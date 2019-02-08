@@ -1,0 +1,29 @@
+<ng-template #shapeTemplate>
+    <svg:rect attr.id="{{shape.shapeProperties.name}}" class="draggable" attr.x="{{ shape.originX }}" attr.y="{{ shape.originY }}"
+        attr.width="{{ shape.width }}" attr.height="{{ shape.height }}" [ngStyle]="setStyles()">
+        <title>{{ shape.shapeProperties.name }}</title>
+    </svg:rect>
+    <svg:text attr.x="{{shape.originX+3}}" attr.y="{{ shape.originY+8 }}">{{ label }}</svg:text>
+    <svg:g *ngIf="isEditing">
+        <svg:rect attr.x="{{ shape.originX - handlesRadius }}" attr.y="{{ shape.originY - handlesRadius }}"
+                  class="svgHandle svgTopLeftHandle"
+                  attr.width="{{handlesRadius*2}}" attr.height="{{handlesRadius*2}}" attr.fill="{{handlesColor}}" attr.stroke="{{handlesColor}}"
+                  (mousedown)="onHandleMouseDown($event, 'svgTopLeftHandle')"
+        />
+        <svg:rect attr.x="{{ shape.originX + shape.width - handlesRadius }}" attr.y="{{ shape.originY - handlesRadius }}"
+                  class="svgHandle svgTopRightHandle"
+                  attr.width="{{handlesRadius*2}}" attr.height="{{handlesRadius*2}}" attr.fill="{{handlesColor}}" attr.stroke="{{handlesColor}}"
+                  (mousedown)="onHandleMouseDown($event, 'svgTopRightHandle')"
+        />
+        <svg:rect attr.x="{{ shape.originX - handlesRadius }}" attr.y="{{ shape.originY + shape.height - handlesRadius }}"
+                  class="svgHandle svgBottomLeftHandle"
+                  attr.width="{{handlesRadius*2}}" attr.height="{{handlesRadius*2}}" attr.fill="{{handlesColor}}" attr.stroke="{{handlesColor}}"
+                  (mousedown)="onHandleMouseDown($event, 'svgBottomLeftHandle')"
+        />
+        <svg:rect attr.x="{{ shape.originX + shape.width - handlesRadius }}" attr.y="{{ shape.originY + shape.height - handlesRadius }}"
+                  class="svgHandle svgBottomRightHandle"
+                  attr.width="{{handlesRadius*2}}" attr.height="{{handlesRadius*2}}" attr.fill="{{handlesColor}}" attr.stroke="{{handlesColor}}"
+                  (mousedown)="onHandleMouseDown($event, 'svgBottomRightHandle')"
+        />
+    </svg:g>
+</ng-template>

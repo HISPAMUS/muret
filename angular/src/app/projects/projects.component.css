@@ -1,0 +1,9 @@
+.projects {
+  margin-bottom: 20px;
+}
+
+.projects .card {
+  background-color: transparent;
+  text-align: center;
+}
+

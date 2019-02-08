@@ -1,0 +1,78 @@
+<div  id="toolbar" class="btn-group-vertical btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="selectedTool">
+  <p id="linkBackProject">
+    <a (click)="onBrowseCurrentProject()">Back to {{getCurrentProjectName()}}</a>
+  </p>
+  <ngb-accordion [closeOthers]="true" [activeIds]="currentActivePanel" (panelChange)="onPanelChange($event)">
+    <ngb-panel id="documentAnalysisMode" title="1. Document analysis">
+      <ng-template ngbPanelContent>
+        <ngb-accordion [closeOthers]="true" activeIds="daManual">
+          <ngb-panel id="daManual" title="Manual">
+            <ng-template ngbPanelContent>
+              <label ngbButtonLabel class="btn-light" (click)="clearDocumentAnalysis()">
+                Clear
+              </label>
+              <label ngbButtonLabel class="btn-light">
+                <input ngbButton type="radio" value="101"> Select
+              </label>
+              <label ngbButtonLabel class="btn-light">
+                <input ngbButton type="radio" value="102"> Split pages
+              </label>
+              <label ngbButtonLabel class="btn-light">
+                <input ngbButton type="radio" value="103"> Split regions
+              </label>
+              <label ngbButtonLabel class="btn-light">
+                <input ngbButton type="radio" value="104" disabled> Draw pages
+              </label>
+              <label ngbButtonLabel class="btn-light">
+                <input ngbButton type="radio" value="105" disabled> Draw regions
+              </label>
+            </ng-template>
+          </ngb-panel>
+          <ngb-panel id="daAutomatic" title="Automatic">
+            <ng-template ngbPanelContent>
+              <label ngbButtonLabel class="btn-light">
+                <input ngbButton type="radio" value="110" disabled> Pages
+              </label>
+              <label ngbButtonLabel class="btn-light">
+                <input ngbButton type="radio" value="111" disabled> Regions in pages
+              </label>
+            </ng-template>
+          </ngb-panel>
+        </ngb-accordion>
+      </ng-template>
+    </ngb-panel>
+    <ngb-panel id="symbolsMode" title="2. Symbols">
+      <ng-template ngbPanelContent>
+        <ngb-accordion [closeOthers]="true" activeIds="symbolsManual">
+          <ngb-panel id="symbolsManual" title="Manual">
+            <ng-template ngbPanelContent>
+              <label ngbButtonLabel class="btn-light">
+                <input ngbButton type="radio" value="200"> Select
+              </label>
+              <label ngbButtonLabel class="btn-light">
+                <input ngbButton type="radio" value="201"> Bounding boxes
+              </label>
+              <label ngbButtonLabel class="btn-light">
+                <input ngbButton type="radio" value="202"> Strokes
+              </label>
+            </ng-template>
+          </ngb-panel>
+          <ngb-panel id="symmbolsAutomatic" title="Automatic">
+            <ng-template ngbPanelContent>
+              <label ngbButtonLabel class="btn-light">
+                <input ngbButton type="radio" value="210" disabled> Image end to end
+              </label>
+              <label ngbButtonLabel class="btn-light">
+                <input ngbButton type="radio" value="211" disabled> Staff end to end
+              </label>
+            </ng-template>
+          </ngb-panel>
+        </ngb-accordion>
+      </ng-template>
+    </ngb-panel>
+    <ngb-panel id="diplomatic" title="3. Diplomatic" [disabled]="true">
+      <ng-template ngbPanelContent>
+      </ng-template>
+    </ngb-panel>
+  </ngb-accordion>
+</div>

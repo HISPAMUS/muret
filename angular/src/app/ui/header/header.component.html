@@ -1,0 +1,26 @@
+<nav class="navbar navbar-light offset-1">
+  <div ngbDropdown class="d-inline-block">
+    <button class="navbar-toggler hidden-sm-up" id="dropdownBasic1" ngbDropdownToggle>
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+      <a class="dropdown-item nav-link" routerLinkActive="active" routerLink="startup">Home</a>
+      <a class="dropdown-item nav-link" [hidden]="authenticated()" routerLink="login">Login</a>
+      <a class="dropdown-item nav-link" [hidden]="!authenticated()" routerLink="login">Logout</a>
+      <a class="dropdown-item nav-link" [hidden]="!authenticated()" routerLink="export">Export training sets</a>
+      <a class="dropdown-item nav-link" [hidden]="!authenticated()" routerLink="preferences">Preferences</a>
+      <a class="dropdown-item nav-link" routerLinkActive="active" routerLink="about">About</a>
+      <a class="dropdown-item nav-link" href="https://github.com/davidrizo/im3" target="_blank">
+        <i class="fa fa-github"></i>
+      </a>
+    </div>
+    <a [hidden]="hideLogo()" class="navbar-brand" routerLink="startup">
+      <img src="assets/images/muret.png" alt="Logo MuRET">
+    </a>
+    <a routerLink="dev">DEV</a>&nbsp;
+
+  </div>
+  <div ng-if="authenticated()" class="navbar-right">
+    {{getUserName()}}
+  </div>
+</nav>

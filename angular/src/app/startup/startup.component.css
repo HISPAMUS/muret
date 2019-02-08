@@ -1,0 +1,10 @@
+#startup {
+  height: 100vh;
+  margin-top: 20vh;
+}
+#startuplogo {
+  margin-bottom: 5vh;
+}
+#startup img {
+  width: 100%;
+}

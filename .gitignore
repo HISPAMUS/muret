@@ -1,3 +1,5 @@
 *.iml
 uploads/
 spring/target/
+.idea/
+.DS_Store

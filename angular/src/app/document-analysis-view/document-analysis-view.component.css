@@ -1,0 +1,12 @@
+#documentAnalysis {
+  position: relative;
+}
+#documentAnalysisCanvas {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+}
+#documentAnalysisTools {
+  margin-bottom: 1em;
+}

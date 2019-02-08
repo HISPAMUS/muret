@@ -1,0 +1,15 @@
+<h2>Preferences</h2>
+
+<form [formGroup]="preferencesGroup" (ngSubmit)="onSubmit()">
+        <div *ngFor="let classifierType of classifierTypes; trackBy: trackByClassifierTypeFunction" class="form-group">
+          <h3>{{classifierType.name}}</h3>
+          <label class="center-block">Symbol classifier based on image:
+            <select class="form-control" formControlName="symbolImageClassifiersSelect">
+              <option *ngFor="let classifier of classifierType.classifiers; trackBy: trackByClassifierFunction" [ngValue]="classifier.id">{{classifier.description}}</option>
+            </select>
+          </label>
+        </div>
+        <div>
+          <button type="submit">Submit</button>
+        </div>
+</form>

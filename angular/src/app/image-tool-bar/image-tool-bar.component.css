@@ -1,0 +1,33 @@
+#toolbar {
+  background-color: #7DE2DB;
+}
+
+#linkBackProject {
+  text-align: center;
+}
+
+#linkBackProject a {
+  color: white;
+  font-weight: bold;
+}
+
+/** use ::ng-deep to change component css */
+::ng-deep #toolbar .card-body {
+  background-color: #7DE2DB;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+::ng-deep #toolbar .card-header {
+  background-color: #D91E63;
+}
+
+::ng-deep #toolbar .card-header button {
+  color: black;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* it removes radio box because after adding accordions to the button groups it has appeared */
+::ng-deep #toolbar input[type="radio"] {
+  appearance: none;
+}

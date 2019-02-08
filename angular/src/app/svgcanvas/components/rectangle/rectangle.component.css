@@ -1,0 +1,21 @@
+/* drizo */
+.svgHandle {
+  stroke-width: 1;
+}
+
+.svgTopLeftHandle {
+  cursor: nw-resize;
+}
+
+.svgTopRightHandle {
+  cursor: ne-resize;
+}
+
+.svgBottomLeftHandle {
+  cursor: sw-resize;
+}
+
+.svgBottomRightHandle {
+  cursor: se-resize;
+}
+

@@ -1,0 +1,16 @@
+#trainingSets h3 {
+   color: white;
+}
+
+#trainingSets h4 {
+  color: white;
+}
+
+#trainingSets p {
+  color: gray;
+}
+
+#trainingSets button {
+  margin: 10px;
+  margin-bottom: 20px;
+}

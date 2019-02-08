@@ -1,0 +1,16 @@
+.thumbnail {
+  display: inline-block;
+  margin: 5px;
+}
+
+.thumbnail img {
+  height: 200px;
+}
+
+h5 {
+  color: white;
+  text-align: center;
+}
+.links {
+  text-align: center;
+}
