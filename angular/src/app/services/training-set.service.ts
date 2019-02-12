@@ -21,7 +21,7 @@ export class TrainingSetService {
     this.urlTrainingSets = environment.apiEndpoint + '/trainingsets';
   }
 
-  getTrainingSetExporters(): Observable<Array<ITrainingSetExporter>> {
+  getTrainingSetExporters$(): Observable<Array<ITrainingSetExporter>> {
     this.logger.debug('IM3WSService: fetching training set exporters');
     return this.http.get<Array<ITrainingSetExporter>>(this.urlTrainingSets + '/exporters', this.authService.getHttpAuthOptions())
       .pipe(
@@ -29,7 +29,7 @@ export class TrainingSetService {
       );
   }
 
-  downloadTrainingSet(exporterIndex: number, projectIDS: Array<number>): Observable<any> {
+  downloadTrainingSet$(exporterIndex: number, projectIDS: Array<number>): Observable<any> {
     this.logger.debug('IM3WSService: fetching training set file for exporter ' + exporterIndex + ' and project ids: ' + projectIDS);
     let projectIdsString: string = null;
     projectIDS.forEach(id => {

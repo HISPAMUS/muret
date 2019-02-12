@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Im3wsService} from '../services/im3ws.service';
+import {RestClientService} from '../services/rest-client.service';
 import {ActivatedRoute} from '@angular/router';
 import {Image} from '../model/image';
 import {Symbol} from '../model/symbol';
@@ -9,7 +9,7 @@ import {NGXLogger} from 'ngx-logger';
 import {Region} from '../model/region';
 import {AgnosticSymbolSVGPath} from './agnostic-symbol-svgpath';
 import {Project} from '../model/project';
-import {SessionDataService} from '../session-data.service';
+import {SessionDataService} from '../services/session-data.service';
 import {ComponentCanDeactivate} from '../component-can-deactivate';
 import {ImageToolBarService} from '../image-tool-bar/image-tool-bar.service';
 import {SVGCanvasComponent, SVGCanvasState, SVGMousePositionEvent} from '../svgcanvas/components/svgcanvas/svgcanvas.component';
@@ -21,6 +21,9 @@ import {AgnosticSymbolStrokes} from './agnostic-symbol-strokes';
 import {Observable, timer} from 'rxjs';
 import {Strokes} from '../model/strokes';
 import {Point} from '../model/point';
+import {AgnosticService} from "../services/agnostic.service";
+import {ImageService} from "../services/image.service";
+import {SymbolService} from "../services/symbol.service";
 
 @Component({
   selector: 'app-symbols',
@@ -77,7 +80,9 @@ export class SymbolsComponent extends ComponentCanDeactivate implements OnInit, 
   private currentStrokesFreeHandComponents: Array<ShapeComponent>;
 
   constructor(
-    private im3wsService: Im3wsService,
+    private agnosticService: AgnosticService,
+    private imageService: ImageService,
+    private symbolService: SymbolService,
     private sessionDataService: SessionDataService,
     private route: ActivatedRoute,
     private logger: NGXLogger,
@@ -110,7 +115,6 @@ export class SymbolsComponent extends ComponentCanDeactivate implements OnInit, 
     } else {*/
       this.project = this.sessionDataService.currentProject;
       this.image = this.sessionDataService.currentImage;
-      this.imageURL = this.sessionDataService.currentImageMastersURL + '/' + this.image.filename;
       this.logger.debug('Working with image ' + this.imageURL);
       this.loadSVGSet();
     // }
@@ -124,7 +128,7 @@ export class SymbolsComponent extends ComponentCanDeactivate implements OnInit, 
   }
 
   private loadSVGSet() {
-    this.im3wsService.agnosticService.setSVGSet$(this.project.notationType, this.project.manuscriptType).
+    this.agnosticService.getSVGSet$(this.project.notationType, this.project.manuscriptType).
     subscribe(next => {
         this.agnosticSVGScaleX = next.x;
         this.agnosticSVGScaleY = next.y;
@@ -392,12 +396,13 @@ export class SymbolsComponent extends ComponentCanDeactivate implements OnInit, 
 
       const prevCursor = this.selectedStaffCursor;
       this.selectedStaffCursor = 'wait';
-      this.im3wsService.imageService.createSymbolFromBoundingBox(this.selectedRegion, fromX, fromY,
+      this.imageService.createSymbolFromBoundingBox$(this.selectedRegion, fromX, fromY,
         toX, toY).subscribe(next => {
           this.selectedStaffCursor = prevCursor;
           this.logger.debug('New symbol created ' + next.id);
           this.svgCanvas.remove($event);
           this.drawSymbol(next);
+          this.selectedRegion.symbols.push(next); // the im3ws spring service just returns the new symbol, not the complete region on each symbol insert
       });
     } else if ($event.shape instanceof PolyLine) {
         const shape = $event.shape;
@@ -440,7 +445,7 @@ export class SymbolsComponent extends ComponentCanDeactivate implements OnInit, 
       // generate strokes
       const prevCursor = this.selectedStaffCursor;
       this.selectedStaffCursor = 'wait';
-      this.im3wsService.imageService.createSymbolFromStrokes(this.selectedRegion, this.currentStrokes).subscribe(next => {
+      this.imageService.createSymbolFromStrokes$(this.selectedRegion, this.currentStrokes).subscribe(next => {
         this.selectedStaffCursor = prevCursor;
         this.logger.debug('New symbol created ' + next.id);
 
@@ -451,6 +456,7 @@ export class SymbolsComponent extends ComponentCanDeactivate implements OnInit, 
         this.currentStrokes = null;
         this.currentStrokesFreeHandComponents = null;
         this.drawSymbol(next);
+        this.selectedRegion.symbols.push(next); // the im3ws spring service just returns the new symbol, not the complete region on each symbol insert
       });
     } // else discard it because it has been overwritten by the new one
   }
@@ -541,7 +547,7 @@ export class SymbolsComponent extends ComponentCanDeactivate implements OnInit, 
 
   deleteSelectedSymbol() {
     if (this.selectedSymbol != null) {
-      this.im3wsService.imageService.deleteSymbol(this.selectedRegion.id, this.selectedSymbol.id).subscribe(() => {
+      this.imageService.deleteSymbol$(this.selectedRegion.id, this.selectedSymbol.id).subscribe(() => {
         this.agnosticSymbols.delete(this.selectedSymbol.id);
         this.agnosticSymbolSVGs.delete(this.selectedSymbol.id);
         this.svgCanvas.remove(this.svgCanvas.selectedComponent);
@@ -560,7 +566,7 @@ export class SymbolsComponent extends ComponentCanDeactivate implements OnInit, 
 
   movePitchSelectedSymbol(upOrDown: string) {
     if (this.selectedSymbol != null) {
-      this.im3wsService.symbolService.changeAgnosticPositionInStaffUpOrDown(this.selectedSymbol.id, upOrDown).subscribe( next => {
+      this.symbolService.changeAgnosticPositionInStaffUpOrDown$(this.selectedSymbol.id, upOrDown).subscribe( next => {
         this.selectedSymbol.positionInStaff = next.positionInStaff;
         const newY = this.computeAgnosticStaffSymbolY(this.selectedRegion, this.selectedSymbol);
         const svgPath = this.agnosticSymbolSVGs.get(this.selectedSymbol.id);
@@ -582,7 +588,7 @@ export class SymbolsComponent extends ComponentCanDeactivate implements OnInit, 
   }
 
   changeAgnosticType(type: string) {
-    this.im3wsService.symbolService.changeAgnosticSymbolType(this.selectedSymbol.id, type).subscribe( next => {
+    this.symbolService.changeAgnosticSymbolType$(this.selectedSymbol.id, type).subscribe( next => {
       this.selectedSymbol.positionInStaff = next.positionInStaff;
       const svgPath = this.agnosticSymbolSVGs.get(this.selectedSymbol.id);
       if (!svgPath) {

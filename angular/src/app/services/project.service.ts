@@ -13,6 +13,9 @@ import {ProjectURLS} from '../model/project-urls';
 import {StringBody} from '../payloads/string-body';
 import {ProjectStatistics} from '../model/project-statistics';
 import {StringReponse} from '../string-reponse';
+import {RestClientService} from "./rest-client.service";
+import {SessionDataService} from "./session-data.service";
+import {State} from "../model/state";
 
 @Injectable({
   providedIn: 'root'
@@ -20,114 +23,115 @@ import {StringReponse} from '../string-reponse';
 export class ProjectService {
   private urlProject: string;
 
-  constructor(private http: HttpClient,
-              private logger: NGXLogger,
-              private authService: AuthService,
-              private dialogService: DialogsService) {
+  constructor(private restClientService: RestClientService,
+      private sessionDataService: SessionDataService,
+      private logger: NGXLogger) {
     this.urlProject = environment.apiEndpoint + '/project';
   }
 
+  /**
+   * It returns an observable array of lazily loaded projects
+   */
   public getProjects$(): Observable<Project[]> {
-    this.logger.debug('IM3WSService: fetching projects...');
-
-    return this.http.get<Project[]>(this.urlProject, this.authService.getHttpAuthOptions())
-      .pipe(
-        catchError(this.dialogService.handleError('getProjects$', []))
-      );
+    return this.restClientService.httpGet$<Project[]>(this.urlProject, 'Fetching all projects (lazy)');
   }
 
-  public getUser$(id: number): Observable<User> {
-    this.logger.debug('IM3WSService: fetching user ' + id + '...');
-
-    return this.http.get<User>(this.urlProject + '/getlazy/' + id, this.authService.getHttpAuthOptions())
-      .pipe(
-        catchError(this.dialogService.handleError('getUser$$', null))
-      );
-  }
-
+  /**
+   * Post a new project
+   * @param name
+   * @param composer
+   * @param notationType
+   * @param manuscriptType
+   * @param comments
+   * @param base64Thumbnail
+   */
   public newProject$(name: string, composer: string, notationType: string, manuscriptType: string, comments: string,
                      base64Thumbnail: string): Observable<Project> {
-    this.logger.debug('IM3WSService: creating project with name ' + name);
-    return this.http.post<Project>(this.urlProject + '/new', {
+    return this.restClientService.httpPost<Project>(this.urlProject + '/new/',
+      {
       'name': name,
       'composer': composer,
       'notationType': notationType,
       'manuscriptType': manuscriptType,
       'comments': comments,
+      'createdBy': {
+          'id': this.sessionDataService.user.id
+      },
       'thumbnailBase64Encoding': base64Thumbnail
-    }, this.authService.getHttpAuthOptions()).pipe(
-      catchError(this.dialogService.handleError('newProject$ with name=' + name, null))
+    },
+      'Creating new project with name ' + name);
+  }
+
+  /**
+   * It retrieves eagerly the project
+   * @param id
+   */
+  public getProject$(id: number): Observable<Project> {
+    return this.restClientService.httpGet$(this.urlProject + '/get/' + id,
+      'Fetching project with id ' + id);
+  }
+
+  /**
+   * It retrieves the project statistics
+   * @param id
+   */
+  public getProjectStatistics$(id: number): Observable<ProjectStatistics> {
+    return this.restClientService.httpGet$(this.urlProject + '/statistics/' + id,
+      'Fetching project statistics for id ' + id);
+  }
+
+  /**
+   * It puts a project update
+   * @param project
+   */
+  public updateProject(project: Project): Observable<any> {
+    this.logger.debug('IM3WSService: saving project with id: ' + project.id);
+    return this.restClientService.httpPut(this.urlProject, project,
+      'Updating project with id ' + project.id);
+  }
+
+  /**
+   * It just updates the project composer
+   * @param project
+   */
+  public saveProjectComposer(project: Project, composer: string) {
+    const stringBody = new StringBody(composer);
+    this.restClientService.httpPut(this.urlProject + '/composer/' + project.id, stringBody,
+      'Updating project composer of project with id ' + project.id)
+      .subscribe(next => project.composer = composer); // if correctly changed
+  }
+
+  /**
+   * It just updates the project comments
+   * @param project
+   */
+  public saveProjectComments(project: Project, comments: string) {
+    const stringBody = new StringBody(comments);
+    return this.restClientService.httpPut(this.urlProject + '/comments/' + project.id, stringBody,
+      'Updating project comments of project with id ' + project.id)
+      .subscribe(next => project.comments = comments); // if correctly changed
+  }
+
+  /**
+   * It just updates the project state
+   * @param project
+   */
+  public saveProjectState(project: Project, value: string) {
+    let state: State;
+    if (value === 'none') {
+      state = null;
+    } else {
+      if (project.state == null) {
+        state = new State();
+      } else {
+        state = project.state;
+      }
+      state.state = value;
+    }
+
+    return this.restClientService.httpPut(this.urlProject + '/state/' + project.id, state,
+      'Updating project state of project with id ' + project.id).subscribe(
+        next => project.state = state // if correctly changed
     );
   }
-
-  public getProject$(id: number): Observable<Project> {
-    this.logger.debug('IM3WSService: fetching project with id ' + id);
-    const result: Observable<Project> = this.http.get<Project>(this.urlProject + '/get/' + id, this.authService.getHttpAuthOptions())
-      .pipe(
-        catchError(this.dialogService.handleError('getProject$ with id=' + id, null))
-      );
-    this.logger.debug('IM3WSService: fetched ' + result.valueOf());
-    return result;
-  }
-
-  public getProjectURLs$(id: number): Observable<ProjectURLS> {
-    this.logger.debug('IM3WSService: fetching thumbnail URL of project with id ' + id);
-    const result: Observable<ProjectURLS> = this.http.get<ProjectURLS>(this.urlProject + '/projectURLS/' + id, this.authService.getHttpAuthOptions())
-      .pipe(
-        catchError(this.dialogService.handleError('getProject$ with id=' + id, null))
-      );
-    this.logger.debug('IM3WSService: fetched URL ' + result.valueOf());
-    return result;
-  }
-
-  public saveProject(project: Project): Observable<any> {
-    this.logger.debug('IM3WSService: saving project with id: ' + project.id);
-    const result = this.http.put(this.urlProject, project, this.authService.getHttpAuthOptions());
-    result.subscribe(res => {
-      console.log('Save project result: ' + res);
-    });
-    return result;
-  }
-
-  public saveProjectComposer(project: Project): Observable<any> {
-    this.logger.debug('IM3WSService: saving project composer with id: ' + project.id);
-    const stringBody = new StringBody(project.composer);
-    const result = this.http.put(this.urlProject + '/composer/' + project.id, stringBody, this.authService.getHttpAuthOptions());
-    result.subscribe(res => {
-      console.log('Save project composer result: ' + res);
-    });
-    return result;
-  }
-
-  public saveProjectComments(project: Project): Observable<any> {
-    this.logger.debug('IM3WSService: saving project comments with id: ' + project.id);
-    const stringBody = new StringBody(project.comments);
-    const result = this.http.put(this.urlProject + '/comments/' + project.id, stringBody, this.authService.getHttpAuthOptions());
-    result.subscribe(res => {
-      console.log('Save project comments result: ' + res);
-    });
-    return result;
-  }
-
-  public saveProjectState(project: Project): Observable<any> {
-    this.logger.debug('IM3WSService: saving project state with id: ' + project.id);
-    const result = this.http.put(this.urlProject + '/state/' + project.id, project.state, this.authService.getHttpAuthOptions());
-    result.subscribe(res => {
-      console.log('Save project state result: ' + res);
-    });
-    return result;
-  }
-
-  public getProjectStatistics$(id: number)
-    : Observable<ProjectStatistics> {
-    this.logger.debug('IM3WSService: fetching project statistics for id ' + id);
-    return this.http.get<StringReponse>(this.urlProject + '/statistics/' + id
-      ,
-      this.authService.getHttpAuthOptions(),
-    )
-      .pipe(
-        catchError(this.dialogService.handleError('getProjectStatistics$ ' + id, null))
-      );
-  }
-
 }

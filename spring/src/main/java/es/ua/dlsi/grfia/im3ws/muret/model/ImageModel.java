@@ -245,7 +245,7 @@ public class ImageModel {
                 DLSymbolAndPositionClassifier classifier = new DLSymbolAndPositionClassifier(localClassifierPath);
                 BoundingBox boundingBox = new BoundingBoxXY(fromX, fromY, toX, toY);
 
-                File muretProjectsFolder = new File(muretConfiguration.getFolder(), image.getProject().getPath()); // TODO estático
+                File muretProjectsFolder = new File(image.getProject().getPath()); // TODO estático
                 File imagesFolder = new File(muretProjectsFolder, MURETConfiguration.MASTER_IMAGES);
                 File imageFile = new File(imagesFolder, image.getFilename());
                 if (!imageFile.exists()) {

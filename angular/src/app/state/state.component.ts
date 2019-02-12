@@ -19,7 +19,7 @@ export class StateComponent implements OnInit {
   }
 
   showCheck() {
-    return this.state && this.state.state === 'done';
+    return this.state && (this.state.state === 'done' || this.state.state === 'doublechecked');
   }
 
   showDoubleCheck() {

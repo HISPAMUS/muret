@@ -262,16 +262,16 @@ public class ImageController extends CRUDController<Image, Long, ImageService> {
 
     }
 
-    @GetMapping(value = "master/{imageID}")
+    @GetMapping(value = "master/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<InputStreamResource> getMasterImage(@PathVariable("imageID") Long imageID) throws IM3WSException, FileNotFoundException {
         return getImage(imageID,  MURETConfiguration.MASTER_IMAGES);
     }
 
-    @GetMapping(value = "thumbnail/{imageID}")
+    @GetMapping(value = "thumbnail/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<InputStreamResource> getThumbnailImage(@PathVariable("imageID") Long imageID) throws IM3WSException, FileNotFoundException {
         return getImage(imageID,  MURETConfiguration.THUMBNAIL_IMAGES);
     }
-    @GetMapping(value = "preview/{imageID}")
+    @GetMapping(value = "preview/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<InputStreamResource> getPreviewImage(@PathVariable("imageID") Long imageID) throws IM3WSException, FileNotFoundException {
         return getImage(imageID,  MURETConfiguration.PREVIEW_IMAGES);
     }

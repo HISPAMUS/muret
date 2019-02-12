@@ -107,7 +107,7 @@ public class ProjectController extends CRUDController<Project, Integer, ProjectS
     }
 
     @PutMapping("/state/{projectID}")
-    public void putState(@PathVariable int projectID, @RequestBody State state) throws IM3WSException {
+    public void putState(@PathVariable int projectID, @RequestBody(required=false) State state) throws IM3WSException {
         Optional<Project> project = projectService.findById(projectID);
         if (!project.isPresent()) {
             throw new IM3WSException("Cannot find a project with id " + projectID);
@@ -116,11 +116,16 @@ public class ProjectController extends CRUDController<Project, Integer, ProjectS
         State persistedState;
         if (project.get().getState() == null) {
             persistedState = stateService.create(state);
+            project.get().setState(persistedState);
+            projectService.update(project.get());
+            
         } else {
             if (state == null) {
+                Long prevStateID = project.get().getState().getId();
+                project.get().setState(null);
+                projectService.update(project.get());
                 // delete state
-                stateService.delete(project.get().getState().getId());
-                persistedState = null;
+                stateService.delete(prevStateID);
             } else {
                 // update state
                 persistedState = project.get().getState();
@@ -130,8 +135,5 @@ public class ProjectController extends CRUDController<Project, Integer, ProjectS
                 stateService.update(persistedState);
             }
         }
-
-        project.get().setState(persistedState);
-        projectService.update(project.get());
     }
 }

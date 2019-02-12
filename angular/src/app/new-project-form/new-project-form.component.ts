@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Validators } from '@angular/forms';
-import {Im3wsService} from '../services/im3ws.service';
+import {RestClientService} from '../services/rest-client.service';
 import {Router} from '@angular/router';
 
 // import { ImageCropperModule } from 'ngx-image-cropper';
 import {NGXLogger} from 'ngx-logger';
+import {ProjectService} from "../services/project.service";
+import {SessionDataService} from "../services/session-data.service";
 
 @Component({
   selector: 'app-new-project-form',
@@ -24,7 +26,7 @@ export class NewProjectFormComponent implements OnInit {
     comments: ['']
   });
 
-  constructor(private fb: FormBuilder, private projectService: Im3wsService, private router: Router, private logger: NGXLogger) {
+  constructor(private fb: FormBuilder, private sessionDataService: SessionDataService, private projectService: ProjectService, private router: Router, private logger: NGXLogger) {
   }
 
   ngOnInit() {
@@ -39,13 +41,15 @@ export class NewProjectFormComponent implements OnInit {
 
   onSubmit() {
     this.logger.debug('Submitting new project');
-    this.projectService.projectService.newProject$(this.newProjectForm.controls['name'].value,
+    this.projectService.newProject$(this.newProjectForm.controls['name'].value,
       this.newProjectForm.controls['composer'].value,
       this.newProjectForm.controls['notationType'].value,
       this.newProjectForm.controls['manuscriptType'].value,
       this.newProjectForm.controls['comments'].value, this.imgSrc)
-      .subscribe(serviceNewProject =>
-        this.router.navigate(['/project/get', { id: serviceNewProject.id }])
+      .subscribe(serviceNewProject => {
+          this.sessionDataService.user.projectsCreated.push(serviceNewProject);
+          this.router.navigate(['/project/get', {id: serviceNewProject.id}])
+        }
       );
     // TODO ¿Si hay error?
   }

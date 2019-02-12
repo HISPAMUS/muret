@@ -1,36 +1,58 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {Image} from '../model/image';
 import {ProjectURLS} from '../model/project-urls';
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
-import {SessionDataService} from '../session-data.service';
-import {Im3wsService} from '../services/im3ws.service';
+import {SessionDataService} from '../services/session-data.service';
+import {RestClientService} from '../services/rest-client.service';
+import {ImageService} from "../services/image.service";
+import {Lightbox, LightboxConfig} from "ngx-lightbox";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-image-thumbnail',
   templateUrl: './image-thumbnail.component.html',
   styleUrls: ['./image-thumbnail.component.css']
 })
+// see https://stackoverflow.com/questions/49411283/angular-5-http-get-images-from-back-end
 export class ImageThumbnailComponent implements OnInit {
-  @Input() projectURLs: ProjectURLS;
   @Input() image: Image;
+  @ViewChild('imageThumbnail') imageThumbnail: ElementRef;
   constructor(private logger: NGXLogger, private router: Router, private sessionDataService: SessionDataService,
-              private im3wsService: Im3wsService) {
+              private imageService: ImageService, private _lightbox: Lightbox, private _lighboxConfig: LightboxConfig,
+              private sanitizer: DomSanitizer) {
+    _lighboxConfig.fitImageInViewPort = true;
+    _lighboxConfig.showImageNumberLabel = false;
   }
 
   ngOnInit() {
-    // this.logger.debug('ImageThumbnails at: ' + this.projectURLs.thumbnails);
+    this.imageService.getThumbnailImage$(this.image.id).subscribe(imageBlob => {
+      this.imageThumbnail.nativeElement.src = window.URL.createObjectURL(imageBlob)
+    });
   }
 
-  openImage(image: Image) {
-    this.logger.debug('Opening image ' + image.id + ' in URL ' + this.projectURLs);
+  openImage() {
+    this.logger.debug('Opening image ' + this.image.id);
 
     // this call retrieves the whole image data (the current image does not contain all lazy relations)
-    this.im3wsService.imageService.getImage$(image.id).
-      subscribe(serviceImage => {
-        this.sessionDataService.currentImageMastersURL = this.projectURLs.masters;
-        this.sessionDataService.currentImage = serviceImage;
-        this.router.navigate(['/image']);
-      });
+    this.imageService.getImage$(this.image.id).subscribe(next => {
+      this.sessionDataService.currentImage = next;
+      this.router.navigate(['/image']);
+    });
  }
+
+  previewImage() {
+    this.imageService.getPreviewImage$(this.image.id).subscribe(imageBlob => {
+      const albums = []; // used by Lightbox
+
+      const album = {
+        src: this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(imageBlob)),
+        caption: this.image.filename,
+      };
+
+      albums.push(album);
+      this._lightbox.open(albums, );
+    });
+
+  }
 }

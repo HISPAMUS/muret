@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-import {Im3wsService} from '../services/im3ws.service';
+import {RestClientService} from '../services/rest-client.service';
 import {ClassifierType} from '../model/classifier-type';
 import {Classifier} from '../model/classifier';
+import {ClassifierService} from "../services/classifier.service";
 
 @Component({
   selector: 'app-preferences',
@@ -11,7 +12,7 @@ import {Classifier} from '../model/classifier';
 })
 export class PreferencesComponent implements OnInit {
 
-  constructor(private im3WSservice: Im3wsService) {
+  constructor(private classifierService: ClassifierService) {
   }
 
   classifierTypes: ClassifierType[];
@@ -22,7 +23,7 @@ export class PreferencesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.im3WSservice.classifierService.getClassifierTypes$().subscribe(next => {
+    this.classifierService.getClassifierTypes$().subscribe(next => {
       this.classifierTypes = next;
     });
   }

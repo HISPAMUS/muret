@@ -29,10 +29,11 @@ import { ImageThumbnailComponent } from './image-thumbnail/image-thumbnail.compo
 import { FormsModule } from '@angular/forms';
 
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { LightboxModule } from 'ngx-lightbox';
 
 
 import {RouterModule} from '@angular/router';
-import {Im3wsService} from './services/im3ws.service';
+import {RestClientService} from './services/rest-client.service';
 import {LoginComponent} from './login/login.component';
 
 import {LoggerModule, NGXLogger, NgxLoggerLevel} from 'ngx-logger';
@@ -82,13 +83,14 @@ import { TrainingSetsComponent } from './training-sets/training-sets.component';
     DragulaModule.forRoot(),
     FormsModule,
     RouterModule,
+    LightboxModule,
     NgbModule,
     AngularResizedEventModule,
     SVGDrawingToolModule,
     // LoggerModule.forRoot({serverLoggingUrl: '/api/logs', level: NgxLoggerLevel.DEBUG, serverLogLevel: NgxLoggerLevel.ERROR})
     LoggerModule.forRoot({level: NgxLoggerLevel.DEBUG, serverLogLevel: NgxLoggerLevel.ERROR})
   ],
-  providers: [Im3wsService, NGXLogger, GlobalErrorHandlerService,
+  providers: [RestClientService, NGXLogger, GlobalErrorHandlerService,
     { provide: ErrorHandler, useClass: GlobalErrorHandlerService },
   ], // singleton
   bootstrap: [AppComponent]

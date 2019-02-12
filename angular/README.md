@@ -1,27 +1,49 @@
-# Angular
+#Services
+##SessionDataService
+This service contains the data used along the user session, such as the user object itself,
+the currently loaded project and the image being processed.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.1.
+As a rule of thumb, we should avoid having two objects referencing the same tuple in database. 
+For example, when a project is retrieved in [ProjectService](#proyectservice), the
+lazily loaded project object in [SessionDataService](#sessionDataService) is filled rather
+than loading a new one. This helps in mantaining updated all elements in the interface without
+creating unnecessary coupling.
 
-## Development server
+##AuthService
+It sends the post request to authenticate to _spring_, which, if success, it sets into _SessionDataService_ 
+a _User_ object containing the minimum data about the _Projects_ and _Permissions_. 
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+##RestClientService
+This service contains common utilities and data to access the REST API. 
 
-## Code scaffolding
+##ProjectService
+**TO-DO Describir**
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+#Components
+**TODO: UML class and sequence diagram**
 
-## Build
+##1. Login
+It just delegates to the [AuthService](#authservice) the authentication. When user gets authenticated, 
+he/she is moved to the static [StartupComponent](#startupcomponent).    
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+##2. Startup
+It is just a static view with a [NEW](#3-newprojectform) and [OPEN](#4-projects) buttons
 
-## Running unit tests
+##3. NewProjectForm
+**TODO**
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+##4. Projects
+By accessing to the user information in [SessionDataService](#sessionDataService),
+it shows the projects the user has created and those that can be acccessed with possible 
+restricted permissions to the user (**TODO: this is not fully implemented yet**).
+When project is opened, the route takes to the [Project](#5-project) view.
 
-## Running end-to-end tests
+##5. Project 
+It allows the edition of the composer value, project comments and status.  
+A list of [image thumbnail components](#6-imagethumbnail) is shown.  
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+It loads the project from the [ProjectService](#projectservice) given the *project_id* in the route params.
 
-## Further help
+##6. ImageThumbnail
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+

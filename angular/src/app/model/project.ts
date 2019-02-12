@@ -1,5 +1,6 @@
 import {Image} from './image';
 import {State} from './state';
+import {NGXLogger} from "ngx-logger";
 
 export class Project {
   id: number;
@@ -26,7 +27,6 @@ export class Project {
   }*/
 
   orderImageArray() {
-    console.log('Ordering images');
     if (this.images) {
       // first insert input images in a map
       const imagesMap: Map<number, Image> = new Map<number, Image>();

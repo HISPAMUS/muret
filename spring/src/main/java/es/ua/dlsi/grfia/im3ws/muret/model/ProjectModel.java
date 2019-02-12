@@ -3,7 +3,9 @@ package es.ua.dlsi.grfia.im3ws.muret.model;
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.muret.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Project;
+import es.ua.dlsi.grfia.im3ws.muret.entity.User;
 import es.ua.dlsi.grfia.im3ws.muret.service.ProjectService;
+import es.ua.dlsi.grfia.im3ws.muret.service.UserService;
 import es.ua.dlsi.im3.core.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,6 +21,9 @@ import java.util.logging.Logger;
  */
 @Component
 public class ProjectModel {
+    @Autowired
+    UserService userService;
+
     @Autowired
     ProjectService projectService;
 
@@ -64,7 +69,7 @@ public class ProjectModel {
                     project.getComposer(),
                     now,
                     now,
-                    null,
+                    project.getCreatedBy(),
                     null,
                     project.getThumbnailBase64Encoding(),
                     project.getComments(),

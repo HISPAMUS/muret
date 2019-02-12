@@ -29,14 +29,7 @@
 <div class="row">
   <div class="offset-1 col-10">
     <div *ngIf="project; let project; else loading" dragula="DRAGULA_FACTS" #domImages>
-      <app-image-thumbnail *ngFor="let image of project.images" [image]="image" [projectURLs]="projectURLs" [attr.data-id]="image.id"></app-image-thumbnail>
-
-      <!--<div *ngFor="let image of project.images" class="projectImage">-->
-        <!--<p><img class="img-thumbnail" src="{{projectURLs.thumbnails}}/{{image.filename}}" alt="Image"></p>
-        <a href="{{projectURLs.previews}}/{{image.filename}}" target="_blank">Preview</a>
-        &nbsp;&nbsp;&nbsp;
-        <a href="image/{{image.id}}">Open</a>
-      </div>-->
+      <app-image-thumbnail *ngFor="let image of project.images" [image]="image" [attr.data-id]="image.id"></app-image-thumbnail>
     </div>
     <ng-template #loading>Loading project...</ng-template>
   </div>

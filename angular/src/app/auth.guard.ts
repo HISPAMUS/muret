@@ -7,17 +7,18 @@ import {
   NavigationExtras,
   CanLoad, Route, CanDeactivate
 } from '@angular/router';
-import {Im3wsService} from './services/im3ws.service';
+import {RestClientService} from './services/rest-client.service';
 import {NGXLogger} from 'ngx-logger';
-import {SessionDataService} from './session-data.service';
+import {SessionDataService} from './services/session-data.service';
 import {Observable} from 'rxjs';
 import {ComponentCanDeactivate} from './component-can-deactivate';
+import {AuthService} from "./services/auth.service";
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate, CanActivateChild, CanLoad, CanDeactivate<ComponentCanDeactivate> {
-  constructor(private im3WSService: Im3wsService, private sessionDataService: SessionDataService, private router: Router,
+  constructor(private authService: AuthService, private sessionDataService: SessionDataService, private router: Router,
               private logger: NGXLogger) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
@@ -38,7 +39,7 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad, CanDea
   }
 
   checkLogin(url: string): boolean {
-    if (this.im3WSService.authService.authenticated()) {
+    if (this.authService.authenticated()) {
       this.logger.debug('Can activate ' + url);
       return true;
     }

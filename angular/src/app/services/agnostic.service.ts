@@ -8,6 +8,7 @@ import {Observable} from 'rxjs';
 import {StringReponse} from '../string-reponse';
 import {catchError} from 'rxjs/operators';
 import {SVGSet} from '../model/SVGSet';
+import {RestClientService} from "./rest-client.service";
 
 @Injectable({
   providedIn: 'root'
@@ -15,42 +16,31 @@ import {SVGSet} from '../model/SVGSet';
 export class AgnosticService {
   private urlAgnostic: string;
 
-  constructor(private http: HttpClient,
-              private logger: NGXLogger,
-              private authService: AuthService,
-              private dialogService: DialogsService) {
+  constructor(private restClientService: RestClientService,
+        private logger: NGXLogger,
+        private dialogService: DialogsService) {
     this.urlAgnostic = environment.apiEndpoint + '/agnostic';
   }
 
   public getSVGFromAgnosticSymbolType$(notationType: string, manuscriptType: string, agnosticSymbolType: string)
     : Observable<StringReponse> {
-    this.logger.debug('IM3WSService: fetching svg path for notationType=' + notationType
+
+    return this.restClientService.httpGet$<StringReponse>(this.urlAgnostic + '/svg'
+      + '?notationType=' + notationType
+      + '&manuscriptType=' + manuscriptType
+      + '&symbolType=' + agnosticSymbolType,
+      'Fetching svg path for notationType=' + notationType
       + 'manuscriptType=' + manuscriptType
       + ' and agnosticSymbolType=' + agnosticSymbolType);
-    return this.http.get<StringReponse>(this.urlAgnostic + '/svg'
-      + '?notationType=' + notationType
-      + '&manuscriptType=' + manuscriptType
-      + '&symbolType=' + agnosticSymbolType
-      ,
-      this.authService.getHttpAuthOptions(),
-    )
-      .pipe(
-        catchError(this.dialogService.handleError('getSVGFromAgnosticSymbolType ' + agnosticSymbolType, null))
-      );
   }
 
-  public setSVGSet$(notationType: string, manuscriptType: string): Observable<SVGSet> {
-    this.logger.debug('IM3WSService: fetching svgset for notationType=' + notationType
-      + 'manuscriptType=' + manuscriptType);
-    return this.http.get<SVGSet>(this.urlAgnostic + '/svgset'
+  public getSVGSet$(notationType: string, manuscriptType: string): Observable<SVGSet> {
+    return this.restClientService.httpGet$<SVGSet>(this.urlAgnostic + '/svgset'
       + '?notationType=' + notationType
       + '&manuscriptType=' + manuscriptType
       ,
-      this.authService.getHttpAuthOptions(),
-    )
-      .pipe(
-        catchError(this.dialogService.handleError('getSVGScale', null))
-      );
+      'Fetching svgset for notationType=' + notationType
+      + 'manuscriptType=' + manuscriptType);
   }
 
 }

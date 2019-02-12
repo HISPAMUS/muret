@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
-import {Im3wsService} from '../services/im3ws.service';
+import {RestClientService} from '../services/rest-client.service';
 import {ActivatedRoute} from '@angular/router';
 import {Image} from '../model/image';
 import {Page} from '../model/page';
@@ -8,13 +8,15 @@ import {NGXLogger} from 'ngx-logger';
 // import {ResizedEvent} from 'angular-resize-event/resized-event';
 import {Region} from '../model/region';
 import {Project} from '../model/project';
-import {SessionDataService} from '../session-data.service';
+import {SessionDataService} from '../services/session-data.service';
 import {SVGCanvasComponent, SVGCanvasState, SVGMousePositionEvent} from '../svgcanvas/components/svgcanvas/svgcanvas.component';
 import {ShapeComponent} from '../svgcanvas/components/shape/shape.component';
 import {LineComponent} from '../svgcanvas/components/line/line.component';
 import {Rectangle} from '../svgcanvas/model/shape';
 import {RegionType} from '../model/region-type';
 import {RectangleComponent} from '../svgcanvas/components/rectangle/rectangle.component';
+import {RegionService} from "../services/region.service";
+import {ImageService} from "../services/image.service";
 
 export enum DocumentAnalysisMode {
   eSelecting, eEditing, eSplittingPages, eSplittingRegions
@@ -55,18 +57,18 @@ export class DocumentAnalysisViewComponent implements OnInit, AfterViewInit {
   private selectedRegion: ShapeComponent = null;
 
   constructor(
-    private im3wsService: Im3wsService,
+    private regionService: RegionService,
+    private imageService: ImageService,
     private sessionDataService: SessionDataService,
     private route: ActivatedRoute,
     private logger: NGXLogger,
   ) {
     this.project = sessionDataService.currentProject;
     this.image = sessionDataService.currentImage;
-    this.imageURL = sessionDataService.currentImageMastersURL + '/' + this.image.filename;
     this.logger.debug('Working with image ' + this.imageURL);
 
     if (!sessionDataService.regionTypes) {
-      im3wsService.regionService.getRegionTypes().subscribe(value => {
+      this.regionService.getRegionTypes().subscribe(value => {
         sessionDataService.regionTypes = value;
         this.logger.debug('Fetched #' + sessionDataService.regionTypes.length + ' region types');
         this.regionTypes = value;
@@ -84,13 +86,6 @@ export class DocumentAnalysisViewComponent implements OnInit, AfterViewInit {
   public ngAfterViewInit(): void {
     this.logger.debug('ngAfterViewInit');
   }
-
-  /* It draws the page and region bounding boxes */
-  /* private setImage(serviceImage: Image) {
-    this.image = serviceImage;
-    this.logger.debug('Setting image ' + serviceImage + ' ' + this.image.filename);
-    this.imageURL = this.projectURLs + '/' + this.image.filename;
-  } */
 
   onImageLoad() {
     this.logger.debug('OnImageLoad');
@@ -124,12 +119,13 @@ export class DocumentAnalysisViewComponent implements OnInit, AfterViewInit {
     this.drawImagePages();
   }
 
+  //TODO Centralizar imageService / regionService en lo mismo
   private splitPage(imageX: number) {
     this.logger.debug('Splitting page at X: ' + imageX);
     const prevCursor = this.canvasCursor;
     this.canvasCursor = 'wait';
     try {
-      this.im3wsService.imageService.splitPage(this.image.id, imageX).subscribe(next => {
+      this.imageService.splitPage$(this.image.id, imageX).subscribe(next => {
         this.image.pages = next;
         this.drawImagePages();
         this.canvasCursor = prevCursor;
@@ -146,7 +142,7 @@ export class DocumentAnalysisViewComponent implements OnInit, AfterViewInit {
     const prevCursor = this.canvasCursor;
     this.canvasCursor = 'wait';
     try {
-      this.im3wsService.imageService.splitRegion(this.image.id, imageX, imageY).subscribe(next => {
+      this.imageService.splitRegion$(this.image.id, imageX, imageY).subscribe(next => {
         this.image.pages = next;
         this.drawImagePages();
         this.canvasCursor = prevCursor;
@@ -158,8 +154,8 @@ export class DocumentAnalysisViewComponent implements OnInit, AfterViewInit {
     }
   }
 
-  clearDocumentAnalysis() {
-    this.im3wsService.imageService.clearDocumentAnalysis(this.image.id).subscribe(next => {
+  public clearDocumentAnalysis() {
+    this.imageService.clearDocumentAnalysis$(this.image.id).subscribe(next => {
       this.image.pages = next;
       this.drawImagePages();
       this.clearInteractiveLines();
@@ -260,12 +256,12 @@ export class DocumentAnalysisViewComponent implements OnInit, AfterViewInit {
     if ($event.shape instanceof Rectangle) {
       // TODO Si da error la actualización que se repinte
       if ($event.modelObjectType === 'Region') {
-        this.im3wsService.imageService.updateRegionBoundingBox($event.modelObjectID,
+        this.imageService.updateRegionBoundingBox$($event.modelObjectID,
           $event.shape.originX / this.scale, $event.shape.originY / this.scale,
           ($event.shape.originX + $event.shape.width)  / this.scale,
           ($event.shape.originX + $event.shape.height) / this.scale);
       } else if ($event.modelObjectType === 'Page') {
-        this.im3wsService.imageService.updatePageBoundingBox($event.modelObjectID,
+        this.imageService.updatePageBoundingBox$($event.modelObjectID,
           $event.shape.originX / this.scale, $event.shape.originY / this.scale,
           ($event.shape.originX + $event.shape.width)  / this.scale,
           ($event.shape.originX + $event.shape.height) / this.scale);
@@ -309,7 +305,7 @@ export class DocumentAnalysisViewComponent implements OnInit, AfterViewInit {
     if (this.selectedRegion != null) {
       const region = this.findRegionID(this.selectedRegion.modelObjectID);
       if (region) {
-        this.im3wsService.imageService.updateRegionType(region.id, regionType).subscribe(next => {
+        this.imageService.updateRegionType$(region.id, regionType).subscribe(next => {
           if (this.selectedRegion instanceof RectangleComponent) {
             region.regionType = regionType;
             this.selectedRegion.label = regionType.name;

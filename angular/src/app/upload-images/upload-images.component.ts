@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
 import {ActivatedRoute} from '@angular/router';
 import {Project} from '../model/project';
-import {Im3wsService} from '../services/im3ws.service';
+import {RestClientService} from '../services/rest-client.service';
 import {NGXLogger} from 'ngx-logger';
 import {ConfigurationService} from '../configuration.service';
+import {ProjectService} from "../services/project.service";
 
 // const URL = 'http://localhost:8080/muret/upload/projectImage';
   @Component({
@@ -18,7 +19,7 @@ export class UploadImagesComponent implements OnInit {
   public hasBaseDropZoneOver = true;
   public hasAnotherDropZoneOver = false;
 
-  constructor(private im3wsService: Im3wsService, private route: ActivatedRoute, private logger: NGXLogger,
+  constructor(private projectService: ProjectService, private route: ActivatedRoute, private logger: NGXLogger,
               private configurationService: ConfigurationService) {
   }
 
@@ -29,7 +30,7 @@ export class UploadImagesComponent implements OnInit {
 
     const routeParams = this.route.snapshot.params;
 
-    this.im3wsService.projectService.getProject$(routeParams.id)
+    this.projectService.getProject$(routeParams.id)
       .subscribe(serviceProject => this.project = serviceProject).add(teardown => {
       this.logger.debug('UploadImagesComponent' + this.project.name + ' with #' + this.project.images.length + ' images');
     });

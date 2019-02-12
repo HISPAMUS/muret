@@ -3,7 +3,7 @@ import {ImageToolBarService} from './image-tool-bar.service';
 import {NgbPanelChangeEvent} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router';
 import {NGXLogger} from 'ngx-logger';
-import {SessionDataService} from '../session-data.service';
+import {SessionDataService} from '../services/session-data.service';
 
 @Component({
   selector: 'app-image-tool-bar',

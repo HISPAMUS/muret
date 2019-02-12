@@ -4,6 +4,7 @@ import {environment} from '../../environments/environment';
 import {Observable} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {NGXLogger} from 'ngx-logger';
+import {SessionDataService} from "./session-data.service";
 
 @Injectable({
   providedIn: 'root'
@@ -11,32 +12,30 @@ import {NGXLogger} from 'ngx-logger';
 export class AuthService {
   private SESSION_USER_STORAGE = 'token';
 
-  private user: User;
   private urlLogin: string;
   private urlAuthenticatedUser: string;
   private urlUser: string;
 
   constructor(private http: HttpClient,
-              private logger: NGXLogger) {
+              private logger: NGXLogger,
+              private sessionDataService: SessionDataService) {
     this.urlLogin = environment.apiEndpoint + '/auth/login';  // URL to web api
     this.urlAuthenticatedUser = environment.apiEndpoint + '/auth/user';
     this.urlUser = environment.apiEndpoint + '/user';
   }
 
   logout(): void {
-    // return this.im3wsService.logout();
-    //  this.isLoggedIn = false;
-    this.user = null;
+    this.sessionDataService.user = null;
     sessionStorage.removeItem(this.SESSION_USER_STORAGE);
   }
 
   public authenticated(): boolean {
     // return this.isLoggedIn;
-    return this.user != null;
+    return this.sessionDataService.user != null;
   }
 
   public getUser(): User {
-    return this.user;
+    return this.sessionDataService.user;
   }
 
 
@@ -59,6 +58,12 @@ export class AuthService {
   }
 
   public getHttpAuthOptions() {
+    const options = {headers: this.getHeaders()};
+    return options;
+  }
+
+
+  getHeaders(): HttpHeaders {
     const token = sessionStorage.getItem(this.SESSION_USER_STORAGE);
     if (!token) {
       throw new Error('User is not authorized yet');
@@ -67,20 +72,10 @@ export class AuthService {
     const headers: HttpHeaders = new HttpHeaders({
       'Authorization': 'Bearer ' + token
     });
-    const options = {headers: headers};
-    return options;
 
-
-    /*const headers_object = new HttpHeaders();
-    headers_object.append('Content-Type', 'application/json');
-    headers_object.append('Authorization', 'Basic ' + btoa('username:password'));
-    headers_object.append('Access-Control-Allow-Methods', 'GET, POST, DELETE, PUT');
-
-    const httpOptions = {
-      headers: headers_object
-    };
-    return httpOptions;*/
+    return headers;
   }
+
 
   checkAuthorized() {
     this.http.post<Observable<Object>>(this.urlAuthenticatedUser, {}, this.getHttpAuthOptions()).
@@ -112,17 +107,14 @@ export class AuthService {
     }
   });*/
 
-
-
-
   setUser(u: User) {
-    this.user = Object.assign(new User(), u);
+    this.sessionDataService.user = Object.assign(new User(), u);
 
     sessionStorage.setItem(
       this.SESSION_USER_STORAGE,
-      btoa(this.user.username)
+      btoa(this.sessionDataService.user.username)
     );
-    this.logger.debug('ID: ' + this.user.id);
+    this.logger.debug('ID: ' + this.sessionDataService.user.id);
   }
 
 }

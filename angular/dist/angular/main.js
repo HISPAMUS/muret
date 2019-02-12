@@ -244,21 +244,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var ng2_file_upload__WEBPACK_IMPORTED_MODULE_18___default = /*#__PURE__*/__webpack_require__.n(ng2_file_upload__WEBPACK_IMPORTED_MODULE_18__);
 /* harmony import */ var _image_thumbnail_image_thumbnail_component__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./image-thumbnail/image-thumbnail.component */ "./src/app/image-thumbnail/image-thumbnail.component.ts");
 /* harmony import */ var _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @ng-bootstrap/ng-bootstrap */ "./node_modules/@ng-bootstrap/ng-bootstrap/fesm5/ng-bootstrap.js");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var _services_im3ws_service__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./services/im3ws.service */ "./src/app/services/im3ws.service.ts");
-/* harmony import */ var _login_login_component__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./login/login.component */ "./src/app/login/login.component.ts");
-/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
-/* harmony import */ var _global_error_handler_service__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./global-error-handler.service */ "./src/app/global-error-handler.service.ts");
-/* harmony import */ var angular_resize_event__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! angular-resize-event */ "./node_modules/angular-resize-event/fesm5/angular-resize-event.js");
-/* harmony import */ var _image_tool_bar_image_tool_bar_component__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./image-tool-bar/image-tool-bar.component */ "./src/app/image-tool-bar/image-tool-bar.component.ts");
-/* harmony import */ var _symbols_symbols_component__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./symbols/symbols.component */ "./src/app/symbols/symbols.component.ts");
-/* harmony import */ var _svgcanvas_svgdrawing_tool_module__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./svgcanvas/svgdrawing-tool.module */ "./src/app/svgcanvas/svgdrawing-tool.module.ts");
-/* harmony import */ var _document_analysis_view_document_analysis_view_component__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./document-analysis-view/document-analysis-view.component */ "./src/app/document-analysis-view/document-analysis-view.component.ts");
-/* harmony import */ var _preferences_preferences_component__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./preferences/preferences.component */ "./src/app/preferences/preferences.component.ts");
-/* harmony import */ var _dev_dev_component__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./dev/dev.component */ "./src/app/dev/dev.component.ts");
-/* harmony import */ var _state_state_component__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./state/state.component */ "./src/app/state/state.component.ts");
-/* harmony import */ var _inline_edit_inline_edit_component__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./inline-edit/inline-edit.component */ "./src/app/inline-edit/inline-edit.component.ts");
-/* harmony import */ var _training_sets_training_sets_component__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./training-sets/training-sets.component */ "./src/app/training-sets/training-sets.component.ts");
+/* harmony import */ var ngx_lightbox__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ngx-lightbox */ "./node_modules/ngx-lightbox/index.js");
+/* harmony import */ var ngx_lightbox__WEBPACK_IMPORTED_MODULE_21___default = /*#__PURE__*/__webpack_require__.n(ngx_lightbox__WEBPACK_IMPORTED_MODULE_21__);
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _services_rest_client_service__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./services/rest-client.service */ "./src/app/services/rest-client.service.ts");
+/* harmony import */ var _login_login_component__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./login/login.component */ "./src/app/login/login.component.ts");
+/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
+/* harmony import */ var _global_error_handler_service__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./global-error-handler.service */ "./src/app/global-error-handler.service.ts");
+/* harmony import */ var angular_resize_event__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! angular-resize-event */ "./node_modules/angular-resize-event/fesm5/angular-resize-event.js");
+/* harmony import */ var _image_tool_bar_image_tool_bar_component__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./image-tool-bar/image-tool-bar.component */ "./src/app/image-tool-bar/image-tool-bar.component.ts");
+/* harmony import */ var _symbols_symbols_component__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./symbols/symbols.component */ "./src/app/symbols/symbols.component.ts");
+/* harmony import */ var _svgcanvas_svgdrawing_tool_module__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./svgcanvas/svgdrawing-tool.module */ "./src/app/svgcanvas/svgdrawing-tool.module.ts");
+/* harmony import */ var _document_analysis_view_document_analysis_view_component__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./document-analysis-view/document-analysis-view.component */ "./src/app/document-analysis-view/document-analysis-view.component.ts");
+/* harmony import */ var _preferences_preferences_component__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./preferences/preferences.component */ "./src/app/preferences/preferences.component.ts");
+/* harmony import */ var _dev_dev_component__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./dev/dev.component */ "./src/app/dev/dev.component.ts");
+/* harmony import */ var _state_state_component__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./state/state.component */ "./src/app/state/state.component.ts");
+/* harmony import */ var _inline_edit_inline_edit_component__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./inline-edit/inline-edit.component */ "./src/app/inline-edit/inline-edit.component.ts");
+/* harmony import */ var _training_sets_training_sets_component__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./training-sets/training-sets.component */ "./src/app/training-sets/training-sets.component.ts");
+
 
 
 
@@ -311,15 +314,15 @@ var AppModule = /** @class */ (function () {
                 _new_project_form_new_project_form_component__WEBPACK_IMPORTED_MODULE_15__["NewProjectFormComponent"],
                 _upload_images_upload_images_component__WEBPACK_IMPORTED_MODULE_17__["UploadImagesComponent"],
                 _image_thumbnail_image_thumbnail_component__WEBPACK_IMPORTED_MODULE_19__["ImageThumbnailComponent"],
-                _login_login_component__WEBPACK_IMPORTED_MODULE_23__["LoginComponent"],
-                _image_tool_bar_image_tool_bar_component__WEBPACK_IMPORTED_MODULE_27__["ImageToolBarComponent"],
-                _symbols_symbols_component__WEBPACK_IMPORTED_MODULE_28__["SymbolsComponent"],
-                _document_analysis_view_document_analysis_view_component__WEBPACK_IMPORTED_MODULE_30__["DocumentAnalysisViewComponent"],
-                _preferences_preferences_component__WEBPACK_IMPORTED_MODULE_31__["PreferencesComponent"],
-                _dev_dev_component__WEBPACK_IMPORTED_MODULE_32__["DevComponent"],
-                _state_state_component__WEBPACK_IMPORTED_MODULE_33__["StateComponent"],
-                _inline_edit_inline_edit_component__WEBPACK_IMPORTED_MODULE_34__["InlineEditComponent"],
-                _training_sets_training_sets_component__WEBPACK_IMPORTED_MODULE_35__["TrainingSetsComponent"]
+                _login_login_component__WEBPACK_IMPORTED_MODULE_24__["LoginComponent"],
+                _image_tool_bar_image_tool_bar_component__WEBPACK_IMPORTED_MODULE_28__["ImageToolBarComponent"],
+                _symbols_symbols_component__WEBPACK_IMPORTED_MODULE_29__["SymbolsComponent"],
+                _document_analysis_view_document_analysis_view_component__WEBPACK_IMPORTED_MODULE_31__["DocumentAnalysisViewComponent"],
+                _preferences_preferences_component__WEBPACK_IMPORTED_MODULE_32__["PreferencesComponent"],
+                _dev_dev_component__WEBPACK_IMPORTED_MODULE_33__["DevComponent"],
+                _state_state_component__WEBPACK_IMPORTED_MODULE_34__["StateComponent"],
+                _inline_edit_inline_edit_component__WEBPACK_IMPORTED_MODULE_35__["InlineEditComponent"],
+                _training_sets_training_sets_component__WEBPACK_IMPORTED_MODULE_36__["TrainingSetsComponent"]
             ],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
@@ -332,15 +335,16 @@ var AppModule = /** @class */ (function () {
                 ngx_img__WEBPACK_IMPORTED_MODULE_16__["NgxImgModule"].forRoot(),
                 ng2_dragula__WEBPACK_IMPORTED_MODULE_13__["DragulaModule"].forRoot(),
                 _angular_forms__WEBPACK_IMPORTED_MODULE_8__["FormsModule"],
-                _angular_router__WEBPACK_IMPORTED_MODULE_21__["RouterModule"],
+                _angular_router__WEBPACK_IMPORTED_MODULE_22__["RouterModule"],
+                ngx_lightbox__WEBPACK_IMPORTED_MODULE_21__["LightboxModule"],
                 _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_20__["NgbModule"],
-                angular_resize_event__WEBPACK_IMPORTED_MODULE_26__["AngularResizedEventModule"],
-                _svgcanvas_svgdrawing_tool_module__WEBPACK_IMPORTED_MODULE_29__["SVGDrawingToolModule"],
+                angular_resize_event__WEBPACK_IMPORTED_MODULE_27__["AngularResizedEventModule"],
+                _svgcanvas_svgdrawing_tool_module__WEBPACK_IMPORTED_MODULE_30__["SVGDrawingToolModule"],
                 // LoggerModule.forRoot({serverLoggingUrl: '/api/logs', level: NgxLoggerLevel.DEBUG, serverLogLevel: NgxLoggerLevel.ERROR})
-                ngx_logger__WEBPACK_IMPORTED_MODULE_24__["LoggerModule"].forRoot({ level: ngx_logger__WEBPACK_IMPORTED_MODULE_24__["NgxLoggerLevel"].DEBUG, serverLogLevel: ngx_logger__WEBPACK_IMPORTED_MODULE_24__["NgxLoggerLevel"].ERROR })
+                ngx_logger__WEBPACK_IMPORTED_MODULE_25__["LoggerModule"].forRoot({ level: ngx_logger__WEBPACK_IMPORTED_MODULE_25__["NgxLoggerLevel"].DEBUG, serverLogLevel: ngx_logger__WEBPACK_IMPORTED_MODULE_25__["NgxLoggerLevel"].ERROR })
             ],
-            providers: [_services_im3ws_service__WEBPACK_IMPORTED_MODULE_22__["Im3wsService"], ngx_logger__WEBPACK_IMPORTED_MODULE_24__["NGXLogger"], _global_error_handler_service__WEBPACK_IMPORTED_MODULE_25__["GlobalErrorHandlerService"],
-                { provide: _angular_core__WEBPACK_IMPORTED_MODULE_2__["ErrorHandler"], useClass: _global_error_handler_service__WEBPACK_IMPORTED_MODULE_25__["GlobalErrorHandlerService"] },
+            providers: [_services_rest_client_service__WEBPACK_IMPORTED_MODULE_23__["RestClientService"], ngx_logger__WEBPACK_IMPORTED_MODULE_25__["NGXLogger"], _global_error_handler_service__WEBPACK_IMPORTED_MODULE_26__["GlobalErrorHandlerService"],
+                { provide: _angular_core__WEBPACK_IMPORTED_MODULE_2__["ErrorHandler"], useClass: _global_error_handler_service__WEBPACK_IMPORTED_MODULE_26__["GlobalErrorHandlerService"] },
             ],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"]]
         })
@@ -365,9 +369,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var _services_im3ws_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./services/im3ws.service */ "./src/app/services/im3ws.service.ts");
-/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
-/* harmony import */ var _session_data_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./session-data.service */ "./src/app/session-data.service.ts");
+/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
+/* harmony import */ var _services_session_data_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./services/session-data.service */ "./src/app/services/session-data.service.ts");
+/* harmony import */ var _services_auth_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./services/auth.service */ "./src/app/services/auth.service.ts");
 
 
 
@@ -375,8 +379,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var AuthGuard = /** @class */ (function () {
-    function AuthGuard(im3WSService, sessionDataService, router, logger) {
-        this.im3WSService = im3WSService;
+    function AuthGuard(authService, sessionDataService, router, logger) {
+        this.authService = authService;
         this.sessionDataService = sessionDataService;
         this.router = router;
         this.logger = logger;
@@ -395,7 +399,7 @@ var AuthGuard = /** @class */ (function () {
         return this.checkLogin(url);
     };
     AuthGuard.prototype.checkLogin = function (url) {
-        if (this.im3WSService.authService.authenticated()) {
+        if (this.authService.authenticated()) {
             this.logger.debug('Can activate ' + url);
             return true;
         }
@@ -430,8 +434,8 @@ var AuthGuard = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root',
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_im3ws_service__WEBPACK_IMPORTED_MODULE_3__["Im3wsService"], _session_data_service__WEBPACK_IMPORTED_MODULE_5__["SessionDataService"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
-            ngx_logger__WEBPACK_IMPORTED_MODULE_4__["NGXLogger"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_auth_service__WEBPACK_IMPORTED_MODULE_5__["AuthService"], _services_session_data_service__WEBPACK_IMPORTED_MODULE_4__["SessionDataService"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
+            ngx_logger__WEBPACK_IMPORTED_MODULE_3__["NGXLogger"]])
     ], AuthGuard);
     return AuthGuard;
 }());
@@ -550,9 +554,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var _services_im3ws_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../services/im3ws.service */ "./src/app/services/im3ws.service.ts");
-/* harmony import */ var _session_data_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../session-data.service */ "./src/app/session-data.service.ts");
-/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
+/* harmony import */ var _services_session_data_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../services/session-data.service */ "./src/app/services/session-data.service.ts");
+/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
+/* harmony import */ var _services_auth_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../services/auth.service */ "./src/app/services/auth.service.ts");
+/* harmony import */ var _services_image_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../services/image.service */ "./src/app/services/image.service.ts");
+
 
 
 
@@ -560,10 +566,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var DevComponent = /** @class */ (function () {
-    function DevComponent(im3wsService, router, sessionDataService, logger) {
+    function DevComponent(authService, router, imageService, sessionDataService, logger) {
         var _this = this;
-        this.im3wsService = im3wsService;
+        this.authService = authService;
         this.router = router;
+        this.imageService = imageService;
         this.sessionDataService = sessionDataService;
         this.logger = logger;
         // projectID = 37;
@@ -573,15 +580,13 @@ var DevComponent = /** @class */ (function () {
         this.imageID = 2103;
         this.path = 'b-59-850';
         this.logger.warn('¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ DEV!!!!!!!!!!!!!!!!!!!!!!');
-        this.im3wsService.authService.login('davidrizo', 'nose').subscribe(function (next) {
+        this.authService.login('davidrizo', 'nose').subscribe(function (next) {
             if (next) {
-                _this.im3wsService.authService.setUser(next);
+                _this.authService.setUser(next);
                 _this.router.navigate(['/project/' + _this.projectID])
                     .then(function (value) {
-                    _this.im3wsService.imageService.getImage$(_this.imageID).
+                    _this.imageService.getImage$(_this.imageID).
                         subscribe(function (serviceImage) {
-                        _this.sessionDataService.currentImageMastersURL
-                            = 'http://localhost:8888/muret/' + _this.path + '/masters/';
                         _this.sessionDataService.currentImage = serviceImage;
                         _this.router.navigate(['/image']);
                     });
@@ -602,9 +607,10 @@ var DevComponent = /** @class */ (function () {
         })
         // Used to speed up development
         ,
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_im3ws_service__WEBPACK_IMPORTED_MODULE_3__["Im3wsService"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
-            _session_data_service__WEBPACK_IMPORTED_MODULE_4__["SessionDataService"],
-            ngx_logger__WEBPACK_IMPORTED_MODULE_5__["NGXLogger"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_auth_service__WEBPACK_IMPORTED_MODULE_5__["AuthService"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
+            _services_image_service__WEBPACK_IMPORTED_MODULE_6__["ImageService"],
+            _services_session_data_service__WEBPACK_IMPORTED_MODULE_3__["SessionDataService"],
+            ngx_logger__WEBPACK_IMPORTED_MODULE_4__["NGXLogger"]])
     ], DevComponent);
     return DevComponent;
 }());
@@ -648,13 +654,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DocumentAnalysisViewComponent", function() { return DocumentAnalysisViewComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _services_im3ws_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/im3ws.service */ "./src/app/services/im3ws.service.ts");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
-/* harmony import */ var _session_data_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../session-data.service */ "./src/app/session-data.service.ts");
-/* harmony import */ var _svgcanvas_components_svgcanvas_svgcanvas_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../svgcanvas/components/svgcanvas/svgcanvas.component */ "./src/app/svgcanvas/components/svgcanvas/svgcanvas.component.ts");
-/* harmony import */ var _svgcanvas_model_shape__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../svgcanvas/model/shape */ "./src/app/svgcanvas/model/shape.ts");
-/* harmony import */ var _svgcanvas_components_rectangle_rectangle_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../svgcanvas/components/rectangle/rectangle.component */ "./src/app/svgcanvas/components/rectangle/rectangle.component.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
+/* harmony import */ var _services_session_data_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../services/session-data.service */ "./src/app/services/session-data.service.ts");
+/* harmony import */ var _svgcanvas_components_svgcanvas_svgcanvas_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../svgcanvas/components/svgcanvas/svgcanvas.component */ "./src/app/svgcanvas/components/svgcanvas/svgcanvas.component.ts");
+/* harmony import */ var _svgcanvas_model_shape__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../svgcanvas/model/shape */ "./src/app/svgcanvas/model/shape.ts");
+/* harmony import */ var _svgcanvas_components_rectangle_rectangle_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../svgcanvas/components/rectangle/rectangle.component */ "./src/app/svgcanvas/components/rectangle/rectangle.component.ts");
+/* harmony import */ var _services_region_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../services/region.service */ "./src/app/services/region.service.ts");
+/* harmony import */ var _services_image_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../services/image.service */ "./src/app/services/image.service.ts");
+
 
 
 
@@ -672,9 +680,10 @@ var DocumentAnalysisMode;
     DocumentAnalysisMode[DocumentAnalysisMode["eSplittingRegions"] = 3] = "eSplittingRegions";
 })(DocumentAnalysisMode || (DocumentAnalysisMode = {}));
 var DocumentAnalysisViewComponent = /** @class */ (function () {
-    function DocumentAnalysisViewComponent(im3wsService, sessionDataService, route, logger) {
+    function DocumentAnalysisViewComponent(regionService, imageService, sessionDataService, route, logger) {
         var _this = this;
-        this.im3wsService = im3wsService;
+        this.regionService = regionService;
+        this.imageService = imageService;
         this.sessionDataService = sessionDataService;
         this.route = route;
         this.logger = logger;
@@ -688,10 +697,9 @@ var DocumentAnalysisViewComponent = /** @class */ (function () {
         this.selectedRegion = null;
         this.project = sessionDataService.currentProject;
         this.image = sessionDataService.currentImage;
-        this.imageURL = sessionDataService.currentImageMastersURL + '/' + this.image.filename;
         this.logger.debug('Working with image ' + this.imageURL);
         if (!sessionDataService.regionTypes) {
-            im3wsService.regionService.getRegionTypes().subscribe(function (value) {
+            this.regionService.getRegionTypes().subscribe(function (value) {
                 sessionDataService.regionTypes = value;
                 _this.logger.debug('Fetched #' + sessionDataService.regionTypes.length + ' region types');
                 _this.regionTypes = value;
@@ -707,12 +715,6 @@ var DocumentAnalysisViewComponent = /** @class */ (function () {
     DocumentAnalysisViewComponent.prototype.ngAfterViewInit = function () {
         this.logger.debug('ngAfterViewInit');
     };
-    /* It draws the page and region bounding boxes */
-    /* private setImage(serviceImage: Image) {
-      this.image = serviceImage;
-      this.logger.debug('Setting image ' + serviceImage + ' ' + this.image.filename);
-      this.imageURL = this.projectURLs + '/' + this.image.filename;
-    } */
     DocumentAnalysisViewComponent.prototype.onImageLoad = function () {
         this.logger.debug('OnImageLoad');
         this.scale = this.domImage.nativeElement.width / this.domImage.nativeElement.naturalWidth;
@@ -738,13 +740,14 @@ var DocumentAnalysisViewComponent = /** @class */ (function () {
     DocumentAnalysisViewComponent.prototype.drawBoundingBoxes = function () {
         this.drawImagePages();
     };
+    //TODO Centralizar imageService / regionService en lo mismo
     DocumentAnalysisViewComponent.prototype.splitPage = function (imageX) {
         var _this = this;
         this.logger.debug('Splitting page at X: ' + imageX);
         var prevCursor = this.canvasCursor;
         this.canvasCursor = 'wait';
         try {
-            this.im3wsService.imageService.splitPage(this.image.id, imageX).subscribe(function (next) {
+            this.imageService.splitPage$(this.image.id, imageX).subscribe(function (next) {
                 _this.image.pages = next;
                 _this.drawImagePages();
                 _this.canvasCursor = prevCursor;
@@ -762,7 +765,7 @@ var DocumentAnalysisViewComponent = /** @class */ (function () {
         var prevCursor = this.canvasCursor;
         this.canvasCursor = 'wait';
         try {
-            this.im3wsService.imageService.splitRegion(this.image.id, imageX, imageY).subscribe(function (next) {
+            this.imageService.splitRegion$(this.image.id, imageX, imageY).subscribe(function (next) {
                 _this.image.pages = next;
                 _this.drawImagePages();
                 _this.canvasCursor = prevCursor;
@@ -776,7 +779,7 @@ var DocumentAnalysisViewComponent = /** @class */ (function () {
     };
     DocumentAnalysisViewComponent.prototype.clearDocumentAnalysis = function () {
         var _this = this;
-        this.im3wsService.imageService.clearDocumentAnalysis(this.image.id).subscribe(function (next) {
+        this.imageService.clearDocumentAnalysis$(this.image.id).subscribe(function (next) {
             _this.image.pages = next;
             _this.drawImagePages();
             _this.clearInteractiveLines();
@@ -786,13 +789,13 @@ var DocumentAnalysisViewComponent = /** @class */ (function () {
         this.interactionLine = this.svgCanvas.drawLine(0, 0, 0, this.domImageWidth);
         this.interactionLine.shape.shapeProperties.strokeColor = 'red';
         this.interactionLine.shape.shapeProperties.strokeWidth = 2;
-        this.svgCanvas.changeState(_svgcanvas_components_svgcanvas_svgcanvas_component__WEBPACK_IMPORTED_MODULE_6__["SVGCanvasState"].eIdle);
+        this.svgCanvas.changeState(_svgcanvas_components_svgcanvas_svgcanvas_component__WEBPACK_IMPORTED_MODULE_5__["SVGCanvasState"].eIdle);
     };
     DocumentAnalysisViewComponent.prototype.drawInteractiveHorizontalLine = function () {
         this.interactionLine = this.svgCanvas.drawLine(0, 0, this.domImageWidth, 0);
         this.interactionLine.shape.shapeProperties.strokeColor = 'red';
         this.interactionLine.shape.shapeProperties.strokeWidth = 2;
-        this.svgCanvas.changeState(_svgcanvas_components_svgcanvas_svgcanvas_component__WEBPACK_IMPORTED_MODULE_6__["SVGCanvasState"].eIdle);
+        this.svgCanvas.changeState(_svgcanvas_components_svgcanvas_svgcanvas_component__WEBPACK_IMPORTED_MODULE_5__["SVGCanvasState"].eIdle);
     };
     DocumentAnalysisViewComponent.prototype.drawImagePages = function () {
         var _this = this;
@@ -867,13 +870,13 @@ var DocumentAnalysisViewComponent = /** @class */ (function () {
     DocumentAnalysisViewComponent.prototype.onShapeChanged = function ($event) {
         this.logger.debug('Image: detected a shape change on a ' + $event.modelObjectType
             + ' with ID=' + $event.modelObjectID);
-        if ($event.shape instanceof _svgcanvas_model_shape__WEBPACK_IMPORTED_MODULE_7__["Rectangle"]) {
+        if ($event.shape instanceof _svgcanvas_model_shape__WEBPACK_IMPORTED_MODULE_6__["Rectangle"]) {
             // TODO Si da error la actualización que se repinte
             if ($event.modelObjectType === 'Region') {
-                this.im3wsService.imageService.updateRegionBoundingBox($event.modelObjectID, $event.shape.originX / this.scale, $event.shape.originY / this.scale, ($event.shape.originX + $event.shape.width) / this.scale, ($event.shape.originX + $event.shape.height) / this.scale);
+                this.imageService.updateRegionBoundingBox$($event.modelObjectID, $event.shape.originX / this.scale, $event.shape.originY / this.scale, ($event.shape.originX + $event.shape.width) / this.scale, ($event.shape.originX + $event.shape.height) / this.scale);
             }
             else if ($event.modelObjectType === 'Page') {
-                this.im3wsService.imageService.updatePageBoundingBox($event.modelObjectID, $event.shape.originX / this.scale, $event.shape.originY / this.scale, ($event.shape.originX + $event.shape.width) / this.scale, ($event.shape.originX + $event.shape.height) / this.scale);
+                this.imageService.updatePageBoundingBox$($event.modelObjectID, $event.shape.originX / this.scale, $event.shape.originY / this.scale, ($event.shape.originX + $event.shape.width) / this.scale, ($event.shape.originX + $event.shape.height) / this.scale);
             }
         }
         else {
@@ -893,12 +896,12 @@ var DocumentAnalysisViewComponent = /** @class */ (function () {
     DocumentAnalysisViewComponent.prototype.activateEditMode = function () {
         this.documentAnalysisMode = DocumentAnalysisMode.eEditing;
         this.canvasCursor = 'move';
-        this.svgCanvas.changeState(_svgcanvas_components_svgcanvas_svgcanvas_component__WEBPACK_IMPORTED_MODULE_6__["SVGCanvasState"].eEditing);
+        this.svgCanvas.changeState(_svgcanvas_components_svgcanvas_svgcanvas_component__WEBPACK_IMPORTED_MODULE_5__["SVGCanvasState"].eEditing);
     };
     DocumentAnalysisViewComponent.prototype.activateSelectMode = function () {
         this.documentAnalysisMode = DocumentAnalysisMode.eSelecting;
         this.canvasCursor = 'default';
-        this.svgCanvas.changeState(_svgcanvas_components_svgcanvas_svgcanvas_component__WEBPACK_IMPORTED_MODULE_6__["SVGCanvasState"].eSelecting);
+        this.svgCanvas.changeState(_svgcanvas_components_svgcanvas_svgcanvas_component__WEBPACK_IMPORTED_MODULE_5__["SVGCanvasState"].eSelecting);
     };
     DocumentAnalysisViewComponent.prototype.getImageNaturalWidth = function () {
         return this.domImage.nativeElement.naturalWidth;
@@ -908,8 +911,8 @@ var DocumentAnalysisViewComponent = /** @class */ (function () {
         if (this.selectedRegion != null) {
             var region_1 = this.findRegionID(this.selectedRegion.modelObjectID);
             if (region_1) {
-                this.im3wsService.imageService.updateRegionType(region_1.id, regionType).subscribe(function (next) {
-                    if (_this.selectedRegion instanceof _svgcanvas_components_rectangle_rectangle_component__WEBPACK_IMPORTED_MODULE_8__["RectangleComponent"]) {
+                this.imageService.updateRegionType$(region_1.id, regionType).subscribe(function (next) {
+                    if (_this.selectedRegion instanceof _svgcanvas_components_rectangle_rectangle_component__WEBPACK_IMPORTED_MODULE_7__["RectangleComponent"]) {
                         region_1.regionType = regionType;
                         _this.selectedRegion.label = regionType.name;
                     }
@@ -926,7 +929,7 @@ var DocumentAnalysisViewComponent = /** @class */ (function () {
     ], DocumentAnalysisViewComponent.prototype, "domImage", void 0);
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])('svgCanvas'),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _svgcanvas_components_svgcanvas_svgcanvas_component__WEBPACK_IMPORTED_MODULE_6__["SVGCanvasComponent"])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _svgcanvas_components_svgcanvas_svgcanvas_component__WEBPACK_IMPORTED_MODULE_5__["SVGCanvasComponent"])
     ], DocumentAnalysisViewComponent.prototype, "svgCanvas", void 0);
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
@@ -946,10 +949,11 @@ var DocumentAnalysisViewComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./document-analysis-view.component.html */ "./src/app/document-analysis-view/document-analysis-view.component.html"),
             styles: [__webpack_require__(/*! ./document-analysis-view.component.css */ "./src/app/document-analysis-view/document-analysis-view.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_im3ws_service__WEBPACK_IMPORTED_MODULE_2__["Im3wsService"],
-            _session_data_service__WEBPACK_IMPORTED_MODULE_5__["SessionDataService"],
-            _angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"],
-            ngx_logger__WEBPACK_IMPORTED_MODULE_4__["NGXLogger"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_region_service__WEBPACK_IMPORTED_MODULE_8__["RegionService"],
+            _services_image_service__WEBPACK_IMPORTED_MODULE_9__["ImageService"],
+            _services_session_data_service__WEBPACK_IMPORTED_MODULE_4__["SessionDataService"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"],
+            ngx_logger__WEBPACK_IMPORTED_MODULE_3__["NGXLogger"]])
     ], DocumentAnalysisViewComponent);
     return DocumentAnalysisViewComponent;
 }());
@@ -1060,7 +1064,7 @@ module.exports = ".thumbnail {\n  display: inline-block;\n  margin: 5px;\n}\n\n.
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"thumbnail\">\n  <p>\n    <img src=\"{{projectURLs?.thumbnails}}/{{image?.filename}}\" alt=\"Image\">\n  </p>\n  <h5>{{image?.filename}}</h5>\n  <p class=\"links\">\n    <a class=\"previewLink\" href=\"{{projectURLs?.previews}}/{{image?.filename}}\" target=\"_blank\">Preview</a>\n    &nbsp;\n    <a class=\"openLink\" (click)=\"openImage(image)\">Open</a>\n  </p>\n</div>\n"
+module.exports = "<div class=\"thumbnail\">\n  <p>\n    <img #imageThumbnail alt=\"Image\">\n  </p>\n  <h5>{{image?.filename}}</h5>\n  <p class=\"links\">\n    <a class=\"previewLink\" (click)=\"previewImage()\" target=\"_blank\">Preview</a>\n    &nbsp;\n    <a class=\"openLink\" (click)=\"openImage()\">Open</a>\n  </p>\n</div>\n"
 
 /***/ }),
 
@@ -1077,11 +1081,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _model_image__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../model/image */ "./src/app/model/image.ts");
-/* harmony import */ var _model_project_urls__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../model/project-urls */ "./src/app/model/project-urls.ts");
-/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var _session_data_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../session-data.service */ "./src/app/session-data.service.ts");
-/* harmony import */ var _services_im3ws_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../services/im3ws.service */ "./src/app/services/im3ws.service.ts");
+/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _services_session_data_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../services/session-data.service */ "./src/app/services/session-data.service.ts");
+/* harmony import */ var _services_image_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../services/image.service */ "./src/app/services/image.service.ts");
+/* harmony import */ var ngx_lightbox__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ngx-lightbox */ "./node_modules/ngx-lightbox/index.js");
+/* harmony import */ var ngx_lightbox__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(ngx_lightbox__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/platform-browser */ "./node_modules/@angular/platform-browser/fesm5/platform-browser.js");
+
 
 
 
@@ -1091,42 +1098,65 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var ImageThumbnailComponent = /** @class */ (function () {
-    function ImageThumbnailComponent(logger, router, sessionDataService, im3wsService) {
+    function ImageThumbnailComponent(logger, router, sessionDataService, imageService, _lightbox, _lighboxConfig, sanitizer) {
         this.logger = logger;
         this.router = router;
         this.sessionDataService = sessionDataService;
-        this.im3wsService = im3wsService;
+        this.imageService = imageService;
+        this._lightbox = _lightbox;
+        this._lighboxConfig = _lighboxConfig;
+        this.sanitizer = sanitizer;
+        _lighboxConfig.fitImageInViewPort = true;
+        _lighboxConfig.showImageNumberLabel = false;
+        _lighboxConfig.centerVertically = true;
+        _lighboxConfig.resizeDuration = 0;
     }
     ImageThumbnailComponent.prototype.ngOnInit = function () {
-        // this.logger.debug('ImageThumbnails at: ' + this.projectURLs.thumbnails);
-    };
-    ImageThumbnailComponent.prototype.openImage = function (image) {
         var _this = this;
-        this.logger.debug('Opening image ' + image.id + ' in URL ' + this.projectURLs);
+        this.imageService.getThumbnailImage$(this.image.id).subscribe(function (imageBlob) {
+            _this.imageThumbnail.nativeElement.src = window.URL.createObjectURL(imageBlob);
+        });
+    };
+    ImageThumbnailComponent.prototype.openImage = function () {
+        var _this = this;
+        this.logger.debug('Opening image ' + this.image.id);
         // this call retrieves the whole image data (the current image does not contain all lazy relations)
-        this.im3wsService.imageService.getImage$(image.id).
-            subscribe(function (serviceImage) {
-            _this.sessionDataService.currentImageMastersURL = _this.projectURLs.masters;
-            _this.sessionDataService.currentImage = serviceImage;
+        this.imageService.getImage$(this.image.id).subscribe(function (next) {
+            _this.sessionDataService.currentImage = next;
             _this.router.navigate(['/image']);
+        });
+    };
+    ImageThumbnailComponent.prototype.previewImage = function () {
+        var _this = this;
+        this.imageService.getPreviewImage$(this.image.id).subscribe(function (imageBlob) {
+            var albums = []; // used by Lightbox
+            var album = {
+                src: _this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(imageBlob)),
+                caption: _this.image.filename,
+            };
+            albums.push(album);
+            _this._lightbox.open(albums);
         });
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _model_project_urls__WEBPACK_IMPORTED_MODULE_3__["ProjectURLS"])
-    ], ImageThumbnailComponent.prototype, "projectURLs", void 0);
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _model_image__WEBPACK_IMPORTED_MODULE_2__["Image"])
     ], ImageThumbnailComponent.prototype, "image", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])('imageThumbnail'),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ElementRef"])
+    ], ImageThumbnailComponent.prototype, "imageThumbnail", void 0);
     ImageThumbnailComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'app-image-thumbnail',
             template: __webpack_require__(/*! ./image-thumbnail.component.html */ "./src/app/image-thumbnail/image-thumbnail.component.html"),
             styles: [__webpack_require__(/*! ./image-thumbnail.component.css */ "./src/app/image-thumbnail/image-thumbnail.component.css")]
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [ngx_logger__WEBPACK_IMPORTED_MODULE_4__["NGXLogger"], _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"], _session_data_service__WEBPACK_IMPORTED_MODULE_6__["SessionDataService"],
-            _services_im3ws_service__WEBPACK_IMPORTED_MODULE_7__["Im3wsService"]])
+        })
+        // see https://stackoverflow.com/questions/49411283/angular-5-http-get-images-from-back-end
+        ,
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [ngx_logger__WEBPACK_IMPORTED_MODULE_3__["NGXLogger"], _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"], _services_session_data_service__WEBPACK_IMPORTED_MODULE_5__["SessionDataService"],
+            _services_image_service__WEBPACK_IMPORTED_MODULE_6__["ImageService"], ngx_lightbox__WEBPACK_IMPORTED_MODULE_7__["Lightbox"], ngx_lightbox__WEBPACK_IMPORTED_MODULE_7__["LightboxConfig"],
+            _angular_platform_browser__WEBPACK_IMPORTED_MODULE_8__["DomSanitizer"]])
     ], ImageThumbnailComponent);
     return ImageThumbnailComponent;
 }());
@@ -1172,7 +1202,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _image_tool_bar_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./image-tool-bar.service */ "./src/app/image-tool-bar/image-tool-bar.service.ts");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
-/* harmony import */ var _session_data_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../session-data.service */ "./src/app/session-data.service.ts");
+/* harmony import */ var _services_session_data_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../services/session-data.service */ "./src/app/services/session-data.service.ts");
 
 
 
@@ -1237,7 +1267,7 @@ var ImageToolBarComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./image-tool-bar.component.html */ "./src/app/image-tool-bar/image-tool-bar.component.html"),
             styles: [__webpack_require__(/*! ./image-tool-bar.component.css */ "./src/app/image-tool-bar/image-tool-bar.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_session_data_service__WEBPACK_IMPORTED_MODULE_5__["SessionDataService"], _image_tool_bar_service__WEBPACK_IMPORTED_MODULE_2__["ImageToolBarService"], _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"], ngx_logger__WEBPACK_IMPORTED_MODULE_4__["NGXLogger"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_session_data_service__WEBPACK_IMPORTED_MODULE_5__["SessionDataService"], _image_tool_bar_service__WEBPACK_IMPORTED_MODULE_2__["ImageToolBarService"], _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"], ngx_logger__WEBPACK_IMPORTED_MODULE_4__["NGXLogger"]])
     ], ImageToolBarComponent);
     return ImageToolBarComponent;
 }());
@@ -1584,16 +1614,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var _services_im3ws_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../services/im3ws.service */ "./src/app/services/im3ws.service.ts");
-/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
+/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
+/* harmony import */ var _services_auth_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../services/auth.service */ "./src/app/services/auth.service.ts");
 
 
 
 
 
 var LoginComponent = /** @class */ (function () {
-    function LoginComponent(im3WSService, router, logger) {
-        this.im3WSService = im3WSService;
+    function LoginComponent(authService, router, logger) {
+        this.authService = authService;
         this.router = router;
         this.logger = logger;
         this.model = {
@@ -1609,14 +1639,15 @@ var LoginComponent = /** @class */ (function () {
            this.message = 'Logged out';
          } */
     };
+    // TODO Refactorizar
     LoginComponent.prototype.login = function () {
         var _this = this;
         this.logger.debug('Loging in');
         this.message = 'Trying to log in ...';
-        this.im3WSService.authService.login(this.model.username, this.model.password).subscribe(function (next) {
-            _this.im3WSService.authService.setUser(next);
+        this.authService.login(this.model.username, this.model.password).subscribe(function (next) {
+            _this.authService.setUser(next);
             _this.setMessage();
-            if (_this.im3WSService.authService.authenticated()) {
+            if (_this.authService.authenticated()) {
                 var redirect = 'startup';
                 // Redirect the user
                 _this.router.navigate([redirect]);
@@ -1625,11 +1656,11 @@ var LoginComponent = /** @class */ (function () {
     };
     LoginComponent.prototype.logout = function () {
         this.logger.debug('Logging out');
-        this.im3WSService.authService.logout();
+        this.authService.logout();
         this.setMessage();
     };
     LoginComponent.prototype.isLoggedIn = function () {
-        return this.im3WSService.authService.authenticated();
+        return this.authService.authenticated();
     };
     LoginComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -1637,7 +1668,7 @@ var LoginComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./login.component.html */ "./src/app/login/login.component.html"),
             styles: [__webpack_require__(/*! ./login.component.css */ "./src/app/login/login.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_im3ws_service__WEBPACK_IMPORTED_MODULE_3__["Im3wsService"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"], ngx_logger__WEBPACK_IMPORTED_MODULE_4__["NGXLogger"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_auth_service__WEBPACK_IMPORTED_MODULE_4__["AuthService"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"], ngx_logger__WEBPACK_IMPORTED_MODULE_3__["NGXLogger"]])
     ], LoginComponent);
     return LoginComponent;
 }());
@@ -1757,10 +1788,9 @@ var MessagesComponent = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Image", function() { return Image; });
 var Image = /** @class */ (function () {
-    function Image(id, filename, thumbnailFilename, pages, state) {
+    function Image(id, filename, pages, state) {
         this.id = id;
         this.filename = filename;
-        this.thumbnailFilename = thumbnailFilename;
         this.pages = pages;
         this.state = state;
     }
@@ -1794,26 +1824,6 @@ var Point = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/app/model/project-urls.ts":
-/*!***************************************!*\
-  !*** ./src/app/model/project-urls.ts ***!
-  \***************************************/
-/*! exports provided: ProjectURLS */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ProjectURLS", function() { return ProjectURLS; });
-var ProjectURLS = /** @class */ (function () {
-    function ProjectURLS() {
-    }
-    return ProjectURLS;
-}());
-
-
-
-/***/ }),
-
 /***/ "./src/app/model/project.ts":
 /*!**********************************!*\
   !*** ./src/app/model/project.ts ***!
@@ -1839,7 +1849,6 @@ var Project = /** @class */ (function () {
     }*/
     Project.prototype.orderImageArray = function () {
         var _this = this;
-        console.log('Ordering images');
         if (this.images) {
             // first insert input images in a map
             var imagesMap_1 = new Map();
@@ -1956,6 +1965,46 @@ __webpack_require__.r(__webpack_exports__);
 var User = /** @class */ (function () {
     function User() {
     }
+    Object.defineProperty(User.prototype, "id", {
+        get: function () {
+            return this._id;
+        },
+        set: function (value) {
+            this._id = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(User.prototype, "username", {
+        get: function () {
+            return this._username;
+        },
+        set: function (value) {
+            this._username = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(User.prototype, "projectsCreated", {
+        get: function () {
+            return this._projectsCreated;
+        },
+        set: function (value) {
+            this._projectsCreated = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(User.prototype, "permissions", {
+        get: function () {
+            return this._permissions;
+        },
+        set: function (value) {
+            this._permissions = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return User;
 }());
 
@@ -1998,16 +2047,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var _services_im3ws_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../services/im3ws.service */ "./src/app/services/im3ws.service.ts");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
-
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
+/* harmony import */ var _services_project_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../services/project.service */ "./src/app/services/project.service.ts");
 
 
 
 
 
 // import { ImageCropperModule } from 'ngx-image-cropper';
+
 
 var NewProjectFormComponent = /** @class */ (function () {
     function NewProjectFormComponent(fb, projectService, router, logger) {
@@ -2033,7 +2082,7 @@ var NewProjectFormComponent = /** @class */ (function () {
     NewProjectFormComponent.prototype.onSubmit = function () {
         var _this = this;
         this.logger.debug('Submitting new project');
-        this.projectService.projectService.newProject$(this.newProjectForm.controls['name'].value, this.newProjectForm.controls['composer'].value, this.newProjectForm.controls['notationType'].value, this.newProjectForm.controls['manuscriptType'].value, this.newProjectForm.controls['comments'].value, this.imgSrc)
+        this.projectService.newProject$(this.newProjectForm.controls['name'].value, this.newProjectForm.controls['composer'].value, this.newProjectForm.controls['notationType'].value, this.newProjectForm.controls['manuscriptType'].value, this.newProjectForm.controls['comments'].value, this.imgSrc)
             .subscribe(function (serviceNewProject) {
             return _this.router.navigate(['/project/get', { id: serviceNewProject.id }]);
         });
@@ -2045,7 +2094,7 @@ var NewProjectFormComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./new-project-form.component.html */ "./src/app/new-project-form/new-project-form.component.html"),
             styles: [__webpack_require__(/*! ./new-project-form.component.css */ "./src/app/new-project-form/new-project-form.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormBuilder"], _services_im3ws_service__WEBPACK_IMPORTED_MODULE_3__["Im3wsService"], _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"], ngx_logger__WEBPACK_IMPORTED_MODULE_5__["NGXLogger"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormBuilder"], _services_project_service__WEBPACK_IMPORTED_MODULE_5__["ProjectService"], _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"], ngx_logger__WEBPACK_IMPORTED_MODULE_4__["NGXLogger"]])
     ], NewProjectFormComponent);
     return NewProjectFormComponent;
 }());
@@ -2132,14 +2181,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var _services_im3ws_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../services/im3ws.service */ "./src/app/services/im3ws.service.ts");
+/* harmony import */ var _services_classifier_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../services/classifier.service */ "./src/app/services/classifier.service.ts");
 
 
 
 
 var PreferencesComponent = /** @class */ (function () {
-    function PreferencesComponent(im3WSservice) {
-        this.im3WSservice = im3WSservice;
+    function PreferencesComponent(classifierService) {
+        this.classifierService = classifierService;
         this.preferencesGroup = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormGroup"]({
             symbolImageClassifiersSelect: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"]()
         });
@@ -2148,7 +2197,7 @@ var PreferencesComponent = /** @class */ (function () {
     };
     PreferencesComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.im3WSservice.classifierService.getClassifierTypes$().subscribe(function (next) {
+        this.classifierService.getClassifierTypes$().subscribe(function (next) {
             _this.classifierTypes = next;
         });
     };
@@ -2164,7 +2213,7 @@ var PreferencesComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./preferences.component.html */ "./src/app/preferences/preferences.component.html"),
             styles: [__webpack_require__(/*! ./preferences.component.css */ "./src/app/preferences/preferences.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_im3ws_service__WEBPACK_IMPORTED_MODULE_3__["Im3wsService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_classifier_service__WEBPACK_IMPORTED_MODULE_3__["ClassifierService"]])
     ], PreferencesComponent);
     return PreferencesComponent;
 }());
@@ -2191,7 +2240,7 @@ module.exports = "/*----- Dragula ----- */\n/* in-flight clone */\n.gu-mirror {\
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\">\n  <div *ngIf=\"projectIsLoaded()\" class=\"col-7 offset-1\">\n    <h2>{{project?.name}}</h2>\n    <app-inline-edit [(ngModel)]=\"project.composer\" type=\"text\" [label]=\"'Enter value for composer'\" (changed)=\"composerChanged($event)\" [size]=\"128\"> </app-inline-edit>\n    <p>{{projectStatistics?.images}} images, {{projectStatistics?.pages}} pages, {{projectStatistics?.regions}} regions, {{projectStatistics?.agnosticSymbols}} symbols </p>\n\n    <input type=\"radio\" name=\"rbProjectState\" [(ngModel)]=\"projectState\" value=\"none\">\n    None\n    <input type=\"radio\" name=\"rbProjectState\" [(ngModel)]=\"projectState\" value=\"inprogress\">\n    In progress\n    <input type=\"radio\" name=\"rbProjectState\" [(ngModel)]=\"projectState\" value=\"done\">\n    Done\n    <input type=\"radio\" name=\"rbProjectState\" [(ngModel)]=\"projectState\" value=\"doublechecked\">\n    Double checked\n\n    <app-inline-edit [(ngModel)]=\"project.comments\" type=\"text\" [label]=\"'Enter comments'\" (changed)=\"commentsChanged($event)\" [size]=\"128\"> </app-inline-edit>\n  </div>\n\n  <div class=\"col-1\">\n    <a (click)=\"uploadImages()\">\n      Upload images\n    </a>\n  </div>\n  <div class=\"col-3\">\n    <img src=\"assets/images/orderimages.png\" alt=\"Order images\"/>\n  </div>\n</div>\n\n<div class=\"row\">\n  <div class=\"offset-1 col-10\">\n    <div *ngIf=\"project; let project; else loading\" dragula=\"DRAGULA_FACTS\" #domImages>\n      <app-image-thumbnail *ngFor=\"let image of project.images\" [image]=\"image\" [projectURLs]=\"projectURLs\" [attr.data-id]=\"image.id\"></app-image-thumbnail>\n\n      <!--<div *ngFor=\"let image of project.images\" class=\"projectImage\">-->\n        <!--<p><img class=\"img-thumbnail\" src=\"{{projectURLs.thumbnails}}/{{image.filename}}\" alt=\"Image\"></p>\n        <a href=\"{{projectURLs.previews}}/{{image.filename}}\" target=\"_blank\">Preview</a>\n        &nbsp;&nbsp;&nbsp;\n        <a href=\"image/{{image.id}}\">Open</a>\n      </div>-->\n    </div>\n    <ng-template #loading>Loading project...</ng-template>\n  </div>\n</div>\n"
+module.exports = "<div class=\"row\">\n  <div *ngIf=\"projectIsLoaded()\" class=\"col-7 offset-1\">\n    <h2>{{project?.name}}</h2>\n    <app-inline-edit [(ngModel)]=\"project.composer\" type=\"text\" [label]=\"'Enter value for composer'\" (changed)=\"composerChanged($event)\" [size]=\"128\"> </app-inline-edit>\n    <p>{{projectStatistics?.images}} images, {{projectStatistics?.pages}} pages, {{projectStatistics?.regions}} regions, {{projectStatistics?.agnosticSymbols}} symbols </p>\n\n    <input type=\"radio\" name=\"rbProjectState\" [(ngModel)]=\"projectState\" value=\"none\">\n    None\n    <input type=\"radio\" name=\"rbProjectState\" [(ngModel)]=\"projectState\" value=\"inprogress\">\n    In progress\n    <input type=\"radio\" name=\"rbProjectState\" [(ngModel)]=\"projectState\" value=\"done\">\n    Done\n    <input type=\"radio\" name=\"rbProjectState\" [(ngModel)]=\"projectState\" value=\"doublechecked\">\n    Double checked\n\n    <app-inline-edit [(ngModel)]=\"project.comments\" type=\"text\" [label]=\"'Enter comments'\" (changed)=\"commentsChanged($event)\" [size]=\"128\"> </app-inline-edit>\n  </div>\n\n  <div class=\"col-1\">\n    <a (click)=\"uploadImages()\">\n      Upload images\n    </a>\n  </div>\n  <div class=\"col-3\">\n    <img src=\"assets/images/orderimages.png\" alt=\"Order images\"/>\n  </div>\n</div>\n\n<div class=\"row\">\n  <div class=\"offset-1 col-10\">\n    <div *ngIf=\"project; let project; else loading\" dragula=\"DRAGULA_FACTS\" #domImages>\n      <app-image-thumbnail *ngFor=\"let image of project.images\" [image]=\"image\" [attr.data-id]=\"image.id\"></app-image-thumbnail>\n    </div>\n    <ng-template #loading>Loading project...</ng-template>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -2207,14 +2256,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ProjectComponent", function() { return ProjectComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _services_im3ws_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/im3ws.service */ "./src/app/services/im3ws.service.ts");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var _model_project__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../model/project */ "./src/app/model/project.ts");
-/* harmony import */ var ng2_dragula__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ng2-dragula */ "./node_modules/ng2-dragula/dist/fesm5/ng2-dragula.js");
-/* harmony import */ var _image_thumbnail_image_thumbnail_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../image-thumbnail/image-thumbnail.component */ "./src/app/image-thumbnail/image-thumbnail.component.ts");
-/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
-/* harmony import */ var _session_data_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../session-data.service */ "./src/app/session-data.service.ts");
-/* harmony import */ var _component_can_deactivate__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../component-can-deactivate */ "./src/app/component-can-deactivate.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _model_project__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../model/project */ "./src/app/model/project.ts");
+/* harmony import */ var ng2_dragula__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ng2-dragula */ "./node_modules/ng2-dragula/dist/fesm5/ng2-dragula.js");
+/* harmony import */ var _image_thumbnail_image_thumbnail_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../image-thumbnail/image-thumbnail.component */ "./src/app/image-thumbnail/image-thumbnail.component.ts");
+/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
+/* harmony import */ var _services_session_data_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../services/session-data.service */ "./src/app/services/session-data.service.ts");
+/* harmony import */ var _component_can_deactivate__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../component-can-deactivate */ "./src/app/component-can-deactivate.ts");
+/* harmony import */ var _services_project_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../services/project.service */ "./src/app/services/project.service.ts");
 
 
 
@@ -2228,17 +2277,86 @@ __webpack_require__.r(__webpack_exports__);
 // import { Lightbox } from 'ngx-lightbox';
 var ProjectComponent = /** @class */ (function (_super) {
     tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](ProjectComponent, _super);
-    function ProjectComponent(im3wsService, sessionDataService, route, router, dragulaService, logger) {
+    function ProjectComponent(sessionDataService, route, router, dragulaService, logger, projectService) {
         var _this = _super.call(this) || this;
-        _this.im3wsService = im3wsService;
         _this.sessionDataService = sessionDataService;
         _this.route = route;
         _this.router = router;
         _this.dragulaService = dragulaService;
         _this.logger = logger;
+        _this.projectService = projectService;
         _this.BAG = 'DRAGULA_FACTS';
         _this.logger.debug('Loading project component');
-        dragulaService.drop(_this.BAG)
+        _this.initReorderInteraction();
+        return _this;
+    }
+    ProjectComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        var routeParams = this.route.snapshot.params;
+        this.projectService.getProject$(routeParams.id).subscribe(function (next) { return _this.loadProject(next); });
+        this.projectService.getProjectStatistics$(routeParams.id).subscribe(function (next) { return _this.projectStatistics = next; });
+    };
+    ProjectComponent.prototype.loadProject = function (loadedProject) {
+        var project = Object.assign(new _model_project__WEBPACK_IMPORTED_MODULE_3__["Project"](), loadedProject);
+        project.orderImageArray();
+        this.sessionDataService.currentProject = project;
+        this.changeProjectState();
+    };
+    Object.defineProperty(ProjectComponent.prototype, "project", {
+        get: function () {
+            return this.sessionDataService.currentProject;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ProjectComponent.prototype, "projectState", {
+        get: function () {
+            return this._projectState;
+        },
+        set: function (value) {
+            this.logger.debug('Changing project state to ' + value);
+            if (value === 'none') {
+                this.project.state = null;
+            }
+            else {
+                this.project.state.state = value;
+            }
+            this.projectService.saveProjectState(this.project);
+            this._projectState = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    ProjectComponent.prototype.uploadImages = function () {
+        var url = 'uploadimages';
+        // Redirect the user
+        this.router.navigate([url, this.project.id]);
+    };
+    ProjectComponent.prototype.canDeactivate = function () {
+        return false; // TODO
+    };
+    ProjectComponent.prototype.projectIsLoaded = function () {
+        return this.project != null;
+    };
+    ProjectComponent.prototype.composerChanged = function ($event) {
+        this.project.composer = $event;
+        this.projectService.saveProjectComposer(this.project);
+    };
+    ProjectComponent.prototype.commentsChanged = function ($event) {
+        this.project.comments = $event;
+        this.projectService.saveProjectComments(this.project);
+    };
+    ProjectComponent.prototype.changeProjectState = function () {
+        if (this.project.state == null) {
+            this._projectState = 'none';
+        }
+        else {
+            this._projectState = this.project.state.state;
+        }
+    };
+    ProjectComponent.prototype.initReorderInteraction = function () {
+        var _this = this;
+        this.dragulaService.drop(this.BAG)
             .subscribe(function (_a) {
             // this.logger.debug('Images order for drop ' + el );
             // this.logger.debug('DOM:' + this.domImages.nativeElement);
@@ -2258,85 +2376,11 @@ var ProjectComponent = /** @class */ (function (_super) {
             });
             _this.logger.debug('Sorted images ' + imagesOrder);
             _this.project.imagesOrdering = imagesOrder;
-            _this.logger.debug('Updating project ' + imagesOrder);
-            im3wsService.projectService.saveProject(_this.project);
-            _this.logger.debug('Project updated');
-            /*
-              this.imageThumbnailComponents.forEach((item: ImageThumbnailComponent) =>
-                this.logger..debug('Image ID ' + item.image.id));*/
+            _this.projectService.updateProject(_this.project);
         });
-        return _this;
-    }
-    ProjectComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        var routeParams = this.route.snapshot.params;
-        this.im3wsService.projectService.getProjectURLs$(routeParams.id)
-            .subscribe(function (result) { return _this.projectURLs = result; }).add(function (teardown) {
-            _this.logger.debug('Project URLs: ' + _this.projectURLs);
-            _this.logger.debug('Loading project ...'); // after urls have been obtained
-            _this.im3wsService.projectService.getProject$(routeParams.id)
-                .subscribe(function (res) {
-                return _this.project = Object.assign(new _model_project__WEBPACK_IMPORTED_MODULE_4__["Project"](), res);
-            })
-                .add(function (teardown2) {
-                _this.logger.debug('Project component ' + _this.project.name + ' with #' + _this.project.images.length + ' images');
-                _this.project.orderImageArray();
-                _this.changeProjectState();
-                _this.sessionDataService.currentProject = _this.project;
-            });
-        });
-        this.im3wsService.projectService.getProjectStatistics$(routeParams.id)
-            .subscribe(function (result) { return _this.projectStatistics = result; });
-    };
-    ProjectComponent.prototype.uploadImages = function () {
-        var url = 'uploadimages';
-        // Redirect the user
-        this.router.navigate([url, this.project.id]);
-    };
-    ProjectComponent.prototype.canDeactivate = function () {
-        return false; // TODO
-    };
-    ProjectComponent.prototype.projectIsLoaded = function () {
-        return this.project != null;
-    };
-    ProjectComponent.prototype.composerChanged = function ($event) {
-        this.logger.info('Saving project after composer change ' + $event);
-        this.project.composer = $event;
-        this.im3wsService.projectService.saveProjectComposer(this.project);
-    };
-    ProjectComponent.prototype.commentsChanged = function ($event) {
-        this.logger.info('Saving project after comments change ' + $event);
-        this.project.comments = $event;
-        this.im3wsService.projectService.saveProjectComments(this.project);
-    };
-    Object.defineProperty(ProjectComponent.prototype, "projectState", {
-        get: function () {
-            return this._projectState;
-        },
-        set: function (value) {
-            this.logger.debug('Changing project state to ' + value);
-            if (value === 'none') {
-                this.project.state = null;
-            }
-            else {
-                this.project.state.state = value;
-            }
-            this.im3wsService.projectService.saveProjectState(this.project);
-            this._projectState = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    ProjectComponent.prototype.changeProjectState = function () {
-        if (this.project.state == null) {
-            this._projectState = 'none';
-        }
-        else {
-            this._projectState = this.project.state.state;
-        }
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChildren"])(_image_thumbnail_image_thumbnail_component__WEBPACK_IMPORTED_MODULE_6__["ImageThumbnailComponent"]),
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChildren"])(_image_thumbnail_image_thumbnail_component__WEBPACK_IMPORTED_MODULE_5__["ImageThumbnailComponent"]),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_1__["QueryList"])
     ], ProjectComponent.prototype, "imageThumbnailComponents", void 0);
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -2349,15 +2393,15 @@ var ProjectComponent = /** @class */ (function (_super) {
             template: __webpack_require__(/*! ./project.component.html */ "./src/app/project/project.component.html"),
             styles: [__webpack_require__(/*! ./project.component.css */ "./src/app/project/project.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_im3ws_service__WEBPACK_IMPORTED_MODULE_2__["Im3wsService"],
-            _session_data_service__WEBPACK_IMPORTED_MODULE_8__["SessionDataService"],
-            _angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"],
-            _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"],
-            ng2_dragula__WEBPACK_IMPORTED_MODULE_5__["DragulaService"],
-            ngx_logger__WEBPACK_IMPORTED_MODULE_7__["NGXLogger"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_session_data_service__WEBPACK_IMPORTED_MODULE_7__["SessionDataService"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
+            ng2_dragula__WEBPACK_IMPORTED_MODULE_4__["DragulaService"],
+            ngx_logger__WEBPACK_IMPORTED_MODULE_6__["NGXLogger"],
+            _services_project_service__WEBPACK_IMPORTED_MODULE_9__["ProjectService"]])
     ], ProjectComponent);
     return ProjectComponent;
-}(_component_can_deactivate__WEBPACK_IMPORTED_MODULE_9__["ComponentCanDeactivate"]));
+}(_component_can_deactivate__WEBPACK_IMPORTED_MODULE_8__["ComponentCanDeactivate"]));
 
 
 
@@ -2381,7 +2425,7 @@ module.exports = ".projects {\n  margin-bottom: 20px;\n}\n\n.projects .card {\n 
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row titles\">\n  <div class=\"col-2 offset-1 align-self-end\">\n    <img src=\"assets/images/myprojects.png\" alt=\"My projects\"/>\n  </div>\n  <div class=\"col-9 screenTitle\">\n    <img src=\"assets/images/openproject.png\" alt=\"Open project\"/>\n  </div>\n</div>\n<div class=\"row projects\">\n  <div class=\"col-10 offset-1\">\n    <div class=\"row\">\n      <div *ngFor=\"let project of myProjects; trackBy: trackByProjectFn\" class=\"project col-2\">\n        <div class=\"card\">\n          <img class=\"card-img-top img-thumbnail\" *ngIf=\"project.thumbnailBase64Encoding\" src=\"{{project.thumbnailBase64Encoding}}\" alt=\"Project thumbnail\">\n          <img class=\"card-img-top img-thumbnail\" *ngIf=\"!project.thumbnailBase64Encoding\" src=\"assets/images/empty_thumbnail.png\" alt=\"Project thumbnail\">\n          <app-state [state]=\"project.state\"></app-state>\n          <div class=\"card-body\">\n            <p>\n              <a [routerLink]=\"['/project', project.id]\">{{project.name}}</a>\n            </p>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n\n\n<div class=\"row titles\">\n  <div class=\"col-2 offset-1 align-self-end\">\n    <img src=\"assets/images/assignedprojects.png\" alt=\"My projects\"/>\n  </div>\n</div>\n<div class=\"row projects\">\n  <div class=\"col-10 offset-1\">\n    <div class=\"row\">\n      <div *ngFor=\"let permission of permissions; trackBy: trackByPermissionFn\" class=\"project col-2\">\n        <div class=\"card\">\n          <img class=\"card-img-top img-thumbnail\" *ngIf=\"permission.project.thumbnailBase64Encoding\" src=\"{{permission.project.thumbnailBase64Encoding}}\" alt=\"Project thumbnail\">\n          <img class=\"card-img-top img-thumbnail\" *ngIf=\"!permission.project.thumbnailBase64Encoding\" src=\"assets/images/empty_thumbnail.png\" alt=\"Project thumbnail\">\n          <app-state [state]=\"permission.state\"></app-state>\n          <div class=\"card-body\">\n              <a [routerLink]=\"['/project', permission.project.id]\">{{permission.project.name}}</a>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n"
+module.exports = "<div class=\"row titles\">\n  <div class=\"col-2 offset-1 align-self-end\">\n    <img src=\"assets/images/myprojects.png\" alt=\"My projects\"/>\n  </div>\n  <div class=\"col-9 screenTitle\">\n    <img src=\"assets/images/openproject.png\" alt=\"Open project\"/>\n  </div>\n</div>\n\n<div class=\"row projects\">\n  <div class=\"col-10 offset-1\">\n    <div class=\"row\">\n      <div *ngFor=\"let project of myProjects; trackBy: trackByProjectFn\" class=\"project col-2\">\n        <div class=\"card\">\n          <img class=\"card-img-top img-thumbnail\" *ngIf=\"project.thumbnailBase64Encoding\" src=\"{{project.thumbnailBase64Encoding}}\" alt=\"Project thumbnail\">\n          <img class=\"card-img-top img-thumbnail\" *ngIf=\"!project.thumbnailBase64Encoding\" src=\"assets/images/empty_thumbnail.png\" alt=\"Project thumbnail\">\n          <app-state [state]=\"project.state\"></app-state>\n          <div class=\"card-body\">\n            <p>\n              <a [routerLink]=\"['/project', project.id]\">{{project.name}}</a>\n            </p>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n\n\n<div class=\"row titles\">\n  <div class=\"col-2 offset-1 align-self-end\">\n    <img src=\"assets/images/assignedprojects.png\" alt=\"My projects\"/>\n  </div>\n</div>\n<div class=\"row projects\">\n  <div class=\"col-10 offset-1\">\n    <div class=\"row\">\n      <div *ngFor=\"let permission of permissions; trackBy: trackByPermissionFn\" class=\"project col-2\">\n        <div class=\"card\">\n          <img class=\"card-img-top img-thumbnail\" *ngIf=\"permission.project.thumbnailBase64Encoding\" src=\"{{permission.project.thumbnailBase64Encoding}}\" alt=\"Project thumbnail\">\n          <img class=\"card-img-top img-thumbnail\" *ngIf=\"!permission.project.thumbnailBase64Encoding\" src=\"assets/images/empty_thumbnail.png\" alt=\"Project thumbnail\">\n          <app-state [state]=\"permission.state\"></app-state>\n          <div class=\"card-body\">\n              <a [routerLink]=\"['/project', permission.project.id]\">{{permission.project.name}}</a>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -2397,39 +2441,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ProjectsComponent", function() { return ProjectsComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _services_im3ws_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/im3ws.service */ "./src/app/services/im3ws.service.ts");
-/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
+/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
+/* harmony import */ var _services_session_data_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../services/session-data.service */ "./src/app/services/session-data.service.ts");
 
 
 
 
 var ProjectsComponent = /** @class */ (function () {
-    function ProjectsComponent(im3wsService, logger) {
-        this.im3wsService = im3wsService;
+    function ProjectsComponent(sessionDataService, logger) {
+        this.sessionDataService = sessionDataService;
         this.logger = logger;
     }
     ProjectsComponent.prototype.ngOnInit = function () {
-        // this.getProjects();
-        this.myProjects = this.im3wsService.authService.getUser().projectsCreated;
-        this.permissions = this.im3wsService.authService.getUser().permissions;
-        /*this.myProjects = new Array<Project>();
-        this.im3wsService.getUser().projectsCreated.forEach(project => {
-          const target: Project = Object.assign(new Project(), project);
-          this.myProjects.push(target);
-        });
-        this.myProjects = this.im3wsService.getUser().projectsCreated;
-    
-        this.permissions = new Array<Permission>();
-        this.im3wsService.getUser().permissions.forEach(permission => {
-          const target: Permission = Object.assign(new Permission(), permission);
-          this.permissions.push(target);
-        });*/
+        this.myProjects = this.sessionDataService.user.projectsCreated;
+        this.permissions = this.sessionDataService.user.permissions;
     };
-    /*getProjects(): void {
-      this.logger.debug('Obtaining projects');
-      this.im3wsService.getProjects$().
-        subscribe(serviceProjects => this.projects = serviceProjects);
-    }*/
     ProjectsComponent.prototype.trackByProjectFn = function (index, item) {
         return item.id; // unique id corresponding to the item
     };
@@ -2442,7 +2468,7 @@ var ProjectsComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./projects.component.html */ "./src/app/projects/projects.component.html"),
             styles: [__webpack_require__(/*! ./projects.component.css */ "./src/app/projects/projects.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_im3ws_service__WEBPACK_IMPORTED_MODULE_2__["Im3wsService"], ngx_logger__WEBPACK_IMPORTED_MODULE_3__["NGXLogger"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_session_data_service__WEBPACK_IMPORTED_MODULE_3__["SessionDataService"], ngx_logger__WEBPACK_IMPORTED_MODULE_2__["NGXLogger"]])
     ], ProjectsComponent);
     return ProjectsComponent;
 }());
@@ -2464,13 +2490,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../environments/environment */ "./src/environments/environment.ts");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
-/* harmony import */ var _auth_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./auth.service */ "./src/app/services/auth.service.ts");
-/* harmony import */ var _dialogs_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./dialogs.service */ "./src/app/services/dialogs.service.ts");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
-
-
+/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
+/* harmony import */ var _dialogs_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./dialogs.service */ "./src/app/services/dialogs.service.ts");
+/* harmony import */ var _rest_client_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./rest-client.service */ "./src/app/services/rest-client.service.ts");
 
 
 
@@ -2478,39 +2500,33 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var AgnosticService = /** @class */ (function () {
-    function AgnosticService(http, logger, authService, dialogService) {
-        this.http = http;
+    function AgnosticService(restClientService, logger, dialogService) {
+        this.restClientService = restClientService;
         this.logger = logger;
-        this.authService = authService;
         this.dialogService = dialogService;
         this.urlAgnostic = _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].apiEndpoint + '/agnostic';
     }
     AgnosticService.prototype.getSVGFromAgnosticSymbolType$ = function (notationType, manuscriptType, agnosticSymbolType) {
-        this.logger.debug('IM3WSService: fetching svg path for notationType=' + notationType
-            + 'manuscriptType=' + manuscriptType
-            + ' and agnosticSymbolType=' + agnosticSymbolType);
-        return this.http.get(this.urlAgnostic + '/svg'
+        return this.restClientService.httpGet$(this.urlAgnostic + '/svg'
             + '?notationType=' + notationType
             + '&manuscriptType=' + manuscriptType
-            + '&symbolType=' + agnosticSymbolType, this.authService.getHttpAuthOptions())
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["catchError"])(this.dialogService.handleError('getSVGFromAgnosticSymbolType ' + agnosticSymbolType, null)));
+            + '&symbolType=' + agnosticSymbolType, 'Fetching svg path for notationType=' + notationType
+            + 'manuscriptType=' + manuscriptType
+            + ' and agnosticSymbolType=' + agnosticSymbolType);
     };
-    AgnosticService.prototype.setSVGSet$ = function (notationType, manuscriptType) {
-        this.logger.debug('IM3WSService: fetching svgset for notationType=' + notationType
-            + 'manuscriptType=' + manuscriptType);
-        return this.http.get(this.urlAgnostic + '/svgset'
+    AgnosticService.prototype.getSVGSet$ = function (notationType, manuscriptType) {
+        return this.restClientService.httpGet$(this.urlAgnostic + '/svgset'
             + '?notationType=' + notationType
-            + '&manuscriptType=' + manuscriptType, this.authService.getHttpAuthOptions())
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["catchError"])(this.dialogService.handleError('getSVGScale', null)));
+            + '&manuscriptType=' + manuscriptType, 'Fetching svgset for notationType=' + notationType
+            + 'manuscriptType=' + manuscriptType);
     };
     AgnosticService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root'
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"],
-            ngx_logger__WEBPACK_IMPORTED_MODULE_4__["NGXLogger"],
-            _auth_service__WEBPACK_IMPORTED_MODULE_5__["AuthService"],
-            _dialogs_service__WEBPACK_IMPORTED_MODULE_6__["DialogsService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_rest_client_service__WEBPACK_IMPORTED_MODULE_5__["RestClientService"],
+            ngx_logger__WEBPACK_IMPORTED_MODULE_3__["NGXLogger"],
+            _dialogs_service__WEBPACK_IMPORTED_MODULE_4__["DialogsService"]])
     ], AgnosticService);
     return AgnosticService;
 }());
@@ -2535,6 +2551,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../environments/environment */ "./src/environments/environment.ts");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
 /* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
+/* harmony import */ var _session_data_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./session-data.service */ "./src/app/services/session-data.service.ts");
+
 
 
 
@@ -2542,26 +2560,25 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var AuthService = /** @class */ (function () {
-    function AuthService(http, logger) {
+    function AuthService(http, logger, sessionDataService) {
         this.http = http;
         this.logger = logger;
+        this.sessionDataService = sessionDataService;
         this.SESSION_USER_STORAGE = 'token';
         this.urlLogin = _environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiEndpoint + '/auth/login'; // URL to web api
         this.urlAuthenticatedUser = _environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiEndpoint + '/auth/user';
         this.urlUser = _environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiEndpoint + '/user';
     }
     AuthService.prototype.logout = function () {
-        // return this.im3wsService.logout();
-        //  this.isLoggedIn = false;
-        this.user = null;
+        this.sessionDataService.user = null;
         sessionStorage.removeItem(this.SESSION_USER_STORAGE);
     };
     AuthService.prototype.authenticated = function () {
         // return this.isLoggedIn;
-        return this.user != null;
+        return this.sessionDataService.user != null;
     };
     AuthService.prototype.getUser = function () {
-        return this.user;
+        return this.sessionDataService.user;
     };
     AuthService.prototype.login = function (username, password) {
         return this.http.post(this.urlLogin, {
@@ -2581,6 +2598,10 @@ var AuthService = /** @class */ (function () {
         );*/
     };
     AuthService.prototype.getHttpAuthOptions = function () {
+        var options = { headers: this.getHeaders() };
+        return options;
+    };
+    AuthService.prototype.getHeaders = function () {
         var token = sessionStorage.getItem(this.SESSION_USER_STORAGE);
         if (!token) {
             throw new Error('User is not authorized yet');
@@ -2588,17 +2609,7 @@ var AuthService = /** @class */ (function () {
         var headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpHeaders"]({
             'Authorization': 'Bearer ' + token
         });
-        var options = { headers: headers };
-        return options;
-        /*const headers_object = new HttpHeaders();
-        headers_object.append('Content-Type', 'application/json');
-        headers_object.append('Authorization', 'Basic ' + btoa('username:password'));
-        headers_object.append('Access-Control-Allow-Methods', 'GET, POST, DELETE, PUT');
-    
-        const httpOptions = {
-          headers: headers_object
-        };
-        return httpOptions;*/
+        return headers;
     };
     AuthService.prototype.checkAuthorized = function () {
         var _this = this;
@@ -2628,16 +2639,17 @@ var AuthService = /** @class */ (function () {
       }
     });*/
     AuthService.prototype.setUser = function (u) {
-        this.user = Object.assign(new _model_user__WEBPACK_IMPORTED_MODULE_2__["User"](), u);
-        sessionStorage.setItem(this.SESSION_USER_STORAGE, btoa(this.user.username));
-        this.logger.debug('ID: ' + this.user.id);
+        this.sessionDataService.user = Object.assign(new _model_user__WEBPACK_IMPORTED_MODULE_2__["User"](), u);
+        sessionStorage.setItem(this.SESSION_USER_STORAGE, btoa(this.sessionDataService.user.username));
+        this.logger.debug('ID: ' + this.sessionDataService.user.id);
     };
     AuthService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root'
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"],
-            ngx_logger__WEBPACK_IMPORTED_MODULE_5__["NGXLogger"]])
+            ngx_logger__WEBPACK_IMPORTED_MODULE_5__["NGXLogger"],
+            _session_data_service__WEBPACK_IMPORTED_MODULE_6__["SessionDataService"]])
     ], AuthService);
     return AuthService;
 }());
@@ -2659,41 +2671,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../environments/environment */ "./src/environments/environment.ts");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
-/* harmony import */ var _auth_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./auth.service */ "./src/app/services/auth.service.ts");
-/* harmony import */ var _dialogs_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./dialogs.service */ "./src/app/services/dialogs.service.ts");
-
-
-
+/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
+/* harmony import */ var _rest_client_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./rest-client.service */ "./src/app/services/rest-client.service.ts");
 
 
 
 
 
 var ClassifierService = /** @class */ (function () {
-    function ClassifierService(http, logger, authService, dialogService) {
-        this.http = http;
+    function ClassifierService(restClientService, logger) {
+        this.restClientService = restClientService;
         this.logger = logger;
-        this.authService = authService;
-        this.dialogService = dialogService;
         this.urlClassifierTypes = _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].apiEndpoint + '/classifiers';
     }
     ClassifierService.prototype.getClassifierTypes$ = function () {
-        this.logger.debug('IM3WSService: fetching classifier types...');
         // TODO Pasarle usuario actual
-        return this.http.get(this.urlClassifierTypes, this.authService.getHttpAuthOptions())
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["catchError"])(this.dialogService.handleError('getClassifierTypes$', [])));
+        return this.restClientService.httpGet$(this.urlClassifierTypes, 'Fetching classifier types');
     };
     ClassifierService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root'
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"],
-            ngx_logger__WEBPACK_IMPORTED_MODULE_4__["NGXLogger"],
-            _auth_service__WEBPACK_IMPORTED_MODULE_6__["AuthService"],
-            _dialogs_service__WEBPACK_IMPORTED_MODULE_7__["DialogsService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_rest_client_service__WEBPACK_IMPORTED_MODULE_4__["RestClientService"],
+            ngx_logger__WEBPACK_IMPORTED_MODULE_3__["NGXLogger"]])
     ], ClassifierService);
     return ClassifierService;
 }());
@@ -2747,133 +2747,6 @@ var DialogsService = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/app/services/im3ws.service.ts":
-/*!*******************************************!*\
-  !*** ./src/app/services/im3ws.service.ts ***!
-  \*******************************************/
-/*! exports provided: Im3wsService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Im3wsService", function() { return Im3wsService; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
-/* harmony import */ var _agnostic_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./agnostic.service */ "./src/app/services/agnostic.service.ts");
-/* harmony import */ var _classifier_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./classifier.service */ "./src/app/services/classifier.service.ts");
-/* harmony import */ var _image_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./image.service */ "./src/app/services/image.service.ts");
-/* harmony import */ var _project_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./project.service */ "./src/app/services/project.service.ts");
-/* harmony import */ var _region_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./region.service */ "./src/app/services/region.service.ts");
-/* harmony import */ var _symbol_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./symbol.service */ "./src/app/services/symbol.service.ts");
-/* harmony import */ var _auth_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./auth.service */ "./src/app/services/auth.service.ts");
-/* harmony import */ var _training_set_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./training-set.service */ "./src/app/services/training-set.service.ts");
-
-
-
-
-
-
-
-
-
-
-
-var Im3wsService = /** @class */ (function () {
-    function Im3wsService(logger, _agnosticService, _classifierService, _imageService, _projectService, _regionService, _symbolService, _authService, _trainingSetService) {
-        this.logger = logger;
-        this._agnosticService = _agnosticService;
-        this._classifierService = _classifierService;
-        this._imageService = _imageService;
-        this._projectService = _projectService;
-        this._regionService = _regionService;
-        this._symbolService = _symbolService;
-        this._authService = _authService;
-        this._trainingSetService = _trainingSetService;
-        this.logger.info('Creating Im3wsService');
-    }
-    Object.defineProperty(Im3wsService.prototype, "agnosticService", {
-        get: function () {
-            return this._agnosticService;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Im3wsService.prototype, "classifierService", {
-        get: function () {
-            return this._classifierService;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Im3wsService.prototype, "imageService", {
-        get: function () {
-            return this._imageService;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Im3wsService.prototype, "projectService", {
-        get: function () {
-            return this._projectService;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Im3wsService.prototype, "regionService", {
-        get: function () {
-            return this._regionService;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Im3wsService.prototype, "symbolService", {
-        get: function () {
-            return this._symbolService;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Im3wsService.prototype, "authService", {
-        get: function () {
-            return this._authService;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Im3wsService.prototype, "trainingSetService", {
-        get: function () {
-            return this._trainingSetService;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Im3wsService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
-            providedIn: 'root'
-        })
-        /**
-         * This class has access to the IM3WS server, it includes the auth service
-         * It acts as a façade to all IM3WS services
-         */
-        ,
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [ngx_logger__WEBPACK_IMPORTED_MODULE_2__["NGXLogger"],
-            _agnostic_service__WEBPACK_IMPORTED_MODULE_3__["AgnosticService"],
-            _classifier_service__WEBPACK_IMPORTED_MODULE_4__["ClassifierService"],
-            _image_service__WEBPACK_IMPORTED_MODULE_5__["ImageService"],
-            _project_service__WEBPACK_IMPORTED_MODULE_6__["ProjectService"],
-            _region_service__WEBPACK_IMPORTED_MODULE_7__["RegionService"],
-            _symbol_service__WEBPACK_IMPORTED_MODULE_8__["SymbolService"],
-            _auth_service__WEBPACK_IMPORTED_MODULE_9__["AuthService"],
-            _training_set_service__WEBPACK_IMPORTED_MODULE_10__["TrainingSetService"]])
-    ], Im3wsService);
-    return Im3wsService;
-}());
-
-
-
-/***/ }),
-
 /***/ "./src/app/services/image.service.ts":
 /*!*******************************************!*\
   !*** ./src/app/services/image.service.ts ***!
@@ -2886,15 +2759,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ImageService", function() { return ImageService; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
-/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../environments/environment */ "./src/environments/environment.ts");
-/* harmony import */ var _auth_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./auth.service */ "./src/app/services/auth.service.ts");
-/* harmony import */ var _dialogs_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./dialogs.service */ "./src/app/services/dialogs.service.ts");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
-/* harmony import */ var _payloads_post_strokes__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../payloads/post-strokes */ "./src/app/payloads/post-strokes.ts");
-
-
+/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../environments/environment */ "./src/environments/environment.ts");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _payloads_post_strokes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../payloads/post-strokes */ "./src/app/payloads/post-strokes.ts");
+/* harmony import */ var _rest_client_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./rest-client.service */ "./src/app/services/rest-client.service.ts");
 
 
 
@@ -2903,106 +2772,80 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var ImageService = /** @class */ (function () {
-    function ImageService(http, logger, authService, dialogService) {
-        this.http = http;
+    function ImageService(logger, restClientService) {
         this.logger = logger;
-        this.authService = authService;
-        this.dialogService = dialogService;
-        this.urlImage = _environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].apiEndpoint + '/image';
+        this.restClientService = restClientService;
+        this.urlImage = _environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiEndpoint + '/image';
     }
-    ImageService.prototype.updateRegionBoundingBox = function (id, fromX, fromY, toX, toY) {
-        var _this = this;
-        this.logger.debug('IM3WSService: updating region bounding box of id: ' + id);
-        var result = this.http.get(this.urlImage + '/regionUpdate/' + id + '/'
-            + fromX + '/' + fromY + '/'
-            + toX + '/' + toY, this.authService.getHttpAuthOptions());
-        result.subscribe(function (res) {
-            _this.logger.debug('Update region bounding box result: ' + res);
-        });
-        return result;
-    };
-    ImageService.prototype.updateRegionType = function (id, regionType) {
-        var _this = this;
-        this.logger.debug('IM3WSService: updating region type of id: ' + id + ' to ' + regionType.name);
-        var result = this.http.get(this.urlImage + '/regionUpdateType/' + id + '/' + regionType.id, this.authService.getHttpAuthOptions());
-        result.subscribe(function (res) {
-            _this.logger.debug('Update region type update result: ' + res);
-        });
-        return result;
-    };
-    ImageService.prototype.updatePageBoundingBox = function (id, fromX, fromY, toX, toY) {
-        var _this = this;
-        this.logger.debug('IM3WSService: updating page bounding box of id: ' + id);
-        var result = this.http.get(this.urlImage + '/pageUpdate/' + id + '/'
-            + fromX + '/' + fromY + '/'
-            + toX + '/' + toY, this.authService.getHttpAuthOptions());
-        result.subscribe(function (res) {
-            _this.logger.debug('Update page bounding box result: ' + res);
-        });
-        return result;
-    };
-    // ############### IMAGES ###############
     ImageService.prototype.getImage$ = function (id) {
-        this.logger.debug('IM3WSService: fetching image with id ' + id);
-        return this.http.get(this.urlImage + '/get/' + id, this.authService.getHttpAuthOptions())
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["catchError"])(this.dialogService.handleError('getImage$ with id=' + id, null)));
+        return this.restClientService.httpGet$(this.urlImage + '/get/' + id, 'Fetching image with id ' + id);
     };
-    ImageService.prototype.splitPage = function (imageId, imageX) {
-        this.logger.debug('IM3WSService: splitting page image with id ' + imageId);
-        return this.http.get(this.urlImage + '/pageSplit/' + imageId + '/' + imageX, this.authService.getHttpAuthOptions())
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["catchError"])(this.dialogService.handleError('splitPage with id=' + imageId, null)));
+    ImageService.prototype.getMasterImage$ = function (imageID) {
+        return this.restClientService.httpGetBlob(this.urlImage + '/master/' + imageID, 'Fetching master image ' + imageID);
     };
-    ImageService.prototype.splitRegion = function (imageId, imageX, imageY) {
-        this.logger.debug('IM3WSService: splitting region image with id ' + imageId);
-        return this.http.get(this.urlImage + '/regionSplit/' + imageId + '/' + imageX + '/' + imageY, this.authService.getHttpAuthOptions())
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["catchError"])(this.dialogService.handleError('splitRegion with id=' + imageId, null)));
+    ImageService.prototype.getThumbnailImage$ = function (imageID) {
+        return this.restClientService.httpGetBlob(this.urlImage + '/thumbnail/' + imageID, 'Fetching thumbnail image ' + imageID);
     };
-    ImageService.prototype.clearDocumentAnalysis = function (imageId) {
-        this.logger.debug('IM3WSService: clearing document analysis of image with id ' + imageId);
-        return this.http.get(this.urlImage + '/documentAnalysisClear/' + imageId, this.authService.getHttpAuthOptions())
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["catchError"])(this.dialogService.handleError('clearDocumentAnalysis with id=' + imageId, null)));
+    ImageService.prototype.getPreviewImage$ = function (imageID) {
+        return this.restClientService.httpGetBlob(this.urlImage + '/preview/' + imageID, 'Fetching preview image ' + imageID);
     };
-    ImageService.prototype.createSymbolFromBoundingBox = function (region, fromX, fromY, toX, toY) {
-        var _this = this;
-        this.logger.debug('IM3WSService: create symbol from bounding box in region ' + region.id);
-        var result = this.http.get(this.urlImage + '/createSymbolFromBoundingBox/' + region.id + '/'
+    ImageService.prototype.updateRegionBoundingBox$ = function (id, fromX, fromY, toX, toY) {
+        //TODO Cambiar por PUT
+        return this.restClientService.httpGet$(this.urlImage + '/regionUpdate/' + id + '/'
             + fromX + '/' + fromY + '/'
-            + toX + '/' + toY, this.authService.getHttpAuthOptions())
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["share"])()); // if not, two calls are made for the same request due to CORS checking
-        result.subscribe(function (res) {
-            region.symbols.push(res); // the im3ws spring service just returns the new symbol, not the complete region on each symbol insert
-            _this.logger.debug('Symbol from bounding box in region ' + region.id);
-        });
-        return result;
+            + toX + '/' + toY, 'Updating region bounding box of id: ' + id);
     };
-    ImageService.prototype.createSymbolFromStrokes = function (region, currentStrokes) {
-        var _this = this;
-        this.logger.debug('IM3WSService: create symbol from strokes in region ' + region.id);
+    ImageService.prototype.updateRegionType$ = function (id, regionType) {
+        //TODO Cambiar por PUT
+        return this.restClientService.httpGet$(this.urlImage + '/regionUpdateType/' + id + '/' + regionType.id, 'Updating region type of id' + id + ' to ' + regionType.name);
+    };
+    ImageService.prototype.updatePageBoundingBox$ = function (id, fromX, fromY, toX, toY) {
+        this.logger.debug('IM3WSService: updating page bounding box of id: ' + id);
+        //TODO Cambiar por PUT
+        return this.restClientService.httpGet$(this.urlImage + '/pageUpdate/' + id + '/'
+            + fromX + '/' + fromY + '/'
+            + toX + '/' + toY, 'Updating page bounding box of id ' + id);
+    };
+    ImageService.prototype.splitPage$ = function (imageId, imageX) {
+        //TODO Cambiar por PUT
+        return this.restClientService.httpGet$(this.urlImage + '/pageSplit/' + imageId + '/' + imageX, 'Splitting page image with id ' + imageId);
+    };
+    ImageService.prototype.splitRegion$ = function (imageId, imageX, imageY) {
+        //TODO Cambiar por PUT
+        return this.restClientService.httpGet$(this.urlImage + '/regionSplit/' + imageId + '/' + imageX + '/' + imageY, 'IM3WSService: splitting region image with id ' + imageId);
+    };
+    ImageService.prototype.clearDocumentAnalysis$ = function (imageId) {
+        //TODO Cambiar por PUT
+        return this.restClientService.httpGet$(this.urlImage + '/documentAnalysisClear/' + imageId, 'Clearing document analysis of image with id ' + imageId);
+    };
+    ImageService.prototype.createSymbolFromBoundingBox$ = function (region, fromX, fromY, toX, toY) {
+        //TODO Cambiar por PUT
+        return this.restClientService.httpGet$(this.urlImage + '/createSymbolFromBoundingBox/' + region.id + '/'
+            + fromX + '/' + fromY + '/'
+            + toX + '/' + toY, 'Create symbol from bounding box in region ' + region.id)
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["share"])()); // if not, two calls are made for the same request due to CORS checking
+        //TODO Comprobar esto del share
+    };
+    ImageService.prototype.createSymbolFromStrokes$ = function (region, currentStrokes) {
         var points = [[]];
         currentStrokes.strokeList.forEach(function (stroke) {
             points.push(stroke.points);
         });
-        var postStrokes = new _payloads_post_strokes__WEBPACK_IMPORTED_MODULE_8__["PostStrokes"](region.id, points);
-        var result = this.http.post(this.urlImage + '/createSymbolFromStrokes', postStrokes, this.authService.getHttpAuthOptions())
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["share"])()); // if not, two calls are made for the same request due to CORS checking
-        result.subscribe(function (res) {
-            region.symbols.push(res); // the im3ws spring service just returns the new symbol, not the complete region on each symbol insert
-            _this.logger.debug('Symbol from strokes in region ' + region.id);
-        });
-        return result;
+        var postStrokes = new _payloads_post_strokes__WEBPACK_IMPORTED_MODULE_5__["PostStrokes"](region.id, points);
+        return this.restClientService.httpPost(this.urlImage + '/createSymbolFromStrokes', postStrokes, 'Create symbol from strokes in region ' + region.id)
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["share"])()); // if not, two calls are made for the same request due to CORS checking
+        //TODO Comprobar esto del share
     };
-    ImageService.prototype.deleteSymbol = function (regionID, symbolID) {
-        this.logger.debug('IM3WSService: deleting symbol from region with id ' + regionID + ' with symbol id: ' + symbolID);
-        return this.http.get(this.urlImage + '/removeSymbol/' + regionID + '/' + symbolID, this.authService.getHttpAuthOptions());
+    ImageService.prototype.deleteSymbol$ = function (regionID, symbolID) {
+        //TODO Cambiar por DELETE
+        return this.restClientService.httpGet$(this.urlImage + '/removeSymbol/' + regionID + '/' + symbolID, 'Deleting symbol from region with id ' + regionID + ' with symbol id: ' + symbolID);
     };
     ImageService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root'
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"],
-            ngx_logger__WEBPACK_IMPORTED_MODULE_3__["NGXLogger"],
-            _auth_service__WEBPACK_IMPORTED_MODULE_5__["AuthService"],
-            _dialogs_service__WEBPACK_IMPORTED_MODULE_6__["DialogsService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [ngx_logger__WEBPACK_IMPORTED_MODULE_2__["NGXLogger"],
+            _rest_client_service__WEBPACK_IMPORTED_MODULE_6__["RestClientService"]])
     ], ImageService);
     return ImageService;
 }());
@@ -3023,16 +2866,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ProjectService", function() { return ProjectService; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
-/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../environments/environment */ "./src/environments/environment.ts");
-/* harmony import */ var _auth_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./auth.service */ "./src/app/services/auth.service.ts");
-/* harmony import */ var _dialogs_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./dialogs.service */ "./src/app/services/dialogs.service.ts");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
-/* harmony import */ var _payloads_string_body__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../payloads/string-body */ "./src/app/payloads/string-body.ts");
-
-
-
+/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../environments/environment */ "./src/environments/environment.ts");
+/* harmony import */ var _payloads_string_body__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../payloads/string-body */ "./src/app/payloads/string-body.ts");
+/* harmony import */ var _rest_client_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./rest-client.service */ "./src/app/services/rest-client.service.ts");
 
 
 
@@ -3040,95 +2877,87 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var ProjectService = /** @class */ (function () {
-    function ProjectService(http, logger, authService, dialogService) {
-        this.http = http;
+    function ProjectService(restClientService, logger) {
+        this.restClientService = restClientService;
         this.logger = logger;
-        this.authService = authService;
-        this.dialogService = dialogService;
-        this.urlProject = _environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].apiEndpoint + '/project';
+        this.urlProject = _environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiEndpoint + '/project';
     }
+    /**
+     * It returns an observable array of lazily loaded projects
+     */
     ProjectService.prototype.getProjects$ = function () {
-        this.logger.debug('IM3WSService: fetching projects...');
-        return this.http.get(this.urlProject, this.authService.getHttpAuthOptions())
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["catchError"])(this.dialogService.handleError('getProjects$', [])));
+        return this.restClientService.httpGet$(this.urlProject, 'Fetching all projects (lazy)');
     };
-    ProjectService.prototype.getUser$ = function (id) {
-        this.logger.debug('IM3WSService: fetching user ' + id + '...');
-        return this.http.get(this.urlProject + '/getlazy/' + id, this.authService.getHttpAuthOptions())
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["catchError"])(this.dialogService.handleError('getUser$$', null)));
-    };
+    /**
+     * Post a new project
+     * @param name
+     * @param composer
+     * @param notationType
+     * @param manuscriptType
+     * @param comments
+     * @param base64Thumbnail
+     */
     ProjectService.prototype.newProject$ = function (name, composer, notationType, manuscriptType, comments, base64Thumbnail) {
-        this.logger.debug('IM3WSService: creating project with name ' + name);
-        return this.http.post(this.urlProject + '/new', {
+        return this.restClientService.httpPost(this.urlProject + '/new', {
             'name': name,
             'composer': composer,
             'notationType': notationType,
             'manuscriptType': manuscriptType,
             'comments': comments,
             'thumbnailBase64Encoding': base64Thumbnail
-        }, this.authService.getHttpAuthOptions()).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["catchError"])(this.dialogService.handleError('newProject$ with name=' + name, null)));
+        }, 'Creating new project with name ' + name);
     };
+    /**
+     * It retrieves eagerly the project
+     * @param id
+     */
     ProjectService.prototype.getProject$ = function (id) {
-        this.logger.debug('IM3WSService: fetching project with id ' + id);
-        var result = this.http.get(this.urlProject + '/get/' + id, this.authService.getHttpAuthOptions())
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["catchError"])(this.dialogService.handleError('getProject$ with id=' + id, null)));
-        this.logger.debug('IM3WSService: fetched ' + result.valueOf());
-        return result;
+        return this.restClientService.httpGet$(this.urlProject + '/get/' + id, 'Fetching project with id ' + id);
     };
-    ProjectService.prototype.getProjectURLs$ = function (id) {
-        this.logger.debug('IM3WSService: fetching thumbnail URL of project with id ' + id);
-        var result = this.http.get(this.urlProject + '/projectURLS/' + id, this.authService.getHttpAuthOptions())
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["catchError"])(this.dialogService.handleError('getProject$ with id=' + id, null)));
-        this.logger.debug('IM3WSService: fetched URL ' + result.valueOf());
-        return result;
-    };
-    ProjectService.prototype.saveProject = function (project) {
-        this.logger.debug('IM3WSService: saving project with id: ' + project.id);
-        var result = this.http.put(this.urlProject, project, this.authService.getHttpAuthOptions());
-        result.subscribe(function (res) {
-            console.log('Save project result: ' + res);
-        });
-        return result;
-    };
-    ProjectService.prototype.saveProjectComposer = function (project) {
-        this.logger.debug('IM3WSService: saving project composer with id: ' + project.id);
-        var stringBody = new _payloads_string_body__WEBPACK_IMPORTED_MODULE_8__["StringBody"](project.composer);
-        var result = this.http.put(this.urlProject + '/composer/' + project.id, stringBody, this.authService.getHttpAuthOptions());
-        result.subscribe(function (res) {
-            console.log('Save project composer result: ' + res);
-        });
-        return result;
-    };
-    ProjectService.prototype.saveProjectComments = function (project) {
-        this.logger.debug('IM3WSService: saving project comments with id: ' + project.id);
-        var stringBody = new _payloads_string_body__WEBPACK_IMPORTED_MODULE_8__["StringBody"](project.comments);
-        var result = this.http.put(this.urlProject + '/comments/' + project.id, stringBody, this.authService.getHttpAuthOptions());
-        result.subscribe(function (res) {
-            console.log('Save project comments result: ' + res);
-        });
-        return result;
-    };
-    ProjectService.prototype.saveProjectState = function (project) {
-        this.logger.debug('IM3WSService: saving project state with id: ' + project.id);
-        var result = this.http.put(this.urlProject + '/state/' + project.id, project.state, this.authService.getHttpAuthOptions());
-        result.subscribe(function (res) {
-            console.log('Save project state result: ' + res);
-        });
-        return result;
-    };
+    /**
+     * It retrieves the project statistics
+     * @param id
+     */
     ProjectService.prototype.getProjectStatistics$ = function (id) {
-        this.logger.debug('IM3WSService: fetching project statistics for id ' + id);
-        return this.http.get(this.urlProject + '/statistics/' + id, this.authService.getHttpAuthOptions())
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["catchError"])(this.dialogService.handleError('getProjectStatistics$ ' + id, null)));
+        return this.restClientService.httpGet$(this.urlProject + '/statistics/' + id, 'Fetching project statistics for id ' + id);
+    };
+    /**
+     * It puts a project update
+     * @param project
+     */
+    ProjectService.prototype.updateProject = function (project) {
+        this.logger.debug('IM3WSService: saving project with id: ' + project.id);
+        return this.restClientService.httpPut(this.urlProject, project, 'Updating project with id ' + project.id);
+    };
+    /**
+     * It just updates the project composer
+     * @param project
+     */
+    ProjectService.prototype.saveProjectComposer = function (project) {
+        var stringBody = new _payloads_string_body__WEBPACK_IMPORTED_MODULE_4__["StringBody"](project.composer);
+        return this.restClientService.httpPut(this.urlProject + '/composer/' + project.id, stringBody, 'Updating project composer of project with id ' + project.id);
+    };
+    /**
+     * It just updates the project comments
+     * @param project
+     */
+    ProjectService.prototype.saveProjectComments = function (project) {
+        var stringBody = new _payloads_string_body__WEBPACK_IMPORTED_MODULE_4__["StringBody"](project.comments);
+        return this.restClientService.httpPut(this.urlProject + '/comments/' + project.id, stringBody, 'Updating project comments of project with id ' + project.id);
+    };
+    /**
+     * It just updates the project state
+     * @param project
+     */
+    ProjectService.prototype.saveProjectState = function (project) {
+        return this.restClientService.httpPut(this.urlProject + '/state/' + project.id, project.state, 'Updating project state of project with id ' + project.id);
     };
     ProjectService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root'
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"],
-            ngx_logger__WEBPACK_IMPORTED_MODULE_3__["NGXLogger"],
-            _auth_service__WEBPACK_IMPORTED_MODULE_5__["AuthService"],
-            _dialogs_service__WEBPACK_IMPORTED_MODULE_6__["DialogsService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_rest_client_service__WEBPACK_IMPORTED_MODULE_5__["RestClientService"],
+            ngx_logger__WEBPACK_IMPORTED_MODULE_2__["NGXLogger"]])
     ], ProjectService);
     return ProjectService;
 }());
@@ -3150,42 +2979,171 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../environments/environment */ "./src/environments/environment.ts");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
-/* harmony import */ var _auth_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./auth.service */ "./src/app/services/auth.service.ts");
-/* harmony import */ var _dialogs_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./dialogs.service */ "./src/app/services/dialogs.service.ts");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
-
-
-
+/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
+/* harmony import */ var _rest_client_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./rest-client.service */ "./src/app/services/rest-client.service.ts");
 
 
 
 
 
 var RegionService = /** @class */ (function () {
-    function RegionService(http, logger, authService, dialogService) {
-        this.http = http;
+    function RegionService(restClientService, logger) {
+        this.restClientService = restClientService;
         this.logger = logger;
-        this.authService = authService;
-        this.dialogService = dialogService;
         this.urlRegionTypes = _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].apiEndpoint + '/regiontypes';
     }
     RegionService.prototype.getRegionTypes = function () {
-        this.logger.debug('IM3WSService: fetching region types...');
-        return this.http.get(this.urlRegionTypes, this.authService.getHttpAuthOptions())
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["catchError"])(this.dialogService.handleError('getRegionTypes', [])));
+        return this.restClientService.httpGet$(this.urlRegionTypes, 'Fetching region types');
     };
     RegionService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root'
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"],
-            ngx_logger__WEBPACK_IMPORTED_MODULE_4__["NGXLogger"],
-            _auth_service__WEBPACK_IMPORTED_MODULE_5__["AuthService"],
-            _dialogs_service__WEBPACK_IMPORTED_MODULE_6__["DialogsService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_rest_client_service__WEBPACK_IMPORTED_MODULE_4__["RestClientService"],
+            ngx_logger__WEBPACK_IMPORTED_MODULE_3__["NGXLogger"]])
     ], RegionService);
     return RegionService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/services/rest-client.service.ts":
+/*!*************************************************!*\
+  !*** ./src/app/services/rest-client.service.ts ***!
+  \*************************************************/
+/*! exports provided: RestClientService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RestClientService", function() { return RestClientService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
+/* harmony import */ var _auth_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./auth.service */ "./src/app/services/auth.service.ts");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _dialogs_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./dialogs.service */ "./src/app/services/dialogs.service.ts");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+
+
+
+
+
+
+
+var RestClientService = /** @class */ (function () {
+    function RestClientService(http, authService, dialogService, logger) {
+        this.http = http;
+        this.authService = authService;
+        this.dialogService = dialogService;
+        this.logger = logger;
+        this.logger.info('Creating RestClientService');
+    }
+    RestClientService.prototype.httpGetBlob = function (url, debugMessage) {
+        this.logger.debug('RestClientService: ' + debugMessage);
+        return this.http.get(url, { headers: this.authService.getHeaders(), responseType: 'blob' }).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["catchError"])(this.dialogService.handleError(debugMessage, null)));
+    };
+    RestClientService.prototype.httpGet$ = function (url, debugMessage) {
+        this.logger.debug('RestClientService: ' + debugMessage);
+        return this.http.get(url, this.authService.getHttpAuthOptions()).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["catchError"])(this.dialogService.handleError(debugMessage, null)));
+    };
+    RestClientService.prototype.httpPost = function (url, body, debugMessage) {
+        this.logger.debug('RestClientService: ' + debugMessage);
+        return this.http.post(url, body, this.authService.getHttpAuthOptions()).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["catchError"])(this.dialogService.handleError(debugMessage, null)));
+    };
+    RestClientService.prototype.httpPut = function (url, body, debugMessage) {
+        this.logger.debug('RestClientService: ' + debugMessage);
+        return this.http.put(url, body, this.authService.getHttpAuthOptions()).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["catchError"])(this.dialogService.handleError(debugMessage, null)));
+    };
+    RestClientService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        })
+        /**
+         * This class encapsulates the HTTP REST API calls including CORS and authentication
+         */
+        ,
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"],
+            _auth_service__WEBPACK_IMPORTED_MODULE_3__["AuthService"],
+            _dialogs_service__WEBPACK_IMPORTED_MODULE_5__["DialogsService"],
+            ngx_logger__WEBPACK_IMPORTED_MODULE_2__["NGXLogger"]])
+    ], RestClientService);
+    return RestClientService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/services/session-data.service.ts":
+/*!**************************************************!*\
+  !*** ./src/app/services/session-data.service.ts ***!
+  \**************************************************/
+/*! exports provided: SessionDataService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SessionDataService", function() { return SessionDataService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var SessionDataService = /** @class */ (function () {
+    function SessionDataService() {
+    }
+    Object.defineProperty(SessionDataService.prototype, "user", {
+        get: function () {
+            return this._user;
+        },
+        set: function (value) {
+            this._user = value;
+            if (value == null) {
+                this._currentProject = null;
+                this._currentImage = null;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(SessionDataService.prototype, "currentProject", {
+        get: function () {
+            return this._currentProject;
+        },
+        set: function (value) {
+            this._currentProject = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(SessionDataService.prototype, "currentImage", {
+        get: function () {
+            return this._currentImage;
+        },
+        set: function (value) {
+            this._currentImage = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(SessionDataService.prototype, "regionTypes", {
+        get: function () {
+            return this._regionTypes;
+        },
+        set: function (value) {
+            this._regionTypes = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    SessionDataService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        })
+    ], SessionDataService);
+    return SessionDataService;
 }());
 
 
@@ -3204,57 +3162,39 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SymbolService", function() { return SymbolService; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
-/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../environments/environment */ "./src/environments/environment.ts");
-/* harmony import */ var _auth_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./auth.service */ "./src/app/services/auth.service.ts");
-/* harmony import */ var _dialogs_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./dialogs.service */ "./src/app/services/dialogs.service.ts");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
-
-
-
+/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../environments/environment */ "./src/environments/environment.ts");
+/* harmony import */ var _rest_client_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./rest-client.service */ "./src/app/services/rest-client.service.ts");
 
 
 
 
 
 var SymbolService = /** @class */ (function () {
-    function SymbolService(http, logger, authService, dialogService) {
-        this.http = http;
+    function SymbolService(restClientService, logger) {
+        this.restClientService = restClientService;
         this.logger = logger;
-        this.authService = authService;
-        this.dialogService = dialogService;
-        this.urlSymbol = _environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].apiEndpoint + '/symbol';
+        this.urlSymbol = _environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiEndpoint + '/symbol';
     }
-    // TODO ¿Se está usando? - Si no, quitarlo
-    SymbolService.prototype.getSymbolsOfRegion$ = function (regionID) {
-        this.logger.debug('IM3WSService: fetching symbols with region_id ' + regionID);
-        return this.http.get(this.urlSymbol + '/region/' + regionID, this.authService.getHttpAuthOptions())
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["catchError"])(this.dialogService.handleError('getSymbols$ with region_id=' + regionID, null)));
-    };
-    SymbolService.prototype.changeAgnosticSymbolType = function (symbolID, agnosticSymbolTypeString) {
-        this.logger.debug('IM3WSService: changeAgnosticSymbolType with symbol id: ' + symbolID + ' to ' + agnosticSymbolTypeString);
-        return this.http.get(this.urlSymbol + '/changeAgnosticSymbolType/' + symbolID + '/' + agnosticSymbolTypeString, this.authService.getHttpAuthOptions());
+    SymbolService.prototype.changeAgnosticSymbolType$ = function (symbolID, agnosticSymbolTypeString) {
+        return this.restClientService.httpGet$(this.urlSymbol + '/changeAgnosticSymbolType/' + symbolID + '/' + agnosticSymbolTypeString, 'ChangeAgnosticSymbolType with symbol id: ' + symbolID + ' to ' + agnosticSymbolTypeString);
     };
     SymbolService.prototype.changeAgnosticPositionInStaff = function (symbolID, agnosticSymbolPositionInStaff) {
         this.logger.debug('IM3WSService: changeAgnosticSymbolType with symbol id: ' + symbolID + ' to ' + agnosticSymbolPositionInStaff);
-        return this.http.get(this.urlSymbol + '/changeAgnosticPositionInStaff/' + symbolID + '/' + agnosticSymbolPositionInStaff, this.authService.getHttpAuthOptions());
+        return this.restClientService.httpGet$(this.urlSymbol + '/changeAgnosticPositionInStaff/' + symbolID + '/' + agnosticSymbolPositionInStaff, 'ChangeAgnosticSymbolType with symbol id: ' + symbolID + ' to ' + agnosticSymbolPositionInStaff);
     };
     /**
      * @param upOrDown up | down
      */
-    SymbolService.prototype.changeAgnosticPositionInStaffUpOrDown = function (symbolID, upOrDown) {
-        this.logger.debug('IM3WSService: changeAgnosticSymbolType with symbol id: ' + symbolID + ' ' + upOrDown);
-        return this.http.get(this.urlSymbol + '/changeAgnosticPositionInStaffUpOrDown/' + symbolID + '/' + upOrDown, this.authService.getHttpAuthOptions());
+    SymbolService.prototype.changeAgnosticPositionInStaffUpOrDown$ = function (symbolID, upOrDown) {
+        return this.restClientService.httpGet$(this.urlSymbol + '/changeAgnosticPositionInStaffUpOrDown/' + symbolID + '/' + upOrDown, 'ChangeAgnosticSymbolType with symbol id: ' + symbolID + ' ' + upOrDown);
     };
     SymbolService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root'
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"],
-            ngx_logger__WEBPACK_IMPORTED_MODULE_3__["NGXLogger"],
-            _auth_service__WEBPACK_IMPORTED_MODULE_5__["AuthService"],
-            _dialogs_service__WEBPACK_IMPORTED_MODULE_6__["DialogsService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_rest_client_service__WEBPACK_IMPORTED_MODULE_4__["RestClientService"],
+            ngx_logger__WEBPACK_IMPORTED_MODULE_2__["NGXLogger"]])
     ], SymbolService);
     return SymbolService;
 }());
@@ -3297,12 +3237,12 @@ var TrainingSetService = /** @class */ (function () {
         this.dialogService = dialogService;
         this.urlTrainingSets = _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].apiEndpoint + '/trainingsets';
     }
-    TrainingSetService.prototype.getTrainingSetExporters = function () {
+    TrainingSetService.prototype.getTrainingSetExporters$ = function () {
         this.logger.debug('IM3WSService: fetching training set exporters');
         return this.http.get(this.urlTrainingSets + '/exporters', this.authService.getHttpAuthOptions())
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["catchError"])(this.dialogService.handleError('Fetch training set exporters', null)));
     };
-    TrainingSetService.prototype.downloadTrainingSet = function (exporterIndex, projectIDS) {
+    TrainingSetService.prototype.downloadTrainingSet$ = function (exporterIndex, projectIDS) {
         this.logger.debug('IM3WSService: fetching training set file for exporter ' + exporterIndex + ' and project ids: ' + projectIDS);
         var projectIdsString = null;
         projectIDS.forEach(function (id) {
@@ -3333,80 +3273,6 @@ var TrainingSetService = /** @class */ (function () {
             _dialogs_service__WEBPACK_IMPORTED_MODULE_6__["DialogsService"]])
     ], TrainingSetService);
     return TrainingSetService;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/session-data.service.ts":
-/*!*****************************************!*\
-  !*** ./src/app/session-data.service.ts ***!
-  \*****************************************/
-/*! exports provided: SessionDataService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SessionDataService", function() { return SessionDataService; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-
-
-var SessionDataService = /** @class */ (function () {
-    function SessionDataService() {
-    }
-    Object.defineProperty(SessionDataService.prototype, "currentProject", {
-        // private regionTypeColors: Map<number, string>;
-        get: function () {
-            return this._currentProject;
-        },
-        set: function (value) {
-            this._currentProject = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(SessionDataService.prototype, "currentImage", {
-        get: function () {
-            return this._currentImage;
-        },
-        set: function (value) {
-            this._currentImage = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(SessionDataService.prototype, "currentImageMastersURL", {
-        get: function () {
-            return this._currentImageMastersURL;
-        },
-        set: function (value) {
-            this._currentImageMastersURL = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(SessionDataService.prototype, "regionTypes", {
-        get: function () {
-            return this._regionTypes;
-        },
-        set: function (value) {
-            this._regionTypes = value;
-            /*this.regionTypeColors = new Map();
-            value.forEach(region => {
-              this.regionTypeColors.set(region.id, region.hexargb);
-            });*/
-        },
-        enumerable: true,
-        configurable: true
-    });
-    SessionDataService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
-            providedIn: 'root'
-        })
-    ], SessionDataService);
-    return SessionDataService;
 }());
 
 
@@ -6235,21 +6101,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SymbolsComponent", function() { return SymbolsComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _services_im3ws_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/im3ws.service */ "./src/app/services/im3ws.service.ts");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var _model_stroke__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../model/stroke */ "./src/app/model/stroke.ts");
-/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
-/* harmony import */ var _agnostic_symbol_svgpath__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./agnostic-symbol-svgpath */ "./src/app/symbols/agnostic-symbol-svgpath.ts");
-/* harmony import */ var _session_data_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../session-data.service */ "./src/app/session-data.service.ts");
-/* harmony import */ var _component_can_deactivate__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../component-can-deactivate */ "./src/app/component-can-deactivate.ts");
-/* harmony import */ var _image_tool_bar_image_tool_bar_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../image-tool-bar/image-tool-bar.service */ "./src/app/image-tool-bar/image-tool-bar.service.ts");
-/* harmony import */ var _svgcanvas_components_svgcanvas_svgcanvas_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../svgcanvas/components/svgcanvas/svgcanvas.component */ "./src/app/svgcanvas/components/svgcanvas/svgcanvas.component.ts");
-/* harmony import */ var _document_analysis_view_document_analysis_view_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../document-analysis-view/document-analysis-view.component */ "./src/app/document-analysis-view/document-analysis-view.component.ts");
-/* harmony import */ var _svgcanvas_model_shape__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../svgcanvas/model/shape */ "./src/app/svgcanvas/model/shape.ts");
-/* harmony import */ var _agnostic_symbol_strokes__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./agnostic-symbol-strokes */ "./src/app/symbols/agnostic-symbol-strokes.ts");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
-/* harmony import */ var _model_strokes__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../model/strokes */ "./src/app/model/strokes.ts");
-/* harmony import */ var _model_point__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../model/point */ "./src/app/model/point.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _model_stroke__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../model/stroke */ "./src/app/model/stroke.ts");
+/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
+/* harmony import */ var _agnostic_symbol_svgpath__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./agnostic-symbol-svgpath */ "./src/app/symbols/agnostic-symbol-svgpath.ts");
+/* harmony import */ var _services_session_data_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../services/session-data.service */ "./src/app/services/session-data.service.ts");
+/* harmony import */ var _component_can_deactivate__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../component-can-deactivate */ "./src/app/component-can-deactivate.ts");
+/* harmony import */ var _image_tool_bar_image_tool_bar_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../image-tool-bar/image-tool-bar.service */ "./src/app/image-tool-bar/image-tool-bar.service.ts");
+/* harmony import */ var _svgcanvas_components_svgcanvas_svgcanvas_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../svgcanvas/components/svgcanvas/svgcanvas.component */ "./src/app/svgcanvas/components/svgcanvas/svgcanvas.component.ts");
+/* harmony import */ var _document_analysis_view_document_analysis_view_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../document-analysis-view/document-analysis-view.component */ "./src/app/document-analysis-view/document-analysis-view.component.ts");
+/* harmony import */ var _svgcanvas_model_shape__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../svgcanvas/model/shape */ "./src/app/svgcanvas/model/shape.ts");
+/* harmony import */ var _agnostic_symbol_strokes__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./agnostic-symbol-strokes */ "./src/app/symbols/agnostic-symbol-strokes.ts");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var _model_strokes__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../model/strokes */ "./src/app/model/strokes.ts");
+/* harmony import */ var _model_point__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../model/point */ "./src/app/model/point.ts");
+/* harmony import */ var _services_agnostic_service__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../services/agnostic.service */ "./src/app/services/agnostic.service.ts");
+/* harmony import */ var _services_image_service__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../services/image.service */ "./src/app/services/image.service.ts");
+/* harmony import */ var _services_symbol_service__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../services/symbol.service */ "./src/app/services/symbol.service.ts");
+
+
 
 
 
@@ -6269,9 +6139,11 @@ __webpack_require__.r(__webpack_exports__);
 
 var SymbolsComponent = /** @class */ (function (_super) {
     tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](SymbolsComponent, _super);
-    function SymbolsComponent(im3wsService, sessionDataService, route, logger, toolbarService) {
+    function SymbolsComponent(agnosticService, imageService, symbolService, sessionDataService, route, logger, toolbarService) {
         var _this = _super.call(this) || this;
-        _this.im3wsService = im3wsService;
+        _this.agnosticService = agnosticService;
+        _this.imageService = imageService;
+        _this.symbolService = symbolService;
         _this.sessionDataService = sessionDataService;
         _this.route = route;
         _this.logger = logger;
@@ -6308,7 +6180,6 @@ var SymbolsComponent = /** @class */ (function (_super) {
         } else {*/
         this.project = this.sessionDataService.currentProject;
         this.image = this.sessionDataService.currentImage;
-        this.imageURL = this.sessionDataService.currentImageMastersURL + '/' + this.image.filename;
         this.logger.debug('Working with image ' + this.imageURL);
         this.loadSVGSet();
         // }
@@ -6321,7 +6192,7 @@ var SymbolsComponent = /** @class */ (function (_super) {
     };
     SymbolsComponent.prototype.loadSVGSet = function () {
         var _this = this;
-        this.im3wsService.agnosticService.setSVGSet$(this.project.notationType, this.project.manuscriptType).
+        this.agnosticService.getSVGSet$(this.project.notationType, this.project.manuscriptType).
             subscribe(function (next) {
             _this.agnosticSVGScaleX = next.x;
             _this.agnosticSVGScaleY = next.y;
@@ -6348,18 +6219,18 @@ var SymbolsComponent = /** @class */ (function (_super) {
             _this.selectedStaffCursor = 'default';
             switch (next) {
                 case '200': // symbols select
-                    _this.svgCanvas.changeState(_svgcanvas_components_svgcanvas_svgcanvas_component__WEBPACK_IMPORTED_MODULE_10__["SVGCanvasState"].eEditing);
+                    _this.svgCanvas.changeState(_svgcanvas_components_svgcanvas_svgcanvas_component__WEBPACK_IMPORTED_MODULE_9__["SVGCanvasState"].eEditing);
                     break;
                 case '201': // symbols bounding boxes
                     _this.svgCanvas.selectShapeProperties('transparent', 2, 'lightgreen'); // TODO values
                     _this.svgCanvas.selectShape('Rectangle');
-                    _this.svgCanvas.changeState(_svgcanvas_components_svgcanvas_svgcanvas_component__WEBPACK_IMPORTED_MODULE_10__["SVGCanvasState"].eDrawing);
+                    _this.svgCanvas.changeState(_svgcanvas_components_svgcanvas_svgcanvas_component__WEBPACK_IMPORTED_MODULE_9__["SVGCanvasState"].eDrawing);
                     _this.selectedStaffCursor = 'cell';
                     break;
                 case '202': // symbols strokes
                     _this.svgCanvas.selectShapeProperties('transparent', 2, 'lightgreen'); // TODO values
                     _this.svgCanvas.selectShape('Freehand');
-                    _this.svgCanvas.changeState(_svgcanvas_components_svgcanvas_svgcanvas_component__WEBPACK_IMPORTED_MODULE_10__["SVGCanvasState"].eDrawing);
+                    _this.svgCanvas.changeState(_svgcanvas_components_svgcanvas_svgcanvas_component__WEBPACK_IMPORTED_MODULE_9__["SVGCanvasState"].eDrawing);
                     _this.selectedStaffCursor = 'crosshair';
                     break;
             }
@@ -6396,7 +6267,7 @@ var SymbolsComponent = /** @class */ (function (_super) {
         this.logger.debug('Drawing symbol ' + symbol.id);
         if (symbol.strokes != null) {
             this.logger.debug('Drawing ' + symbol.strokes.strokeList.length + ' strokes');
-            var agnosticStrokes_1 = new _agnostic_symbol_strokes__WEBPACK_IMPORTED_MODULE_13__["AgnosticSymbolStrokes"]();
+            var agnosticStrokes_1 = new _agnostic_symbol_strokes__WEBPACK_IMPORTED_MODULE_12__["AgnosticSymbolStrokes"]();
             symbol.strokes.strokeList.forEach(function (stroke) {
                 var component = _this.drawStroke(symbol, stroke);
                 agnosticStrokes_1.freehandComponents.push(component);
@@ -6473,7 +6344,7 @@ var SymbolsComponent = /** @class */ (function (_super) {
             var x = ((symbol.boundingBox.fromX - region.boundingBox.fromX) / this.selectedStaffScale) * this.expectedStaffWidthPercentage;
             var svg = this.agnosticSymbolSVGMap.get(symbol.agnosticSymbolType);
             var y = this.computeAgnosticStaffSymbolY(region, symbol);
-            var asvg = new _agnostic_symbol_svgpath__WEBPACK_IMPORTED_MODULE_6__["AgnosticSymbolSVGPath"](svg, x, y);
+            var asvg = new _agnostic_symbol_svgpath__WEBPACK_IMPORTED_MODULE_5__["AgnosticSymbolSVGPath"](svg, x, y);
             this.agnosticSymbolSVGs.set(symbol.id, asvg);
             /*if (!svg) {
               this.im3wsService.getSVGFromAgnosticSymbolType$(
@@ -6549,7 +6420,7 @@ var SymbolsComponent = /** @class */ (function (_super) {
     SymbolsComponent.prototype.onShapeCreated = function ($event) {
         var _this = this;
         this.logger.debug('New bounding box: ' + $event);
-        if ($event.shape instanceof _svgcanvas_model_shape__WEBPACK_IMPORTED_MODULE_12__["Rectangle"]) {
+        if ($event.shape instanceof _svgcanvas_model_shape__WEBPACK_IMPORTED_MODULE_11__["Rectangle"]) {
             var shape = $event.shape;
             /* const fromX = this.selectedRegion.boundingBox.fromX + ((shape.originX) * this.selectedStaffScale)
                / this.expectedStaffWidthPercentage;
@@ -6565,22 +6436,23 @@ var SymbolsComponent = /** @class */ (function (_super) {
             var toY = this.fromScreenY(shape.originY + shape.height);
             var prevCursor_1 = this.selectedStaffCursor;
             this.selectedStaffCursor = 'wait';
-            this.im3wsService.imageService.createSymbolFromBoundingBox(this.selectedRegion, fromX, fromY, toX, toY).subscribe(function (next) {
+            this.imageService.createSymbolFromBoundingBox$(this.selectedRegion, fromX, fromY, toX, toY).subscribe(function (next) {
                 _this.selectedStaffCursor = prevCursor_1;
                 _this.logger.debug('New symbol created ' + next.id);
                 _this.svgCanvas.remove($event);
                 _this.drawSymbol(next);
+                _this.selectedRegion.symbols.push(next); // the im3ws spring service just returns the new symbol, not the complete region on each symbol insert
             });
         }
-        else if ($event.shape instanceof _svgcanvas_model_shape__WEBPACK_IMPORTED_MODULE_12__["PolyLine"]) {
+        else if ($event.shape instanceof _svgcanvas_model_shape__WEBPACK_IMPORTED_MODULE_11__["PolyLine"]) {
             var shape = $event.shape;
-            var source = Object(rxjs__WEBPACK_IMPORTED_MODULE_14__["timer"])(300); // TODO timer duration, now 300ms
+            var source = Object(rxjs__WEBPACK_IMPORTED_MODULE_13__["timer"])(300); // TODO timer duration, now 300ms
             this.currentTimerID++;
             var subscribe = source.subscribe(function (val) {
                 return _this.onStrokesTimer(_this.currentTimerID);
             });
             if (this.currentStrokes == null) {
-                this.currentStrokes = new _model_strokes__WEBPACK_IMPORTED_MODULE_15__["Strokes"](new Array());
+                this.currentStrokes = new _model_strokes__WEBPACK_IMPORTED_MODULE_14__["Strokes"](new Array());
             }
             var points_1 = new Array();
             var prevTimeStamp_1 = 0;
@@ -6593,10 +6465,10 @@ var SymbolsComponent = /** @class */ (function (_super) {
                     t = p.timestamp - prevTimeStamp_1;
                 }
                 prevTimeStamp_1 = p.timestamp;
-                var point = new _model_point__WEBPACK_IMPORTED_MODULE_16__["Point"](t, _this.fromScreenX(p.x), _this.fromScreenY(p.y));
+                var point = new _model_point__WEBPACK_IMPORTED_MODULE_15__["Point"](t, _this.fromScreenX(p.x), _this.fromScreenY(p.y));
                 points_1.push(point);
             });
-            var stroke = new _model_stroke__WEBPACK_IMPORTED_MODULE_4__["Stroke"](points_1);
+            var stroke = new _model_stroke__WEBPACK_IMPORTED_MODULE_3__["Stroke"](points_1);
             this.currentStrokes.strokeList.push(stroke);
             if (this.currentStrokesFreeHandComponents == null) {
                 this.currentStrokesFreeHandComponents = new Array();
@@ -6610,7 +6482,7 @@ var SymbolsComponent = /** @class */ (function (_super) {
             // generate strokes
             var prevCursor_2 = this.selectedStaffCursor;
             this.selectedStaffCursor = 'wait';
-            this.im3wsService.imageService.createSymbolFromStrokes(this.selectedRegion, this.currentStrokes).subscribe(function (next) {
+            this.imageService.createSymbolFromStrokes$(this.selectedRegion, this.currentStrokes).subscribe(function (next) {
                 _this.selectedStaffCursor = prevCursor_2;
                 _this.logger.debug('New symbol created ' + next.id);
                 _this.currentStrokesFreeHandComponents.forEach(function (shape) {
@@ -6619,6 +6491,7 @@ var SymbolsComponent = /** @class */ (function (_super) {
                 _this.currentStrokes = null;
                 _this.currentStrokesFreeHandComponents = null;
                 _this.drawSymbol(next);
+                _this.selectedRegion.symbols.push(next); // the im3ws spring service just returns the new symbol, not the complete region on each symbol insert
             });
         } // else discard it because it has been overwritten by the new one
     };
@@ -6661,7 +6534,7 @@ var SymbolsComponent = /** @class */ (function (_super) {
         if (stroke) {
             var mousePositions_1 = new Array();
             stroke.points.forEach(function (point) {
-                var mousePosition = new _svgcanvas_model_shape__WEBPACK_IMPORTED_MODULE_12__["MousePosition"]();
+                var mousePosition = new _svgcanvas_model_shape__WEBPACK_IMPORTED_MODULE_11__["MousePosition"]();
                 mousePosition.x = _this.toScreenX(point.x);
                 mousePosition.y = _this.toScreenY(point.y);
                 mousePositions_1.push(mousePosition);
@@ -6697,7 +6570,7 @@ var SymbolsComponent = /** @class */ (function (_super) {
     SymbolsComponent.prototype.deleteSelectedSymbol = function () {
         var _this = this;
         if (this.selectedSymbol != null) {
-            this.im3wsService.imageService.deleteSymbol(this.selectedRegion.id, this.selectedSymbol.id).subscribe(function () {
+            this.imageService.deleteSymbol$(this.selectedRegion.id, this.selectedSymbol.id).subscribe(function () {
                 _this.agnosticSymbols.delete(_this.selectedSymbol.id);
                 _this.agnosticSymbolSVGs.delete(_this.selectedSymbol.id);
                 _this.svgCanvas.remove(_this.svgCanvas.selectedComponent);
@@ -6715,7 +6588,7 @@ var SymbolsComponent = /** @class */ (function (_super) {
     SymbolsComponent.prototype.movePitchSelectedSymbol = function (upOrDown) {
         var _this = this;
         if (this.selectedSymbol != null) {
-            this.im3wsService.symbolService.changeAgnosticPositionInStaffUpOrDown(this.selectedSymbol.id, upOrDown).subscribe(function (next) {
+            this.symbolService.changeAgnosticPositionInStaffUpOrDown$(this.selectedSymbol.id, upOrDown).subscribe(function (next) {
                 _this.selectedSymbol.positionInStaff = next.positionInStaff;
                 var newY = _this.computeAgnosticStaffSymbolY(_this.selectedRegion, _this.selectedSymbol);
                 var svgPath = _this.agnosticSymbolSVGs.get(_this.selectedSymbol.id);
@@ -6734,7 +6607,7 @@ var SymbolsComponent = /** @class */ (function (_super) {
     };
     SymbolsComponent.prototype.changeAgnosticType = function (type) {
         var _this = this;
-        this.im3wsService.symbolService.changeAgnosticSymbolType(this.selectedSymbol.id, type).subscribe(function (next) {
+        this.symbolService.changeAgnosticSymbolType$(this.selectedSymbol.id, type).subscribe(function (next) {
             _this.selectedSymbol.positionInStaff = next.positionInStaff;
             var svgPath = _this.agnosticSymbolSVGs.get(_this.selectedSymbol.id);
             if (!svgPath) {
@@ -6746,7 +6619,7 @@ var SymbolsComponent = /** @class */ (function (_super) {
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])('appDocumentAnalysisView'),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _document_analysis_view_document_analysis_view_component__WEBPACK_IMPORTED_MODULE_11__["DocumentAnalysisViewComponent"])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _document_analysis_view_document_analysis_view_component__WEBPACK_IMPORTED_MODULE_10__["DocumentAnalysisViewComponent"])
     ], SymbolsComponent.prototype, "documentAnalysisView", void 0);
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])('selectedStaffInnerDIV'),
@@ -6754,7 +6627,7 @@ var SymbolsComponent = /** @class */ (function (_super) {
     ], SymbolsComponent.prototype, "selectedStaffInnerDIV", void 0);
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])('svgCanvas'),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _svgcanvas_components_svgcanvas_svgcanvas_component__WEBPACK_IMPORTED_MODULE_10__["SVGCanvasComponent"])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _svgcanvas_components_svgcanvas_svgcanvas_component__WEBPACK_IMPORTED_MODULE_9__["SVGCanvasComponent"])
     ], SymbolsComponent.prototype, "svgCanvas", void 0);
     SymbolsComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -6762,14 +6635,16 @@ var SymbolsComponent = /** @class */ (function (_super) {
             template: __webpack_require__(/*! ./symbols.component.html */ "./src/app/symbols/symbols.component.html"),
             styles: [__webpack_require__(/*! ./symbols.component.css */ "./src/app/symbols/symbols.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_im3ws_service__WEBPACK_IMPORTED_MODULE_2__["Im3wsService"],
-            _session_data_service__WEBPACK_IMPORTED_MODULE_7__["SessionDataService"],
-            _angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"],
-            ngx_logger__WEBPACK_IMPORTED_MODULE_5__["NGXLogger"],
-            _image_tool_bar_image_tool_bar_service__WEBPACK_IMPORTED_MODULE_9__["ImageToolBarService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_agnostic_service__WEBPACK_IMPORTED_MODULE_16__["AgnosticService"],
+            _services_image_service__WEBPACK_IMPORTED_MODULE_17__["ImageService"],
+            _services_symbol_service__WEBPACK_IMPORTED_MODULE_18__["SymbolService"],
+            _services_session_data_service__WEBPACK_IMPORTED_MODULE_6__["SessionDataService"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"],
+            ngx_logger__WEBPACK_IMPORTED_MODULE_4__["NGXLogger"],
+            _image_tool_bar_image_tool_bar_service__WEBPACK_IMPORTED_MODULE_8__["ImageToolBarService"]])
     ], SymbolsComponent);
     return SymbolsComponent;
-}(_component_can_deactivate__WEBPACK_IMPORTED_MODULE_8__["ComponentCanDeactivate"]));
+}(_component_can_deactivate__WEBPACK_IMPORTED_MODULE_7__["ComponentCanDeactivate"]));
 
 
 
@@ -6809,12 +6684,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TrainingSetsComponent", function() { return TrainingSetsComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _services_im3ws_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/im3ws.service */ "./src/app/services/im3ws.service.ts");
-/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! file-saver */ "./node_modules/file-saver/dist/FileSaver.min.js");
-/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(file_saver__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _session_data_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../session-data.service */ "./src/app/session-data.service.ts");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var _form_utils__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../form-utils */ "./src/app/form-utils.ts");
+/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! file-saver */ "./node_modules/file-saver/dist/FileSaver.min.js");
+/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(file_saver__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _services_session_data_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../services/session-data.service */ "./src/app/services/session-data.service.ts");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _form_utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../form-utils */ "./src/app/form-utils.ts");
+/* harmony import */ var _services_training_set_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../services/training-set.service */ "./src/app/services/training-set.service.ts");
+/* harmony import */ var _services_project_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../services/project.service */ "./src/app/services/project.service.ts");
+
 
 
 
@@ -6823,29 +6700,30 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var TrainingSetsComponent = /** @class */ (function () {
-    function TrainingSetsComponent(im3wsService, sessionDataService, formBuilder) {
-        this.im3wsService = im3wsService;
+    function TrainingSetsComponent(projectService, trainingSetService, sessionDataService, formBuilder) {
+        this.projectService = projectService;
+        this.trainingSetService = trainingSetService;
         this.sessionDataService = sessionDataService;
         this.formBuilder = formBuilder;
         this.currentCursor = 'default';
         this.form = this.formBuilder.group({
-            exportersFormArray: new _angular_forms__WEBPACK_IMPORTED_MODULE_5__["FormArray"]([], _angular_forms__WEBPACK_IMPORTED_MODULE_5__["Validators"].required),
-            projectsFormArray: new _angular_forms__WEBPACK_IMPORTED_MODULE_5__["FormArray"]([], _form_utils__WEBPACK_IMPORTED_MODULE_6__["FormUtils"].minSelectedCheckboxes(1))
+            exportersFormArray: new _angular_forms__WEBPACK_IMPORTED_MODULE_4__["FormArray"]([], _angular_forms__WEBPACK_IMPORTED_MODULE_4__["Validators"].required),
+            projectsFormArray: new _angular_forms__WEBPACK_IMPORTED_MODULE_4__["FormArray"]([], _form_utils__WEBPACK_IMPORTED_MODULE_5__["FormUtils"].minSelectedCheckboxes(1))
         });
     }
     TrainingSetsComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.im3wsService.trainingSetService.getTrainingSetExporters().pipe().subscribe(function (value) {
+        this.trainingSetService.getTrainingSetExporters$().pipe().subscribe(function (value) {
             _this.exporters = value;
-            var controls = _this.exporters.map(function (c) { return new _angular_forms__WEBPACK_IMPORTED_MODULE_5__["FormControl"](false); });
+            var controls = _this.exporters.map(function (c) { return new _angular_forms__WEBPACK_IMPORTED_MODULE_4__["FormControl"](false); });
             controls.forEach(function (c) {
                 _this.form.get('exportersFormArray').push(c);
             });
             _this.onExporterSelected(controls.length - 1); // TODO Parche
         });
-        this.im3wsService.projectService.getProjects$().subscribe(function (value) {
+        this.projectService.getProjects$().subscribe(function (value) {
             _this.projects = value;
-            var controls = _this.projects.map(function (c) { return new _angular_forms__WEBPACK_IMPORTED_MODULE_5__["FormControl"](false); });
+            var controls = _this.projects.map(function (c) { return new _angular_forms__WEBPACK_IMPORTED_MODULE_4__["FormControl"](false); });
             var projectsFormArray = _this.form.get('projectsFormArray');
             controls.forEach(function (c) {
                 projectsFormArray.push(c);
@@ -6863,9 +6741,9 @@ var TrainingSetsComponent = /** @class */ (function () {
             index++;
         });
         this.currentCursor = 'wait';
-        this.im3wsService.trainingSetService.downloadTrainingSet(this.selectedExporterId, selectedProjectIDS).subscribe(function (data) {
+        this.trainingSetService.downloadTrainingSet$(this.selectedExporterId, selectedProjectIDS).subscribe(function (data) {
             var blob1 = new Blob([data], { type: 'application/x-gzip' });
-            file_saver__WEBPACK_IMPORTED_MODULE_3___default.a.saveAs(blob1, 'training_set.tgz'); // TODO file name
+            file_saver__WEBPACK_IMPORTED_MODULE_2___default.a.saveAs(blob1, 'training_set.tgz'); // TODO file name
             _this.currentCursor = 'default';
         });
     };
@@ -6878,7 +6756,7 @@ var TrainingSetsComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./training-sets.component.html */ "./src/app/training-sets/training-sets.component.html"),
             styles: [__webpack_require__(/*! ./training-sets.component.css */ "./src/app/training-sets/training-sets.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_im3ws_service__WEBPACK_IMPORTED_MODULE_2__["Im3wsService"], _session_data_service__WEBPACK_IMPORTED_MODULE_4__["SessionDataService"], _angular_forms__WEBPACK_IMPORTED_MODULE_5__["FormBuilder"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_project_service__WEBPACK_IMPORTED_MODULE_7__["ProjectService"], _services_training_set_service__WEBPACK_IMPORTED_MODULE_6__["TrainingSetService"], _services_session_data_service__WEBPACK_IMPORTED_MODULE_3__["SessionDataService"], _angular_forms__WEBPACK_IMPORTED_MODULE_4__["FormBuilder"]])
     ], TrainingSetsComponent);
     return TrainingSetsComponent;
 }());
@@ -6961,7 +6839,7 @@ module.exports = ".navbar-toggler-icon {\n  background-image: url(\"data:image/s
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<nav class=\"navbar navbar-light offset-1\">\n  <div ngbDropdown class=\"d-inline-block\">\n    <button class=\"navbar-toggler hidden-sm-up\" id=\"dropdownBasic1\" ngbDropdownToggle>\n      <span class=\"navbar-toggler-icon\"></span>\n    </button>\n    <div ngbDropdownMenu aria-labelledby=\"dropdownBasic1\">\n      <a class=\"dropdown-item nav-link\" routerLinkActive=\"active\" routerLink=\"startup\">Home</a>\n      <a class=\"dropdown-item nav-link\" [hidden]=\"authenticated()\" routerLink=\"login\">Login</a>\n      <a class=\"dropdown-item nav-link\" [hidden]=\"!authenticated()\" routerLink=\"login\">Logout</a>\n      <a class=\"dropdown-item nav-link\" [hidden]=\"!authenticated()\" routerLink=\"export\">Export training sets</a>\n      <a class=\"dropdown-item nav-link\" [hidden]=\"!authenticated()\" routerLink=\"preferences\">Preferences</a>\n      <a class=\"dropdown-item nav-link\" routerLinkActive=\"active\" routerLink=\"about\">About</a>\n      <a class=\"dropdown-item nav-link\" href=\"https://github.com/davidrizo/im3\" target=\"_blank\">\n        <i class=\"fa fa-github\"></i>\n      </a>\n    </div>\n    <a [hidden]=\"hideLogo()\" class=\"navbar-brand\" routerLink=\"startup\">\n      <img src=\"assets/images/muret.png\" alt=\"Logo MuRET\">\n    </a>\n    <a routerLink=\"dev\">DEV</a>&nbsp;\n\n  </div>\n  <div ng-if=\"authenticated()\" class=\"navbar-right\">\n    {{getUserName()}}\n  </div>\n</nav>\n"
+module.exports = "<nav class=\"navbar navbar-light offset-1\">\n  <div ngbDropdown class=\"d-inline-block\">\n    <button class=\"navbar-toggler hidden-sm-up\" id=\"dropdownBasic1\" ngbDropdownToggle>\n      <span class=\"navbar-toggler-icon\"></span>\n    </button>\n    <div ngbDropdownMenu aria-labelledby=\"dropdownBasic1\">\n      <a class=\"dropdown-item nav-link\" routerLinkActive=\"active\" routerLink=\"startup\">Home</a>\n      <a class=\"dropdown-item nav-link\" [hidden]=\"authenticated()\" routerLink=\"login\">Login</a>\n      <a class=\"dropdown-item nav-link\" [hidden]=\"!authenticated()\" routerLink=\"login\">Logout</a>\n      <a class=\"dropdown-item nav-link\" [hidden]=\"!authenticated()\" routerLink=\"export\">Export training sets</a>\n      <a class=\"dropdown-item nav-link\" [hidden]=\"!authenticated()\" routerLink=\"preferences\">Preferences</a>\n      <a class=\"dropdown-item nav-link\" routerLinkActive=\"active\" routerLink=\"about\">About</a>\n      <a class=\"dropdown-item nav-link\" href=\"https://github.com/HISPAMUS/muret\" target=\"_blank\">\n        <i class=\"fa fa-github\"></i>\n      </a>\n    </div>\n    <a [hidden]=\"hideLogo()\" class=\"navbar-brand\" routerLink=\"startup\">\n      <img src=\"assets/images/muret.png\" alt=\"Logo MuRET\">\n    </a>\n    <a routerLink=\"dev\">DEV</a>&nbsp;\n\n  </div>\n  <div ng-if=\"authenticated()\" class=\"navbar-right\">\n    {{getUserName()}}\n  </div>\n</nav>\n"
 
 /***/ }),
 
@@ -6977,15 +6855,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HeaderComponent", function() { return HeaderComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _services_im3ws_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/im3ws.service */ "./src/app/services/im3ws.service.ts");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _services_auth_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/auth.service */ "./src/app/services/auth.service.ts");
 
 
 
 
 var HeaderComponent = /** @class */ (function () {
-    function HeaderComponent(im3WSService, router) {
-        this.im3WSService = im3WSService;
+    function HeaderComponent(authService, router) {
+        this.authService = authService;
         this.router = router;
         this.hideLogoIn = new Set([
             '/about',
@@ -6993,14 +6871,14 @@ var HeaderComponent = /** @class */ (function () {
         ]);
     }
     HeaderComponent.prototype.authenticated = function () {
-        return this.im3WSService.authService.authenticated();
+        return this.authService.authenticated();
     };
     HeaderComponent.prototype.hideLogo = function () {
         return this.hideLogoIn.has(this.router.url);
     };
     HeaderComponent.prototype.getUserName = function () {
-        if (this.im3WSService.authService.authenticated()) {
-            return this.im3WSService.authService.getUser().username;
+        if (this.authService.authenticated()) {
+            return this.authService.getUser().username;
         }
         else {
             return '';
@@ -7012,7 +6890,7 @@ var HeaderComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./header.component.html */ "./src/app/ui/header/header.component.html"),
             styles: [__webpack_require__(/*! ./header.component.css */ "./src/app/ui/header/header.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_im3ws_service__WEBPACK_IMPORTED_MODULE_2__["Im3wsService"], _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_auth_service__WEBPACK_IMPORTED_MODULE_3__["AuthService"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]])
     ], HeaderComponent);
     return HeaderComponent;
 }());
@@ -7162,9 +7040,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var ng2_file_upload__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ng2-file-upload */ "./node_modules/ng2-file-upload/index.js");
 /* harmony import */ var ng2_file_upload__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(ng2_file_upload__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var _services_im3ws_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../services/im3ws.service */ "./src/app/services/im3ws.service.ts");
-/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
-/* harmony import */ var _configuration_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../configuration.service */ "./src/app/configuration.service.ts");
+/* harmony import */ var ngx_logger__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ngx-logger */ "./node_modules/ngx-logger/esm5/ngx-logger.js");
+/* harmony import */ var _configuration_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../configuration.service */ "./src/app/configuration.service.ts");
+/* harmony import */ var _services_project_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../services/project.service */ "./src/app/services/project.service.ts");
 
 
 
@@ -7174,8 +7052,8 @@ __webpack_require__.r(__webpack_exports__);
 
 // const URL = 'http://localhost:8080/muret/upload/projectImage';
 var UploadImagesComponent = /** @class */ (function () {
-    function UploadImagesComponent(im3wsService, route, logger, configurationService) {
-        this.im3wsService = im3wsService;
+    function UploadImagesComponent(projectService, route, logger, configurationService) {
+        this.projectService = projectService;
         this.route = route;
         this.logger = logger;
         this.configurationService = configurationService;
@@ -7188,7 +7066,7 @@ var UploadImagesComponent = /** @class */ (function () {
         var URL = this.configurationService + '/muret/upload/projectImage';
         this.uploader = new ng2_file_upload__WEBPACK_IMPORTED_MODULE_2__["FileUploader"]({ url: URL });
         var routeParams = this.route.snapshot.params;
-        this.im3wsService.projectService.getProject$(routeParams.id)
+        this.projectService.getProject$(routeParams.id)
             .subscribe(function (serviceProject) { return _this.project = serviceProject; }).add(function (teardown) {
             _this.logger.debug('UploadImagesComponent' + _this.project.name + ' with #' + _this.project.images.length + ' images');
         });
@@ -7214,8 +7092,8 @@ var UploadImagesComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./upload-images.component.html */ "./src/app/upload-images/upload-images.component.html"),
             styles: [__webpack_require__(/*! ./upload-images.component.css */ "./src/app/upload-images/upload-images.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_im3ws_service__WEBPACK_IMPORTED_MODULE_4__["Im3wsService"], _angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"], ngx_logger__WEBPACK_IMPORTED_MODULE_5__["NGXLogger"],
-            _configuration_service__WEBPACK_IMPORTED_MODULE_6__["ConfigurationService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_project_service__WEBPACK_IMPORTED_MODULE_6__["ProjectService"], _angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"], ngx_logger__WEBPACK_IMPORTED_MODULE_4__["NGXLogger"],
+            _configuration_service__WEBPACK_IMPORTED_MODULE_5__["ConfigurationService"]])
     ], UploadImagesComponent);
     return UploadImagesComponent;
 }());

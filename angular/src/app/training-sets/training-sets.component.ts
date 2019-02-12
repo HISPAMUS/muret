@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import {Im3wsService} from '../services/im3ws.service';
 import saveAs from 'file-saver';
 import {Project} from '../model/project';
-import {SessionDataService} from '../session-data.service';
+import {SessionDataService} from '../services/session-data.service';
 import {ITrainingSetExporter} from '../model/itraining-set-exporter';
 import {FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {FormUtils} from '../form-utils';
+import {TrainingSetService} from "../services/training-set.service";
+import {ProjectService} from "../services/project.service";
 
 @Component({
   selector: 'app-training-sets',
@@ -19,7 +20,7 @@ export class TrainingSetsComponent implements OnInit {
   selectedExporterId: number;
   currentCursor = 'default';
 
-  constructor(private im3wsService: Im3wsService, private sessionDataService: SessionDataService, private formBuilder: FormBuilder) {
+  constructor(private projectService: ProjectService, private trainingSetService: TrainingSetService, private sessionDataService: SessionDataService, private formBuilder: FormBuilder) {
     this.form = this.formBuilder.group({
       exportersFormArray: new FormArray([], Validators.required),
       projectsFormArray: new FormArray([], FormUtils.minSelectedCheckboxes(1))
@@ -27,7 +28,7 @@ export class TrainingSetsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.im3wsService.trainingSetService.getTrainingSetExporters().pipe().subscribe(value => {
+    this.trainingSetService.getTrainingSetExporters$().pipe().subscribe(value => {
       this.exporters = value;
       const controls = this.exporters.map(c => new FormControl(false));
       controls.forEach(c => {
@@ -35,7 +36,7 @@ export class TrainingSetsComponent implements OnInit {
       });
       this.onExporterSelected(controls.length - 1); // TODO Parche
     });
-    this.im3wsService.projectService.getProjects$().subscribe(value => {
+    this.projectService.getProjects$().subscribe(value => {
       this.projects = value;
 
       const controls = this.projects.map(c => new FormControl(false));
@@ -57,7 +58,7 @@ export class TrainingSetsComponent implements OnInit {
     });
 
     this.currentCursor = 'wait';
-    this.im3wsService.trainingSetService.downloadTrainingSet(this.selectedExporterId, selectedProjectIDS).subscribe(data => {
+    this.trainingSetService.downloadTrainingSet$(this.selectedExporterId, selectedProjectIDS).subscribe(data => {
       const blob1 = new Blob([data], { type: 'application/x-gzip' });
       saveAs.saveAs(blob1, 'training_set.tgz'); // TODO file name
       this.currentCursor = 'default';

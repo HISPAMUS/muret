@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
-import {Im3wsService} from '../services/im3ws.service';
-import {SessionDataService} from '../session-data.service';
+import {RestClientService} from '../services/rest-client.service';
+import {SessionDataService} from '../services/session-data.service';
 import {NGXLogger} from 'ngx-logger';
+import {AuthService} from "../services/auth.service";
+import {ImageService} from "../services/image.service";
 
 @Component({
   selector: 'app-dev',
@@ -21,20 +23,19 @@ export class DevComponent implements OnInit {
   imageID = 2103;
   path = 'b-59-850';
 
-  constructor(private im3wsService: Im3wsService, private router: Router,
+  constructor(private authService: AuthService, private router: Router,
+              private imageService: ImageService,
               private sessionDataService: SessionDataService,
               private logger: NGXLogger) {
     this.logger.warn('¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ DEV!!!!!!!!!!!!!!!!!!!!!!');
-    this.im3wsService.authService.login('davidrizo', 'nose').subscribe(
+    this.authService.login('davidrizo', 'nose').subscribe(
       next => {
         if (next) {
-          this.im3wsService.authService.setUser(next);
+          this.authService.setUser(next);
           this.router.navigate(['/project/' + this.projectID])
             .then(value => {
-              this.im3wsService.imageService.getImage$(this.imageID).
+              this.imageService.getImage$(this.imageID).
               subscribe(serviceImage => {
-                this.sessionDataService.currentImageMastersURL
-                  = 'http://localhost:8888/muret/' + this.path + '/masters/';
                 this.sessionDataService.currentImage = serviceImage;
                 this.router.navigate(['/image']);
               });

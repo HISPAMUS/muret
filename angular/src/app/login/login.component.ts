@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { Router,
   NavigationExtras } from '@angular/router';
-import {Im3wsService} from '../services/im3ws.service';
+import {RestClientService} from '../services/rest-client.service';
 import {NGXLogger} from 'ngx-logger';
+import {AuthService} from "../services/auth.service";
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,7 @@ export class LoginComponent {
     'password': ''
   };
 
-  constructor(private im3WSService: Im3wsService, private router: Router, private logger: NGXLogger) {
+  constructor(private authService: AuthService, private router: Router, private logger: NGXLogger) {
     this.setMessage();
   }
 
@@ -29,15 +30,16 @@ export class LoginComponent {
 
   }
 
+  // TODO Refactorizar
   login() {
     this.logger.debug('Loging in');
     this.message = 'Trying to log in ...';
 
-    this.im3WSService.authService.login(this.model.username, this.model.password).subscribe(next => {
-      this.im3WSService.authService.setUser(next);
+    this.authService.login(this.model.username, this.model.password).subscribe(next => {
+      this.authService.setUser(next);
 
       this.setMessage();
-      if (this.im3WSService.authService.authenticated()) {
+      if (this.authService.authenticated()) {
         const redirect = 'startup';
         // Redirect the user
         this.router.navigate([redirect]);
@@ -47,12 +49,12 @@ export class LoginComponent {
 
   logout() {
     this.logger.debug('Logging out');
-    this.im3WSService.authService.logout();
+    this.authService.logout();
     this.setMessage();
   }
 
   isLoggedIn(): boolean {
-    return this.im3WSService.authService.authenticated();
+    return this.authService.authenticated();
   }
 }
 

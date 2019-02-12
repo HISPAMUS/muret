@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { SessionDataService } from './session-data.service';
+import { SessionDataService } from './services/session-data.service';
 
 describe('SessionDataService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
