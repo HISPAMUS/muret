@@ -1,9 +1,9 @@
 package es.ua.dlsi.grfia.im3ws.scripts;
 
-import es.ua.dlsi.grfia.im3ws.muret.MURETConfiguration;
+import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.model.ProjectModel;
-import es.ua.dlsi.grfia.im3ws.muret.service.*;
+import es.ua.dlsi.grfia.im3ws.muret.repository.*;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.utils.FileUtils;
 import es.ua.dlsi.im3.core.utils.ImageUtils;
@@ -43,17 +43,17 @@ delete from project;
 @EntityScan("es.ua.dlsi.grfia.im3ws.muret.entity")
 public class MigrateMuretXML implements CommandLineRunner {
     @Autowired
-    ProjectService projectService;
+    ProjectRepository projectRepository;
     @Autowired
-    ImageService imageService;
+    ImageRepository imageRepository;
     @Autowired
-    PageService pageService;
+    PageRepository pageRepository;
     @Autowired
-    RegionService regionService;
+    RegionRepository regionRepository;
     @Autowired
-    SymbolService symbolService;
+    SymbolRepository symbolRepository;
     @Autowired
-    RegionTypeService regionTypeService;
+    RegionTypeRepository regionTypeRepository;
     @Autowired
     ProjectModel projectModel;
 
@@ -68,7 +68,7 @@ public class MigrateMuretXML implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws IOException, IM3Exception {
-        muretConfiguration = new MURETConfiguration("/Applications/MAMP/htdocs/muret", "http://localhost:8888/muret", null, 200, 720, true);
+        muretConfiguration = new MURETConfiguration("/Applications/MAMP/htdocs/muret", null, 200, 720, true);
 
         /*String path = "/Users/drizo/GCLOUDUA/HISPAMUS/muret/catedral_zaragoza/";
         importMuRETXML(path + "B-3.28/B-3.28.mrt");
@@ -77,7 +77,7 @@ public class MigrateMuretXML implements CommandLineRunner {
         importMuRETXML(path + "B-59.850-completo/B-59.850-completo.mrt");*/
 
         regionTypeHashMap = new HashMap<>();
-        regionTypeService.findAll().forEach(regionType -> regionTypeHashMap.put(regionType.getName(), regionType));
+        regionTypeRepository.findAll().forEach(regionType -> regionTypeHashMap.put(regionType.getName(), regionType));
         ArrayList<File> mrts = new ArrayList<>();
         //FileUtils.readFiles(new File(path), mrts, "mrt");
         FileUtils.readFiles(new File("/Users/drizo/GCLOUDUA/HISPAMUS/muret/catedral_barcelona"), mrts, "mrt2", true); // documents with regions tagged with es.ua.dlsi.im3.omr.conversions.VicenteGilabertBoundingBoxes2MURET
@@ -146,7 +146,7 @@ public class MigrateMuretXML implements CommandLineRunner {
         if (xmlSymbol.getStrokes() != null) {
             symbol.setStrokes(convert(xmlSymbol.getStrokes()));
         }
-        return symbolService.create(symbol);
+        return symbolRepository.save(symbol);
     }
 
     private Strokes convert(es.ua.dlsi.im3.omr.model.entities.Strokes xmlStrokes) {
@@ -186,7 +186,7 @@ public class MigrateMuretXML implements CommandLineRunner {
             throw new IM3Exception("Cannot find region type: '" + xmlRegion.getRegionType().name() + "'");
         }
         region.setRegionType(regionType);
-        return regionService.create(region);
+        return regionRepository.save(region);
     }
 
     private Page importPage(es.ua.dlsi.im3.omr.model.entities.Page xmlPage, es.ua.dlsi.grfia.im3ws.muret.entity.Image image) {
@@ -196,7 +196,7 @@ public class MigrateMuretXML implements CommandLineRunner {
         page.setComments(xmlPage.getComments());
         page.setBoundingBox(convert(xmlPage.getBoundingBox()));
         page.setImage(image);
-        return pageService.create(page);
+        return pageRepository.save(page);
     }
 
     BoundingBox convert(es.ua.dlsi.im3.core.adt.graphics.BoundingBox bb) {
@@ -230,7 +230,7 @@ public class MigrateMuretXML implements CommandLineRunner {
         File preview = new File(new File(projectPath, MURETConfiguration.PREVIEW_IMAGES), xmlImage.getImageRelativeFileName());
         ImageUtils.getInstance().scaleToFitHeight(inputImage, preview, muretConfiguration.getPreviewHeight());
 
-        return imageService.create(image);
+        return imageRepository.save(image);
     }
 
 

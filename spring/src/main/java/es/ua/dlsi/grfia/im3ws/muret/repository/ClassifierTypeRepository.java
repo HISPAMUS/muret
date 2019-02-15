@@ -2,12 +2,13 @@ package es.ua.dlsi.grfia.im3ws.muret.repository;
 
 import es.ua.dlsi.grfia.im3ws.muret.entity.ClassifierType;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 /**
  * @author drizo
  */
-@Repository
-public interface ClassifierTypeRepository extends JpaRepository<ClassifierType, Integer> {
+@RepositoryRestResource
+public interface ClassifierTypeRepository extends CrudRepository<ClassifierType, Integer> {
 
 }

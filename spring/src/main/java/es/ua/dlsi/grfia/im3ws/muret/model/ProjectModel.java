@@ -1,11 +1,10 @@
 package es.ua.dlsi.grfia.im3ws.muret.model;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
-import es.ua.dlsi.grfia.im3ws.muret.MURETConfiguration;
+import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Project;
-import es.ua.dlsi.grfia.im3ws.muret.entity.User;
-import es.ua.dlsi.grfia.im3ws.muret.service.ProjectService;
-import es.ua.dlsi.grfia.im3ws.muret.service.UserService;
+import es.ua.dlsi.grfia.im3ws.muret.repository.ProjectRepository;
+import es.ua.dlsi.grfia.im3ws.muret.repository.UserRepository;
 import es.ua.dlsi.im3.core.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,14 +20,18 @@ import java.util.logging.Logger;
  */
 @Component
 public class ProjectModel {
-    @Autowired
-    UserService userService;
+    private final UserRepository userRepository;
+
+    private final ProjectRepository projectRepository;
+
+    private final MURETConfiguration muretConfiguration;
 
     @Autowired
-    ProjectService projectService;
-
-    @Autowired
-    MURETConfiguration muretConfiguration;
+    public ProjectModel(UserRepository userRepository, ProjectRepository projectRepository, MURETConfiguration muretConfiguration) {
+        this.userRepository = userRepository;
+        this.projectRepository = projectRepository;
+        this.muretConfiguration = muretConfiguration;
+    }
 
     private File createProjectFileStructure(File parentFolder, String projectBaseName) throws IM3WSException {
 
@@ -80,7 +83,7 @@ public class ProjectModel {
                     null
             );
 
-            return projectService.create(newProject);
+            return projectRepository.save(newProject);
         } catch (Exception e) {
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot create project", e);
             while (!createdFolders.empty()) {

@@ -1,6 +1,6 @@
 package es.ua.dlsi.grfia.im3ws.muret.model.trainingsets;
 
-import es.ua.dlsi.grfia.im3ws.muret.MURETConfiguration;
+import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Project;
 import es.ua.dlsi.im3.core.io.ExportException;
 import es.ua.dlsi.im3.core.utils.FileCompressors;

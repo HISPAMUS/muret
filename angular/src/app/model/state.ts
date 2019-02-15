@@ -1,6 +1,6 @@
 import {User} from './user';
 
-export class State {
+export interface State {
   id: number;
   comments: string;
   state: string;

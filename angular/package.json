@@ -21,6 +21,7 @@
     "@angular/platform-browser-dynamic": "^7.2.4",
     "@angular/router": "^7.2.4",
     "@ng-bootstrap/ng-bootstrap": "latest",
+    "@ngrx/store": "^7.2.0",
     "angular-fontawesome": "^1.0.0",
     "angular-resize-event": "latest",
     "angular-svg-icon": "latest",
@@ -37,8 +38,9 @@
     "ngx-img": "^10.19.0",
     "ngx-lightbox": "^1.2.0",
     "ngx-logger": "latest",
+    "npm": "^6.8.0",
     "popper.js": "^1.14.7",
-    "rxjs": "~6.3.3",
+    "rxjs": "^6.4.0",
     "tslib": "^1.9.0",
     "zone.js": "~0.8.26"
   },

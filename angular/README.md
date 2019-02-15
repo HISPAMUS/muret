@@ -1,4 +1,12 @@
+**TODO**
+Redux architecture based on the example in: https://github.com/lestard/angular-redux-shop-example
+
 #Services
+**TODO**
+We have divided the services into *CRUD* and *Business Logic*, following the same structure
+used in the *spring* backend controllers.
+**TODO**
+
 ##SessionDataService
 This service contains the data used along the user session, such as the user object itself,
 the currently loaded project and the image being processed.

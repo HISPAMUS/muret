@@ -1,13 +1,15 @@
-import { Injectable } from '@angular/core';
+import {Injectable } from '@angular/core';
 import {Project} from '../model/project';
 import {Image} from '../model/image';
 import {RegionType} from '../model/region-type';
 import {User} from "../model/user";
+import {ImageBlobs} from "../model/image-blobs";
 
 @Injectable({
   providedIn: 'root'
 })
 
+// TODO Deberíamos ver el patrón redux (https://academia-binaria.com/el-patron-redux-con-ngrx-en-angular/)
 export class SessionDataService {
   private _user: User;
   private _currentProject: Project;
@@ -55,7 +57,8 @@ export class SessionDataService {
    * @param loadedProject
    */
   public loadProject(loadedProject: Project) {
-    const newLoadedProject = Object.assign(new Project(), loadedProject);
+    //const newLoadedProject = Object.assign(new Project(), loadedProject);
+    const newLoadedProject = Object.assign({}, loadedProject);
 
     let itemIndex = this._user.projectsCreated.findIndex(item => item.id == loadedProject.id);
     if (itemIndex != -1) {

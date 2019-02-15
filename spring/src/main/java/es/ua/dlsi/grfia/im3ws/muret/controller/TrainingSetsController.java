@@ -3,11 +3,11 @@ package es.ua.dlsi.grfia.im3ws.muret.controller;
 
 import es.ua.dlsi.grfia.im3ws.BinaryOutputWrapper;
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
-import es.ua.dlsi.grfia.im3ws.muret.MURETConfiguration;
+import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Project;
 import es.ua.dlsi.grfia.im3ws.muret.model.ITrainingSetExporter;
 import es.ua.dlsi.grfia.im3ws.muret.model.trainingsets.TrainingSetsFactory;
-import es.ua.dlsi.grfia.im3ws.muret.service.ProjectService;
+import es.ua.dlsi.grfia.im3ws.muret.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,15 +23,19 @@ import java.util.logging.Logger;
 /**
  * @author drizo
  */
-@RequestMapping("/muretapi/trainingsets")
-@CrossOrigin("${angular.url}")
+@RequestMapping("trainingsets")
+//@CrossOrigin("${angular.url}")
 @RestController
 public class TrainingSetsController {
-    @Autowired
-    MURETConfiguration muretConfiguration;
+    private final MURETConfiguration muretConfiguration;
+
+    private final ProjectRepository projectRepository;
 
     @Autowired
-    ProjectService projectService;
+    public TrainingSetsController(MURETConfiguration muretConfiguration, ProjectRepository projectRepository) {
+        this.muretConfiguration = muretConfiguration;
+        this.projectRepository = projectRepository;
+    }
 
     @GetMapping(path = {"/exporters"})
     public Collection<ITrainingSetExporter> getTrainingSetExporters()  {
@@ -53,7 +57,7 @@ public class TrainingSetsController {
 
             ArrayList<Project> projectArrayList = new ArrayList<>();
             for (Integer projectID: projectIds) {
-                Optional<Project> project = projectService.findById(projectID);
+                Optional<Project> project = projectRepository.findById(projectID);
                 if (!project.isPresent()) {
                     throw new IM3WSException("Cannot find project with id=" + projectID);
                 }

@@ -1,14 +1,12 @@
 package es.ua.dlsi.grfia.im3ws.muret.repository;
 
 import es.ua.dlsi.grfia.im3ws.muret.entity.Image;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 /**
  * @author drizo
  */
-@Repository
-public interface ImageRepository extends JpaRepository<Image, Long> {
-
-
+@RepositoryRestResource
+public interface ImageRepository extends CrudRepository<Image, Long> {
 }

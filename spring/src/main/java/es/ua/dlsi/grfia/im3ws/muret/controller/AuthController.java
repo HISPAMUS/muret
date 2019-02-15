@@ -2,9 +2,8 @@ package es.ua.dlsi.grfia.im3ws.muret.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import es.ua.dlsi.grfia.im3ws.muret.entity.JSONFilteredDataViews;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Project;
 import es.ua.dlsi.grfia.im3ws.muret.entity.User;
-import es.ua.dlsi.grfia.im3ws.muret.service.UserService;
+import es.ua.dlsi.grfia.im3ws.muret.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,20 +14,23 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@RequestMapping("/muretapi/auth")
-@CrossOrigin("${angular.url}")
+@RequestMapping("auth")
 @RestController
 public class AuthController {
 
+    private final UserRepository userRepository;
+
     @Autowired
-    UserService userService;
+    public AuthController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     @RequestMapping("login")
     public Optional<User> login(@RequestBody User user) {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Login with user '" + user.getUsername() + "'");
 
-        Optional<User> response = userService.findByUserNamePassword(user.getUsername(), user.getPassword());
+        Optional<User> response = userRepository.findByUserNamePassword(user.getUsername(), user.getPassword());
        /* if (response.isPresent()) {
             for (Project project: response.get().getProjectsCreated()) {
                 if (project.getState() != null) {

@@ -1,10 +1,8 @@
 package es.ua.dlsi.grfia.im3ws.muret.model.trainingsets;
 
-import es.ua.dlsi.grfia.im3ws.muret.MURETConfiguration;
+import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.model.ProjectModel;
-import es.ua.dlsi.im3.core.IM3Exception;
-import es.ua.dlsi.im3.core.TestFileUtils;
 import es.ua.dlsi.im3.core.io.ExportException;
 import es.ua.dlsi.im3.core.utils.FileCompressors;
 import org.json.simple.JSONArray;
@@ -25,10 +23,15 @@ public class JSONTagging extends AbstractTrainingSetExporter {
     private static final String FIELD_SEPARATOR = ";";
     private final boolean includeStrokes;
 
+    //TODO Como constructor
     @Autowired
     MURETConfiguration muretConfiguration;
 
+    //TODO Como constructor
+    @Autowired
     ProjectModel projectModel;
+
+
 
     public JSONTagging(int id, boolean includeStrokes) {
         super(id,
@@ -39,7 +42,6 @@ public class JSONTagging extends AbstractTrainingSetExporter {
                         "This JSON file encodes the bounding boxes of pages, regions, and symbols. For each region its region type is also exported. " +
                         "For each symbol both its agnostic encoding is appended and, if present, the strokes information"
                 );
-        projectModel = new ProjectModel();
         this.includeStrokes = includeStrokes;
     }
 

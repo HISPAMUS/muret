@@ -108,7 +108,8 @@ export class AuthService {
   });*/
 
   setUser(u: User) {
-    this.sessionDataService.user = Object.assign(new User(), u);
+    //this.sessionDataService.user = Object.assign(new User(), u);
+    this.sessionDataService.user = Object.assign({}, u);
 
     sessionStorage.setItem(
       this.SESSION_USER_STORAGE,
