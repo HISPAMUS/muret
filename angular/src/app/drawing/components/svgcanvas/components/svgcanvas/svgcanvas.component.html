@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-     (mousedown)="onMouseDown($event)" (mouseup)="onMouseUp($event)" (mousemove)="onMouseMove($event)"
-    [attr.width.px]="width" [attr.height.px]="height">
-  <ng-container *ngFor="let shape of getShapes(); trackBy: trackByShapeFn">
-    <ng-template [appDynamicSVG]="shape"></ng-template>
-  </ng-container>
-</svg>

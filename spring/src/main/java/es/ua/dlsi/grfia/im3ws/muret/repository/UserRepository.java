@@ -13,6 +13,11 @@ import java.util.Optional;
 @RepositoryRestResource
 public interface UserRepository extends CrudRepository<User, Integer> {
 
-    @Query("select u from User u where u.username=?1 AND u.password = ?2")
-    Optional<User> findByUserNamePassword(String username, String password);
+    /*@Query("select u from User u where u.username=?1 AND u.password = ?2")
+    Optional<User> findByUserNamePassword(String username, String password);*/
+
+    Optional<User> findByUsername(String username);
+    Boolean existsByUsername(String username);
+    Boolean existsByEmail(String email);
+
 }

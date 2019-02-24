@@ -26,7 +26,6 @@ public class RegionType {
     public RegionType() {
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public String getName() {
         return name;
     }
@@ -35,7 +34,6 @@ public class RegionType {
         this.name = name;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public Integer getId() {
         return id;
     }
@@ -44,7 +42,6 @@ public class RegionType {
         this.id = id;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public String getHexargb() {
         return hexargb;
     }

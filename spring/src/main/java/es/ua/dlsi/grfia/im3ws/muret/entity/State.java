@@ -32,7 +32,6 @@ public class State {
         this.changedBy = changedBy;
         this.comments = comments;
     }
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public Long getId() {
         return id;
     }
@@ -40,7 +39,6 @@ public class State {
     public void setId(Long id) {
         this.id = id;
     }
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public States getState() {
         return state;
     }
@@ -57,7 +55,6 @@ public class State {
         this.changedBy = changedBy;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public String getComments() {
         return comments;
     }

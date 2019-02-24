@@ -11,16 +11,23 @@ import java.util.Objects;
  */
 @Entity
 public class User {
+    public static final String ADMINISTRATOR_ROLE = "ADMIN";
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column
+    private String firstName;
+    @Column
+    private String lastName;
     @Column
     private String username;
     @Column
     private String password;
     @Column
     private String email;
+    @Column
+    private boolean administrator;
 
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "createdBy")
     private List<Project> projectsCreated;
@@ -31,12 +38,14 @@ public class User {
     public User() {
     }
 
-    public User(String username, String password, String email) {
+    public User(String firstName, String lastName, String username, String password, String email, boolean administrator) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.administrator = administrator;
         this.username = username;
         this.password = password;
         this.email = email;
     }
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public Integer getId() {
         return id;
     }
@@ -45,19 +54,40 @@ public class User {
         this.id = id;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public String getUsername() {
         return username;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public List<Project> getProjectsCreated() {
         return projectsCreated;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public List<Permissions> getPermissions() {
         return permissions;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public boolean isAdministrator() {
+        return administrator;
+    }
+
+    public void setAdministrator(boolean administrator) {
+        this.administrator = administrator;
     }
 
     public void setProjectsCreated(List<Project> projectsCreated) {

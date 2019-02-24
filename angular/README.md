@@ -1,57 +1,40 @@
-**TODO**
-Redux architecture based on the example in: https://github.com/lestard/angular-redux-shop-example
+**TODO: Documentar el servicio que ataca a las projections**
+https://spring.io/guides/tutorials/spring-security-and-angular-js/
+https://grokonez.com/frontend/angular/angular-6/angular-spring-boot-jwt-authentication-example-angular-6-spring-security-mysql-full-stack-part-3-build-frontend
 
-#Services
-**TODO**
-We have divided the services into *CRUD* and *Business Logic*, following the same structure
-used in the *spring* backend controllers.
-**TODO**
+https://github.com/FortAwesome/angular-fontawesome (see shared.module.ts). Icons at: https://fontawesome.com/icons?d=gallery&c=design
 
-##SessionDataService
-This service contains the data used along the user session, such as the user object itself,
-the currently loaded project and the image being processed.
+Components don't include business logic, rather, it is contained in different Services
+ 
+ Prefer template async over synchronized
+ 
+ In order to develop, we have added at development time only the button "dev" at login component
+ 
+https://www.npmjs.com/package/angular-svg 
+# Angular
 
-As a rule of thumb, we should avoid having two objects referencing the same tuple in database. 
-For example, when a project is retrieved in [ProjectService](#proyectservice), the
-lazily loaded project object in [SessionDataService](#sessionDataService) is filled rather
-than loading a new one. This helps in mantaining updated all elements in the interface without
-creating unnecessary coupling.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.2.
 
-##AuthService
-It sends the post request to authenticate to _spring_, which, if success, it sets into _SessionDataService_ 
-a _User_ object containing the minimum data about the _Projects_ and _Permissions_. 
+## Development server
 
-##RestClientService
-This service contains common utilities and data to access the REST API. 
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-##ProjectService
-**TO-DO Describir**
+## Code scaffolding
 
-#Components
-**TODO: UML class and sequence diagram**
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-##1. Login
-It just delegates to the [AuthService](#authservice) the authentication. When user gets authenticated, 
-he/she is moved to the static [StartupComponent](#startupcomponent).    
+## Build
 
-##2. Startup
-It is just a static view with a [NEW](#3-newprojectform) and [OPEN](#4-projects) buttons
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
-##3. NewProjectForm
-**TODO**
+## Running unit tests
 
-##4. Projects
-By accessing to the user information in [SessionDataService](#sessionDataService),
-it shows the projects the user has created and those that can be acccessed with possible 
-restricted permissions to the user (**TODO: this is not fully implemented yet**).
-When project is opened, the route takes to the [Project](#5-project) view.
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-##5. Project 
-It allows the edition of the composer value, project comments and status.  
-A list of [image thumbnail components](#6-imagethumbnail) is shown.  
+## Running end-to-end tests
 
-It loads the project from the [ProjectService](#projectservice) given the *project_id* in the route params.
+Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
-##6. ImageThumbnail
+## Further help
 
-
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).

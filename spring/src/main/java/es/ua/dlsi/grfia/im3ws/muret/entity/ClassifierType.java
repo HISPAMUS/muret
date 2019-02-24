@@ -39,7 +39,6 @@ public class ClassifierType {
         this.id = id;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public String getName() {
         return name;
     }
@@ -48,7 +47,6 @@ public class ClassifierType {
         this.name = name;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public List<Classifier> getClassifiers() {
         return classifiers;
     }

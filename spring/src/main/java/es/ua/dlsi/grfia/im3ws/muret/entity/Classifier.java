@@ -40,7 +40,6 @@ public class Classifier {
         this.id = id;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public String getValue() {
         return value;
     }
@@ -49,7 +48,6 @@ public class Classifier {
         this.value = value;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public String getDescription() {
         return description;
     }

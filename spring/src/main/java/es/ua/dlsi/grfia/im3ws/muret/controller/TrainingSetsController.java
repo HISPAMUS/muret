@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,9 +24,10 @@ import java.util.logging.Logger;
 /**
  * @author drizo
  */
-@RequestMapping("trainingsets")
 //@CrossOrigin("${angular.url}")
+@RequestMapping("trainingsets")
 @RestController
+@Transactional // this solves the error: "springboot "failed to lazily initialize a collection of role": could not initialize proxy - no Session
 public class TrainingSetsController {
     private final MURETConfiguration muretConfiguration;
 

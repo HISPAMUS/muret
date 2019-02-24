@@ -1,0 +1,51 @@
+<div class="container">
+<div *ngIf="project$ | async as project; else loading">
+  <h2>{{project.name}}</h2>
+
+  <app-image-thumbnail *ngFor="let image of images$ | async; trackBy: trackByImageFn" [projectPath]="project.path" [image]="image" [attr.data-id]="image.id"></app-image-thumbnail>
+
+</div>
+<ng-template #loading>
+  Loading project data ...
+</ng-template>
+</div>
+
+
+
+<!--<div class="row">
+  <div *ngIf="projectIsLoaded()" class="col-7 offset-1">
+    <h2>{{project?.name}}</h2>
+    <app-inline-edit [(ngModel)]="project.composer" type="text" [label]="'Enter value for composer'" (changed)="composerChanged($event)" [size]="128"> </app-inline-edit>
+    <p>{{projectStatistics?.images}} images, {{projectStatistics?.pages}} pages, {{projectStatistics?.regions}} regions, {{projectStatistics?.agnosticSymbols}} symbols </p>
+
+    <input type="radio" name="rbProjectState" [(ngModel)]="projectState" value="none">
+    None
+    <input type="radio" name="rbProjectState" [(ngModel)]="projectState" value="inprogress">
+    In progress
+    <input type="radio" name="rbProjectState" [(ngModel)]="projectState" value="done">
+    Done
+    <input type="radio" name="rbProjectState" [(ngModel)]="projectState" value="doublechecked">
+    Double checked
+
+    <app-inline-edit [(ngModel)]="project.comments" type="text" [label]="'Enter comments'" (changed)="commentsChanged($event)" [size]="128"> </app-inline-edit>
+  </div>
+
+  <div class="col-1">
+    <a (click)="uploadImages()">
+      Upload images
+    </a>
+  </div>
+  <div class="col-3">
+    <img src="assets/images/orderimages.png" alt="Order images"/>
+  </div>
+</div>
+
+<div class="row">
+  <div class="offset-1 col-10">
+    <div *ngIf="project; let project; else loading" dragula="DRAGULA_FACTS" #domImages>
+      <app-image-thumbnail *ngFor="let image of project.images" [image]="image" [attr.data-id]="image.id"></app-image-thumbnail>
+    </div>
+    <ng-template #loading>Loading project...</ng-template>
+  </div>
+</div>
+-->

@@ -1,15 +1,11 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import {ProjectsComponent} from './projects/components/projects.component';
-import {MessagesComponent} from './layout/components/messages/messages.component';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        AppComponent,
-        ProjectsComponent,
-        MessagesComponent
+        AppComponent
       ],
     }).compileComponents();
   }));
@@ -20,16 +16,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'MuRET'`, () => {
+  it(`should have as title 'angular'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('MuRET');
+    expect(app.title).toEqual('angular');
   });
 
-  /*it('should render title in a h1 tag', () => {
+  it('should render title in a h1 tag', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Welcome to muretwebfrontent!');
-  });*/
+    expect(compiled.querySelector('h1').textContent).toContain('Welcome to angular!');
+  });
 });

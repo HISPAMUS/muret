@@ -86,7 +86,6 @@ public class Project {
         this.manuscriptType = manuscriptType;
         this.state = state;
     }
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public Integer getId() {
         return id;
     }
@@ -94,7 +93,6 @@ public class Project {
     public void setId(Integer id) {
         this.id = id;
     }
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public String getName() {
         return name;
     }
@@ -103,7 +101,6 @@ public class Project {
         this.name = name;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public State getState() {
         return state;
     }
@@ -112,7 +109,6 @@ public class Project {
         this.state = state;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public String getPath() {
         return path;
     }
@@ -121,7 +117,6 @@ public class Project {
         this.path = path;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public Date getCreated() {
         return created;
     }
@@ -130,7 +125,6 @@ public class Project {
         this.created = created;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public Date getLastChange() {
         return lastChange;
     }
@@ -139,7 +133,6 @@ public class Project {
         this.lastChange = lastChange;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public User getCreatedBy() {
         return createdBy;
     }
@@ -148,7 +141,6 @@ public class Project {
         this.createdBy = createdBy;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public User getChangedBy() {
         return changedBy;
     }
@@ -173,7 +165,6 @@ public class Project {
         this.comments = comments;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public String getThumbnailBase64Encoding() {
         return thumbnailBase64Encoding;
     }
@@ -182,7 +173,6 @@ public class Project {
         this.thumbnailBase64Encoding = thumbnailBase64Encoding;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public NotationType getNotationType() {
         return notationType;
     }
@@ -191,7 +181,6 @@ public class Project {
         this.notationType = notationType;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public ManuscriptType getManuscriptType() {
         return manuscriptType;
     }
@@ -200,7 +189,6 @@ public class Project {
         this.manuscriptType = manuscriptType;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public String getComposer() {
         return composer;
     }

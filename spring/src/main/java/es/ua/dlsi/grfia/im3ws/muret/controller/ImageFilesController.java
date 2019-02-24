@@ -18,12 +18,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Optional;
 
-@RequestMapping("imagecrud")
+@RequestMapping("imagefiles")
 @RestController
 public class ImageFilesController {
-    MURETConfiguration muretConfiguration;
-
-    ImageRepository imageRepository;
+    private final MURETConfiguration muretConfiguration;
+    private final ImageRepository imageRepository;
 
     @Autowired
     public ImageFilesController(MURETConfiguration muretConfiguration, ImageRepository imageRepository) {
@@ -31,13 +30,16 @@ public class ImageFilesController {
         this.imageRepository = imageRepository;
     }
 
-    private ResponseEntity<InputStreamResource> getImage(Long imageID, String imagesRelativePath) throws IM3WSException, FileNotFoundException {
+    private ResponseEntity<InputStreamResource> getImage(String projectPath, Long imageID, String imagesRelativePath) throws IM3WSException, FileNotFoundException {
         Optional<Image> image = imageRepository.findById(imageID);
         if (!image.isPresent()) {
             throw new IM3WSException("Cannot find an image with id " + imageID);
         }
 
-        File projectFolder = new File(muretConfiguration.getFolder(), image.get().getProject().getPath());
+        Image img = image.get();
+
+        //avoid another query File projectFolder = new File(muretConfiguration.getFolder(), image.get().getProject().getPath());
+        File projectFolder = new File(muretConfiguration.getFolder(), projectPath);
         File masterImagesFolder = new File(projectFolder, imagesRelativePath);
         File imageFile = new File(masterImagesFolder, image.get().getFilename());
         if (!imageFile.exists()) {
@@ -51,18 +53,18 @@ public class ImageFilesController {
 
     }
 
-    @GetMapping(value = "master/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<InputStreamResource> getMasterImage(@PathVariable("imageID") Long imageID) throws IM3WSException, FileNotFoundException {
-        return getImage(imageID,  MURETConfiguration.MASTER_IMAGES);
+    @GetMapping(value = "{projectPath}/master/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<InputStreamResource> getMasterImage(@PathVariable("projectPath") String projectPath, @PathVariable("imageID") Long imageID) throws IM3WSException, FileNotFoundException {
+        return getImage(projectPath, imageID,  MURETConfiguration.MASTER_IMAGES);
     }
 
-    @GetMapping(value = "thumbnail/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<InputStreamResource> getThumbnailImage(@PathVariable("imageID") Long imageID) throws IM3WSException, FileNotFoundException {
-        return getImage(imageID,  MURETConfiguration.THUMBNAIL_IMAGES);
+    @GetMapping(value = "{projectPath}/thumbnail/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<InputStreamResource> getThumbnailImage(@PathVariable("projectPath") String projectPath, @PathVariable("imageID") Long imageID) throws IM3WSException, FileNotFoundException {
+        return getImage(projectPath, imageID,  MURETConfiguration.THUMBNAIL_IMAGES);
     }
-    @GetMapping(value = "preview/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<InputStreamResource> getPreviewImage(@PathVariable("imageID") Long imageID) throws IM3WSException, FileNotFoundException {
-        return getImage(imageID,  MURETConfiguration.PREVIEW_IMAGES);
+    @GetMapping(value = "{projectPath}/preview/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<InputStreamResource> getPreviewImage(@PathVariable("projectPath") String projectPath, @PathVariable("imageID") Long imageID) throws IM3WSException, FileNotFoundException {
+        return getImage(projectPath, imageID,  MURETConfiguration.PREVIEW_IMAGES);
     }
 
 }

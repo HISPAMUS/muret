@@ -64,14 +64,12 @@ public class Page {
         this.id = id;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public BoundingBox getBoundingBox() {
         return boundingBox;
     }
     public void setBoundingBox(BoundingBox boundingBox)  {
         this.boundingBox = boundingBox;
     }
-    @JsonIgnore
     public Image getImage() {
         return image;
     }

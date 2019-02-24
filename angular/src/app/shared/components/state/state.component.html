@@ -1,0 +1,5 @@
+<div [ngSwitch]="state?.state" title="{{getTooltip()}}"> <!-- we could add here behaviour depending on the state -->
+  <fa-icon *ngSwitchCase="'inprogress'" icon="user-clock"></fa-icon>
+  <fa-icon *ngSwitchCase="'done'" icon="check"></fa-icon>
+  <fa-icon *ngSwitchCase="'doublechecked'" icon="check-double"></fa-icon>
+</div>

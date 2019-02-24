@@ -1,61 +1,54 @@
 import { BrowserModule } from '@angular/platform-browser';
-import {ErrorHandler, NgModule} from '@angular/core';
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
-
-import {HttpClientModule} from '@angular/common/http';
-import {AppRoutingModule} from './routing/app-routing.module';
-
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-
-
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-
-
-import {RouterModule} from '@angular/router';
-
-import {LoggerModule, NGXLogger, NgxLoggerLevel} from 'ngx-logger';
-import {GlobalErrorHandlerService} from './error-handling/global-error-handler.service';
-
-import { AngularResizedEventModule } from 'angular-resize-event';
-import { ImageToolBarComponent } from './image-tool-bar/image-tool-bar.component';
-import { StoreModule } from '@ngrx/store';
-import { reducers, metaReducers } from './reducers';
-import {LayoutModule} from "./layout/layout.module";
-import {AboutModule} from "./about/about.module";
-import {HomeModule} from "./home/home.module";
+import {LayoutModule} from './layout/layout.module';
+import {AppRoutingModule} from './app-routing.module';
+import {AboutModule} from './features/about/about.module';
+import { HttpClientModule } from '@angular/common/http';
+import {AuthModule} from './auth/auth.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {ExportModule} from './features/export/export.module';
+import {LoggerModule, NgxLoggerLevel} from 'ngx-logger';
+import {ProjectsModule} from './features/projects/projects.module';
+import {NewProjectModule} from './features/new-project/new-project.module';
+import {DocumentAnalysisModule} from './features/document-analysis/document-analysis.module';
+import {AgnosticRepresentationModule} from './features/agnostic-representation/agnostic-representation.module';
+import {SemanticRepresentationModule} from './features/semantic-representation/semantic-representation.module';
+import {SharedModule} from './shared/shared.module';
+import {intersectionObserverPreset, LazyLoadImageModule} from 'ng-lazyload-image';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    ImageToolBarComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,
-    HttpClientModule,
     RouterModule,
     FormsModule,
-
     ReactiveFormsModule,
-    NgbModule,
-    AngularResizedEventModule, // TODo Quitar
-
+    HttpClientModule,
+    SharedModule,
     LayoutModule,
+    AuthModule,
     AppRoutingModule,
     AboutModule,
-    //HomeModule,
-
-    // LoggerModule.forRoot({serverLoggingUrl: '/api/logs', level: NgxLoggerLevel.DEBUG, serverLogLevel: NgxLoggerLevel.ERROR})
+    ExportModule,
+    ProjectsModule,
+    NewProjectModule,
+    DocumentAnalysisModule,
+    AgnosticRepresentationModule,
+    SemanticRepresentationModule,
+    LazyLoadImageModule.forRoot({
+      preset: intersectionObserverPreset
+    }),
     LoggerModule.forRoot({level: NgxLoggerLevel.DEBUG, serverLogLevel: NgxLoggerLevel.ERROR}),
-    StoreModule.forRoot(reducers, { metaReducers })
+    NgbModule.forRoot()
   ],
-  providers: [
-    //RestClientService,
-    NGXLogger,
-    GlobalErrorHandlerService,
-    { provide: ErrorHandler, useClass: GlobalErrorHandlerService },
-  ], // singleton
+  providers: [], // don't add here singleton services if using @Injectable( providedIn: 'root'})
   bootstrap: [AppComponent]
 })
-export class AppModule { }
-
+export class AppModule {
+}

@@ -38,7 +38,6 @@ public class Permissions {
         this.permissions = permissions;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public Integer getId() {
         return id;
     }
@@ -47,7 +46,6 @@ public class Permissions {
         this.id = id;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public User getUser() {
         return user;
     }
@@ -56,7 +54,6 @@ public class Permissions {
         this.user = user;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public Project getProject() {
         return project;
     }
@@ -65,7 +62,6 @@ public class Permissions {
         this.project = project;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public char getPermission() {
         return permissions;
     }

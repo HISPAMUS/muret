@@ -53,7 +53,6 @@ public class Image {
         this.comments = comments;
         this.state = state;
     }
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public Long getId() {
         return id;
     }
@@ -62,7 +61,6 @@ public class Image {
         this.id = id;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public State getState() {
         return state;
     }
@@ -71,7 +69,6 @@ public class Image {
         this.state = state;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public String getFilename() {
         return filename;
     }

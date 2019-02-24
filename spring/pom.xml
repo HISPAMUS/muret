@@ -77,6 +77,13 @@
             <version>RELEASE</version>
         </dependency>-->
 
+        <!-- For Working with Json Web Tokens (JWT) -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.0</version>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>
@@ -95,6 +102,8 @@
                 <optional>true</optional>
             </dependency>
         </dependencies>
+
+
     </dependencyManagement>
 
     <build>

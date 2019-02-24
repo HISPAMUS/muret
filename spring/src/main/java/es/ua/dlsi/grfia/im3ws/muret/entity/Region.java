@@ -60,7 +60,6 @@ public class Region {
         this.boundingBox = new BoundingBox(fromX, fromY, toX, toY);
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public Long getId() {
         return id;
     }
@@ -69,7 +68,6 @@ public class Region {
         this.id = id;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public BoundingBox getBoundingBox() {
         return boundingBox;
     }
@@ -86,7 +84,6 @@ public class Region {
         this.comments = comments;
     }
 
-    @JsonView(JSONFilteredDataViews.ObjectWithoutRelations.class)
     public RegionType getRegionType() {
         return regionType;
     }

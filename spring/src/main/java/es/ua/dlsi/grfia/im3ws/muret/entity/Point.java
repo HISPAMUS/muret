@@ -1,6 +1,6 @@
 package es.ua.dlsi.grfia.im3ws.muret.entity;
 
-public class Point {
+public class Point implements java.io.Serializable { // Hibernate needs it to be java.io.Serializable
     long time;
     int x;
     int y;
