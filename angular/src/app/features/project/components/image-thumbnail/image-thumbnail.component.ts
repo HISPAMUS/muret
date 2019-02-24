@@ -55,7 +55,7 @@ export class ImageThumbnailComponent implements OnInit {
 
       albums.push(album);
       this.lightbox.open(albums);
-      // window.open(window.URL.createObjectURL(imageBlob), 'Preview ' + this.image.filename, 'width=1280,height=720');
+      // window.open(window.URL.createObjectURL(imageBlob), 'Preview ' + this.image.filename, 'widthPercentage=1280,heightPercentage=720');
     });
   }
 }

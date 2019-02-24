@@ -1,0 +1,26 @@
+<div>
+  <button (click)="zoomOut()"><fa-icon icon="search-minus"></fa-icon></button>
+  <button (click)="zoomIn()"><fa-icon icon="search-plus"></fa-icon></button>
+  <button (click)="zoomFit()"><fa-icon icon="expand"></fa-icon></button>
+
+  <form [formGroup]="checkboxGroupForm">
+    <div class="btn-group btn-group-toggle">
+      <label class="btn-primary" ngbButtonLabel>
+        <input type="checkbox" formControlName="left" ngbButton> Left (pre-checked)
+      </label>
+      <label class="btn-primary" ngbButtonLabel>
+        <input type="checkbox" formControlName="middle" ngbButton> Middle
+      </label>
+      <label class="btn-primary" ngbButtonLabel>
+        <input type="checkbox" formControlName="right" ngbButton> Right
+      </label>
+    </div>
+  </form>
+</div>
+
+<div #canvas id="canvas">
+  <app-svg-canvas [backgroundImage]="imageURL" [shapes]="shapes"
+                  [widthPercentage]="canvasWidthPercentage" [heightPercentage]="canvasHeightPercentage"
+                  [viewPortWidth]="backgroundImageWidth" [viewPortHeight]="backgroundImageHeight">
+  </app-svg-canvas>
+</div>

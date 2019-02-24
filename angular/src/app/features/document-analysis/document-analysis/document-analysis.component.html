@@ -1,0 +1,28 @@
+<div class="container-fluid">
+<div class="row">
+  <nav class="col-2">
+  </nav>
+
+  <section class="col-10">
+    <div *ngIf="documentAnalysisImageProjection$ | async as documentAnalysisImageProjection; else loading">
+      <h2>{{documentAnalysisImageProjection.filename}}</h2>
+
+      <div *ngIf="loadedImage$ | async as loadedImage; else loading">
+        <app-image-annotate [imageURL]="loadedImage" [backgroundImageWidth]="imageWidth"
+                            [backgroundImageHeight]="imageHeight"
+                            [layers]="[pages, regions]" [shapes]="shapes">
+
+        </app-image-annotate>
+
+      </div>
+      <ng-template #loading>
+        <img src="assets/images/loading.svg" alt="Master loading">
+      </ng-template>
+
+    </div>
+    <ng-template #loading>
+      Loading image data ...
+    </ng-template>
+  </section>
+</div>
+</div>

@@ -1,0 +1,35 @@
+<div class="container">
+  <div id="login" class="row justify-content-around align-items-center">
+
+    <!-- login -->
+    <div *ngIf="!authenticated(); else logoutBlock" class="col-5 ">
+      <h1>Login</h1>
+      <form role="form" (submit)="login()">
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input type="text" class="form-control" id="username" name="username" [(ngModel)]="credentials.username"/>
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" class="form-control" id="password" name="password" [(ngModel)]="credentials.password"/>
+        </div>
+
+        <div id="loginError" class="alert alert-danger" [hidden]="!isLoginFailed">
+          There was a problem logging in: {{errorMessage}}
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+      <button class="btn btn-secondary" (click)="dev()">Dev</button>
+    </div>
+
+    <!-- logout -->
+    <ng-template #logoutBlock>
+      <div class="col-5">
+        <p>Do you really want to exit? &nbsp;
+          <button class="btn btn-primary" (click)="logout()">Press to logout</button>
+        </p>
+      </div>
+
+    </ng-template>
+</div>
+</div>
