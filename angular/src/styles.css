@@ -20,3 +20,36 @@ a {
   margin-bottom: 25px;
 }
 
+/* Cursors */
+.cursorAuto            { cursor: auto; }
+.cursorDefault         { cursor: default; }
+.cursorNone            { cursor: none; }
+.cursorContextMenu    { cursor: context-menu; }
+.cursorHelp            { cursor: help; }
+.cursorPointer         { cursor: pointer; }
+.cursorProgress        { cursor: progress; }
+.cursorWait            { cursor: wait; }
+.cursorCell            { cursor: cell; }
+.cursorCrosshair       { cursor: crosshair; }
+.cursorText            { cursor: text; }
+.cursorVerticalText   { cursor: vertical-text; }
+.cursorAlias           { cursor: alias; }
+.cursorCopy            { cursor: copy; }
+.cursorMove            { cursor: move; }
+.cursorNoDrop         { cursor: no-drop; }
+.cursorNotAllowed     { cursor: not-allowed; }
+.cursorAllScroll      { cursor: all-scroll; }
+.cursorColResize      { cursor: col-resize; }
+.cursorRowResize      { cursor: row-resize; }
+.cursorNResize        { cursor: n-resize; }
+.cursorEresize        { cursor: e-resize; }
+.cursorSresize        { cursor: s-resize; }
+.cursorWresize        { cursor: w-resize; }
+.cursornSresize       { cursor: ns-resize; }
+.cursoreWresize       { cursor: ew-resize; }
+.cursorNresize       { cursor: ne-resize; }
+.cursorNWresize       { cursor: nw-resize; }
+.cursorSEresize       { cursor: se-resize; }
+.cursorSWresize       { cursor: sw-resize; }
+.cursorNESWresize     { cursor: nesw-resize; }
+.cursorNWSEresize     { cursor: nwse-resize; }

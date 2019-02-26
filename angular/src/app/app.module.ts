@@ -20,6 +20,16 @@ import {SharedModule} from './shared/shared.module';
 import {intersectionObserverPreset, LazyLoadImageModule} from 'ng-lazyload-image';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faSearchMinus } from '@fortawesome/free-solid-svg-icons';
+import { faSearchPlus } from '@fortawesome/free-solid-svg-icons';
+import { faExpand } from '@fortawesome/free-solid-svg-icons';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faCheckDouble } from '@fortawesome/free-solid-svg-icons';
+import { faUserClock} from '@fortawesome/free-solid-svg-icons';
+
+
 @NgModule({
   declarations: [
     AppComponent
@@ -30,6 +40,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    FontAwesomeModule,
     SharedModule,
     LayoutModule,
     AuthModule,
@@ -51,4 +62,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
   bootstrap: [AppComponent]
 })
 export class AppModule {
+  constructor() {
+    library.add(faSearchMinus);
+    library.add(faSearchPlus);
+    library.add(faExpand);
+    library.add(faCheck);
+    library.add(faCheckDouble);
+    library.add(faUserClock);
+  }
 }

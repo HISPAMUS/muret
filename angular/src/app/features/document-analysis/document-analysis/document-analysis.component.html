@@ -1,6 +1,29 @@
 <div class="container-fluid">
 <div class="row">
   <nav class="col-2">
+    <div>
+      <button (click)="zoomOut()"><fa-icon icon="search-minus"></fa-icon></button>
+      <button (click)="zoomIn()"><fa-icon icon="search-plus"></fa-icon></button>
+      <button (click)="zoomFit()"><fa-icon icon="expand"></fa-icon></button>
+
+      <button (click)="select()">TO-DO Select</button>
+      <button (click)="edit()">TO-DO Edit</button>
+      <button (click)="draw()">TO-DO Draw</button>
+
+      <form [formGroup]="checkboxGroupForm">
+        <div class="btn-group btn-group-toggle">
+          <label class="btn-primary" ngbButtonLabel>
+            <input type="checkbox" formControlName="left" ngbButton> Left (pre-checked)
+          </label>
+          <label class="btn-primary" ngbButtonLabel>
+            <input type="checkbox" formControlName="middle" ngbButton> Middle
+          </label>
+          <label class="btn-primary" ngbButtonLabel>
+            <input type="checkbox" formControlName="right" ngbButton> Right
+          </label>
+        </div>
+      </form>
+    </div>
   </nav>
 
   <section class="col-10">
@@ -8,11 +31,33 @@
       <h2>{{documentAnalysisImageProjection.filename}}</h2>
 
       <div *ngIf="loadedImage$ | async as loadedImage; else loading">
-        <app-image-annotate [imageURL]="loadedImage" [backgroundImageWidth]="imageWidth"
-                            [backgroundImageHeight]="imageHeight"
-                            [layers]="[pages, regions]" [shapes]="shapes">
+        <div #canvas id="canvas">
+          <!-- shape selected, changed, and deselected are forwarded from the canvas -->
+          <app-svg-canvas #svgCanvasComponent
+                          [shapes]="shapes" [backgroundImage]="loadedImage"
+                          [widthPercentage]="canvasWidthPercentage" [heightPercentage]="canvasHeightPercentage"
+                          [viewPortWidth]="imageWidth" [viewPortHeight]="imageHeight"
+                          (svgShapeCreated)="onShapeCreated($event)"
+                          (svgShapeChanged)="onShapeChanged($event)"
+                          (svgShapeSelected)="onShapeSelected($event)"
+                          (svgShapeDeselected)="onShapeDeselected($event)"
 
-        </app-image-annotate>
+          >
+          </app-svg-canvas>
+        </div>
+
+
+
+        <!--<app-image-annotate [imageURL]="loadedImage" [backgroundImageWidth]="imageWidth"
+                            [backgroundImageHeight]="imageHeight"
+                            [layers]="[pages, regions]" [shapes]="shapes"
+          (shapeCreated)="onShapeCreated($event)"
+          (shapeChanged)="onShapeChanged($event)"
+          (shapeSelected)="onShapeSelected($event)"
+          (shapeDeselected)="onShapeDeselected($event)"
+        >
+
+        </app-image-annotate>-->
 
       </div>
       <ng-template #loading>

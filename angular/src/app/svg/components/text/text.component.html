@@ -1,1 +1,6 @@
-<svg:text attr.x="{{shape.fromX}}" attr.y="{{shape.fromY}}" attr.fill="{{shape.fillColor}}">{{shape.text}}</svg:text>
+<svg:text id="{{shape.id}}"
+          attr.x="{{shape.fromX}}" attr.y="{{shape.fromY}}"
+          attr.fill="{{shape.fillColor}}" *ngIf="!shape.hidden"
+>
+  {{shape.text}}
+</svg:text>

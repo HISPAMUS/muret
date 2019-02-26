@@ -1,4 +1,4 @@
-<svg #canvas xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+<svg [ngClass]="cursorClass"  #canvas xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
      (mousedown)="onMouseDown($event)" (mouseup)="onMouseUp($event)" (mousemove)="onMouseMove($event)"
      [attr.width.%]="widthPercentString" [attr.height.%]="heightPercentString"
      [attr.viewBox]="viewBox">

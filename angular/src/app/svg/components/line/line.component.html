@@ -1,5 +1,10 @@
-<svg:line attr.x1="{{shape.fromX}}" attr.y1="{{shape.fromY}}" attr.x2="{{shape.toX}}" attr.y2="{{shape.toY}}"
-          attr.stroke="{{shape.strokeColor}}"
-          attr.stroke-width="{{shape.strokeWidth}}"
-          attr.stroke-dasharray="{{shape.strokeDashArray}}"
-/>
+<svg:g>
+  <svg:line id="{{shape.id}}"
+            attr.x1="{{shape.fromX}}" attr.y1="{{shape.fromY}}" attr.x2="{{shape.toX}}" attr.y2="{{shape.toY}}"
+            attr.stroke="{{shape.strokeColor}}"
+            attr.stroke-width="{{shape.strokeWidth}}"
+            attr.stroke-dasharray="{{shape.strokeDashArray}}"
+            *ngIf="!shape.hidden"
+  />
+  <svg:text *ngIf="shape.label" attr.x="{{shape.fromX+3}}" attr.y="{{ shape.fromY+8 }}">{{ shape.label }}</svg:text>
+</svg:g>

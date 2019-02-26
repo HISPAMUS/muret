@@ -9,7 +9,7 @@ Components don't include business logic, rather, it is contained in different Se
  Prefer template async over synchronized
  
  In order to develop, we have added at development time only the button "dev" at login component
- 
+  
 https://www.npmjs.com/package/angular-svg 
 # Angular
 

@@ -1,5 +1,9 @@
-<svg:path attr.fill="none" attr.d="{{shape.d}}" attr.stroke="{{shape.strokeColor}}"
-          attr.stroke-width="{{shape.strokeWidth}}"
-          attr.stroke-dasharray="{{shape.strokeDashArray}}"
-          />
-
+<svg:g>
+  <svg:path id="{{shape.id}}"
+            attr.fill="none" attr.d="{{shape.d}}" attr.stroke="{{shape.strokeColor}}"
+            attr.stroke-width="{{shape.strokeWidth}}"
+            attr.stroke-dasharray="{{shape.strokeDashArray}}"
+            *ngIf="!shape.hidden"
+            />
+  <svg:text *ngIf="shape.label" attr.x="{{shape.fromX+3}}" attr.y="{{ shape.fromY+8 }}">{{ shape.label }}</svg:text>
+</svg:g>
