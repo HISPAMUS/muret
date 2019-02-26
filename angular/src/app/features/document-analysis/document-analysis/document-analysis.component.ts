@@ -14,6 +14,9 @@ import {SvgCanvasComponent} from '../../../svg/components/svg-canvas/svg-canvas.
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {SVGCanvasState} from '../../../svg/services/svg-canvas-state.service';
 import {RegionType} from '../../../shared/entities/region-type';
+import {Page} from '../../../shared/entities/page';
+import {BoundingBox} from '../../../shared/entities/bounding-box';
+import {Region} from '../../../shared/entities/region';
 
 @Component({
   selector: 'app-document-analysis',
@@ -28,7 +31,7 @@ export class DocumentAnalysisComponent implements OnInit {
 
   regionTypes$: Observable<RegionType[]>;
 
-  private shapes: Shape[];
+  private shapes = new Array<Shape>();
   private imageHeight: number;
   private imageWidth: number;
 
@@ -38,15 +41,15 @@ export class DocumentAnalysisComponent implements OnInit {
   canvasWidthPercentage: number;
   zoomFactor = 1;
 
-  checkboxGroupForm: FormGroup;
+  layersCheckboxes: FormGroup;
 
   constructor(@Self() private documentAnalysisService: DocumentAnalysisService,
               private imageFilesService: ImageFilesService,
               private route: ActivatedRoute,
               private formBuilder: FormBuilder
               ) {
-      this.checkboxGroupForm = this.formBuilder.group({
-        pages: true
+      this.layersCheckboxes = this.formBuilder.group({
+        page: true
       });
   }
 
@@ -55,11 +58,14 @@ export class DocumentAnalysisComponent implements OnInit {
 
     // get different region types
     this.regionTypes$ = this.documentAnalysisService.getRegionTypes$().pipe(
-      tap(regions => regions.forEach(region => {
-        this.checkboxGroupForm.addControl(region.name, new FormControl());
+      tap(regionTypes => regionTypes.forEach(regionType => {
+        this.layersCheckboxes.addControl(regionType.name, new FormControl(true));
         }
       ))
     );
+    this.layersCheckboxes.valueChanges.subscribe(val => {
+      this.onLayerChanged(val);
+    });    
 
     // download image
     this.documentAnalysisImageProjection$ = this.documentAnalysisService.getDocumentAnalysisImageProjection$(id);
@@ -69,57 +75,14 @@ export class DocumentAnalysisComponent implements OnInit {
       })
     );
 
-
-
-    this.shapes = new Array();
-    const rect = new Rectangle();
-    rect.id = '1';
-    rect.fromX = 0;
-    rect.fromY = 0;
-    rect.width = 1000;
-    rect.height  = 500;
-    rect.strokeDashArray = '20';
-    rect.fillColor = 'blue';
-    rect.strokeColor = 'green';
-    rect.strokeWidth = 20;
-
-    this.shapes.push(rect);
-
-
-    const line = new Line();
-    line.id = '2';
-    line.fromX = 0;
-    line.fromY = 0;
-    line.toX = 2965;
-    line.toY = 2126;
-    line.strokeColor = 'yellow';
-    line.strokeWidth = 10;
-    this.shapes.push(line);
-
-    const text = new Text();
-    text.id = '3';
-    text.fromX = 125;
-    text.fromY = 123;
-    text.text = 'David';
-    this.shapes.push(text);
-
-    const path = new Path();
-    path.id = '4';
-    path.d = 'M150 0 L75 200 L225 200 Z';
-    this.shapes.push(path);
-
-
-    text.fromX = 0;
-    text.fromY = 200;
-
-
     this.computeZoom();
   }
 
   private readImageContents(documentAnalysisImageProjection: DocumentAnalysisImageProjection) {
     this.imageWidth = documentAnalysisImageProjection.width;
     this.imageHeight = documentAnalysisImageProjection.height;
-
+    this.drawPagesAndRegions(documentAnalysisImageProjection);
+    
     return this.imageFilesService.getMasterImageBlob$(documentAnalysisImageProjection.projectPath, documentAnalysisImageProjection.id).
       pipe(map(imageBlob => window.URL.createObjectURL(imageBlob)));
   }
@@ -194,4 +157,83 @@ export class DocumentAnalysisComponent implements OnInit {
     return item.id; // unique id corresponding to the item
   }
 
+  private drawPagesAndRegions(documentAnalysisImageProjection: DocumentAnalysisImageProjection) {
+    documentAnalysisImageProjection.pages.forEach(page => {
+      this.drawPage(page);
+      page.regions.forEach(region => {
+        this.drawRegion(region);
+      });
+    });
+  }
+
+  example() {
+    const rect = new Rectangle();
+    rect.id = '1';
+    rect.fromX = 0;
+    rect.fromY = 0;
+    rect.width = 1000;
+    rect.height  = 500;
+    rect.strokeDashArray = '20';
+    rect.fillColor = 'blue';
+    rect.strokeColor = 'green';
+    rect.strokeWidth = 20;
+
+    this.shapes.push(rect);
+
+
+    const line = new Line();
+    line.id = '2';
+    line.fromX = 0;
+    line.fromY = 0;
+    line.toX = 2965;
+    line.toY = 2126;
+    line.strokeColor = 'yellow';
+    line.strokeWidth = 10;
+    this.shapes.push(line);
+
+    const text = new Text();
+    text.id = '3';
+    text.fromX = 125;
+    text.fromY = 123;
+    text.text = 'David';
+    this.shapes.push(text);
+
+    const path = new Path();
+    path.id = '4';
+    path.d = 'M150 0 L75 200 L225 200 Z';
+    this.shapes.push(path);
+
+
+    text.fromX = 0;
+    text.fromY = 200;
+  }
+
+  private createBox(layer: string, id: number, boundingBox: BoundingBox, color: string): Rectangle {
+    const rect = new Rectangle();
+    rect.id = layer + id;
+    rect.fromX = boundingBox.fromX;
+    rect.fromY = boundingBox.fromY;
+    rect.width = boundingBox.toX - boundingBox.fromX;
+    rect.height  = boundingBox.toY - boundingBox.fromY;
+    rect.fillColor = 'transparent';
+    rect.strokeColor = color;
+    rect.strokeWidth = 3;
+    rect.layer = layer;
+    this.shapes.push(rect);
+    return rect;
+  }
+  private drawPage(page: Page) {
+    this.createBox('page', page.id, page.boundingBox, 'red' ).data = page; // TODO color
+  }
+
+  private drawRegion(region: Region) {
+    this.createBox(region.regionType.name, region.id, region.boundingBox, '#' + region.regionType.hexargb ).data = region;
+  }
+
+  private onLayerChanged(val: any) {
+    this.shapes.forEach(shape => {
+      const checkBox = this.layersCheckboxes.get(shape.layer);
+      shape.hidden = !this.layersCheckboxes.get(shape.layer).value;
+    });
+  }
 }

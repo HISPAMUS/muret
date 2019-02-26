@@ -16,5 +16,4 @@ export class DocumentAnalysisService {
   public getRegionTypes$(): Observable<RegionType[]> {
     return this.apiRestClientService.getListExcerptProjection$<RegionType>('regionTypes');
   }
-
 }

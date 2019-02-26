@@ -11,5 +11,6 @@ export class Shape {
   strokeDashArray?: string; // see SVG stroke-dasharray
   hidden = false;
   label?: string;
+  layer: string;
   data?: any;
 }

@@ -15,10 +15,10 @@
   <section class="col-10">
     <!-- layers selector -->
     <nav class="row">
-      <form [formGroup]="checkboxGroupForm">
+      <form [formGroup]="layersCheckboxes">
         <div class="col btn-group btn-group-toggle">
           <label class="btn-primary" ngbButtonLabel>
-            <input type="checkbox" formControlName="pages" ngbButton> Pages
+            <input type="checkbox" formControlName="page" ngbButton> Pages
           </label>
           <label *ngFor="let regionType of regionTypes$ | async; trackBy: trackByRegionTypeFn" class="btn-primary" ngbButtonLabel>
             <input type="checkbox" formControlName="{{regionType.name}}" ngbButton> {{regionType.name}}
