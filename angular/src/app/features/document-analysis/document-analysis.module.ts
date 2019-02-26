@@ -7,6 +7,7 @@ import {SharedModule} from '../../shared/shared.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {SvgModule} from '../../svg/svg.module';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [DocumentAnalysisComponent],
@@ -18,6 +19,7 @@ import {SvgModule} from '../../svg/svg.module';
     FormsModule,
     ReactiveFormsModule,
     FontAwesomeModule,
+    NgbModule
   ]
 })
 export class DocumentAnalysisModule {

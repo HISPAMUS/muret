@@ -11,7 +11,6 @@ import {Coordinate} from '../../model/coordinate';
 export class ShapeComponent implements OnInit {
   shape: Shape;
 
-  handlesRadius = 30;
   editing = false;
   selected = false;
 
@@ -27,7 +26,6 @@ export class ShapeComponent implements OnInit {
     this.handleSelected = handle;
     $event.stopPropagation();
   }
-
 
   public select(selected: boolean) {
     this.selected = selected;

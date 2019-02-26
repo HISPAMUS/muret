@@ -6,9 +6,29 @@
       <button (click)="zoomIn()"><fa-icon icon="search-plus"></fa-icon></button>
       <button (click)="zoomFit()"><fa-icon icon="expand"></fa-icon></button>
 
-      <button (click)="select()">TO-DO Select</button>
-      <button (click)="edit()">TO-DO Edit</button>
-      <button (click)="draw()">TO-DO Draw</button>
+     <form [formGroup]="radioGroupForm">
+        <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="model">
+          <!--<button (click)="select()">TO-DO Select</button>-->
+          <label ngbButtonLabel class="btn-light">
+            <input ngbButton type="radio" [value]="'idle'" (click)="idle()"> Idle
+          </label>
+          <label ngbButtonLabel class="btn-light">
+            <input ngbButton type="radio" value="draw" (click)="draw()"> Add
+          </label>
+          <label ngbButtonLabel class="btn-light">
+            <input ngbButton type="radio" value="edit" (click)="edit()"> Edit
+          </label>
+        </div>
+      </form>
+
+      <form [formGroup]="regionTypesRadioGroupForm">
+        <div class="btn-group-vertical btn-group-toggle" ngbRadioGroup name="radioBasic2" formControlName="regionTypeRB">
+          <label *ngFor="let regionType of regionTypes$ | async; trackBy: trackByRegionTypeFn" class="btn-primary" ngbButtonLabel>
+            <input ngbButton type="radio" value="{{regionType.name}}" (click)="changeRegionType(regionType)"> {{regionType.name}}
+          </label>
+        </div>
+      </form>
+
     </div>
   </nav>
 

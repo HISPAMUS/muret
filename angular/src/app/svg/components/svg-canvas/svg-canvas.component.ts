@@ -293,6 +293,11 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
 
   private createShape(coordinate: Coordinate) {
     const shape = this.createShapeFromType(this.nextShapeToDraw);
+    shape.fillColor = 'transparent';
+    shape.strokeColor = 'black';
+    shape.strokeWidth = 3;
+
+
     // shape.id = '1000'; // TODO
     this.selectedComponent = this.addShapeComponent(shape);
     this.selectedComponent.startDrawing(coordinate);

@@ -10,25 +10,25 @@
   <svg:text *ngIf="shape.label" attr.x="{{shape.fromX+3}}" attr.y="{{ shape.fromY+8 }}">{{ shape.label }}</svg:text>
 
   <svg:g *ngIf="editing">
-    <svg:circle  attr.cx="{{shape.fromX}}" attr.cy="{{shape.fromY}}" attr.r="{{handlesRadius}}"
+    <svg:circle  attr.cx="{{shape.fromX}}" attr.cy="{{shape.fromY}}" attr.r="{{shape.strokeWidth*5}}"
                  attr.stroke="{{shape.strokeColor}}" attr.stroke-width="0" attr.fill="{{shape.strokeColor}}"
                  class="cursorNWresize"
                  (mousedown)="onHandleMouseDown($event, 'svgTopLeftHandle')"
     />
 
-    <svg:circle  attr.cx="{{shape.fromX + shape.width}}" attr.cy="{{shape.fromY}}" attr.r="{{handlesRadius}}"
+    <svg:circle  attr.cx="{{shape.fromX + shape.width}}" attr.cy="{{shape.fromY}}" attr.r="{{shape.strokeWidth*5}}"
                  attr.stroke="{{shape.strokeColor}}" attr.stroke-width="0" attr.fill="{{shape.strokeColor}}"
                  class="cursorNEresize"
                  (mousedown)="onHandleMouseDown($event, 'svgTopRightHandle')"
     />
 
-    <svg:circle  attr.cx="{{shape.fromX}}" attr.cy="{{shape.fromY + shape.height}}" attr.r="{{handlesRadius}}"
+    <svg:circle  attr.cx="{{shape.fromX}}" attr.cy="{{shape.fromY + shape.height}}" attr.r="{{shape.strokeWidth*5}}"
                  attr.stroke="{{shape.strokeColor}}" attr.stroke-width="0" attr.fill="{{shape.strokeColor}}"
                  class="cursorSWresize"
                  (mousedown)="onHandleMouseDown($event, 'svgBottomLeftHandle')"
     />
 
-    <svg:circle  attr.cx="{{shape.fromX + shape.width}}" attr.cy="{{shape.fromY  + shape.height}}" attr.r="{{handlesRadius}}"
+    <svg:circle  attr.cx="{{shape.fromX + shape.width}}" attr.cy="{{shape.fromY  + shape.height}}" attr.r="{{shape.strokeWidth*5}}"
                  attr.stroke="{{shape.strokeColor}}" attr.stroke-width="0" attr.fill="{{shape.strokeColor}}"
                  class="cursorSEresize"
                  (mousedown)="onHandleMouseDown($event, 'svgBottomRightHandle')"

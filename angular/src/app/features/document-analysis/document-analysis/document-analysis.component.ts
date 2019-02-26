@@ -30,6 +30,7 @@ export class DocumentAnalysisComponent implements OnInit {
   loadedImage$: Observable<string>;
 
   regionTypes$: Observable<RegionType[]>;
+  regionTypes: RegionType[]; // non observable
 
   private shapes = new Array<Shape>();
   private imageHeight: number;
@@ -43,29 +44,47 @@ export class DocumentAnalysisComponent implements OnInit {
 
   layersCheckboxes: FormGroup;
 
+  // tools
+  public radioGroupForm: FormGroup;
+  public regionTypesRadioGroupForm: FormGroup;
+  private selectedShape: Shape;
+  // end tools
+
   constructor(@Self() private documentAnalysisService: DocumentAnalysisService,
               private imageFilesService: ImageFilesService,
               private route: ActivatedRoute,
               private formBuilder: FormBuilder
               ) {
-      this.layersCheckboxes = this.formBuilder.group({
-        page: true
-      });
   }
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
+    // tools
+    this.radioGroupForm = this.formBuilder.group({
+      model: 'idle'
+    });
+
+    this.regionTypesRadioGroupForm = this.formBuilder.group({
+      regionTypeRB: 'none'
+    });
+
+    this.layersCheckboxes = this.formBuilder.group({
+      page: true
+    });
+
     // get different region types
     this.regionTypes$ = this.documentAnalysisService.getRegionTypes$().pipe(
       tap(regionTypes => regionTypes.forEach(regionType => {
         this.layersCheckboxes.addControl(regionType.name, new FormControl(true));
+        this.regionTypesRadioGroupForm.addControl('regionTypeRB', new FormControl(false));
+        this.regionTypes = regionTypes;
         }
       ))
     );
     this.layersCheckboxes.valueChanges.subscribe(val => {
       this.onLayerChanged(val);
-    });    
+    });
 
     // download image
     this.documentAnalysisImageProjection$ = this.documentAnalysisService.getDocumentAnalysisImageProjection$(id);
@@ -75,6 +94,7 @@ export class DocumentAnalysisComponent implements OnInit {
       })
     );
 
+
     this.computeZoom();
   }
 
@@ -82,7 +102,7 @@ export class DocumentAnalysisComponent implements OnInit {
     this.imageWidth = documentAnalysisImageProjection.width;
     this.imageHeight = documentAnalysisImageProjection.height;
     this.drawPagesAndRegions(documentAnalysisImageProjection);
-    
+
     return this.imageFilesService.getMasterImageBlob$(documentAnalysisImageProjection.projectPath, documentAnalysisImageProjection.id).
       pipe(map(imageBlob => window.URL.createObjectURL(imageBlob)));
   }
@@ -119,14 +139,26 @@ export class DocumentAnalysisComponent implements OnInit {
     return this.svgCanvasComponent.requestStateChange(SVGCanvasState.eDrawing, Rectangle);
   }
 
+  public idle(): SVGCanvasState {
+    return this.svgCanvasComponent.requestStateChange(SVGCanvasState.eIdle);
+  }
 
   onShapeCreated(shape: Shape) {
+    // TODO crear páginas
     // TODO
     // shape.id = '10202';
     console.log('Adding shape');
     // the array address must be changed in order to propagate changes to the @Input onChange
     const error = false;
-    if (error) {
+    const regionTypeName = this.regionTypesRadioGroupForm.get('regionTypeRB').value;
+
+    // TODO algo más elegante....
+    const regionType = this.regionTypes.find(rt => rt.name === regionTypeName);
+    shape.layer = regionTypeName;
+    // TODO (shape.data as Region).regionType = regionType;
+    shape.strokeColor = '#' + regionType.hexargb; // TODO TODO TODO
+
+    if (!error) {
       this.shapes = [...this.shapes, shape];
     } else {
       this.shapes = [...this.shapes]; // error - propagate error by not adding the shape
@@ -134,23 +166,29 @@ export class DocumentAnalysisComponent implements OnInit {
   }
 
   onShapeChanged(shape: Shape) {
-    console.log('New y' + shape.fromY);
-    // TODO como redux, copiar estado anterior y este
-
-    const error = true;
+    const error = false;
     if (error) {
       shape.fromY = 15;
     }
-
-
   }
 
-  onShapeSelected($event: Shape) {
-    // TODO
+  changeRegionType(regionType: RegionType) {
+    if (this.selectedShape) {
+      const error = false;
+      if (!error) {
+        this.selectedShape.layer = regionType.name;
+        this.selectedShape.strokeColor = '#' + regionType.hexargb; // TODO enviar a BBDD y cambiar esto en la respuesta∫
+      }
+    }
   }
 
-  onShapeDeselected($event: Shape) {
-    // TODO
+  onShapeSelected(shape: Shape) {
+    this.selectedShape = shape;
+    this.regionTypesRadioGroupForm.get('regionTypeRB').setValue(shape.layer);
+  }
+
+  onShapeDeselected(shape: Shape) {
+    this.selectedShape = null;
   }
 
   trackByRegionTypeFn(index, item: RegionType) {
@@ -236,4 +274,6 @@ export class DocumentAnalysisComponent implements OnInit {
       shape.hidden = !this.layersCheckboxes.get(shape.layer).value;
     });
   }
+
+
 }
