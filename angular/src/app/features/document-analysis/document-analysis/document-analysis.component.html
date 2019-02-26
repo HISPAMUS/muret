@@ -9,65 +9,56 @@
       <button (click)="select()">TO-DO Select</button>
       <button (click)="edit()">TO-DO Edit</button>
       <button (click)="draw()">TO-DO Draw</button>
-
-      <form [formGroup]="checkboxGroupForm">
-        <div class="btn-group btn-group-toggle">
-          <label class="btn-primary" ngbButtonLabel>
-            <input type="checkbox" formControlName="left" ngbButton> Left (pre-checked)
-          </label>
-          <label class="btn-primary" ngbButtonLabel>
-            <input type="checkbox" formControlName="middle" ngbButton> Middle
-          </label>
-          <label class="btn-primary" ngbButtonLabel>
-            <input type="checkbox" formControlName="right" ngbButton> Right
-          </label>
-        </div>
-      </form>
     </div>
   </nav>
 
   <section class="col-10">
-    <div *ngIf="documentAnalysisImageProjection$ | async as documentAnalysisImageProjection; else loading">
-      <h2>{{documentAnalysisImageProjection.filename}}</h2>
-
-      <div *ngIf="loadedImage$ | async as loadedImage; else loading">
-        <div #canvas id="canvas">
-          <!-- shape selected, changed, and deselected are forwarded from the canvas -->
-          <app-svg-canvas #svgCanvasComponent
-                          [shapes]="shapes" [backgroundImage]="loadedImage"
-                          [widthPercentage]="canvasWidthPercentage" [heightPercentage]="canvasHeightPercentage"
-                          [viewPortWidth]="imageWidth" [viewPortHeight]="imageHeight"
-                          (svgShapeCreated)="onShapeCreated($event)"
-                          (svgShapeChanged)="onShapeChanged($event)"
-                          (svgShapeSelected)="onShapeSelected($event)"
-                          (svgShapeDeselected)="onShapeDeselected($event)"
-
-          >
-          </app-svg-canvas>
+    <!-- layers selector -->
+    <nav class="row">
+      <form [formGroup]="checkboxGroupForm">
+        <div class="col btn-group btn-group-toggle">
+          <label class="btn-primary" ngbButtonLabel>
+            <input type="checkbox" formControlName="pages" ngbButton> Pages
+          </label>
+          <label *ngFor="let regionType of regionTypes$ | async; trackBy: trackByRegionTypeFn" class="btn-primary" ngbButtonLabel>
+            <input type="checkbox" formControlName="{{regionType.name}}" ngbButton> {{regionType.name}}
+          </label>
         </div>
+      </form>
+    </nav>
 
+    <!-- image -->
+    <article class="row">
+      <div class="col">
+        <div *ngIf="documentAnalysisImageProjection$ | async as documentAnalysisImageProjection; else loading">
+          <h2>{{documentAnalysisImageProjection.filename}}</h2>
 
+          <div *ngIf="loadedImage$ | async as loadedImage; else loading">
+            <div #canvas id="canvas">
+              <!-- shape selected, changed, and deselected are forwarded from the canvas -->
+              <app-svg-canvas #svgCanvasComponent
+                              [shapes]="shapes" [backgroundImage]="loadedImage"
+                              [widthPercentage]="canvasWidthPercentage" [heightPercentage]="canvasHeightPercentage"
+                              [viewPortWidth]="imageWidth" [viewPortHeight]="imageHeight"
+                              (svgShapeCreated)="onShapeCreated($event)"
+                              (svgShapeChanged)="onShapeChanged($event)"
+                              (svgShapeSelected)="onShapeSelected($event)"
+                              (svgShapeDeselected)="onShapeDeselected($event)"
 
-        <!--<app-image-annotate [imageURL]="loadedImage" [backgroundImageWidth]="imageWidth"
-                            [backgroundImageHeight]="imageHeight"
-                            [layers]="[pages, regions]" [shapes]="shapes"
-          (shapeCreated)="onShapeCreated($event)"
-          (shapeChanged)="onShapeChanged($event)"
-          (shapeSelected)="onShapeSelected($event)"
-          (shapeDeselected)="onShapeDeselected($event)"
-        >
+              >
+              </app-svg-canvas>
+            </div>
+          </div>
+          <ng-template #loading>
+            <img src="assets/images/loading.svg" alt="Master loading">
+          </ng-template>
 
-        </app-image-annotate>-->
-
+        </div>
+        <ng-template #loading>
+          Loading image data ...
+        </ng-template>
       </div>
-      <ng-template #loading>
-        <img src="assets/images/loading.svg" alt="Master loading">
-      </ng-template>
-
-    </div>
-    <ng-template #loading>
-      Loading image data ...
-    </ng-template>
+    </article>
   </section>
 </div>
 </div>
