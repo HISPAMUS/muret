@@ -1,23 +1,22 @@
 package es.ua.dlsi.grfia.im3ws.muret.controller;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Image;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Page;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Region;
-import es.ua.dlsi.grfia.im3ws.muret.entity.RegionType;
+import es.ua.dlsi.grfia.im3ws.controller.ChangeResponse;
+import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.model.DocumentAnalysisModel;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.PageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.RegionTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author drizo
@@ -45,20 +44,63 @@ public class DocumentAnalysisController {
         this.documentAnalysisModel = documentAnalysisModel;
     }
 
-    /**
-     * It returns the new list of pages of the image
-     * @param id
-     * @param x
-     * @return
-     * @throws IM3WSException
-     */
-    @GetMapping(path = {"pageSplit/{id}/{x}"})
-    public List<Page> pageSplit(@PathVariable("id") Long id, @PathVariable("x") Double x) throws IM3WSException {
-        Optional<Image> image = imageRepository.findById(id);
-        if (!image.isPresent()) {
-            throw new IM3WSException("Cannot find an image with id " + id);
+
+    @PutMapping(path = {"pageBoundingBoxUpdate"})
+    public ChangeResponse pageBoundingBoxUpdate(@RequestBody BoundingBox boundingBox) throws IM3WSException {
+        try {
+            Optional<Page> page = pageRepository.findById(boundingBox.getId());
+            if (!page.isPresent()) {
+                throw new IM3WSException("Cannot find a page with id " + boundingBox.getId());
+            }
+            page.get().setBoundingBox(boundingBox);
+            pageRepository.save(page.get());
+            return new ChangeResponse();
+        } catch (Throwable t) {
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot update page boundingBox", t);
+            return new ChangeResponse(false, null, t.getMessage());
         }
-        return documentAnalysisModel.pageSplit(image.get(), x.intValue());
+    }
+
+    @PutMapping(path = {"regionUpdate"})
+    public ChangeResponse regionUpdate(@RequestBody Region region) throws IM3WSException {
+        try {
+            Optional<Region> persistentRegion = regionRepository.findById(region.getId());
+            if (!persistentRegion.isPresent()) {
+                throw new IM3WSException("Cannot find a region with id " + region.getId());
+            }
+            if (region.getBoundingBox() != null) {
+                persistentRegion.get().setBoundingBox(region.getBoundingBox());
+            }
+            if (region.getRegionType() != null && !Objects.equals(persistentRegion.get().getRegionType(), region.getRegionType())) {
+                Optional<RegionType> persistentRegionType = regionTypeRepository.findById(region.getRegionType().getId());
+                if (!persistentRegionType.isPresent()) {
+                    throw new IM3WSException("Cannot find a region type with id " + region.getRegionType().getId());
+                }
+
+                persistentRegion.get().setRegionType(persistentRegionType.get());
+            }
+            regionRepository.save(persistentRegion.get());
+            return new ChangeResponse();
+        } catch (Throwable t) {
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot update region boundingBox", t);
+            return new ChangeResponse(false, null, t.getMessage());
+        }
+    }
+
+    @Transactional // keep session open - avoid "failed to lazily initialize a collection" error
+    @DeleteMapping(path = {"clear/{imageID}"})
+    public ChangeResponse<List<Page>> clear(@PathVariable("imageID") long imageID) throws IM3WSException {
+        try {
+            Optional<Image> persistentImage = imageRepository.findById(imageID);
+            if (!persistentImage.isPresent()) {
+                throw new IM3WSException("Cannot find a image with id " + imageID);
+            }
+            List<Page> createdPages = this.documentAnalysisModel.leaveJustOnePageAndRegion(persistentImage.get());
+            return new ChangeResponse<>(true, createdPages, null);
+        } catch (Throwable t) {
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot update region boundingBox", t);
+            return new ChangeResponse(false, null, t.getMessage());
+        }
     }
 
     /**
@@ -68,7 +110,23 @@ public class DocumentAnalysisController {
      * @return
      * @throws IM3WSException
      */
-    @GetMapping(path = {"regionSplit/{id}/{x}/{y}"})
+    /*@GetMapping(path = {"pageSplit/{id}/{x}"})
+    public List<Page> pageSplit(@PathVariable("id") Long id, @PathVariable("x") Double x) throws IM3WSException {
+        Optional<Image> image = imageRepository.findById(id);
+        if (!image.isPresent()) {
+            throw new IM3WSException("Cannot find an image with id " + id);
+        }
+        return documentAnalysisModel.pageSplit(image.get(), x.intValue());
+    }*/
+
+    /**
+     * It returns the new list of pages of the image
+     * @param id
+     * @param x
+     * @return
+     * @throws IM3WSException
+     */
+   /* @GetMapping(path = {"regionSplit/{id}/{x}/{y}"})
     public List<Page> regionSplit(@PathVariable("id") Long id, @PathVariable("x") Double x, @PathVariable("y") Double y) throws IM3WSException {
         Optional<Image> image = imageRepository.findById(id);
         if (!image.isPresent()) {
@@ -85,56 +143,7 @@ public class DocumentAnalysisController {
             throw new IM3WSException("Cannot find an image with id " + id);
         }
         return documentAnalysisModel.leaveJustOnePageAndRegion(image.get());
-    }
+    }*/
 
-    @GetMapping(path = {"pageUpdate/{id}/{fromX}/{fromY}/{toX}/{toY}"})
-    public Page pageUpdate(@PathVariable("id") Long id,
-                           @PathVariable("fromX") Double fromX,
-                           @PathVariable("fromY") Double fromY,
-                           @PathVariable("toX") Double toX,
-                           @PathVariable("toY") Double toY) throws IM3WSException {
-        Optional<Page> page = pageRepository.findById(id);
-        if (!page.isPresent()) {
-            throw new IM3WSException("Cannot find a page with id " + id);
-        }
-        page.get().getBoundingBox().setFromX(fromX.intValue());
-        page.get().getBoundingBox().setFromY(fromY.intValue());
-        page.get().getBoundingBox().setToX(toX.intValue());
-        page.get().getBoundingBox().setToY(toY.intValue());
-        return pageRepository.save(page.get());
-    }
-
-    @GetMapping(path = {"regionUpdate/{id}/{fromX}/{fromY}/{toX}/{toY}"})
-    public Region regionUpdate(@PathVariable("id") Long id,
-                               @PathVariable("fromX") Double fromX,
-                               @PathVariable("fromY") Double fromY,
-                               @PathVariable("toX") Double toX,
-                               @PathVariable("toY") Double toY) throws IM3WSException {
-        Optional<Region> region = regionRepository.findById(id);
-        if (!region.isPresent()) {
-            throw new IM3WSException("Cannot find a region with id " + id);
-        }
-        region.get().getBoundingBox().setFromX(fromX.intValue());
-        region.get().getBoundingBox().setFromY(fromY.intValue());
-        region.get().getBoundingBox().setToX(toX.intValue());
-        region.get().getBoundingBox().setToY(toY.intValue());
-        return regionRepository.save(region.get());
-    }
-
-    @GetMapping(path = {"regionUpdateType/{id}/{regionTypeId}"})
-    public Region regionUpdate(@PathVariable("id") Long id,
-                               @PathVariable("regionTypeId") Integer regionTypeId) throws IM3WSException {
-        Optional<Region> region = regionRepository.findById(id);
-        if (!region.isPresent()) {
-            throw new IM3WSException("Cannot find a region with id " + id);
-        }
-        Optional<RegionType> regionType = regionTypeRepository.findById(regionTypeId);
-        if (!regionType.isPresent()) {
-            throw new IM3WSException("Cannot find a region type with id " + regionTypeId);
-        }
-
-        region.get().setRegionType(regionType.get());
-        return regionRepository.save(region.get());
-    }
 
 }

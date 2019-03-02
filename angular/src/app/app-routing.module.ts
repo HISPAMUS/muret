@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import {AuthGuard} from './auth/auth.guard';
+import {AuthGuardService as AuthGuard} from './auth/services/auth-guard.service';
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
+import {ErrorInterceptor, TokenInterceptor} from './auth/token-interceptor.service';
 
 const routes = [
   {
@@ -64,6 +66,19 @@ const routes = [
     ],
     exports: [
         RouterModule
-    ]
+    ],
+  providers: [
+    AuthGuard,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
+      multi: true
+    }
+  ]
 })
 export class AppRoutingModule {}

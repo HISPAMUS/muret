@@ -28,6 +28,11 @@ import { faExpand } from '@fortawesome/free-solid-svg-icons';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { faCheckDouble } from '@fortawesome/free-solid-svg-icons';
 import { faUserClock} from '@fortawesome/free-solid-svg-icons';
+import {CoreModule} from './core/core.module';
+import {StoreModule} from '@ngrx/store';
+import {EffectsModule} from '@ngrx/effects';
+import {environment} from '../environments/environment';
+import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 
 
 @NgModule({
@@ -42,6 +47,7 @@ import { faUserClock} from '@fortawesome/free-solid-svg-icons';
     HttpClientModule,
     FontAwesomeModule,
     SharedModule,
+    CoreModule,
     LayoutModule,
     AuthModule,
     AppRoutingModule,
@@ -52,11 +58,16 @@ import { faUserClock} from '@fortawesome/free-solid-svg-icons';
     DocumentAnalysisModule,
     AgnosticRepresentationModule,
     SemanticRepresentationModule,
+    StoreModule.forRoot({
+      /* an empty object here  */
+    }),
+    EffectsModule.forRoot([]),
     LazyLoadImageModule.forRoot({
       preset: intersectionObserverPreset
     }),
     LoggerModule.forRoot({level: NgxLoggerLevel.DEBUG, serverLogLevel: NgxLoggerLevel.ERROR}),
-    NgbModule.forRoot()
+    !environment.production ? StoreDevtoolsModule.instrument() : [],
+    NgbModule,
   ],
   providers: [], // don't add here singleton services if using @Injectable( providedIn: 'root'})
   bootstrap: [AppComponent]

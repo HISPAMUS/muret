@@ -10,7 +10,12 @@ Components don't include business logic, rather, it is contained in different Se
  
  In order to develop, we have added at development time only the button "dev" at login component
   
-https://www.npmjs.com/package/angular-svg 
+https://www.npmjs.com/package/angular-svg
+
+----
+Redux pattern application in MuRET explained in redux.md
+Redux + auth: https://mherman.org/blog/authentication-in-angular-with-ngrx/
+ 
 # Angular
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.2.

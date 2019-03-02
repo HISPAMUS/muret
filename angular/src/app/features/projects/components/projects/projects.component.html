@@ -8,7 +8,7 @@
     </div>
   </div>
 
-  <!-- Note here the observable is the user$, not the user.projectsCreated or user.permissions, this explains this "user$ | async as user" construct  -->
+  <!-- Note here the observable is the auth$, not the auth.projectsCreated or auth.permissions, this explains this "auth$ | async as auth" construct  -->
   <div *ngIf="user$ | async as user; else loading">
     <div class="row projects">
       <div class="col-10 offset-1">

@@ -17,5 +17,5 @@ public interface IRegionProjection {
 
     String getComments();
     BoundingBox getBoundingBox();
-    RegionType getRegionType();
+    IRegionTypeProjection getRegionType();
 }

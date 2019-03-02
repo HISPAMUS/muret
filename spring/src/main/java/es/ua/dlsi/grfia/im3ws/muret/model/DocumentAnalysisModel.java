@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.repository.*;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -135,10 +136,15 @@ public class DocumentAnalysisModel {
      * @param image
      */
     @Transactional
-    public List<Page> leaveJustOnePageAndRegion(Image image) {
+    public List<Page> leaveJustOnePageAndRegion(Image image) throws IM3WSException {
+        RegionType regionType = this.regionTypeRepository.findByName("undefined");
+        if (regionType == null) {
+            throw new IM3WSException("Cannot find 'undefined' region type");
+        }
+
         Page onePage = new Page(image, 0, 0, image.getWidth(), image.getHeight(), null, null);
         //Region oneRegion = regionRepository.save(new Region(onePage, 0, 0, image.getWidth(), image.getHeight()));
-        Region oneRegion = new Region(onePage, null, 0, 0, image.getWidth(), image.getHeight());
+        Region oneRegion = new Region(onePage, regionType, 0, 0, image.getWidth(), image.getHeight());
         onePage.addRegion(oneRegion);
 
         LinkedList<Symbol> symbols = new LinkedList<>();

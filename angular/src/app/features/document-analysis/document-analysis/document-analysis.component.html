@@ -6,7 +6,7 @@
       <button (click)="zoomIn()"><fa-icon icon="search-plus"></fa-icon></button>
       <button (click)="zoomFit()"><fa-icon icon="expand"></fa-icon></button>
 
-     <form [formGroup]="radioGroupForm">
+     <form [formGroup]="toolRadioGroup">
         <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="model">
           <!--<button (click)="select()">TO-DO Select</button>-->
           <label ngbButtonLabel class="btn-light">
@@ -18,14 +18,25 @@
           <label ngbButtonLabel class="btn-light">
             <input ngbButton type="radio" value="edit" (click)="edit()"> Edit
           </label>
+
+          <label ngbButtonLabel class="btn-light">
+            <button (click)="clear()">Clear</button>
+          </label>
         </div>
       </form>
 
       <form [formGroup]="regionTypesRadioGroupForm">
-        <div class="btn-group-vertical btn-group-toggle" ngbRadioGroup name="radioBasic2" formControlName="regionTypeRB">
+        <div class="btn-group-vertical btn-group-toggle" ngbRadioGroup name="radioBasic2" formControlName="regionTypeRadioButton">
           <label *ngFor="let regionType of regionTypes$ | async; trackBy: trackByRegionTypeFn" class="btn-primary" ngbButtonLabel>
-            <input ngbButton type="radio" value="{{regionType.name}}" (click)="changeRegionType(regionType)"> {{regionType.name}}
+            <input ngbButton type="radio" value="{{regionType.id}}" (click)="setRegionType(regionType)"> {{regionType.name}}
           </label>
+
+          &nbsp;
+
+          <label class="btn-primary" ngbButtonLabel>
+            <input ngbButton type="radio" value="page" (click)="setPage()"> Page
+          </label>
+
         </div>
       </form>
 

@@ -12,9 +12,10 @@ Create a model folder with:
     > e.g. `export interface Product {id: number; name: string; price: number;}`
   - interfaces that will be stored in the state (*state* = current state of the domain objects of the application)
     > e.g. `export interface ProductState {products: Product[]; selectedProduct: Product;}`
+- states inside ```store/state``` folder
   - constant with the initial state of each state interface:
     > e.g. `export const initialProductState: ProductState = {products: null, selectedProduct: null};`
-- a global or root application state containing all state interfaces and the router state      
+  - a global or root application state containing all state interfaces and the router state      
     > e.g. `export interface AppState {router?: RouterReducerState; products: ProductState; }` (add here all other states)
     
 ##Step 3: selectors
@@ -25,7 +26,7 @@ A selector is similar to a getter from the root state.
 > const selectProducts = (state: AppState) => state.products;
 > export const selectProductList = createSelector (
 >   selectProducts,
->   (state: UserState) => state.products
+>   (state: AuthState) => state.products
 > ); 
 > export const selectSelectedProduct = createSelector (
 >   selectProducts,
@@ -120,12 +121,6 @@ A reducer will be created for each domain object with all responses of success a
 >           products: action.payload
 >         };
 >       }
->       case EProductActions.GetProductSuccess: {
->         return {
->           ...state,
->           selectedProduct: action.payload
->         };
->       }
 >       default:
 >         return state;
 >   }
@@ -178,6 +173,10 @@ Basically we will include here all calls to HTTP REST API. The usual structure w
 >
 > where ```productService``` will be the service in charge of the HTTP API REST calls
 
+Finally, recall to add the effects to the ```app.module.ts''' (or the suitable module).
+> e.g ```EffectsModule.forRoot([ProductsEffects]),```
+
+
 ## 6 View and controller
 ### 6.1 Visual rendering of data
 In order visually render to use the information stored in the state:
@@ -206,3 +205,9 @@ In the HTML use the usual operators:
 ### 6.2 Interaction
 We can send a router navigation request, e.g. ```this.router.navigate(['product', id]);```,
 or send an action with ```this.store.dispatch(new SOME_ACTION());``` 
+
+**TODO Draw a UML sequence diagram**
+
+**TODO Document - In order to separate stores in modules we use:** 
+https://offering.solutions/blog/articles/2018/02/10/separating-state-into-angular-modules-with-ngrx/
+

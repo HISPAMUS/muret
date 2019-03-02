@@ -1,5 +1,9 @@
 import {Component, isDevMode, OnInit} from '@angular/core';
-import {AuthService} from '../../../auth/services/auth.service';
+import {Observable} from 'rxjs';
+import {CoreState} from '../../../core/store/state/core.state';
+import {Store} from '@ngrx/store';
+import {AuthState} from '../../../auth/store/state/auth.state';
+import {selectAuthState} from '../../../auth/store/selectors/auth.selector';
 
 @Component({
   selector: 'app-layout',
@@ -9,12 +13,16 @@ import {AuthService} from '../../../auth/services/auth.service';
 export class LayoutComponent implements OnInit {
   private menuVisible = true;
 
-  constructor(private authService: AuthService) { }
+  private authState$: Observable<AuthState>;
+  private isAuthenticated = false;
 
-  ngOnInit() {
+  constructor(private store: Store<CoreState>) {
+    this.authState$ = this.store.select<AuthState>(selectAuthState);
   }
 
-  public authenticated() {
-    return this.authService.isLoggedIn;
+  ngOnInit() {
+    this.authState$.subscribe((state: AuthState) => {
+      this.isAuthenticated = state.isAuthenticated;
+    });
   }
 }

@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {State} from '../../entities/state';
+import {State} from '../../../core/model/entities/state';
 
 @Component({
   selector: 'app-state',

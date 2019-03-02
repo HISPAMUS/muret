@@ -1,8 +1,11 @@
 import {Component, isDevMode, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {AuthService} from '../../services/auth.service';
 import {Credentials} from '../../models/credentials';
-import {TokenStorageService} from '../../services/token-storage.service';
+import {CoreState} from '../../../core/store/state/core.state';
+import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs';
+import {AuthState} from '../../store/state/auth.state';
+import {selectAuthState} from '../../store/selectors/auth.selector';
+import {LogIn, LogOut} from '../../store/actions/auth.actions';
 
 @Component({
   selector: 'app-login',
@@ -10,61 +13,56 @@ import {TokenStorageService} from '../../services/token-storage.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  protected credentials: Credentials = {};
-  roles: string[] = [];
+  credentials: Credentials = {};
 
-  isLoginFailed = false;
-  errorMessage = '';
+  private authState$: Observable<AuthState>;
+  errorMessage: string = null;
+  isAuthenticated = false;
+
   isDev = isDevMode();
 
-  constructor(protected authService: AuthService, protected router: Router, protected tokenStorage: TokenStorageService) {
+  constructor(private store: Store<AuthState>) {
+    this.authState$ = this.store.select<AuthState>(selectAuthState);
   }
 
   ngOnInit() {
-    if (this.tokenStorage.getToken()) {
-      this.roles = this.tokenStorage.getAuthorities();
-    }
+    this.authState$.subscribe((state: AuthState) => {
+      this.errorMessage = state.errorMessage;
+      this.isAuthenticated = state.isAuthenticated;
+    });
   }
 
-  loginTo(url: string) {
-    this.authService.attemptAuth(this.credentials).subscribe(
-      data => {
-        this.tokenStorage.saveToken(data.accessToken);
-        this.tokenStorage.saveUsername(data.username);
-        this.tokenStorage.saveAuthorities(data.authorities);
-
-        this.isLoginFailed = false;
-        this.authService.isLoggedIn = true;
-        this.authService.userID = data.userID;
-        this.roles = this.tokenStorage.getAuthorities();
-        this.router.navigateByUrl(url);
-      },
-      error => {
-        this.errorMessage = error.error.message;
-        this.authService.isLoggedIn = false;
-      }
-    );
-  }
   login() {
-    this.loginTo('/home');
+    this.store.dispatch(new LogIn(this.credentials));
+  }
+
+  logout() {
+    this.store.dispatch(new LogOut());
   }
 
   dev() {
     this.credentials.username = 'davidrizo';
     this.credentials.password = 'nose';
-    // this.loginTo('/project/148');
-    this.loginTo('/documentanalysis/2104');
+    this.login(); // TODO enviar a la página que queremos
   }
+    /*login() {
+      this.loginTo('/home');
+    }
 
+    loginTo(url: string) {
+      this.store.dispatch(new LogIn(this.credentials));
+    }
 
-  authenticated() {
-    return this.authService.isLoggedIn;
-  }
+    dev() {
+      this.credentials.username = 'davidrizo';
+      this.credentials.password = 'nose';
+      // this.loginTo('/project/148');
+      // this.loginTo('/documentanalysis/2104');
+      this.loginTo('/documentanalysis/1849');
+    }
 
-  logout() {
-    this.authService.logout(() => {
-      this.router.navigateByUrl('/about');
-    });
-    return false;
-  }
+    authenticated() {
+      return this.authService.isLoggedIn;
+    }*/
+
 }

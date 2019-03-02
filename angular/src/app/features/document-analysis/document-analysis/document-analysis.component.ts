@@ -1,10 +1,10 @@
 import {Component, OnInit, Self, ViewChild} from '@angular/core';
 import {DocumentAnalysisService} from '../document-analysis.service';
-import {Observable, of} from 'rxjs';
+import {observable, Observable, of} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {map, switchMap, tap} from 'rxjs/operators';
-import {ImageFilesService} from '../../../shared/services/image-files.service';
-import {DocumentAnalysisImageProjection} from '../../../shared/projections/document-analysis-image-projection';
+import {ImageFilesService} from '../../../core/services/image-files.service';
+import {DocumentAnalysisImageProjection} from '../../../core/model/restapi/document-analysis-image-projection';
 import {Rectangle} from '../../../svg/model/rectangle';
 import {Line} from '../../../svg/model/line';
 import {Text} from '../../../svg/model/text';
@@ -13,11 +13,15 @@ import {Shape} from '../../../svg/model/shape';
 import {SvgCanvasComponent} from '../../../svg/components/svg-canvas/svg-canvas.component';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {SVGCanvasState} from '../../../svg/services/svg-canvas-state.service';
-import {RegionType} from '../../../shared/entities/region-type';
-import {Page} from '../../../shared/entities/page';
-import {BoundingBox} from '../../../shared/entities/bounding-box';
-import {Region} from '../../../shared/entities/region';
+import {RegionType} from '../../../core/model/entities/region-type';
+import {Page} from '../../../core/model/entities/page';
+import {BoundingBox} from '../../../core/model/entities/bounding-box';
+import {Region} from '../../../core/model/entities/region';
+import {ChangeResponse} from '../../../core/model/restapi/change-response';
+import {SimpleModalService} from 'ngx-simple-modal';
+import {AlertComponent} from '../../../shared/components/error-modal-message/alert.component';
 
+// TODO Ordenar este código
 @Component({
   selector: 'app-document-analysis',
   templateUrl: './document-analysis.component.html',
@@ -30,7 +34,6 @@ export class DocumentAnalysisComponent implements OnInit {
   loadedImage$: Observable<string>;
 
   regionTypes$: Observable<RegionType[]>;
-  regionTypes: RegionType[]; // non observable
 
   private shapes = new Array<Shape>();
   private imageHeight: number;
@@ -45,28 +48,31 @@ export class DocumentAnalysisComponent implements OnInit {
   layersCheckboxes: FormGroup;
 
   // tools
-  public radioGroupForm: FormGroup;
+  public toolRadioGroup: FormGroup;
   public regionTypesRadioGroupForm: FormGroup;
   private selectedShape: Shape;
+  private lastRegionType: RegionType;
+  private imageID: number;
   // end tools
 
   constructor(@Self() private documentAnalysisService: DocumentAnalysisService,
               private imageFilesService: ImageFilesService,
               private route: ActivatedRoute,
-              private formBuilder: FormBuilder
+              private formBuilder: FormBuilder,
+              private simpleModalService: SimpleModalService
               ) {
   }
 
   ngOnInit() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.imageID = Number(this.route.snapshot.paramMap.get('id'));
 
     // tools
-    this.radioGroupForm = this.formBuilder.group({
+    this.toolRadioGroup = this.formBuilder.group({
       model: 'idle'
     });
 
     this.regionTypesRadioGroupForm = this.formBuilder.group({
-      regionTypeRB: 'none'
+      regionTypeRadioButton: 'none'
     });
 
     this.layersCheckboxes = this.formBuilder.group({
@@ -77,25 +83,27 @@ export class DocumentAnalysisComponent implements OnInit {
     this.regionTypes$ = this.documentAnalysisService.getRegionTypes$().pipe(
       tap(regionTypes => regionTypes.forEach(regionType => {
         this.layersCheckboxes.addControl(regionType.name, new FormControl(true));
-        this.regionTypesRadioGroupForm.addControl('regionTypeRB', new FormControl(false));
-        this.regionTypes = regionTypes;
+        this.regionTypesRadioGroupForm.addControl('regionTypeRadioButton', new FormControl(false));
         }
       ))
     );
     this.layersCheckboxes.valueChanges.subscribe(val => {
-      this.onLayerChanged(val);
+      this.onLayerVisibilityChanged(val);
     });
 
     // download image
-    this.documentAnalysisImageProjection$ = this.documentAnalysisService.getDocumentAnalysisImageProjection$(id);
+    this.reloadData();
+
+    this.computeZoom();
+  }
+
+  private reloadData() {
+    this.documentAnalysisImageProjection$ = this.documentAnalysisService.getDocumentAnalysisImageProjection$(this.imageID);
     this.loadedImage$ = this.documentAnalysisImageProjection$.pipe(
       switchMap(next => {
         return this.readImageContents(next);
       })
     );
-
-
-    this.computeZoom();
   }
 
   private readImageContents(documentAnalysisImageProjection: DocumentAnalysisImageProjection) {
@@ -143,48 +151,11 @@ export class DocumentAnalysisComponent implements OnInit {
     return this.svgCanvasComponent.requestStateChange(SVGCanvasState.eIdle);
   }
 
-  onShapeCreated(shape: Shape) {
-    // TODO crear páginas
-    // TODO
-    // shape.id = '10202';
-    console.log('Adding shape');
-    // the array address must be changed in order to propagate changes to the @Input onChange
-    const error = false;
-    const regionTypeName = this.regionTypesRadioGroupForm.get('regionTypeRB').value;
-
-    // TODO algo más elegante....
-    const regionType = this.regionTypes.find(rt => rt.name === regionTypeName);
-    shape.layer = regionTypeName;
-    // TODO (shape.data as Region).regionType = regionType;
-    shape.strokeColor = '#' + regionType.hexargb; // TODO TODO TODO
-
-    if (!error) {
-      this.shapes = [...this.shapes, shape];
-    } else {
-      this.shapes = [...this.shapes]; // error - propagate error by not adding the shape
-    }
-  }
-
-  onShapeChanged(shape: Shape) {
-    const error = false;
-    if (error) {
-      shape.fromY = 15;
-    }
-  }
-
-  changeRegionType(regionType: RegionType) {
-    if (this.selectedShape) {
-      const error = false;
-      if (!error) {
-        this.selectedShape.layer = regionType.name;
-        this.selectedShape.strokeColor = '#' + regionType.hexargb; // TODO enviar a BBDD y cambiar esto en la respuesta∫
-      }
-    }
-  }
-
   onShapeSelected(shape: Shape) {
     this.selectedShape = shape;
-    this.regionTypesRadioGroupForm.get('regionTypeRB').setValue(shape.layer);
+    if (shape) {
+      this.regionTypesRadioGroupForm.get('regionTypeRadioButton').setValue(shape.layer);
+    }
   }
 
   onShapeDeselected(shape: Shape) {
@@ -204,7 +175,7 @@ export class DocumentAnalysisComponent implements OnInit {
     });
   }
 
-  example() {
+  /*example() {
     const rect = new Rectangle();
     rect.id = '1';
     rect.fromX = 0;
@@ -244,9 +215,9 @@ export class DocumentAnalysisComponent implements OnInit {
 
     text.fromX = 0;
     text.fromY = 200;
-  }
+  }*/
 
-  private createBox(layer: string, id: number, boundingBox: BoundingBox, color: string): Rectangle {
+  private drawBox(layer: string, id: number, boundingBox: BoundingBox, color: string): Rectangle {
     const rect = new Rectangle();
     rect.id = layer + id;
     rect.fromX = boundingBox.fromX;
@@ -261,19 +232,140 @@ export class DocumentAnalysisComponent implements OnInit {
     return rect;
   }
   private drawPage(page: Page) {
-    this.createBox('page', page.id, page.boundingBox, 'red' ).data = page; // TODO color
+    this.drawBox('page', page.id, page.boundingBox, 'red' ).data = page; // TODO color
   }
 
   private drawRegion(region: Region) {
-    this.createBox(region.regionType.name, region.id, region.boundingBox, '#' + region.regionType.hexargb ).data = region;
+    this.drawBox(region.regionType.name, region.id, region.boundingBox, '#' + region.regionType.hexargb ).data = region;
   }
 
-  private onLayerChanged(val: any) {
+  private onLayerVisibilityChanged(val: any) {
     this.shapes.forEach(shape => {
       const checkBox = this.layersCheckboxes.get(shape.layer);
       shape.hidden = !this.layersCheckboxes.get(shape.layer).value;
     });
   }
 
+  // ------------- METHODS that deal with actual data -------------
+  onShapeCreated(shape: Shape) {
+    const rectangle = shape as Rectangle;
+    const selectedRegionTypeOrPage = this.regionTypesRadioGroupForm.value.regionTypeRadioButton;
+    let boxTypeName: string;
+    if (!selectedRegionTypeOrPage || selectedRegionTypeOrPage === 'none') {
+      this.showError('Shape creation', 'Select page or the type of region first'); // TODO que esté seleccionado el último por defecto
+      this.shapes = [...this.shapes]; // propagate error by not changing anything on shapes
+    } else {
+      let response: Observable<ChangeResponse<any>>;
+      if (selectedRegionTypeOrPage === 'page') {
+        boxTypeName = 'Page';
+        response = this.documentAnalysisService.createPage(this.imageID, rectangle.fromX, rectangle.fromY,
+          rectangle.fromX + rectangle.width, rectangle.fromY + rectangle.height);
+      } else {
+        boxTypeName = 'Region';
+        response = this.documentAnalysisService.createRegion(this.imageID, this.lastRegionType, rectangle.fromX, rectangle.fromY,
+          rectangle.fromX + rectangle.width, rectangle.fromY + rectangle.height);
+      }
+
+      response.subscribe(next => {
+        if (!next.ok) {
+          this.showError('Cannot create ' + boxTypeName, next.errorMessage);
+          this.shapes = [...this.shapes]; // propagate error by not changing anything on shapes
+        }
+      });
+    }
+
+    // TODO crear páginas
+    // TODO
+    // shape.id = '10202';
+    // the array address must be changed in order to propagate changes to the @Input onChange
+    /*const error = false;
+    const regionTypeName = this.regionTypesRadioGroupForm.get('regionTypeRadioButton').value;
+
+    // TODO algo más elegante....
+    const regionType = this.regionTypes.find(rt => rt.name === regionTypeName);
+    shape.layer = regionTypeName;
+    // TODO (shape.data as Region).regionType = regionType;
+    shape.strokeColor = '#' + regionType.hexargb; // TODO TODO TODO
+
+    if (!error) {
+      this.shapes = [...this.shapes, shape];
+    } else {
+      this.shapes = [...this.shapes]; // error - propagate error by not adding the shape
+    }*/
+  }
+
+  onShapeChanged(shape: Shape) {
+    let response: Observable<ChangeResponse<any>>;
+    const rectangle = shape as Rectangle;
+
+    if (shape.layer === 'page') {
+      response = this.documentAnalysisService.updatePageBoundingBox(rectangle.data, rectangle.fromX, rectangle.fromY,
+        rectangle.fromX + rectangle.width, rectangle.fromY + rectangle.height);
+    } else {
+      response = this.documentAnalysisService.updateRegionBoundingBox(rectangle.data, rectangle.fromX, rectangle.fromY,
+        rectangle.fromX + rectangle.width, rectangle.fromY + rectangle.height);
+    }
+
+    response.subscribe(next => {
+      if (!next.ok) {
+        this.showError('Cannot save region bounding box change', next.errorMessage); // TODO - restaurar al que tenía
+      }
+    });
+  }
+
+  isAddingMode(): boolean {
+    return this.toolRadioGroup.value.model === 'draw';
+  }
+
+  isEditingMode(): boolean {
+    return this.toolRadioGroup.value.model === 'edit';
+  }
+
+  setRegionType(regionType: RegionType) {
+    this.lastRegionType = regionType;
+
+    if (this.isEditingMode()) {
+      let response: Observable<ChangeResponse<any>>;
+
+      const shape = this.selectedShape;
+      if (!shape) {
+        throw new Error('No selected shape');
+      }
+
+      if (shape.layer === 'page') {
+        throw new Error('Cannot change a page to any region type');
+      } else {
+        response = this.documentAnalysisService.updateRegionType(shape.data, regionType);
+      }
+
+      response.subscribe(next => {
+        if (next.ok) {
+          shape.layer = regionType.name;
+          shape.strokeColor = '#' + regionType.hexargb;
+        } else {
+          this.showError('Cannot change region type', next.errorMessage);
+        }
+      });
+    }
+  }
+
+  clear() {
+    const response: Observable<ChangeResponse<Page[]>> = this.documentAnalysisService.clear(this.imageID);
+
+    response.subscribe(next => {
+      if (next.ok) {
+        // this.drawPagesAndRegions(next.content as Page[]); // TODO tenemos pages diferentes en this.documentAnalysisImageProjection$ y aquí, ¿deberíamos recargarlo todo de nuevo?
+        this.reloadData();
+      } else {
+        this.showError('Cannot clear image', next.errorMessage);
+      }
+    });
+
+  }
+
+  // todo - generalizarlo
+  showError(title: string, message: string) {
+    this.simpleModalService.addModal(AlertComponent, {title, message});
+  }
 
 }

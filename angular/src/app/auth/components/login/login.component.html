@@ -2,7 +2,7 @@
   <div id="login" class="row justify-content-around align-items-center">
 
     <!-- login -->
-    <div *ngIf="!authenticated(); else logoutBlock" class="col-5 ">
+    <div *ngIf="!isAuthenticated; else logoutBlock" class="col-5 ">
       <h1>Login</h1>
       <form role="form" (submit)="login()">
         <div class="form-group">
@@ -14,7 +14,7 @@
           <input type="password" class="form-control" id="password" name="password" [(ngModel)]="credentials.password"/>
         </div>
 
-        <div id="loginError" class="alert alert-danger" [hidden]="!isLoginFailed">
+        <div id="loginError" class="alert alert-danger" [hidden]="!errorMessage">
           There was a problem logging in: {{errorMessage}}
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>

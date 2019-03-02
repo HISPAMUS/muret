@@ -6,10 +6,22 @@ import java.util.Objects;
  * This is not persistent, it is constructed from the string fromX,fromY,toX,toY stored in the database
  */
 public class BoundingBox {
+    private Long id; // may be used as payload for REST methods
     private int fromX;
     private int fromY;
     private int toX;
     private int toY;
+
+    public BoundingBox() {
+    }
+
+    public BoundingBox(Long id, int fromX, int fromY, int toX, int toY) {
+        this.id = id;
+        this.fromX = fromX;
+        this.fromY = fromY;
+        this.toX = toX;
+        this.toY = toY;
+    }
 
     public BoundingBox(int fromX, int fromY, int toX, int toY) {
         this.fromX = fromX;
@@ -51,20 +63,12 @@ public class BoundingBox {
         this.toY = toY;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BoundingBox that = (BoundingBox) o;
-        return fromX == that.fromX &&
-                fromY == that.fromY &&
-                toX == that.toX &&
-                toY == that.toY;
+    public Long getId() {
+        return id;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(fromX, fromY, toX, toY);
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public int getWidth() {
@@ -83,6 +87,23 @@ public class BoundingBox {
 
     public void setHeight(int height) {
         this.toY = this.fromY + height;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BoundingBox that = (BoundingBox) o;
+        return fromX == that.fromX &&
+                fromY == that.fromY &&
+                toX == that.toX &&
+                toY == that.toY &&
+                Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, fromX, fromY, toX, toY);
     }
 
     @Override

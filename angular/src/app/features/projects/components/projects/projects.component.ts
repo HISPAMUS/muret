@@ -1,25 +1,34 @@
-import {Component, OnInit, Self} from '@angular/core';
-import {ProjectsService} from '../../projects.service';
-import {Project} from '../../../../shared/entities/project';
-import {Permissions} from '../../../../shared/entities/permissions';
-import {Observable} from 'rxjs';
-import {User} from '../../../../shared/entities/user';
+import {Component, OnDestroy, OnInit, Self} from '@angular/core';
+import {Project} from '../../../../core/model/entities/project';
+import {Permissions} from '../../../../core/model/entities/permissions';
+import {Observable, Subscription} from 'rxjs';
+import {User} from '../../../../core/model/entities/user';
+import {CoreState} from '../../../../core/store/state/core.state';
+import {select, Store} from '@ngrx/store';
+import {selectLoggedInUser} from '../../../../core/store/selectors/user.selector';
+import {AuthState} from '../../../../auth/store/state/auth.state';
+import {GetUser} from '../../../../core/store/actions/user.actions';
+import {selectAuthState} from '../../../../auth/store/selectors/auth.selector';
 
 @Component({
   selector: 'app-projects',
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.css'],
-  providers: [ProjectsService] // this service is not a singleton
 })
 
-export class ProjectsComponent implements OnInit {
+export class ProjectsComponent implements OnInit, OnDestroy {
+  private authSubscription: Subscription;
+
   user$: Observable<User>;
 
-  constructor(@Self() private projectsService: ProjectsService) {
+  constructor(private store: Store<any>) {
+    this.user$ = this.store.select(selectLoggedInUser);
   }
 
   ngOnInit(): void {
-    this.user$ = this.projectsService.user$;
+    this.authSubscription = this.store.select(selectAuthState).subscribe(next => {
+      this.store.dispatch(new GetUser(next.userID));
+    });
   }
 
   trackByProjectFn(index, item: Project) {
@@ -30,4 +39,8 @@ export class ProjectsComponent implements OnInit {
     return item.id; // unique id corresponding to the item
   }
 
+
+  ngOnDestroy(): void {
+    this.authSubscription.unsubscribe();
+  }
 }

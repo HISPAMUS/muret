@@ -212,7 +212,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
         break;
       case SVGCanvasState.eEditing:
         this.deselect();
-        // when user clicks over a svg shape, it is sent to this method as event
+        // when auth clicks over a svg shape, it is sent to this method as event
         this.selectedComponent = this.findEventTargetComponent($event.target);
         if (this.selectedComponent) {
           this.selectedComponent.select(true);

@@ -10,6 +10,7 @@ public class MURETConfiguration {
     public static final String THUMBNAIL_IMAGES = "thumbnails";
     public static final String PREVIEW_IMAGES = "previews";
 
+    private String angularurl;
     private String folder;
     private int thumbnailHeight;
     private int previewHeight;
@@ -20,8 +21,9 @@ public class MURETConfiguration {
     public MURETConfiguration() {
     }
 
-    public MURETConfiguration(String folder, String pythonclassifiers, int thumbnailHeight, int previewHeight, boolean disableSecurity) {
+    public MURETConfiguration(String angularurl, String folder, String pythonclassifiers, int thumbnailHeight, int previewHeight, boolean disableSecurity) {
         this.folder = folder;
+        this.angularurl = angularurl;
         //this.url = url;
         this.thumbnailHeight = thumbnailHeight;
         this.previewHeight = previewHeight;
@@ -67,5 +69,13 @@ public class MURETConfiguration {
 
     public void setDisableSecurity(boolean disableSecurity) {
         this.disableSecurity = disableSecurity;
+    }
+
+    public String getAngularurl() {
+        return angularurl;
+    }
+
+    public void setAngularurl(String angularurl) {
+        this.angularurl = angularurl;
     }
 }

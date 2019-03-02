@@ -2,11 +2,11 @@ import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 // import {Lightbox, LightboxConfig} from 'ngx-lightbox';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
-import {Image} from '../../../../shared/entities/image';
-import {ImageFilesService} from '../../../../shared/services/image-files.service';
+import {Image} from '../../../../core/model/entities/image';
+import {ImageFilesService} from '../../../../core/services/image-files.service';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {Project} from '../../../../shared/entities/project';
+import {Project} from '../../../../core/model/entities/project';
 import {Lightbox, LightboxConfig} from 'ngx-lightbox';
 
 @Component({
