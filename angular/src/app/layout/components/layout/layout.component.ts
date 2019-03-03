@@ -11,6 +11,8 @@ import {selectAuthState} from '../../../auth/store/selectors/auth.selector';
   styleUrls: ['./layout.component.css']
 })
 export class LayoutComponent implements OnInit {
+  isDev = isDevMode();
+
   private menuVisible = true;
 
   private authState$: Observable<AuthState>;

@@ -18,7 +18,6 @@ export class LoginComponent implements OnInit {
   private authState$: Observable<AuthState>;
   errorMessage: string = null;
   isAuthenticated = false;
-
   isDev = isDevMode();
 
   constructor(private store: Store<AuthState>) {
@@ -43,7 +42,7 @@ export class LoginComponent implements OnInit {
   dev() {
     this.credentials.username = 'davidrizo';
     this.credentials.password = 'nose';
-    this.login(); // TODO enviar a la página que queremos
+    this.login();
   }
     /*login() {
       this.loginTo('/home');

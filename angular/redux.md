@@ -136,6 +136,8 @@ Finally, all reducers will be included in the root `appReducers` constant:
 > };
 > ```
 
+
+
 ### 5.2 Effects
 Basically we will include here all calls to HTTP REST API. The usual structure will be:
 

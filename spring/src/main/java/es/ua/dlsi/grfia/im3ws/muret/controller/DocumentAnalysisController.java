@@ -62,29 +62,24 @@ public class DocumentAnalysisController {
     }
 
     @PutMapping(path = {"regionUpdate"})
-    public ChangeResponse regionUpdate(@RequestBody Region region) throws IM3WSException {
-        try {
-            Optional<Region> persistentRegion = regionRepository.findById(region.getId());
-            if (!persistentRegion.isPresent()) {
-                throw new IM3WSException("Cannot find a region with id " + region.getId());
-            }
-            if (region.getBoundingBox() != null) {
-                persistentRegion.get().setBoundingBox(region.getBoundingBox());
-            }
-            if (region.getRegionType() != null && !Objects.equals(persistentRegion.get().getRegionType(), region.getRegionType())) {
-                Optional<RegionType> persistentRegionType = regionTypeRepository.findById(region.getRegionType().getId());
-                if (!persistentRegionType.isPresent()) {
-                    throw new IM3WSException("Cannot find a region type with id " + region.getRegionType().getId());
-                }
-
-                persistentRegion.get().setRegionType(persistentRegionType.get());
-            }
-            regionRepository.save(persistentRegion.get());
-            return new ChangeResponse();
-        } catch (Throwable t) {
-            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot update region boundingBox", t);
-            return new ChangeResponse(false, null, t.getMessage());
+    public Region regionUpdate(@RequestBody Region region) throws IM3WSException {
+        Optional<Region> persistentRegion = regionRepository.findById(region.getId());
+        if (!persistentRegion.isPresent()) {
+            throw new IM3WSException("Cannot find a region with id " + region.getId());
         }
+        if (region.getBoundingBox() != null) {
+            persistentRegion.get().setBoundingBox(region.getBoundingBox());
+        }
+        if (region.getRegionType() != null && !Objects.equals(persistentRegion.get().getRegionType(), region.getRegionType())) {
+            Optional<RegionType> persistentRegionType = regionTypeRepository.findById(region.getRegionType().getId());
+            if (!persistentRegionType.isPresent()) {
+                throw new IM3WSException("Cannot find a region type with id " + region.getRegionType().getId());
+            }
+
+            persistentRegion.get().setRegionType(persistentRegionType.get());
+        }
+        regionRepository.save(persistentRegion.get());
+        return persistentRegion.get();
     }
 
     @Transactional // keep session open - avoid "failed to lazily initialize a collection" error

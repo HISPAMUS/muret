@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, ParamMap} from '@angular/router';
 import {Image} from '../../../../core/model/entities/image';
 import {Observable} from 'rxjs';
 import {Project} from '../../../../core/model/entities/project';
@@ -23,9 +23,11 @@ export class ProjectComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.store.dispatch(new GetProject(id));
-    this.store.dispatch(new GetImages(id));
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      const id = +this.route.snapshot.paramMap.get('id'); // + converts the string to number
+      this.store.dispatch(new GetProject(id));
+      this.store.dispatch(new GetImages(id));
+    });
   }
 
   trackByImageFn(index, item: Image) {

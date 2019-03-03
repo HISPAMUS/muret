@@ -42,6 +42,7 @@
     "npm": "^6.8.0",
     "popper.js": "^1.14.7",
     "rxjs": "~6.3.3",
+    "ts-deepcopy": "^0.1.4",
     "tslib": "^1.9.0",
     "uninstall": "0.0.0",
     "zone.js": "~0.8.26"

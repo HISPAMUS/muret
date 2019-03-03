@@ -12,8 +12,13 @@ public class ChangeResponse<T> {
         this.ok = true;
     }
 
-    public ChangeResponse(boolean ok, T content, String message) {
+    public ChangeResponse(T content) {
         this.ok = true;
+        this.content = content;
+    }
+
+    public ChangeResponse(boolean ok, T content, String message) {
+        this.ok = ok;
         this.content = content;
         this.message = message;
     }

@@ -5,7 +5,7 @@ import {catchError, map} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 import {NGXLogger} from 'ngx-logger';
 import {ErrorHandlingService} from './error-handling.service';
-import {ChangeResponse} from '../model/restapi/change-response';
+import {ServerError} from '../model/restapi/server-error';
 
 @Injectable({
   providedIn: 'root'
@@ -84,7 +84,7 @@ export class ApiRestClientService {
   }
 
 
-  public post$<T>(endpoint: string, body: any): Observable<ChangeResponse<T>> {
+  public post$<T>(endpoint: string, body: any): Observable<T> {
 
     let url: string;
     url = `${this.url}/${endpoint}`;
@@ -96,7 +96,7 @@ export class ApiRestClientService {
     );
   }
 
-  public put$<T>(endpoint: string, body: any): Observable<ChangeResponse<T>> {
+  public put$<T>(endpoint: string, body: any): Observable<T> {
 
     let url: string;
     url = `${this.url}/${endpoint}`;
@@ -109,7 +109,7 @@ export class ApiRestClientService {
       );
   }
 
-  public delete$<T>(endpoint: string, id: any): Observable<ChangeResponse<T>> {
+  public delete$<T>(endpoint: string, id: any): Observable<T> {
 
     let url: string;
     url = `${this.url}/${endpoint}/${id}`;

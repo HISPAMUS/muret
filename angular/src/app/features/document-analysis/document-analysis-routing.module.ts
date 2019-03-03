@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {DocumentAnalysisComponent} from './document-analysis/document-analysis.component';
+import {DocumentAnalysisComponent} from './components/document-analysis/document-analysis.component';
 
 const routes: Routes = [
   { path: ':id', component: DocumentAnalysisComponent }

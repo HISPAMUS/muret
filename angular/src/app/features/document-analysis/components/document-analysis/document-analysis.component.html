@@ -1,5 +1,6 @@
 <div class="container-fluid">
-<div class="row">
+<!-- menu -->
+  <div class="row">
   <nav class="col-2">
     <div>
       <button (click)="zoomOut()"><fa-icon icon="search-minus"></fa-icon></button>
@@ -8,7 +9,6 @@
 
      <form [formGroup]="toolRadioGroup">
         <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="model">
-          <!--<button (click)="select()">TO-DO Select</button>-->
           <label ngbButtonLabel class="btn-light">
             <input ngbButton type="radio" [value]="'idle'" (click)="idle()"> Idle
           </label>
@@ -61,16 +61,14 @@
     <!-- image -->
     <article class="row">
       <div class="col">
-        <div *ngIf="documentAnalysisImageProjection$ | async as documentAnalysisImageProjection; else loading">
-          <h2>{{documentAnalysisImageProjection.filename}}</h2>
-
-          <div *ngIf="loadedImage$ | async as loadedImage; else loading">
+          <h2>{{filename$ | async}}</h2>
+          <div *ngIf="imageURL$ | async as loadedImage; else loading">
             <div #canvas id="canvas">
               <!-- shape selected, changed, and deselected are forwarded from the canvas -->
               <app-svg-canvas #svgCanvasComponent
                               [shapes]="shapes" [backgroundImage]="loadedImage"
                               [widthPercentage]="canvasWidthPercentage" [heightPercentage]="canvasHeightPercentage"
-                              [viewPortWidth]="imageWidth" [viewPortHeight]="imageHeight"
+                              [viewPortWidth]="imageWidth$ | async" [viewPortHeight]="imageHeight$ | async"
                               (svgShapeCreated)="onShapeCreated($event)"
                               (svgShapeChanged)="onShapeChanged($event)"
                               (svgShapeSelected)="onShapeSelected($event)"
@@ -83,12 +81,7 @@
           <ng-template #loading>
             <img src="assets/images/loading.svg" alt="Master loading">
           </ng-template>
-
         </div>
-        <ng-template #loading>
-          Loading image data ...
-        </ng-template>
-      </div>
     </article>
   </section>
 </div>

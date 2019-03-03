@@ -111,13 +111,11 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
 
         const componentsToRemove: ShapeComponent[]
           = this.shapeComponents.filter(shapeComponent => newShapes.indexOf(shapeComponent.shape) < 0);
-        console.log('Removed ' + componentsToRemove.length);
         // Note that if a new added shape was not added to the client due to an error,
         // it will be in components but not in the new shape array
         // and it will be deleted
         const shapesToAdd =
           newShapes.filter(shape => !this.shapeComponents.some(shapeComponent => shapeComponent.shape === shape));
-        console.log('Added ' + shapesToAdd.length);
 
         componentsToRemove.forEach(shapeComponent => {
           this.removeShapeComponent(shapeComponent);

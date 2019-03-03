@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
+import {AlertComponent} from '../../shared/components/error-modal-message/alert.component';
+import {ServerError} from '../model/restapi/server-error';
+import {SimpleModalService} from 'ngx-simple-modal';
+import {NGXLogger} from 'ngx-logger';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ErrorHandlingService {
 
-  constructor() { }
+  constructor(private simpleModalService: SimpleModalService, private logger: NGXLogger) { }
 
   /**
    * Handle Http operation that failed.
@@ -15,12 +19,15 @@ export class ErrorHandlingService {
    * @param result - optional value to return as the observable result
    */
   public handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
+    return (error: ServerError): Observable<T> => {
 
-      // this.logger.error(`${operation} failed: ${error.message}`);
-      /// alert('Warning: ' + error.message); // TODO - algo mejor que un alert
+      this.logger.warn(`${operation} failed: ${error.message}`);
+      this.simpleModalService.addModal(AlertComponent, {
+        title: error.error,
+        message: error.message
+      });
       // Let the app keep running by returning an empty result.
-      throw new Error(error.message);
+      return of(result as T);
     };
   }
 }
