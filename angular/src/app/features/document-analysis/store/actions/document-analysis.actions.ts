@@ -139,12 +139,12 @@ export class CreateRegionSuccess implements Action {
 
 export class Clear implements Action {
   public readonly type = DocumentAnalysisActionTypes.Clear;
-  constructor(public region: Region, public regionType: RegionType) {}
+  constructor(public imageID: number) {}
 }
 
 export class ClearSuccess implements Action {
   public readonly type = DocumentAnalysisActionTypes.ClearSuccess;
-  constructor(public region: Region, public regionType: RegionType) {}
+  constructor(public pages: Page[]) {}
 }
 
 export class DeletePage implements Action {

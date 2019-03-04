@@ -21,7 +21,7 @@ import {DocumentAnalysisState} from '../../store/state/document-analysis.state';
 import {
   ChangePageBoundingBox,
   ChangeRegionBoundingBox,
-  ChangeRegionType,
+  ChangeRegionType, Clear,
   GetImageProjection,
   GetImageURL,
   GetRegionTypes
@@ -34,6 +34,7 @@ import {
   selectNotationType, selectPages, selectProjectPath,
   selectRegionTypes
 } from '../../store/selectors/document-analysis.selector';
+import {ConfirmDialogComponent} from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-document-analysis',
@@ -77,7 +78,8 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
 
   constructor(private store: Store<DocumentAnalysisState>,
               private route: ActivatedRoute,
-              private formBuilder: FormBuilder
+              private formBuilder: FormBuilder,
+              private simpleModalService: SimpleModalService
               ) {
     this.regionTypes$ = store.select(selectRegionTypes);
     this.imageWidth$ = store.select(selectImageWidth);
@@ -327,23 +329,17 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   }
 
 
-
   clear() {
-    /* const response: Observable<ServerError<Page[]>> = this.documentAnalysisService.clear(this.imageID);
-
-    response.subscribe(next => {
-      if (next.ok) {
-        // this.drawPagesAndRegions(next.content as Page[]);
-        // TODO tenemos pages diferentes en this.documentAnalysisImageProjection$ y aquí, ¿deberíamos recargarlo todo de nuevo?
-        this.reloadData();
-      } else {
-        this.showError('Cannot clear image', next.errorMessage);
-      }
-    }); */
-
+    this.simpleModalService.addModal(ConfirmDialogComponent, {
+      title: 'Clear document analysis?',
+      message: 'This action cannot be undone'})
+      .subscribe((isConfirmed) => {
+        if (isConfirmed) {
+          this.store.dispatch(new Clear(this.imageID));
+        }
+      });
   }
 
-  // todo - generalizarlo
   ngOnDestroy(): void {
     this.regionTypesSubscription.unsubscribe();
     this.projectPathSubscription.unsubscribe();

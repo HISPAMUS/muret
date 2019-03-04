@@ -6,7 +6,7 @@ import {DocumentAnalysisService} from '../../services/document-analysis.service'
 import {
   ChangePageBoundingBox, ChangePageBoundingBoxSuccess,
   ChangeRegionBoundingBox, ChangeRegionBoundingBoxSuccess,
-  ChangeRegionType, ChangeRegionTypeSuccess,
+  ChangeRegionType, ChangeRegionTypeSuccess, Clear, ClearSuccess,
   DocumentAnalysisActionTypes, GetImageProjection, GetImageProjectionSuccess, GetImageURL, GetImageURLSuccess,
   GetRegionTypes,
   GetRegionTypesSuccess
@@ -81,6 +81,15 @@ export class DocumentAnalysisEffects {
       action.page, action.boundingBox.fromX, action.boundingBox.fromY, action.boundingBox.toX, action.boundingBox.toY)),
     switchMap((page: Page) => {
       return of(new ChangePageBoundingBoxSuccess(page));
+    })
+  );
+
+  @Effect()
+  clear$ = this.actions$.pipe(
+    ofType<Clear>(DocumentAnalysisActionTypes.Clear),
+    switchMap((action: Clear) => this.documentAnalysisService.clear(action.imageID)),
+    switchMap((pages: Page[]) => {
+      return of(new ClearSuccess(pages));
     })
   );
 

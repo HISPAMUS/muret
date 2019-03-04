@@ -89,6 +89,11 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
       );
       return newState;
     }
+    case DocumentAnalysisActionTypes.ClearSuccess: {
+      const newState = {...state};
+      newState.pages = action.pages;
+      return newState;
+    }
     default: {
       return state;
     }
