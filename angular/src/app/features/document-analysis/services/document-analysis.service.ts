@@ -4,7 +4,6 @@ import {Observable} from 'rxjs';
 import {DocumentAnalysisImageProjection} from '../../../core/model/restapi/document-analysis-image-projection';
 import {RegionType} from '../../../core/model/entities/region-type';
 import {Page} from '../../../core/model/entities/page';
-import {ServerError} from '../../../core/model/restapi/server-error';
 import {Region} from '../../../core/model/entities/region';
 import {BoundingBox} from '../../../core/model/entities/bounding-box';
 
@@ -59,7 +58,7 @@ export class DocumentAnalysisService {
     return this.apiRestClientService.put$<Region>('documentanalysis/regionUpdate', newRegion);
   }
 
-  createPage(imageID: number, fromX: number, fromY: number, toX: number, toY: number) {
+  createPage(imageID: number, fromX: number, fromY: number, toX: number, toY: number): Observable<Page[]> {
     const boundingBox: BoundingBox = {
       fromX,
       fromY,
@@ -72,11 +71,10 @@ export class DocumentAnalysisService {
       boundingBox
     };
 
-    // TODO
-    return this.apiRestClientService.put$<BoundingBox>('documentanalysis/createPage', page);
+    return this.apiRestClientService.put$<Page[]>('documentanalysis/createPage', page);
   }
 
-  createRegion(imageID: number, regionType: RegionType, fromX: number, fromY: number, toX: number, toY: number) {
+  createRegion(imageID: number, regionType: RegionType, fromX: number, fromY: number, toX: number, toY: number): Observable<Page[]> {
     const boundingBox: BoundingBox = {
       fromX,
       fromY,
@@ -86,12 +84,11 @@ export class DocumentAnalysisService {
 
     const region = {
       imageID,
-      regionType: regionType.id,
+      regionTypeID: regionType.id,
       boundingBox
     };
 
-    // TODO
-    return this.apiRestClientService.put$<BoundingBox>('documentanalysis/createRegion', region);
+    return this.apiRestClientService.put$<Page[]>('documentanalysis/createRegion', region);
   }
 
   clear(imageID: number) {

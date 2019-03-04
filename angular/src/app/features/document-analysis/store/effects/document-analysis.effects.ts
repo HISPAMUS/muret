@@ -6,7 +6,7 @@ import {DocumentAnalysisService} from '../../services/document-analysis.service'
 import {
   ChangePageBoundingBox, ChangePageBoundingBoxSuccess,
   ChangeRegionBoundingBox, ChangeRegionBoundingBoxSuccess,
-  ChangeRegionType, ChangeRegionTypeSuccess, Clear, ClearSuccess,
+  ChangeRegionType, ChangeRegionTypeSuccess, Clear, ClearSuccess, CreatePage, CreatePageSuccess, CreateRegion, CreateRegionSuccess,
   DocumentAnalysisActionTypes, GetImageProjection, GetImageProjectionSuccess, GetImageURL, GetImageURLSuccess,
   GetRegionTypes,
   GetRegionTypesSuccess
@@ -14,7 +14,6 @@ import {
 import {DocumentAnalysisImageProjection} from '../../../../core/model/restapi/document-analysis-image-projection';
 import {RegionType} from '../../../../core/model/entities/region-type';
 import {ImageFilesService} from '../../../../core/services/image-files.service';
-import {ServerError} from '../../../../core/model/restapi/server-error';
 import {Region} from '../../../../core/model/entities/region';
 import {Page} from '../../../../core/model/entities/page';
 
@@ -93,4 +92,24 @@ export class DocumentAnalysisEffects {
     })
   );
 
+  @Effect()
+  createPage$ = this.actions$.pipe(
+    ofType<CreatePage>(DocumentAnalysisActionTypes.CreatePage),
+    switchMap((action: CreatePage) => this.documentAnalysisService.createPage(
+      action.imageID, action.boundingBox.fromX, action.boundingBox.fromY, action.boundingBox.toX, action.boundingBox.toY)),
+    switchMap((pages: Page[]) => {
+      return of(new CreatePageSuccess(pages));
+    })
+  );
+
+  @Effect()
+  createRegion$ = this.actions$.pipe(
+    ofType<CreateRegion>(DocumentAnalysisActionTypes.CreateRegion),
+    switchMap((action: CreateRegion) => this.documentAnalysisService.createRegion(
+      action.imageID, action.regionType,
+      action.boundingBox.fromX, action.boundingBox.fromY, action.boundingBox.toX, action.boundingBox.toY)),
+    switchMap((pages: Page[]) => {
+      return of(new CreateRegionSuccess(pages));
+    })
+  );
 }

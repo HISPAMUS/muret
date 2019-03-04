@@ -1,7 +1,8 @@
 package es.ua.dlsi.grfia.im3ws.muret.controller;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
-import es.ua.dlsi.grfia.im3ws.controller.ChangeResponse;
+import es.ua.dlsi.grfia.im3ws.muret.controller.payload.PageCreation;
+import es.ua.dlsi.grfia.im3ws.muret.controller.payload.RegionCreation;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.model.DocumentAnalysisModel;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
@@ -15,8 +16,6 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author drizo
@@ -79,19 +78,39 @@ public class DocumentAnalysisController {
 
     @Transactional // keep session open - avoid "failed to lazily initialize a collection" error
     @DeleteMapping(path = {"clear/{imageID}"})
-    public ChangeResponse<List<Page>> clear(@PathVariable("imageID") long imageID) throws IM3WSException {
-        try {
-            Optional<Image> persistentImage = imageRepository.findById(imageID);
-            if (!persistentImage.isPresent()) {
-                throw new IM3WSException("Cannot find a image with id " + imageID);
-            }
-            List<Page> createdPages = this.documentAnalysisModel.leaveJustOnePageAndRegion(persistentImage.get());
-            return new ChangeResponse<>(true, createdPages, null);
-        } catch (Throwable t) {
-            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot update region boundingBox", t);
-            return new ChangeResponse(false, null, t.getMessage());
+    public List<Page> clear(@PathVariable("imageID") long imageID) throws IM3WSException {
+        Optional<Image> persistentImage = imageRepository.findById(imageID);
+        if (!persistentImage.isPresent()) {
+            throw new IM3WSException("Cannot find a image with id " + imageID);
         }
+        List<Page> createdPages = this.documentAnalysisModel.leaveJustOnePageAndRegion(persistentImage.get());
+        return createdPages;
     }
+
+    /**
+     * Returns the whole list of pages because some regions may have changed from page
+     * @param pageCreation
+     * @return
+     * @throws IM3WSException
+     */
+    @PutMapping(path = {"createPage"})
+    public List<Page> createPage(@RequestBody PageCreation pageCreation) throws IM3WSException {
+        List<Page> createdPages = this.documentAnalysisModel.createPage(pageCreation);
+        return createdPages;
+    }
+
+    /**
+     * Returns the whole list of pages because we don't known a priori where the region is to be created
+     * @param regionCreation
+     * @return
+     * @throws IM3WSException
+     */
+    @PutMapping(path = {"createRegion"})
+    public List<Page> createPage(@RequestBody RegionCreation regionCreation) throws IM3WSException {
+        List<Page> pages = this.documentAnalysisModel.createRegion(regionCreation.getImageID(), regionCreation.getRegionTypeID(), regionCreation.getBoundingBox());
+        return pages;
+    }
+
 
     /**
      * It returns the new list of pages of the image

@@ -104,6 +104,36 @@ export class ChangeRegionBoundingBoxSuccess implements ChangeRegionBoundingBoxSu
 }
 
 
+export class Clear implements Action {
+  public readonly type = DocumentAnalysisActionTypes.Clear;
+  constructor(public imageID: number) {}
+}
+
+export class ClearSuccess implements Action {
+  public readonly type = DocumentAnalysisActionTypes.ClearSuccess;
+  constructor(public pages: Page[]) {}
+}
+
+export class CreatePage implements Action {
+  public readonly type = DocumentAnalysisActionTypes.CreatePage;
+  constructor(public imageID: number, public boundingBox: BoundingBox) {}
+}
+
+export class CreatePageSuccess implements Action {
+  public readonly type = DocumentAnalysisActionTypes.CreatePageSuccess;
+  constructor(public pages: Page[]) {} // it returns several pages because some regions may have changed its page
+}
+
+export class CreateRegion implements Action {
+  public readonly type = DocumentAnalysisActionTypes.CreateRegion;
+  constructor(public imageID: number, public regionType: RegionType, public boundingBox: BoundingBox) {}
+}
+
+export class CreateRegionSuccess implements Action {
+  public readonly type = DocumentAnalysisActionTypes.CreateRegionSuccess;
+  constructor(public pages: Page[]) {} // it returns several pages because we don't a priori in which page the region has been created
+}
+
 /*export class SelectPage implements Action {
   public readonly type = DocumentAnalysisActionTypes.SelectPage;
   constructor(public page: Page) {}
@@ -117,35 +147,6 @@ export class SelectRegion implements Action {
 ///// parámetros ????
 
 
-export class CreatePage implements Action {
-  public readonly type = DocumentAnalysisActionTypes.CreatePage;
-  constructor(public region: Region, public regionType: RegionType) {}
-}
-
-export class CreatePageSuccess implements Action {
-  public readonly type = DocumentAnalysisActionTypes.CreatePageSuccess;
-  constructor(public region: Region, public regionType: RegionType) {}
-}
-
-export class CreateRegion implements Action {
-  public readonly type = DocumentAnalysisActionTypes.CreateRegion;
-  constructor(public region: Region, public regionType: RegionType) {}
-}
-
-export class CreateRegionSuccess implements Action {
-  public readonly type = DocumentAnalysisActionTypes.CreateRegionSuccess;
-  constructor(public region: Region, public regionType: RegionType) {}
-}
-
-export class Clear implements Action {
-  public readonly type = DocumentAnalysisActionTypes.Clear;
-  constructor(public imageID: number) {}
-}
-
-export class ClearSuccess implements Action {
-  public readonly type = DocumentAnalysisActionTypes.ClearSuccess;
-  constructor(public pages: Page[]) {}
-}
 
 export class DeletePage implements Action {
   public readonly type = DocumentAnalysisActionTypes.DeletePage;

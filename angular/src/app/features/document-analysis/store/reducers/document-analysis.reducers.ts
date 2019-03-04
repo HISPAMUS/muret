@@ -94,6 +94,25 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
       newState.pages = action.pages;
       return newState;
     }
+    case DocumentAnalysisActionTypes.CreatePageSuccess: {
+      const newState = {...state};
+      if (action.pages == null) { // if an error has ocurred
+        newState.pages = deepcopy<Page[]>(state.pages);
+      } else {
+        newState.pages = deepcopy<Page[]>(action.pages);
+      }
+
+      return newState;
+    }
+    case DocumentAnalysisActionTypes.CreateRegionSuccess: {
+      const newState = {...state};
+      if (action.pages == null) { // if an error has ocurred
+        newState.pages = deepcopy<Page[]>(state.pages);
+      } else {
+        newState.pages = deepcopy<Page[]>(action.pages);
+      }
+      return newState;
+    }
     default: {
       return state;
     }

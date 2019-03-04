@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.im3ws.muret.model;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
+import es.ua.dlsi.grfia.im3ws.muret.controller.payload.PageCreation;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.repository.*;
 import org.hibernate.Hibernate;
@@ -9,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -214,5 +217,45 @@ public class DocumentAnalysisModel {
                 }
             }
         }
+    }
+
+    @Transactional
+    /**
+     * It moves the current regions to the new page if its center is contained inside the new page
+     */
+    public List<Page> createPage(PageCreation pageCreation) throws IM3WSException {
+        Optional<Image> persistentImage = imageRepository.findById(pageCreation.getImageID());
+        if (!persistentImage.isPresent()) {
+            throw new IM3WSException("Cannot find a image with id " + pageCreation.getImageID());
+        }
+
+        List<Region> regionsToBeMoved = new ArrayList<>();
+        for (Page previousPage: persistentImage.get().getPages()) { // new page has not been inserted
+            for (Region region: previousPage.getRegions()) {
+                if (pageCreation.getBoundingBox().containsCenterOf(region.getBoundingBox())) {
+                    regionsToBeMoved.add(region);
+                }
+            }
+        }
+
+
+        Page persistentPage = new Page();
+        persistentPage.setBoundingBox(pageCreation.getBoundingBox());
+        persistentPage.setImage(persistentImage.get());
+        persistentPage = pageRepository.save(persistentPage);
+        persistentImage.get().getPages().add(persistentPage);
+
+        for (Region region: regionsToBeMoved) {
+            region.setPage(persistentPage);
+        }
+
+
+        regionRepository.saveAll(regionsToBeMoved);
+        return persistentImage.get().getPages();
+    }
+
+    @Transactional
+    public List<Page> createRegion(long imageID, int regionTypeID, BoundingBox boundingBox) throws IM3WSException {
+        throw new IM3WSException("Cannot create region");
     }
 }

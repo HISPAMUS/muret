@@ -1,9 +1,6 @@
 import {Component, OnDestroy, OnInit, Self, ViewChild} from '@angular/core';
-import {DocumentAnalysisService} from '../../services/document-analysis.service';
-import {observable, Observable, of, Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {ActivatedRoute, ParamMap} from '@angular/router';
-import {map, share, switchMap, tap} from 'rxjs/operators';
-import {DocumentAnalysisImageProjection} from '../../../../core/model/restapi/document-analysis-image-projection';
 import {Rectangle} from '../../../../svg/model/rectangle';
 import {Shape} from '../../../../svg/model/shape';
 import {SvgCanvasComponent} from '../../../../svg/components/svg-canvas/svg-canvas.component';
@@ -13,15 +10,12 @@ import {RegionType} from '../../../../core/model/entities/region-type';
 import {Page} from '../../../../core/model/entities/page';
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {Region} from '../../../../core/model/entities/region';
-import {ServerError} from '../../../../core/model/restapi/server-error';
-import {SimpleModalService} from 'ngx-simple-modal';
-import {AlertComponent} from '../../../../shared/components/error-modal-message/alert.component';
 import {Store} from '@ngrx/store';
 import {DocumentAnalysisState} from '../../store/state/document-analysis.state';
 import {
   ChangePageBoundingBox,
   ChangeRegionBoundingBox,
-  ChangeRegionType, Clear,
+  ChangeRegionType, Clear, CreatePage, CreateRegion,
   GetImageProjection,
   GetImageURL,
   GetRegionTypes
@@ -35,6 +29,7 @@ import {
   selectRegionTypes
 } from '../../store/selectors/document-analysis.selector';
 import {ConfirmDialogComponent} from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import {DialogsService} from '../../../../shared/services/dialogs.service';
 
 @Component({
   selector: 'app-document-analysis',
@@ -74,12 +69,13 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   public regionTypesRadioGroupForm: FormGroup;
   private selectedShape: Shape;
   private lastRegionType: RegionType;
+  private nextDrawShape: string | RegionType;
   // end tools
 
   constructor(private store: Store<DocumentAnalysisState>,
               private route: ActivatedRoute,
               private formBuilder: FormBuilder,
-              private simpleModalService: SimpleModalService
+              private dialogsService: DialogsService
               ) {
     this.regionTypes$ = store.select(selectRegionTypes);
     this.imageWidth$ = store.select(selectImageWidth);
@@ -198,9 +194,11 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
     this.shapes = new Array();
     pages.forEach(page => {
       this.drawPage(page);
-      page.regions.forEach(region => {
-        this.drawRegion(region);
-      });
+      if (page.regions) {
+        page.regions.forEach(region => {
+          this.drawRegion(region);
+        });
+      }
     });
   }
 
@@ -234,7 +232,93 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   }
 
   // ------------- METHODS that deal with actual data -------------
+  isAddingMode(): boolean {
+    return this.toolRadioGroup.value.model === 'draw';
+  }
+
+  isEditingMode(): boolean {
+    return this.toolRadioGroup.value.model === 'edit';
+  }
+
+  setRegionType(regionType: RegionType) {
+    if (this.isEditingMode()) {
+      const shape = this.selectedShape;
+      if (!shape) {
+        throw new Error('No selected shape');
+      }
+
+      if (shape.layer === 'page') {
+        this.dialogsService.showError('Region type change', 'Cannot change a page to be a region');
+      } else {
+        this.store.dispatch(new ChangeRegionType(shape.data, regionType));
+      }
+    } else {
+      this.nextDrawShape = regionType;
+    }
+  }
+
+  setPage() {
+    if (this.isEditingMode()) {
+      this.dialogsService.showError('Page', 'Cannot set page in editing mode');
+    } else {
+      this.nextDrawShape = 'page';
+    }
+  }
+
+
+  onShapeChanged(shape: Shape) {
+    const rectangle = shape as Rectangle;
+
+    if (shape.layer === 'page') {
+        this.store.dispatch(new ChangePageBoundingBox(shape.data, {
+          fromX: rectangle.fromX,
+          fromY: rectangle.fromY,
+          id: rectangle.data.id,
+          toX: rectangle.fromX + rectangle.width,
+          toY: rectangle.fromY + rectangle.height
+        }));
+    } else {
+      this.store.dispatch(new ChangeRegionBoundingBox(shape.data, {
+        fromX: rectangle.fromX,
+        fromY: rectangle.fromY,
+        id: rectangle.data.id,
+        toX: rectangle.fromX + rectangle.width,
+        toY: rectangle.fromY + rectangle.height
+      }));
+    }
+  }
+
+
+  clear() {
+    this.dialogsService.showConfirmarion('Clear document analysis?', 'This action cannot be undone')
+      .subscribe((isConfirmed) => {
+        if (isConfirmed) {
+          this.store.dispatch(new Clear(this.imageID));
+        }
+      });
+  }
+
   onShapeCreated(shape: Shape) {
+    if (!this.nextDrawShape) {
+      this.dialogsService.showError('Shape creation', 'Page or region type must be selected first');
+      this.shapes = [...this.shapes]; // force shapes redrawing
+    } else {
+      const rectangle = shape as Rectangle;
+
+      if (this.nextDrawShape === 'page') {
+        this.store.dispatch(new CreatePage(this.imageID, {fromX: rectangle.fromX,
+          fromY: rectangle.fromY,
+          toX: rectangle.fromX + rectangle.width,
+          toY: rectangle.fromY + rectangle.height}));
+      } else {
+        this.store.dispatch(new CreateRegion(this.imageID, this.nextDrawShape as RegionType,
+          {fromX: rectangle.fromX,
+          fromY: rectangle.fromY,
+          toX: rectangle.fromX + rectangle.width,
+          toY: rectangle.fromY + rectangle.height}));
+      }
+    }
+
     /*const rectangle = shape as Rectangle;
     const selectedRegionTypeOrPage = this.regionTypesRadioGroupForm.value.regionTypeRadioButton;
     let boxTypeName: string;
@@ -281,64 +365,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
     }*/
   }
 
-  isAddingMode(): boolean {
-    return this.toolRadioGroup.value.model === 'draw';
-  }
 
-  isEditingMode(): boolean {
-    return this.toolRadioGroup.value.model === 'edit';
-  }
-
-  setRegionType(regionType: RegionType) {
-    this.lastRegionType = regionType;
-
-    if (this.isEditingMode()) {
-      const shape = this.selectedShape;
-      if (!shape) {
-        throw new Error('No selected shape');
-      }
-
-      if (shape.layer === 'page') {
-        throw new Error('Cannot change a page to any region type');
-      } else {
-        this.store.dispatch(new ChangeRegionType(shape.data, regionType));
-      }
-    }
-  }
-
-  onShapeChanged(shape: Shape) {
-    const rectangle = shape as Rectangle;
-
-    if (shape.layer === 'page') {
-        this.store.dispatch(new ChangePageBoundingBox(shape.data, {
-          fromX: rectangle.fromX,
-          fromY: rectangle.fromY,
-          id: rectangle.data.id,
-          toX: rectangle.fromX + rectangle.width,
-          toY: rectangle.fromY + rectangle.height
-        }));
-    } else {
-      this.store.dispatch(new ChangeRegionBoundingBox(shape.data, {
-        fromX: rectangle.fromX,
-        fromY: rectangle.fromY,
-        id: rectangle.data.id,
-        toX: rectangle.fromX + rectangle.width,
-        toY: rectangle.fromY + rectangle.height
-      }));
-    }
-  }
-
-
-  clear() {
-    this.simpleModalService.addModal(ConfirmDialogComponent, {
-      title: 'Clear document analysis?',
-      message: 'This action cannot be undone'})
-      .subscribe((isConfirmed) => {
-        if (isConfirmed) {
-          this.store.dispatch(new Clear(this.imageID));
-        }
-      });
-  }
 
   ngOnDestroy(): void {
     this.regionTypesSubscription.unsubscribe();

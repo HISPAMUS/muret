@@ -85,6 +85,12 @@ public class BoundingBox {
 
     }
 
+    public boolean containsCenterOf(BoundingBox boundingBox) {
+        int centerX = (boundingBox.getFromX() + boundingBox.getToX()) / 2;
+        int centerY = (boundingBox.getFromY() + boundingBox.getToY()) / 2;
+        return contains(centerX, centerY);
+    }
+
     public void setHeight(int height) {
         this.toY = this.fromY + height;
     }
