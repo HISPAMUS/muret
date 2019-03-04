@@ -95,7 +95,7 @@ public class DocumentAnalysisController {
      */
     @PutMapping(path = {"createPage"})
     public List<Page> createPage(@RequestBody PageCreation pageCreation) throws IM3WSException {
-        List<Page> createdPages = this.documentAnalysisModel.createPage(pageCreation);
+        List<Page> createdPages = this.documentAnalysisModel.createPage(pageCreation.getImageID(), pageCreation.getBoundingBox());
         return createdPages;
     }
 

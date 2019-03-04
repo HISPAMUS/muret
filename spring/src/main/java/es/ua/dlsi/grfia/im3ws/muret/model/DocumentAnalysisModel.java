@@ -2,10 +2,8 @@ package es.ua.dlsi.grfia.im3ws.muret.model;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
-import es.ua.dlsi.grfia.im3ws.muret.controller.payload.PageCreation;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.repository.*;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -223,16 +221,16 @@ public class DocumentAnalysisModel {
     /**
      * It moves the current regions to the new page if its center is contained inside the new page
      */
-    public List<Page> createPage(PageCreation pageCreation) throws IM3WSException {
-        Optional<Image> persistentImage = imageRepository.findById(pageCreation.getImageID());
+    public List<Page> createPage(long imageID, BoundingBox boundingBox) throws IM3WSException {
+        Optional<Image> persistentImage = imageRepository.findById(imageID);
         if (!persistentImage.isPresent()) {
-            throw new IM3WSException("Cannot find a image with id " + pageCreation.getImageID());
+            throw new IM3WSException("Cannot find a image with id " + imageID);
         }
 
         List<Region> regionsToBeMoved = new ArrayList<>();
         for (Page previousPage: persistentImage.get().getPages()) { // new page has not been inserted
             for (Region region: previousPage.getRegions()) {
-                if (pageCreation.getBoundingBox().containsCenterOf(region.getBoundingBox())) {
+                if (boundingBox.containsCenterOf(region.getBoundingBox())) {
                     regionsToBeMoved.add(region);
                 }
             }
@@ -240,7 +238,7 @@ public class DocumentAnalysisModel {
 
 
         Page persistentPage = new Page();
-        persistentPage.setBoundingBox(pageCreation.getBoundingBox());
+        persistentPage.setBoundingBox(boundingBox);
         persistentPage.setImage(persistentImage.get());
         persistentPage = pageRepository.save(persistentPage);
         persistentImage.get().getPages().add(persistentPage);
@@ -256,6 +254,44 @@ public class DocumentAnalysisModel {
 
     @Transactional
     public List<Page> createRegion(long imageID, int regionTypeID, BoundingBox boundingBox) throws IM3WSException {
-        throw new IM3WSException("Cannot create region");
+        Optional<Image> persistentImage = imageRepository.findById(imageID);
+        if (!persistentImage.isPresent()) {
+            throw new IM3WSException("Cannot find a image with id " + imageID);
+        }
+
+        Optional<RegionType> persistentRegionType = regionTypeRepository.findById(regionTypeID);
+        if (!persistentRegionType.isPresent()) {
+            throw new IM3WSException("Cannot find a region type with id " + regionTypeID);
+        }
+
+        // if there is not any page, a new page is created spaning the whole image
+        List<Page> pages;
+        if (persistentImage.get().getPages() == null || persistentImage.get().getPages().isEmpty()) {
+            pages = this.createPage(imageID, new BoundingBox(0, 0, persistentImage.get().getWidth(), persistentImage.get().getHeight()));
+        } else {
+            pages = persistentImage.get().getPages();
+        }
+
+        // look for the page that will create the region
+        Page parentPage = null;
+        for (Page page: pages) {
+            if (page.getBoundingBox().containsCenterOf(boundingBox)) {
+                parentPage = page;
+                break;
+            }
+        }
+
+        if (parentPage == null) {
+            throw new IM3WSException("Cannot find a page to insert the region");
+        }
+
+        Region region = new Region();
+        region.setRegionType(persistentRegionType.get());
+        region.setPage(parentPage);
+        region.setBoundingBox(boundingBox);
+        regionRepository.save(region);
+        parentPage.getRegions().add(region);
+
+        return persistentImage.get().getPages();
     }
 }
