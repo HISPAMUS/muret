@@ -21,7 +21,7 @@ export class DocumentAnalysisService {
     return this.apiRestClientService.getListExcerptProjection$<RegionType>('regionTypes');
   }
 
-  public updatePageBoundingBox(page: Page, fromX: number, fromY: number, toX: number, toY: number) {
+  public updatePageBoundingBox(page: Page, fromX: number, fromY: number, toX: number, toY: number): Observable<Page> {
     const boundingBox: BoundingBox = {
         id: page.id,
         fromX,
@@ -29,10 +29,10 @@ export class DocumentAnalysisService {
         toX,
         toY
     };
-    return this.apiRestClientService.put$<BoundingBox>('documentanalysis/pageBoundingBoxUpdate', boundingBox);
+    return this.apiRestClientService.put$<Page>('documentanalysis/pageBoundingBoxUpdate', boundingBox);
   }
 
-  public updateRegionBoundingBox(region: Region, fromX: number, fromY: number, toX: number, toY: number) {
+  public updateRegionBoundingBox(region: Region, fromX: number, fromY: number, toX: number, toY: number): Observable<Region> {
     const boundingBox: BoundingBox = {
       id: region.id,
       fromX,
@@ -47,7 +47,7 @@ export class DocumentAnalysisService {
       regionType: region.regionType
     };
 
-    return this.apiRestClientService.put$<BoundingBox>('documentanalysis/regionUpdate', newRegion);
+    return this.apiRestClientService.put$<Region>('documentanalysis/regionUpdate', newRegion);
   }
 
   updateRegionType(region: Region, regionType: RegionType) {

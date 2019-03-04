@@ -46,19 +46,14 @@ public class DocumentAnalysisController {
 
 
     @PutMapping(path = {"pageBoundingBoxUpdate"})
-    public ChangeResponse pageBoundingBoxUpdate(@RequestBody BoundingBox boundingBox) throws IM3WSException {
-        try {
-            Optional<Page> page = pageRepository.findById(boundingBox.getId());
-            if (!page.isPresent()) {
-                throw new IM3WSException("Cannot find a page with id " + boundingBox.getId());
-            }
-            page.get().setBoundingBox(boundingBox);
-            pageRepository.save(page.get());
-            return new ChangeResponse();
-        } catch (Throwable t) {
-            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot update page boundingBox", t);
-            return new ChangeResponse(false, null, t.getMessage());
+    public Page pageBoundingBoxUpdate(@RequestBody BoundingBox boundingBox) throws IM3WSException {
+        Optional<Page> page = pageRepository.findById(boundingBox.getId());
+        if (!page.isPresent()) {
+            throw new IM3WSException("Cannot find a page with id " + boundingBox.getId());
         }
+        page.get().setBoundingBox(boundingBox);
+        pageRepository.save(page.get());
+        return page.get();
     }
 
     @PutMapping(path = {"regionUpdate"})

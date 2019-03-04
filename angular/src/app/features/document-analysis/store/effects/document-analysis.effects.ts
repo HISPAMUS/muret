@@ -4,6 +4,8 @@ import { of } from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {DocumentAnalysisService} from '../../services/document-analysis.service';
 import {
+  ChangePageBoundingBox, ChangePageBoundingBoxSuccess,
+  ChangeRegionBoundingBox, ChangeRegionBoundingBoxSuccess,
   ChangeRegionType, ChangeRegionTypeSuccess,
   DocumentAnalysisActionTypes, GetImageProjection, GetImageProjectionSuccess, GetImageURL, GetImageURLSuccess,
   GetRegionTypes,
@@ -14,6 +16,7 @@ import {RegionType} from '../../../../core/model/entities/region-type';
 import {ImageFilesService} from '../../../../core/services/image-files.service';
 import {ServerError} from '../../../../core/model/restapi/server-error';
 import {Region} from '../../../../core/model/entities/region';
+import {Page} from '../../../../core/model/entities/page';
 
 @Injectable()
 export class DocumentAnalysisEffects {
@@ -60,4 +63,25 @@ export class DocumentAnalysisEffects {
       return of(new ChangeRegionTypeSuccess(region));
     })
   );
+
+  @Effect()
+  changeRegionBoundingBox$ = this.actions$.pipe(
+    ofType<ChangeRegionBoundingBox>(DocumentAnalysisActionTypes.ChangeRegionBoundingBox),
+    switchMap((action: ChangeRegionBoundingBox) => this.documentAnalysisService.updateRegionBoundingBox(
+      action.region, action.boundingBox.fromX, action.boundingBox.fromY, action.boundingBox.toX, action.boundingBox.toY)),
+    switchMap((region: Region) => {
+      return of(new ChangeRegionBoundingBoxSuccess(region));
+    })
+  );
+
+  @Effect()
+  changePageBoundingBox$ = this.actions$.pipe(
+    ofType<ChangePageBoundingBox>(DocumentAnalysisActionTypes.ChangePageBoundingBox),
+    switchMap((action: ChangePageBoundingBox) => this.documentAnalysisService.updatePageBoundingBox(
+      action.page, action.boundingBox.fromX, action.boundingBox.fromY, action.boundingBox.toX, action.boundingBox.toY)),
+    switchMap((page: Page) => {
+      return of(new ChangePageBoundingBoxSuccess(page));
+    })
+  );
+
 }

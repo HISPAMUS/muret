@@ -18,7 +18,14 @@ import {SimpleModalService} from 'ngx-simple-modal';
 import {AlertComponent} from '../../../../shared/components/error-modal-message/alert.component';
 import {Store} from '@ngrx/store';
 import {DocumentAnalysisState} from '../../store/state/document-analysis.state';
-import {ChangeRegionType, GetImageProjection, GetImageURL, GetRegionTypes} from '../../store/actions/document-analysis.actions';
+import {
+  ChangePageBoundingBox,
+  ChangeRegionBoundingBox,
+  ChangeRegionType,
+  GetImageProjection,
+  GetImageURL,
+  GetRegionTypes
+} from '../../store/actions/document-analysis.actions';
 import {
   selectFileName,
   selectImageHeight, selectImageURL,
@@ -272,25 +279,6 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
     }*/
   }
 
-  onShapeChanged(shape: Shape) {
-    /*let response: Observable<ServerError<any>>;
-    const rectangle = shape as Rectangle;
-
-    if (shape.layer === 'page') {
-      response = this.documentAnalysisService.updatePageBoundingBox(rectangle.data, rectangle.fromX, rectangle.fromY,
-        rectangle.fromX + rectangle.width, rectangle.fromY + rectangle.height);
-    } else {
-      response = this.documentAnalysisService.updateRegionBoundingBox(rectangle.data, rectangle.fromX, rectangle.fromY,
-        rectangle.fromX + rectangle.width, rectangle.fromY + rectangle.height);
-    }
-
-    response.subscribe(next => {
-      if (!next.ok) {
-        this.showError('Cannot save region bounding box change', next.errorMessage); // TODO - restaurar al que tenía
-      }
-    });*/
-  }
-
   isAddingMode(): boolean {
     return this.toolRadioGroup.value.model === 'draw';
   }
@@ -315,6 +303,30 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+  onShapeChanged(shape: Shape) {
+    const rectangle = shape as Rectangle;
+
+    if (shape.layer === 'page') {
+        this.store.dispatch(new ChangePageBoundingBox(shape.data, {
+          fromX: rectangle.fromX,
+          fromY: rectangle.fromY,
+          id: rectangle.data.id,
+          toX: rectangle.fromX + rectangle.width,
+          toY: rectangle.fromY + rectangle.height
+        }));
+    } else {
+      this.store.dispatch(new ChangeRegionBoundingBox(shape.data, {
+        fromX: rectangle.fromX,
+        fromY: rectangle.fromY,
+        id: rectangle.data.id,
+        toX: rectangle.fromX + rectangle.width,
+        toY: rectangle.fromY + rectangle.height
+      }));
+    }
+  }
+
+
 
   clear() {
     /* const response: Observable<ServerError<Page[]>> = this.documentAnalysisService.clear(this.imageID);

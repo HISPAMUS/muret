@@ -15,7 +15,7 @@ export const selectImageHeight = createSelector(
 
 export const selectFileName = createSelector(
   documentAnalysisState,
-  (state: DocumentAnalysisState) => state.filaname
+  (state: DocumentAnalysisState) => state.filename
 );
 
 

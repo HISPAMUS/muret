@@ -3,6 +3,7 @@ import {DocumentAnalysisImageProjection} from '../../../../core/model/restapi/do
 import {RegionType} from '../../../../core/model/entities/region-type';
 import {Region} from '../../../../core/model/entities/region';
 import {Page} from '../../../../core/model/entities/page';
+import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 
 export enum DocumentAnalysisActionTypes {
   GetImageProjection = '[DocumentAnalysis] Get image projection',
@@ -22,8 +23,8 @@ export enum DocumentAnalysisActionTypes {
   ChangePageBoundingBox = '[DocumentAnalysis] Change page bounding box',
   ChangePageBoundingBoxSuccess = '[DocumentAnalysis] Change page bounding box success',
 
-  ChangeRegionBoundingBox = '[DocumentAnalysis] Change page bounding box',
-  ChangeRegionBoundingBoxSuccess = '[DocumentAnalysis] Change page bounding box success',
+  ChangeRegionBoundingBox = '[DocumentAnalysis] Change region bounding box',
+  ChangeRegionBoundingBoxSuccess = '[DocumentAnalysis] Change region bounding box success',
 
   CreatePage = '[DocumentAnalysis] Create page',
   CreatePageSuccess = '[DocumentAnalysis] Create page success',
@@ -81,6 +82,28 @@ export class ChangeRegionTypeSuccess implements Action {
   constructor(public region: Region) {}
 }
 
+
+export class ChangePageBoundingBox implements Action {
+  public readonly type = DocumentAnalysisActionTypes.ChangePageBoundingBox;
+  constructor(public page: Page, public boundingBox: BoundingBox) {}
+}
+
+export class ChangePageBoundingBoxSuccess implements Action {
+  public readonly type = DocumentAnalysisActionTypes.ChangePageBoundingBoxSuccess;
+  constructor(public page: Page) {}
+}
+
+export class ChangeRegionBoundingBox implements Action {
+  public readonly type = DocumentAnalysisActionTypes.ChangeRegionBoundingBox;
+  constructor(public region: Region, public boundingBox: BoundingBox) {}
+}
+
+export class ChangeRegionBoundingBoxSuccess implements ChangeRegionBoundingBoxSuccess {
+  public readonly type = DocumentAnalysisActionTypes.ChangeRegionBoundingBoxSuccess;
+  constructor(public region: Region) {}
+}
+
+
 /*export class SelectPage implements Action {
   public readonly type = DocumentAnalysisActionTypes.SelectPage;
   constructor(public page: Page) {}
@@ -93,25 +116,6 @@ export class SelectRegion implements Action {
 
 ///// parámetros ????
 
-export class ChangePageBoundingBox implements Action {
-  public readonly type = DocumentAnalysisActionTypes.ChangePageBoundingBox;
-  constructor(public region: Region, public regionType: RegionType) {}
-}
-
-export class ChangePageBoundingBoxSuccess implements Action {
-  public readonly type = DocumentAnalysisActionTypes.ChangePageBoundingBoxSuccess;
-  constructor(public region: Region, public regionType: RegionType) {}
-}
-
-export class ChangeRegionBoundingBox implements Action {
-  public readonly type = DocumentAnalysisActionTypes.ChangeRegionBoundingBox;
-  constructor(public region: Region, public regionType: RegionType) {}
-}
-
-export class ChangeRegionBoundingBoxSuccess implements ChangeRegionBoundingBoxSuccess {
-  public readonly type = DocumentAnalysisActionTypes.ChangeRegionBoundingBoxSuccess;
-  constructor(public region: Region, public regionType: RegionType) {}
-}
 
 export class CreatePage implements Action {
   public readonly type = DocumentAnalysisActionTypes.CreatePage;

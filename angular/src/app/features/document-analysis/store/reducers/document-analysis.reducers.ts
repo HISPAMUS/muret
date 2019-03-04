@@ -48,6 +48,17 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
         selectedRegion: action.region
       };
     }*/
+    case DocumentAnalysisActionTypes.ChangePageBoundingBoxSuccess: {
+      const newState = {...state};
+
+      newState.pages = deepcopy<Page[]>(state.pages);
+
+      const page = newState.pages.find(p => p.id === action.page.id);
+      if (page) {
+        page.boundingBox = action.page.boundingBox;
+      }
+      return newState;
+    }
     case DocumentAnalysisActionTypes.ChangeRegionTypeSuccess: {
       const newState = {...state};
 
@@ -57,6 +68,21 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
           const region = page.regions.find(r => r.id === action.region.id);
           if (region) {
             region.regionType = action.region.regionType;
+            return;
+          }
+        }
+      );
+      return newState;
+    }
+    case DocumentAnalysisActionTypes.ChangeRegionBoundingBoxSuccess: {
+      const newState = {...state};
+
+      newState.pages = deepcopy<Page[]>(state.pages);
+
+      newState.pages.forEach(page => {
+          const region = page.regions.find(r => r.id === action.region.id);
+          if (region) {
+            region.boundingBox = action.region.boundingBox;
             return;
           }
         }
