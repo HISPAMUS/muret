@@ -4,10 +4,24 @@ import { of } from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {DocumentAnalysisService} from '../../services/document-analysis.service';
 import {
-  ChangePageBoundingBox, ChangePageBoundingBoxSuccess,
-  ChangeRegionBoundingBox, ChangeRegionBoundingBoxSuccess,
-  ChangeRegionType, ChangeRegionTypeSuccess, Clear, ClearSuccess, CreatePage, CreatePageSuccess, CreateRegion, CreateRegionSuccess,
-  DocumentAnalysisActionTypes, GetImageProjection, GetImageProjectionSuccess, GetImageURL, GetImageURLSuccess,
+  ChangePageBoundingBox,
+  ChangePageBoundingBoxSuccess,
+  ChangeRegionBoundingBox,
+  ChangeRegionBoundingBoxSuccess,
+  ChangeRegionType,
+  ChangeRegionTypeSuccess,
+  Clear,
+  ClearSuccess,
+  CreatePage,
+  CreatePageSuccess,
+  CreateRegion,
+  CreateRegionSuccess,
+  DeletePage, DeletePageSuccess, DeleteRegion, DeleteRegionSuccess,
+  DocumentAnalysisActionTypes,
+  GetImageProjection,
+  GetImageProjectionSuccess,
+  GetImageURL,
+  GetImageURLSuccess,
   GetRegionTypes,
   GetRegionTypesSuccess
 } from '../actions/document-analysis.actions';
@@ -112,4 +126,23 @@ export class DocumentAnalysisEffects {
       return of(new CreateRegionSuccess(pages));
     })
   );
+
+  @Effect()
+  deletePage$ = this.actions$.pipe(
+    ofType<DeletePage>(DocumentAnalysisActionTypes.DeletePage),
+    switchMap((action: DeletePage) => this.documentAnalysisService.deletePage(action.pageID)),
+    switchMap((pages: Page[]) => {
+      return of(new DeletePageSuccess(pages));
+    })
+  );
+
+  @Effect()
+  deleteRegion$ = this.actions$.pipe(
+    ofType<DeleteRegion>(DocumentAnalysisActionTypes.DeleteRegion),
+    switchMap((action: DeleteRegion) => this.documentAnalysisService.deleteRegion(action.regionID)),
+    switchMap((pages: Page[]) => {
+      return of(new DeleteRegionSuccess(pages));
+    })
+  );
+
 }

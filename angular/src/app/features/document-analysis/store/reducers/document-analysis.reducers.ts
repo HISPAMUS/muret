@@ -113,6 +113,30 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
       }
       return newState;
     }
+    case DocumentAnalysisActionTypes.DeletePageSuccess: {
+      const newState = {...state};
+      newState.pages = deepcopy<Page[]>(state.pages);
+
+      if (action.deletedPageID) { // if no error has ocurred
+        // remove the deleted page
+        if (newState.pages) { // we may have deleted all pages
+          newState.pages = newState.pages.filter(page => page.id !== action.deletedPageID);
+        }
+      }
+      return newState;
+    }
+    case DocumentAnalysisActionTypes.DeleteRegionSuccess: {
+      const newState = {...state};
+      newState.pages = deepcopy<Page[]>(state.pages);
+
+      if (action.deletedRegionID) { // if no error has ocurred
+        // remove the deleted region
+        newState.pages.forEach(page => {
+          page.regions = page.regions.filter(region => region.id !== action.deletedRegionID);
+        });
+      }
+      return newState;
+    }
     default: {
       return state;
     }

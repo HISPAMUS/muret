@@ -134,6 +134,28 @@ export class CreateRegionSuccess implements Action {
   constructor(public pages: Page[]) {} // it returns several pages because we don't a priori in which page the region has been created
 }
 
+
+
+export class DeletePage implements Action {
+  public readonly type = DocumentAnalysisActionTypes.DeletePage;
+  constructor(public pageID: number) {}
+}
+
+export class DeletePageSuccess implements Action {
+  public readonly type = DocumentAnalysisActionTypes.DeletePageSuccess;
+  constructor(public deletedPageID: number) {}
+}
+
+export class DeleteRegion implements Action {
+  public readonly type = DocumentAnalysisActionTypes.DeleteRegion;
+  constructor(public regionID: number) {}
+}
+
+export class DeleteRegionSuccess implements Action {
+  public readonly type = DocumentAnalysisActionTypes.DeleteRegionSuccess;
+  constructor(public deletedRegionID: number) {}
+}
+
 /*export class SelectPage implements Action {
   public readonly type = DocumentAnalysisActionTypes.SelectPage;
   constructor(public page: Page) {}
@@ -144,29 +166,6 @@ export class SelectRegion implements Action {
   constructor(public region: Region) {}
 }*/
 
-///// parámetros ????
-
-
-
-export class DeletePage implements Action {
-  public readonly type = DocumentAnalysisActionTypes.DeletePage;
-  constructor(public region: Region, public regionType: RegionType) {}
-}
-
-export class DeletePageSuccess implements Action {
-  public readonly type = DocumentAnalysisActionTypes.DeletePageSuccess;
-  constructor(public region: Region, public regionType: RegionType) {}
-}
-
-export class DeleteRegion implements Action {
-  public readonly type = DocumentAnalysisActionTypes.DeleteRegion;
-  constructor(public region: Region, public regionType: RegionType) {}
-}
-
-export class DeleteRegionSuccess implements Action {
-  public readonly type = DocumentAnalysisActionTypes.DeleteRegionSuccess;
-  constructor(public region: Region, public regionType: RegionType) {}
-}
 
 
 export type DocumentAnalysisActions =

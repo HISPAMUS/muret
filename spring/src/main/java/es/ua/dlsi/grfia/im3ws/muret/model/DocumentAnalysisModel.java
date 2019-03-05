@@ -19,6 +19,8 @@ import static org.junit.Assert.assertEquals;
 
 @Component
 public class DocumentAnalysisModel {
+    int ONE_PAGE_MARGIN = 25;
+    int ONE_PAGE_REGION_MARGIN = 50;
     private final MURETConfiguration muretConfiguration;
     private final ImageRepository imageRepository;
     private final RegionRepository regionRepository;
@@ -133,7 +135,7 @@ public class DocumentAnalysisModel {
     }
 
     /**
-     * It creates one page and region and puts every symbol inside it
+     * It creates one page and, when there are symbols, one region and puts every symbol inside it
      *
      * @param image
      */
@@ -144,10 +146,7 @@ public class DocumentAnalysisModel {
             throw new IM3WSException("Cannot find 'undefined' region type");
         }
 
-        Page onePage = new Page(image, 0, 0, image.getWidth(), image.getHeight(), null, null);
-        //Region oneRegion = regionRepository.save(new Region(onePage, 0, 0, image.getWidth(), image.getHeight()));
-        Region oneRegion = new Region(onePage, regionType, 0, 0, image.getWidth(), image.getHeight());
-        onePage.addRegion(oneRegion);
+        Page onePage = new Page(image, ONE_PAGE_MARGIN, ONE_PAGE_MARGIN, image.getWidth()-ONE_PAGE_MARGIN, image.getHeight()-ONE_PAGE_MARGIN, null, null);
 
         LinkedList<Symbol> symbols = new LinkedList<>();
         for (Page page : image.getPages()) {
@@ -158,8 +157,14 @@ public class DocumentAnalysisModel {
             }
             //pageRepository.delete(page.getId());
         }
-        for (Symbol omrSymbol : symbols) { // avoid concurrent modification above
-            omrSymbol.setRegion(oneRegion);
+
+        if (symbols.size() > 0) {
+            Region oneRegion = new Region(onePage, regionType, ONE_PAGE_REGION_MARGIN, ONE_PAGE_REGION_MARGIN, image.getWidth()-ONE_PAGE_REGION_MARGIN, image.getHeight()-ONE_PAGE_REGION_MARGIN);
+            onePage.addRegion(oneRegion);
+
+            for (Symbol omrSymbol : symbols) { // avoid concurrent modification above
+                omrSymbol.setRegion(oneRegion);
+            }
         }
         for (Page page : image.getPages()) {
             page.setImage(null); // to force the delete instead of an update
@@ -303,8 +308,17 @@ public class DocumentAnalysisModel {
             throw new IM3WSException("Cannot find a page with id " + pageID);
         }
 
-        if (persistentPage.get().getRegions() != null && !persistentPage.get().getRegions().isEmpty()) {
-            throw new IM3WSException("Cannot remove a page that has regions inside");
+        if (persistentPage.get().getRegions() != null) {
+            if (persistentPage.get().getRegions().size() == 1) {
+                Region persistentRegion = getRegion(persistentPage.get().getRegions().get(0).getId());
+                if (persistentRegion.getSymbols() != null && !persistentRegion.getSymbols().isEmpty()) {
+                    throw new IM3WSException("Cannot remove a page that with a region containing " + persistentRegion.getSymbols() + " symbols");
+                } else {
+                    persistentPage.get().getRegions().remove(persistentRegion);
+                }
+            } else if (persistentPage.get().getRegions().size() > 1) {
+                throw new IM3WSException("Cannot remove a page that has " + persistentPage.get().getRegions().size() + " regions inside");
+            }
         }
 
         // pageRepository.delete(persistentPage.get());
@@ -323,22 +337,19 @@ public class DocumentAnalysisModel {
      */
     @Transactional
     public long deleteRegion(long regionID) throws IM3WSException {
-        Optional<Region> persistentRegion = regionRepository.findById(regionID);
-        if (!persistentRegion.isPresent()) {
-            throw new IM3WSException("Cannot find a page with id " + regionID);
-        }
+        Region persistentRegion = getRegion(regionID);
 
-        if (persistentRegion.get().getSymbols() != null && !persistentRegion.get().getSymbols().isEmpty()) {
+        if (persistentRegion.getSymbols() != null && !persistentRegion.getSymbols().isEmpty()) {
             throw new IM3WSException("Cannot remove a region that has symbols inside");
         }
 
-        Optional<Page> persistentPage = pageRepository.findById(persistentRegion.get().getPage().getId());
+        Optional<Page> persistentPage = pageRepository.findById(persistentRegion.getPage().getId());
         if (!persistentPage.isPresent()) {
-            throw new IM3WSException("Cannot find page with id " + persistentRegion.get().getPage().getId());
+            throw new IM3WSException("Cannot find page with id " + persistentRegion.getPage().getId());
         }
 
         //regionRepository.delete(persistentRegion.get());
-        persistentPage.get().getRegions().remove(persistentRegion.get()); // it is the correct way of deleting, removing from the owner class for being a composition
+        persistentPage.get().getRegions().remove(persistentRegion); // it is the correct way of deleting, removing from the owner class for being a composition
         // For deleting this way the orphan = true and CASCADE.ALL must be set
         return regionID;
     }
@@ -351,5 +362,14 @@ public class DocumentAnalysisModel {
         }
 
         return persistentImage.get();
+    }
+
+    private Region getRegion(long regionID) throws IM3WSException {
+        Optional<Region> persistentRegion = regionRepository.findById(regionID);
+        if (!persistentRegion.isPresent()) {
+            throw new IM3WSException("Cannot find a region with id " + regionID);
+        }
+
+        return persistentRegion.get();
     }
 }

@@ -1,14 +1,10 @@
 <div class="container-fluid">
 <!-- menu -->
   <div class="row">
-  <nav class="col-2">
+  <nav class="col-1">
     <div>
-      <button (click)="zoomOut()"><fa-icon icon="search-minus"></fa-icon></button>
-      <button (click)="zoomIn()"><fa-icon icon="search-plus"></fa-icon></button>
-      <button (click)="zoomFit()"><fa-icon icon="expand"></fa-icon></button>
-
      <form [formGroup]="toolRadioGroup">
-        <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="model">
+        <div class="btn-group-vertical btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="model">
           <label ngbButtonLabel class="btn-light">
             <input ngbButton type="radio" [value]="'idle'" (click)="idle()"> Idle
           </label>
@@ -17,22 +13,22 @@
           </label>
           <label ngbButtonLabel class="btn-light">
             <input ngbButton type="radio" value="edit" (click)="edit()"> Edit
-          </label>
+          </label> <!-- TODO Disable when none selected -->
 
           <label ngbButtonLabel class="btn-light">
             <button (click)="clear()">Clear</button>
           </label>
+          <label ngbButtonLabel class="btn-light">
+            <button [disabled]="!isEditingMode()" (click)="deleteSelected()">Delete</button>
+          </label> <!-- TODO Disable when none selected -->
         </div>
       </form>
 
       <form [formGroup]="regionTypesRadioGroupForm">
-        <div class="btn-group-vertical btn-group-toggle" ngbRadioGroup name="radioBasic2" formControlName="regionTypeRadioButton">
+        <div [hidden]="!isEditingMode() && !isAddingMode()" class="btn-group-vertical btn-group-toggle" ngbRadioGroup name="radioBasic2" formControlName="regionTypeRadioButton">
           <label *ngFor="let regionType of regionTypes$ | async; trackBy: trackByRegionTypeFn" class="btn-primary" ngbButtonLabel>
             <input ngbButton type="radio" value="{{regionType.id}}" (click)="setRegionType(regionType)"> {{regionType.name}}
           </label>
-
-          &nbsp;
-
           <label class="btn-primary" ngbButtonLabel>
             <input ngbButton type="radio" value="page" (click)="setPage()"> Page
           </label>
@@ -43,11 +39,19 @@
     </div>
   </nav>
 
-  <section class="col-10">
+  <section class="col-11">
+    <div class="row">
+      <h2 class="col">{{filename$ | async}}</h2>
+    </div>
+
     <!-- layers selector -->
     <nav class="row">
       <form [formGroup]="layersCheckboxes">
         <div class="col btn-group btn-group-toggle">
+          <button (click)="zoomOut()"><fa-icon icon="search-minus"></fa-icon></button>
+          <button (click)="zoomIn()"><fa-icon icon="search-plus"></fa-icon></button>
+          <button (click)="zoomFit()"><fa-icon icon="expand"></fa-icon></button>
+
           <label class="btn-primary" ngbButtonLabel>
             <input type="checkbox" formControlName="page" ngbButton> Pages
           </label>
@@ -61,7 +65,6 @@
     <!-- image -->
     <article class="row">
       <div class="col">
-          <h2>{{filename$ | async}}</h2>
           <div *ngIf="imageURL$ | async as loadedImage; else loading">
             <div #canvas id="canvas">
               <!-- shape selected, changed, and deselected are forwarded from the canvas -->

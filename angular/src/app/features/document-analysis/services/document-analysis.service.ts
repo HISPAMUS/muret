@@ -94,4 +94,13 @@ export class DocumentAnalysisService {
   clear(imageID: number) {
     return this.apiRestClientService.delete$<Page[]>('documentanalysis/clear', imageID);
   }
+
+  deletePage(pageID: number) {
+    return this.apiRestClientService.delete$<Page[]>('documentanalysis/deletePage', pageID);
+  }
+
+  deleteRegion(regionID: number) {
+    return this.apiRestClientService.delete$<Page[]>('documentanalysis/deleteRegion', regionID);
+  }
+
 }

@@ -15,7 +15,7 @@ import {DocumentAnalysisState} from '../../store/state/document-analysis.state';
 import {
   ChangePageBoundingBox,
   ChangeRegionBoundingBox,
-  ChangeRegionType, Clear, CreatePage, CreateRegion,
+  ChangeRegionType, Clear, CreatePage, CreateRegion, DeletePage, DeleteRegion,
   GetImageProjection,
   GetImageURL,
   GetRegionTypes
@@ -28,7 +28,6 @@ import {
   selectNotationType, selectPages, selectProjectPath,
   selectRegionTypes
 } from '../../store/selectors/document-analysis.selector';
-import {ConfirmDialogComponent} from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 
 @Component({
@@ -43,7 +42,6 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   imageHeight$: Observable<number>;
   filename$: Observable<string>;
   imageURL$: Observable<string>;
-  loadingImage = 'assets/loading.svg';
   projectPathSubscription: Subscription;
   notationType$: Observable<'eMensural' | 'eModern'>;
   manuscriptType$: Observable<'eHandwritten' | 'ePrinted'>;
@@ -52,9 +50,6 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   pagesSubscription: Subscription;
 
   private shapes = new Array<Shape>();
-
-
-
 
 
   @ViewChild('svgCanvasComponent') svgCanvasComponent: SvgCanvasComponent;
@@ -68,7 +63,6 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   public toolRadioGroup: FormGroup;
   public regionTypesRadioGroupForm: FormGroup;
   private selectedShape: Shape;
-  private lastRegionType: RegionType;
   private nextDrawShape: string | RegionType;
   // end tools
 
@@ -93,6 +87,19 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.imageID = +params.get('id'); // + converts the string to number
       this.store.dispatch(new GetImageProjection(+this.imageID));
+
+      // when changing image, reset buttons
+      if (this.toolRadioGroup) {
+        this.toolRadioGroup.setValue({
+          model: 'idle'
+        });
+      }
+
+      if (this.regionTypesRadioGroupForm) {
+        this.regionTypesRadioGroupForm.setValue({
+          regionTypeRadioButton: 'none'
+        });
+      }
     });
 
     this.projectPathSubscription = this.store.select(selectProjectPath).subscribe(next => {
@@ -192,14 +199,16 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
 
   private drawPagesAndRegions(pages: Page[]) {
     this.shapes = new Array();
-    pages.forEach(page => {
-      this.drawPage(page);
-      if (page.regions) {
-        page.regions.forEach(region => {
-          this.drawRegion(region);
-        });
-      }
-    });
+    if (pages) {
+      pages.forEach(page => {
+        this.drawPage(page);
+        if (page.regions) {
+          page.regions.forEach(region => {
+            this.drawRegion(region);
+          });
+        }
+      });
+    }
   }
 
   private drawBox(layer: string, id: number, boundingBox: BoundingBox, color: string): Rectangle {
@@ -318,54 +327,18 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
           toY: rectangle.fromY + rectangle.height}));
       }
     }
-
-    /*const rectangle = shape as Rectangle;
-    const selectedRegionTypeOrPage = this.regionTypesRadioGroupForm.value.regionTypeRadioButton;
-    let boxTypeName: string;
-    if (!selectedRegionTypeOrPage || selectedRegionTypeOrPage === 'none') {
-      this.showError('Shape creation', 'Select page or the type of region first'); // TODO que esté seleccionado el último por defecto
-      this.shapes = [...this.shapes]; // propagate error by not changing anything on shapes
-    } else {
-      let response: Observable<ServerError<any>>;
-      if (selectedRegionTypeOrPage === 'page') {
-        boxTypeName = 'Page';
-        response = this.documentAnalysisService.createPage(this.imageID, rectangle.fromX, rectangle.fromY,
-          rectangle.fromX + rectangle.width, rectangle.fromY + rectangle.height);
-      } else {
-        boxTypeName = 'Region';
-        response = this.documentAnalysisService.createRegion(this.imageID, this.lastRegionType, rectangle.fromX, rectangle.fromY,
-          rectangle.fromX + rectangle.width, rectangle.fromY + rectangle.height);
-      }
-
-      response.subscribe(next => {
-        if (!next.ok) {
-          this.showError('Cannot create ' + boxTypeName, next.errorMessage);
-          this.shapes = [...this.shapes]; // propagate error by not changing anything on shapes
-        }
-      });
-    }*/
-
-    // TODO crear páginas
-    // TODO
-    // shape.id = '10202';
-    // the array address must be changed in order to propagate changes to the @Input onChange
-    /*const error = false;
-    const regionTypeName = this.regionTypesRadioGroupForm.get('regionTypeRadioButton').value;
-
-    // TODO algo más elegante....
-    const regionType = this.regionTypes.find(rt => rt.name === regionTypeName);
-    shape.layer = regionTypeName;
-    // TODO (shape.data as Region).regionType = regionType;
-    shape.strokeColor = '#' + regionType.hexargb; // TODO TODO TODO
-
-    if (!error) {
-      this.shapes = [...this.shapes, shape];
-    } else {
-      this.shapes = [...this.shapes]; // error - propagate error by not adding the shape
-    }*/
   }
 
 
+  deleteSelected() {
+    if (this.selectedShape) {
+      if (this.selectedShape.layer === 'page') {
+        this.store.dispatch(new DeletePage(+this.selectedShape.data.id));
+      } else {
+        this.store.dispatch(new DeleteRegion(+this.selectedShape.data.id));
+      }
+    }
+  }
 
   ngOnDestroy(): void {
     this.regionTypesSubscription.unsubscribe();
@@ -373,6 +346,13 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
     this.pagesSubscription.unsubscribe();
   }
 
+  editSelected() {
+    return false;
+  }
+
+  editOrAddSelected() {
+    return false;
+  }
 }
 
 
