@@ -35,7 +35,9 @@ public class Page {
     Image image;
 
     @JsonManagedReference
-    @OneToMany(fetch=FetchType.EAGER, mappedBy = "page", cascade = CascadeType.ALL, orphanRemoval = true) // orphanRemoval = remove dependent rather than set the FK to null)
+    @OneToMany(fetch=FetchType.EAGER, mappedBy = "page",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true) // orphanRemoval = remove dependent rather than set the FK to null)
     //@JoinColumn(name="page_id", referencedColumnName="id")
     private List<Region> regions;
 
@@ -100,4 +102,5 @@ public class Page {
         }
         regions.add(newRegion);
     }
+
 }

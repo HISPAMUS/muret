@@ -46,28 +46,28 @@ public class DocumentAnalysisModel {
     public List<Page> pageSplit(Image image, int x) throws IM3WSException {
         //TODO Transaction
 
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Splitting page at {0}" , x);
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Splitting page at {0}", x);
 
         if (image.getPages() == null || image.getPages().isEmpty()) {
             Page omrPage1 = new Page(image, 0, 0, x, image.getHeight(), null, null);
-            Page omrPage2 = new Page(image, x+1, 0, image.getWidth(), image.getHeight(), null, null);
+            Page omrPage2 = new Page(image, x + 1, 0, image.getWidth(), image.getHeight(), null, null);
 
             image.addPage(pageRepository.save(omrPage1));
             image.addPage(pageRepository.save(omrPage2));
         } else {
-            for (Page page: image.getPages()) {
+            for (Page page : image.getPages()) {
                 if (page.getBoundingBox().getFromX() == x) {
                     throw new IM3WSException("The specified position is the same as the stating of page " + page);
                 }
-                if (page.getBoundingBox().getFromX()+page.getBoundingBox().getWidth() == x) {
+                if (page.getBoundingBox().getFromX() + page.getBoundingBox().getWidth() == x) {
                     throw new IM3WSException("The specified position is the same as the end of page " + page);
                 }
 
-                if (page.getBoundingBox().getFromX() < x && x < page.getBoundingBox().getFromX()+page.getBoundingBox().getWidth()) {
+                if (page.getBoundingBox().getFromX() < x && x < page.getBoundingBox().getFromX() + page.getBoundingBox().getWidth()) {
                     Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Splitting page {0}", page);
 
-                    Page newPage = new Page(image, x, 0, page.getBoundingBox().getFromX()+page.getBoundingBox().getWidth(), image.getHeight(), null, null);
-                    page.getBoundingBox().setWidth(x - page.getBoundingBox().getFromX()-1);
+                    Page newPage = new Page(image, x, 0, page.getBoundingBox().getFromX() + page.getBoundingBox().getWidth(), image.getHeight(), null, null);
+                    page.getBoundingBox().setWidth(x - page.getBoundingBox().getFromX() - 1);
                     pageRepository.save(page);
 
                     newPage = pageRepository.save(newPage);
@@ -81,12 +81,12 @@ public class DocumentAnalysisModel {
                     newPage.addRegion(newRegion);
 
                     // not move all symbols in new page and change the width of previous regions
-                    for (Region region: page.getRegions()) {
+                    for (Region region : page.getRegions()) {
                         region.getBoundingBox().setWidth(page.getBoundingBox().getWidth()); // change the width of all regions inside
 
                         LinkedList<Symbol> symbols = new LinkedList<>();
-                        for (Symbol symbol: region.getSymbols()) {
-                            if (!region.getBoundingBox().contains(symbol.getBoundingBox().getFromX(),symbol.getBoundingBox().getFromY())) {
+                        for (Symbol symbol : region.getSymbols()) {
+                            if (!region.getBoundingBox().contains(symbol.getBoundingBox().getFromX(), symbol.getBoundingBox().getFromY())) {
                                 if (newRegion.getBoundingBox().contains(symbol.getBoundingBox().getFromX(), symbol.getBoundingBox().getFromY())) {
                                     symbols.add(symbol);
                                 } else {
@@ -94,7 +94,7 @@ public class DocumentAnalysisModel {
                                 }
                             }
                         }
-                        for (Symbol symbol: symbols) { // avoid concurrent modification above
+                        for (Symbol symbol : symbols) { // avoid concurrent modification above
                             symbol.setRegion(newRegion);
                             symbolRepository.save(symbol);
                         }
@@ -108,7 +108,7 @@ public class DocumentAnalysisModel {
 
     @Transactional
     public List<Page> regionSplit(Image image, int x, int y) throws IM3WSException {
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Splitting region at {0},{1}" , new Object[]{x, y});
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Splitting region at {0},{1}", new Object[]{x, y});
         if (image.getPages() == null || image.getPages().isEmpty()) {
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, "No page, creating a single page");
             Page omrPage1 = new Page(image, 0, 0, image.getWidth(), image.getHeight(), null, null);
@@ -116,7 +116,7 @@ public class DocumentAnalysisModel {
         }
 
         // first locate the page
-        for (Page page: image.getPages()) {
+        for (Page page : image.getPages()) {
             if (page.getBoundingBox().getFromX() == x) {
                 throw new IM3WSException("The specified position is the same as the stating of page " + page);
             }
@@ -125,7 +125,7 @@ public class DocumentAnalysisModel {
             }
 
             if (page.getBoundingBox().getFromX() < x && x < page.getBoundingBox().getFromX() + page.getBoundingBox().getWidth()) {
-                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Splitting region at {0},{1} in page {2}" , new Object[]{x, y, page});
+                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Splitting region at {0},{1} in page {2}", new Object[]{x, y, page});
                 splitRegionAt(page, y);
             }
         }
@@ -134,6 +134,7 @@ public class DocumentAnalysisModel {
 
     /**
      * It creates one page and region and puts every symbol inside it
+     *
      * @param image
      */
     @Transactional
@@ -149,18 +150,18 @@ public class DocumentAnalysisModel {
         onePage.addRegion(oneRegion);
 
         LinkedList<Symbol> symbols = new LinkedList<>();
-        for (Page page: image.getPages()) {
-            for (Region omrRegion: page.getRegions()) {
+        for (Page page : image.getPages()) {
+            for (Region omrRegion : page.getRegions()) {
                 if (omrRegion.getSymbols() != null) {
                     symbols.addAll(omrRegion.getSymbols());
                 }
             }
             //pageRepository.delete(page.getId());
         }
-        for (Symbol omrSymbol: symbols) { // avoid concurrent modification above
+        for (Symbol omrSymbol : symbols) { // avoid concurrent modification above
             omrSymbol.setRegion(oneRegion);
         }
-        for (Page page: image.getPages()) {
+        for (Page page : image.getPages()) {
             page.setImage(null); // to force the delete instead of an update
         }
         image.getPages().clear();
@@ -172,12 +173,12 @@ public class DocumentAnalysisModel {
     @Transactional
     public void splitRegionAt(Page page, int y) throws IM3WSException {
         if (page.getRegions() == null || page.getRegions().isEmpty()) {
-            Region omrRegion1 = regionRepository.save(new Region(page, null, page.getBoundingBox().getFromX(), 0, page.getBoundingBox().getToX(), y-1));
+            Region omrRegion1 = regionRepository.save(new Region(page, null, page.getBoundingBox().getFromX(), 0, page.getBoundingBox().getToX(), y - 1));
             Region omrRegion2 = regionRepository.save(new Region(page, null, page.getBoundingBox().getFromX(), y, page.getBoundingBox().getToX(), page.getBoundingBox().getToY()));
             page.addRegion(omrRegion1);
             page.addRegion(omrRegion2);
         } else {
-            for (Region region: page.getRegions()) {
+            for (Region region : page.getRegions()) {
                 int fromY = region.getBoundingBox().getFromY();
                 int toY = region.getBoundingBox().getToY();
                 if (y == fromY) {
@@ -190,9 +191,9 @@ public class DocumentAnalysisModel {
                     // All symbols whose bottomY lay below y are attached to the new region. Regions above it will remain in the current region
                     // bounding box is computed taking into account the symbols, so two regions may overlap
 
-                    LinkedList<Symbol> symbolsToMoveToNewRegion= new LinkedList<>();
+                    LinkedList<Symbol> symbolsToMoveToNewRegion = new LinkedList<>();
                     int splitYTakingIntoAccountTopSymbol = y; // by default it is the drawn y
-                    for (Symbol symbol: region.getSymbols()) {
+                    for (Symbol symbol : region.getSymbols()) {
                         if (symbol.getBoundingBox().getToY() > y) {
                             symbolsToMoveToNewRegion.add(symbol);
                             if (symbol.getBoundingBox().getFromY() < splitYTakingIntoAccountTopSymbol) {
@@ -207,7 +208,7 @@ public class DocumentAnalysisModel {
                             region.getBoundingBox().getToX(), toY));
                     page.addRegion(newRegion);
 
-                    for (Symbol symbol: symbolsToMoveToNewRegion) {
+                    for (Symbol symbol : symbolsToMoveToNewRegion) {
                         symbol.setRegion(newRegion);
                         symbolRepository.save(symbol);
                     }
@@ -222,14 +223,11 @@ public class DocumentAnalysisModel {
      * It moves the current regions to the new page if its center is contained inside the new page
      */
     public List<Page> createPage(long imageID, BoundingBox boundingBox) throws IM3WSException {
-        Optional<Image> persistentImage = imageRepository.findById(imageID);
-        if (!persistentImage.isPresent()) {
-            throw new IM3WSException("Cannot find a image with id " + imageID);
-        }
+        Image persistentImage = getImage(imageID);
 
         List<Region> regionsToBeMoved = new ArrayList<>();
-        for (Page previousPage: persistentImage.get().getPages()) { // new page has not been inserted
-            for (Region region: previousPage.getRegions()) {
+        for (Page previousPage : persistentImage.getPages()) { // new page has not been inserted
+            for (Region region : previousPage.getRegions()) {
                 if (boundingBox.containsCenterOf(region.getBoundingBox())) {
                     regionsToBeMoved.add(region);
                 }
@@ -239,25 +237,22 @@ public class DocumentAnalysisModel {
 
         Page persistentPage = new Page();
         persistentPage.setBoundingBox(boundingBox);
-        persistentPage.setImage(persistentImage.get());
+        persistentPage.setImage(persistentImage);
         persistentPage = pageRepository.save(persistentPage);
-        persistentImage.get().getPages().add(persistentPage);
+        persistentImage.getPages().add(persistentPage);
 
-        for (Region region: regionsToBeMoved) {
+        for (Region region : regionsToBeMoved) {
             region.setPage(persistentPage);
         }
 
 
         regionRepository.saveAll(regionsToBeMoved);
-        return persistentImage.get().getPages();
+        return persistentImage.getPages();
     }
 
     @Transactional
     public List<Page> createRegion(long imageID, int regionTypeID, BoundingBox boundingBox) throws IM3WSException {
-        Optional<Image> persistentImage = imageRepository.findById(imageID);
-        if (!persistentImage.isPresent()) {
-            throw new IM3WSException("Cannot find a image with id " + imageID);
-        }
+        Image persistentImage = getImage(imageID);
 
         Optional<RegionType> persistentRegionType = regionTypeRepository.findById(regionTypeID);
         if (!persistentRegionType.isPresent()) {
@@ -266,15 +261,15 @@ public class DocumentAnalysisModel {
 
         // if there is not any page, a new page is created spaning the whole image
         List<Page> pages;
-        if (persistentImage.get().getPages() == null || persistentImage.get().getPages().isEmpty()) {
-            pages = this.createPage(imageID, new BoundingBox(0, 0, persistentImage.get().getWidth(), persistentImage.get().getHeight()));
+        if (persistentImage.getPages() == null || persistentImage.getPages().isEmpty()) {
+            pages = this.createPage(imageID, new BoundingBox(0, 0, persistentImage.getWidth(), persistentImage.getHeight()));
         } else {
-            pages = persistentImage.get().getPages();
+            pages = persistentImage.getPages();
         }
 
         // look for the page that will create the region
         Page parentPage = null;
-        for (Page page: pages) {
+        for (Page page : pages) {
             if (page.getBoundingBox().containsCenterOf(boundingBox)) {
                 parentPage = page;
                 break;
@@ -292,6 +287,69 @@ public class DocumentAnalysisModel {
         regionRepository.save(region);
         parentPage.getRegions().add(region);
 
-        return persistentImage.get().getPages();
+        return persistentImage.getPages();
+    }
+
+    /**
+     *
+     * @param pageID
+     * @return Deleted pageID
+     * @throws IM3WSException
+     */
+    @Transactional
+    public long deletePage(long pageID) throws IM3WSException {
+        Optional<Page> persistentPage = pageRepository.findById(pageID);
+        if (!persistentPage.isPresent()) {
+            throw new IM3WSException("Cannot find a page with id " + pageID);
+        }
+
+        if (persistentPage.get().getRegions() != null && !persistentPage.get().getRegions().isEmpty()) {
+            throw new IM3WSException("Cannot remove a page that has regions inside");
+        }
+
+        // pageRepository.delete(persistentPage.get());
+        Image image = getImage(persistentPage.get().getImage().getId());
+        image.getPages().remove(persistentPage.get());// it is the correct way of deleting, removing from the owner class for being a composition
+        // For deleting this way the orphan = true and CASCADE.ALL must be set
+
+        return pageID;
+    }
+
+    /**
+     *
+     * @param regionID
+     * @return Deleted regionID
+     * @throws IM3WSException
+     */
+    @Transactional
+    public long deleteRegion(long regionID) throws IM3WSException {
+        Optional<Region> persistentRegion = regionRepository.findById(regionID);
+        if (!persistentRegion.isPresent()) {
+            throw new IM3WSException("Cannot find a page with id " + regionID);
+        }
+
+        if (persistentRegion.get().getSymbols() != null && !persistentRegion.get().getSymbols().isEmpty()) {
+            throw new IM3WSException("Cannot remove a region that has symbols inside");
+        }
+
+        Optional<Page> persistentPage = pageRepository.findById(persistentRegion.get().getPage().getId());
+        if (!persistentPage.isPresent()) {
+            throw new IM3WSException("Cannot find page with id " + persistentRegion.get().getPage().getId());
+        }
+
+        //regionRepository.delete(persistentRegion.get());
+        persistentPage.get().getRegions().remove(persistentRegion.get()); // it is the correct way of deleting, removing from the owner class for being a composition
+        // For deleting this way the orphan = true and CASCADE.ALL must be set
+        return regionID;
+    }
+
+    private Image getImage(long imageID) throws IM3WSException {
+        Optional<Image> persistentImage = imageRepository.findById(imageID);
+
+        if (!persistentImage.isPresent()) {
+            throw new IM3WSException("Cannot find an image with id " + imageID);
+        }
+
+        return persistentImage.get();
     }
 }

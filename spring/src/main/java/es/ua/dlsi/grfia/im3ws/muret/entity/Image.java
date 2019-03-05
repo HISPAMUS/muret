@@ -33,7 +33,9 @@ public class Image {
     private Project project;
 
     @JsonManagedReference
-    @OneToMany(fetch=FetchType.LAZY, mappedBy = "image", cascade = CascadeType.ALL, orphanRemoval = true) // orphanRemoval = remove dependent rather than set the FK to null
+    @OneToMany(fetch=FetchType.LAZY, mappedBy = "image",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true) // orphanRemoval = remove dependent rather than set the FK to null
     //@JoinColumn(name="image_id", referencedColumnName="id") // don't use this construct to let orphanRemoval to work right
     private List<Page> pages;
 

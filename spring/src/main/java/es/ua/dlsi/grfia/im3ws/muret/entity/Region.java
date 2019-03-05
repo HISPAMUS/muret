@@ -34,7 +34,9 @@ public class Region {
     private Page page;
 
     @JsonManagedReference
-    @OneToMany(fetch=FetchType.EAGER, mappedBy = "region", cascade = CascadeType.ALL, orphanRemoval = true) // orphanRemoval = remove dependent rather than set the FK to null)
+    @OneToMany(fetch=FetchType.EAGER, mappedBy = "region",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true) // orphanRemoval = remove dependent rather than set the FK to null)
     //@JoinColumn(name="region_id", referencedColumnName="id")
     //@JoinColumn(name="region_id")
     private List<Symbol> symbols;

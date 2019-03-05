@@ -111,6 +111,15 @@ public class DocumentAnalysisController {
         return pages;
     }
 
+    @DeleteMapping(path = {"deletePage/{pageID}"})
+    public long deletePage(@PathVariable("pageID") long pageID) throws IM3WSException {
+        return this.documentAnalysisModel.deletePage(pageID);
+    }
+
+    @DeleteMapping(path = {"deleteRegion/{regionID}"})
+    public long deleteRegion(@PathVariable("regionID") long regionID) throws IM3WSException {
+        return this.documentAnalysisModel.deleteRegion(regionID);
+    }
 
     /**
      * It returns the new list of pages of the image
