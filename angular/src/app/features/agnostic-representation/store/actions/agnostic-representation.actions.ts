@@ -1,20 +1,21 @@
 import {Action} from '@ngrx/store';
+import {Region} from '../../../../core/model/entities/region';
 
 export enum AgnosticRepresentationActionTypes {
-  Accion = '[AgnosticRepresentation] Acción',
-  AccionSuccess = '[AgnosticRepresentation] Acción success'
+  GetRegion = '[AgnosticRepresentation] Get region',
+  GetRegionSuccess = '[AgnosticRepresentation] Get region success'
 }
 
-export class Accion implements Action {
-  public readonly type = AgnosticRepresentationActionTypes.Accion
-  constructor(public payload: any) {}
+export class GetRegion implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.GetRegion
+  constructor(public id: number) {}
 }
 
-export class AccionSuccess implements Action {
-  public readonly type = AgnosticRepresentationActionTypes.AccionSuccess
-  constructor(public payload: any) {}
+export class GetRegionSuccess implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.GetRegionSuccess
+  constructor(public region: Region) {}
 }
 
 
 export type AgnosticRepresentationActions =
-  Accion | AccionSuccess;
+  GetRegion | GetRegionSuccess;

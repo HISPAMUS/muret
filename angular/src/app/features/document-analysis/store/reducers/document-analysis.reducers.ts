@@ -25,7 +25,6 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
         pages: action.documentAnalysisImageProjection.pages,
         manuscriptType: action.documentAnalysisImageProjection.manuscriptType,
         notationType: action.documentAnalysisImageProjection.notationType,
-        projectPath: action.documentAnalysisImageProjection.projectPath,
       };
     }
     case DocumentAnalysisActionTypes.GetImageURLSuccess: {

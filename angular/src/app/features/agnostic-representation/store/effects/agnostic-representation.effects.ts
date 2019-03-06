@@ -2,9 +2,13 @@ import { Injectable } from '@angular/core';
 import { Effect, ofType, Actions } from '@ngrx/effects';
 import { of } from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
-import {DocumentAnalysisActionTypes} from '../../../document-analysis/store/actions/document-analysis.actions';
-import {Accion, AccionSuccess, AgnosticRepresentationActionTypes} from '../actions/agnostic-representation.actions';
+import {
+  AgnosticRepresentationActionTypes,
+  GetRegion,
+  GetRegionSuccess
+} from '../actions/agnostic-representation.actions';
 import {AgnosticRepresentationService} from '../../services/agnostic-representation.service';
+import {Region} from '../../../../core/model/entities/region';
 
 @Injectable()
 export class AgnosticRepresentationEffects {
@@ -14,12 +18,12 @@ export class AgnosticRepresentationEffects {
   ) {}
 
   @Effect()
-  accion$ = this.actions$.pipe(
-    ofType<Accion>(AgnosticRepresentationActionTypes.Accion),
-    map((action: Accion) => action.payload),
-    switchMap((parametro) => this.agnosticRepresentationService.hazAccion$(parametro)),
-    switchMap((resultado: any) => {
-      return of(new AccionSuccess(resultado));
+  getRegion$ = this.actions$.pipe(
+    ofType<GetRegion>(AgnosticRepresentationActionTypes.GetRegion),
+    map((action: GetRegion) => action.id),
+    switchMap((id) => this.agnosticRepresentationService.getRegion$(id)),
+    switchMap((region: Region) => {
+      return of(new GetRegionSuccess(region));
     })
   );
 }

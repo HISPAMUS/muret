@@ -6,19 +6,14 @@ import {
   Input,
   OnChanges,
   OnInit,
-  Output,
+  Output, QueryList,
   SimpleChanges,
   Type,
-  ViewChild
+  ViewChild, ViewChildren
 } from '@angular/core';
 import {ShapeComponent} from '../shape/shape.component';
-import {ShapeDirective} from '../../directives/shape.directive';
 import {Rectangle} from '../../model/rectangle';
 import {Shape} from '../../model/shape';
-import {TextComponent} from '../text/text.component';
-import {PathComponent} from '../path/path.component';
-import {LineComponent} from '../line/line.component';
-import {RectangleComponent} from '../rectangle/rectangle.component';
 import {Coordinate} from '../../model/coordinate';
 import {MousePositionEvent} from './mouse-position-event';
 import {SVGCanvasState, SvgCanvasStateService} from '../../services/svg-canvas-state.service';
@@ -26,6 +21,7 @@ import {Path} from '../../model/path';
 import {Line} from '../../model/line';
 import {Text} from '../../model/text';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import {BoundingBox} from '../../../core/model/entities/bounding-box';
 
 @Component({
   selector: 'app-svg-canvas',
@@ -36,7 +32,7 @@ import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 })
 
 /**
- * This canvas is only in charge of displaying svg shapes, possibly with a background image. It can create or edit shapes,
+ * This canvas is only in charge of displaying svg shapes, possibly with a background image. It can create or setEditingMode shapes,
  * but the mode change must be driven from another client component.
  *
  * It also implements the resizing of elements without CDK drag&drop
@@ -47,8 +43,11 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   @Input() widthPercentage: number;
   @Input() heightPercentage: number;
 
+  @Input() crop: BoundingBox;
+
   @ViewChild('canvas') canvas: ElementRef;
   @ViewChild('backgroundHiddenImageElement ') backgroundHiddenImageElement: ElementRef;
+  @ViewChildren(ShapeComponent) shapeComponents: QueryList<ShapeComponent>;
 
   // interaction
   private svgMouseEventContent: MousePositionEvent = {}; // avoid creating too many objects
@@ -62,7 +61,6 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   cursorClass = 'cursorDefault';
   // end of interaction
 
-  @ViewChild(ShapeDirective) injectComp: ShapeDirective;
   viewBox: string;
   viewPortHeight = 0;
   viewPortWidth = 0;
@@ -71,8 +69,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   widthPercentString: string;
   private nextShapeToDraw: Type<Shape>;
   private selectedComponent: ShapeComponent;
-  private shapeComponents = new Array<ShapeComponent>();
   private unsafeBackgroundImage: SafeResourceUrl;
+  private shapeWithoutComponent: Rectangle | Line | Text | Path;
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver,
               private stateService: SvgCanvasStateService,
@@ -83,74 +81,20 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.requestStateChange(SVGCanvasState.eIdle);
     this.unsafeBackgroundImage = this.sanitizer.bypassSecurityTrustResourceUrl(this.backgroundImage);
-
-  }
-
-  private removeShapeComponent(shapeComponent: ShapeComponent) {
-    const i = this.shapeComponents.indexOf(shapeComponent, 0);
-    if (i >= 0) {
-      this.shapeComponents.splice(i, 1); // remove
-      const viewContainerRef = this.injectComp.viewContainerRef;
-      const index = viewContainerRef.remove(i);
-    } else {
-      // TODO error en consola
-      console.warn('Shape component not found');
-    }
-  }
-
-  private addShapeComponent(shape: Shape): ShapeComponent {
-    /*const shapeClassName = shape.constructor.name;
-    const type = window[shapeClassName + 'Component'].prototype;*/
-    const componentType = this.shapeToComponent(shape);
-    const componentCreated = this.addShape(componentType);
-    componentCreated.shape = shape;
-    this.shapeComponents.push(componentCreated);
-    return componentCreated;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.shapes) {
-        let newShapes = changes.shapes.currentValue as unknown as Shape[];
-        // check for changes
-
-        if (!newShapes) {
-          newShapes = new Array();
-        }
-        const componentsToRemove: ShapeComponent[]
-          = this.shapeComponents.filter(shapeComponent => newShapes.indexOf(shapeComponent.shape) < 0);
-        // Note that if a new added shape was not added to the client due to an error,
-        // it will be in components but not in the new shape array
-        // and it will be deleted
-        const shapesToAdd =
-          newShapes.filter(shape => !this.shapeComponents.some(shapeComponent => shapeComponent.shape === shape));
-
-        componentsToRemove.forEach(shapeComponent => {
-          this.removeShapeComponent(shapeComponent);
-        });
-
-        shapesToAdd.forEach(shape => {
-          this.addShapeComponent(shape);
-        });
-    }
-
     this.computeViewBox(); // it costs less to compute the change than checking if it has changed
   }
 
   private computeViewBox() {
-    this.viewBox = `0 0 ${this.viewPortWidth} ${this.viewPortHeight}`;
+    if (this.crop) {
+      this.viewBox = `${this.crop.fromX} ${this.crop.fromY} ${this.crop.toX - this.crop.fromX} ${this.crop.toY - this.crop.fromY}`;
+    } else {
+      this.viewBox = `0 0 ${this.viewPortWidth} ${this.viewPortHeight}`;
+    }
     this.heightPercentString = this.heightPercentage + '%';
     this.widthPercentString = this.widthPercentage + '%';
-  }
-
-  // this could be done with reflection
-  shapeToComponent(shape: Shape): Type<any> {
-    switch (shape.constructor.name) {
-      case 'Rectangle': return RectangleComponent;
-      case 'Line': return LineComponent;
-      case 'Text': return TextComponent;
-      case 'Path': return PathComponent;
-      default: throw new Error('Cannot find a component for shape type ' + shape.constructor.name);
-    }
   }
 
   private createShapeFromType(nextShapeToDraw: Type<Shape>) {
@@ -164,16 +108,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
     }
   }
 
-
-  /*trackByShapeFn(index, item: ShapeComponent) {
-    return item.shape.id;
-  }*/
-
-  private addShape<T>(componentType: Type<T>): T {
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(componentType);
-    const viewContainerRef = this.injectComp.viewContainerRef;
-    const componentRef = viewContainerRef.createComponent(componentFactory);
-    return componentRef.instance;
+  trackByShapeFn(index, item: Shape) {
+    return item.id;
   }
 
   requestStateChange(state: SVGCanvasState, drawingShape?: Type<Shape>) {
@@ -215,13 +151,25 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
         this.deselect();
         this.createShape(svgCoordinate);
         break;
+      case SVGCanvasState.eSelecting:
+        this.deselect();
+        // when auth clicks over a svg shape, it is sent to this method as event
+        this.selectedComponent = this.findEventTargetComponent($event.target);
+        if (this.selectedComponent) {
+          this.selectedComponent.select(true);
+          this.svgShapeSelected.emit(this.selectedComponent.shape);
+        } else {
+          this.svgShapeSelected.emit(null); // unselect
+          // TODO - create selection rectangle
+        }
+        break;
       case SVGCanvasState.eEditing:
         this.deselect();
         // when auth clicks over a svg shape, it is sent to this method as event
         this.selectedComponent = this.findEventTargetComponent($event.target);
         if (this.selectedComponent) {
           this.selectedComponent.select(true);
-          this.selectedComponent.edit(true);
+          this.selectedComponent.setEditingMode(true);
           this.svgShapeSelected.emit(this.selectedComponent.shape);
         } else {
           this.svgShapeSelected.emit(null); // unselect
@@ -244,6 +192,11 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   onMouseMove($event) {
     switch (this.stateService.getState()) {
       case SVGCanvasState.eDrawing:
+        if (!this.selectedComponent && this.shapeWithoutComponent) {
+          this.selectedComponent = this.shapeWithoutComponent.shapeComponent;
+          this.shapeWithoutComponent = null;
+        }
+
         if (this.selectedComponent) {
           const svgCoordinate = this.screenCoordinateToSVGCoordinate($event.offsetX, $event.offsetY);
           this.selectedComponent.draw(svgCoordinate);
@@ -281,18 +234,9 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   private deselect() {
     if (this.selectedComponent) {
       this.selectedComponent.select(false);
-      this.selectedComponent.edit(false);
+      this.selectedComponent.setEditingMode(false);
       this.svgShapeDeselected.emit(this.selectedComponent.shape);
       this.selectedComponent = null;
-    }
-  }
-
-  private findEventTargetComponent(target: EventTarget): ShapeComponent {
-    if (target instanceof SVGGraphicsElement) {
-      const result = this.shapeComponents.find(sc => sc.shape.id === target.id);
-      return result;
-    } else {
-      return null;
     }
   }
 
@@ -301,16 +245,15 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
     shape.fillColor = 'transparent';
     shape.strokeColor = 'black';
     shape.strokeWidth = 3;
+    shape.fromX = coordinate.x;
+    shape.fromY = coordinate.y;
+    this.shapes.push(shape);
 
-
-    // shape.id = '1000'; // TODO
-    this.selectedComponent = this.addShapeComponent(shape);
-    this.selectedComponent.startDrawing(coordinate);
+    this.shapeWithoutComponent = shape;
   }
 
   private endShapeDraw() {
     if (this.selectedComponent) {
-
       if (this.selectedComponent.isDrawStarted()) { // if no drag has been done no shape is inserted
         this.svgShapeCreated.emit(this.selectedComponent.shape);
       }
@@ -325,5 +268,14 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
     this.viewPortWidth = $event.target.naturalWidth;
 
     this.computeViewBox();
+  }
+
+  private findEventTargetComponent(target: any): ShapeComponent {
+    const shape = this.shapes.find(s => s.id === target.id);
+    if (shape) {
+      return shape.shapeComponent;
+    } else {
+      return null;
+    }
   }
 }

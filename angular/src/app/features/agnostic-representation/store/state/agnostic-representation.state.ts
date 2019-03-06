@@ -1,9 +1,11 @@
+import {Region} from '../../../../core/model/entities/region';
+
 export interface AgnosticRepresentationState {
-  nada: string;
+  selectedRegion: Region;
 }
 
 export const initialAgnosticRepresentationState: AgnosticRepresentationState = {
-  nada: null,
+  selectedRegion: null,
 };
 
 export function getInitialState(): AgnosticRepresentationState {

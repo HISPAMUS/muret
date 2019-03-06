@@ -14,7 +14,9 @@
     <div class="col">
       <section class="row">
         <div class="col">
-          Selected staff
+          <app-image #selectedRegionImage *ngIf="selectedRegion" [imageID]="imageID" [shapes]="selectedRegionShapes" [zoomFactor]="selectedRegionZoomFactor"
+                     [crop]="selectedRegion.boundingBox"
+          ></app-image>
         </div>
       </section>
 
@@ -29,7 +31,7 @@
           <!-- image -->
           <section class="row">
             <div class="col-6">
-              <app-image [imageID]="imageID" [shapes]="imagePreviewShapes" [zoomFactor]="imagePreviewZoomFactor"
+              <app-image #imagePreview [imageID]="imageID" [shapes]="imagePreviewShapes" [zoomFactor]="imagePreviewZoomFactor"
                          (svgShapeSelected)="onPreviewImageShapeSelected($event)"
                          (svgShapeDeselected)="onPreviewImageShapeDeselected($event)"
               ></app-image>

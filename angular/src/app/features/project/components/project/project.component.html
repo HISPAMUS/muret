@@ -15,7 +15,7 @@
 <!--<div class="row">
   <div *ngIf="projectIsLoaded()" class="col-7 offset-1">
     <h2>{{project?.name}}</h2>
-    <app-inline-edit [(ngModel)]="project.composer" type="text" [label]="'Enter value for composer'" (changed)="composerChanged($event)" [size]="128"> </app-inline-edit>
+    <app-inline-setEditingMode [(ngModel)]="project.composer" type="text" [label]="'Enter value for composer'" (changed)="composerChanged($event)" [size]="128"> </app-inline-setEditingMode>
     <p>{{projectStatistics?.images}} images, {{projectStatistics?.pages}} pages, {{projectStatistics?.regions}} regions, {{projectStatistics?.agnosticSymbols}} symbols </p>
 
     <input type="radio" name="rbProjectState" [(ngModel)]="projectState" value="none">
@@ -27,7 +27,7 @@
     <input type="radio" name="rbProjectState" [(ngModel)]="projectState" value="doublechecked">
     Double checked
 
-    <app-inline-edit [(ngModel)]="project.comments" type="text" [label]="'Enter comments'" (changed)="commentsChanged($event)" [size]="128"> </app-inline-edit>
+    <app-inline-setEditingMode [(ngModel)]="project.comments" type="text" [label]="'Enter comments'" (changed)="commentsChanged($event)" [size]="128"> </app-inline-setEditingMode>
   </div>
 
   <div class="col-1">

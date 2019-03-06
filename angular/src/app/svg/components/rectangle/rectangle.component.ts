@@ -1,22 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ShapeComponent} from '../shape/shape.component';
 import {Rectangle} from '../../model/rectangle';
 import {Coordinate} from '../../model/coordinate';
+import {Shape} from '../../model/shape';
 
 /**
  * We don't use the angular 7 capabilities because we are getting some troubles with zoom
  */
 @Component({
-  selector: 'svg[app-rectangle]',
+  selector: '[appRectangle]',
   templateUrl: './rectangle.component.html',
   styleUrls: ['./rectangle.component.css']
 })
 export class RectangleComponent extends ShapeComponent implements OnInit {
+  @Input() appRectangle: Rectangle;
+
   constructor() {
     super();
   }
 
   ngOnInit() {
+    this.shape = this.appRectangle;
+    this.shape.shapeComponent = this;
   }
 
   // received from canvas

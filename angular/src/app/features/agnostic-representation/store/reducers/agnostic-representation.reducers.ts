@@ -5,10 +5,15 @@ import {AgnosticRepresentationState, initialAgnosticRepresentationState} from '.
 export function agnosticRepresentationReducers(state = initialAgnosticRepresentationState, action: AgnosticRepresentationActions):
   AgnosticRepresentationState {
   switch (action.type) {
-    case AgnosticRepresentationActionTypes.AccionSuccess: {
+    case AgnosticRepresentationActionTypes.GetRegion: {
       return {
-        ...initialAgnosticRepresentationState
+        ...state // reset values
       };
+    }
+    case AgnosticRepresentationActionTypes.GetRegionSuccess: {
+      const newState = {...state};
+      newState.selectedRegion = action.region;
+      return newState;
     }
     default: {
       return state;

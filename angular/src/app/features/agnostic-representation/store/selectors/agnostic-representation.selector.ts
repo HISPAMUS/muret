@@ -3,7 +3,7 @@ import {AgnosticRepresentationState} from '../state/agnostic-representation.stat
 
 export const agnosticRepresentationState = createFeatureSelector<AgnosticRepresentationState>('agnostic-representation');
 
-export const selectNada = createSelector(
+export const selectSelectedRegion = createSelector(
   agnosticRepresentationState,
-  (state: AgnosticRepresentationState) => state.nada
+  (state: AgnosticRepresentationState) => state.selectedRegion
 );

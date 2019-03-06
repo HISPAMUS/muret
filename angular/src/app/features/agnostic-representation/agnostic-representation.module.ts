@@ -15,10 +15,10 @@ import {DocumentAnalysisModule} from '../document-analysis/document-analysis.mod
   imports: [
     CommonModule,
     AgnosticRepresentationRoutingModule,
-    DocumentAnalysisModule, // for Image component - set after routing for avoiding document analysis route override this module routes
     StoreModule.forFeature('agnostic-representation', agnosticRepresentationReducers),
     EffectsModule.forFeature([AgnosticRepresentationEffects]),
-
+    // for Image component - set after routing for avoiding document analysis route override this module routes and store
+    DocumentAnalysisModule
   ],
   providers: [
     AgnosticRepresentationService

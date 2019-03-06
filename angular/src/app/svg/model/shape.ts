@@ -1,6 +1,8 @@
 /**
  * Needs to be class rather than an interface for the component instantiation method
  */
+import {ShapeComponent} from '../components/shape/shape.component';
+
 export class Shape {
   id: string;
   fromX: number;
@@ -13,4 +15,10 @@ export class Shape {
   label?: string;
   layer: string;
   data?: any;
+  shapeComponent: ShapeComponent;
+
+  constructor(public type: string) {
+    this.fromX = 0;
+    this.fromY = 0;
+  }
 }

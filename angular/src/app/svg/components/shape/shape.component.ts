@@ -1,4 +1,4 @@
-import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {Shape} from '../../model/shape';
 import {Coordinate} from '../../model/coordinate';
 
@@ -23,15 +23,17 @@ export class ShapeComponent implements OnInit {
   }
 
   onHandleMouseDown($event, handle: string) {
-    this.handleSelected = handle;
-    $event.stopPropagation();
+    if (this.editing) {
+      this.handleSelected = handle;
+      $event.stopPropagation();
+    }
   }
 
   public select(selected: boolean) {
     this.selected = selected;
   }
 
-  edit(editing: boolean) {
+  setEditingMode(editing: boolean) {
     this.editing = editing;
   }
 
@@ -54,10 +56,6 @@ export class ShapeComponent implements OnInit {
 
   onHandleMouseMove(x: number, y: number): boolean {
     return false; // it will be overriden by specific shapes
-  }
-
-  startDrawing(coordinate: Coordinate) {
-    // it will be overriden by specific shapes
   }
 
   draw(coordinate: Coordinate) {
