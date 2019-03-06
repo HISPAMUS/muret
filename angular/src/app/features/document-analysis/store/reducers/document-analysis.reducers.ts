@@ -2,8 +2,6 @@ import {DocumentAnalysisState, initialDocumentAnalysisState} from '../state/docu
 import {DocumentAnalysisActions, DocumentAnalysisActionTypes} from '../actions/document-analysis.actions';
 import {Page} from '../../../../core/model/entities/page';
 import deepcopy from 'ts-deepcopy';
-import {forEach} from '@angular/router/src/utils/collection';
-import {Region} from '../../../../core/model/entities/region';
 
 export function documentAnalysisReducers(state = initialDocumentAnalysisState, action: DocumentAnalysisActions): DocumentAnalysisState {
   switch (action.type) {

@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit, Self, ViewChild} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
-import {ActivatedRoute, ParamMap} from '@angular/router';
+import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Rectangle} from '../../../../svg/model/rectangle';
 import {Shape} from '../../../../svg/model/shape';
 import {SvgCanvasComponent} from '../../../../svg/components/svg-canvas/svg-canvas.component';
@@ -17,18 +17,16 @@ import {
   ChangeRegionBoundingBox,
   ChangeRegionType, Clear, CreatePage, CreateRegion, DeletePage, DeleteRegion,
   GetImageProjection,
-  GetImageURL,
   GetRegionTypes
 } from '../../store/actions/document-analysis.actions';
 import {
   selectFileName,
-  selectImageHeight, selectImageURL,
-  selectImageWidth,
   selectManuscriptType,
-  selectNotationType, selectPages, selectProjectPath,
+  selectNotationType, selectPages,
   selectRegionTypes
 } from '../../store/selectors/document-analysis.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
+import {ImageComponent} from '../../image/image.component';
 
 @Component({
   selector: 'app-document-analysis',
@@ -38,24 +36,14 @@ import {DialogsService} from '../../../../shared/services/dialogs.service';
 })
 export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   private imageID: number;
-  imageWidth$: Observable<number>;
-  imageHeight$: Observable<number>;
   filename$: Observable<string>;
-  imageURL$: Observable<string>;
-  projectPathSubscription: Subscription;
   notationType$: Observable<'eMensural' | 'eModern'>;
   manuscriptType$: Observable<'eHandwritten' | 'ePrinted'>;
   regionTypes$: Observable<RegionType[]>;
   regionTypesSubscription: Subscription;
   pagesSubscription: Subscription;
 
-  private shapes = new Array<Shape>();
-
-
-  @ViewChild('svgCanvasComponent') svgCanvasComponent: SvgCanvasComponent;
-  canvasHeightPercentage: number;  // e.g. 100 for 100%
-  canvasWidthPercentage: number;
-  zoomFactor = 1;
+  private zoomFactor = 1;
 
   layersCheckboxes: FormGroup;
 
@@ -64,20 +52,21 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   public regionTypesRadioGroupForm: FormGroup;
   private selectedShape: Shape;
   private nextDrawShape: string | RegionType;
+  private shapes: Shape[];
   // end tools
+
+  @ViewChild('imageComponent') imageComponent: ImageComponent;
 
   constructor(private store: Store<DocumentAnalysisState>,
               private route: ActivatedRoute,
+              private router: Router,
               private formBuilder: FormBuilder,
               private dialogsService: DialogsService
               ) {
     this.regionTypes$ = store.select(selectRegionTypes);
-    this.imageWidth$ = store.select(selectImageWidth);
-    this.imageHeight$ = store.select(selectImageHeight);
     this.filename$ = store.select(selectFileName);
     this.notationType$ = store.select(selectNotationType);
     this.manuscriptType$ = store.select(selectManuscriptType);
-    this.imageURL$ = store.select(selectImageURL);
   }
 
   ngOnInit() {
@@ -99,13 +88,6 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
         this.regionTypesRadioGroupForm.setValue({
           regionTypeRadioButton: 'none'
         });
-      }
-    });
-
-    this.projectPathSubscription = this.store.select(selectProjectPath).subscribe(next => {
-      if (next != null) {
-        // the imageID parameter, even though it is a subcribed value, will be gathered always before the project path
-        this.store.dispatch(new GetImageURL(this.imageID, next)); // request image URL
       }
     });
 
@@ -141,45 +123,23 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
         this.drawPagesAndRegions(next);
       }
     });
+  }
 
-
-    this.computeZoom();
+  ngOnDestroy(): void {
+    this.regionTypesSubscription.unsubscribe();
+    this.pagesSubscription.unsubscribe();
   }
 
   zoomIn() {
     this.zoomFactor += 0.5;
-    this.computeZoom();
   }
 
   zoomOut() {
     this.zoomFactor = Math.max(1, this.zoomFactor - 0.5);
-    this.computeZoom();
   }
 
   zoomFit() {
     this.zoomFactor = 1;
-    this.computeZoom();
-  }
-
-  private computeZoom() {
-    this.canvasHeightPercentage = 100.0 * this.zoomFactor;
-    this.canvasWidthPercentage = 100.0 * this.zoomFactor;
-  }
-
-  public select(): SVGCanvasState {
-    return this.svgCanvasComponent.requestStateChange(SVGCanvasState.eSelecting);
-  }
-
-  public edit(): SVGCanvasState {
-    return this.svgCanvasComponent.requestStateChange(SVGCanvasState.eEditing);
-  }
-
-  public draw(): SVGCanvasState {
-    return this.svgCanvasComponent.requestStateChange(SVGCanvasState.eDrawing, Rectangle);
-  }
-
-  public idle(): SVGCanvasState {
-    return this.svgCanvasComponent.requestStateChange(SVGCanvasState.eIdle);
   }
 
   onShapeSelected(shape: Shape) {
@@ -234,10 +194,12 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   }
 
   private onLayerVisibilityChanged(val: any) {
-    this.shapes.forEach(shape => {
-      const checkBox = this.layersCheckboxes.get(shape.layer);
-      shape.hidden = !this.layersCheckboxes.get(shape.layer).value;
-    });
+    if (this.shapes) {
+      this.shapes.forEach(shape => {
+        const checkBox = this.layersCheckboxes.get(shape.layer);
+        shape.hidden = !this.layersCheckboxes.get(shape.layer).value;
+      });
+    }
   }
 
   // ------------- METHODS that deal with actual data -------------
@@ -340,18 +302,32 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    this.regionTypesSubscription.unsubscribe();
-    this.projectPathSubscription.unsubscribe();
-    this.pagesSubscription.unsubscribe();
-  }
-
   editSelected() {
     return false;
   }
 
   editOrAddSelected() {
     return false;
+  }
+
+  openAgnosticRepresentation() {
+    this.router.navigate(['agnosticrepresentation', this.imageID]);
+  }
+
+  openSemanticRepresentation() {
+    this.router.navigate(['semanticrepresentation', this.imageID]);
+  }
+
+  idle() {
+    this.imageComponent.idle();
+  }
+
+  draw() {
+    this.imageComponent.draw();
+  }
+
+  edit() {
+    this.imageComponent.edit();
   }
 }
 

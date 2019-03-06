@@ -7,10 +7,12 @@
       <li *ngIf="isAuthenticated" class="nav-item"><a class="nav-link" routerLink="export/trainingsets">Training sets</a></li>
       <li class="nav-item"><a class="nav-link" routerLink="about">About</a></li>
       <!--<li *ngIf="isDev" class="nav-item"><a class="nav-link" routerLink="/documentanalysis/1849">dev</a></li>-->
-      <li *ngIf="isDev" class="nav-item"><a class="nav-link" routerLink="/documentanalysis/2104">dev</a></li>
-      <li *ngIf="isDev" class="nav-item"><a class="nav-link" routerLink="/documentanalysis/1842">dev2</a></li>
-      <li *ngIf="isDev" class="nav-item"><a class="nav-link" routerLink="/documentanalysis/1849">dev3</a></li>
     </ul>
+    <div *ngIf="isDev">
+      <a routerLink="/documentanalysis/1849">dev3</a> &nbsp;
+      <a routerLink="/documentanalysis/2104">dev</a> &nbsp;
+      <a routerLink="/agnosticrepresentation/1842">AgnostDev</a>
+    </div>
   </div>
 </nav>
 

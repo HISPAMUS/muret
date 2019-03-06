@@ -96,11 +96,11 @@ export class DocumentAnalysisService {
   }
 
   deletePage(pageID: number) {
-    return this.apiRestClientService.delete$<Page[]>('documentanalysis/deletePage', pageID);
+    return this.apiRestClientService.delete$<number>('documentanalysis/deletePage', pageID);
   }
 
   deleteRegion(regionID: number) {
-    return this.apiRestClientService.delete$<Page[]>('documentanalysis/deleteRegion', regionID);
+    return this.apiRestClientService.delete$<number>('documentanalysis/deleteRegion', regionID);
   }
 
 }

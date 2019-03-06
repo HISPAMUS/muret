@@ -53,7 +53,7 @@ export class DocumentAnalysisEffects {
   getImageURL$ = this.actions$.pipe(
     ofType<GetImageURL>(DocumentAnalysisActionTypes.GetImageURL),
     map((action: GetImageURL) => action),
-    switchMap((action) => this.imageFilesService.getMasterImageBlob$(action.projectPath, action.imageID)),
+    switchMap((action) => this.imageFilesService.getMasterImageBlob$(null, action.imageID)),
     switchMap((imageBlob: Blob) => {
       return of(new GetImageURLSuccess(window.URL.createObjectURL(imageBlob)));
     })
@@ -131,8 +131,8 @@ export class DocumentAnalysisEffects {
   deletePage$ = this.actions$.pipe(
     ofType<DeletePage>(DocumentAnalysisActionTypes.DeletePage),
     switchMap((action: DeletePage) => this.documentAnalysisService.deletePage(action.pageID)),
-    switchMap((pages: Page[]) => {
-      return of(new DeletePageSuccess(pages));
+    switchMap((deletedPageID: number) => {
+      return of(new DeletePageSuccess(deletedPageID));
     })
   );
 
@@ -140,8 +140,8 @@ export class DocumentAnalysisEffects {
   deleteRegion$ = this.actions$.pipe(
     ofType<DeleteRegion>(DocumentAnalysisActionTypes.DeleteRegion),
     switchMap((action: DeleteRegion) => this.documentAnalysisService.deleteRegion(action.regionID)),
-    switchMap((pages: Page[]) => {
-      return of(new DeleteRegionSuccess(pages));
+    switchMap((deletedRegionID) => {
+      return of(new DeleteRegionSuccess(deletedRegionID));
     })
   );
 

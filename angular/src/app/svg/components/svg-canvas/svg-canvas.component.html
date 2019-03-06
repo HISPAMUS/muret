@@ -1,8 +1,10 @@
+<!-- hidden - used to get the size of the image -->
+<img (load)="onBackgroundHiddenImageElementLoaded($event)" id="backgroundHiddenImageElement" *ngIf="backgroundImage" [src]="unsafeBackgroundImage"/>
+
 <svg [ngClass]="cursorClass"  #canvas xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
      (mousedown)="onMouseDown($event)" (mouseup)="onMouseUp($event)" (mousemove)="onMouseMove($event)"
      [attr.width.%]="widthPercentString" [attr.height.%]="heightPercentString"
      [attr.viewBox]="viewBox">
-  <image #backgroundImageElement *ngIf="backgroundImage" [attr.xlink:href]="backgroundImage"/>
-  <!--<image id="#background" #background href="https://pngimage.net/wp-content/uploads/2018/06/grid-png-blue-3.png"/>-->
+  <image *ngIf="backgroundImage" [attr.xlink:href]="backgroundImage"/>
   <ng-container appShape></ng-container>
 </svg>

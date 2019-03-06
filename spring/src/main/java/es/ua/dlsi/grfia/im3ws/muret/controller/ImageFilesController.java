@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,6 +31,15 @@ public class ImageFilesController {
         this.imageRepository = imageRepository;
     }
 
+    /**
+     *
+     * @param projectPath If null, it is searched in the project
+     * @param imageID
+     * @param imagesRelativePath
+     * @return
+     * @throws IM3WSException
+     * @throws FileNotFoundException
+     */
     private ResponseEntity<InputStreamResource> getImage(String projectPath, Long imageID, String imagesRelativePath) throws IM3WSException, FileNotFoundException {
         Optional<Image> image = imageRepository.findById(imageID);
         if (!image.isPresent()) {
@@ -37,6 +47,10 @@ public class ImageFilesController {
         }
 
         Image img = image.get();
+
+        if (projectPath == null) {
+            projectPath = img.getProject().getPath();
+        }
 
         //avoid another query File projectFolder = new File(muretConfiguration.getFolder(), image.get().getProject().getPath());
         File projectFolder = new File(muretConfiguration.getFolder(), projectPath);
@@ -56,6 +70,11 @@ public class ImageFilesController {
     @GetMapping(value = "{projectPath}/master/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<InputStreamResource> getMasterImage(@PathVariable("projectPath") String projectPath, @PathVariable("imageID") Long imageID) throws IM3WSException, FileNotFoundException {
         return getImage(projectPath, imageID,  MURETConfiguration.MASTER_IMAGES);
+    }
+    @GetMapping(value = "master/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
+    @Transactional // because we'll get the project path
+    public ResponseEntity<InputStreamResource> getMasterImage(@PathVariable("imageID") Long imageID) throws IM3WSException, FileNotFoundException {
+        return getImage(null, imageID,  MURETConfiguration.MASTER_IMAGES);
     }
 
     @GetMapping(value = "{projectPath}/thumbnail/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)

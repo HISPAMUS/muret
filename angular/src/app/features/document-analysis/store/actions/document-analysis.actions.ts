@@ -54,7 +54,7 @@ export class GetImageProjectionSuccess implements Action {
 
 export class GetImageURL implements Action {
   public readonly type = DocumentAnalysisActionTypes.GetImageURL;
-  constructor(public imageID: number, public projectPath: string) {}
+  constructor(public imageID: number) {}
 }
 
 export class GetImageURLSuccess implements Action {

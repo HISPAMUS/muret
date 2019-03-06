@@ -30,13 +30,22 @@ export class ImageFilesService {
     if (blob) {
       return blob;
     } else {
-      const url = `${endpoint}/${projectPath}/${imageType}/${imageID}`;
+      let url: string;
+      if (projectPath == null) {
+        url = `${endpoint}/${imageType}/${imageID}`;
+      } else {
+        url = `${endpoint}/${projectPath}/${imageType}/${imageID}`;
+      }
+
       blob = this.apiRestClientService.getBlob$(url);
       this.imagesCache.get(imageType).set(imageID, blob);
       return blob;
     }
   }
 
+  /**
+   * @param projectPath May be null
+   */
   public getMasterImageBlob$(projectPath: string, imageID: number): Observable<Blob> {
     return this.getImageBlob$(projectPath, ImageType.master, imageID);
   }

@@ -25,6 +25,7 @@ import {SVGCanvasState, SvgCanvasStateService} from '../../services/svg-canvas-s
 import {Path} from '../../model/path';
 import {Line} from '../../model/line';
 import {Text} from '../../model/text';
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-svg-canvas',
@@ -42,22 +43,20 @@ import {Text} from '../../model/text';
  */
 export class SvgCanvasComponent implements OnInit, OnChanges {
   @Input() backgroundImage: string;
-  @Input() viewPortWidth: number;
   @Input() shapes: Shape[];
-  @Input() viewPortHeight: number;
   @Input() widthPercentage: number;
   @Input() heightPercentage: number;
 
   @ViewChild('canvas') canvas: ElementRef;
+  @ViewChild('backgroundHiddenImageElement ') backgroundHiddenImageElement: ElementRef;
 
   // interaction
-  @Output() svgMouseEvent = new EventEmitter<Coordinate>(); // only emitted on eIdle state
   private svgMouseEventContent: MousePositionEvent = {}; // avoid creating too many objects
+  @Output() svgMouseEvent = new EventEmitter<Coordinate>(); // only emitted on eIdle state
 
   @Output() svgShapeCreated = new EventEmitter<Shape>();
   @Output() svgShapeChanged = new EventEmitter<Shape>();
   @Output() svgShapeSelected = new EventEmitter<Shape>();
-
   @Output() svgShapeDeselected = new EventEmitter<Shape>();
 
   cursorClass = 'cursorDefault';
@@ -65,22 +64,27 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
 
   @ViewChild(ShapeDirective) injectComp: ShapeDirective;
   viewBox: string;
+  viewPortHeight = 0;
+  viewPortWidth = 0;
+
   heightPercentString: string;
   widthPercentString: string;
   private nextShapeToDraw: Type<Shape>;
   private selectedComponent: ShapeComponent;
   private shapeComponents = new Array<ShapeComponent>();
+  private unsafeBackgroundImage: SafeResourceUrl;
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver,
-              private stateService: SvgCanvasStateService) {
+              private stateService: SvgCanvasStateService,
+              private sanitizer: DomSanitizer) {
 
   }
 
   ngOnInit() {
     this.requestStateChange(SVGCanvasState.eIdle);
+    this.unsafeBackgroundImage = this.sanitizer.bypassSecurityTrustResourceUrl(this.backgroundImage);
+
   }
-
-
 
   private removeShapeComponent(shapeComponent: ShapeComponent) {
     const i = this.shapeComponents.indexOf(shapeComponent, 0);
@@ -106,9 +110,12 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.shapes) {
-        const newShapes = changes.shapes.currentValue as unknown as Shape[];
+        let newShapes = changes.shapes.currentValue as unknown as Shape[];
         // check for changes
 
+        if (!newShapes) {
+          newShapes = new Array();
+        }
         const componentsToRemove: ShapeComponent[]
           = this.shapeComponents.filter(shapeComponent => newShapes.indexOf(shapeComponent.shape) < 0);
         // Note that if a new added shape was not added to the client due to an error,
@@ -311,4 +318,12 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
     }
   }
 
+  onBackgroundHiddenImageElementLoaded($event: Event) {
+    // @ts-ignore
+    this.viewPortHeight = $event.target.naturalHeight;
+    // @ts-ignore
+    this.viewPortWidth = $event.target.naturalWidth;
+
+    this.computeViewBox();
+  }
 }

@@ -3,6 +3,7 @@
   <div class="row">
   <nav class="col-1">
     <div>
+      <h2>Document analysis</h2>
      <form [formGroup]="toolRadioGroup">
         <div class="btn-group-vertical btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="model">
           <label ngbButtonLabel class="btn-light">
@@ -37,6 +38,9 @@
       </form>
 
     </div>
+    <a (click)="openAgnosticRepresentation()">Agnostic representation</a>
+    <br/>
+    <a (click)="openSemanticRepresentation()">Semantic representation</a>
   </nav>
 
   <section class="col-11">
@@ -63,29 +67,17 @@
     </nav>
 
     <!-- image -->
-    <article class="row">
+    <section class="row">
       <div class="col">
-          <div *ngIf="imageURL$ | async as loadedImage; else loading">
-            <div #canvas id="canvas">
-              <!-- shape selected, changed, and deselected are forwarded from the canvas -->
-              <app-svg-canvas #svgCanvasComponent
-                              [shapes]="shapes" [backgroundImage]="loadedImage"
-                              [widthPercentage]="canvasWidthPercentage" [heightPercentage]="canvasHeightPercentage"
-                              [viewPortWidth]="imageWidth$ | async" [viewPortHeight]="imageHeight$ | async"
-                              (svgShapeCreated)="onShapeCreated($event)"
-                              (svgShapeChanged)="onShapeChanged($event)"
-                              (svgShapeSelected)="onShapeSelected($event)"
-                              (svgShapeDeselected)="onShapeDeselected($event)"
-
-              >
-              </app-svg-canvas>
-            </div>
-          </div>
-          <ng-template #loading>
-            <img src="assets/images/loading.svg" alt="Master loading">
-          </ng-template>
-        </div>
-    </article>
+        <app-image #imageComponent [imageID]="imageID" [shapes]="shapes" [zoomFactor]="zoomFactor"
+        (svgShapeCreated)="onShapeCreated($event)"
+        (svgShapeChanged)="onShapeChanged($event)"
+        (svgShapeSelected)="onShapeSelected($event)"
+        (svgShapeDeselected)="onShapeDeselected($event)"
+        ></app-image>
+      </div>
+    </section>
+    <!-- end image -->
   </section>
 </div>
 </div>

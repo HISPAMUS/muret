@@ -19,12 +19,6 @@ export const selectFileName = createSelector(
 );
 
 
-export const selectProjectPath = createSelector(
-  documentAnalysisState,
-  (state: DocumentAnalysisState) => state.projectPath
-);
-
-
 export const selectNotationType = createSelector(
   documentAnalysisState,
   (state: DocumentAnalysisState) => state.notationType

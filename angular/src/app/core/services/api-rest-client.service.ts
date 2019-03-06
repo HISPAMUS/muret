@@ -5,7 +5,6 @@ import {catchError, map} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 import {NGXLogger} from 'ngx-logger';
 import {ErrorHandlingService} from './error-handling.service';
-import {ServerError} from '../model/restapi/server-error';
 
 @Injectable({
   providedIn: 'root'

@@ -13,9 +13,10 @@ import {EffectsModule} from '@ngrx/effects';
 import {documentAnalysisReducers} from './store/reducers/document-analysis.reducers';
 import {DocumentAnalysisEffects} from './store/effects/document-analysis.effects';
 import {DocumentAnalysisService} from './services/document-analysis.service';
+import { ImageComponent } from './image/image.component';
 
 @NgModule({
-  declarations: [DocumentAnalysisComponent],
+  declarations: [DocumentAnalysisComponent, ImageComponent],
   imports: [
     CommonModule,
     DocumentAnalysisRoutingModule,
@@ -27,6 +28,12 @@ import {DocumentAnalysisService} from './services/document-analysis.service';
     NgbModule,
     StoreModule.forFeature('document-analysis', documentAnalysisReducers),
     EffectsModule.forFeature([DocumentAnalysisEffects]),
+  ],
+  entryComponents: [
+    ImageComponent
+  ],
+  exports: [
+    ImageComponent
   ],
   providers: [
     DocumentAnalysisService

@@ -1,6 +1,5 @@
 import {RegionType} from '../../../../core/model/entities/region-type';
 import {Page} from '../../../../core/model/entities/page';
-import {Region} from '../../../../core/model/entities/region';
 
 export interface DocumentAnalysisState {
   regionTypes: RegionType[];
@@ -11,7 +10,6 @@ export interface DocumentAnalysisState {
   pages: Page[];
   manuscriptType: 'eHandwritten' | 'ePrinted' | null;
   notationType: 'eMensural' | 'eModern' | null;
-  projectPath: string;
 //  selectedRegion: Region;
 //  selectedPage: Page;
 }
@@ -25,7 +23,6 @@ export const initialDocumentAnalysisState: DocumentAnalysisState = {
   pages: null,
   manuscriptType: null,
   notationType: null,
-  projectPath: null
   // selectedRegion: null,
   // selectedPage: null
 };

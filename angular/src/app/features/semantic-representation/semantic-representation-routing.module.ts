@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import {SemanticRepresentationComponent} from './components/semantic-representation/semantic-representation.component';
 
 const routes: Routes = [
-  { path: '', component: SemanticRepresentationComponent }
+  { path: ':id', component: SemanticRepresentationComponent }
 ];
 
 @NgModule({

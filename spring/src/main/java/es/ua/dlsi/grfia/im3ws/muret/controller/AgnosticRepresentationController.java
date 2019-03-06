@@ -55,7 +55,7 @@ public class AgnosticRepresentationController {
      * @return Map<symbolType, svg>
      * @throws IM3WSException On SVG constructrion
      */
-    @GetMapping(path = {"svgset"})
+    /*@GetMapping(path = {"svgset"})
     public SVGSet getAgnosticSymbolSVGSet(@RequestParam(name="notationType") NotationType notationType, @RequestParam(name="manuscriptType") ManuscriptType manuscriptType) throws IM3WSException {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Getting AgnosticSymbolSVGSet");
         Objects.requireNonNull(notationType, "notationType cannot be null");
@@ -66,9 +66,9 @@ public class AgnosticRepresentationController {
                 agnosticSymbolFont.getLayoutFont().getScaleY(),
                 LayoutConstants.EM,
                 agnosticSymbolFont.getFullSVGSetPathd());
-    }
+    }*/
 
-    @GetMapping(path = {"createSymbolFromBoundingBox/{regionID}/{fromX}/{fromY}/{toX}/{toY}"})
+    /*@GetMapping(path = {"createSymbolFromBoundingBox/{regionID}/{fromX}/{fromY}/{toX}/{toY}"})
     public Symbol createSymbolFromBoundingBox(@PathVariable("regionID") Long regionID,
                                               @PathVariable("fromX") Double fromX,
                                               @PathVariable("fromY") Double fromY,
@@ -90,10 +90,10 @@ public class AgnosticRepresentationController {
 
         //return symbolRepository.create(symbol);
         return symbolRepository.save(symbol);
-    }
+    }*/
 
     //TODO Generalizar a cualquier tipo de strokes
-    @RequestMapping(value="/createSymbolFromStrokes", method= RequestMethod.POST)
+    /*@RequestMapping(value="/createSymbolFromStrokes", method= RequestMethod.POST)
     @ResponseBody
     public Symbol createSymbol(@RequestBody PostStrokes requestObject) throws IM3WSException, IM3Exception {
         Optional<Region> region = regionRepository.findById(requestObject.getRegionID());
@@ -141,10 +141,10 @@ public class AgnosticRepresentationController {
 
         //return symbolRepository.create(symbol);
         return symbolRepository.save(symbol);
-    }
+    }*/
 
     // with SymbolController --> repository --> delete it does not work
-    @GetMapping(path = {"removeSymbol/{regionID}/{symbolID}"})
+    /*@GetMapping(path = {"removeSymbol/{regionID}/{symbolID}"})
     public boolean removeSymbol(@PathVariable("regionID") Long regionID,
                                 @PathVariable("symbolID") Long symbolID) throws IM3WSException {
         Optional<Region> region = regionRepository.findById(regionID);
@@ -163,9 +163,9 @@ public class AgnosticRepresentationController {
         }
 
         throw new IM3WSException("Cannot find a symbol in region " + regionID + " with id " + symbolID);
-    }
+    }*/
 
-    @GetMapping(path = {"/region/{id}"})
+    /*@GetMapping(path = {"/region/{id}"})
     public List<Symbol> findByRegionID(@PathVariable(name="id") Long regionID) throws IM3WSException {
         // TODO This could be improved using a native query - this one makes two sql queries
         Optional<Region> region =  regionRepository.findById(regionID);
@@ -174,9 +174,9 @@ public class AgnosticRepresentationController {
         }
 
         return region.get().getSymbols();
-    }
+    }*/
 
-    @GetMapping(path = {"changeAgnosticSymbolType/{symbolID}/{agnosticSymbolTypeString}"})
+    /*@GetMapping(path = {"changeAgnosticSymbolType/{symbolID}/{agnosticSymbolTypeString}"})
     public Symbol changeAgnosticSymbolType(@PathVariable("symbolID") Long symbolID,
                                            @PathVariable("agnosticSymbolTypeString") String agnosticSymbolTypeString) throws IM3WSException, IM3Exception {
         Optional<Symbol> symbol = symbolRepository.findById(symbolID);
@@ -188,9 +188,9 @@ public class AgnosticRepresentationController {
         symbol.get().setAgnosticSymbol(new AgnosticSymbol(AgnosticVersion.v2, agnosticSymbolType, symbol.get().getAgnosticSymbol().getPositionInStaff()));
         //return symbolRepository.update(symbol.get());
         return symbolRepository.save(symbol.get());
-    }
+    }*/
 
-    @GetMapping(path = {"changeAgnosticPositionInStaff/{symbolID}/{positionInStaffString}"})
+    /*@GetMapping(path = {"changeAgnosticPositionInStaff/{symbolID}/{positionInStaffString}"})
     public Symbol changeAgnosticPositionInStaff(@PathVariable("symbolID") Long symbolID,
                                                 @PathVariable("positionInStaffString") String positionInStaffString) throws IM3WSException, IM3Exception {
         Optional<Symbol> symbol = symbolRepository.findById(symbolID);
@@ -202,7 +202,7 @@ public class AgnosticRepresentationController {
         symbol.get().getAgnosticSymbol().setPositionInStaff(positionInStaff);
         //return symbolRepository.update(symbol.get());
         return symbolRepository.save(symbol.get());
-    }
+    }*/
 
     /**
      *
@@ -211,7 +211,7 @@ public class AgnosticRepresentationController {
      * @return .
      * @throws IM3WSException .
      */
-    @GetMapping(path = {"changeAgnosticPositionInStaffUpOrDown/{symbolID}/{upOrDown}"})
+    /*@GetMapping(path = {"changeAgnosticPositionInStaffUpOrDown/{symbolID}/{upOrDown}"})
     public Symbol changeAgnosticPositionInStaffUpOrDown(@PathVariable("symbolID") Long symbolID,
                                                         @PathVariable("upOrDown") String upOrDown) throws IM3WSException {
         Optional<Symbol> symbol = symbolRepository.findById(symbolID);
@@ -233,6 +233,6 @@ public class AgnosticRepresentationController {
         symbol.get().getAgnosticSymbol().setPositionInStaff(newPositionInStaff);
         //return symbolRepository.update(symbol.get());
         return symbolRepository.save(symbol.get());
-    }
+    }*/
 
 }
