@@ -8,11 +8,13 @@ import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
 import {semanticRepresentationReducers} from './store/reducers/semantic-representation.reducers';
 import {SemanticRepresentationEffects} from './store/effects/semantic-representation.effects';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [SemanticRepresentationComponent],
   imports: [
     CommonModule,
+    FontAwesomeModule,
     SemanticRepresentationRoutingModule,
     StoreModule.forFeature('semantic-representation', semanticRepresentationReducers),
     EffectsModule.forFeature([SemanticRepresentationEffects]),

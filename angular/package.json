@@ -30,6 +30,7 @@
     "@ngrx/store": "^7.3.0",
     "@ngrx/store-devtools": "^7.3.0",
     "angular-svg": "^2.0.8",
+    "angular-svg-icon": "^7.2.0",
     "bootstrap": "^4.3.1",
     "core-js": "^2.5.4",
     "file-saver": "^2.0.1",

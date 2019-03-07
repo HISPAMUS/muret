@@ -22,7 +22,16 @@
 
       <section class="row">
         <div class="col">
-          Pentagrama
+          <app-agnostic-staff></app-agnostic-staff>
+        </div>
+      </section>
+
+      <section class="row">
+        <div class="col">
+          <app-agnostic-toolbar [agnosticSymbolToolbarCategories]="agnosticSymbolToolbarCategories"
+                                [notationType]="notationType" [manuscriptType]="manuscriptType">
+
+          </app-agnostic-toolbar>
         </div>
       </section>
 

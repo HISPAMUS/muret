@@ -13,6 +13,8 @@ import {SvgCanvasComponent} from '../../../../svg/components/svg-canvas/svg-canv
 import {ImageComponent} from '../../../document-analysis/image/image.component';
 import {GetRegion} from '../../store/actions/agnostic-representation.actions';
 import {selectSelectedRegion} from '../../store/selectors/agnostic-representation.selector';
+import {AgnosticSymbolToolbarCategory} from '../../agnostic-toolbar/agnostic-symbol-toolbar-category';
+import {AGNOSTIC_SYMBOL_TOOLBAR_CATEGORIES} from '../../agnostic-toolbar/agnostic-symbol-toolbar-categories';
 
 @Component({
   selector: 'app-agnostic-representation',
@@ -27,6 +29,11 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   imagePreviewZoomFactor = 1;
   selectedRegionShapes: any;
   selectedRegionZoomFactor = 1;
+
+  // TODO manuscript vs printed - data from store
+  agnosticSymbolToolbarCategories: AgnosticSymbolToolbarCategory[] = AGNOSTIC_SYMBOL_TOOLBAR_CATEGORIES.get('eMensural');
+  notationType = 'eMensural';
+  manuscriptType = 'eHandwritten';
 
   selectedRegion: Region = null;
 

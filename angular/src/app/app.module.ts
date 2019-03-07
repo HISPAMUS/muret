@@ -22,7 +22,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faSearchMinus } from '@fortawesome/free-solid-svg-icons';
+import {faSearchMinus} from '@fortawesome/free-solid-svg-icons';
 import { faSearchPlus } from '@fortawesome/free-solid-svg-icons';
 import { faExpand } from '@fortawesome/free-solid-svg-icons';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
@@ -33,6 +33,9 @@ import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
 import {environment} from '../environments/environment';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+import {faAngleDown} from '@fortawesome/free-solid-svg-icons/faAngleDown';
+import {faAngleUp} from '@fortawesome/free-solid-svg-icons/faAngleUp';
+import {faTrash} from '@fortawesome/free-solid-svg-icons/faTrash';
 
 
 @NgModule({
@@ -80,5 +83,8 @@ export class AppModule {
     library.add(faCheck);
     library.add(faCheckDouble);
     library.add(faUserClock);
+    library.add(faAngleDown);
+    library.add(faAngleUp);
+    library.add(faTrash);
   }
 }
