@@ -6,15 +6,15 @@ import {Page} from '../../../../core/model/entities/page';
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {Rectangle} from '../../../../svg/model/rectangle';
 import {Region} from '../../../../core/model/entities/region';
+import {Symbol} from '../../../../core/model/entities/symbol';
 import {selectPages} from '../../../document-analysis/store/selectors/document-analysis.selector';
 import {Store} from '@ngrx/store';
 import {GetImageProjection} from '../../../document-analysis/store/actions/document-analysis.actions';
-import {SvgCanvasComponent} from '../../../../svg/components/svg-canvas/svg-canvas.component';
 import {ImageComponent} from '../../../document-analysis/image/image.component';
 import {GetRegion} from '../../store/actions/agnostic-representation.actions';
 import {selectSelectedRegion} from '../../store/selectors/agnostic-representation.selector';
-import {AgnosticSymbolToolbarCategory} from '../../agnostic-toolbar/agnostic-symbol-toolbar-category';
-import {AGNOSTIC_SYMBOL_TOOLBAR_CATEGORIES} from '../../agnostic-toolbar/agnostic-symbol-toolbar-categories';
+import {AgnosticSymbolToolbarCategory} from '../../model/agnostic-symbol-toolbar-category';
+import {AGNOSTIC_SYMBOL_TOOLBAR_CATEGORIES} from '../../model/agnostic-symbol-toolbar-categories';
 
 @Component({
   selector: 'app-agnostic-representation',
@@ -52,7 +52,6 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.pagesSubscription = this.store.select(selectPages).subscribe(next => {
       if (next) {
         this.drawImagePreviewRegions(next);
-        this.imagePreview.select(); // set in select mode
       }
     });
 

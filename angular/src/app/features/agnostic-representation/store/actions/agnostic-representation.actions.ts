@@ -1,9 +1,12 @@
 import {Action} from '@ngrx/store';
 import {Region} from '../../../../core/model/entities/region';
+import {SVGSet} from '../../model/svgset';
 
 export enum AgnosticRepresentationActionTypes {
   GetRegion = '[AgnosticRepresentation] Get region',
-  GetRegionSuccess = '[AgnosticRepresentation] Get region success'
+  GetRegionSuccess = '[AgnosticRepresentation] Get region success',
+  GetSVGSet = '[AgnosticRepresentation] Get SVG set',
+  GetSVGSetSucccess = '[AgnosticRepresentation] Get SVG set success'
 }
 
 export class GetRegion implements Action {
@@ -17,5 +20,17 @@ export class GetRegionSuccess implements Action {
 }
 
 
+export class GetSVGSet implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.GetSVGSet
+  constructor(public notationType: string, public manuscriptType: string) {}
+}
+
+export class GetSVGSetSucccess implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.GetSVGSetSucccess
+  constructor(public svgSet: SVGSet) {}
+}
+
+
+
 export type AgnosticRepresentationActions =
-  GetRegion | GetRegionSuccess;
+  GetRegion | GetRegionSuccess | GetSVGSet | GetSVGSetSucccess;

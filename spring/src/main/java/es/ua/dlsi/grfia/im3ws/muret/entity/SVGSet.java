@@ -3,8 +3,8 @@ package es.ua.dlsi.grfia.im3ws.muret.entity;
 import java.util.List;
 
 public class SVGSet {
-    double x;
-    double y;
+    double ascent;
+    double descent;
     double em;
 
     /**
@@ -13,23 +13,23 @@ public class SVGSet {
      */
     List<AgnosticTypeSVGPath> paths;
 
-    public SVGSet(double x, double y, double em, List<AgnosticTypeSVGPath> paths) {
-        this.x = x;
-        this.y = y;
+    public SVGSet(double ascent, double descent, double em, List<AgnosticTypeSVGPath> paths) {
         this.em = em;
         this.paths = paths;
-    }
-
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
+        this.ascent = ascent;
+        this.descent = descent;
     }
 
     public double getEm() {
         return em;
+    }
+
+    public double getAscent() {
+        return ascent;
+    }
+
+    public double getDescent() {
+        return descent;
     }
 
     public List<AgnosticTypeSVGPath> getPaths() {

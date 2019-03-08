@@ -42,6 +42,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   @Input() shapes: Shape[];
   @Input() widthPercentage: number;
   @Input() heightPercentage: number;
+  @Input() initialState: string;
 
   @Input() crop: BoundingBox;
 
@@ -81,6 +82,11 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.requestStateChange(SVGCanvasState.eIdle);
     this.unsafeBackgroundImage = this.sanitizer.bypassSecurityTrustResourceUrl(this.backgroundImage);
+
+    if (this.initialState) {
+      const state = SVGCanvasState[this.initialState];
+      this.requestStateChange(state);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {

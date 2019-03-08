@@ -7,3 +7,10 @@ export const selectSelectedRegion = createSelector(
   agnosticRepresentationState,
   (state: AgnosticRepresentationState) => state.selectedRegion
 );
+
+
+export const selectSVGAgnosticSymbolSet = createSelector(
+  agnosticRepresentationState,
+  (state: AgnosticRepresentationState) => state.svgAgnosticSymbolsSet
+);
+

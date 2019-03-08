@@ -55,18 +55,22 @@ public class AgnosticRepresentationController {
      * @return Map<symbolType, svg>
      * @throws IM3WSException On SVG constructrion
      */
-    /*@GetMapping(path = {"svgset"})
+    @GetMapping(path = {"svgset"})
     public SVGSet getAgnosticSymbolSVGSet(@RequestParam(name="notationType") NotationType notationType, @RequestParam(name="manuscriptType") ManuscriptType manuscriptType) throws IM3WSException {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Getting AgnosticSymbolSVGSet");
         Objects.requireNonNull(notationType, "notationType cannot be null");
         Objects.requireNonNull(manuscriptType, "manuscriptType cannot be null");
         AgnosticSymbolFont agnosticSymbolFont = AgnosticSymbolFontSingleton.getInstance().getLayoutFont(notationType, manuscriptType);
 
-        return new SVGSet(agnosticSymbolFont.getLayoutFont().getScaleX(),
-                agnosticSymbolFont.getLayoutFont().getScaleY(),
-                LayoutConstants.EM,
-                agnosticSymbolFont.getFullSVGSetPathd());
-    }*/
+        try {
+            return new SVGSet(agnosticSymbolFont.getLayoutFont().getSVGFont().getAscent(),
+                    agnosticSymbolFont.getLayoutFont().getSVGFont().getDescent(),
+                    agnosticSymbolFont.getLayoutFont().getSVGFont().getUnitsPerEM(),
+                    agnosticSymbolFont.getFullSVGSetPathd());
+        } catch (IM3Exception e) {
+            throw new IM3WSException(e);
+        }
+    }
 
     /*@GetMapping(path = {"createSymbolFromBoundingBox/{regionID}/{fromX}/{fromY}/{toX}/{toY}"})
     public Symbol createSymbolFromBoundingBox(@PathVariable("regionID") Long regionID,

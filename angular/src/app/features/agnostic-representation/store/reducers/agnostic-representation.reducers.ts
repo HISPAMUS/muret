@@ -15,6 +15,11 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
       newState.selectedRegion = action.region;
       return newState;
     }
+    case AgnosticRepresentationActionTypes.GetSVGSetSucccess: {
+      const newState = {...state};
+      newState.svgAgnosticSymbolsSet = action.svgSet;
+      return newState;
+    }
     default: {
       return state;
     }

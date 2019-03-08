@@ -53,11 +53,11 @@ export class ApiRestClientService {
   }
 
   // HATEOAS
-  public get$<T>(endpoint: string, id: number): Observable<T> {
+  public getOf$<T>(endpoint: string, id: number): Observable<T> {
 
     let url: string;
     url = `${this.url}/${endpoint}/${id}`;
-    this.logger.debug('RestClientService#get ' + url);
+    this.logger.debug('RestClientService#getOf ' + url);
     return this.httpClient.get<T>(url);
   }
 
@@ -80,6 +80,13 @@ export class ApiRestClientService {
     return this.httpClient.get(url, {responseType: 'blob'}).pipe(
       catchError(this.errorHandlingService.handleError(endpoint, null))
     );
+  }
+
+  public get$<T>(endpoint: string): Observable<T> {
+    let url: string;
+    url = `${this.url}/${endpoint}`;
+    this.logger.debug('RestClientService#get ' + url);
+    return this.httpClient.get<T>(url);
   }
 
 

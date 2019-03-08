@@ -16,13 +16,18 @@
         <div class="col">
           <app-image #selectedRegionImage *ngIf="selectedRegion" [imageID]="imageID" [shapes]="selectedRegionShapes" [zoomFactor]="selectedRegionZoomFactor"
                      [crop]="selectedRegion.boundingBox"
+                     [initialCanvasState]="'eIdle'"
           ></app-image>
         </div>
       </section>
 
       <section class="row">
         <div class="col">
-          <app-agnostic-staff></app-agnostic-staff>
+          <app-agnostic-staff *ngIf="selectedRegion"
+                              [regionCropped]="selectedRegion.boundingBox"
+                              [notationType]="notationType" [manuscriptType]="manuscriptType"
+          >
+          </app-agnostic-staff>
         </div>
       </section>
 
@@ -43,6 +48,7 @@
               <app-image #imagePreview [imageID]="imageID" [shapes]="imagePreviewShapes" [zoomFactor]="imagePreviewZoomFactor"
                          (svgShapeSelected)="onPreviewImageShapeSelected($event)"
                          (svgShapeDeselected)="onPreviewImageShapeDeselected($event)"
+                         [initialCanvasState]="'eSelecting'"
               ></app-image>
             </div>
           </section>
