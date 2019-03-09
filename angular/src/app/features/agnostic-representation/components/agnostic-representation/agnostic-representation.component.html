@@ -16,7 +16,8 @@
         <div class="col">
           <app-image #selectedRegionImage *ngIf="selectedRegion" [imageID]="imageID" [shapes]="selectedRegionShapes" [zoomFactor]="selectedRegionZoomFactor"
                      [crop]="selectedRegion.boundingBox"
-                     [initialCanvasState]="'eIdle'"
+                     [initialCanvasState]="'eSelecting'"
+                     (svgShapeSelected)="onSelectAgnosticSymbol($event)"
           ></app-image>
         </div>
       </section>

@@ -1,12 +1,14 @@
 import {Action} from '@ngrx/store';
 import {Region} from '../../../../core/model/entities/region';
 import {SVGSet} from '../../model/svgset';
+import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
 
 export enum AgnosticRepresentationActionTypes {
   GetRegion = '[AgnosticRepresentation] Get region',
   GetRegionSuccess = '[AgnosticRepresentation] Get region success',
+  SelectSymbol = '[AgnosticRepresentation] Select symbol',
   GetSVGSet = '[AgnosticRepresentation] Get SVG set',
-  GetSVGSetSucccess = '[AgnosticRepresentation] Get SVG set success'
+  GetSVGSetSucccess = '[AgnosticRepresentation] Get SVG set success',
 }
 
 export class GetRegion implements Action {
@@ -19,6 +21,10 @@ export class GetRegionSuccess implements Action {
   constructor(public region: Region) {}
 }
 
+export class SelectSymbol implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.SelectSymbol
+  constructor(public agnosticSymbol: AgnosticSymbol) {}
+}
 
 export class GetSVGSet implements Action {
   public readonly type = AgnosticRepresentationActionTypes.GetSVGSet
@@ -33,4 +39,4 @@ export class GetSVGSetSucccess implements Action {
 
 
 export type AgnosticRepresentationActions =
-  GetRegion | GetRegionSuccess | GetSVGSet | GetSVGSetSucccess;
+  GetRegion | GetRegionSuccess | GetSVGSet | GetSVGSetSucccess | SelectSymbol;

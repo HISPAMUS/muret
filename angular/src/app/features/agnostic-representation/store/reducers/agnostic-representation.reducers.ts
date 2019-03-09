@@ -20,6 +20,11 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
       newState.svgAgnosticSymbolsSet = action.svgSet;
       return newState;
     }
+    case AgnosticRepresentationActionTypes.SelectSymbol: {
+      const newState = {...state};
+      newState.selectedSymbol = action.agnosticSymbol;
+      return newState;
+    }
     default: {
       return state;
     }

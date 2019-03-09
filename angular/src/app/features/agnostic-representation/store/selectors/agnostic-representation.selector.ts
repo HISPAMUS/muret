@@ -14,3 +14,7 @@ export const selectSVGAgnosticSymbolSet = createSelector(
   (state: AgnosticRepresentationState) => state.svgAgnosticSymbolsSet
 );
 
+export const selectSelectedSymbol = createSelector (
+  agnosticRepresentationState,
+  (state: AgnosticRepresentationState) => state.selectedSymbol
+);

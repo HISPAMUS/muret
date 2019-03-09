@@ -6,12 +6,12 @@ import {Page} from '../../../../core/model/entities/page';
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {Rectangle} from '../../../../svg/model/rectangle';
 import {Region} from '../../../../core/model/entities/region';
-import {Symbol} from '../../../../core/model/entities/symbol';
+import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
 import {selectPages} from '../../../document-analysis/store/selectors/document-analysis.selector';
 import {Store} from '@ngrx/store';
 import {GetImageProjection} from '../../../document-analysis/store/actions/document-analysis.actions';
 import {ImageComponent} from '../../../document-analysis/image/image.component';
-import {GetRegion} from '../../store/actions/agnostic-representation.actions';
+import {GetRegion, SelectSymbol} from '../../store/actions/agnostic-representation.actions';
 import {selectSelectedRegion} from '../../store/selectors/agnostic-representation.selector';
 import {AgnosticSymbolToolbarCategory} from '../../model/agnostic-symbol-toolbar-category';
 import {AGNOSTIC_SYMBOL_TOOLBAR_CATEGORIES} from '../../model/agnostic-symbol-toolbar-categories';
@@ -126,5 +126,9 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
         // console.log(JSON.stringify(symbol.boundingBox, null, 4));
       });
     }
+  }
+
+  onSelectAgnosticSymbol(shape: Shape) {
+    this.store.dispatch(new SelectSymbol(shape.data));
   }
 }
