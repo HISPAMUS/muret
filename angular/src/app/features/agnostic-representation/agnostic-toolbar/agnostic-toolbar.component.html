@@ -1,0 +1,30 @@
+<div class="btn-toolbar" role="toolbar" aria-label="Agnostic toolbar" id="agnosticToolbarEditButtons">
+  <div class="btn-group mr-2" role="group" aria-label="Symbol edition">
+    <button type="button" class="btn btn-primary" title="Move pitch down"  (click)="movePitchDownSelectedSymbol()">
+      <fa-icon icon="angle-down"></fa-icon>
+    </button>
+    <button type="button" class="btn btn-primary" title="Move pitch up" (click)="movePitchUpSelectedSymbol()">
+      <fa-icon icon="angle-up"></fa-icon>
+    </button>
+    &nbsp;
+    <button type="button" class="btn btn-primary" title="Delete" (click)="deleteSelectedSymbol()">
+      <fa-icon icon="trash"></fa-icon>
+    </button>
+    &nbsp;
+    <!--<input id="showSymbolStrokesCheckBox"
+           type="checkbox" [checked]="showSymbolStrokes"/> Show strokes-->
+
+    <button *ngFor="let category of agnosticSymbolToolbarCategories"
+            type="button" class="btn btn-outline-primary" (click)="toggleCollapsed(category)"
+            [attr.aria-expanded]="!isCollapsed(category)" aria-controls="collapseExample">
+      {{category.name}}
+    </button>
+  </div>
+  <div>
+    <div *ngFor="let category of agnosticSymbolToolbarCategories" [ngbCollapse]="isCollapsed(category)">
+      <button *ngFor="let symbolType of category.agnosticSymbolTypes" type="button" class="btn btn-secondary" title="{{symbolType}}">
+        <svg-icon src="assets/icons/agnostic/{{notationType}}/{{manuscriptType}}/{{symbolType}}.svg" [svgStyle]="{ 'width.px':40 }"></svg-icon>
+      </button>
+    </div>
+  </div>
+</div>
