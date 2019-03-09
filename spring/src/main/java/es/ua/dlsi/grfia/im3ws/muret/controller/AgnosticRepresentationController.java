@@ -72,6 +72,34 @@ public class AgnosticRepresentationController {
         }
     }
 
+    @GetMapping(path = {"changeAgnosticSymbolType/{symbolID}/{agnosticSymbolTypeString}"})
+    public Symbol changeAgnosticSymbolType(@PathVariable("symbolID") Long symbolID,
+                                           @PathVariable("agnosticSymbolTypeString") String agnosticSymbolTypeString) throws IM3WSException, IM3Exception {
+        Optional<Symbol> symbol = symbolRepository.findById(symbolID);
+        if (!symbol.isPresent()) {
+            throw new IM3WSException("Cannot find a symbol with id " + symbolID);
+        }
+
+        AgnosticSymbolType agnosticSymbolType = AgnosticSymbolTypeFactory.parseString(agnosticSymbolTypeString);
+        symbol.get().setAgnosticSymbol(new AgnosticSymbol(AgnosticVersion.v2, agnosticSymbolType, symbol.get().getAgnosticSymbol().getPositionInStaff()));
+        //return symbolRepository.update(symbol.get());
+        return symbolRepository.save(symbol.get());
+    }
+
+    @GetMapping(path = {"changeAgnosticPositionInStaff/{symbolID}/{difference}"})
+    public Symbol changeAgnosticPositionInStaff(@PathVariable("symbolID") Long symbolID,
+                                                @PathVariable("difference") int difference) throws IM3WSException, IM3Exception {
+        Optional<Symbol> symbol = symbolRepository.findById(symbolID);
+        if (!symbol.isPresent()) {
+            throw new IM3WSException("Cannot find a symbol with id " + symbolID);
+        }
+
+        symbol.get().getAgnosticSymbol().setPositionInStaff(symbol.get().getAgnosticSymbol().getPositionInStaff().move(difference));
+        //return symbolRepository.update(symbol.get());
+        return symbolRepository.save(symbol.get());
+    }
+
+
     /*@GetMapping(path = {"createSymbolFromBoundingBox/{regionID}/{fromX}/{fromY}/{toX}/{toY}"})
     public Symbol createSymbolFromBoundingBox(@PathVariable("regionID") Long regionID,
                                               @PathVariable("fromX") Double fromX,
@@ -178,34 +206,6 @@ public class AgnosticRepresentationController {
         }
 
         return region.get().getSymbols();
-    }*/
-
-    /*@GetMapping(path = {"changeAgnosticSymbolType/{symbolID}/{agnosticSymbolTypeString}"})
-    public Symbol changeAgnosticSymbolType(@PathVariable("symbolID") Long symbolID,
-                                           @PathVariable("agnosticSymbolTypeString") String agnosticSymbolTypeString) throws IM3WSException, IM3Exception {
-        Optional<Symbol> symbol = symbolRepository.findById(symbolID);
-        if (!symbol.isPresent()) {
-            throw new IM3WSException("Cannot find a symbol with id " + symbolID);
-        }
-
-        AgnosticSymbolType agnosticSymbolType = AgnosticSymbolTypeFactory.parseString(agnosticSymbolTypeString);
-        symbol.get().setAgnosticSymbol(new AgnosticSymbol(AgnosticVersion.v2, agnosticSymbolType, symbol.get().getAgnosticSymbol().getPositionInStaff()));
-        //return symbolRepository.update(symbol.get());
-        return symbolRepository.save(symbol.get());
-    }*/
-
-    /*@GetMapping(path = {"changeAgnosticPositionInStaff/{symbolID}/{positionInStaffString}"})
-    public Symbol changeAgnosticPositionInStaff(@PathVariable("symbolID") Long symbolID,
-                                                @PathVariable("positionInStaffString") String positionInStaffString) throws IM3WSException, IM3Exception {
-        Optional<Symbol> symbol = symbolRepository.findById(symbolID);
-        if (!symbol.isPresent()) {
-            throw new IM3WSException("Cannot find a symbol with id " + symbolID);
-        }
-
-        PositionInStaff positionInStaff = PositionInStaff.parseString(positionInStaffString);
-        symbol.get().getAgnosticSymbol().setPositionInStaff(positionInStaff);
-        //return symbolRepository.update(symbol.get());
-        return symbolRepository.save(symbol.get());
     }*/
 
     /**

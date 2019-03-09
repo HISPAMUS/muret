@@ -12,26 +12,30 @@
     </nav>
 
     <div class="col">
-      <section class="row">
-        <div class="col">
-          <app-image #selectedRegionImage *ngIf="selectedRegion" [imageID]="imageID" [shapes]="selectedRegionShapes" [zoomFactor]="selectedRegionZoomFactor"
-                     [crop]="selectedRegion.boundingBox"
-                     [initialCanvasState]="'eSelecting'"
-                     (svgShapeSelected)="onSelectAgnosticSymbol($event)"
-          ></app-image>
-        </div>
-      </section>
+      <div *ngIf="selectedRegion$ | async as selectedRegion; else noRegionSelected">
+        <section class="row">
+          <div class="col">
+            <app-image #selectedRegionImage [imageID]="imageID" [shapes]="selectedRegionShapes" [zoomFactor]="selectedRegionZoomFactor"
+                       [crop]="selectedRegion.boundingBox"
+                       [initialCanvasState]="'eSelecting'"
+                       (svgShapeSelected)="onSelectAgnosticSymbol($event)"
+            ></app-image>
+          </div>
+        </section>
 
-      <section class="row">
-        <div class="col">
-          <app-agnostic-staff *ngIf="selectedRegion"
-                              [regionCropped]="selectedRegion.boundingBox"
-                              [notationType]="notationType" [manuscriptType]="manuscriptType"
-          >
-          </app-agnostic-staff>
-        </div>
-      </section>
-
+        <section class="row">
+          <div class="col">
+            <app-agnostic-staff
+                                [regionCropped]="selectedRegion.boundingBox"
+                                [notationType]="notationType" [manuscriptType]="manuscriptType"
+            >
+            </app-agnostic-staff>
+          </div>
+        </section>
+      </div>
+      <ng-template #noRegionSelected>
+        <p>Select a region</p>
+      </ng-template>
       <section class="row">
         <div class="col">
           <app-agnostic-toolbar [agnosticSymbolToolbarCategories]="agnosticSymbolToolbarCategories"

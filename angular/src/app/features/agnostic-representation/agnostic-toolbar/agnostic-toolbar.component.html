@@ -22,7 +22,8 @@
   </div>
   <div>
     <div *ngFor="let category of agnosticSymbolToolbarCategories" [ngbCollapse]="isCollapsed(category)">
-      <button *ngFor="let symbolType of category.agnosticSymbolTypes" type="button" class="btn btn-secondary" title="{{symbolType}}">
+      <button *ngFor="let symbolType of category.agnosticSymbolTypes" type="button" class="btn btn-secondary" title="{{symbolType}}"
+              (click)="changeSymbolType(symbolType)">
         <svg-icon src="assets/icons/agnostic/{{notationType}}/{{manuscriptType}}/{{symbolType}}.svg" [svgStyle]="{ 'width.px':40 }"></svg-icon>
       </button>
     </div>

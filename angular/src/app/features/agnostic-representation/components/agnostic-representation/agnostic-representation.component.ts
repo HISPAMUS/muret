@@ -12,7 +12,7 @@ import {Store} from '@ngrx/store';
 import {GetImageProjection} from '../../../document-analysis/store/actions/document-analysis.actions';
 import {ImageComponent} from '../../../document-analysis/image/image.component';
 import {GetRegion, SelectSymbol} from '../../store/actions/agnostic-representation.actions';
-import {selectSelectedRegion} from '../../store/selectors/agnostic-representation.selector';
+import {selectAgnosticSymbols, selectSelectedRegion} from '../../store/selectors/agnostic-representation.selector';
 import {AgnosticSymbolToolbarCategory} from '../../model/agnostic-symbol-toolbar-category';
 import {AGNOSTIC_SYMBOL_TOOLBAR_CATEGORIES} from '../../model/agnostic-symbol-toolbar-categories';
 
@@ -24,7 +24,8 @@ import {AGNOSTIC_SYMBOL_TOOLBAR_CATEGORIES} from '../../model/agnostic-symbol-to
 export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   imageID: number;
   private pagesSubscription: Subscription;
-  private selectedRegionSubscription: Subscription;
+  private agnosticSymbolsSubscription: Subscription;
+  selectedRegion$: Observable<Region>;
   imagePreviewShapes: Shape[];
   imagePreviewZoomFactor = 1;
   selectedRegionShapes: any;
@@ -35,12 +36,12 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   notationType = 'eMensural';
   manuscriptType = 'eHandwritten';
 
-  selectedRegion: Region = null;
-
   @ViewChild('imagePreview') imagePreview: ImageComponent;
   @ViewChild('selectedRegionImage') selectedRegionImage: ImageComponent;
 
-  constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>) { }
+  constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>) {
+    this.selectedRegion$ = store.select(selectSelectedRegion);
+  }
 
   ngOnInit() {
     // request store data
@@ -55,16 +56,16 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.selectedRegionSubscription = this.store.select(selectSelectedRegion).subscribe(next => {
+    this.agnosticSymbolsSubscription = this.store.select(selectAgnosticSymbols).subscribe(next => {
       if (next) {
-        this.selectedRegion = next;
-        this.drawSelectedRegionSymbols();
+        this.drawSelectedRegionSymbols(next);
       }
     });
   }
 
   ngOnDestroy() {
     this.pagesSubscription.unsubscribe();
+    this.agnosticSymbolsSubscription.unsubscribe();
   }
 
   openDocumentAnalysis() {
@@ -77,7 +78,6 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
   onPreviewImageShapeSelected($event: Shape) {
     if ($event) {
-      this.selectedRegion = null; // it will have in the selectedRegionSubscription subscription
       this.store.dispatch(new GetRegion($event.data.id));
     }
   }
@@ -98,7 +98,8 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     }
   }
 
-  private drawBox(shapes: Shape[], layer: string, id: number, boundingBox: BoundingBox, color: string): Rectangle {
+  private drawBox(shapes: Shape[], modelObject: Region | AgnosticSymbol,
+                  layer: string, id: number, boundingBox: BoundingBox, color: string): Rectangle {
     const rect = new Rectangle();
     rect.id = layer + id;
     rect.fromX = boundingBox.fromX;
@@ -109,19 +110,20 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     rect.strokeColor = color;
     rect.strokeWidth = 3;
     rect.layer = layer;
+    rect.data = modelObject;
     shapes.push(rect);
     return rect;
   }
   private drawImagePreviewRegion(region: Region) {
-    this.drawBox(this.imagePreviewShapes,
+    this.drawBox(this.imagePreviewShapes, region,
       region.regionType.name, region.id, region.boundingBox, '#' + region.regionType.hexargb ).data = region;
   }
 
-  private drawSelectedRegionSymbols() {
+  private drawSelectedRegionSymbols(agnosticSymbols: AgnosticSymbol[]) {
     this.selectedRegionShapes = new Array();
-    if (this.selectedRegion.symbols) {
-      this.selectedRegion.symbols.forEach(symbol => {
-        this.drawBox(this.selectedRegionShapes,
+    if (agnosticSymbols) {
+      agnosticSymbols.forEach(symbol => {
+        this.drawBox(this.selectedRegionShapes, symbol,
           symbol.agnosticSymbolType, symbol.id, symbol.boundingBox, 'red').data = symbol;
         // console.log(JSON.stringify(symbol.boundingBox, null, 4));
       });

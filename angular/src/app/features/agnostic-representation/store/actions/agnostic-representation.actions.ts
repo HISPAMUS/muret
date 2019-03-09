@@ -9,6 +9,10 @@ export enum AgnosticRepresentationActionTypes {
   SelectSymbol = '[AgnosticRepresentation] Select symbol',
   GetSVGSet = '[AgnosticRepresentation] Get SVG set',
   GetSVGSetSucccess = '[AgnosticRepresentation] Get SVG set success',
+  ChangeSymbolType = '[AgnosticRepresentation] Change symbol type',
+  ChangeSymbolTypeSuccess = '[AgnosticRepresentation] Change symbol type success',
+  ChangeSymbolPositionInStaff = '[AgnosticRepresentation] Change symbol position in staff',
+  ChangeSymbolPositionInStaffSuccess = '[AgnosticRepresentation] Change symbol position in staff success'
 }
 
 export class GetRegion implements Action {
@@ -36,7 +40,27 @@ export class GetSVGSetSucccess implements Action {
   constructor(public svgSet: SVGSet) {}
 }
 
+export class ChangeSymbolType implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.ChangeSymbolType
+  constructor(public agnosticSymbol: AgnosticSymbol, public agnosticSymbolType: string) {}
+}
+
+export class ChangeSymbolTypeSuccess implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.ChangeSymbolTypeSuccess
+  constructor(public agnosticSymbol: AgnosticSymbol) {}
+}
+
+export class ChangeSymbolPositionInStaff implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.ChangeSymbolPositionInStaff
+  constructor(public agnosticSymbol: AgnosticSymbol, public difference: number) {}
+}
+
+export class ChangeSymbolPositionInStaffSuccess implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.ChangeSymbolPositionInStaffSuccess
+  constructor(public agnosticSymbol: AgnosticSymbol) {}
+}
 
 
 export type AgnosticRepresentationActions =
-  GetRegion | GetRegionSuccess | GetSVGSet | GetSVGSetSucccess | SelectSymbol;
+  GetRegion | GetRegionSuccess | GetSVGSet | GetSVGSetSucccess | SelectSymbol |
+  ChangeSymbolType | ChangeSymbolTypeSuccess | ChangeSymbolPositionInStaff | ChangeSymbolPositionInStaffSuccess;

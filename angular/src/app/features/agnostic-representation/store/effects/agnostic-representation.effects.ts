@@ -4,12 +4,19 @@ import { of } from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 import {
   AgnosticRepresentationActionTypes,
+  ChangeSymbolPositionInStaff,
+  ChangeSymbolPositionInStaffSuccess,
+  ChangeSymbolType,
+  ChangeSymbolTypeSuccess,
   GetRegion,
-  GetRegionSuccess, GetSVGSet, GetSVGSetSucccess
+  GetRegionSuccess,
+  GetSVGSet,
+  GetSVGSetSucccess
 } from '../actions/agnostic-representation.actions';
 import {AgnosticRepresentationService} from '../../services/agnostic-representation.service';
 import {Region} from '../../../../core/model/entities/region';
 import {SVGSet} from '../../model/svgset';
+import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
 
 @Injectable()
 export class AgnosticRepresentationEffects {
@@ -33,6 +40,24 @@ export class AgnosticRepresentationEffects {
     switchMap((action: GetSVGSet) => this.agnosticRepresentationService.getSVGSet$(action.notationType, action.manuscriptType)),
     switchMap((svgSet: SVGSet) => {
       return of(new GetSVGSetSucccess(svgSet));
+    })
+  );
+  @Effect()
+  changeSymbolType$ = this.actions$.pipe(
+    ofType<ChangeSymbolType>(AgnosticRepresentationActionTypes.ChangeSymbolType),
+    switchMap((action: ChangeSymbolType) =>
+      this.agnosticRepresentationService.changeSymbolType$(action.agnosticSymbol, action.agnosticSymbolType)),
+    switchMap((agnosticSymbol: AgnosticSymbol) => {
+      return of(new ChangeSymbolTypeSuccess(agnosticSymbol));
+    })
+  );
+  @Effect()
+  changeSymbolPositionInStaff$ = this.actions$.pipe(
+    ofType<ChangeSymbolPositionInStaff>(AgnosticRepresentationActionTypes.ChangeSymbolPositionInStaff),
+    switchMap((action: ChangeSymbolPositionInStaff) =>
+      this.agnosticRepresentationService.changeSymbolPositionInStaff$(action.agnosticSymbol, action.difference)),
+    switchMap((agnosticSymbol: AgnosticSymbol) => {
+      return of(new ChangeSymbolPositionInStaffSuccess(agnosticSymbol));
     })
   );
 }
