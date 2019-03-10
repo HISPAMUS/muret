@@ -1,30 +1,38 @@
 package es.ua.dlsi.grfia.im3ws.muret.model;
 
+import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Image;
+import es.ua.dlsi.grfia.im3ws.muret.entity.BoundingBox;
+import es.ua.dlsi.grfia.im3ws.muret.entity.Region;
+import es.ua.dlsi.grfia.im3ws.muret.entity.Symbol;
+import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
+import es.ua.dlsi.grfia.im3ws.muret.repository.SymbolRepository;
 import es.ua.dlsi.im3.core.IM3Exception;
-import es.ua.dlsi.im3.core.adt.graphics.BoundingBox;
-import es.ua.dlsi.im3.core.adt.graphics.BoundingBoxXY;
-import es.ua.dlsi.im3.omr.classifiers.symbolrecognition.DLSymbolAndPositionClassifier;
+import es.ua.dlsi.im3.core.score.PositionInStaff;
+import es.ua.dlsi.im3.core.score.PositionsInStaff;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
+import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbolTypeFactory;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Component
 public class AgnosticRepresentationModel {
     private final MURETConfiguration muretConfiguration;
+    private final RegionRepository regionRepository;
+    private final SymbolRepository symbolRepository;
 
     @Autowired
-    public AgnosticRepresentationModel(MURETConfiguration muretConfiguration) {
+    public AgnosticRepresentationModel(MURETConfiguration muretConfiguration, RegionRepository regionRepository, SymbolRepository symbolRepository) {
         this.muretConfiguration = muretConfiguration;
+        this.regionRepository = regionRepository;
+        this.symbolRepository = symbolRepository;
     }
 
-    public AgnosticSymbol classifySymbolFromImageBoundingBox(Image image, int fromX, int fromY, int toX, int toY, String classifierName) throws IM3Exception {
+    /*public AgnosticSymbol classifySymbolFromImageBoundingBox(Image image, int fromX, int fromY, int toX, int toY, String classifierName) throws IM3Exception {
         //TODO generalizar - coger el clasificador cargado - ¿si está el python en memoria tb.?
 
         boolean usePythonClassifiers = false;
@@ -53,5 +61,46 @@ public class AgnosticRepresentationModel {
                 return agnosticSymbol;
             }
         }
+    }*/
+
+    private Region getRegion(long regionID) throws IM3WSException {
+        Optional<Region> persistentRegion = regionRepository.findById(regionID);
+        if (!persistentRegion.isPresent()) {
+            throw new IM3WSException("Cannot find region with ID=" + regionID);
+        }
+        return persistentRegion.get();
+    }
+    @Transactional
+    public Region createSymbol(long regionID, BoundingBox boundingBox, String agnosticSymbolType) throws IM3WSException, IM3Exception {
+        Region persistentRegion = getRegion(regionID);
+
+        Symbol symbol = new Symbol();
+        symbol.setBoundingBox(boundingBox);
+        symbol.setRegion(persistentRegion);
+        AgnosticSymbol agnosticSymbol = new AgnosticSymbol(AgnosticVersion.v2,
+                AgnosticSymbolTypeFactory.parseString(agnosticSymbolType),
+                PositionsInStaff.LINE_3);
+        symbol.setAgnosticSymbol(agnosticSymbol);
+        persistentRegion.getSymbols().add(symbol);
+        regionRepository.save(persistentRegion);
+        return persistentRegion;
+    }
+
+    /**
+     *
+     * @param symbolID
+     * @return Deleted symbol ID
+     * @throws IM3WSException
+     */
+    @Transactional
+    public long deleteSymbol(long symbolID) throws IM3WSException {
+        Optional<Symbol> persistentSymbol = symbolRepository.findById(symbolID);
+        if (!persistentSymbol.isPresent()) {
+            throw new IM3WSException("Cannot find symbol with ID=" + symbolID);
+        }
+
+        Region persistentRegion = getRegion(persistentSymbol.get().getRegion().getId());
+        persistentRegion.getSymbols().remove(persistentSymbol.get());
+        return symbolID;
     }
 }

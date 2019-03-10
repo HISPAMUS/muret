@@ -71,7 +71,7 @@ export class DocumentAnalysisService {
       boundingBox
     };
 
-    return this.apiRestClientService.put$<Page[]>('documentanalysis/createPage', page);
+    return this.apiRestClientService.post$<Page[]>('documentanalysis/createPage', page);
   }
 
   createRegion(imageID: number, regionType: RegionType, fromX: number, fromY: number, toX: number, toY: number): Observable<Page[]> {
@@ -88,7 +88,7 @@ export class DocumentAnalysisService {
       boundingBox
     };
 
-    return this.apiRestClientService.put$<Page[]>('documentanalysis/createRegion', region);
+    return this.apiRestClientService.post$<Page[]>('documentanalysis/createRegion', region);
   }
 
   clear(imageID: number) {

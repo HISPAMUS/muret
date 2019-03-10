@@ -46,7 +46,6 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   layersCheckboxes: FormGroup;
 
   // tools
-  public modeRadioButtonGroup: FormGroup;
   public regionTypeRadioButtonGroup: FormGroup;
   private selectedShape: Shape;
   private nextDrawShape: string | RegionType;
@@ -54,6 +53,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   // end tools
 
   @ViewChild('imageComponent') imageComponent: ImageComponent;
+  private crudMode: 'idle' | 'add' | 'edit';
 
   constructor(private store: Store<DocumentAnalysisState>,
               private route: ActivatedRoute,
@@ -69,10 +69,6 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // ------- menus --------
-    this.modeRadioButtonGroup = this.formBuilder.group({
-      modeRadioButton: 'idle'
-    });
-
     this.regionTypeRadioButtonGroup = this.formBuilder.group({
       regionTypeRadioButton: 'none'
     });
@@ -89,12 +85,6 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
       this.store.dispatch(new GetImageProjection(+this.imageID));
 
       // when changing image, reset buttons
-      if (this.modeRadioButtonGroup) {
-        this.modeRadioButtonGroup.setValue({
-          modeRadioButton: 'idle'
-        });
-      }
-
       if (this.regionTypeRadioButtonGroup) {
         this.regionTypeRadioButtonGroup.setValue({
           regionTypeRadioButton: 'none' // reset values
@@ -194,7 +184,6 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   private onLayerVisibilityChanged(val: any) {
     if (this.shapes) {
       this.shapes.forEach(shape => {
-        const checkBox = this.layersCheckboxes.get(shape.layer);
         shape.hidden = !this.layersCheckboxes.get(shape.layer).value;
       });
     }
@@ -202,29 +191,27 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
 
   // ------------- METHODS that deal with actual data -------------
   isAddingMode(): boolean {
-    return this.modeRadioButtonGroup.value.modeRadioButton === 'draw';
+    return this.crudMode === 'add';
   }
 
   isEditingMode(): boolean {
-    return this.modeRadioButtonGroup.value.modeRadioButton === 'edit';
+    return this.crudMode === 'edit';
   }
 
   setRegionType(regionType: RegionType) {
-    if (this.selectedShape) {
-      if (this.isEditingMode()) {
-        const shape = this.selectedShape;
-        if (!shape) {
-          throw new Error('No selected shape');
-        }
-
-        if (shape.layer === 'page') {
-          this.dialogsService.showError('Region type change', 'Cannot change a page to be a region');
-        } else {
-          this.store.dispatch(new ChangeRegionType(shape.data, regionType));
-        }
-      } else {
-        this.nextDrawShape = regionType;
+    if (this.isEditingMode() && this.selectedShape) {
+      const shape = this.selectedShape;
+      if (!shape) {
+        throw new Error('No selected shape');
       }
+
+      if (shape.layer === 'page') {
+        this.dialogsService.showError('Region type change', 'Cannot change a page to be a region');
+      } else {
+        this.store.dispatch(new ChangeRegionType(shape.data, regionType));
+      }
+    } else {
+      this.nextDrawShape = regionType;
     }
   }
 
@@ -272,7 +259,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   onShapeCreated(shape: Shape) {
     if (!this.nextDrawShape) {
       this.dialogsService.showError('Shape creation', 'Page or region type must be selected first');
-      this.shapes = [...this.shapes]; // force shapes redrawing
+      this.shapes = [...this.shapes]; // force shapes redrawing //TODO Creo que no va - ver tb. en AgnosticRepresentation
     } else {
       const rectangle = shape as Rectangle;
 
@@ -302,13 +289,6 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
     }
   }
 
-  editSelected() {
-    return false;
-  }
-
-  editOrAddSelected() {
-    return false;
-  }
 
   openAgnosticRepresentation() {
     this.router.navigate(['agnosticrepresentation', this.imageID]);
@@ -318,16 +298,20 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
     this.router.navigate(['semanticrepresentation', this.imageID]);
   }
 
-  idle() {
-    this.imageComponent.idle();
-  }
+  onCrudModeChanged($event: 'idle' | 'add' | 'edit') {
+    this.crudMode = $event;
 
-  draw() {
-    this.imageComponent.draw();
-  }
-
-  edit() {
-    this.imageComponent.edit();
+    switch (this.crudMode) {
+      case 'idle':
+        this.imageComponent.idle();
+        break;
+      case 'add':
+        this.imageComponent.draw();
+        break;
+      case 'edit':
+        this.imageComponent.edit();
+        break;
+    }
   }
 }
 

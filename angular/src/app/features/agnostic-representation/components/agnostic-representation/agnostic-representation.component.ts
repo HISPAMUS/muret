@@ -11,10 +11,11 @@ import {selectPages} from '../../../document-analysis/store/selectors/document-a
 import {Store} from '@ngrx/store';
 import {GetImageProjection} from '../../../document-analysis/store/actions/document-analysis.actions';
 import {ImageComponent} from '../../../document-analysis/image/image.component';
-import {GetRegion, SelectSymbol} from '../../store/actions/agnostic-representation.actions';
+import {CreateSymbolFromBoundingBox, DeleteSymbol, GetRegion, SelectSymbol} from '../../store/actions/agnostic-representation.actions';
 import {selectAgnosticSymbols, selectSelectedRegion} from '../../store/selectors/agnostic-representation.selector';
 import {AgnosticSymbolToolbarCategory} from '../../model/agnostic-symbol-toolbar-category';
 import {AGNOSTIC_SYMBOL_TOOLBAR_CATEGORIES} from '../../model/agnostic-symbol-toolbar-categories';
+import {DialogsService} from '../../../../shared/services/dialogs.service';
 
 @Component({
   selector: 'app-agnostic-representation',
@@ -23,8 +24,10 @@ import {AGNOSTIC_SYMBOL_TOOLBAR_CATEGORIES} from '../../model/agnostic-symbol-to
 })
 export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   imageID: number;
-  private pagesSubscription: Subscription;
-  private agnosticSymbolsSubscription: Subscription;
+  pagesSubscription: Subscription;
+  agnosticSymbolsSubscription: Subscription;
+  selectedRegionSubscription: Subscription;
+  selectedRegion: Region;
   selectedRegion$: Observable<Region>;
   imagePreviewShapes: Shape[];
   imagePreviewZoomFactor = 1;
@@ -38,9 +41,11 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
   @ViewChild('imagePreview') imagePreview: ImageComponent;
   @ViewChild('selectedRegionImage') selectedRegionImage: ImageComponent;
-  private crudMode: 'idle' | 'add' | 'edit';
+  private crudMode: 'idle' | 'add' | 'edit' = 'idle';
+  agnosticSmbolTypeSelected: string;
+  private selectedShape: Shape;
 
-  constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>) {
+  constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>, private dialogsService: DialogsService) {
     this.selectedRegion$ = store.select(selectSelectedRegion);
   }
 
@@ -62,11 +67,16 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
         this.drawSelectedRegionSymbols(next);
       }
     });
+    this.selectedRegionSubscription = this.store.select(selectSelectedRegion).subscribe(next => {
+      this.selectedRegion = next;
+    });
+
   }
 
   ngOnDestroy() {
     this.pagesSubscription.unsubscribe();
     this.agnosticSymbolsSubscription.unsubscribe();
+    this.selectedRegionSubscription.unsubscribe();
   }
 
   openDocumentAnalysis() {
@@ -132,14 +142,85 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   onSelectAgnosticSymbol(shape: Shape) {
-    this.store.dispatch(new SelectSymbol(shape.data));
+    if (shape) {
+      this.store.dispatch(new SelectSymbol(shape.data));
+      this.selectedShape = shape;
+    }
   }
 
   crudModeChanged($event: 'idle' | 'add' | 'edit') {
     this.crudMode = $event;
+    if (this.selectedRegionImage) {
+      this.setSelectedRegionImageMode();
+    }
+  }
+
+  private setSelectedRegionImageMode() {
+    switch (this.crudMode) {
+      case 'edit':
+        this.selectedRegionImage.select();
+        break;
+      case 'idle':
+        this.selectedRegionImage.idle();
+        break;
+      case 'add':
+        this.selectedRegionImage.draw(); // TODO dibujo ahora sólo rectángulos
+        break;
+    }
   }
 
   isAddOrEditMode() {
     return this.crudMode === 'add' || this.crudMode === 'edit';
+  }
+
+  getSelectedRegionImageMode() {
+    switch (this.crudMode) {
+      case 'edit':
+        return 'eSelecting';
+        break;
+      case 'idle':
+        return  'eIdle';
+        break;
+      case 'add':
+        return 'eDrawing';
+    }
+  }
+
+  onSymbolCreated(shape: Shape) {
+    if (!this.agnosticSmbolTypeSelected) {
+      this.dialogsService.showError('Shape creation', 'A symbol type must be selected first');
+      this.selectedRegionShapes = [...this.selectedRegionShapes]; // force shapes redrawing
+      // TODO Creo que no va - ver también en DocumentAnalysis
+    } else {
+      const rect = shape as Rectangle;
+
+      this.store.dispatch(new CreateSymbolFromBoundingBox(
+        this.selectedRegion.id,
+        {
+          fromX: rect.fromX,
+          fromY: rect.fromY,
+          toX: rect.fromX + rect.width,
+          toY: rect.fromY + rect.height
+        },
+        this.agnosticSmbolTypeSelected));
+    }
+  }
+
+  getShapeToDraw() {
+    return 'Rectangle'; // TODO Cuando estemos dibujando trazos será otra cosa
+  }
+
+  onAgnosticSymbolTypeSelected($event: string) {
+    this.agnosticSmbolTypeSelected = $event;
+  }
+
+  deleteSelectedSymbol() {
+    if (this.selectedShape) {
+      this.store.dispatch(new DeleteSymbol(this.selectedShape.data.id));
+    }
+  }
+
+  onDeselectAgnosticSymbol($event: Shape) {
+    this.selectedShape = null;
   }
 }

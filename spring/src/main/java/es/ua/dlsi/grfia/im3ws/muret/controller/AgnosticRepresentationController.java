@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.im3ws.muret.controller;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.PostStrokes;
+import es.ua.dlsi.grfia.im3ws.muret.controller.payload.SymbolCreation;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticRepresentationModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticSymbolFont;
@@ -100,7 +101,28 @@ public class AgnosticRepresentationController {
     }
 
 
-    /*@GetMapping(path = {"createSymbolFromBoundingBox/{regionID}/{fromX}/{fromY}/{toX}/{toY}"})
+    /**
+     * @param symbolCreation
+     * @return Container region
+     * @throws IM3WSException
+     */
+    @PostMapping(path = {"createSymbolFromBoundingBox"})
+    public Region createSymbol(@RequestBody SymbolCreation symbolCreation) throws IM3WSException, IM3Exception {
+        return this.agnosticRepresentationModel.createSymbol(symbolCreation.getRegionID(), symbolCreation.getBoundingBox(), symbolCreation.getAgnosticSymbolType());
+    }
+
+    /**
+     * @param symbolID
+     * @return Deleted symbol ID
+     * @throws IM3WSException
+     */
+    @DeleteMapping(path = {"deleteSymbol/{symbolID}"})
+    public long deleteSymbol(@PathVariable("symbolID") long symbolID) throws IM3WSException {
+        return this.agnosticRepresentationModel.deleteSymbol(symbolID);
+    }
+
+
+   /* @PostMapping(path = {"createSymbolFromBoundingBox/{regionID}/{fromX}/{fromY}/{toX}/{toY}"})
     public Symbol createSymbolFromBoundingBox(@PathVariable("regionID") Long regionID,
                                               @PathVariable("fromX") Double fromX,
                                               @PathVariable("fromY") Double fromY,

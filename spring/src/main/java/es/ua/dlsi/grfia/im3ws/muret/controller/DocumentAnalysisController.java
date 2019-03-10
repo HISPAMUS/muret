@@ -93,7 +93,7 @@ public class DocumentAnalysisController {
      * @return
      * @throws IM3WSException
      */
-    @PutMapping(path = {"createPage"})
+    @PostMapping(path = {"createPage"})
     public List<Page> createPage(@RequestBody PageCreation pageCreation) throws IM3WSException {
         List<Page> createdPages = this.documentAnalysisModel.createPage(pageCreation.getImageID(), pageCreation.getBoundingBox());
         return createdPages;
@@ -105,8 +105,8 @@ public class DocumentAnalysisController {
      * @return
      * @throws IM3WSException
      */
-    @PutMapping(path = {"createRegion"})
-    public List<Page> createPage(@RequestBody RegionCreation regionCreation) throws IM3WSException {
+    @PostMapping(path = {"createRegion"})
+    public List<Page> createRegion(@RequestBody RegionCreation regionCreation) throws IM3WSException {
         List<Page> pages = this.documentAnalysisModel.createRegion(regionCreation.getImageID(), regionCreation.getRegionTypeID(), regionCreation.getBoundingBox());
         return pages;
     }

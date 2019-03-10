@@ -68,7 +68,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
 
   heightPercentString: string;
   widthPercentString: string;
-  private nextShapeToDraw: Type<Shape>;
+  private nextShapeToDraw: string;
   private selectedComponent: ShapeComponent;
   private unsafeBackgroundImage: SafeResourceUrl;
   private shapeWithoutComponent: Rectangle | Line | Text | Path;
@@ -103,14 +103,14 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
     this.widthPercentString = this.widthPercentage + '%';
   }
 
-  private createShapeFromType(nextShapeToDraw: Type<Shape>) {
+  private createShapeFromTypeName(nextShapeToDraw: string) {
     // wish - without switch
-    switch (nextShapeToDraw.name) {
+    switch (nextShapeToDraw) {
       case 'Rectangle': return new Rectangle();
       case 'Line': return new Line();
       case 'Text': return new Text();
       case 'Path': return new Path();
-      default: throw new Error('Cannot find a shape for shape type ' + nextShapeToDraw.name);
+      default: throw new Error('Cannot find a shape for shape type ' + nextShapeToDraw);
     }
   }
 
@@ -118,13 +118,15 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
     return item.id;
   }
 
-  requestStateChange(state: SVGCanvasState, drawingShape?: Type<Shape>) {
+  requestStateChange(state: SVGCanvasState, drawingShape?: string) {
     this.deselect();
 
-    if (state === SVGCanvasState.eDrawing && !drawingShape) {
+    if (drawingShape) {
+      this.nextShapeToDraw = drawingShape;
+    }
+    if (state === SVGCanvasState.eDrawing && !this.nextShapeToDraw) {
       throw new Error('Must specify a new shape when drawing');
     }
-    this.nextShapeToDraw = drawingShape;
 
     const newState = this.stateService.requestStateChange(state);
     switch (newState) {
@@ -186,12 +188,27 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   }
 
   screenCoordinateToSVGCoordinate(screenX: number, screenY: number): Coordinate {
-    const xScale = this.viewPortWidth / this.canvas.nativeElement.clientWidth;
-    const yScale = this.viewPortHeight / this.canvas.nativeElement.clientHeight;
+    let xScale: number;
+    let yScale: number;
+
+    let xOffset: number;
+    let yOffset: number;
+
+    if (this.crop) {
+      xScale = (this.crop.toX - this.crop.fromX) / this.canvas.nativeElement.clientWidth;
+      yScale = (this.crop.toY - this.crop.fromY)  / this.canvas.nativeElement.clientHeight;
+      xOffset = this.crop.fromX;
+      yOffset = this.crop.fromY;
+    } else {
+      xScale = this.viewPortWidth / this.canvas.nativeElement.clientWidth;
+      yScale = this.viewPortHeight / this.canvas.nativeElement.clientHeight;
+      xOffset = 0;
+      yOffset = 0;
+    }
 
     return {
-      x: screenX * xScale,
-      y: screenY * yScale
+      x: screenX * xScale + xOffset,
+      y: screenY * yScale + yOffset
     };
   }
 
@@ -233,10 +250,6 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
     }
   }
 
-  private changeMousePosition(event: MouseEvent) {
-  }
-
-
   private deselect() {
     if (this.selectedComponent) {
       this.selectedComponent.select(false);
@@ -247,7 +260,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   }
 
   private createShape(coordinate: Coordinate) {
-    const shape = this.createShapeFromType(this.nextShapeToDraw);
+    const shape = this.createShapeFromTypeName(this.nextShapeToDraw);
     shape.fillColor = 'transparent';
     shape.strokeColor = 'black';
     shape.strokeWidth = 3;

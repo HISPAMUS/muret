@@ -1,9 +1,7 @@
 import deepcopy from 'ts-deepcopy';
 import {AgnosticRepresentationActions, AgnosticRepresentationActionTypes} from '../actions/agnostic-representation.actions';
 import {AgnosticRepresentationState, initialAgnosticRepresentationState} from '../state/agnostic-representation.state';
-import {Page} from '../../../../core/model/entities/page';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
-import {Region} from '../../../../core/model/entities/region';
 
 export function agnosticRepresentationReducers(state = initialAgnosticRepresentationState, action: AgnosticRepresentationActions):
   AgnosticRepresentationState {
@@ -46,6 +44,25 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
           newState.selectedSymbol = symbol;
         }*/
       }
+      return newState;
+    }
+    case AgnosticRepresentationActionTypes.CreateSymbolSuccess: {
+      const newState = {...state};
+      newState.selectedSymbol = null;
+      newState.selectedRegion = action.region;
+      newState.agnosticSymbols = newState.selectedRegion.symbols; // same object
+      return newState;
+    }
+    case AgnosticRepresentationActionTypes.DeleteSymbolSuccess: {
+      const newState = {...state};
+      newState.selectedSymbol = null;
+      newState.agnosticSymbols = deepcopy<AgnosticSymbol[]>(state.agnosticSymbols);
+
+      if (action.deletedAgnosticSymbolID) { // if no error has occurred
+        // remove the deleted symbol
+        newState.agnosticSymbols = newState.agnosticSymbols.filter(symbol => symbol.id !== action.deletedAgnosticSymbolID);
+      }
+      newState.selectedRegion.symbols = newState.agnosticSymbols; // same object
       return newState;
     }
     default: {

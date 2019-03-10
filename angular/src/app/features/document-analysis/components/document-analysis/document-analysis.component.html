@@ -4,27 +4,9 @@
   <nav class="col-1">
     <div>
       <h2>Document analysis</h2>
-     <form [formGroup]="modeRadioButtonGroup">
-        <div class="btn-group-vertical btn-group-toggle" ngbRadioGroup
-             name="modeRadioButtonGroup" formControlName="modeRadioButton">
-          <label ngbButtonLabel class="btn-light">
-            <input ngbButton type="radio" value="idle" (click)="idle()"> Idle
-          </label>
-          <label ngbButtonLabel class="btn-light">
-            <input ngbButton type="radio" value="draw" (click)="draw()"> Add
-          </label>
-          <label ngbButtonLabel class="btn-light">
-            <input ngbButton type="radio" value="edit" (click)="edit()"> Edit
-          </label> <!-- TODO Disable when none selected -->
-
-          <label ngbButtonLabel class="btn-light">
-            <button (click)="clear()">Clear</button>
-          </label>
-          <label ngbButtonLabel class="btn-light">
-            <button [disabled]="!isEditingMode()" (click)="deleteSelected()">Delete</button>
-          </label> <!-- TODO Disable when none selected -->
-        </div>
-      </form>
+      <app-crud-toolbar (onModeChange)="onCrudModeChanged($event)"
+                        (onClear)="clear()" (onDelete)="deleteSelected()">
+      </app-crud-toolbar>
 
       <form [formGroup]="regionTypeRadioButtonGroup">
         <div [hidden]="!isEditingMode() && !isAddingMode()" class="btn-group-vertical btn-group-toggle" ngbRadioGroup
@@ -77,6 +59,7 @@
         (svgShapeSelected)="onShapeSelected($event)"
         (svgShapeDeselected)="onShapeDeselected($event)"
         [initialCanvasState]="'eIdle'"
+        [initialShapeToDraw]="'Rectangle'"
         ></app-image>
       </div>
     </section>
