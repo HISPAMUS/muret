@@ -3,9 +3,7 @@ import {Observable, Subscription} from 'rxjs';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Rectangle} from '../../../../svg/model/rectangle';
 import {Shape} from '../../../../svg/model/shape';
-import {SvgCanvasComponent} from '../../../../svg/components/svg-canvas/svg-canvas.component';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {SVGCanvasState} from '../../../../svg/services/svg-canvas-state.service';
 import {RegionType} from '../../../../core/model/entities/region-type';
 import {Page} from '../../../../core/model/entities/page';
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
@@ -48,8 +46,8 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   layersCheckboxes: FormGroup;
 
   // tools
-  public toolRadioGroup: FormGroup;
-  public regionTypesRadioGroupForm: FormGroup;
+  public modeRadioButtonGroup: FormGroup;
+  public regionTypeRadioButtonGroup: FormGroup;
   private selectedShape: Shape;
   private nextDrawShape: string | RegionType;
   private shapes: Shape[];
@@ -70,6 +68,19 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    // ------- menus --------
+    this.modeRadioButtonGroup = this.formBuilder.group({
+      modeRadioButton: 'idle'
+    });
+
+    this.regionTypeRadioButtonGroup = this.formBuilder.group({
+      regionTypeRadioButton: 'none'
+    });
+
+    this.layersCheckboxes = this.formBuilder.group({
+      page: true
+    });
+
     this.store.dispatch(new GetRegionTypes());
 
     // request store data
@@ -78,30 +89,17 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
       this.store.dispatch(new GetImageProjection(+this.imageID));
 
       // when changing image, reset buttons
-      if (this.toolRadioGroup) {
-        this.toolRadioGroup.setValue({
-          model: 'idle'
+      if (this.modeRadioButtonGroup) {
+        this.modeRadioButtonGroup.setValue({
+          modeRadioButton: 'idle'
         });
       }
 
-      if (this.regionTypesRadioGroupForm) {
-        this.regionTypesRadioGroupForm.setValue({
-          regionTypeRadioButton: 'none'
+      if (this.regionTypeRadioButtonGroup) {
+        this.regionTypeRadioButtonGroup.setValue({
+          regionTypeRadioButton: 'none' // reset values
         });
       }
-    });
-
-    // ------- menus --------
-    this.toolRadioGroup = this.formBuilder.group({
-      model: 'idle'
-    });
-
-    this.regionTypesRadioGroupForm = this.formBuilder.group({
-      regionTypeRadioButton: 'none'
-    });
-
-    this.layersCheckboxes = this.formBuilder.group({
-      page: true
     });
 
     // region type creation menu
@@ -109,7 +107,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
       if (next) {
         next.forEach(regionType => {
           this.layersCheckboxes.addControl(regionType.name, new FormControl(true));
-          this.regionTypesRadioGroupForm.addControl('regionTypeRadioButton', new FormControl(false));
+          this.regionTypeRadioButtonGroup.addControl('regionTypeRadioButton', new FormControl(false));
         });
       }
     });
@@ -144,8 +142,8 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
 
   onShapeSelected(shape: Shape) {
     this.selectedShape = shape;
-    if (shape) {
-      this.regionTypesRadioGroupForm.get('regionTypeRadioButton').setValue(shape.layer);
+    if (shape && shape.data && shape.data.regionType) {
+      this.regionTypeRadioButtonGroup.get('regionTypeRadioButton').setValue(shape.data.regionType.id);
     }
   }
 
@@ -204,27 +202,29 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
 
   // ------------- METHODS that deal with actual data -------------
   isAddingMode(): boolean {
-    return this.toolRadioGroup.value.model === 'draw';
+    return this.modeRadioButtonGroup.value.modeRadioButton === 'draw';
   }
 
   isEditingMode(): boolean {
-    return this.toolRadioGroup.value.model === 'edit';
+    return this.modeRadioButtonGroup.value.modeRadioButton === 'edit';
   }
 
   setRegionType(regionType: RegionType) {
-    if (this.isEditingMode()) {
-      const shape = this.selectedShape;
-      if (!shape) {
-        throw new Error('No selected shape');
-      }
+    if (this.selectedShape) {
+      if (this.isEditingMode()) {
+        const shape = this.selectedShape;
+        if (!shape) {
+          throw new Error('No selected shape');
+        }
 
-      if (shape.layer === 'page') {
-        this.dialogsService.showError('Region type change', 'Cannot change a page to be a region');
+        if (shape.layer === 'page') {
+          this.dialogsService.showError('Region type change', 'Cannot change a page to be a region');
+        } else {
+          this.store.dispatch(new ChangeRegionType(shape.data, regionType));
+        }
       } else {
-        this.store.dispatch(new ChangeRegionType(shape.data, regionType));
+        this.nextDrawShape = regionType;
       }
-    } else {
-      this.nextDrawShape = regionType;
     }
   }
 

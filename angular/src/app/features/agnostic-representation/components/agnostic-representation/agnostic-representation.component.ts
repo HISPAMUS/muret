@@ -38,6 +38,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
   @ViewChild('imagePreview') imagePreview: ImageComponent;
   @ViewChild('selectedRegionImage') selectedRegionImage: ImageComponent;
+  private crudMode: 'idle' | 'add' | 'edit';
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>) {
     this.selectedRegion$ = store.select(selectSelectedRegion);
@@ -132,5 +133,13 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
   onSelectAgnosticSymbol(shape: Shape) {
     this.store.dispatch(new SelectSymbol(shape.data));
+  }
+
+  crudModeChanged($event: 'idle' | 'add' | 'edit') {
+    this.crudMode = $event;
+  }
+
+  isAddOrEditMode() {
+    return this.crudMode === 'add' || this.crudMode === 'edit';
   }
 }

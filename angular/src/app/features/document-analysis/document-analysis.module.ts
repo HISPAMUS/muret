@@ -7,7 +7,7 @@ import {SharedModule} from '../../shared/shared.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {SvgModule} from '../../svg/svg.module';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbButtonsModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
 import {documentAnalysisReducers} from './store/reducers/document-analysis.reducers';
@@ -25,7 +25,8 @@ import { ImageComponent } from './image/image.component';
     FormsModule,
     ReactiveFormsModule,
     FontAwesomeModule,
-    NgbModule,
+    SharedModule,
+    NgbButtonsModule,
     StoreModule.forFeature('document-analysis', documentAnalysisReducers),
     EffectsModule.forFeature([DocumentAnalysisEffects]),
   ],

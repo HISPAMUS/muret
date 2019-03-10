@@ -12,8 +12,10 @@ import {DocumentAnalysisModule} from '../document-analysis/document-analysis.mod
 import { AgnosticStaffComponent } from './components/agnostic-staff/agnostic-staff.component';
 import { AgnosticToolbarComponent } from './agnostic-toolbar/agnostic-toolbar.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import {NgbCollapseModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbButtonsModule, NgbCollapseModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {AngularSvgIconModule} from 'angular-svg-icon';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {SharedModule} from '../../shared/shared.module';
 
 @NgModule({
   declarations: [AgnosticRepresentationComponent, AgnosticStaffComponent, AgnosticToolbarComponent],
@@ -21,8 +23,12 @@ import {AngularSvgIconModule} from 'angular-svg-icon';
     CommonModule,
     FontAwesomeModule,
     AgnosticRepresentationRoutingModule,
-    NgbCollapseModule,
     AngularSvgIconModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgbButtonsModule,
+    NgbCollapseModule,
+    SharedModule,
     StoreModule.forFeature('agnostic-representation', agnosticRepresentationReducers),
     EffectsModule.forFeature([AgnosticRepresentationEffects]),
     // for Image component - set after routing for avoiding document analysis route override this module routes and store
