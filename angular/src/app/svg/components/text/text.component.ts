@@ -14,7 +14,7 @@ export class TextComponent extends ShapeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.shape = this.appText;
+    super.ngOnInit(); // important
   }
 
 }

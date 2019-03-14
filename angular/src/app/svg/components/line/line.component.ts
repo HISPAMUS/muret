@@ -15,7 +15,7 @@ export class LineComponent extends ShapeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.shape = this.appLine;
+    super.ngOnInit(); // important
   }
 
 }

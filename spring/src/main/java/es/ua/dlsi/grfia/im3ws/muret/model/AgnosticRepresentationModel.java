@@ -71,7 +71,7 @@ public class AgnosticRepresentationModel {
         return persistentRegion.get();
     }
     @Transactional
-    public Region createSymbol(long regionID, BoundingBox boundingBox, String agnosticSymbolType) throws IM3WSException, IM3Exception {
+    public Symbol createSymbol(long regionID, BoundingBox boundingBox, String agnosticSymbolType) throws IM3WSException, IM3Exception {
         Region persistentRegion = getRegion(regionID);
 
         Symbol symbol = new Symbol();
@@ -81,9 +81,11 @@ public class AgnosticRepresentationModel {
                 AgnosticSymbolTypeFactory.parseString(agnosticSymbolType),
                 PositionsInStaff.LINE_3);
         symbol.setAgnosticSymbol(agnosticSymbol);
-        persistentRegion.getSymbols().add(symbol);
-        regionRepository.save(persistentRegion);
-        return persistentRegion;
+        symbol.setRegion(persistentRegion);
+        Symbol persistentSymbol = symbolRepository.save(symbol);
+        persistentRegion.getSymbols().add(persistentSymbol);
+        //regionRepository.save(persistentRegion);
+        return persistentSymbol;
     }
 
     /**

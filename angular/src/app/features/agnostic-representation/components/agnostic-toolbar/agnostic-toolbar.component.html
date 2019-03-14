@@ -21,11 +21,11 @@
     </button>
   </div>
   <div>
-    <form [formGroup]="symbolTypesRadioGroup">
-      <div class="btn-group-toggle" ngbRadioGroup name="symbolTypesRadioGroup" formControlName="symbolTypeRadioButton">
+    <form>
+      <div class="btn-group-toggle" ngbRadioGroup name="symbolTypesRadioGroup" [(ngModel)]="selectedAgnosticSymbolType">
         <div *ngFor="let category of agnosticSymbolToolbarCategories" [ngbCollapse]="isCollapsed(category)">
           <label *ngFor="let symbolType of category.agnosticSymbolTypes" class="btn-light" ngbButtonLabel title="{{symbolType}}">
-            <input ngbButton type="radio" value="{{symbolType}}" (click)="changeSymbolType(symbolType)">
+            <input name="symbolTypeRadioButton" ngbButton type="radio" [value]="symbolType">
             <svg-icon src="assets/icons/agnostic/{{notationType}}/{{manuscriptType}}/{{symbolType}}.svg" [svgStyle]="{ 'width.px':40 }"></svg-icon>
           </label>
         </div>

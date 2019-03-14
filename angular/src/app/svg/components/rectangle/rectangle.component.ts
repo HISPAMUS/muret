@@ -20,8 +20,7 @@ export class RectangleComponent extends ShapeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.shape = this.appRectangle;
-    this.shape.shapeComponent = this;
+    super.ngOnInit(); // important
   }
 
   // received from canvas

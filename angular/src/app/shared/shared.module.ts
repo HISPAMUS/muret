@@ -8,6 +8,7 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
 import { CrudToolbarComponent } from './components/crud-toolbar/crud-toolbar.component';
 import {NgbButtonsModule} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {StoreModule} from '@ngrx/store';
 
 @NgModule({
   imports: [

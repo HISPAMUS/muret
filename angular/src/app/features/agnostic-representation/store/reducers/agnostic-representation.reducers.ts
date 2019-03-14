@@ -27,36 +27,32 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
       newState.selectedSymbol = action.agnosticSymbol;
       return newState;
     }
-
+    case AgnosticRepresentationActionTypes.DeselectSymbol: {
+      const newState = {...state};
+      newState.selectedSymbol = null;
+      return newState;
+    }
     case AgnosticRepresentationActionTypes.ChangeSymbolTypeSuccess: // the same in all cases
     case AgnosticRepresentationActionTypes.ChangeSymbolPositionInStaffSuccess: {
       const newState = {...state};
       if (action.agnosticSymbol != null) { // if no error
-        newState.selectedSymbol.positionInStaff = action.agnosticSymbol.positionInStaff;
-        newState.selectedSymbol.agnosticSymbolType = action.agnosticSymbol.agnosticSymbolType;
-
-        // TODO - Urgente - que se cline
-        /* newState.agnosticSymbols = deepcopy<AgnosticSymbol[]>(state.agnosticSymbols);
+        const symbolsWithoutChangedOne: AgnosticSymbol[] = state.agnosticSymbols.filter(symbol => symbol.id !== action.agnosticSymbol.id);
+        newState.agnosticSymbols = [...symbolsWithoutChangedOne, action.agnosticSymbol];
         newState.selectedRegion.symbols = newState.agnosticSymbols; // it is the same object
-
-        const symbol = newState.agnosticSymbols.find(s => s.id === action.agnosticSymbol.id);
-        if (symbol) {
-          newState.selectedSymbol = symbol;
-        }*/
+        newState.selectedSymbol = null;
       }
       return newState;
     }
     case AgnosticRepresentationActionTypes.CreateSymbolSuccess: {
       const newState = {...state};
       newState.selectedSymbol = null;
-      newState.selectedRegion = action.region;
-      newState.agnosticSymbols = newState.selectedRegion.symbols; // same object
+      newState.agnosticSymbols = [...newState.agnosticSymbols, action.createdSymbol];
+      newState.selectedRegion.symbols = newState.agnosticSymbols; // same object
       return newState;
     }
     case AgnosticRepresentationActionTypes.DeleteSymbolSuccess: {
       const newState = {...state};
       newState.selectedSymbol = null;
-      newState.agnosticSymbols = deepcopy<AgnosticSymbol[]>(state.agnosticSymbols);
 
       if (action.deletedAgnosticSymbolID) { // if no error has occurred
         // remove the deleted symbol

@@ -65,8 +65,8 @@ export class AgnosticRepresentationEffects {
     ofType<CreateSymbolFromBoundingBox>(AgnosticRepresentationActionTypes.CreateSymbolFromBoundingBox),
     switchMap((action: CreateSymbolFromBoundingBox) =>
       this.agnosticRepresentationService.createSymbolFromBoundingBox$(action.regionID, action.boundingBox, action.agnosticSymbolType)),
-    switchMap((region: Region) => {
-      return of(new CreateSymbolSuccess(region));
+    switchMap((createdSymbol: AgnosticSymbol) => {
+      return of(new CreateSymbolSuccess(createdSymbol));
     })
   );
   @Effect()

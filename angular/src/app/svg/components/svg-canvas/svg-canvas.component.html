@@ -7,19 +7,21 @@
      [attr.viewBox]="viewBox">
   <image *ngIf="backgroundImage" [attr.xlink:href]="backgroundImage"/>
 
-  <g *ngFor="let shape of shapes; trackBy: trackByShapeFn">
+  <!--<g *ngFor="let shape of shapes; trackBy: trackByShapeFn">-->
+  <!-- Force repainting DOM because otherwise it does not create the shape again and it causes problems -->
+  <g *ngFor="let shape of shapes">
     <ng-container [ngSwitch]="shape.type">
       <ng-container *ngSwitchCase="'Rectangle'">
-        <g appRectangle [appRectangle]="shape"></g>
+        <g appRectangle [appRectangle]="shape" [shape]="shape"></g>
       </ng-container>
       <ng-container *ngSwitchCase="'Line'">
-        <g appLine [appLine]="shape"></g>
+        <g appLine [appLine]="shape"  [shape]="shape"></g>
       </ng-container>
       <ng-container *ngSwitchCase="'Path'">
-        <g appPath [appPath]="shape"></g>
+        <g appPath [appPath]="shape"  [shape]="shape"></g>
       </ng-container>
       <ng-container *ngSwitchCase="'Text'">
-        <g appText [appText]="shape"></g>
+        <g appText [appText]="shape"  [shape]="shape"></g>
       </ng-container>
     </ng-container>
   </g>

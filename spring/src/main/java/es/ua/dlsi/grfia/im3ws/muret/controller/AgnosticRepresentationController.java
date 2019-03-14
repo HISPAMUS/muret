@@ -107,7 +107,7 @@ public class AgnosticRepresentationController {
      * @throws IM3WSException
      */
     @PostMapping(path = {"createSymbolFromBoundingBox"})
-    public Region createSymbol(@RequestBody SymbolCreation symbolCreation) throws IM3WSException, IM3Exception {
+    public Symbol createSymbol(@RequestBody SymbolCreation symbolCreation) throws IM3WSException, IM3Exception {
         return this.agnosticRepresentationModel.createSymbol(symbolCreation.getRegionID(), symbolCreation.getBoundingBox(), symbolCreation.getAgnosticSymbolType());
     }
 

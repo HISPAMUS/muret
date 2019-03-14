@@ -6,17 +6,14 @@ import {
   Input,
   OnChanges,
   OnInit,
-  Output, QueryList,
+  Output,
   SimpleChanges,
-  Type,
-  ViewChild, ViewChildren
+  ViewChild
 } from '@angular/core';
 import {ShapeComponent} from '../shape/shape.component';
 import {Rectangle} from '../../model/rectangle';
 import {Shape} from '../../model/shape';
 import {Coordinate} from '../../model/coordinate';
-import {MousePositionEvent} from './mouse-position-event';
-import {SVGCanvasState, SvgCanvasStateService} from '../../services/svg-canvas-state.service';
 import {Path} from '../../model/path';
 import {Line} from '../../model/line';
 import {Text} from '../../model/text';
@@ -27,8 +24,7 @@ import {BoundingBox} from '../../../core/model/entities/bounding-box';
   selector: 'app-svg-canvas',
   templateUrl: './svg-canvas.component.html',
   styleUrls: ['./svg-canvas.component.css'],
-  providers: [SvgCanvasStateService] // create service instance for SvgCanvasComponent -
-  // (sandboxing) - see https://angular.io/guide/dependency-injection-in-action
+  providers: []
 })
 
 /**
@@ -42,22 +38,25 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   @Input() shapes: Shape[];
   @Input() widthPercentage: number;
   @Input() heightPercentage: number;
-  @Input() initialState: string;
 
   @Input() crop: BoundingBox;
+  @Input() nextShapeToAdd: 'Rectangle' | 'Line' | 'Text' | 'Path';
+
+  selectedShapeValue: Shape;
+
+  private modeValue: 'eIdle' | 'eAdding' | 'eEditing' | 'eSelecting';
+  @Output() modeChange = new EventEmitter();
 
   @ViewChild('canvas') canvas: ElementRef;
   @ViewChild('backgroundHiddenImageElement ') backgroundHiddenImageElement: ElementRef;
-  @ViewChildren(ShapeComponent) shapeComponents: QueryList<ShapeComponent>;
+  /// @ViewChildren(ShapeComponent) shapeComponents: QueryList<ShapeComponent>;
 
   // interaction
-  private svgMouseEventContent: MousePositionEvent = {}; // avoid creating too many objects
   @Output() svgMouseEvent = new EventEmitter<Coordinate>(); // only emitted on eIdle state
 
   @Output() svgShapeCreated = new EventEmitter<Shape>();
   @Output() svgShapeChanged = new EventEmitter<Shape>();
-  @Output() svgShapeSelected = new EventEmitter<Shape>();
-  @Output() svgShapeDeselected = new EventEmitter<Shape>();
+  @Output() selectedShapeChange = new EventEmitter<Shape>();
 
   cursorClass = 'cursorDefault';
   // end of interaction
@@ -68,29 +67,55 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
 
   heightPercentString: string;
   widthPercentString: string;
-  private nextShapeToDraw: string;
   private selectedComponent: ShapeComponent;
   private unsafeBackgroundImage: SafeResourceUrl;
   private shapeWithoutComponent: Rectangle | Line | Text | Path;
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver,
-              private stateService: SvgCanvasStateService,
               private sanitizer: DomSanitizer) {
 
+    this.modeValue = 'eIdle';
+    this.updateCursor();
   }
 
   ngOnInit() {
-    this.requestStateChange(SVGCanvasState.eIdle);
     this.unsafeBackgroundImage = this.sanitizer.bypassSecurityTrustResourceUrl(this.backgroundImage);
-
-    if (this.initialState) {
-      const state = SVGCanvasState[this.initialState];
-      this.requestStateChange(state);
-    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.computeViewBox(); // it costs less to compute the change than checking if it has changed
+  }
+
+  @Input()
+  get mode() {
+    return this.modeValue;
+  }
+
+  set mode(val) {
+    this.modeValue = val;
+    this.modeChange.emit(this.modeValue);
+    this.updateCursor();
+  }
+
+  @Input()
+  get selectedShape() {
+    return this.selectedShapeValue;
+  }
+
+  set selectedShape(shape: Shape) {
+    if (this.selectedShapeValue !== shape) {
+      this.deselect();
+      this.selectedComponent = this.findEventTargetComponent(shape);
+      if (this.selectedComponent) {
+        this.selectedShapeValue = shape;
+        this.selectedComponent.select(true);
+        this.selectedComponent.setEditingMode(this.mode === 'eEditing');
+        this.selectedShapeChange.emit(shape);
+      } else {
+        this.selectedShapeChange.emit(null); // unselect
+        // TODO - create selection rectangle
+      }
+    }
   }
 
   private computeViewBox() {
@@ -103,7 +128,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
     this.widthPercentString = this.widthPercentage + '%';
   }
 
-  private createShapeFromTypeName(nextShapeToDraw: string) {
+  private createShapeFromTypeName(nextShapeToDraw: 'Rectangle' | 'Line' | 'Text' | 'Path') {
     // wish - without switch
     switch (nextShapeToDraw) {
       case 'Rectangle': return new Rectangle();
@@ -114,75 +139,53 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
     }
   }
 
-  trackByShapeFn(index, item: Shape) {
+  // TODO - see html
+  /*trackByShapeFn(index, item: Shape) {
     return item.id;
-  }
+  }*/
 
-  requestStateChange(state: SVGCanvasState, drawingShape?: string) {
-    this.deselect();
-
-    if (drawingShape) {
-      this.nextShapeToDraw = drawingShape;
-    }
-    if (state === SVGCanvasState.eDrawing && !this.nextShapeToDraw) {
-      throw new Error('Must specify a new shape when drawing');
-    }
-
-    const newState = this.stateService.requestStateChange(state);
-    switch (newState) {
-      case SVGCanvasState.eDrawing:
+  updateCursor() {
+    switch (this.mode) {
+      case 'eAdding':
         this.changeCursor('cursorCrosshair');
         break;
-      case SVGCanvasState.eIdle:
+      case 'eIdle':
         this.changeCursor('cursorNotAllowed');
         break;
-      case SVGCanvasState.eSelecting:
+      case 'eSelecting':
         this.changeCursor('cursorCell');
         break;
-      case SVGCanvasState.eEditing:
+      case 'eEditing':
         this.changeCursor('cursorDefault');
         break;
     }
-    return newState;
   }
 
   private changeCursor(cursor: string) {
     this.cursorClass = cursor;
   }
 
+  private findShape(id: string): Shape {
+    return this.shapes.find(s => s.id === id);
+  }
+
   // ----------- Interaction ---------
   onMouseDown($event) {
     const svgCoordinate = this.screenCoordinateToSVGCoordinate($event.offsetX, $event.offsetY);
 
-    switch (this.stateService.getState()) {
-      case SVGCanvasState.eDrawing:
+    switch (this.mode) {
+      case 'eAdding':
         this.deselect();
         this.createShape(svgCoordinate);
         break;
-      case SVGCanvasState.eSelecting:
+      case 'eSelecting':
         this.deselect();
-        // when auth clicks over a svg shape, it is sent to this method as event
-        this.selectedComponent = this.findEventTargetComponent($event.target);
-        if (this.selectedComponent) {
-          this.selectedComponent.select(true);
-          this.svgShapeSelected.emit(this.selectedComponent.shape);
-        } else {
-          this.svgShapeSelected.emit(null); // unselect
-          // TODO - create selection rectangle
-        }
+        this.selectedShape = this.findShape($event.target.id);
         break;
-      case SVGCanvasState.eEditing:
+      case 'eEditing':
         this.deselect();
         // when auth clicks over a svg shape, it is sent to this method as event
-        this.selectedComponent = this.findEventTargetComponent($event.target);
-        if (this.selectedComponent) {
-          this.selectedComponent.select(true);
-          this.selectedComponent.setEditingMode(true);
-          this.svgShapeSelected.emit(this.selectedComponent.shape);
-        } else {
-          this.svgShapeSelected.emit(null); // unselect
-          // TODO - create selection rectangle
-        }
+        this.selectedShape = this.findShape($event.target.id);
         break;
     }
   }
@@ -213,8 +216,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   }
 
   onMouseMove($event) {
-    switch (this.stateService.getState()) {
-      case SVGCanvasState.eDrawing:
+    switch (this.mode) {
+      case 'eAdding':
         if (!this.selectedComponent && this.shapeWithoutComponent) {
           this.selectedComponent = this.shapeWithoutComponent.shapeComponent;
           this.shapeWithoutComponent = null;
@@ -225,7 +228,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
           this.selectedComponent.draw(svgCoordinate);
         }
         break;
-      case SVGCanvasState.eEditing:
+      case 'eEditing':
         if (this.selectedComponent && this.selectedComponent.isHandleSelected()) {
           const svgCoordinate = this.screenCoordinateToSVGCoordinate($event.offsetX, $event.offsetY);
           this.selectedComponent.onHandleMouseMove(svgCoordinate.x, svgCoordinate.y);
@@ -235,12 +238,12 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   }
 
   onMouseUp($event): void {
-    switch (this.stateService.getState()) {
-      case SVGCanvasState.eDrawing:
-        this.endShapeDraw();
+    switch (this.mode) {
+      case 'eAdding':
         $event.stopPropagation();
+        this.endShapeDraw();
         break;
-      case SVGCanvasState.eEditing:
+      case 'eEditing':
         if (this.selectedComponent && this.selectedComponent.isHandleSelected()) {
           this.selectedComponent.deselectHandle();
           this.svgShapeChanged.emit(this.selectedComponent.shape);
@@ -254,13 +257,12 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
     if (this.selectedComponent) {
       this.selectedComponent.select(false);
       this.selectedComponent.setEditingMode(false);
-      this.svgShapeDeselected.emit(this.selectedComponent.shape);
       this.selectedComponent = null;
     }
   }
 
   private createShape(coordinate: Coordinate) {
-    const shape = this.createShapeFromTypeName(this.nextShapeToDraw);
+    const shape = this.createShapeFromTypeName(this.nextShapeToAdd);
     shape.fillColor = 'transparent';
     shape.strokeColor = 'black';
     shape.strokeWidth = 3;
@@ -274,9 +276,10 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   private endShapeDraw() {
     if (this.selectedComponent) {
       if (this.selectedComponent.isDrawStarted()) { // if no drag has been done no shape is inserted
-        this.svgShapeCreated.emit(this.selectedComponent.shape);
+        const shape = this.selectedComponent.shape;
+        this.selectedShape = null;
+        this.svgShapeCreated.emit(shape);
       }
-      this.selectedComponent = null;
     }
   }
 
@@ -290,11 +293,17 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   }
 
   private findEventTargetComponent(target: any): ShapeComponent {
-    const shape = this.shapes.find(s => s.id === target.id);
-    if (shape) {
-      return shape.shapeComponent;
-    } else {
+    if (!this.shapes || !target) {
       return null;
+    } else {
+      const shape = this.shapes.find(s => s.id === target.id);
+      if (shape) {
+        return shape.shapeComponent;
+      } else {
+        return null;
+      }
     }
   }
+
+
 }

@@ -4,7 +4,9 @@
     <nav class="col-1">
       <div>
         <h2>Agnostic</h2>
-        <app-crud-toolbar (onModeChange)="crudModeChanged($event)" (onDelete)="deleteSelectedSymbol()"></app-crud-toolbar>
+        <app-crud-toolbar [(mode)]="mode" (modeChange)="onModeChange($event)" (onDelete)="deleteSelectedSymbol()">
+
+        </app-crud-toolbar>
       </div>
       <a (click)="openDocumentAnalysis()">Document analysis</a>
       <br/>
@@ -15,13 +17,12 @@
       <div *ngIf="selectedRegion$ | async as selectedRegion; else noRegionSelected">
         <section class="row">
           <div class="col">
-            <app-image #selectedRegionImage [imageID]="imageID" [shapes]="selectedRegionShapes" [zoomFactor]="selectedRegionZoomFactor"
+            <app-image [imageID]="imageID" [shapes]="selectedRegionShapes" [zoomFactor]="selectedRegionZoomFactor"
                        [crop]="selectedRegion.boundingBox"
-                       [initialCanvasState]="getSelectedRegionImageMode()"
-                       (svgShapeSelected)="onSelectAgnosticSymbol($event)"
-                       (svgShapeDeselected)="onDeselectAgnosticSymbol($event)"
                        (svgShapeCreated)="onSymbolCreated($event)"
-                       [initialShapeToDraw]="getShapeToDraw()"
+                       [nextShapeToDraw]="nextShapeToDraw"
+                       [(mode)]="mode"
+                       [(selectedShape)]="selectedShape"
             ></app-image>
           </div>
         </section>
@@ -31,6 +32,7 @@
             <app-agnostic-staff
                                 [regionCropped]="selectedRegion.boundingBox"
                                 [notationType]="notationType" [manuscriptType]="manuscriptType"
+                                [mode]="mode"
             >
             </app-agnostic-staff>
           </div>
@@ -43,7 +45,11 @@
         <div class="col">
           <app-agnostic-toolbar [agnosticSymbolToolbarCategories]="agnosticSymbolToolbarCategories"
                                 [notationType]="notationType" [manuscriptType]="manuscriptType"
-                                (onAgnosticSymbolTypeSelected)="onAgnosticSymbolTypeSelected($event)">
+                                (onAgnosticSymbolTypeSelected)="onAgnosticSymbolTypeSelected($event)"
+                                [(selectedAgnosticSymbolType)]="selectedAgnosticSymbolType"
+                                (onPitchDown)="movePitchDownSelectedSymbol()"
+                                (onPitchUp)="movePitchUpSelectedSymbol()"
+          >
           </app-agnostic-toolbar>
         </div>
       </section>
@@ -53,10 +59,9 @@
           <!-- image -->
           <section class="row">
             <div class="col-6">
-              <app-image #imagePreview [imageID]="imageID" [shapes]="imagePreviewShapes" [zoomFactor]="imagePreviewZoomFactor"
-                         (svgShapeSelected)="onPreviewImageShapeSelected($event)"
-                         (svgShapeDeselected)="onPreviewImageShapeDeselected($event)"
-                         [initialCanvasState]="'eSelecting'"
+              <app-image [imageID]="imageID" [shapes]="imagePreviewShapes" [zoomFactor]="imagePreviewZoomFactor"
+                         [(selectedShape)]="selectedRegionShape"
+                         [mode]="'eSelecting'"
               ></app-image>
             </div>
           </section>

@@ -10,7 +10,7 @@ import {agnosticRepresentationReducers} from './store/reducers/agnostic-represen
 import {AgnosticRepresentationEffects} from './store/effects/agnostic-representation.effects';
 import {DocumentAnalysisModule} from '../document-analysis/document-analysis.module';
 import { AgnosticStaffComponent } from './components/agnostic-staff/agnostic-staff.component';
-import { AgnosticToolbarComponent } from './agnostic-toolbar/agnostic-toolbar.component';
+import { AgnosticToolbarComponent } from './components/agnostic-toolbar/agnostic-toolbar.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {NgbButtonsModule, NgbCollapseModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {AngularSvgIconModule} from 'angular-svg-icon';

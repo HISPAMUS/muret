@@ -3,7 +3,6 @@ import {Observable, Subscription} from 'rxjs';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Rectangle} from '../../../../svg/model/rectangle';
 import {Shape} from '../../../../svg/model/shape';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {RegionType} from '../../../../core/model/entities/region-type';
 import {Page} from '../../../../core/model/entities/page';
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
@@ -24,7 +23,6 @@ import {
   selectRegionTypes
 } from '../../store/selectors/document-analysis.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
-import {ImageComponent} from '../../image/image.component';
 
 @Component({
   selector: 'app-document-analysis',
@@ -33,77 +31,44 @@ import {ImageComponent} from '../../image/image.component';
   providers: []
 })
 export class DocumentAnalysisComponent implements OnInit, OnDestroy {
-  private imageID: number;
+  imageID: number;
   filename$: Observable<string>;
   notationType$: Observable<'eMensural' | 'eModern'>;
   manuscriptType$: Observable<'eHandwritten' | 'ePrinted'>;
   regionTypes$: Observable<RegionType[]>;
-  regionTypesSubscription: Subscription;
   pagesSubscription: Subscription;
-
+  mode: 'eIdle' |'eSelecting' | 'eEditing' | 'eAdding';
+  selectedRegionTypeID: number | 'page';
   private zoomFactor = 1;
 
-  layersCheckboxes: FormGroup;
-
   // tools
-  public regionTypeRadioButtonGroup: FormGroup;
-  private selectedShape: Shape;
+  private selectedShapeValue: Shape;
   private nextDrawShape: string | RegionType;
-  private shapes: Shape[];
+  shapes: Shape[];
+
   // end tools
 
-  @ViewChild('imageComponent') imageComponent: ImageComponent;
-  private crudMode: 'idle' | 'add' | 'edit';
-
+  // @ViewChild('imageComponent') imageComponent: ImageComponent;
   constructor(private store: Store<DocumentAnalysisState>,
               private route: ActivatedRoute,
               private router: Router,
-              private formBuilder: FormBuilder,
               private dialogsService: DialogsService
               ) {
     this.regionTypes$ = store.select(selectRegionTypes);
     this.filename$ = store.select(selectFileName);
     this.notationType$ = store.select(selectNotationType);
     this.manuscriptType$ = store.select(selectManuscriptType);
+    this.mode = 'eIdle';
+    this.selectedRegionTypeID = 'page';
   }
 
   ngOnInit() {
-    // ------- menus --------
-    this.regionTypeRadioButtonGroup = this.formBuilder.group({
-      regionTypeRadioButton: 'none'
-    });
-
-    this.layersCheckboxes = this.formBuilder.group({
-      page: true
-    });
-
     this.store.dispatch(new GetRegionTypes());
 
     // request store data
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.imageID = +params.get('id'); // + converts the string to number
       this.store.dispatch(new GetImageProjection(+this.imageID));
-
-      // when changing image, reset buttons
-      if (this.regionTypeRadioButtonGroup) {
-        this.regionTypeRadioButtonGroup.setValue({
-          regionTypeRadioButton: 'none' // reset values
-        });
-      }
-    });
-
-    // region type creation menu
-    this.regionTypesSubscription = this.regionTypes$.subscribe(next => {
-      if (next) {
-        next.forEach(regionType => {
-          this.layersCheckboxes.addControl(regionType.name, new FormControl(true));
-          this.regionTypeRadioButtonGroup.addControl('regionTypeRadioButton', new FormControl(false));
-        });
-      }
-    });
-
-    this.layersCheckboxes.valueChanges.subscribe(val => {
-      this.onLayerVisibilityChanged(val);
     });
 
     this.pagesSubscription = this.store.select(selectPages).subscribe(next => {
@@ -114,7 +79,6 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.regionTypesSubscription.unsubscribe();
     this.pagesSubscription.unsubscribe();
   }
 
@@ -130,15 +94,17 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
     this.zoomFactor = 1;
   }
 
-  onShapeSelected(shape: Shape) {
-    this.selectedShape = shape;
-    if (shape && shape.data && shape.data.regionType) {
-      this.regionTypeRadioButtonGroup.get('regionTypeRadioButton').setValue(shape.data.regionType.id);
-    }
+  get selectedShape() {
+    return this.selectedShapeValue;
   }
 
-  onShapeDeselected(shape: Shape) {
-    this.selectedShape = null;
+  set selectedShape(shape: Shape) {
+    this.selectedShapeValue = shape;
+    if (shape && shape.data && shape.data.regionType) {
+      this.selectedRegionTypeID = shape.data.regionType.id;
+    } else {
+      this.selectedRegionTypeID = null;
+    }
   }
 
   trackByRegionTypeFn(index, item: RegionType) {
@@ -159,7 +125,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
     }
   }
 
-  private drawBox(layer: string, id: number, boundingBox: BoundingBox, color: string): Rectangle {
+  private drawBox(layer: string, id: number, boundingBox: BoundingBox, color: string, data: Region | Page): Rectangle {
     const rect = new Rectangle();
     rect.id = layer + id;
     rect.fromX = boundingBox.fromX;
@@ -170,32 +136,35 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
     rect.strokeColor = color;
     rect.strokeWidth = 3;
     rect.layer = layer;
+    rect.data = data;
     this.shapes.push(rect);
     return rect;
   }
   private drawPage(page: Page) {
-    this.drawBox('page', page.id, page.boundingBox, 'red' ).data = page; // TODO color
+    this.drawBox('page', page.id, page.boundingBox, 'red', page); // TODO color
   }
 
   private drawRegion(region: Region) {
-    this.drawBox(region.regionType.name, region.id, region.boundingBox, '#' + region.regionType.hexargb ).data = region;
+    this.drawBox(region.regionType.name, region.id, region.boundingBox, '#' + region.regionType.hexargb, region);
   }
 
-  private onLayerVisibilityChanged(val: any) {
+  private onLayerVisibilityChanged($event) {
     if (this.shapes) {
       this.shapes.forEach(shape => {
-        shape.hidden = !this.layersCheckboxes.get(shape.layer).value;
+        if (shape.layer === $event.target.name) {
+          shape.hidden = !($event.target.checked);
+        }
       });
     }
   }
 
   // ------------- METHODS that deal with actual data -------------
   isAddingMode(): boolean {
-    return this.crudMode === 'add';
+    return this.mode === 'eAdding';
   }
 
   isEditingMode(): boolean {
-    return this.crudMode === 'edit';
+    return this.mode === 'eEditing';
   }
 
   setRegionType(regionType: RegionType) {
@@ -259,7 +228,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   onShapeCreated(shape: Shape) {
     if (!this.nextDrawShape) {
       this.dialogsService.showError('Shape creation', 'Page or region type must be selected first');
-      this.shapes = [...this.shapes]; // force shapes redrawing //TODO Creo que no va - ver tb. en AgnosticRepresentation
+      this.shapes = this.shapes.filter(s => s !== shape); // remove erroneous shape
     } else {
       const rectangle = shape as Rectangle;
 
@@ -296,22 +265,6 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
 
   openSemanticRepresentation() {
     this.router.navigate(['semanticrepresentation', this.imageID]);
-  }
-
-  onCrudModeChanged($event: 'idle' | 'add' | 'edit') {
-    this.crudMode = $event;
-
-    switch (this.crudMode) {
-      case 'idle':
-        this.imageComponent.idle();
-        break;
-      case 'add':
-        this.imageComponent.draw();
-        break;
-      case 'edit':
-        this.imageComponent.edit();
-        break;
-    }
   }
 }
 

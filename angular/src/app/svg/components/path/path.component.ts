@@ -14,7 +14,7 @@ export class PathComponent extends ShapeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.shape = this.appPath;
+    super.ngOnInit(); // important
   }
 
 }

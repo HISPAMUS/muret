@@ -22,3 +22,4 @@ export const selectSelectedSymbol = createSelector (
   agnosticRepresentationState,
   (state: AgnosticRepresentationState) => state.selectedSymbol
 );
+

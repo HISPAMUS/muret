@@ -12,7 +12,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
   declarations: [SvgCanvasComponent, ShapeComponent, RectangleComponent, LineComponent, TextComponent, PathComponent],
   imports: [
     CommonModule,
-    DragDropModule
+    DragDropModule,
   ], exports: [
     SvgCanvasComponent
   ],
