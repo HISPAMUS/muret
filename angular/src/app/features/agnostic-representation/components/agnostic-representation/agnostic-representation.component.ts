@@ -13,7 +13,7 @@ import {GetImageProjection} from '../../../document-analysis/store/actions/docum
 import {
   ChangeSymbolPositionInStaff,
   ChangeSymbolType,
-  CreateSymbolFromBoundingBox,
+  CreateSymbolFromBoundingBox, CreateSymbolFromStrokes,
   DeleteSymbol, DeselectSymbol,
   GetRegion,
   SelectSymbol
@@ -22,6 +22,7 @@ import {selectAgnosticSymbols, selectSelectedRegion, selectSelectedSymbol} from 
 import {AgnosticSymbolToolbarCategory} from '../../model/agnostic-symbol-toolbar-category';
 import {AGNOSTIC_SYMBOL_TOOLBAR_CATEGORIES} from '../../model/agnostic-symbol-toolbar-categories';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
+import {Polylines} from '../../../../svg/model/polylines';
 
 @Component({
   selector: 'app-agnostic-representation',
@@ -49,16 +50,17 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
   private mode: 'eIdle' | 'eAdding' | 'eEditing' | 'eSelecting';
   private selectedShapeValue: Shape;
-  nextShapeToDraw: 'Rectangle' | 'Path';
+  nextShapeToDraw: 'Rectangle' | 'Polylines';
   selectedAgnosticSymbolType: string;
   private selectedRegionShapeValue: Shape;
+  addMethodTypeValue: 'boundingbox' | 'strokes' ;
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>,
               private dialogsService: DialogsService) {
     this.selectedRegion$ = store.select(selectSelectedRegion);
     this.mode = 'eIdle';
-    this.nextShapeToDraw = 'Rectangle';
     this.selectedRegionShapeValue = null;
+    this.addMethodType = 'boundingbox';
   }
 
   ngOnInit() {
@@ -102,7 +104,6 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
   /**
    * It comes from the svg canvas through image component
-   * @param shape
    */
   set selectedShape(shape: Shape) {
     if (this.selectedShapeValue !== shape) {
@@ -205,22 +206,28 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
       this.dialogsService.showError('Shape creation', 'A symbol type must be selected first');
       this.selectedRegionShapes = this.selectedRegionShapes.filter(s => s !== shape); // remove erroneous shape
     } else {
-      const rect = shape as Rectangle;
+      if (shape instanceof Rectangle) {
+        const rect = shape;
+        this.store.dispatch(new CreateSymbolFromBoundingBox(
+          this.selectedRegion.id,
+          {
+            fromX: rect.fromX,
+            fromY: rect.fromY,
+            toX: rect.fromX + rect.width,
+            toY: rect.fromY + rect.height
+          },
+          this.selectedAgnosticSymbolType));
+      } else if (shape instanceof Polylines) {
+        this.store.dispatch(new CreateSymbolFromStrokes(
+          this.selectedRegion.id,
+          shape.polylines,
+          this.selectedAgnosticSymbolType));
 
-      this.store.dispatch(new CreateSymbolFromBoundingBox(
-        this.selectedRegion.id,
-        {
-          fromX: rect.fromX,
-          fromY: rect.fromY,
-          toX: rect.fromX + rect.width,
-          toY: rect.fromY + rect.height
-        },
-        this.selectedAgnosticSymbolType));
+        // por aqui, hacer el servicio + spring, visualizarlo
+      } else {
+        throw new Error('Unsupported shape type: ' + shape.constructor.name);
+      }
     }
-  }
-
-  getShapeToDraw() {
-    return 'Rectangle'; // TODO Cuando estemos dibujando trazos será otra cosa
   }
 
   onAgnosticSymbolTypeSelected($event: string) {
@@ -261,4 +268,28 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+  isAddingMode() {
+    return this.mode === 'eAdding';
+  }
+
+  isEditingMode() {
+    return this.mode === 'eEditing';
+  }
+
+  get addMethodType() {
+    return this.addMethodTypeValue;
+  }
+
+  set addMethodType(val) {
+    this.addMethodTypeValue = val;
+    if (this.addMethodTypeValue === 'boundingbox') {
+      this.nextShapeToDraw = 'Rectangle';
+    } else if (this.addMethodType === 'strokes') {
+      this.nextShapeToDraw = 'Polylines';
+    } else {
+      throw Error('Invalid add method type: ' + this.addMethodType);
+    }
+  }
+
 }

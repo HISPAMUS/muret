@@ -3,6 +3,7 @@ import {Region} from '../../../../core/model/entities/region';
 import {SVGSet} from '../../model/svgset';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
+import {Polyline} from '../../../../svg/model/polyline';
 
 export enum AgnosticRepresentationActionTypes {
   GetRegion = '[AgnosticRepresentation] Get region',
@@ -76,6 +77,11 @@ export class CreateSymbolFromBoundingBox implements Action {
   constructor(public regionID: number, public boundingBox: BoundingBox, public agnosticSymbolType: string) {}
 }
 
+export class CreateSymbolFromStrokes implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.CreateSymbolFromBoundingBox;
+  constructor(public regionID: number, public polyline: Polyline[], public agnosticSymbolType: string) {}
+}
+
 export class CreateSymbolSuccess implements Action {
   public readonly type = AgnosticRepresentationActionTypes.CreateSymbolSuccess
   constructor(public createdSymbol: AgnosticSymbol) {}
@@ -94,4 +100,4 @@ export class DeleteSymbolSuccess implements Action {
 export type AgnosticRepresentationActions =
   GetRegion | GetRegionSuccess | GetSVGSet | GetSVGSetSucccess | SelectSymbol | DeselectSymbol |
   ChangeSymbolType | ChangeSymbolTypeSuccess | ChangeSymbolPositionInStaff | ChangeSymbolPositionInStaffSuccess |
-  CreateSymbolFromBoundingBox | CreateSymbolSuccess | DeleteSymbol | DeleteSymbolSuccess;
+  CreateSymbolFromBoundingBox | CreateSymbolFromStrokes | CreateSymbolSuccess | DeleteSymbol | DeleteSymbolSuccess;

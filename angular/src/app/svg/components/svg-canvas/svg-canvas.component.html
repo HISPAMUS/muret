@@ -17,8 +17,8 @@
       <ng-container *ngSwitchCase="'Line'">
         <g appLine [appLine]="shape"  [shape]="shape"></g>
       </ng-container>
-      <ng-container *ngSwitchCase="'Path'">
-        <g appPath [appPath]="shape"  [shape]="shape"></g>
+      <ng-container *ngSwitchCase="'Polylines'">
+        <g appPolyline [appPolylines]="shape"  [shape]="shape"></g>
       </ng-container>
       <ng-container *ngSwitchCase="'Text'">
         <g appText [appText]="shape"  [shape]="shape"></g>

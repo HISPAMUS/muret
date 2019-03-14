@@ -1,0 +1,10 @@
+<svg:g id="{{appPolylines.id}}" *ngIf="!appPolylines.hidden">
+  <svg:polyline *ngFor="let polyline of appPolylines.polylines; trackBy: trackByPolylineFn"
+            fill="none"
+            attr.stroke-width="{{appPolylines.strokeWidth}}"
+            attr.stroke-dasharray="{{appPolylines.strokeDashArray}}"
+            attr.stroke="{{appPolylines.strokeColor}}"
+            [attr.points]="polyline.svgPoints"
+            />
+  <svg:text *ngIf="appPolylines.label" attr.x="{{appPolylines.fromX+3}}" attr.y="{{ appPolylines.fromY+8 }}">{{ appPolylines.label }}</svg:text>
+</svg:g>

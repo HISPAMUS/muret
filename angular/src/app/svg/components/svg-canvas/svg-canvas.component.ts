@@ -14,11 +14,11 @@ import {ShapeComponent} from '../shape/shape.component';
 import {Rectangle} from '../../model/rectangle';
 import {Shape} from '../../model/shape';
 import {Coordinate} from '../../model/coordinate';
-import {Path} from '../../model/path';
 import {Line} from '../../model/line';
 import {Text} from '../../model/text';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {BoundingBox} from '../../../core/model/entities/bounding-box';
+import {Polylines} from '../../model/polylines';
 
 @Component({
   selector: 'app-svg-canvas',
@@ -40,7 +40,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   @Input() heightPercentage: number;
 
   @Input() crop: BoundingBox;
-  @Input() nextShapeToAdd: 'Rectangle' | 'Line' | 'Text' | 'Path';
+  @Input() nextShapeToAdd: 'Rectangle' | 'Line' | 'Text' | 'Polylines';
 
   selectedShapeValue: Shape;
 
@@ -69,7 +69,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   widthPercentString: string;
   private selectedComponent: ShapeComponent;
   private unsafeBackgroundImage: SafeResourceUrl;
-  private shapeWithoutComponent: Rectangle | Line | Text | Path;
+  private shapeWithoutComponent: Rectangle | Line | Text | Polylines;
+  private polylinesCreationTimeout: number;
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver,
               private sanitizer: DomSanitizer) {
@@ -128,13 +129,13 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
     this.widthPercentString = this.widthPercentage + '%';
   }
 
-  private createShapeFromTypeName(nextShapeToDraw: 'Rectangle' | 'Line' | 'Text' | 'Path') {
+  private createShapeFromTypeName(nextShapeToDraw: 'Rectangle' | 'Line' | 'Text' | 'Polylines') {
     // wish - without switch
     switch (nextShapeToDraw) {
       case 'Rectangle': return new Rectangle();
       case 'Line': return new Line();
       case 'Text': return new Text();
-      case 'Path': return new Path();
+      case 'Polylines': return new Polylines();
       default: throw new Error('Cannot find a shape for shape type ' + nextShapeToDraw);
     }
   }
@@ -171,12 +172,17 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
 
   // ----------- Interaction ---------
   onMouseDown($event) {
-    const svgCoordinate = this.screenCoordinateToSVGCoordinate($event.offsetX, $event.offsetY);
+    const svgCoordinate = this.screenCoordinateToSVGCoordinate($event.timeStamp, $event.offsetX, $event.offsetY);
 
     switch (this.mode) {
       case 'eAdding':
-        this.deselect();
-        this.createShape(svgCoordinate);
+        if (this.polylinesCreationTimeout) {
+          clearTimeout(this.polylinesCreationTimeout);
+          this.polylinesCreationTimeout = null;
+        } else {
+          this.deselect();
+          this.createShape(svgCoordinate);
+        }
         break;
       case 'eSelecting':
         this.deselect();
@@ -190,7 +196,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
     }
   }
 
-  screenCoordinateToSVGCoordinate(screenX: number, screenY: number): Coordinate {
+  screenCoordinateToSVGCoordinate(timestamp: number, screenX: number, screenY: number): Coordinate {
     let xScale: number;
     let yScale: number;
 
@@ -210,6 +216,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
     }
 
     return {
+      timestamp,
       x: screenX * xScale + xOffset,
       y: screenY * yScale + yOffset
     };
@@ -223,14 +230,14 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
           this.shapeWithoutComponent = null;
         }
 
-        if (this.selectedComponent) {
-          const svgCoordinate = this.screenCoordinateToSVGCoordinate($event.offsetX, $event.offsetY);
+        if (this.selectedComponent && !this.polylinesCreationTimeout) {
+          const svgCoordinate = this.screenCoordinateToSVGCoordinate($event.timeStamp, $event.offsetX, $event.offsetY);
           this.selectedComponent.draw(svgCoordinate);
         }
         break;
       case 'eEditing':
         if (this.selectedComponent && this.selectedComponent.isHandleSelected()) {
-          const svgCoordinate = this.screenCoordinateToSVGCoordinate($event.offsetX, $event.offsetY);
+          const svgCoordinate = this.screenCoordinateToSVGCoordinate($event.timeStamp, $event.offsetX, $event.offsetY);
           this.selectedComponent.onHandleMouseMove(svgCoordinate.x, svgCoordinate.y);
         }
         break;
@@ -277,8 +284,18 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
     if (this.selectedComponent) {
       if (this.selectedComponent.isDrawStarted()) { // if no drag has been done no shape is inserted
         const shape = this.selectedComponent.shape;
-        this.selectedShape = null;
-        this.svgShapeCreated.emit(shape);
+
+        if (shape instanceof Polylines) {
+          shape.startNewPolyline = true;
+          this.polylinesCreationTimeout = setTimeout(() => {
+            this.selectedShape = null;
+            this.svgShapeCreated.emit(shape);
+            this.polylinesCreationTimeout = null;
+          }, 1000); // TODO parametrizar timeout
+        } else {
+          this.selectedShape = null;
+          this.svgShapeCreated.emit(shape);
+        }
       }
     }
   }

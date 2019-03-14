@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * It is very similar to the format used in the Calco application
+ * Eeach point is encoded as: relative time in millisecods from first point, x, y
  */
 public class CalcoStrokes extends Strokes {
     public static final String PREFIX = "C:";

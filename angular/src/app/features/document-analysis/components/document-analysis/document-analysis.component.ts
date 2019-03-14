@@ -302,7 +302,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   text.text = 'David';
   this.shapes.push(text);
 
-  const path = new Path();
+  const path = new Polyline();
   path.id = '4';
   path.d = 'M150 0 L75 200 L225 200 Z';
   this.shapes.push(path);

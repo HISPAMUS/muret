@@ -5,8 +5,21 @@
       <div>
         <h2>Agnostic</h2>
         <app-crud-toolbar [(mode)]="mode" (modeChange)="onModeChange($event)" (onDelete)="deleteSelectedSymbol()">
-
         </app-crud-toolbar>
+
+        <form>
+          <div [hidden]="!isEditingMode() && !isAddingMode()" class="btn-group-vertical btn-group-toggle" ngbRadioGroup
+               name="addMethodRadioButtonGroup" [(ngModel)]="addMethodType">
+            <label class="btn-light" ngbButtonLabel>
+              <input ngbButton type="radio" name="addMethodRadioButton" [value]="'boundingbox'"> Bounding box
+            </label>
+            <label class="btn-light" ngbButtonLabel>
+              <input ngbButton type="radio" name="addMethodRadioButton" [value]="'strokes'"> Strokes
+            </label>
+
+          </div>
+        </form>
+
       </div>
       <a (click)="openDocumentAnalysis()">Document analysis</a>
       <br/>
