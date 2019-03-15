@@ -5,12 +5,14 @@
       <li *ngIf="!isAuthenticated" class="nav-item"><a class="nav-link" routerLink="login">Login</a></li>
       <li *ngIf="isAuthenticated" class="nav-item"><a class="nav-link" routerLink="login">Logout</a></li>
       <li *ngIf="isAuthenticated" class="nav-item"><a class="nav-link" routerLink="export/trainingsets">Training sets</a></li>
+      <li *ngIf="isAuthenticated" class="nav-item"><a class="nav-link" href="https://github.com/HISPAMUS/muret/issues" target="_blank">Report an issue</a></li>
+
       <li class="nav-item"><a class="nav-link" routerLink="about">About</a></li>
       <!--<li *ngIf="isDev" class="nav-item"><a class="nav-link" routerLink="/documentanalysis/1849">dev</a></li>-->
     </ul>
     <div *ngIf="isDev">
-      <a routerLink="/documentanalysis/1849">dev3</a> &nbsp;
-      <a routerLink="/documentanalysis/2104">dev</a> &nbsp;
+      <!--<a routerLink="/documentanalysis/1849">dev3</a> &nbsp;
+      <a routerLink="/documentanalysis/2104">dev</a> &nbsp;-->
       <a routerLink="/agnosticrepresentation/2104">AgnostDev</a>
     </div>
   </div>

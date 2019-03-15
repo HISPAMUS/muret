@@ -10,8 +10,6 @@ import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
 import {selectPages} from '../../../document-analysis/store/selectors/document-analysis.selector';
 import {Store} from '@ngrx/store';
 import {
-  ChangePageBoundingBox,
-  ChangeRegionBoundingBox,
   GetImageProjection
 } from '../../../document-analysis/store/actions/document-analysis.actions';
 import {
@@ -116,7 +114,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     if (this.selectedShapeValue !== shape) {
       this.selectedShapeValue = shape;
       if (shape && shape.data !== this.selectedSymbol) {
-        this.store.dispatch(new SelectSymbol(shape.data));
+        this.store.dispatch(new SelectSymbol(shape.data.id));
       } else if (!shape) {
         this.store.dispatch(new DeselectSymbol());
       }
@@ -208,7 +206,6 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   private drawSelectedRegionSymbols(agnosticSymbols: AgnosticSymbol[]) {
-    this.selectedShape = null; // if not, previous shape is still selected and concurrency errors are raised
     this.selectedRegionShapes = new Array();
     if (agnosticSymbols) {
       agnosticSymbols.forEach(symbol => {

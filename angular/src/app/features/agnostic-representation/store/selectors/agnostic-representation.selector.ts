@@ -20,6 +20,7 @@ export const selectSVGAgnosticSymbolSet = createSelector(
 
 export const selectSelectedSymbol = createSelector (
   agnosticRepresentationState,
-  (state: AgnosticRepresentationState) => state.selectedSymbol
+  (state: AgnosticRepresentationState) =>
+    state.agnosticSymbols == null ? null : state.agnosticSymbols.find(s => s.id === state.selectedSymbolID)
 );
 

@@ -5,14 +5,14 @@ import {SVGSet} from '../../model/svgset';
 export interface AgnosticRepresentationState {
   selectedRegion: Region;
   agnosticSymbols: AgnosticSymbol[];
-  selectedSymbol: AgnosticSymbol;
+  selectedSymbolID: number;
   svgAgnosticSymbolsSet: SVGSet;
 }
 
 export const initialAgnosticRepresentationState: AgnosticRepresentationState = {
   selectedRegion: null,
   agnosticSymbols: null,
-  selectedSymbol: null,
+  selectedSymbolID: null,
   svgAgnosticSymbolsSet: null
 };
 

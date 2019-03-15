@@ -1,4 +1,5 @@
 import {
+  AfterContentChecked, AfterViewChecked,
   Component,
   ComponentFactoryResolver,
   ElementRef,
@@ -71,6 +72,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   private unsafeBackgroundImage: SafeResourceUrl;
   private shapeWithoutComponent: Rectangle | Line | Text | Polylines;
   private polylinesCreationTimeout: number;
+  private emitShapeSelected: boolean;
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver,
               private sanitizer: DomSanitizer) {
@@ -111,9 +113,13 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
         this.selectedShapeValue = shape;
         this.selectedComponent.select(true);
         this.selectedComponent.setEditingMode(this.mode === 'eEditing');
-        this.selectedShapeChange.emit(shape);
+        if (this.emitShapeSelected) { // avoid circular
+          this.selectedShapeChange.emit(shape);
+        }
       } else {
-        this.selectedShapeChange.emit(null); // unselect
+        if (this.emitShapeSelected) {
+          this.selectedShapeChange.emit(null); // unselect
+        }
         // TODO - create selection rectangle
       }
     }
@@ -186,12 +192,16 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
         break;
       case 'eSelecting':
         this.deselect();
+        this.emitShapeSelected = true;
         this.selectedShape = this.findShape($event.target.id);
+        this.emitShapeSelected = false;
         break;
       case 'eEditing':
         this.deselect();
+        this.emitShapeSelected = true;
         // when auth clicks over a svg shape, it is sent to this method as event
         this.selectedShape = this.findShape($event.target.id);
+        this.emitShapeSelected = false;
         break;
     }
   }
@@ -321,6 +331,4 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
       }
     }
   }
-
-
 }

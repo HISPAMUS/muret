@@ -35,7 +35,7 @@ export class GetRegionSuccess implements Action {
 
 export class SelectSymbol implements Action {
   public readonly type = AgnosticRepresentationActionTypes.SelectSymbol;
-  constructor(public agnosticSymbol: AgnosticSymbol) {}
+  constructor(public agnosticSymbolID: number) {}
 }
 
 export class DeselectSymbol implements Action {

@@ -1,4 +1,3 @@
-import deepcopy from 'ts-deepcopy';
 import {AgnosticRepresentationActions, AgnosticRepresentationActionTypes} from '../actions/agnostic-representation.actions';
 import {AgnosticRepresentationState, initialAgnosticRepresentationState} from '../state/agnostic-representation.state';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
@@ -24,12 +23,12 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
     }
     case AgnosticRepresentationActionTypes.SelectSymbol: {
       const newState = {...state};
-      newState.selectedSymbol = action.agnosticSymbol;
+      newState.selectedSymbolID = action.agnosticSymbolID;
       return newState;
     }
     case AgnosticRepresentationActionTypes.DeselectSymbol: {
       const newState = {...state};
-      newState.selectedSymbol = null;
+      newState.selectedSymbolID = null;
       return newState;
     }
     case AgnosticRepresentationActionTypes.ChangeSymbolSuccess: {
@@ -39,20 +38,19 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
           state.agnosticSymbols.filter(symbol => symbol.id !== action.agnosticSymbol.id);
         newState.agnosticSymbols = [...symbolsWithoutChangedOne, action.agnosticSymbol];
         newState.selectedRegion.symbols = newState.agnosticSymbols; // it is the same object
-        newState.selectedSymbol = null;
       }
       return newState;
     }
     case AgnosticRepresentationActionTypes.CreateSymbolSuccess: {
       const newState = {...state};
-      newState.selectedSymbol = null;
       newState.agnosticSymbols = [...newState.agnosticSymbols, action.createdSymbol];
       newState.selectedRegion.symbols = newState.agnosticSymbols; // same object
+      newState.selectedSymbolID = action.createdSymbol.id;
       return newState;
     }
     case AgnosticRepresentationActionTypes.DeleteSymbolSuccess: {
       const newState = {...state};
-      newState.selectedSymbol = null;
+      newState.selectedSymbolID = null;
 
       if (action.deletedAgnosticSymbolID) { // if no error has occurred
         // remove the deleted symbol
