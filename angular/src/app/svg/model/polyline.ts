@@ -5,8 +5,9 @@ export class Polyline {
   pointsValue: Point[];
   svgPoints: string;
 
-  constructor() {
-    this.pointsValue = new Array();
+  constructor(points: Point[]) {
+    this.pointsValue = points;
+    this.recomputeSVGPoints();
   }
 
   /*get points() {

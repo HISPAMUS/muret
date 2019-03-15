@@ -32,11 +32,11 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
       newState.selectedSymbol = null;
       return newState;
     }
-    case AgnosticRepresentationActionTypes.ChangeSymbolTypeSuccess: // the same in all cases
-    case AgnosticRepresentationActionTypes.ChangeSymbolPositionInStaffSuccess: {
+    case AgnosticRepresentationActionTypes.ChangeSymbolSuccess: {
       const newState = {...state};
       if (action.agnosticSymbol != null) { // if no error
-        const symbolsWithoutChangedOne: AgnosticSymbol[] = state.agnosticSymbols.filter(symbol => symbol.id !== action.agnosticSymbol.id);
+        const symbolsWithoutChangedOne: AgnosticSymbol[] =
+          state.agnosticSymbols.filter(symbol => symbol.id !== action.agnosticSymbol.id);
         newState.agnosticSymbols = [...symbolsWithoutChangedOne, action.agnosticSymbol];
         newState.selectedRegion.symbols = newState.agnosticSymbols; // it is the same object
         newState.selectedSymbol = null;

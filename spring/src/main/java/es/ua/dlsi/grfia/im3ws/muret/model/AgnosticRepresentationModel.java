@@ -18,6 +18,7 @@ import java.util.Optional;
 
 @Component
 public class AgnosticRepresentationModel {
+    private static final int BOUNDING_BOX_TOLERANCE = 10;
     private final MURETConfiguration muretConfiguration;
     private final RegionRepository regionRepository;
     private final SymbolRepository symbolRepository;
@@ -72,6 +73,7 @@ public class AgnosticRepresentationModel {
     protected Symbol createSymbol(long regionID, BoundingBox boundingBox, Strokes strokes, String agnosticSymbolType) throws IM3WSException, IM3Exception {
         Region persistentRegion = getRegion(regionID);
 
+        boundingBox.adjustToFitInto(persistentRegion.getBoundingBox());
         Symbol symbol = new Symbol();
         symbol.setBoundingBox(boundingBox);
         symbol.setStrokes(strokes);
@@ -119,7 +121,7 @@ public class AgnosticRepresentationModel {
             throw new IM3WSException("Cannot classify with just one point");
         }
 
-        BoundingBox boundingBox = new BoundingBox(minX, minY, maxX, maxY);
+        BoundingBox boundingBox = new BoundingBox(minX-BOUNDING_BOX_TOLERANCE, minY-BOUNDING_BOX_TOLERANCE, maxX+BOUNDING_BOX_TOLERANCE, maxY+BOUNDING_BOX_TOLERANCE);
 
         return createSymbol(regionID, boundingBox, calcoStrokes, agnosticSymbolType);
     }

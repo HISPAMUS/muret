@@ -27,4 +27,7 @@ public interface ISymbolProjection {
     @Value("#{target.getAgnosticSymbolType()}")
     String getAgnosticSymbolType();
 
+    @Value("#{target.getStrokes()}")
+    Strokes getStrokes();
+
 }

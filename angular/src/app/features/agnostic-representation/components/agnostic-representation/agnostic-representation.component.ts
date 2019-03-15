@@ -9,8 +9,13 @@ import {Region} from '../../../../core/model/entities/region';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
 import {selectPages} from '../../../document-analysis/store/selectors/document-analysis.selector';
 import {Store} from '@ngrx/store';
-import {GetImageProjection} from '../../../document-analysis/store/actions/document-analysis.actions';
 import {
+  ChangePageBoundingBox,
+  ChangeRegionBoundingBox,
+  GetImageProjection
+} from '../../../document-analysis/store/actions/document-analysis.actions';
+import {
+  ChangeSymbolBoundingBox,
   ChangeSymbolPositionInStaff,
   ChangeSymbolType,
   CreateSymbolFromBoundingBox, CreateSymbolFromStrokes,
@@ -23,10 +28,8 @@ import {AgnosticSymbolToolbarCategory} from '../../model/agnostic-symbol-toolbar
 import {AGNOSTIC_SYMBOL_TOOLBAR_CATEGORIES} from '../../model/agnostic-symbol-toolbar-categories';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {Polylines} from '../../../../svg/model/polylines';
-import {Polyline} from '../../../../svg/model/polyline';
 import {Strokes} from '../../../../core/model/entities/strokes';
-import {Stroke} from '../../../../core/model/entities/stroke';
-import {Point} from '../../../../core/model/entities/point';
+import {Polyline} from '../../../../svg/model/polyline';
 
 @Component({
   selector: 'app-agnostic-representation',
@@ -165,6 +168,24 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     }
   }
 
+  private drawStrokes(shapes: Shape[], modelObject: AgnosticSymbol, layer: string, id: number, strokes: Strokes, color: string) {
+    const polylines = new Polylines();
+    polylines.id = layer + 'strokes' + id;
+    polylines.polylines = strokes.strokeList.map(
+      stroke => {
+        return new Polyline(stroke.points);
+      }
+    );
+    polylines.fillColor = 'transparent';
+    polylines.strokeColor = color;
+    polylines.strokeWidth = 1;
+    polylines.layer = layer;
+    polylines.data = modelObject;
+    shapes.push(polylines);
+    return polylines;
+  }
+
+
   private drawBox(shapes: Shape[], modelObject: Region | AgnosticSymbol,
                   layer: string, id: number, boundingBox: BoundingBox, color: string): Rectangle {
     const rect = new Rectangle();
@@ -187,25 +208,29 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   private drawSelectedRegionSymbols(agnosticSymbols: AgnosticSymbol[]) {
-    console.log('drawing');
-
     this.selectedShape = null; // if not, previous shape is still selected and concurrency errors are raised
     this.selectedRegionShapes = new Array();
     if (agnosticSymbols) {
       agnosticSymbols.forEach(symbol => {
         this.drawBox(this.selectedRegionShapes, symbol,
-          symbol.agnosticSymbolType, symbol.id, symbol.boundingBox, 'red').data = symbol;
+          symbol.agnosticSymbolType, symbol.id, symbol.boundingBox, 'red');
         // console.log(JSON.stringify(symbol.boundingBox, null, 4));
+
+        if (symbol.strokes) {
+          this.drawStrokes(this.selectedRegionShapes, symbol,
+            symbol.agnosticSymbolType, symbol.id, symbol.strokes, 'red');
+        }
       });
     }
   }
+
+
 
   isAddOrEditMode() {
     return this.mode === 'eAdding' || this.mode === 'eEditing';
   }
 
   onSymbolCreated(shape: Shape) {
-    console.log('Created shape for ' + this.selectedAgnosticSymbolType);
     if (!this.selectedAgnosticSymbolType) {
       this.dialogsService.showError('Shape creation', 'A symbol type must be selected first');
       this.selectedRegionShapes = this.selectedRegionShapes.filter(s => s !== shape); // remove erroneous shape
@@ -294,4 +319,16 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     }
   }
 
+  onSymbolShapeChanged(shape: Shape) {
+    // currently we only support bounding box change
+    if (shape instanceof Rectangle) {
+      this.store.dispatch(new ChangeSymbolBoundingBox(shape.data, {
+        fromX: shape.fromX,
+        fromY: shape.fromY,
+        id: shape.data.id,
+        toX: shape.fromX + shape.width,
+        toY: shape.fromY + shape.height
+      }));
+    }
+  }
 }

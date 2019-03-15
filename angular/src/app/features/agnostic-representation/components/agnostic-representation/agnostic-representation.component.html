@@ -30,9 +30,11 @@
       <div *ngIf="selectedRegion$ | async as selectedRegion; else noRegionSelected">
         <section class="row">
           <div class="col">
-            <app-image [imageID]="imageID" [shapes]="selectedRegionShapes" [zoomFactor]="selectedRegionZoomFactor"
+            <app-image [imageID]="imageID" [shapes]="selectedRegionShapes"
+                       [zoomFactor]="selectedRegionZoomFactor"
                        [crop]="selectedRegion.boundingBox"
                        (svgShapeCreated)="onSymbolCreated($event)"
+                       (svgShapeChanged)="onSymbolShapeChanged($event)"
                        [nextShapeToDraw]="nextShapeToDraw"
                        [(mode)]="mode"
                        [(selectedShape)]="selectedShape"

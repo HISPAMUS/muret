@@ -14,7 +14,6 @@ export class ProjectService {
   }
 
   public getProjectImages$(id: number): Observable<Image[]> {
-    console.log('id=' + id);
     return this.apiRestClientService.getDetailsExcerptProjection$<Image>('projects', 'images', id);
   }
 }

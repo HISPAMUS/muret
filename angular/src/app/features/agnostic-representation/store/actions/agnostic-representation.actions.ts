@@ -13,9 +13,9 @@ export enum AgnosticRepresentationActionTypes {
   GetSVGSet = '[AgnosticRepresentation] Get SVG set',
   GetSVGSetSucccess = '[AgnosticRepresentation] Get SVG set success',
   ChangeSymbolType = '[AgnosticRepresentation] Change symbol type',
-  ChangeSymbolTypeSuccess = '[AgnosticRepresentation] Change symbol type success',
   ChangeSymbolPositionInStaff = '[AgnosticRepresentation] Change symbol position in staff',
-  ChangeSymbolPositionInStaffSuccess = '[AgnosticRepresentation] Change symbol position in staff success',
+  ChangeSymbolBoundingBox = '[AgnosticRepresentation] Change symbol bounding box',
+  ChangeSymbolSuccess = '[AgnosticRepresentation] Change symbol success',
   CreateSymbolFromBoundingBox = '[AgnosticRepresentation] Create symbol from bounding box',
   CreateSymbolFromStrokes = '[AgnosticRepresentation] Create symbol from strokes',
   CreateSymbolSuccess = '[AgnosticRepresentation] Create symbol success',
@@ -58,8 +58,8 @@ export class ChangeSymbolType implements Action {
   constructor(public agnosticSymbol: AgnosticSymbol, public agnosticSymbolType: string) {}
 }
 
-export class ChangeSymbolTypeSuccess implements Action {
-  public readonly type = AgnosticRepresentationActionTypes.ChangeSymbolTypeSuccess;
+export class ChangeSymbolSuccess implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.ChangeSymbolSuccess;
   constructor(public agnosticSymbol: AgnosticSymbol) {}
 }
 
@@ -68,9 +68,9 @@ export class ChangeSymbolPositionInStaff implements Action {
   constructor(public agnosticSymbol: AgnosticSymbol, public difference: number) {}
 }
 
-export class ChangeSymbolPositionInStaffSuccess implements Action {
-  public readonly type = AgnosticRepresentationActionTypes.ChangeSymbolPositionInStaffSuccess;
-  constructor(public agnosticSymbol: AgnosticSymbol) {}
+export class ChangeSymbolBoundingBox implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.ChangeSymbolBoundingBox;
+  constructor(public agnosticSymbol: AgnosticSymbol, public boundingBox: BoundingBox) {}
 }
 
 export class CreateSymbolFromBoundingBox implements Action {
@@ -100,5 +100,5 @@ export class DeleteSymbolSuccess implements Action {
 
 export type AgnosticRepresentationActions =
   GetRegion | GetRegionSuccess | GetSVGSet | GetSVGSetSucccess | SelectSymbol | DeselectSymbol |
-  ChangeSymbolType | ChangeSymbolTypeSuccess | ChangeSymbolPositionInStaff | ChangeSymbolPositionInStaffSuccess |
+  ChangeSymbolType  | ChangeSymbolBoundingBox | ChangeSymbolPositionInStaff | ChangeSymbolSuccess |
   CreateSymbolFromBoundingBox | CreateSymbolFromStrokes | CreateSymbolSuccess | DeleteSymbol | DeleteSymbolSuccess;

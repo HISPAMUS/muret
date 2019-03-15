@@ -121,4 +121,15 @@ public class BoundingBox {
                 ", toY=" + toY +
                 '}';
     }
+
+    /**
+     * It adjusts this bounding box to fit into the one given as parameter
+     * @param boundingBox
+     */
+    public void adjustToFitInto(BoundingBox boundingBox) {
+        this.fromX = Math.max(this.fromX, boundingBox.fromX);
+        this.fromY = Math.max(this.fromY, boundingBox.fromY);
+        this.toX = Math.min(this.toX, boundingBox.toX);
+        this.toY = Math.min(this.toY, boundingBox.toY);
+    }
 }

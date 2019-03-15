@@ -97,6 +97,16 @@ public class AgnosticRepresentationController {
         return symbolRepository.save(symbol.get());
     }
 
+    @PutMapping(path = {"symbolBoundingBoxUpdate"})
+    public Symbol symbolBoundingBoxUpdate(@RequestBody BoundingBox boundingBox) throws IM3WSException {
+        Optional<Symbol> symbol = symbolRepository.findById(boundingBox.getId());
+        if (!symbol.isPresent()) {
+            throw new IM3WSException("Cannot find a symbol with id " + boundingBox.getId());
+        }
+        symbol.get().setBoundingBox(boundingBox);
+        symbolRepository.save(symbol.get());
+        return symbol.get();
+    }
 
     /**
      * @param symbolCreationFromBoundingBox

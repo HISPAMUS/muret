@@ -3,11 +3,11 @@ import { Effect, ofType, Actions } from '@ngrx/effects';
 import { of } from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 import {
-  AgnosticRepresentationActionTypes,
+  AgnosticRepresentationActionTypes, ChangeSymbolBoundingBox,
   ChangeSymbolPositionInStaff,
-  ChangeSymbolPositionInStaffSuccess,
+  ChangeSymbolSuccess,
   ChangeSymbolType,
-  ChangeSymbolTypeSuccess, CreateSymbolFromBoundingBox, CreateSymbolFromStrokes, CreateSymbolSuccess, DeleteSymbol, DeleteSymbolSuccess,
+  CreateSymbolFromBoundingBox, CreateSymbolFromStrokes, CreateSymbolSuccess, DeleteSymbol, DeleteSymbolSuccess,
   GetRegion,
   GetRegionSuccess,
   GetSVGSet,
@@ -48,7 +48,7 @@ export class AgnosticRepresentationEffects {
     switchMap((action: ChangeSymbolType) =>
       this.agnosticRepresentationService.changeSymbolType$(action.agnosticSymbol, action.agnosticSymbolType)),
     switchMap((agnosticSymbol: AgnosticSymbol) => {
-      return of(new ChangeSymbolTypeSuccess(agnosticSymbol));
+      return of(new ChangeSymbolSuccess(agnosticSymbol));
     })
   );
   @Effect()
@@ -57,7 +57,18 @@ export class AgnosticRepresentationEffects {
     switchMap((action: ChangeSymbolPositionInStaff) =>
       this.agnosticRepresentationService.changeSymbolPositionInStaff$(action.agnosticSymbol, action.difference)),
     switchMap((agnosticSymbol: AgnosticSymbol) => {
-      return of(new ChangeSymbolPositionInStaffSuccess(agnosticSymbol));
+      return of(new ChangeSymbolSuccess(agnosticSymbol));
+    })
+  );
+  @Effect()
+  changeSymbolBoundingBox$ = this.actions$.pipe(
+    ofType<ChangeSymbolBoundingBox>(AgnosticRepresentationActionTypes.ChangeSymbolBoundingBox),
+    switchMap((action: ChangeSymbolBoundingBox) =>
+      this.agnosticRepresentationService.changeSymbolBoundingBox$(action.agnosticSymbol,
+        action.boundingBox.fromX, action.boundingBox.fromY,
+        action.boundingBox.toX, action.boundingBox.toY)),
+    switchMap((agnosticSymbol: AgnosticSymbol) => {
+      return of(new ChangeSymbolSuccess(agnosticSymbol));
     })
   );
   @Effect()
