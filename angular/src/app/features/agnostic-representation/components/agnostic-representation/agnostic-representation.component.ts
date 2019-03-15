@@ -23,6 +23,10 @@ import {AgnosticSymbolToolbarCategory} from '../../model/agnostic-symbol-toolbar
 import {AGNOSTIC_SYMBOL_TOOLBAR_CATEGORIES} from '../../model/agnostic-symbol-toolbar-categories';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {Polylines} from '../../../../svg/model/polylines';
+import {Polyline} from '../../../../svg/model/polyline';
+import {Strokes} from '../../../../core/model/entities/strokes';
+import {Stroke} from '../../../../core/model/entities/stroke';
+import {Point} from '../../../../core/model/entities/point';
 
 @Component({
   selector: 'app-agnostic-representation',
@@ -220,10 +224,8 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
       } else if (shape instanceof Polylines) {
         this.store.dispatch(new CreateSymbolFromStrokes(
           this.selectedRegion.id,
-          shape.polylines,
+          shape.polylines.map(polyline => polyline.pointsValue),
           this.selectedAgnosticSymbolType));
-
-        // por aqui, hacer el servicio + spring, visualizarlo
       } else {
         throw new Error('Unsupported shape type: ' + shape.constructor.name);
       }

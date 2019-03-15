@@ -1,19 +1,17 @@
 package es.ua.dlsi.grfia.im3ws.muret.controller.payload;
 
-import es.ua.dlsi.grfia.im3ws.muret.entity.BoundingBox;
-
-public class SymbolCreation {
+public class SymbolCreationFromStrokes {
     long regionID;
     String agnosticSymbolType;
-    BoundingBox boundingBox;
+    Point[][] points;
 
-    public SymbolCreation() {
+    public SymbolCreationFromStrokes() {
     }
 
-    public SymbolCreation(long regionID, String agnosticSymbolType, BoundingBox boundingBox) {
+    public SymbolCreationFromStrokes(long regionID, String agnosticSymbolType, Point[][] points) {
         this.regionID = regionID;
         this.agnosticSymbolType = agnosticSymbolType;
-        this.boundingBox = boundingBox;
+        this.points = points;
     }
 
     public long getRegionID() {
@@ -32,11 +30,11 @@ public class SymbolCreation {
         this.agnosticSymbolType = agnosticSymbolType;
     }
 
-    public BoundingBox getBoundingBox() {
-        return boundingBox;
+    public Point[][] getPoints() {
+        return points;
     }
 
-    public void setBoundingBox(BoundingBox boundingBox) {
-        this.boundingBox = boundingBox;
+    public void setPoints(Point[][] points) {
+        this.points = points;
     }
 }

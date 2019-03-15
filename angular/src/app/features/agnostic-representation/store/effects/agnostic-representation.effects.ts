@@ -7,7 +7,7 @@ import {
   ChangeSymbolPositionInStaff,
   ChangeSymbolPositionInStaffSuccess,
   ChangeSymbolType,
-  ChangeSymbolTypeSuccess, CreateSymbolFromBoundingBox, CreateSymbolSuccess, DeleteSymbol, DeleteSymbolSuccess,
+  ChangeSymbolTypeSuccess, CreateSymbolFromBoundingBox, CreateSymbolFromStrokes, CreateSymbolSuccess, DeleteSymbol, DeleteSymbolSuccess,
   GetRegion,
   GetRegionSuccess,
   GetSVGSet,
@@ -65,6 +65,15 @@ export class AgnosticRepresentationEffects {
     ofType<CreateSymbolFromBoundingBox>(AgnosticRepresentationActionTypes.CreateSymbolFromBoundingBox),
     switchMap((action: CreateSymbolFromBoundingBox) =>
       this.agnosticRepresentationService.createSymbolFromBoundingBox$(action.regionID, action.boundingBox, action.agnosticSymbolType)),
+    switchMap((createdSymbol: AgnosticSymbol) => {
+      return of(new CreateSymbolSuccess(createdSymbol));
+    })
+  );
+  @Effect()
+  createSymbolFromStrokes$ = this.actions$.pipe(
+    ofType<CreateSymbolFromStrokes>(AgnosticRepresentationActionTypes.CreateSymbolFromStrokes),
+    switchMap((action: CreateSymbolFromStrokes) =>
+      this.agnosticRepresentationService.createSymbolFromStrokes$(action.regionID, action.points, action.agnosticSymbolType)),
     switchMap((createdSymbol: AgnosticSymbol) => {
       return of(new CreateSymbolSuccess(createdSymbol));
     })

@@ -3,7 +3,7 @@ import {Region} from '../../../../core/model/entities/region';
 import {SVGSet} from '../../model/svgset';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
-import {Polyline} from '../../../../svg/model/polyline';
+import {Point} from '../../../../core/model/entities/point';
 
 export enum AgnosticRepresentationActionTypes {
   GetRegion = '[AgnosticRepresentation] Get region',
@@ -17,6 +17,7 @@ export enum AgnosticRepresentationActionTypes {
   ChangeSymbolPositionInStaff = '[AgnosticRepresentation] Change symbol position in staff',
   ChangeSymbolPositionInStaffSuccess = '[AgnosticRepresentation] Change symbol position in staff success',
   CreateSymbolFromBoundingBox = '[AgnosticRepresentation] Create symbol from bounding box',
+  CreateSymbolFromStrokes = '[AgnosticRepresentation] Create symbol from strokes',
   CreateSymbolSuccess = '[AgnosticRepresentation] Create symbol success',
   DeleteSymbol = '[AgnosticRepresentation] Delete symbol',
   DeleteSymbolSuccess = '[AgnosticRepresentation] Delete symbol success'
@@ -78,8 +79,8 @@ export class CreateSymbolFromBoundingBox implements Action {
 }
 
 export class CreateSymbolFromStrokes implements Action {
-  public readonly type = AgnosticRepresentationActionTypes.CreateSymbolFromBoundingBox;
-  constructor(public regionID: number, public polyline: Polyline[], public agnosticSymbolType: string) {}
+  public readonly type = AgnosticRepresentationActionTypes.CreateSymbolFromStrokes;
+  constructor(public regionID: number, public points: Point[][], public agnosticSymbolType: string) {}
 }
 
 export class CreateSymbolSuccess implements Action {

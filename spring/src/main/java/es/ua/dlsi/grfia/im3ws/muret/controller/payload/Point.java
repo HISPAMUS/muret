@@ -3,22 +3,22 @@ package es.ua.dlsi.grfia.im3ws.muret.controller.payload;
 import java.io.Serializable;
 
 public class Point implements Serializable {
-    long timestamp;
+    long time;
     int x;
     int y;
 
     public Point(long timestamp, int x, int y) {
-        this.timestamp = timestamp;
+        this.time = timestamp;
         this.x = x;
         this.y = y;
     }
 
-    public long getTimestamp() {
-        return timestamp;
+    public long getTime() {
+        return time;
     }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+    public void setTime(long time) {
+        this.time = time;
     }
 
     public int getX() {
