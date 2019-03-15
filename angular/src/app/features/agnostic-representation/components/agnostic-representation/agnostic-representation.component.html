@@ -21,9 +21,10 @@
         </form>
 
       </div>
-      <a (click)="openDocumentAnalysis()">Document analysis</a>
-      <br/>
-      <a (click)="openSemanticRepresentation()">Semantic representation</a>
+      <br>
+      <br>
+      <button (click)="openDocumentAnalysis()">Document analysis</button>
+      <button (click)="openSemanticRepresentation()" disabled>Semantic representation</button>
     </nav>
 
     <div class="col">
@@ -54,35 +55,31 @@
         </section>
       </div>
       <ng-template #noRegionSelected>
-        <p>Select a region</p>
+        <div class="jumbotron align-content-md-center">
+          <p>Select a region</p>
+        </div>
       </ng-template>
-      <section class="row" *ngIf="isAddOrEditMode()">
+      <section class="row">
         <div class="col">
-          <app-agnostic-toolbar [agnosticSymbolToolbarCategories]="agnosticSymbolToolbarCategories"
+          <app-agnostic-toolbar *ngIf="isAddOrEditMode()"
+                                [agnosticSymbolToolbarCategories]="agnosticSymbolToolbarCategories"
                                 [notationType]="notationType" [manuscriptType]="manuscriptType"
                                 (onAgnosticSymbolTypeSelected)="onAgnosticSymbolTypeSelected($event)"
                                 [(selectedAgnosticSymbolType)]="selectedAgnosticSymbolType"
                                 (onPitchDown)="movePitchDownSelectedSymbol()"
-                                (onPitchUp)="movePitchUpSelectedSymbol()"
-          >
+                                (onPitchUp)="movePitchUpSelectedSymbol()">
           </app-agnostic-toolbar>
         </div>
       </section>
-
       <section class="row">
         <div class="col">
-          <!-- image -->
-          <section class="row">
-            <div class="col-6">
-              <app-image [imageID]="imageID" [shapes]="imagePreviewShapes" [zoomFactor]="imagePreviewZoomFactor"
-                         [(selectedShape)]="selectedRegionShape"
-                         [mode]="'eSelecting'"
-              ></app-image>
-            </div>
-          </section>
-          <!-- end image -->
+          <app-image [imageID]="imageID" [shapes]="imagePreviewShapes" [zoomFactor]="imagePreviewZoomFactor"
+                     [(selectedShape)]="selectedRegionShape"
+                     [mode]="'eSelecting'">
+          </app-image>
         </div>
       </section>
+
     </div>
   </div>
 </div>

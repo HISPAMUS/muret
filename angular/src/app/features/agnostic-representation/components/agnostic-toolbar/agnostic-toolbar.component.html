@@ -14,22 +14,23 @@
     <!--<input id="showSymbolStrokesCheckBox"
            type="checkbox" [checked]="showSymbolStrokes"/> Show strokes-->
 
+    <!--
     <button *ngFor="let category of agnosticSymbolToolbarCategories"
             type="button" class="btn btn-light" (click)="toggleCollapsed(category)"
             [attr.aria-expanded]="!isCollapsed(category)" aria-controls="collapseExample">
       {{category.name}}
-    </button>
-  </div>
-  <div>
+    </button>-->
     <form>
-      <div class="btn-group-toggle" ngbRadioGroup name="symbolTypesRadioGroup" [(ngModel)]="selectedAgnosticSymbolType">
-        <div *ngFor="let category of agnosticSymbolToolbarCategories" [ngbCollapse]="isCollapsed(category)">
-          <label *ngFor="let symbolType of category.agnosticSymbolTypes" class="btn-light" ngbButtonLabel title="{{symbolType}}">
+      <ng-container
+           ngbRadioGroup name="symbolTypesRadioGroup" [(ngModel)]="selectedAgnosticSymbolType">
+        <ng-container *ngFor="let category of agnosticSymbolToolbarCategories"> <!--[ngbCollapse]="isCollapsed(category)"-->
+          <label *ngFor="let symbolType of category.agnosticSymbolTypes" class="btn-light mb-2" ngbButtonLabel title="{{symbolType}}">
             <input name="symbolTypeRadioButton" ngbButton type="radio" [value]="symbolType">
-            <svg-icon src="assets/icons/agnostic/{{notationType}}/{{manuscriptType}}/{{symbolType}}.svg" [svgStyle]="{ 'width.px':40 }"></svg-icon>
+            <svg-icon src="assets/icons/agnostic/{{notationType}}/{{manuscriptType}}/{{symbolType}}.svg" [svgStyle]="{ 'width.px':35 }"></svg-icon>
           </label>
-        </div>
-      </div>
+          &nbsp;
+        </ng-container>
+      </ng-container>
     </form>
   </div>
 </div>

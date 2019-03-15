@@ -53,7 +53,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   notationType = 'eMensural';
   manuscriptType = 'eHandwritten';
 
-  private mode: 'eIdle' | 'eAdding' | 'eEditing' | 'eSelecting';
+  mode: 'eIdle' | 'eAdding' | 'eEditing' | 'eSelecting';
   private selectedShapeValue: Shape;
   nextShapeToDraw: 'Rectangle' | 'Polylines';
   selectedAgnosticSymbolType: string;
