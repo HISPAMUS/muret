@@ -1,0 +1,42 @@
+<div id="agnosticStaff">
+  <svg [ngClass]="cursorClass" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+       (mousedown)="onMouseDown($event)" (mouseup)="onMouseUp($event)" (mousemove)="onMouseMove($event)"
+        width="100%" [attr.height.px]="height"
+  [attr.viewBox]="viewBox" preserveAspectRatio="xMidYMid meet" overflow="visible"
+  >
+    <ng-container *ngIf="svgAgnosticSymbolSet$ | async as svgAgnosticSymbolSet">
+      <svg:symbol *ngFor="let path of svgAgnosticSymbolSet.paths; trackBy: trackByAgnosticSymbolTypeFn"
+              [attr.id]="path.agnosticTypeString" [attr.viewBox]="computeSVGSymbolViewBox(svgAgnosticSymbolSet, path)"
+              preserveAspectRatio="xMinYMin" overflow="visible"
+      >
+        <svg:path [attr.d]="path.svgPathD"
+                  [attr.transform]="'scale(1, -1) translate(0, ' + computeSVGSymbolTranslateY(svgAgnosticSymbolSet)+ ')' ">
+        </svg:path>
+      </svg:symbol>
+      <!--symbol viewBox="3391 0 16391 8242">  transform="scale(1, -1)"  TO-DO Ver vbox en svg fuente -->
+    </ng-container>
+    <g>
+      <svg:line *ngFor="let line of staffLines; trackBy: trackByLineFn"
+                id="{{line.index}}"
+                attr.x1="{{this.regionCropped.fromX}}" attr.y1="{{line.y}}" attr.x2="{{this.regionCropped.toX}}" attr.y2="{{line.y}}"
+                stroke="black"
+                stroke-width="1"
+      />
+    </g>
+    <g>
+      <!-- Don't use the trackBy because it does not refresh symbols on having the same id <svg:use *ngFor="let agnosticSymbol of agnosticSymbols; trackBy: trackBySymbolFn"-->
+      <!-- use "as" structure for sharing subscriptions -->
+      <ng-container *ngIf="agnosticSymbols$ | async as agnosticSymbols">
+        <svg:use *ngFor="let agnosticSymbol of agnosticSymbols"
+                 [attr.xlink:href]="'#' + agnosticSymbol.agnosticSymbolType"
+                 [attr.x]="agnosticSymbol.boundingBox.fromX"
+                 [attr.y]="computeAgnosticStaffSymbolY(agnosticSymbol)"
+                 style="opacity:1.0" height="87.5px"
+                 (mousedown)="onSymbolMouseDown(agnosticSymbol)"
+                 [attr.fill]="getColor(agnosticSymbol)"
+        />
+      </ng-container>
+      <!-- TODO 87.5px a piñón para altura espacio 100px-->
+    </g>
+  </svg>
+</div>

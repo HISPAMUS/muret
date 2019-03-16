@@ -1,0 +1,20 @@
+<div *ngIf="imageURL$ | async as loadedImage; else loading">
+  <div #canvas id="imageCanvas">
+    <!-- shape selected, changed, and deselected are forwarded from the canvas -->
+    <app-svg-canvas #svgCanvasComponent
+                    [shapes]="shapes" [backgroundImage]="loadedImage"
+                    [widthPercentage]="canvasWidthPercentage" [heightPercentage]="canvasHeightPercentage"
+                    (svgShapeCreated)="onShapeCreated($event)"
+                    (svgShapeChanged)="onShapeChanged($event)"
+                    [crop]="crop"
+                    [nextShapeToAdd]="nextShapeToDraw"
+                    [(mode)]="mode"
+                    [(selectedShape)]="selectedShape"
+    >
+    </app-svg-canvas>
+  </div>
+</div>
+<ng-template #loading>
+  <img src="assets/images/loading.svg" alt="Master loading">
+</ng-template>
+
