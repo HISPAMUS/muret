@@ -9,6 +9,8 @@ import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {Region} from '../../../../core/model/entities/region';
 import {Store} from '@ngrx/store';
 import {DocumentAnalysisState} from '../../store/state/document-analysis.state';
+import { Location } from '@angular/common';
+
 import {
   ChangePageBoundingBox,
   ChangeRegionBoundingBox,
@@ -52,7 +54,8 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   constructor(private store: Store<DocumentAnalysisState>,
               private route: ActivatedRoute,
               private router: Router,
-              private dialogsService: DialogsService
+              private dialogsService: DialogsService,
+              private location: Location
               ) {
     this.regionTypes$ = store.select(selectRegionTypes);
     this.filename$ = store.select(selectFileName);
@@ -83,15 +86,19 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   }
 
   zoomIn() {
-    this.zoomFactor += 0.5;
+    this.zoomFactor += 0.25;
   }
 
   zoomOut() {
-    this.zoomFactor = Math.max(1, this.zoomFactor - 0.5);
+    this.zoomFactor = Math.max(0.5, this.zoomFactor - 0.25);
   }
 
   zoomFit() {
     this.zoomFactor = 1;
+  }
+
+  goBack() {
+    this.location.back();
   }
 
   get selectedShape() {

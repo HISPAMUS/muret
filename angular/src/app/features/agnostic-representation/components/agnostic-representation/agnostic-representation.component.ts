@@ -56,7 +56,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   mode: 'eIdle' | 'eAdding' | 'eEditing' | 'eSelecting';
   private selectedShapeValue: Shape;
   nextShapeToDraw: 'Rectangle' | 'Polylines';
-  selectedAgnosticSymbolType: string;
+  selectedAgnosticSymbolTypeValue: string;
   private selectedRegionShapeValue: Shape;
   addMethodTypeValue: 'boundingbox' | 'strokes' ;
 
@@ -118,6 +118,17 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
       } else if (!shape) {
         this.store.dispatch(new DeselectSymbol());
       }
+    }
+  }
+
+  get selectedAgnosticSymbolType() {
+    return this.selectedAgnosticSymbolTypeValue;
+  }
+
+  set selectedAgnosticSymbolType(val) {
+    console.log('Changing to ' + val);
+    if (val !== this.selectedAgnosticSymbolTypeValue) {
+      this.selectedAgnosticSymbolTypeValue = val;
     }
   }
 
@@ -228,6 +239,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   onSymbolCreated(shape: Shape) {
+    console.log('Adding ' + this.selectedAgnosticSymbolType);
     if (!this.selectedAgnosticSymbolType) {
       this.dialogsService.showError('Shape creation', 'A symbol type must be selected first');
       this.selectedRegionShapes = this.selectedRegionShapes.filter(s => s !== shape); // remove erroneous shape
@@ -255,10 +267,12 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   onAgnosticSymbolTypeSelected($event: string) {
-    if (this.selectedSymbol && this.selectedSymbol.agnosticSymbolType !== $event) {
-      this.store.dispatch(new ChangeSymbolType(this.selectedSymbol, $event));
-    } else {
-      this.selectedAgnosticSymbolType = $event;
+    this.selectedAgnosticSymbolType = $event;
+
+    if (this.isEditingMode()) {
+      if (this.selectedSymbol && this.selectedSymbol.agnosticSymbolType !== $event) {
+        this.store.dispatch(new ChangeSymbolType(this.selectedSymbol, $event));
+      }
     }
   }
 
@@ -282,14 +296,13 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   onModeChange($event: any) {
-    if ($event === 'eAdding' && !this.selectedAgnosticSymbolType) {
-      this.selectedAgnosticSymbolType = 'clef.G';
-    }
-
     if ($event !== 'eEditing') {
       if (this.selectedSymbol) {
         this.store.dispatch(new DeselectSymbol());
       }
+    }
+    if ($event === 'eAdding' && !this.selectedAgnosticSymbolType) {
+      this.selectedAgnosticSymbolType = 'clef.G';
     }
   }
 
@@ -328,4 +341,17 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
       }));
     }
   }
+
+  zoomIn() {
+    this.selectedRegionZoomFactor += 0.15;
+  }
+
+  zoomOut() {
+    this.selectedRegionZoomFactor = Math.max(0.5, this.selectedRegionZoomFactor - 0.15);
+  }
+
+  zoomFit() {
+    this.selectedRegionZoomFactor = 1;
+  }
+
 }

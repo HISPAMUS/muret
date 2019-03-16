@@ -3,7 +3,7 @@
   <div class="row">
   <nav class="col-1">
     <div>
-      <h2>Document analysis</h2>
+      <h3>Document analysis</h3>
       <app-crud-toolbar (onClear)="clear()" (onDelete)="deleteSelected()" [(mode)]="mode">
       </app-crud-toolbar>
 
@@ -25,11 +25,15 @@
     <br>
     <button (click)="openAgnosticRepresentation()">Agnostic representation</button>
     <button (click)="openSemanticRepresentation()" disabled>Semantic representation</button>
+    <br>
+    <br>
+    <!-- anchor must be a passive link -->
+    <a (click)="goBack()">Back to project</a>
   </nav>
 
   <section class="col-11">
     <div class="row">
-      <h2 class="col">{{filename$ | async}}</h2>
+      <h4 class="col">&nbsp;&nbsp;{{filename$ | async}}</h4>
     </div>
 
     <!-- layers selector -->
