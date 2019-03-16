@@ -70,16 +70,10 @@ public class MigrateMuretXML implements CommandLineRunner {
     public void run(String... args) throws IOException, IM3Exception {
         muretConfiguration = new MURETConfiguration(null, "/Applications/MAMP/htdocs/muret", null, 200, 720, true);
 
-        /*String path = "/Users/drizo/GCLOUDUA/HISPAMUS/muret/catedral_zaragoza/";
-        importMuRETXML(path + "B-3.28/B-3.28.mrt");
-        importMuRETXML(path + "B-50.747/B-50.747.mrt");
-        importMuRETXML(path + "B-53.781/B-53.781.mrt");
-        importMuRETXML(path + "B-59.850-completo/B-59.850-completo.mrt");*/
-
         regionTypeHashMap = new HashMap<>();
         regionTypeRepository.findAll().forEach(regionType -> regionTypeHashMap.put(regionType.getName(), regionType));
         ArrayList<File> mrts = new ArrayList<>();
-        //FileUtils.readFiles(new File(path), mrts, "mrt");
+        FileUtils.readFiles(new File("/Users/drizo/GCLOUDUA/HISPAMUS/muret/pruebas"), mrts, "mrt2", true); // documents with regions tagged with es.ua.dlsi.im3.omr.conversions.VicenteGilabertBoundingBoxes2MURET
         FileUtils.readFiles(new File("/Users/drizo/GCLOUDUA/HISPAMUS/muret/catedral_barcelona"), mrts, "mrt2", true); // documents with regions tagged with es.ua.dlsi.im3.omr.conversions.VicenteGilabertBoundingBoxes2MURET
         FileUtils.readFiles(new File("/Users/drizo/GCLOUDUA/HISPAMUS/muret/catedral_zaragoza"), mrts, "mrt2", true); // documents with regions tagged with es.ua.dlsi.im3.omr.conversions.VicenteGilabertBoundingBoxes2MURET
 
@@ -118,14 +112,16 @@ public class MigrateMuretXML implements CommandLineRunner {
             for (es.ua.dlsi.im3.omr.model.entities.Image xmlImage : xmlProject.getImages()) {
                 es.ua.dlsi.grfia.im3ws.muret.entity.Image image = importImage(xmlImage, xmlImagesPath, project, projectPath);
 
-                for (es.ua.dlsi.im3.omr.model.entities.Page xmlPage : xmlImage.getPages()) {
-                    es.ua.dlsi.grfia.im3ws.muret.entity.Page page = importPage(xmlPage, image);
+                if (xmlImage.getPages() != null) {
+                    for (es.ua.dlsi.im3.omr.model.entities.Page xmlPage : xmlImage.getPages()) {
+                        es.ua.dlsi.grfia.im3ws.muret.entity.Page page = importPage(xmlPage, image);
 
-                    for (es.ua.dlsi.im3.omr.model.entities.Region xmlRegion: xmlPage.getRegions()) {
-                        es.ua.dlsi.grfia.im3ws.muret.entity.Region region = importRegion(xmlRegion, page);
+                        for (es.ua.dlsi.im3.omr.model.entities.Region xmlRegion : xmlPage.getRegions()) {
+                            es.ua.dlsi.grfia.im3ws.muret.entity.Region region = importRegion(xmlRegion, page);
 
-                        for (es.ua.dlsi.im3.omr.model.entities.Symbol xmlSymbol: xmlRegion.getSymbols()) {
-                            es.ua.dlsi.grfia.im3ws.muret.entity.Symbol symbol = importSymbol(xmlSymbol, region);
+                            for (es.ua.dlsi.im3.omr.model.entities.Symbol xmlSymbol : xmlRegion.getSymbols()) {
+                                es.ua.dlsi.grfia.im3ws.muret.entity.Symbol symbol = importSymbol(xmlSymbol, region);
+                            }
                         }
                     }
                 }
@@ -137,7 +133,7 @@ public class MigrateMuretXML implements CommandLineRunner {
     }
 
     private Symbol importSymbol(es.ua.dlsi.im3.omr.model.entities.Symbol xmlSymbol, Region region) {
-        System.out.println("\t\t\t\tImporting symbol");
+        /// System.out.println("\t\t\t\tImporting symbol");
         es.ua.dlsi.grfia.im3ws.muret.entity.Symbol symbol = new Symbol();
         symbol.setAgnosticSymbol(xmlSymbol.getAgnosticSymbol());
         symbol.setBoundingBox(convert(xmlSymbol.getBoundingBox()));
@@ -176,7 +172,7 @@ public class MigrateMuretXML implements CommandLineRunner {
     }
 
     private Region importRegion(es.ua.dlsi.im3.omr.model.entities.Region xmlRegion, Page page) throws IM3Exception {
-        System.out.println("\t\t\tImporting region");
+        /// System.out.println("\t\t\tImporting region");
         es.ua.dlsi.grfia.im3ws.muret.entity.Region region = new Region();
         region.setBoundingBox(convert(xmlRegion.getBoundingBox()));
         region.setPage(page);
