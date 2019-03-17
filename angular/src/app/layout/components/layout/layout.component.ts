@@ -13,7 +13,7 @@ import {selectAuthState} from '../../../auth/store/selectors/auth.selector';
 export class LayoutComponent implements OnInit {
   isDev = isDevMode();
 
-  private menuVisible = true;
+  menuVisible = true;
 
   private authState$: Observable<AuthState>;
   private isAuthenticated = false;

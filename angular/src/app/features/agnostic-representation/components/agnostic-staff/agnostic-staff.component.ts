@@ -42,8 +42,8 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   staffLines: StaffLine[]; // TODO El nº de pentagramas debería depender del tipo de partitura
   private staffBottomLineY: number;
 
-  private agnosticSymbols$: Observable<AgnosticSymbol[]>;
-  private svgAgnosticSymbolSet$: Observable<SVGSet>;
+  agnosticSymbols$: Observable<AgnosticSymbol[]>;
+  svgAgnosticSymbolSet$: Observable<SVGSet>;
   private selectedSymbolSubscription: Subscription;
   private selectedSymbol: AgnosticSymbol;
 
@@ -93,6 +93,10 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
 
   trackBySymbolFn(index, item: AgnosticSymbol) {
     return item.id;
+  }
+
+  trackByLineFn(index, item: AgnosticSymbol) {
+    return index;
   }
 
   trackByAgnosticSymbolTypeFn(index, item: AgnosticTypeSVGPath) {

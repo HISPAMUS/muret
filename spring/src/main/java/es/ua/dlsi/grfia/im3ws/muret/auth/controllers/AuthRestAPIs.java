@@ -1,8 +1,5 @@
 package es.ua.dlsi.grfia.im3ws.muret.auth.controllers;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.validation.Valid;
 
 import es.ua.dlsi.grfia.im3ws.muret.auth.jwt.JwtProvider;

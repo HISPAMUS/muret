@@ -68,7 +68,7 @@ public class MigrateMuretXML implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws IOException, IM3Exception {
-        muretConfiguration = new MURETConfiguration(null, "/Applications/MAMP/htdocs/muret", null, 200, 720, true);
+        muretConfiguration = new MURETConfiguration(null, null, "/Applications/MAMP/htdocs/muret", null, 200, 720, true);
 
         regionTypeHashMap = new HashMap<>();
         regionTypeRepository.findAll().forEach(regionType -> regionTypeHashMap.put(regionType.getName(), regionType));

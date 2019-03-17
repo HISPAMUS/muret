@@ -41,7 +41,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   pagesSubscription: Subscription;
   mode: 'eIdle' |'eSelecting' | 'eEditing' | 'eAdding';
   selectedRegionTypeID: number | 'page';
-  private zoomFactor = 1;
+  zoomFactor = 1;
 
   // tools
   private selectedShapeValue: Shape;
@@ -155,7 +155,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
     this.drawBox(region.regionType.name, region.id, region.boundingBox, '#' + region.regionType.hexargb, region);
   }
 
-  private onLayerVisibilityChanged($event) {
+  onLayerVisibilityChanged($event) {
     if (this.shapes) {
       this.shapes.forEach(shape => {
         if (shape.layer === $event.target.name) {

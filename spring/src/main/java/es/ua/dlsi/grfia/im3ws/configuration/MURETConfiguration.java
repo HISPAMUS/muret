@@ -10,7 +10,8 @@ public class MURETConfiguration {
     public static final String THUMBNAIL_IMAGES = "thumbnails";
     public static final String PREVIEW_IMAGES = "previews";
 
-    private String angularurl;
+    private String angularurldev;
+    private String angularurlprod;
     private String folder;
     private int thumbnailHeight;
     private int previewHeight;
@@ -21,9 +22,10 @@ public class MURETConfiguration {
     public MURETConfiguration() {
     }
 
-    public MURETConfiguration(String angularurl, String folder, String pythonclassifiers, int thumbnailHeight, int previewHeight, boolean disableSecurity) {
+    public MURETConfiguration(String angularurldev, String angularurlprod, String folder, String pythonclassifiers, int thumbnailHeight, int previewHeight, boolean disableSecurity) {
         this.folder = folder;
-        this.angularurl = angularurl;
+        this.angularurldev = angularurldev;
+        this.angularurlprod = angularurlprod;
         //this.url = url;
         this.thumbnailHeight = thumbnailHeight;
         this.previewHeight = previewHeight;
@@ -71,11 +73,19 @@ public class MURETConfiguration {
         this.disableSecurity = disableSecurity;
     }
 
-    public String getAngularurl() {
-        return angularurl;
+    public String getAngularurldev() {
+        return angularurldev;
     }
 
-    public void setAngularurl(String angularurl) {
-        this.angularurl = angularurl;
+    public void setAngularurldev(String angularurldev) {
+        this.angularurldev = angularurldev;
+    }
+
+    public String getAngularurlprod() {
+        return angularurlprod;
+    }
+
+    public void setAngularurlprod(String angularurlprod) {
+        this.angularurlprod = angularurlprod;
     }
 }

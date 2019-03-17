@@ -80,25 +80,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         }
     }
 
-    //TODO Configurarlo con angular.url
-    // Used to avoid CORS
-    /*@Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        UrlBasedCorsConfigurationSource source = new
-                UrlBasedCorsConfigurationSource();
-        CorsConfiguration conf = new CorsConfiguration().applyPermitDefaultValues();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
-        return source;
-    }*/
-
-    //TODO Configurarlo con angular.url y postman
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         //config.addAllowedOrigin("*localhost*");
-        config.addAllowedOrigin(muretConfiguration.getAngularurl());
+        config.addAllowedOrigin(muretConfiguration.getAngularurldev());
+        config.addAllowedOrigin(muretConfiguration.getAngularurlprod());
         config.addAllowedHeader("*");
         config.addAllowedMethod("OPTIONS");
         config.addAllowedMethod("GET");

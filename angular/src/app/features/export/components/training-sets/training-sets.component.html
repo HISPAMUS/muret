@@ -8,7 +8,7 @@
       <h3 class="offset-1 col-9">Available exporters</h3>
     </div>
 
-    <label class="row" formArrayName="exportersFormArray" *ngFor="let rb of form.controls.exportersFormArray.controls; let i = index">
+    <label class="row" formArrayName="exportersFormArray" *ngFor="let rb of form['controls'].exportersFormArray['controls']; let i = index">
       <div class="offset-1 col-1 text-right">
         <input type="radio" checked name="exportersRadioButton" value="{{i}}" (change)="onExporterSelected(i)">
       </div>
@@ -22,7 +22,7 @@
       <h3 class="offset-1 col-9">Projects to be exported</h3>
     </div>
 
-    <label class="row" formArrayName="projectsFormArray" *ngFor="let cb of form.controls.projectsFormArray.controls; let i = index">
+    <label class="row" formArrayName="projectsFormArray" *ngFor="let cb of form['controls'].projectsFormArray['controls']; let i = index">
       <div class="offset-1 col-1 text-right">
         <input type="checkbox" [formControlName]="i">
       </div>
