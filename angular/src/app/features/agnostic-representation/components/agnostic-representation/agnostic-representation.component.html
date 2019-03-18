@@ -66,7 +66,9 @@
       </ng-template>
       <section class="row">
         <div class="col">
+          <p>Use classifier {{classifier}}</p>
           <app-agnostic-toolbar *ngIf="isAddOrEditMode()"
+                                [mode]="mode" [classifier]="classifier" (classifierChanged)="onClassifierChanged($event)"
                                 [agnosticSymbolToolbarCategories]="agnosticSymbolToolbarCategories"
                                 [notationType]="notationType" [manuscriptType]="manuscriptType"
                                 (onAgnosticSymbolTypeSelected)="onAgnosticSymbolTypeSelected($event)"

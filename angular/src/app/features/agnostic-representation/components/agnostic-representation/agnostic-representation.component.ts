@@ -29,6 +29,8 @@ import {Polylines} from '../../../../svg/model/polylines';
 import {Strokes} from '../../../../core/model/entities/strokes';
 import {Polyline} from '../../../../svg/model/polyline';
 
+const USE_SYMBOL_CLASSIFIER = 'USE_SYMBOL_CLASSIFIER'; // see es.ua.dlsi.grfia.im3ws.muret.model.AgnosticRepresentationModel
+
 @Component({
   selector: 'app-agnostic-representation',
   templateUrl: './agnostic-representation.component.html',
@@ -59,6 +61,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   selectedAgnosticSymbolTypeValue: string;
   private selectedRegionShapeValue: Shape;
   addMethodTypeValue: 'boundingbox' | 'strokes' ;
+  classifier = true;
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>,
               private dialogsService: DialogsService) {
@@ -126,7 +129,6 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   set selectedAgnosticSymbolType(val) {
-    console.log('Changing to ' + val);
     if (val !== this.selectedAgnosticSymbolTypeValue) {
       this.selectedAgnosticSymbolTypeValue = val;
     }
@@ -239,11 +241,12 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   onSymbolCreated(shape: Shape) {
-    console.log('Adding ' + this.selectedAgnosticSymbolType);
     if (!this.selectedAgnosticSymbolType) {
       this.dialogsService.showError('Shape creation', 'A symbol type must be selected first');
       this.selectedRegionShapes = this.selectedRegionShapes.filter(s => s !== shape); // remove erroneous shape
     } else {
+      const agnosticSymbolType = this.classifier ? USE_SYMBOL_CLASSIFIER : this.selectedAgnosticSymbolType;
+
       if (shape instanceof Rectangle) {
         const rect = shape;
         this.store.dispatch(new CreateSymbolFromBoundingBox(
@@ -254,12 +257,13 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
             toX: rect.fromX + rect.width,
             toY: rect.fromY + rect.height
           },
-          this.selectedAgnosticSymbolType));
+          agnosticSymbolType));
       } else if (shape instanceof Polylines) {
         this.store.dispatch(new CreateSymbolFromStrokes(
           this.selectedRegion.id,
           shape.polylines.map(polyline => polyline.pointsValue),
-          this.selectedAgnosticSymbolType));
+          agnosticSymbolType
+          ));
       } else {
         throw new Error('Unsupported shape type: ' + shape.constructor.name);
       }
@@ -354,4 +358,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.selectedRegionZoomFactor = 1;
   }
 
+  onClassifierChanged($event: boolean) {
+    this.classifier = $event;
+  }
 }

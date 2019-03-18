@@ -2,11 +2,6 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {AgnosticSymbolToolbarCategory} from '../../model/agnostic-symbol-toolbar-category';
 import {Store} from '@ngrx/store';
 import {AgnosticRepresentationState} from '../../store/state/agnostic-representation.state';
-import {Subscription} from 'rxjs';
-import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
-import {selectSelectedSymbol} from '../../store/selectors/agnostic-representation.selector';
-import {ChangeSymbolPositionInStaff, ChangeSymbolType} from '../../store/actions/agnostic-representation.actions';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-agnostic-toolbar',
@@ -17,13 +12,16 @@ export class AgnosticToolbarComponent implements OnInit, OnDestroy {
   @Input() agnosticSymbolToolbarCategories: AgnosticSymbolToolbarCategory[];
   @Input() notationType: string;
   @Input() manuscriptType: string;
+  @Input() mode: 'eIdle' | 'eAdding' | 'eSelecting' | 'eEditing';
   @Output() onAgnosticSymbolTypeSelected = new EventEmitter<string>();
   @Output() onPitchUp = new EventEmitter();
   @Output() onPitchDown = new EventEmitter();
+  @Output() classifierChanged = new EventEmitter<boolean>();
 
   private selectedAgnosticSymbolTypeValue: string;
 
   collapsed: Map<string, boolean>;
+  classifierValue = true;
 
 
   constructor(public store: Store<AgnosticRepresentationState>) {
@@ -51,6 +49,17 @@ export class AgnosticToolbarComponent implements OnInit, OnDestroy {
     }
   }
 
+  @Input()
+  get classifier() {
+    return this.classifierValue;
+  }
+
+  set classifier(val) {
+    if (this.classifierValue !== val) {
+      this.classifierValue = val;
+      this.classifierChanged.emit(val);
+    }
+  }
 
   isCollapsed(category: AgnosticSymbolToolbarCategory): boolean {
     return this.collapsed.get(category.name);
@@ -59,6 +68,10 @@ export class AgnosticToolbarComponent implements OnInit, OnDestroy {
   toggleCollapsed(category: AgnosticSymbolToolbarCategory) {
     const prev = this.collapsed.get(category.name);
     this.collapsed.set(category.name, !prev);
+  }
+
+  inAddingMode() {
+    return this.mode === 'eAdding';
   }
 
   movePitchDownSelectedSymbol() {

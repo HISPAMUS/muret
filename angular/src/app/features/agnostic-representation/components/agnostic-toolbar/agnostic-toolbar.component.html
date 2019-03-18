@@ -21,8 +21,12 @@
       {{category.name}}
     </button>-->
     <form>
-      <ng-container
-           ngbRadioGroup name="symbolTypesRadioGroup" [(ngModel)]="selectedAgnosticSymbolType">
+      <label *ngIf="inAddingMode()" class="btn-light mb-2" ngbButtonLabel title="Use classifier">
+        <input name="symbolTypeRadioButton" ngbButton type="checkbox" [(ngModel)]="classifier">
+        Use classifier
+      </label>
+
+      <ng-container ngbRadioGroup name="symbolTypesRadioGroup" [(ngModel)]="selectedAgnosticSymbolType">
         <ng-container *ngFor="let category of agnosticSymbolToolbarCategories"> <!--[ngbCollapse]="isCollapsed(category)"-->
           <label *ngFor="let symbolType of category.agnosticSymbolTypes" class="btn-light mb-2" ngbButtonLabel title="{{symbolType}}">
             <input name="symbolTypeRadioButton" ngbButton type="radio" [value]="symbolType">
