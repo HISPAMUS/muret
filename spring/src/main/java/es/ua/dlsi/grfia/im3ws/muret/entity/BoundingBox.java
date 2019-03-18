@@ -1,5 +1,7 @@
 package es.ua.dlsi.grfia.im3ws.muret.entity;
 
+import es.ua.dlsi.im3.core.IM3RuntimeException;
+
 import java.util.Objects;
 
 /**
@@ -17,17 +19,20 @@ public class BoundingBox {
 
     public BoundingBox(Long id, int fromX, int fromY, int toX, int toY) {
         this.id = id;
+        if (fromX >= toX) {
+            throw new IM3RuntimeException("fromX (" + fromX + ") is >= toX (" + toX + ")");
+        }
         this.fromX = fromX;
+        if (fromY >= toY) {
+            throw new IM3RuntimeException("fromY (" + fromY + ") is >= toY (" + toY + ")");
+        }
         this.fromY = fromY;
         this.toX = toX;
         this.toY = toY;
     }
 
     public BoundingBox(int fromX, int fromY, int toX, int toY) {
-        this.fromX = fromX;
-        this.fromY = fromY;
-        this.toX = toX;
-        this.toY = toY;
+        this(null, fromX, fromY, toX, toY);
     }
 
 

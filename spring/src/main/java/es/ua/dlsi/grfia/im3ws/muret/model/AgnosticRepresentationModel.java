@@ -6,38 +6,48 @@ import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.SymbolRepository;
 import es.ua.dlsi.im3.core.IM3Exception;
+import es.ua.dlsi.im3.core.score.PositionInStaff;
 import es.ua.dlsi.im3.core.score.PositionsInStaff;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
+import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbolType;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbolTypeFactory;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Component
 public class AgnosticRepresentationModel {
     private static final int BOUNDING_BOX_TOLERANCE = 10;
-    private final MURETConfiguration muretConfiguration;
+    // see agnostic-representation.component.ts
+    private static final String AGNOSTIC_SYMBOL_TYPE_FROM_CLASSIFIER = "USE_SYMBOL_CLASSIFIER";
     private final RegionRepository regionRepository;
     private final SymbolRepository symbolRepository;
+    private final SymbolClassifierClient symbolClassifierClient;
+    private final MURETConfiguration muretConfiguration;
+
 
     @Autowired
     public AgnosticRepresentationModel(MURETConfiguration muretConfiguration, RegionRepository regionRepository, SymbolRepository symbolRepository) {
         this.muretConfiguration = muretConfiguration;
         this.regionRepository = regionRepository;
         this.symbolRepository = symbolRepository;
+        this.symbolClassifierClient = new SymbolClassifierClient(muretConfiguration.getPythonclassifiers());
+
     }
 
     /*public AgnosticSymbol classifySymbolFromImageBoundingBox(Image image, int fromX, int fromY, int toX, int toY, String classifierName) throws IM3Exception {
-        //TODO generalizar - coger el clasificador cargado - ¿si está el python en memoria tb.?
 
         boolean usePythonClassifiers = false;
-        ////TODO
         Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "TO-DO HE DESACTIVADO LAS PETICIONES A PYTHON");
         if (!usePythonClassifiers) {
-            return AgnosticSymbol.parseAgnosticString(AgnosticVersion.v2, "clef.C:L3"); // TODO - siempre devuelvo lo mismo
+            return AgnosticSymbol.parseAgnosticString(AgnosticVersion.v2, "clef.C:L3");
         } else {
             File localClassifierPath = new File(muretConfiguration.getPythonclassifiers(), "symbol-classification");
 
@@ -48,7 +58,7 @@ public class AgnosticRepresentationModel {
                 DLSymbolAndPositionClassifier classifier = new DLSymbolAndPositionClassifier(localClassifierPath);
                 BoundingBox boundingBox = new BoundingBoxXY(fromX, fromY, toX, toY);
 
-                File muretProjectsFolder = new File(image.getProject().getPath()); // TODO estático
+                File muretProjectsFolder = new File(image.getProject().getPath());
                 File imagesFolder = new File(muretProjectsFolder, MURETConfiguration.MASTER_IMAGES);
                 File imageFile = new File(imagesFolder, image.getFilename());
                 if (!imageFile.exists()) {
@@ -78,9 +88,27 @@ public class AgnosticRepresentationModel {
         symbol.setBoundingBox(boundingBox);
         symbol.setStrokes(strokes);
         symbol.setRegion(persistentRegion);
-        AgnosticSymbol agnosticSymbol = new AgnosticSymbol(AgnosticVersion.v2,
-                AgnosticSymbolTypeFactory.parseString(agnosticSymbolType),
-                PositionsInStaff.LINE_3);
+
+
+        AgnosticSymbol agnosticSymbol = null;
+
+        Image persistentImage = persistentRegion.getPage().getImage();
+        
+        long imageID = persistentImage.getId();
+        Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.getProject().getPath(), MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());
+
+        try {
+            agnosticSymbol = symbolClassifierClient.classifyImage(imageID, imagePath, boundingBox);
+        } catch (Exception e) {
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Error classifying symbol, using defaults", e);
+            agnosticSymbol = AgnosticSymbol.parseAgnosticString(AgnosticVersion.v2, "clef.C:L3");
+        }
+
+        if (agnosticSymbolType != null && !agnosticSymbolType.equals(AGNOSTIC_SYMBOL_TYPE_FROM_CLASSIFIER)) {
+            // if an agnostic type is provided, use it
+            agnosticSymbol.changeAgnosticSymbolType(AgnosticSymbolTypeFactory.parseString(agnosticSymbolType));
+        }
+
         symbol.setAgnosticSymbol(agnosticSymbol);
         symbol.setRegion(persistentRegion);
         Symbol persistentSymbol = symbolRepository.save(symbol);
@@ -122,6 +150,7 @@ public class AgnosticRepresentationModel {
         }
 
         BoundingBox boundingBox = new BoundingBox(minX-BOUNDING_BOX_TOLERANCE, minY-BOUNDING_BOX_TOLERANCE, maxX+BOUNDING_BOX_TOLERANCE, maxY+BOUNDING_BOX_TOLERANCE);
+
 
         return createSymbol(regionID, boundingBox, calcoStrokes, agnosticSymbolType);
     }
