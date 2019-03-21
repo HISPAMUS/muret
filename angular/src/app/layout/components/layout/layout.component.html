@@ -1,22 +1,43 @@
-<nav *ngIf="menuVisible" id="topMenu" class="navbar navbar-fixed-top">
-  <div class="container">
-    <a class="navbar-brand" routerLink="home"><img src="assets/images/logos/muret_menu.png" alt="Logo MuRET"></a>
-    <ul class="nav navbar-nav" routerLinkActive="active">
-      <li *ngIf="!isAuthenticated" class="nav-item"><a class="nav-link" routerLink="login">Login</a></li>
-      <li *ngIf="isAuthenticated" class="nav-item"><a class="nav-link" routerLink="login">Logout</a></li>
-      <li *ngIf="isAuthenticated" class="nav-item"><a class="nav-link" routerLink="export/trainingsets">Training sets</a></li>
-      <li *ngIf="isAuthenticated" class="nav-item"><a class="nav-link" href="https://github.com/HISPAMUS/muret/issues" target="_blank">Report an issue</a></li>
+<div class="container-fluid">
+  <nav *ngIf="menuVisible" id="topMenu" class="navbar navbar-expand-lg navbar-light">
+    <a class="navbar-brand" routerLink="home">
+      <img src="assets/images/logos/muret_menu.png" alt="Logo MuRET">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div id="navbarNavDropdown" class="navbar-collapse collapse">
+      <ul class="navbar-nav mr-auto">
+        <!--<li *ngIf="isDev" class="nav-item">
+          <a class="nav-link" routerLink="/agnosticrepresentation/2104">AgnostDev</a>
+        </li>-->
+      </ul>
+      <ul class="navbar-nav">
+        <li *ngIf="!isAuthenticated" class="nav-item active">
+          <a class="nav-link" href="#">Login <span class="sr-only">Login</span></a>
+        </li>
 
-      <li class="nav-item"><a class="nav-link" routerLink="about">About</a></li>
-      <!--<li *ngIf="isDev" class="nav-item"><a class="nav-link" routerLink="/documentanalysis/1849">dev</a></li>-->
-    </ul>
-    <div *ngIf="isDev">
-      <!--<a routerLink="/documentanalysis/1849">dev3</a> &nbsp;
-      <a routerLink="/documentanalysis/2104">dev</a> &nbsp;-->
-      <a routerLink="/agnosticrepresentation/2104">AgnostDev</a>
+        <ng-container *ngIf="isAuthenticated" >
+          <li class="nav-item">
+            <a class="nav-link" routerLink="login">Logout</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="export/trainingsets">Training sets</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/HISPAMUS/muret/issues" target="_blank">Report an issue</a>
+          </li>
+          <li *ngIf="isDev" class="nav-item">
+            <a class="nav-link" routerLink="/agnosticrepresentation/2261">AgnostDev</a>
+          </li>
+        </ng-container>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="about">About</a>
+        </li>
+      </ul>
     </div>
-  </div>
-</nav>
+  </nav>
+</div>
 
 <router-outlet></router-outlet>
 

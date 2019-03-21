@@ -16,7 +16,7 @@ export class LayoutComponent implements OnInit {
   menuVisible = true;
 
   private authState$: Observable<AuthState>;
-  private isAuthenticated = false;
+  isAuthenticated = false;
 
   constructor(private store: Store<CoreState>) {
     this.authState$ = this.store.select<AuthState>(selectAuthState);
