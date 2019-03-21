@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, Self, ViewChild} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit, Self, ViewChild} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Rectangle} from '../../../../svg/model/rectangle';
@@ -272,6 +272,13 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
 
   openSemanticRepresentation() {
     this.router.navigate(['semanticrepresentation', this.imageID]);
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if (this.mode === 'eEditing' && event.code === 'Delete') {
+      this.deleteSelected();
+    }
   }
 }
 

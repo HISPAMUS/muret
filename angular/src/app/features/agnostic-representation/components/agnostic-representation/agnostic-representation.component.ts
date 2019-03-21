@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Observable, Subscription} from 'rxjs';
 import {Shape} from '../../../../svg/model/shape';
@@ -361,4 +361,26 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   onClassifierChanged($event: boolean) {
     this.classifier = $event;
   }
+
+  @HostListener('window:keydown', ['$event']) // keydown to prevent scroll
+  keyEvent(event: KeyboardEvent) {
+    if (this.mode === 'eEditing') {
+      switch (event.code) {
+        case 'Delete':
+          this.deleteSelectedSymbol();
+          break;
+        case 'ArrowDown':
+          event.stopImmediatePropagation();
+          event.preventDefault(); // prevent scroll
+          this.movePitchDownSelectedSymbol();
+          break;
+        case 'ArrowUp':
+          event.stopImmediatePropagation();
+          event.preventDefault(); // prevent scroll
+          this.movePitchUpSelectedSymbol();
+          break;
+      }
+    }
+  }
+
 }
