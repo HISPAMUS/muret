@@ -43,7 +43,7 @@
                        (svgShapeChanged)="onSymbolShapeChanged($event)"
                        [nextShapeToDraw]="nextShapeToDraw"
                        [(mode)]="mode"
-                       [(selectedShape)]="selectedShape"
+                       [(selectedShapeID)]="selectedShapeID"
             ></app-image>
           </div>
         </section>
@@ -81,7 +81,7 @@
       <section class="row">
         <div class="col">
           <app-image [imageID]="imageID" [shapes]="imagePreviewShapes" [zoomFactor]="imagePreviewZoomFactor"
-                     [(selectedShape)]="selectedRegionShape"
+                     [(selectedShapeID)]="selectedRegionShapeID"
                      [mode]="'eSelecting'">
           </app-image>
         </div>

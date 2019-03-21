@@ -12,16 +12,16 @@
   <g *ngFor="let shape of shapes">
     <ng-container [ngSwitch]="shape.type">
       <ng-container *ngSwitchCase="'Rectangle'">
-        <g appRectangle [appRectangle]="shape" [shape]="shape"></g>
+        <g appRectangle [appRectangle]="shape" [shape]="shape" [editing]="isEditing()" [selected]="isSelected(shape)"></g>
       </ng-container>
       <ng-container *ngSwitchCase="'Line'">
-        <g appLine [appLine]="shape"  [shape]="shape"></g>
+        <g appLine [appLine]="shape"  [shape]="shape" [editing]="isEditing()" [selected]="isSelected(shape)"></g>
       </ng-container>
       <ng-container *ngSwitchCase="'Polylines'">
-        <g appPolyline [appPolylines]="shape"  [shape]="shape"></g>
+        <g appPolyline [appPolylines]="shape"  [shape]="shape" [editing]="isEditing()" [selected]="isSelected(shape)"></g>
       </ng-container>
       <ng-container *ngSwitchCase="'Text'">
-        <g appText [appText]="shape"  [shape]="shape"></g>
+        <g appText [appText]="shape"  [shape]="shape" [editing]="isEditing()" [selected]="isSelected(shape)"></g>
       </ng-container>
     </ng-container>
   </g>

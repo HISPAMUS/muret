@@ -21,7 +21,11 @@ import {
   GetRegion,
   SelectSymbol
 } from '../../store/actions/agnostic-representation.actions';
-import {selectAgnosticSymbols, selectSelectedRegion, selectSelectedSymbol} from '../../store/selectors/agnostic-representation.selector';
+import {
+  selectAgnosticSymbols,
+  selectSelectedRegion,
+  selectSelectedSymbol
+} from '../../store/selectors/agnostic-representation.selector';
 import {AgnosticSymbolToolbarCategory} from '../../model/agnostic-symbol-toolbar-category';
 import {AGNOSTIC_SYMBOL_TOOLBAR_CATEGORIES} from '../../model/agnostic-symbol-toolbar-categories';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
@@ -56,10 +60,10 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   manuscriptType = 'eHandwritten';
 
   mode: 'eIdle' | 'eAdding' | 'eEditing' | 'eSelecting';
-  private selectedShapeValue: Shape;
+  private selectedShapeIDValue: string;
   nextShapeToDraw: 'Rectangle' | 'Polylines';
   selectedAgnosticSymbolTypeValue: string;
-  private selectedRegionShapeValue: Shape;
+  private selectedRegionShapeIDValue: string;
   addMethodTypeValue: 'boundingbox' | 'strokes' ;
   classifier = true;
 
@@ -67,7 +71,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
               private dialogsService: DialogsService) {
     this.selectedRegion$ = store.select(selectSelectedRegion);
     this.mode = 'eIdle';
-    this.selectedRegionShapeValue = null;
+    this.selectedRegionShapeIDValue = null;
     this.addMethodType = 'boundingbox';
   }
 
@@ -96,6 +100,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
       this.setSelectedSymbol(next);
     });
 
+
     this.mode = 'eIdle';
   }
 
@@ -106,16 +111,25 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.selectedSymbolSubscription.unsubscribe();
   }
 
-  get selectedShape() {
-    return this.selectedShapeValue;
+  private findSelectedShape(): Shape {
+    if (this.selectedShapeID) {
+      return this.selectedRegionShapes.find(s => s.id === this.selectedShapeID);
+    } else {
+      return null;
+    }
+  }
+
+  get selectedShapeID() {
+    return this.selectedShapeIDValue;
   }
 
   /**
    * It comes from the svg canvas through image component
    */
-  set selectedShape(shape: Shape) {
-    if (this.selectedShapeValue !== shape) {
-      this.selectedShapeValue = shape;
+  set selectedShapeID(id: string) {
+    if (this.selectedShapeIDValue !== id) {
+      this.selectedShapeIDValue = id;
+      const shape = this.findSelectedShape();
       if (shape && shape.data !== this.selectedSymbol) {
         this.store.dispatch(new SelectSymbol(shape.data.id));
       } else if (!shape) {
@@ -139,22 +153,31 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     if (symbol) {
       this.selectedAgnosticSymbolType = symbol.agnosticSymbolType;
       const srs = this.selectedRegionShapes.find(s => s.data === symbol);
-      this.selectedShape = srs;
+      this.selectedShapeID = srs.id;
     } else {
-        this.selectedShape = null;
+        this.selectedShapeID = null;
     }
   }
 
-  get selectedRegionShape() {
-    return this.selectedRegionShapeValue;
+  get selectedRegionShapeID() {
+    return this.selectedRegionShapeIDValue;
   }
 
-  set selectedRegionShape(shape: Shape) {
-    if (this.selectedRegionShapeValue !== shape) {
-      this.selectedRegionShapeValue = shape;
+  set selectedRegionShapeID(id: string) {
+    if (this.selectedRegionShapeIDValue !== id) {
+      this.selectedRegionShapeIDValue = id;
+      const shape = this.findSelectedRegionShape();
       if (shape) {
         this.store.dispatch(new GetRegion(shape.data.id));
       }
+    }
+  }
+
+  private findSelectedRegionShape(): Shape {
+    if (this.selectedRegionShapeID && this.imagePreviewShapes) {
+      return this.imagePreviewShapes.find(s => s.id === this.selectedRegionShapeID);
+    } else {
+      return null;
     }
   }
 

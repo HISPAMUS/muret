@@ -9,10 +9,9 @@ import {Coordinate} from '../../model/coordinate';
 })
 // Don't use angular CDK drag&drop because we are getting some problems with the zoom
 export class ShapeComponent implements OnInit {
+  @Input() selected: boolean;
+  @Input() editing: boolean;
   @Input() shape: Shape;
-
-  editing = false;
-  selected = false;
 
   protected handleSelected: string;
   private drawStarted = false;
@@ -29,14 +28,6 @@ export class ShapeComponent implements OnInit {
       this.handleSelected = handle;
       $event.stopPropagation();
     }
-  }
-
-  public select(selected: boolean) {
-    this.selected = selected;
-  }
-
-  setEditingMode(editing: boolean) {
-    this.editing = editing;
   }
 
   deselectHandle(): boolean {

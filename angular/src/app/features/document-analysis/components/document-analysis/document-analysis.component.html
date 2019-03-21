@@ -61,7 +61,7 @@
         <app-image [imageID]="imageID" [shapes]="shapes" [zoomFactor]="zoomFactor"
         (svgShapeCreated)="onShapeCreated($event)"
         (svgShapeChanged)="onShapeChanged($event)"
-        [(selectedShape)]="selectedShape"
+        [(selectedShapeID)]="selectedShapeID"
         [nextShapeToDraw]="'Rectangle'"
         [(mode)]="mode"
         ></app-image>

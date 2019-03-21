@@ -30,12 +30,12 @@ export class ImageComponent implements OnInit, OnDestroy, OnChanges {
   @Input() zoomFactor: number;
   @Input() crop: BoundingBox;
   @Input() nextShapeToDraw: 'Rectangle' | 'Line' | 'Text' | 'Path';
-  selectedShapeValue: Shape;
+  selectedShapeIDValue: string;
 
 
   @Output() svgShapeCreated = new EventEmitter<Shape>();
   @Output() svgShapeChanged = new EventEmitter<Shape>();
-  @Output() selectedShapeChange = new EventEmitter<Shape>();
+  @Output() selectedShapeIDChange = new EventEmitter<string>();
 
   imageWidth$: Observable<number>;
   imageHeight$: Observable<number>;
@@ -80,14 +80,14 @@ export class ImageComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   @Input()
-  get selectedShape() {
-    return this.selectedShapeValue;
+  get selectedShapeID() {
+    return this.selectedShapeIDValue;
   }
 
-  set selectedShape(val) {
-    if (this.selectedShapeValue !== val) {
-      this.selectedShapeValue = val;
-      this.selectedShapeChange.emit(val);
+  set selectedShapeID(val) {
+    if (this.selectedShapeIDValue !== val) {
+      this.selectedShapeIDValue = val;
+      this.selectedShapeIDChange.emit(val);
     }
   }
 
