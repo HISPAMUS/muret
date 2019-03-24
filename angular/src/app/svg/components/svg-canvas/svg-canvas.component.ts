@@ -1,9 +1,8 @@
 import {
-  AfterContentChecked, AfterViewChecked,
   Component,
   ComponentFactoryResolver,
   ElementRef,
-  EventEmitter,
+  EventEmitter, HostListener,
   Input,
   OnChanges,
   OnInit,
@@ -37,8 +36,7 @@ import {Polylines} from '../../model/polylines';
 export class SvgCanvasComponent implements OnInit, OnChanges {
   @Input() backgroundImage: string;
   @Input() shapes: Shape[];
-  @Input() widthPercentage: number;
-  @Input() heightPercentage: number;
+  @Input() zoomFactor: number;
 
   @Input() crop: BoundingBox;
   @Input() nextShapeToAdd: 'Rectangle' | 'Line' | 'Text' | 'Polylines';
@@ -49,7 +47,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   @Output() modeChange = new EventEmitter();
 
   @ViewChild('canvas') canvas: ElementRef;
-  @ViewChild('backgroundHiddenImageElement ') backgroundHiddenImageElement: ElementRef;
+  @ViewChild('svgContent') svgContent: ElementRef;
   /// @ViewChildren(ShapeComponent) shapeComponents: QueryList<ShapeComponent>;
 
   // interaction
@@ -65,13 +63,16 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   viewBox: string;
   viewPortHeight = 0;
   viewPortWidth = 0;
+  scaledImageWidth: any;
+  scaledImageHeight: any;
 
-  heightPercentString: string;
-  widthPercentString: string;
+  // heightPercentString: string;
+  // widthPercentString: string;
   private selectedComponent: ShapeComponent;
   private unsafeBackgroundImage: SafeResourceUrl;
   private shapeWithoutComponent: Rectangle | Line | Text | Polylines;
   private polylinesCreationTimeout: number;
+  private proportion: number;
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver,
               private sanitizer: DomSanitizer) {
@@ -86,6 +87,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.computeViewBox(); // it costs less to compute the change than checking if it has changed
+    this.computeScaledImageSize();
   }
 
   @Input()
@@ -127,11 +129,14 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   private computeViewBox() {
     if (this.crop) {
       this.viewBox = `${this.crop.fromX} ${this.crop.fromY} ${this.crop.toX - this.crop.fromX} ${this.crop.toY - this.crop.fromY}`;
+      this.proportion = (this.crop.toX - this.crop.fromX) / (this.crop.toY - this.crop.fromY);
     } else {
       this.viewBox = `0 0 ${this.viewPortWidth} ${this.viewPortHeight}`;
+      this.proportion = this.viewPortWidth / this.viewPortHeight;
     }
-    this.heightPercentString = this.heightPercentage + '%';
-    this.widthPercentString = this.widthPercentage + '%';
+
+    // this.heightPercentString = this.heightPercentage + '%';
+    // this.widthPercentString = this.widthPercentage + '%';
   }
 
   private createShapeFromTypeName(nextShapeToDraw: 'Rectangle' | 'Line' | 'Text' | 'Polylines') {
@@ -305,6 +310,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
     this.viewPortWidth = $event.target.naturalWidth;
 
     this.computeViewBox();
+    this.computeScaledImageSize();
   }
 
   isEditing() {
@@ -313,5 +319,28 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
 
   isSelected(shape: Shape) {
     return this.selectedShapeID === shape.id;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.computeScaledImageSize();
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if (event.code === 'Escape') {
+      if (this.selectedComponent && this.selectedComponent.shape && !this.selectedComponent.shape.data) { // if not inserted yet
+        this.shapes = this.shapes.filter(s => s !== this.selectedComponent.shape);
+      }
+      this.selectedComponent = null;
+      this.selectedShapeID = null;
+    }
+  }
+
+  private computeScaledImageSize() {
+    if (this.svgContent.nativeElement && this.proportion) {
+      this.scaledImageWidth = this.zoomFactor * this.svgContent.nativeElement.clientWidth;
+      this.scaledImageHeight = this.scaledImageWidth / this.proportion;
+    }
   }
 }

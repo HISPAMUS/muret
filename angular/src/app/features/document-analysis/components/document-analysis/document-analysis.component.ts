@@ -74,7 +74,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
       this.imageID = +params.get('id'); // + converts the string to number
       this.store.dispatch(new GetImageProjection(+this.imageID));
       setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
-        this.store.dispatch(new ActivateLink({title: 'Image', routerLink: 'documentanalysis/' + this.imageID}));
+        this.store.dispatch(new ActivateLink({title: 'Document analysis', routerLink: 'documentanalysis/' + this.imageID}));
       });
     });
 
@@ -99,10 +99,6 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
 
   zoomFit() {
     this.zoomFactor = 1;
-  }
-
-  goBack() {
-    this.location.back();
   }
 
   get selectedShapeID() {
@@ -299,6 +295,8 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   keyEvent(event: KeyboardEvent) {
     if (this.mode === 'eEditing' && event.code === 'Delete') {
       this.deleteSelected();
+    } else if (event.code === 'Escape') {
+      this.mode = 'eIdle';
     }
   }
 }

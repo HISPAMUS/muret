@@ -42,24 +42,4 @@ export class LoginComponent implements OnInit {
     this.credentials.password = environment.debugpass;
     this.login();
   }
-    /*login() {
-      this.loginTo('/home');
-    }
-
-    loginTo(url: string) {
-      this.store.dispatch(new LogIn(this.credentials));
-    }
-
-    dev() {
-      this.credentials.username = 'davidrizo';
-      this.credentials.password = 'nose';
-      // this.loginTo('/project/148');
-      // this.loginTo('/documentanalysis/2104');
-      this.loginTo('/documentanalysis/1849');
-    }
-
-    authenticated() {
-      return this.authService.isLoggedIn;
-    }*/
-
 }

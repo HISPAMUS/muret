@@ -24,7 +24,7 @@ import {BoundingBox} from '../../../core/model/entities/bounding-box';
 /**
  * Just in charge of showing an image with the option of zooming in and out
  */
-export class ImageComponent implements OnInit, OnDestroy, OnChanges {
+export class ImageComponent implements OnInit, OnDestroy {
   @Input() imageID: number;
   @Input() shapes: Shape[];
   @Input() zoomFactor: number;
@@ -41,9 +41,6 @@ export class ImageComponent implements OnInit, OnDestroy, OnChanges {
   imageHeight$: Observable<number>;
   imageURL$: Observable<string>;
 
-  canvasHeightPercentage: number;  // e.g. 100 for 100%
-  canvasWidthPercentage: number;
-
   // @ViewChild('svgCanvasComponent') svgCanvasComponent: SvgCanvasComponent;
 
   private modeValue: 'eIdle' | 'eAdding' | 'eEditing' | 'eSelecting';
@@ -57,16 +54,9 @@ export class ImageComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnInit() {
     this.docAnalysisStore.dispatch(new GetImageURL(this.imageID)); // request image URL
-    this.computeZoom();
   }
 
   ngOnDestroy() {
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.zoomFactor) {
-      this.computeZoom();
-    }
   }
 
   @Input()
@@ -89,11 +79,6 @@ export class ImageComponent implements OnInit, OnDestroy, OnChanges {
       this.selectedShapeIDValue = val;
       this.selectedShapeIDChange.emit(val);
     }
-  }
-
-  private computeZoom() {
-    this.canvasHeightPercentage = 100.0 * this.zoomFactor;
-    this.canvasWidthPercentage = 100.0 * this.zoomFactor;
   }
 
   onShapeCreated($event: Shape) {
