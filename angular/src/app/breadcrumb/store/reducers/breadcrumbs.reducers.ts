@@ -25,6 +25,12 @@ BreadcrumbsState {
       }
       return newState;
     }
+    case BreadcrumbsActionTypes.ClearLinks: {
+      const newState: BreadcrumbsState = {
+        links: []
+      };
+      return newState;
+    }
     default: {
       return state;
     }

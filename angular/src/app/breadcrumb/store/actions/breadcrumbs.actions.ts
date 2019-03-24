@@ -3,6 +3,7 @@ import {BreadcrumbLink} from '../../model/breadcrumb-link';
 
 export enum BreadcrumbsActionTypes {
   ActivateLink = '[Breadcrumbs] Activate link',
+  ClearLinks = '[Breadcrumbs] Clear links'
 }
 
 export class ActivateLink implements Action {
@@ -10,6 +11,10 @@ export class ActivateLink implements Action {
   constructor(public link: BreadcrumbLink) {}
 }
 
+export class ClearLinks implements Action {
+  public readonly type = BreadcrumbsActionTypes.ClearLinks;
+  constructor() {}
+}
 
 export type BreadcrumbsActions =
-  ActivateLink;
+  ActivateLink | ClearLinks;

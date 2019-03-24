@@ -26,9 +26,11 @@ export class ProjectComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe((params: ParamMap) => {
       const id = +this.route.snapshot.paramMap.get('id'); // + converts the string to number
-      this.store.dispatch(new ActivateLink({title: 'Project ', routerLink: 'project/' + id}));
       this.store.dispatch(new GetProject(id));
       this.store.dispatch(new GetImages(id));
+      setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
+        this.store.dispatch(new ActivateLink({title: 'Project ', routerLink: 'project/' + id}));
+      });
     });
   }
 

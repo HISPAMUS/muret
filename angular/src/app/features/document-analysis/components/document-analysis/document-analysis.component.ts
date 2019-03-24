@@ -72,8 +72,10 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
     // request store data
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.imageID = +params.get('id'); // + converts the string to number
-      this.store.dispatch(new ActivateLink({title: 'Image', routerLink: 'documentanalysis/' + this.imageID}));
       this.store.dispatch(new GetImageProjection(+this.imageID));
+      setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
+        this.store.dispatch(new ActivateLink({title: 'Image', routerLink: 'documentanalysis/' + this.imageID}));
+      });
     });
 
     this.pagesSubscription = this.store.select(selectPages).subscribe(next => {
