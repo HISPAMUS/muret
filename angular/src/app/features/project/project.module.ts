@@ -10,6 +10,7 @@ import {EffectsModule} from '@ngrx/effects';
 import {ProjectService} from './services/project.service';
 import {ProjectEffects} from './store/effects/project.effects';
 import {projectReducers} from './store/reducers/project.reducers';
+import {BreadcrumbModule} from '../../breadcrumb/breadcrumb.module';
 
 @NgModule({
   declarations: [ProjectComponent, ImageThumbnailComponent],
@@ -19,6 +20,7 @@ import {projectReducers} from './store/reducers/project.reducers';
     LightboxModule,
     StoreModule.forFeature('project', projectReducers),
     EffectsModule.forFeature([ProjectEffects]),
+    BreadcrumbModule,
   ],
   providers: [
     ProjectService

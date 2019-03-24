@@ -3,13 +3,13 @@
     <!-- shape selected, changed, and deselected are forwarded from the canvas -->
     <app-svg-canvas #svgCanvasComponent
                     [shapes]="shapes" [backgroundImage]="loadedImage"
-                    [widthPercentage]="canvasWidthPercentage" [heightPercentage]="canvasHeightPercentage"
+                    [zoomFactor]="zoomFactor"
                     (svgShapeCreated)="onShapeCreated($event)"
                     (svgShapeChanged)="onShapeChanged($event)"
                     [crop]="crop"
                     [nextShapeToAdd]="nextShapeToDraw"
                     [(mode)]="mode"
-                    [(selectedShape)]="selectedShape"
+                    [(selectedShapeID)]="selectedShapeID"
     >
     </app-svg-canvas>
   </div>

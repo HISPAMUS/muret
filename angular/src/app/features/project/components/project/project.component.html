@@ -1,12 +1,27 @@
 <div class="container">
-<div *ngIf="project$ | async as project; else loading">
-  <h2>{{project.name}}</h2>
+<ng-container *ngIf="project$ | async as project; else loading">
 
-  <app-image-thumbnail *ngFor="let image of images$ | async; trackBy: trackByImageFn" [projectPath]="project.path" [image]="image" [attr.data-id]="image.id"></app-image-thumbnail>
+  <div class="row titles">
+    <div class="col-9 align-self-end">
+      <h4>{{project.name | uppercase}}</h4>
+    </div>
+    <div class="col-3 screenTitle">
+      <img src="assets/images/orderimages_small.png" alt="Order images"/>
+    </div>
+  </div>
 
-</div>
+  <div class="row">
+    <div class="col">
+    <app-image-thumbnail *ngFor="let image of images$ | async; trackBy: trackByImageFn" [projectPath]="project.path" [image]="image" [attr.data-id]="image.id"></app-image-thumbnail>
+    </div>
+  </div>
+</ng-container>
 <ng-template #loading>
-  Loading project data ...
+  <div class="row">
+    <div class="col">
+      <p>Loading project data ...</p>
+    </div>
+  </div>
 </ng-template>
 </div>
 

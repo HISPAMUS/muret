@@ -14,6 +14,7 @@ import {documentAnalysisReducers} from './store/reducers/document-analysis.reduc
 import {DocumentAnalysisEffects} from './store/effects/document-analysis.effects';
 import {DocumentAnalysisService} from './services/document-analysis.service';
 import { ImageComponent } from './image/image.component';
+import {BreadcrumbModule} from '../../breadcrumb/breadcrumb.module';
 
 @NgModule({
   declarations: [DocumentAnalysisComponent, ImageComponent],
@@ -27,6 +28,7 @@ import { ImageComponent } from './image/image.component';
     FontAwesomeModule,
     SharedModule,
     NgbButtonsModule,
+    BreadcrumbModule,
     StoreModule.forFeature('document-analysis', documentAnalysisReducers),
     EffectsModule.forFeature([DocumentAnalysisEffects]),
   ],

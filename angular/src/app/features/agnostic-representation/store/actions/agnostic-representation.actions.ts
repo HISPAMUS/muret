@@ -6,6 +6,7 @@ import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {Point} from '../../../../core/model/entities/point';
 
 export enum AgnosticRepresentationActionTypes {
+  InitRegion = '[AgnosticRepresentation] Init region',
   GetRegion = '[AgnosticRepresentation] Get region',
   GetRegionSuccess = '[AgnosticRepresentation] Get region success',
   SelectSymbol = '[AgnosticRepresentation] Select symbol',
@@ -21,6 +22,11 @@ export enum AgnosticRepresentationActionTypes {
   CreateSymbolSuccess = '[AgnosticRepresentation] Create symbol success',
   DeleteSymbol = '[AgnosticRepresentation] Delete symbol',
   DeleteSymbolSuccess = '[AgnosticRepresentation] Delete symbol success'
+}
+
+export class InitRegion implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.InitRegion;
+  constructor() {}
 }
 
 export class GetRegion implements Action {
@@ -99,6 +105,6 @@ export class DeleteSymbolSuccess implements Action {
 }
 
 export type AgnosticRepresentationActions =
-  GetRegion | GetRegionSuccess | GetSVGSet | GetSVGSetSucccess | SelectSymbol | DeselectSymbol |
+  InitRegion | GetRegion | GetRegionSuccess | GetSVGSet | GetSVGSetSucccess | SelectSymbol | DeselectSymbol |
   ChangeSymbolType  | ChangeSymbolBoundingBox | ChangeSymbolPositionInStaff | ChangeSymbolSuccess |
   CreateSymbolFromBoundingBox | CreateSymbolFromStrokes | CreateSymbolSuccess | DeleteSymbol | DeleteSymbolSuccess;

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, Self, ViewChild} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit, Self, ViewChild} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Rectangle} from '../../../../svg/model/rectangle';
@@ -25,6 +25,7 @@ import {
   selectRegionTypes
 } from '../../store/selectors/document-analysis.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
+import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
 
 @Component({
   selector: 'app-document-analysis',
@@ -44,7 +45,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   zoomFactor = 1;
 
   // tools
-  private selectedShapeValue: Shape;
+  private selectedShapeValue: string;
   private nextDrawShape: string | RegionType;
   shapes: Shape[];
 
@@ -72,6 +73,9 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.imageID = +params.get('id'); // + converts the string to number
       this.store.dispatch(new GetImageProjection(+this.imageID));
+      setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
+        this.store.dispatch(new ActivateLink({title: 'Document analysis', routerLink: 'documentanalysis/' + this.imageID}));
+      });
     });
 
     this.pagesSubscription = this.store.select(selectPages).subscribe(next => {
@@ -97,22 +101,31 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
     this.zoomFactor = 1;
   }
 
-  goBack() {
-    this.location.back();
-  }
-
-  get selectedShape() {
+  get selectedShapeID() {
     return this.selectedShapeValue;
   }
 
-  set selectedShape(shape: Shape) {
-    this.selectedShapeValue = shape;
-    if (shape && shape.data && shape.data.regionType) {
-      this.selectedRegionTypeID = shape.data.regionType.id;
-    } else {
-      this.selectedRegionTypeID = null;
+  set selectedShapeID(id: string) {
+    if (id !== this.selectedShapeValue) {
+      this.selectedShapeValue = id;
+
+      const shape = this.findSelectedShape();
+      if (shape) {
+        this.selectedRegionTypeID = shape.data.regionType.id;
+      } else {
+        this.selectedRegionTypeID = null;
+      }
     }
   }
+
+  private findSelectedShape(): Shape {
+    if (this.selectedShapeID) {
+      return this.shapes.find(s => s.id === this.selectedShapeID);
+    } else {
+      return null;
+    }
+  }
+
 
   trackByRegionTypeFn(index, item: RegionType) {
     return item.id; // unique id corresponding to the item
@@ -175,8 +188,8 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   }
 
   setRegionType(regionType: RegionType) {
-    if (this.isEditingMode() && this.selectedShape) {
-      const shape = this.selectedShape;
+    if (this.isEditingMode() && this.selectedShapeID) {
+      const shape = this.findSelectedShape();
       if (!shape) {
         throw new Error('No selected shape');
       }
@@ -256,11 +269,15 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
 
 
   deleteSelected() {
-    if (this.selectedShape) {
-      if (this.selectedShape.layer === 'page') {
-        this.store.dispatch(new DeletePage(+this.selectedShape.data.id));
+    if (this.selectedShapeID) {
+      const shape = this.findSelectedShape();
+      if (!shape) {
+        throw new Error('Cannot find shape with ID= "' + this.selectedShapeID + '"');
+      }
+      if (shape.layer === 'page') {
+        this.store.dispatch(new DeletePage(+shape.data.id));
       } else {
-        this.store.dispatch(new DeleteRegion(+this.selectedShape.data.id));
+        this.store.dispatch(new DeleteRegion(+shape.data.id));
       }
     }
   }
@@ -272,6 +289,15 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
 
   openSemanticRepresentation() {
     this.router.navigate(['semanticrepresentation', this.imageID]);
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if (this.mode === 'eEditing' && event.code === 'Delete') {
+      this.deleteSelected();
+    } else if (event.code === 'Escape') {
+      this.mode = 'eIdle';
+    }
   }
 }
 

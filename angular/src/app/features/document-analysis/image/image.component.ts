@@ -24,25 +24,22 @@ import {BoundingBox} from '../../../core/model/entities/bounding-box';
 /**
  * Just in charge of showing an image with the option of zooming in and out
  */
-export class ImageComponent implements OnInit, OnDestroy, OnChanges {
+export class ImageComponent implements OnInit, OnDestroy {
   @Input() imageID: number;
   @Input() shapes: Shape[];
   @Input() zoomFactor: number;
   @Input() crop: BoundingBox;
   @Input() nextShapeToDraw: 'Rectangle' | 'Line' | 'Text' | 'Path';
-  selectedShapeValue: Shape;
+  selectedShapeIDValue: string;
 
 
   @Output() svgShapeCreated = new EventEmitter<Shape>();
   @Output() svgShapeChanged = new EventEmitter<Shape>();
-  @Output() selectedShapeChange = new EventEmitter<Shape>();
+  @Output() selectedShapeIDChange = new EventEmitter<string>();
 
   imageWidth$: Observable<number>;
   imageHeight$: Observable<number>;
   imageURL$: Observable<string>;
-
-  canvasHeightPercentage: number;  // e.g. 100 for 100%
-  canvasWidthPercentage: number;
 
   // @ViewChild('svgCanvasComponent') svgCanvasComponent: SvgCanvasComponent;
 
@@ -57,16 +54,9 @@ export class ImageComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnInit() {
     this.docAnalysisStore.dispatch(new GetImageURL(this.imageID)); // request image URL
-    this.computeZoom();
   }
 
   ngOnDestroy() {
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.zoomFactor) {
-      this.computeZoom();
-    }
   }
 
   @Input()
@@ -80,20 +70,15 @@ export class ImageComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   @Input()
-  get selectedShape() {
-    return this.selectedShapeValue;
+  get selectedShapeID() {
+    return this.selectedShapeIDValue;
   }
 
-  set selectedShape(val) {
-    if (this.selectedShapeValue !== val) {
-      this.selectedShapeValue = val;
-      this.selectedShapeChange.emit(val);
+  set selectedShapeID(val) {
+    if (this.selectedShapeIDValue !== val) {
+      this.selectedShapeIDValue = val;
+      this.selectedShapeIDChange.emit(val);
     }
-  }
-
-  private computeZoom() {
-    this.canvasHeightPercentage = 100.0 * this.zoomFactor;
-    this.canvasWidthPercentage = 100.0 * this.zoomFactor;
   }
 
   onShapeCreated($event: Shape) {

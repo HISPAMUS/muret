@@ -1,9 +1,8 @@
 import {
-  AfterContentChecked, AfterViewChecked,
   Component,
   ComponentFactoryResolver,
   ElementRef,
-  EventEmitter,
+  EventEmitter, HostListener,
   Input,
   OnChanges,
   OnInit,
@@ -37,19 +36,18 @@ import {Polylines} from '../../model/polylines';
 export class SvgCanvasComponent implements OnInit, OnChanges {
   @Input() backgroundImage: string;
   @Input() shapes: Shape[];
-  @Input() widthPercentage: number;
-  @Input() heightPercentage: number;
+  @Input() zoomFactor: number;
 
   @Input() crop: BoundingBox;
   @Input() nextShapeToAdd: 'Rectangle' | 'Line' | 'Text' | 'Polylines';
 
-  selectedShapeValue: Shape;
+  selectedShapeIDValue: string;
 
   private modeValue: 'eIdle' | 'eAdding' | 'eEditing' | 'eSelecting';
   @Output() modeChange = new EventEmitter();
 
   @ViewChild('canvas') canvas: ElementRef;
-  @ViewChild('backgroundHiddenImageElement ') backgroundHiddenImageElement: ElementRef;
+  @ViewChild('svgContent') svgContent: ElementRef;
   /// @ViewChildren(ShapeComponent) shapeComponents: QueryList<ShapeComponent>;
 
   // interaction
@@ -57,7 +55,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
 
   @Output() svgShapeCreated = new EventEmitter<Shape>();
   @Output() svgShapeChanged = new EventEmitter<Shape>();
-  @Output() selectedShapeChange = new EventEmitter<Shape>();
+  @Output() selectedShapeIDChange = new EventEmitter<string>();
 
   cursorClass = 'cursorDefault';
   // end of interaction
@@ -65,14 +63,16 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   viewBox: string;
   viewPortHeight = 0;
   viewPortWidth = 0;
+  scaledImageWidth: any;
+  scaledImageHeight: any;
 
-  heightPercentString: string;
-  widthPercentString: string;
+  // heightPercentString: string;
+  // widthPercentString: string;
   private selectedComponent: ShapeComponent;
   private unsafeBackgroundImage: SafeResourceUrl;
   private shapeWithoutComponent: Rectangle | Line | Text | Polylines;
   private polylinesCreationTimeout: number;
-  private emitShapeSelected: boolean;
+  private proportion: number;
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver,
               private sanitizer: DomSanitizer) {
@@ -87,6 +87,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.computeViewBox(); // it costs less to compute the change than checking if it has changed
+    this.computeScaledImageSize();
   }
 
   @Input()
@@ -101,26 +102,26 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   }
 
   @Input()
-  get selectedShape() {
-    return this.selectedShapeValue;
+  get selectedShapeID() {
+    return this.selectedShapeIDValue;
   }
 
-  set selectedShape(shape: Shape) {
-    if (this.selectedShapeValue !== shape) {
-      this.deselect();
-      this.selectedComponent = this.findEventTargetComponent(shape);
-      if (this.selectedComponent) {
-        this.selectedShapeValue = shape;
-        this.selectedComponent.select(true);
-        this.selectedComponent.setEditingMode(this.mode === 'eEditing');
-        if (this.emitShapeSelected) { // avoid circular
-          this.selectedShapeChange.emit(shape);
-        }
+  set selectedShapeID(id: string) {
+    if (this.selectedShapeIDValue !== id) {
+      this.selectedShapeIDValue = id;
+      this.selectedComponent = this.findEventTargetComponent(id);
+    }
+  }
+
+  private findEventTargetComponent(targetID: string): ShapeComponent {
+    if (!this.shapes || !targetID) {
+      return null;
+    } else {
+      const shape = this.shapes.find(s => s.id === targetID);
+      if (shape) {
+        return shape.shapeComponent;
       } else {
-        if (this.emitShapeSelected) {
-          this.selectedShapeChange.emit(null); // unselect
-        }
-        // TODO - create selection rectangle
+        return null;
       }
     }
   }
@@ -128,11 +129,14 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   private computeViewBox() {
     if (this.crop) {
       this.viewBox = `${this.crop.fromX} ${this.crop.fromY} ${this.crop.toX - this.crop.fromX} ${this.crop.toY - this.crop.fromY}`;
+      this.proportion = (this.crop.toX - this.crop.fromX) / (this.crop.toY - this.crop.fromY);
     } else {
       this.viewBox = `0 0 ${this.viewPortWidth} ${this.viewPortHeight}`;
+      this.proportion = this.viewPortWidth / this.viewPortHeight;
     }
-    this.heightPercentString = this.heightPercentage + '%';
-    this.widthPercentString = this.widthPercentage + '%';
+
+    // this.heightPercentString = this.heightPercentage + '%';
+    // this.widthPercentString = this.widthPercentage + '%';
   }
 
   private createShapeFromTypeName(nextShapeToDraw: 'Rectangle' | 'Line' | 'Text' | 'Polylines') {
@@ -186,22 +190,19 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
           clearTimeout(this.polylinesCreationTimeout);
           this.polylinesCreationTimeout = null;
         } else {
-          this.deselect();
+          this.selectedShapeID = null;
           this.createShape(svgCoordinate);
         }
         break;
       case 'eSelecting':
-        this.deselect();
-        this.emitShapeSelected = true;
-        this.selectedShape = this.findShape($event.target.id);
-        this.emitShapeSelected = false;
+        this.selectedShapeID = $event.target.id;
+        this.selectedShapeIDChange.emit(this.selectedShapeID);
         break;
       case 'eEditing':
-        this.deselect();
-        this.emitShapeSelected = true;
+        this.selectedShapeID = null;
         // when auth clicks over a svg shape, it is sent to this method as event
-        this.selectedShape = this.findShape($event.target.id);
-        this.emitShapeSelected = false;
+        this.selectedShapeID = $event.target.id;
+        this.selectedShapeIDChange.emit(this.selectedShapeID);
         break;
     }
   }
@@ -270,14 +271,6 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
     }
   }
 
-  private deselect() {
-    if (this.selectedComponent) {
-      this.selectedComponent.select(false);
-      this.selectedComponent.setEditingMode(false);
-      this.selectedComponent = null;
-    }
-  }
-
   private createShape(coordinate: Coordinate) {
     const shape = this.createShapeFromTypeName(this.nextShapeToAdd);
     shape.fillColor = 'transparent';
@@ -298,12 +291,12 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
         if (shape instanceof Polylines) {
           shape.startNewPolyline = true;
           this.polylinesCreationTimeout = setTimeout(() => {
-            this.selectedShape = null;
+            this.selectedShapeID = null;
             this.svgShapeCreated.emit(shape);
             this.polylinesCreationTimeout = null;
           }, 1000); // TODO parametrizar timeout
         } else {
-          this.selectedShape = null;
+          this.selectedShapeID = null;
           this.svgShapeCreated.emit(shape);
         }
       }
@@ -317,18 +310,37 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
     this.viewPortWidth = $event.target.naturalWidth;
 
     this.computeViewBox();
+    this.computeScaledImageSize();
   }
 
-  private findEventTargetComponent(target: any): ShapeComponent {
-    if (!this.shapes || !target) {
-      return null;
-    } else {
-      const shape = this.shapes.find(s => s.id === target.id);
-      if (shape) {
-        return shape.shapeComponent;
-      } else {
-        return null;
+  isEditing() {
+    return this.mode === 'eEditing';
+  }
+
+  isSelected(shape: Shape) {
+    return this.selectedShapeID === shape.id;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.computeScaledImageSize();
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if (event.code === 'Escape') {
+      if (this.selectedComponent && this.selectedComponent.shape && !this.selectedComponent.shape.data) { // if not inserted yet
+        this.shapes = this.shapes.filter(s => s !== this.selectedComponent.shape);
       }
+      this.selectedComponent = null;
+      this.selectedShapeID = null;
+    }
+  }
+
+  private computeScaledImageSize() {
+    if (this.svgContent.nativeElement && this.proportion) {
+      this.scaledImageWidth = this.zoomFactor * this.svgContent.nativeElement.clientWidth;
+      this.scaledImageHeight = this.scaledImageWidth / this.proportion;
     }
   }
 }

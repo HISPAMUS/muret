@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Observable, Subscription} from 'rxjs';
 import {Shape} from '../../../../svg/model/shape';
@@ -7,7 +7,7 @@ import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {Rectangle} from '../../../../svg/model/rectangle';
 import {Region} from '../../../../core/model/entities/region';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
-import {selectPages} from '../../../document-analysis/store/selectors/document-analysis.selector';
+import {selectFileName, selectPages} from '../../../document-analysis/store/selectors/document-analysis.selector';
 import {Store} from '@ngrx/store';
 import {
   GetImageProjection
@@ -18,16 +18,21 @@ import {
   ChangeSymbolType,
   CreateSymbolFromBoundingBox, CreateSymbolFromStrokes,
   DeleteSymbol, DeselectSymbol,
-  GetRegion,
+  GetRegion, InitRegion,
   SelectSymbol
 } from '../../store/actions/agnostic-representation.actions';
-import {selectAgnosticSymbols, selectSelectedRegion, selectSelectedSymbol} from '../../store/selectors/agnostic-representation.selector';
+import {
+  selectAgnosticSymbols,
+  selectSelectedRegion,
+  selectSelectedSymbol
+} from '../../store/selectors/agnostic-representation.selector';
 import {AgnosticSymbolToolbarCategory} from '../../model/agnostic-symbol-toolbar-category';
 import {AGNOSTIC_SYMBOL_TOOLBAR_CATEGORIES} from '../../model/agnostic-symbol-toolbar-categories';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {Polylines} from '../../../../svg/model/polylines';
 import {Strokes} from '../../../../core/model/entities/strokes';
 import {Polyline} from '../../../../svg/model/polyline';
+import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
 
 const USE_SYMBOL_CLASSIFIER = 'USE_SYMBOL_CLASSIFIER'; // see es.ua.dlsi.grfia.im3ws.muret.model.AgnosticRepresentationModel
 
@@ -56,19 +61,23 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   manuscriptType = 'eHandwritten';
 
   mode: 'eIdle' | 'eAdding' | 'eEditing' | 'eSelecting';
-  private selectedShapeValue: Shape;
+  private selectedShapeIDValue: string;
   nextShapeToDraw: 'Rectangle' | 'Polylines';
   selectedAgnosticSymbolTypeValue: string;
-  private selectedRegionShapeValue: Shape;
+  private selectedRegionShapeIDValue: string;
   addMethodTypeValue: 'boundingbox' | 'strokes' ;
   classifier = true;
+  filename$: Observable<string>;
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>,
               private dialogsService: DialogsService) {
     this.selectedRegion$ = store.select(selectSelectedRegion);
     this.mode = 'eIdle';
-    this.selectedRegionShapeValue = null;
+    this.selectedRegionShapeIDValue = null;
+    this.filename$ = store.select(selectFileName);
     this.addMethodType = 'boundingbox';
+
+    this.store.dispatch(new InitRegion());
   }
 
   ngOnInit() {
@@ -76,6 +85,11 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.imageID = +params.get('id'); // + converts the string to number
       this.store.dispatch(new GetImageProjection(+this.imageID));
+
+      setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
+        this.store.dispatch(new ActivateLink({title: 'Agnostic', routerLink: 'agnosticrepresentation/' + this.imageID}));
+      });
+
     });
 
     this.pagesSubscription = this.store.select(selectPages).subscribe(next => {
@@ -96,6 +110,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
       this.setSelectedSymbol(next);
     });
 
+
     this.mode = 'eIdle';
   }
 
@@ -106,16 +121,25 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.selectedSymbolSubscription.unsubscribe();
   }
 
-  get selectedShape() {
-    return this.selectedShapeValue;
+  private findSelectedShape(): Shape {
+    if (this.selectedShapeID) {
+      return this.selectedRegionShapes.find(s => s.id === this.selectedShapeID);
+    } else {
+      return null;
+    }
+  }
+
+  get selectedShapeID() {
+    return this.selectedShapeIDValue;
   }
 
   /**
    * It comes from the svg canvas through image component
    */
-  set selectedShape(shape: Shape) {
-    if (this.selectedShapeValue !== shape) {
-      this.selectedShapeValue = shape;
+  set selectedShapeID(id: string) {
+    if (this.selectedShapeIDValue !== id) {
+      this.selectedShapeIDValue = id;
+      const shape = this.findSelectedShape();
       if (shape && shape.data !== this.selectedSymbol) {
         this.store.dispatch(new SelectSymbol(shape.data.id));
       } else if (!shape) {
@@ -139,22 +163,31 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     if (symbol) {
       this.selectedAgnosticSymbolType = symbol.agnosticSymbolType;
       const srs = this.selectedRegionShapes.find(s => s.data === symbol);
-      this.selectedShape = srs;
+      this.selectedShapeID = srs.id;
     } else {
-        this.selectedShape = null;
+        this.selectedShapeID = null;
     }
   }
 
-  get selectedRegionShape() {
-    return this.selectedRegionShapeValue;
+  get selectedRegionShapeID() {
+    return this.selectedRegionShapeIDValue;
   }
 
-  set selectedRegionShape(shape: Shape) {
-    if (this.selectedRegionShapeValue !== shape) {
-      this.selectedRegionShapeValue = shape;
+  set selectedRegionShapeID(id: string) {
+    if (this.selectedRegionShapeIDValue !== id) {
+      this.selectedRegionShapeIDValue = id;
+      const shape = this.findSelectedRegionShape();
       if (shape) {
         this.store.dispatch(new GetRegion(shape.data.id));
       }
+    }
+  }
+
+  private findSelectedRegionShape(): Shape {
+    if (this.selectedRegionShapeID && this.imagePreviewShapes) {
+      return this.imagePreviewShapes.find(s => s.id === this.selectedRegionShapeID);
+    } else {
+      return null;
     }
   }
 
@@ -361,4 +394,30 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   onClassifierChanged($event: boolean) {
     this.classifier = $event;
   }
+
+  @HostListener('window:keydown', ['$event']) // keydown to prevent scroll
+  keyEvent(event: KeyboardEvent) {
+    if (this.mode === 'eEditing') {
+      switch (event.code) {
+        case 'Delete':
+          this.deleteSelectedSymbol();
+          break;
+        case 'ArrowDown':
+          event.stopImmediatePropagation();
+          event.preventDefault(); // prevent scroll
+          this.movePitchDownSelectedSymbol();
+          break;
+        case 'ArrowUp':
+          event.stopImmediatePropagation();
+          event.preventDefault(); // prevent scroll
+          this.movePitchUpSelectedSymbol();
+          break;
+        case 'Escape':
+          this.store.dispatch(new DeselectSymbol());
+          this.mode = 'eIdle';
+          break;
+      }
+    }
+  }
+
 }

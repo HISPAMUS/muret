@@ -2,7 +2,17 @@
   <div id="login" class="row justify-content-around align-items-center">
 
     <!-- login -->
-    <div *ngIf="!isAuthenticated; else logoutBlock" class="col-5 ">
+    <div *ngIf="isAuthenticated$ | async; else loginBlock" class="col-5 ">
+      <div class="col-10">
+        <h1>Logout</h1>
+        <h3>{{username$ | async}}</h3>
+        <p>Do you really want to exit? &nbsp;
+          <button class="btn btn-primary" (click)="logout()">Press to logout</button>
+        </p>
+      </div>
+    </div>
+      <!-- logout -->
+    <ng-template #loginBlock>
       <h1>Login</h1>
       <form role="form" (submit)="login()">
         <div class="form-group">
@@ -14,22 +24,12 @@
           <input type="password" class="form-control" id="password" name="password" [(ngModel)]="credentials.password"/>
         </div>
 
-        <div id="loginError" class="alert alert-danger" [hidden]="!errorMessage">
-          There was a problem logging in: {{errorMessage}}
+        <div *ngIf="(errorMessage$ | async)?.length > 0" id="loginError" class="alert alert-danger">
+          There was a problem logging in: {{errorMessage$ | async}}
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
       <button *ngIf="isDev" class="btn btn-secondary" (click)="dev()">Dev</button>
-    </div>
-
-    <!-- logout -->
-    <ng-template #logoutBlock>
-      <div class="col-5">
-        <p>Do you really want to exit? &nbsp;
-          <button class="btn btn-primary" (click)="logout()">Press to logout</button>
-        </p>
-      </div>
-
     </ng-template>
 </div>
 </div>

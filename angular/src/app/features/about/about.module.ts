@@ -7,7 +7,7 @@ import {AboutComponent} from './components/about/about.component';
   declarations: [AboutComponent],
   imports: [
     CommonModule,
-    AboutRoutingModule
+    AboutRoutingModule,
   ]
 })
 export class AboutModule { }

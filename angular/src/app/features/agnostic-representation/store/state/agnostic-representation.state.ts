@@ -13,7 +13,7 @@ export const initialAgnosticRepresentationState: AgnosticRepresentationState = {
   selectedRegion: null,
   agnosticSymbols: null,
   selectedSymbolID: null,
-  svgAgnosticSymbolsSet: null
+  svgAgnosticSymbolsSet: null,
 };
 
 export function getInitialState(): AgnosticRepresentationState {
