@@ -67,7 +67,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   private selectedRegionShapeIDValue: string;
   addMethodTypeValue: 'boundingbox' | 'strokes' ;
   classifier = true;
-  private filename$: Observable<string>;
+  filename$: Observable<string>;
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>,
               private dialogsService: DialogsService) {
