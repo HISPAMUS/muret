@@ -9,9 +9,33 @@ export function authReducers(state = initialAuthState, action: AuthActions): Aut
         isAuthenticated: true,
         accessToken: action.payload.accessToken,
         userID: action.payload.userID,
+        username: action.payload.username,
         roles: action.payload.authorities,
         errorMessage: null
       };
+    }
+    case AuthActionTypes.REFRESH_LOGGED: {
+      if (action.sessionData) {
+        return {
+          ...state,
+          isAuthenticated: true,
+          accessToken: action.sessionData.accessToken,
+          userID: +action.sessionData.userID,
+          username: action.sessionData.username,
+          roles: action.sessionData.roles,
+          errorMessage: null
+        };
+      } else {
+        return {
+          ...state,
+          isAuthenticated: false,
+          accessToken: null,
+          userID: null,
+          username: null,
+          roles: null,
+          errorMessage: null
+        };
+      }
     }
     case AuthActionTypes.LOGIN_FAILURE: {
       return {

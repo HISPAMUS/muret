@@ -5,7 +5,8 @@
      (mousedown)="onMouseDown($event)" (mouseup)="onMouseUp($event)" (mousemove)="onMouseMove($event)"
      [attr.width.%]="widthPercentString" [attr.height.%]="heightPercentString"
      [attr.viewBox]="viewBox">
-  <image *ngIf="backgroundImage" [attr.xlink:href]="backgroundImage"/>
+  <image *ngIf="backgroundImage" [attr.xlink:href]="backgroundImage" width="100%" height="100%"/>
+  <!-- width and height compulsory for Firefox and Safari -->
 
   <!--<g *ngFor="let shape of shapes; trackBy: trackByShapeFn">-->
   <!-- Force repainting DOM because otherwise it does not create the shape again and it causes problems -->

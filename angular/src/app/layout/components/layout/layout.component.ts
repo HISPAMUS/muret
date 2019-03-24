@@ -2,8 +2,7 @@ import {Component, isDevMode, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
 import {CoreState} from '../../../core/store/state/core.state';
 import {Store} from '@ngrx/store';
-import {AuthState} from '../../../auth/store/state/auth.state';
-import {selectAuthState} from '../../../auth/store/selectors/auth.selector';
+import {selectIsAuthenticated, selectUsername} from '../../../auth/store/selectors/auth.selector';
 
 @Component({
   selector: 'app-layout',
@@ -14,17 +13,14 @@ export class LayoutComponent implements OnInit {
   isDev = isDevMode();
 
   menuVisible = true;
-
-  private authState$: Observable<AuthState>;
-  isAuthenticated = false;
+  isAuthenticated$: Observable<boolean>;
+  username$: Observable<string>;
 
   constructor(private store: Store<CoreState>) {
-    this.authState$ = this.store.select<AuthState>(selectAuthState);
+    this.isAuthenticated$ = this.store.select(selectIsAuthenticated);
+    this.username$ = this.store.select(selectUsername);
   }
 
   ngOnInit() {
-    this.authState$.subscribe((state: AuthState) => {
-      this.isAuthenticated = state.isAuthenticated;
-    });
   }
 }

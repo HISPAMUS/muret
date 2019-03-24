@@ -24,10 +24,4 @@ export class AuthService {
     this.logger.debug('AuthService#post ' + this.loginUrl);
     return this.http.post<JwtResponse>(this.loginUrl, credentials, httpOptions);
   }
-
-
-  getToken(): string {
-    const result = sessionStorage.getItem('token');
-    return result;
-  }
 }

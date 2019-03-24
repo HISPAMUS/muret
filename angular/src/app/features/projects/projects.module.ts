@@ -5,6 +5,7 @@ import { ProjectsRoutingModule } from './projects-routing.module';
 import { ProjectsComponent } from './components/projects/projects.component';
 import {SharedModule} from '../../shared/shared.module';
 import {StoreModule} from '@ngrx/store';
+import {BreadcrumbModule} from '../../breadcrumb/breadcrumb.module';
 
 @NgModule({
   declarations: [ProjectsComponent],
@@ -12,6 +13,7 @@ import {StoreModule} from '@ngrx/store';
     CommonModule,
     ProjectsRoutingModule,
     SharedModule,
+    BreadcrumbModule,
     StoreModule.forFeature('projects', [])
   ],
   providers: []

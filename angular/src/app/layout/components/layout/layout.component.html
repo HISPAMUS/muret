@@ -7,19 +7,11 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div id="navbarNavDropdown" class="navbar-collapse collapse">
-      <ul class="navbar-nav mr-auto">
-        <!--<li *ngIf="isDev" class="nav-item">
-          <a class="nav-link" routerLink="/agnosticrepresentation/2104">AgnostDev</a>
-        </li>-->
-      </ul>
-      <ul class="navbar-nav">
-        <li *ngIf="!isAuthenticated" class="nav-item active">
-          <a class="nav-link" href="#">Login <span class="sr-only">Login</span></a>
-        </li>
-
-        <ng-container *ngIf="isAuthenticated" >
+      <ng-container *ngIf="isAuthenticated$ | async; else notauth">
+        <app-breadcrumb></app-breadcrumb>
+        <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link" routerLink="login">Logout</a>
+            <a class="nav-link" routerLink="login">Logout as <strong>{{username$ | async}}</strong></a>
           </li>
           <li class="nav-item">
             <a class="nav-link" routerLink="export/trainingsets">Training sets</a>
@@ -30,11 +22,21 @@
           <li *ngIf="isDev" class="nav-item">
             <a class="nav-link" routerLink="/agnosticrepresentation/2261">AgnostDev</a>
           </li>
-        </ng-container>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="about">About</a>
-        </li>
-      </ul>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="about">About</a>
+          </li>
+        </ul>
+      </ng-container>
+      <ng-template #notauth>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Login <span class="sr-only">Login</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="about">About</a>
+          </li>
+        </ul>
+      </ng-template>
     </div>
   </nav>
 </div>

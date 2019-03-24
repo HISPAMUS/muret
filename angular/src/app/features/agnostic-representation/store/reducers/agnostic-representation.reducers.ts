@@ -23,7 +23,6 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
     }
     case AgnosticRepresentationActionTypes.SelectSymbol: {
       const newState = {...state};
-      newState.lastChangedSymbolID = null;
       newState.selectedSymbolID = action.agnosticSymbolID;
       return newState;
     }

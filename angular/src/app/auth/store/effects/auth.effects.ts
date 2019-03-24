@@ -5,12 +5,13 @@ import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {
   AuthActionTypes,
   LogIn, LogInSuccess, LogInFailure,
-  LogOut,
+  RefreshLogged,
 } from '../actions/auth.actions';
 import {AuthService} from '../../../auth/services/auth.service';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Observable, of} from 'rxjs';
 import {JwtResponse} from '../../../auth/models/jwt-response';
+import {SessionData} from '../../models/session-data';
 
 
 @Injectable()
@@ -41,8 +42,18 @@ export class AuthEffects {
   LogInSuccess: Observable<any> = this.actions.pipe(
     ofType(AuthActionTypes.LOGIN_SUCCESS),
     tap((user) => {
-      sessionStorage.setItem('token', user.payload.accessToken);
-      this.router.navigateByUrl('/home'); // TODO - diección guardada
+      SessionData.saveSessionData(
+        new SessionData(user.payload.userID, user.payload.username, user.payload.accessToken, user.payload.authorities)
+      ),
+      this.router.navigateByUrl('/home');
+    })
+  );
+
+  @Effect()
+  Refresh: Observable<any> = this.actions.pipe(
+    ofType(AuthActionTypes.REFRESH),
+    switchMap(() => {
+      return of(new RefreshLogged(SessionData.loadSessionData()));
     })
   );
 
@@ -55,7 +66,7 @@ export class AuthEffects {
   public LogOut: Observable<any> = this.actions.pipe(
     ofType(AuthActionTypes.LOGOUT),
     tap((user) => {
-      sessionStorage.removeItem('token');
+      SessionData.clearSessionData();
     })
   );
 
