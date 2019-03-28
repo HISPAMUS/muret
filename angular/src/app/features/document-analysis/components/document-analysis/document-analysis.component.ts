@@ -20,8 +20,7 @@ import {
 } from '../../store/actions/document-analysis.actions';
 import {
   selectFileName,
-  selectManuscriptType,
-  selectNotationType, selectPages,
+  selectDocumentType, selectPages,
   selectRegionTypes
 } from '../../store/selectors/document-analysis.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
@@ -60,8 +59,6 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
               ) {
     this.regionTypes$ = store.select(selectRegionTypes);
     this.filename$ = store.select(selectFileName);
-    this.notationType$ = store.select(selectNotationType);
-    this.manuscriptType$ = store.select(selectManuscriptType);
     this.mode = 'eIdle';
     this.selectedRegionTypeID = 'page';
   }

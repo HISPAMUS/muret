@@ -26,15 +26,34 @@
         Use classifier
       </label>
 
-      <ng-container ngbRadioGroup name="symbolTypesRadioGroup" [(ngModel)]="selectedAgnosticSymbolType">
-        <ng-container *ngFor="let category of agnosticSymbolToolbarCategories"> <!--[ngbCollapse]="isCollapsed(category)"-->
+      <ng-container *ngIf="svgAgnosticSymbolSet; else loadingSymbols"
+                    ngbRadioGroup name="symbolTypesRadioGroup" [(ngModel)]="selectedAgnosticSymbolType"
+      >
+
+        <label *ngFor="let svgSymbol of svgAgnosticSymbolSet.paths; trackBy: trackSVGSymbolFn" class="btn-light mb-2" ngbButtonLabel [title]="svgSymbol.agnosticTypeString">
+          <input name="symbolTypeRadioButton" ngbButton type="radio" [value]="svgSymbol.agnosticTypeString"/>
+          <p>{{svgSymbol.agnosticTypeString}}</p>
+          <app-agnostic-toolbar-icon [buttonWidth]="100" [buttonHeight]="100" [symbolID]="svgSymbol.agnosticTypeString"
+                                     [symbolPathD]="svgSymbol.svgPathD" [symbolTransform]="svgSymbol.symbolTransform"
+                                     [symbolViewBox]="svgSymbol.viewBox" [defaultLineSpace]="svgSymbol.defaultLineSpace"
+          >
+          </app-agnostic-toolbar-icon>
+        </label>
+      </ng-container>
+      <ng-template #loadingSymbols>
+        <p>Loading symbols...</p>
+      </ng-template>
+
+      <!--[ngbCollapse]="isCollapsed(category)"-->
+      <!--<ng-container ngbRadioGroup name="symbolTypesRadioGroup" [(ngModel)]="selectedAgnosticSymbolType">
+        <ng-container *ngFor="let category of agnosticSymbolToolbarCategories">
           <label *ngFor="let symbolType of category.agnosticSymbolTypes" class="btn-light mb-2" ngbButtonLabel title="{{symbolType}}">
             <input name="symbolTypeRadioButton" ngbButton type="radio" [value]="symbolType">
             <svg-icon src="assets/icons/agnostic/{{notationType}}/{{manuscriptType}}/{{symbolType}}.svg" [svgStyle]="{ 'width.px':35 }"></svg-icon>
           </label>
           &nbsp;
         </ng-container>
-      </ng-container>
+      </ng-container>-->
     </form>
   </div>
 </div>

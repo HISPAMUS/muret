@@ -31,10 +31,11 @@ public class AgnosticSymbolFont {
     public List<AgnosticTypeSVGPath> getFullSVGSetPathd() throws IM3Exception {
         HashMap<String, String> codePointGrlyphMap = this.layoutFont.getCodepointGlyphMap();
 
+        int em = this.layoutFont.getSVGFont().getUnitsPerEM();
+        int descent = this.layoutFont.getSVGFont().getDescent();
         List<AgnosticTypeSVGPath> result = new LinkedList<>();
         for (Map.Entry<String, String> entry: codePointGrlyphMap.entrySet()) {
             String agnosticSymbolType = entry.getValue();
-            System.out.println(agnosticSymbolType + " " + entry.getKey());
             try {
                 Glyph glyph = layoutFont.getGlyph(agnosticSymbolType);
                 if (glyph == null) {
@@ -45,12 +46,28 @@ public class AgnosticSymbolFont {
                     Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "TO-DO Glyph for key '" + entry.getKey() + "' has not the horizontal advance value");
                     //throw new IM3Exception("Glyph for key '" + entry.getKey() + "' has not the horizontal advance value");
                 }
-                result.add(new AgnosticTypeSVGPath(agnosticSymbolType, glyph.getPath(), glyph.getDefaultHorizontalAdvance()));
+
+                StringBuilder viewBox = new StringBuilder("0 ");
+                viewBox.append(-(em - descent));
+                viewBox.append(' ');
+                viewBox.append(em + glyph.getDefaultHorizontalAdvance());
+                viewBox.append(' ');
+                viewBox.append(em);
+
+                //return `0 ${-(svgSet.em - svgSet.descent)} ${svgSet.em + svgSymbol.horizAdvX} ${svgSet.em}`;
+                //[attr.transform]="'scale(1, -1) translate(0, ' + computeSVGSymbolTranslateY(svgAgnosticSymbolSet)+ ')' "
+                String symbolTransform = "scale(1, -1) translate(0, " + (em - descent) + ")";
+                result.add(new AgnosticTypeSVGPath(agnosticSymbolType, glyph.getPath(), glyph.getDefaultHorizontalAdvance(),
+                        viewBox.toString(), symbolTransform, layoutFont.getDefaultLineSpace(agnosticSymbolType)));
             } catch (Throwable t) {
                 // TODO
+                // TODO Si algún glifo no está es porque la tipografía no lo tiene, y puede que esté bien que esté ausente (p.ej. # en mensural printed)
                 Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "TO-DO: ", t);
             }
         }
+
+        Collections.sort(result, Comparator.comparing(AgnosticTypeSVGPath::getAgnosticTypeString));
+
         return result;
     }
 

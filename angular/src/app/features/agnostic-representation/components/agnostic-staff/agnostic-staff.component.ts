@@ -4,12 +4,11 @@ import {Observable, Subscription} from 'rxjs';
 import {
   selectAgnosticSymbols,
   selectSelectedSymbol,
-  selectSVGAgnosticSymbolSet
 } from '../../store/selectors/agnostic-representation.selector';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {SVGSet} from '../../model/svgset';
-import {GetSVGSet, SelectSymbol} from '../../store/actions/agnostic-representation.actions';
+import {SelectSymbol} from '../../store/actions/agnostic-representation.actions';
 import {AgnosticTypeSVGPath} from '../../model/agnostic-type-svgpath';
 
 interface StaffLine {
@@ -27,9 +26,8 @@ const UNSELECTED_COLOR = 'black';
 })
 export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   @Input() regionCropped: BoundingBox; // see ngOnInit below
-  @Input() manuscriptType: string;
-  @Input() notationType: string;
   @Input() mode: 'eIdle' | 'eInserting' | 'eEditing' | 'eSelecting';
+  @Input() svgAgnosticSymbolSet: SVGSet;
 
   em = 100; // TODO variable - ver también el cálculo del tamaño de los use en el svg
   margin = 1 * this.em;
@@ -43,21 +41,17 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   private staffBottomLineY: number;
 
   agnosticSymbols$: Observable<AgnosticSymbol[]>;
-  svgAgnosticSymbolSet$: Observable<SVGSet>;
   private selectedSymbolSubscription: Subscription;
   private selectedSymbol: AgnosticSymbol;
 
   constructor(private store: Store<any>) {
     this.agnosticSymbols$ = store.select(selectAgnosticSymbols);
-    this.svgAgnosticSymbolSet$ = store.select(selectSVGAgnosticSymbolSet);
     this.selectedSymbolSubscription = store.select(selectSelectedSymbol).subscribe(next => {
       this.selectedSymbol = next as any as AgnosticSymbol;
     });
   }
 
   ngOnInit() {
-    this.store.dispatch(new GetSVGSet(this.notationType, this.manuscriptType));
-
     this.staffLines = new Array();
     this.staffSpaceHeight = this.em / 4;
     for (let i = 4; i >= 0; i--) {
@@ -95,8 +89,8 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
     return item.id;
   }
 
-  trackByLineFn(index, item: AgnosticSymbol) {
-    return index;
+  trackByLineFn(index, item: StaffLine) {
+    return item.index;
   }
 
   trackByAgnosticSymbolTypeFn(index, item: AgnosticTypeSVGPath) {
@@ -121,9 +115,9 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  computeSVGSymbolViewBox(svgSet: SVGSet, svgSymbol: AgnosticTypeSVGPath) {
+  /*computeSVGSymbolViewBox(svgSet: SVGSet, svgSymbol: AgnosticTypeSVGPath) {
     return `0 ${-(svgSet.em - svgSet.descent)} ${svgSet.em + svgSymbol.horizAdvX} ${svgSet.em}`;
-  }
+  }*/
 
   onMouseDown($event) {
   }
@@ -147,9 +141,4 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
       this.store.dispatch(new SelectSymbol(agnosticSymbol.id));
     }
   }
-
-  computeSVGSymbolTranslateY(svgSet: SVGSet) {
-    return svgSet.em - svgSet.descent;
-  }
-
 }

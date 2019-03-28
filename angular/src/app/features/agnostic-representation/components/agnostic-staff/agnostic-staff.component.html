@@ -4,17 +4,14 @@
         width="100%" [attr.height.px]="height"
   [attr.viewBox]="viewBox" preserveAspectRatio="xMidYMid meet" overflow="visible"
   >
-    <ng-container *ngIf="svgAgnosticSymbolSet$ | async as svgAgnosticSymbolSet">
-      <svg:symbol *ngFor="let path of svgAgnosticSymbolSet.paths; trackBy: trackByAgnosticSymbolTypeFn"
-              [attr.id]="path.agnosticTypeString" [attr.viewBox]="computeSVGSymbolViewBox(svgAgnosticSymbolSet, path)"
-              preserveAspectRatio="xMinYMin" overflow="visible"
-      >
-        <svg:path [attr.d]="path.svgPathD"
-                  [attr.transform]="'scale(1, -1) translate(0, ' + computeSVGSymbolTranslateY(svgAgnosticSymbolSet)+ ')' ">
-        </svg:path>
-      </svg:symbol>
+    <svg:symbol *ngFor="let path of svgAgnosticSymbolSet.paths; trackBy: trackByAgnosticSymbolTypeFn"
+            [attr.id]="path.agnosticTypeString" [attr.viewBox]="path.viewBox"
+            preserveAspectRatio="xMinYMin" overflow="visible"
+    >
+      <svg:path [attr.d]="path.svgPathD" [attr.transform]="path.symbolTransform">
+      </svg:path>
+    </svg:symbol>
       <!--symbol viewBox="3391 0 16391 8242">  transform="scale(1, -1)"  TO-DO Ver vbox en svg fuente -->
-    </ng-container>
     <g>
       <svg:line *ngFor="let line of staffLines; trackBy: trackByLineFn"
                 id="{{line.index}}"

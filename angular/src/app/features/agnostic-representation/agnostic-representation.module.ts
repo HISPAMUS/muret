@@ -17,9 +17,10 @@ import {AngularSvgIconModule} from 'angular-svg-icon';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SharedModule} from '../../shared/shared.module';
 import {BreadcrumbModule} from '../../breadcrumb/breadcrumb.module';
+import { AgnosticToolbarIconComponent } from './components/agnostic-toolbar-button/agnostic-toolbar-icon.component';
 
 @NgModule({
-  declarations: [AgnosticRepresentationComponent, AgnosticStaffComponent, AgnosticToolbarComponent],
+  declarations: [AgnosticRepresentationComponent, AgnosticStaffComponent, AgnosticToolbarComponent, AgnosticToolbarIconComponent],
   imports: [
     CommonModule,
     FontAwesomeModule,

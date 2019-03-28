@@ -2,6 +2,8 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {AgnosticSymbolToolbarCategory} from '../../model/agnostic-symbol-toolbar-category';
 import {Store} from '@ngrx/store';
 import {AgnosticRepresentationState} from '../../store/state/agnostic-representation.state';
+import {SVGSet} from '../../model/svgset';
+import {AgnosticTypeSVGPath} from '../../model/agnostic-type-svgpath';
 
 @Component({
   selector: 'app-agnostic-toolbar',
@@ -9,13 +11,12 @@ import {AgnosticRepresentationState} from '../../store/state/agnostic-representa
   styleUrls: ['./agnostic-toolbar.component.css']
 })
 export class AgnosticToolbarComponent implements OnInit, OnDestroy {
-  @Input() agnosticSymbolToolbarCategories: AgnosticSymbolToolbarCategory[];
-  @Input() notationType: string;
-  @Input() manuscriptType: string;
+  // @Input() agnosticSymbolToolbarCategories: AgnosticSymbolToolbarCategory[];
+  @Input() svgAgnosticSymbolSet: SVGSet;
   @Input() mode: 'eIdle' | 'eAdding' | 'eSelecting' | 'eEditing';
-  @Output() onAgnosticSymbolTypeSelected = new EventEmitter<string>();
-  @Output() onPitchUp = new EventEmitter();
-  @Output() onPitchDown = new EventEmitter();
+  @Output() agnosticSymbolTypeSelected = new EventEmitter<string>();
+  @Output() pitchUp = new EventEmitter();
+  @Output() pitchDown = new EventEmitter();
   @Output() classifierChanged = new EventEmitter<boolean>();
 
   private selectedAgnosticSymbolTypeValue: string;
@@ -23,15 +24,14 @@ export class AgnosticToolbarComponent implements OnInit, OnDestroy {
   collapsed: Map<string, boolean>;
   classifierValue = true;
 
-
   constructor(public store: Store<AgnosticRepresentationState>) {
   }
 
   ngOnInit() {
     this.collapsed = new Map();
-    this.agnosticSymbolToolbarCategories.forEach(category => {
+    /*this.agnosticSymbolToolbarCategories.forEach(category => {
       this.collapsed.set(category.name, false);
-    });
+    });*/
   }
 
   ngOnDestroy(): void {
@@ -45,7 +45,7 @@ export class AgnosticToolbarComponent implements OnInit, OnDestroy {
   set selectedAgnosticSymbolType(val) {
     if (this.selectedAgnosticSymbolTypeValue !== val) {
       this.selectedAgnosticSymbolTypeValue = val;
-      this.onAgnosticSymbolTypeSelected.emit(this.selectedAgnosticSymbolTypeValue);
+      this.agnosticSymbolTypeSelected.emit(this.selectedAgnosticSymbolTypeValue);
     }
   }
 
@@ -75,10 +75,15 @@ export class AgnosticToolbarComponent implements OnInit, OnDestroy {
   }
 
   movePitchDownSelectedSymbol() {
-    this.onPitchDown.emit();
+    this.pitchDown.emit();
   }
 
   movePitchUpSelectedSymbol() {
-    this.onPitchUp.emit();
+    this.pitchUp.emit();
   }
+
+  trackSVGSymbolFn(index, item: AgnosticTypeSVGPath) {
+    return index;
+  }
+
 }

@@ -7,7 +7,11 @@ import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {Rectangle} from '../../../../svg/model/rectangle';
 import {Region} from '../../../../core/model/entities/region';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
-import {selectFileName, selectPages} from '../../../document-analysis/store/selectors/document-analysis.selector';
+import {
+  selectFileName,
+  selectDocumentType,
+  selectPages
+} from '../../../document-analysis/store/selectors/document-analysis.selector';
 import {Store} from '@ngrx/store';
 import {
   GetImageProjection
@@ -18,21 +22,22 @@ import {
   ChangeSymbolType,
   CreateSymbolFromBoundingBox, CreateSymbolFromStrokes,
   DeleteSymbol, DeselectSymbol,
-  GetRegion, InitRegion,
+  GetRegion, GetSVGSet, InitRegion,
   SelectSymbol
 } from '../../store/actions/agnostic-representation.actions';
 import {
   selectAgnosticSymbols,
   selectSelectedRegion,
-  selectSelectedSymbol
+  selectSelectedSymbol, selectSVGAgnosticSymbolSet
 } from '../../store/selectors/agnostic-representation.selector';
-import {AgnosticSymbolToolbarCategory} from '../../model/agnostic-symbol-toolbar-category';
-import {AGNOSTIC_SYMBOL_TOOLBAR_CATEGORIES} from '../../model/agnostic-symbol-toolbar-categories';
+// import {AgnosticSymbolToolbarCategory} from '../../model/agnostic-symbol-toolbar-category';
+// import {AGNOSTIC_SYMBOL_TOOLBAR_CATEGORIES} from '../../model/agnostic-symbol-toolbar-categories';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {Polylines} from '../../../../svg/model/polylines';
 import {Strokes} from '../../../../core/model/entities/strokes';
 import {Polyline} from '../../../../svg/model/polyline';
 import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
+import {SVGSet} from '../../model/svgset';
 
 const USE_SYMBOL_CLASSIFIER = 'USE_SYMBOL_CLASSIFIER'; // see es.ua.dlsi.grfia.im3ws.muret.model.AgnosticRepresentationModel
 
@@ -56,9 +61,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   selectedRegionZoomFactor = 1;
 
   // TODO manuscript vs printed - data from store
-  agnosticSymbolToolbarCategories: AgnosticSymbolToolbarCategory[] = AGNOSTIC_SYMBOL_TOOLBAR_CATEGORIES.get('eMensural');
-  notationType = 'eMensural';
-  manuscriptType = 'eHandwritten';
+  // agnosticSymbolToolbarCategories: AgnosticSymbolToolbarCategory[] = AGNOSTIC_SYMBOL_TOOLBAR_CATEGORIES.get('eMensural');
 
   mode: 'eIdle' | 'eAdding' | 'eEditing' | 'eSelecting';
   private selectedShapeIDValue: string;
@@ -67,7 +70,10 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   private selectedRegionShapeIDValue: string;
   addMethodTypeValue: 'boundingbox' | 'strokes' ;
   classifier = true;
+  svgSet$: Observable<SVGSet>;
+  svgSetSubscription: Subscription;
   filename$: Observable<string>;
+  private documentTypeSubscription: Subscription;
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>,
               private dialogsService: DialogsService) {
@@ -75,9 +81,14 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.mode = 'eIdle';
     this.selectedRegionShapeIDValue = null;
     this.filename$ = store.select(selectFileName);
-    this.addMethodType = 'boundingbox';
+    this.documentTypeSubscription  = store.select(selectDocumentType).subscribe(next => {
+      if (next) {
+        this.store.dispatch(new GetSVGSet(next.notationType, next.manuscriptType));
+      }
+    });
+    this.svgSet$ = store.select(selectSVGAgnosticSymbolSet);
 
-    this.store.dispatch(new InitRegion());
+    this.addMethodType = 'boundingbox';
   }
 
   ngOnInit() {
@@ -119,6 +130,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.agnosticSymbolsSubscription.unsubscribe();
     this.selectedRegionSubscription.unsubscribe();
     this.selectedSymbolSubscription.unsubscribe();
+    this.documentTypeSubscription.unsubscribe();
   }
 
   private findSelectedShape(): Shape {

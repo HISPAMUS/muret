@@ -1,5 +1,9 @@
 import {AgnosticSymbolToolbarCategory} from './agnostic-symbol-toolbar-category';
 
+/**
+ * @deprecated
+ */
+
 export const AGNOSTIC_SYMBOL_TOOLBAR_CATEGORIES: Map<string, AgnosticSymbolToolbarCategory[]> =
   new Map(
     [

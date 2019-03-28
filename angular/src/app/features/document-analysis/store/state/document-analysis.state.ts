@@ -1,6 +1,11 @@
 import {RegionType} from '../../../../core/model/entities/region-type';
 import {Page} from '../../../../core/model/entities/page';
 
+export interface DocumentType {
+  manuscriptType?: 'eHandwritten' | 'ePrinted';
+  notationType?: 'eMensural' | 'eModern';
+}
+
 export interface DocumentAnalysisState {
   regionTypes: RegionType[];
   imageURL: string;
@@ -8,8 +13,7 @@ export interface DocumentAnalysisState {
   imageWidth: number;
   imageHeight: number;
   pages: Page[];
-  manuscriptType: 'eHandwritten' | 'ePrinted' | null;
-  notationType: 'eMensural' | 'eModern' | null;
+  documentType: DocumentType;
 //  selectedRegion: Region;
 //  selectedPage: Page;
 }
@@ -21,8 +25,7 @@ export const initialDocumentAnalysisState: DocumentAnalysisState = {
   imageWidth: 0,
   imageHeight: 0,
   pages: null,
-  manuscriptType: null,
-  notationType: null,
+  documentType: null
   // selectedRegion: null,
   // selectedPage: null
 };

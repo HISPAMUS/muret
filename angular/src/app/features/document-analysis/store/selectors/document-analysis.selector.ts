@@ -19,15 +19,9 @@ export const selectFileName = createSelector(
 );
 
 
-export const selectNotationType = createSelector(
+export const selectDocumentType = createSelector(
   documentAnalysisState,
-  (state: DocumentAnalysisState) => state.notationType
-);
-
-
-export const selectManuscriptType = createSelector(
-  documentAnalysisState,
-  (state: DocumentAnalysisState) => state.manuscriptType
+  (state: DocumentAnalysisState) => state.documentType
 );
 
 

@@ -4,11 +4,17 @@ public class AgnosticTypeSVGPath {
     String agnosticTypeString;
     String svgPathD;
     int horizAdvX;
+    String viewBox;
+    String symbolTransform;
+    int defaultLineSpace;
 
-    public AgnosticTypeSVGPath(String agnosticTypeString, String svgPathD, int horizAdvX) {
+    public AgnosticTypeSVGPath(String agnosticTypeString, String svgPathD, int horizAdvX, String viewBox, String symbolTransform, int defaultLineSpace) {
         this.agnosticTypeString = agnosticTypeString;
         this.svgPathD = svgPathD;
         this.horizAdvX = horizAdvX;
+        this.viewBox = viewBox;
+        this.symbolTransform = symbolTransform;
+        this.defaultLineSpace = defaultLineSpace;
     }
 
     public String getAgnosticTypeString() {
@@ -21,5 +27,17 @@ public class AgnosticTypeSVGPath {
 
     public int getHorizAdvX() {
         return horizAdvX;
+    }
+
+    public String getViewBox() {
+        return viewBox;
+    }
+
+    public String getSymbolTransform() {
+        return symbolTransform;
+    }
+
+    public int getDefaultLineSpace() {
+        return defaultLineSpace;
     }
 }
