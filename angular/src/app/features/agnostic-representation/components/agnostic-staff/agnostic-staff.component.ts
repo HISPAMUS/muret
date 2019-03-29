@@ -29,13 +29,15 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   @Input() mode: 'eIdle' | 'eInserting' | 'eEditing' | 'eSelecting';
   @Input() svgAgnosticSymbolSet: SVGSet;
 
-  em = 100; // TODO variable - ver también el cálculo del tamaño de los use en el svg
-  margin = 1 * this.em;
+  symbolHeight = 50; // 87.5px // TODO
+  em = 50; // TODO variable - ver también el cálculo del tamaño de los use en el svg
+
+  margin: number;
 
   staffSpaceHeight: number;
   cursorClass: string;
   viewBox: string;
-  height: number;
+  height: number; // TODO No se usa pero funciona, con valor puesto no va
   width: number;
   staffLines: StaffLine[]; // TODO El nº de pentagramas debería depender del tipo de partitura
   private staffBottomLineY: number;
@@ -52,6 +54,7 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnInit() {
+    this.margin = this.em / 2;
     this.staffLines = new Array();
     this.staffSpaceHeight = this.em / 4;
     for (let i = 4; i >= 0; i--) {
@@ -73,8 +76,9 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
     // this.viewBox = `0 0 ${this.width} ${this.margin * 2 + this.em}`;
     // in order to use the same horizontal scale of the selected region (see AgnosticRepresentationComponent) we use its same x viewBox
     this.width = this.regionCropped.toX - this.regionCropped.fromX;
-    this.height = this.margin * 2 + this.em;
-    this.viewBox = `${this.regionCropped.fromX} 0 ${this.width} ${this.height}`;
+    const viewBoxHeight =  this.regionCropped.toY - this.regionCropped.fromY;
+    // this.height = this.margin * 2 + this.em;
+    this.viewBox = `${this.regionCropped.fromX} 0 ${this.width} ${viewBoxHeight}`;
   }
 
   ngOnDestroy(): void {

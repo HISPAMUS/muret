@@ -71,7 +71,6 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   addMethodTypeValue: 'boundingbox' | 'strokes' ;
   classifier = true;
   svgSet$: Observable<SVGSet>;
-  svgSetSubscription: Subscription;
   filename$: Observable<string>;
   private documentTypeSubscription: Subscription;
 
@@ -92,6 +91,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.store.dispatch(new InitRegion());
     // request store data
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.imageID = +params.get('id'); // + converts the string to number

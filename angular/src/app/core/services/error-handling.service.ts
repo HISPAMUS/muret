@@ -24,4 +24,9 @@ export class ErrorHandlingService {
       return of(result as T);
     };
   }
+
+  public showError(title: string, message: string) {
+    this.logger.warn('Error message: ' + message);
+    this.dialogsService.showError(title, message);
+  }
 }

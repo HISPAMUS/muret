@@ -10,6 +10,7 @@ import {Store} from '@ngrx/store';
 import {AuthState} from './store/state/auth.state';
 import {selectAccessToken} from './store/selectors/auth.selector';
 import {SessionData} from './models/session-data';
+import {ErrorHandlingService} from '../core/services/error-handling.service';
 
 const TOKEN_HEADER_KEY = 'Authorization';
 
@@ -45,7 +46,7 @@ export class TokenInterceptor implements HttpInterceptor, OnDestroy {
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private errorHandlingService: ErrorHandlingService) {}
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
     return next.handle(request).pipe(
@@ -53,8 +54,11 @@ export class ErrorInterceptor implements HttpInterceptor {
         if (response instanceof HttpErrorResponse && response.status === 401) {
           SessionData.clearSessionData();
           this.router.navigateByUrl('/login');
+          return throwError(response);
+        } else {
+          this.errorHandlingService.showError('Server error', response.message);
+          return null;
         }
-        return throwError(response);
       }));
   }
 }

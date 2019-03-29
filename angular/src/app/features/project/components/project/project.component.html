@@ -12,7 +12,13 @@
 
   <div class="row">
     <div class="col">
-    <app-image-thumbnail *ngFor="let image of images$ | async; trackBy: trackByImageFn" [projectPath]="project.path" [image]="image" [attr.data-id]="image.id"></app-image-thumbnail>
+      <div *ngFor="let image of images$ | async; trackBy: trackByImageFn" class="projectImageThumbnail" >
+        <app-image-thumbnail [projectPath]="project.path" [image]="image" [attr.data-id]="image.id"></app-image-thumbnail>
+      </div>
+      <div id="uploadImagesButton" class="projectImageThumbnail">
+        <button class="btn btn-primary" (click)="uploadImages()">Upload images...</button>
+
+      </div>
     </div>
   </div>
 </ng-container>
