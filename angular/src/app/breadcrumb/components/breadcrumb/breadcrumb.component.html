@@ -1,4 +1,4 @@
-<ul class="navbar-nav">
+<ul class="navbar-nav" id="breadcrumbs">
   <li *ngFor="let link of links$ | async; trackBy: trackLink; last as isLast" class="nav-item">
       <a class="nav-link" (click)="openLink(link)">
         <ng-container *ngIf="isLast; else inner">

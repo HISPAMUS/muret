@@ -12,6 +12,10 @@ export class CrudToolbarComponent implements OnInit {
   private modeValue: 'eIdle' | 'eEditing' | 'eAdding' | 'eSelecting';
   @Output() modeChange = new EventEmitter();
 
+  @Output() onZoomIn = new EventEmitter();
+  @Output() onZoomOut = new EventEmitter();
+  @Output() onZoomFit = new EventEmitter();
+
   constructor() {
     // ------- menus --------
   }
@@ -42,5 +46,28 @@ export class CrudToolbarComponent implements OnInit {
 
   isEditingMode(): boolean {
     return this.mode === 'eEditing';
+  }
+
+  zoomOut() {
+    this.onZoomOut.emit();
+  }
+
+  zoomIn() {
+    this.onZoomIn.emit();
+  }
+
+  zoomFit() {
+    this.onZoomFit.emit();
+  }
+
+  displayMode(): string {
+    switch (this.mode) {
+      case 'eAdding':
+        return 'Adding';
+      case 'eEditing':
+        return 'Editing';
+      case 'eIdle':
+        return 'Viewing';
+    }
   }
 }

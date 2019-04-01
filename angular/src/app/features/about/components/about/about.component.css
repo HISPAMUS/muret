@@ -1,10 +1,11 @@
 .jumbotron {
   background-color: transparent;
+  margin-bottom: 0;
 }
 
 .jumbotron img {
-  width: 50%;
-  margin-bottom: 2vh;
+  max-height: 20vh;
+  max-width: 40vw;
 }
 
 .jumbotron p {
@@ -32,4 +33,5 @@ footer p {
 #cite {
   margin-bottom: 5em;
   color: white;
+  font-size: small;
 }

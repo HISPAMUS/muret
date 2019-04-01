@@ -1,68 +1,96 @@
 <div class="container-fluid">
-<!-- menu -->
-  <div class="row">
-  <nav class="col-1">
-    <div>
-      <h5>{{ filename$ | async}}</h5>
-
-      <app-crud-toolbar (onClear)="clear()" (onDelete)="deleteSelected()" [(mode)]="mode">
-      </app-crud-toolbar>
-
-      <form>
-        <div [hidden]="!isEditingMode() && !isAddingMode()" class="btn-group-vertical btn-group-toggle" ngbRadioGroup
-             name="regionTypeRadioButtonGroup" [(ngModel)]="selectedRegionTypeID">
-          <label *ngFor="let regionType of regionTypes$ | async; trackBy: trackByRegionTypeFn" class="btn-light" ngbButtonLabel>
-            <input ngbButton type="radio" name="regionTypeRadioButton" [value]="regionType.id" (click)="setRegionType(regionType)"> {{regionType.name}}
-          </label>
-          <label class="btn-light" ngbButtonLabel>
-            <input ngbButton type="radio" name="regionTypeRadioButton" [value]="'page'" (click)="setPage()"> Page
-          </label>
-
-        </div>
-      </form>
-
-    </div>
-    <br>
+  <!--<nav class="col-1">
     <br>
     <button (click)="openAgnosticRepresentation()">Agnostic representation</button>
     <button (click)="openSemanticRepresentation()" disabled>Semantic representation</button>
     <br>
-    <br>
+  </nav>-->
+
+  <nav class="row">
+    <div class="col-9">
+      <app-crud-toolbar (onClear)="clear()" (onDelete)="deleteSelected()" [(mode)]="mode" (onZoomFit)="zoomFit()" (onZoomIn)="zoomIn()" (onZoomOut)="zoomOut()">
+      </app-crud-toolbar>
+    </div>
+    <div class="col-3" id="linksPhases">
+      Go to:
+      <button (click)="openAgnosticRepresentation()">Agnostic</button>
+      <button (click)="openSemanticRepresentation()" disabled>Semantic</button>
+    </div>
   </nav>
 
-  <section class="col-11">
-    <!-- layers selector -->
-    <nav class="row">
-      <form>
-        <!-- btn-group-toggle -->
-        <div class="col btn-group">
-          <button (click)="zoomOut()"><fa-icon icon="search-minus"></fa-icon></button>
-          <button (click)="zoomIn()"><fa-icon icon="search-plus"></fa-icon></button>
-          <button (click)="zoomFit()"><fa-icon icon="expand"></fa-icon></button>
+  <!-- VIEW FILTER -->
+  <div id="regionTypesFilter" class="row" [hidden]="!inIdleMode()">
+    <aside class="col btn-group-horizontal sidebar d-flex justify-content-center align-items-center">
+      Filter
+      <label ngbButtonLabel>
+        <input type="checkbox" [checked]="true" name="page" (change)="onLayerVisibilityChanged($event)"> Pages
+      </label>
+      <label *ngFor="let regionType of regionTypes$ | async; trackBy: trackByRegionTypeFn"ngbButtonLabel>
+        <input type="checkbox" [checked]="true" [name]="regionType.name" (change)="onLayerVisibilityChanged($event)"> {{beatufyRegionName(regionType.name)}}
+      </label>
+    </aside>
+  </div>
 
-          <label class="btn-light" ngbButtonLabel>
-            <input type="checkbox" [checked]="true" name="page" (change)="onLayerVisibilityChanged($event)"> Pages
-          </label>
-          <label *ngFor="let regionType of regionTypes$ | async; trackBy: trackByRegionTypeFn" class="btn-light" ngbButtonLabel>
-            <input type="checkbox" [checked]="true" name="{{regionType.name}}" (change)="onLayerVisibilityChanged($event)"> {{regionType.name}}
+  <!-- EDIT -->
+  <form>
+    <div id="regionTypesEdit" [hidden]="!isEditingMode()" class="form-group btn-group btn-group-toggle" ngbRadioGroup
+         name="regionTypeRadioButtonGroup" [(ngModel)]="selectedRegionTypeID">
+      <label class="btn-toolbar" ngbButtonLabel>
+        <input ngbButton type="radio" name="regionTypeRadioButton" [value]="'page'" (click)="setPage()">Page
+      </label>
+      <br>
+      <label *ngFor="let regionType of regionTypes$ | async; trackBy: trackByRegionTypeFn" class="btn-toolbar" ngbButtonLabel>
+        <input ngbButton type="radio" name="regionTypeRadioButton" [value]="regionType.id" (click)="setRegionType(regionType)"> {{beatufyRegionName(regionType.name)}}
+      </label>
+    </div>
+  </form>
+
+  <!-- ADD MODAL -->
+  <ng-template #regionTypesModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Select a region type</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cancel')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form>
+        <label class="btn-toolbar" ngbButtonLabel>
+          <button name="regionTypeRadioButton" [value]="'page'" (click)="modal.close('page')"> Page</button>
+        </label>
+        <div class="form-group btn-group">
+          <label *ngFor="let regionType of regionTypes$ | async; trackBy: trackByRegionTypeFn" class="btn-toolbar" ngbButtonLabel>
+            <!--<input ngbButton type="radio" name="regionTypeRadioButton" [value]="regionType.id" (click)="setRegionType(regionType)"> {{regionType.name}}-->
+            <button name="regionTypeRadioButton" [value]="regionType.id" (click)="modal.close(regionType)"> {{beatufyRegionName(regionType.name)}}</button>
           </label>
         </div>
       </form>
-    </nav>
+    </div>
+  </ng-template>
 
-    <!-- image -->
-    <section class="row">
-      <div class="col">
-        <app-image [imageID]="imageID" [shapes]="shapes" [zoomFactor]="zoomFactor"
-        (svgShapeCreated)="onShapeCreated($event)"
-        (svgShapeChanged)="onShapeChanged($event)"
-        [(selectedShapeID)]="selectedShapeID"
-        [nextShapeToDraw]="'Rectangle'"
-        [(mode)]="mode"
-        ></app-image>
-      </div>
-    </section>
-    <!-- end image -->
+  <!-- image -->
+  <section class="row">
+    <div class="col">
+      <app-image [imageID]="imageID" [shapes]="shapes" [zoomFactor]="zoomFactor"
+      (svgShapeCreated)="onShapeCreated($event)"
+      (svgShapeChanged)="onShapeChanged($event)"
+      [(selectedShapeID)]="selectedShapeID"
+      [nextShapeToDraw]="'Rectangle'"
+      [(mode)]="mode"
+      ></app-image>
+    </div>
   </section>
+    <!-- end image -->
 </div>
-</div>
+
+<footer id="docAnalysisStatusBar" class="container-fluid">
+  <div class="row d-flex justify-content-center">
+    <div class="col-9">
+
+    </div>
+    <div class="col-3 align-self-center" id="footerIdImage">
+      Image ID: {{imageID}} - {{ filename$ | async}}
+    </div>
+  </div>
+</footer>

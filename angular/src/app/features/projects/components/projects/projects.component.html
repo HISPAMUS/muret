@@ -1,10 +1,10 @@
 <div class="container">
   <div class="row titles">
-    <div class="col-8 offset-1 align-self-end">
+    <div class="col-7 offset-1 align-self-end">
       <img src="assets/images/myprojects.png" alt="My projects"/>
     </div>
-    <div class="col-3 screenTitle">
-      <img src="assets/images/openproject_small.png" alt="Open project"/>
+    <div class="col-4 screenTitle">
+      <img class="img-fluid" src="assets/images/openproject_small.png" alt="Open project"/>
     </div>
   </div>
 
@@ -13,7 +13,7 @@
     <div class="row projects">
       <div class="col-10 offset-1">
         <div class="row">
-          <div *ngFor="let project of user.projectsCreated; trackBy: trackByProjectFn" class="project col-2">
+          <div *ngFor="let project of user.projectsCreated; trackBy: trackByProjectFn" class="project col-4 col-lg-3">
             <div class="card">
               <img class="card-img-top img-thumbnail" *ngIf="project.thumbnailBase64Encoding" src="{{project.thumbnailBase64Encoding}}" alt="Project thumbnail">
               <img class="card-img-top img-thumbnail" *ngIf="!project.thumbnailBase64Encoding" src="assets/images/empty_thumbnail.png" alt="Project thumbnail">
@@ -38,7 +38,7 @@
     <div class="row projects">
       <div class="col-10 offset-1">
         <div class="row">
-          <div *ngFor="let permission of user.permissions; trackBy: trackByPermissionFn" class="project col-2">
+          <div *ngFor="let permission of user.permissions; trackBy: trackByPermissionFn" class="project col-4 col-lg-3">
             <div class="card">
               <img class="card-img-top img-thumbnail" *ngIf="permission.project.thumbnailBase64Encoding" src="{{permission.project.thumbnailBase64Encoding}}" alt="Project thumbnail">
               <img class="card-img-top img-thumbnail" *ngIf="!permission.project.thumbnailBase64Encoding" src="assets/images/empty_thumbnail.png" alt="Project thumbnail">
