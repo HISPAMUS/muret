@@ -2,6 +2,8 @@ package es.ua.dlsi.grfia.im3ws.muret.model;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
+import es.ua.dlsi.grfia.im3ws.muret.controller.payload.AgnosticSymbolTypeAndPosition;
+import es.ua.dlsi.grfia.im3ws.muret.controller.payload.SymbolCreationResult;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.SymbolRepository;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -79,80 +82,115 @@ public class AgnosticRepresentationModel {
         return persistentRegion.get();
     }
 
+    class BBoxStrokes {
+        CalcoStrokes calcoStrokes;
+        BoundingBox boundingBox;
+
+        public BBoxStrokes(es.ua.dlsi.grfia.im3ws.muret.controller.payload.Point[][] points) throws IM3WSException {
+            int minX = Integer.MAX_VALUE;
+            int minY = Integer.MAX_VALUE;
+            int maxX = Integer.MIN_VALUE;
+            int maxY = Integer.MIN_VALUE;
+            int npoints=0;
+            calcoStrokes = new CalcoStrokes();
+            for (es.ua.dlsi.grfia.im3ws.muret.controller.payload.Point[] strokePoints: points) {
+                CalcoStroke calcoStroke = new CalcoStroke();
+                calcoStrokes.addStroke(calcoStroke);
+                for (es.ua.dlsi.grfia.im3ws.muret.controller.payload.Point point: strokePoints) {
+                    calcoStroke.addPoint(new es.ua.dlsi.grfia.im3ws.muret.entity.Point(point.getTime(), point.getX(), point.getY()));
+
+                    minX = Math.min(minX, point.getX());
+                    minY = Math.min(minY, point.getY());
+                    maxX = Math.max(maxX, point.getX());
+                    maxY = Math.max(maxY, point.getY());
+
+                    npoints++;
+                }
+            }
+
+            if (npoints < 2) {
+                throw new IM3WSException("Cannot classify with just one point");
+            }
+
+            boundingBox = new BoundingBox(minX-BOUNDING_BOX_TOLERANCE, minY-BOUNDING_BOX_TOLERANCE, maxX+BOUNDING_BOX_TOLERANCE, maxY+BOUNDING_BOX_TOLERANCE);
+        }
+
+        public CalcoStrokes getCalcoStrokes() {
+            return calcoStrokes;
+        }
+
+        public BoundingBox getBoundingBox() {
+            return boundingBox;
+        }
+    }
+
     @Transactional
-    protected Symbol createSymbol(long regionID, BoundingBox boundingBox, Strokes strokes, String agnosticSymbolType) throws IM3WSException, IM3Exception {
+    protected SymbolCreationResult createSymbol(long regionID, BoundingBox boundingBox, Strokes strokes, AgnosticSymbol agnosticSymbol) throws IM3WSException, IM3Exception {
         Region persistentRegion = getRegion(regionID);
 
-        boundingBox.adjustToFitInto(persistentRegion.getBoundingBox());
-        Symbol symbol = new Symbol();
-        symbol.setBoundingBox(boundingBox);
-        symbol.setStrokes(strokes);
-        symbol.setRegion(persistentRegion);
+        List<AgnosticSymbolTypeAndPosition> otherPossibilities = null;
+        if (agnosticSymbol == null) { // if not provided, try to classify
+            Image persistentImage = persistentRegion.getPage().getImage();
+            long imageID = persistentImage.getId();
+            Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.getProject().getPath(),
+                    MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());
 
+            otherPossibilities= symbolClassifierClient.classifyImage(imageID, imagePath, boundingBox);
 
-        AgnosticSymbol agnosticSymbol = null;
-
-        Image persistentImage = persistentRegion.getPage().getImage();
-        
-        long imageID = persistentImage.getId();
-        Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.getProject().getPath(), MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());
-
-        try {
-            agnosticSymbol = symbolClassifierClient.classifyImage(imageID, imagePath, boundingBox);
-        } catch (Exception e) {
-            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Error classifying symbol, using defaults", e);
-            agnosticSymbol = AgnosticSymbol.parseAgnosticString(AgnosticVersion.v2, "clef.C:L3");
-        }
-
-        if (agnosticSymbolType != null && !agnosticSymbolType.equals(AGNOSTIC_SYMBOL_TYPE_FROM_CLASSIFIER)) {
-            // if an agnostic type is provided, use it
-            agnosticSymbol.changeAgnosticSymbolType(AgnosticSymbolTypeFactory.parseString(agnosticSymbolType));
-        }
-
-        symbol.setAgnosticSymbol(agnosticSymbol);
-        symbol.setRegion(persistentRegion);
-        Symbol persistentSymbol = symbolRepository.save(symbol);
-        persistentRegion.getSymbols().add(persistentSymbol);
-        //regionRepository.save(persistentRegion);
-        return persistentSymbol;
-    }
-
-    @Transactional
-    public Symbol createSymbol(long regionID, BoundingBox boundingBox, String agnosticSymbolType) throws IM3WSException, IM3Exception {
-        return createSymbol(regionID, boundingBox, null, agnosticSymbolType);
-    }
-
-    @Transactional
-    public Symbol createSymbol(long regionID, es.ua.dlsi.grfia.im3ws.muret.controller.payload.Point[][] points, String agnosticSymbolType) throws IM3WSException, IM3Exception {
-        int minX = Integer.MAX_VALUE;
-        int minY = Integer.MAX_VALUE;
-        int maxX = Integer.MIN_VALUE;
-        int maxY = Integer.MIN_VALUE;
-        int npoints=0;
-        CalcoStrokes calcoStrokes = new CalcoStrokes();
-        for (es.ua.dlsi.grfia.im3ws.muret.controller.payload.Point[] strokePoints: points) {
-            CalcoStroke calcoStroke = new CalcoStroke();
-            calcoStrokes.addStroke(calcoStroke);
-            for (es.ua.dlsi.grfia.im3ws.muret.controller.payload.Point point: strokePoints) {
-                calcoStroke.addPoint(new es.ua.dlsi.grfia.im3ws.muret.entity.Point(point.getTime(), point.getX(), point.getY()));
-
-                minX = Math.min(minX, point.getX());
-                minY = Math.min(minY, point.getY());
-                maxX = Math.max(maxX, point.getX());
-                maxY = Math.max(maxY, point.getY());
-
-                npoints++;
+            if (otherPossibilities != null && otherPossibilities.size() > 0) {
+                AgnosticSymbolType agnosticSymbolType = AgnosticSymbolTypeFactory.parseString(otherPossibilities.get(0).getAgnosticSymbolType());
+                PositionInStaff positionInStaff = PositionInStaff.parseString(otherPossibilities.get(0).getPositionInStaff());
+                agnosticSymbol = new AgnosticSymbol(AgnosticVersion.v2, agnosticSymbolType, positionInStaff);
             }
         }
 
-        if (npoints < 2) {
-            throw new IM3WSException("Cannot classify with just one point");
+        if (agnosticSymbol != null) {
+            Symbol symbol = new Symbol();
+            symbol.setAgnosticSymbol(agnosticSymbol);
+            boundingBox.adjustToFitInto(persistentRegion.getBoundingBox());
+            symbol.setBoundingBox(boundingBox);
+            symbol.setRegion(getRegion(regionID));
+            Symbol persistentSymbol = symbolRepository.save(symbol);
+            persistentRegion.getSymbols().add(persistentSymbol);
+            //regionRepository.save(persistentRegion);
+
+            SymbolCreationResult result = new SymbolCreationResult(persistentSymbol, otherPossibilities);
+            return result;
+        } else {
+            return null;
         }
+    }
 
-        BoundingBox boundingBox = new BoundingBox(minX-BOUNDING_BOX_TOLERANCE, minY-BOUNDING_BOX_TOLERANCE, maxX+BOUNDING_BOX_TOLERANCE, maxY+BOUNDING_BOX_TOLERANCE);
+
+    @Transactional
+    protected SymbolCreationResult createSymbol(long regionID, BoundingBox boundingBox, Strokes strokes, String agnosticSymbolType, String positionInStaffStr) throws IM3WSException, IM3Exception {
+        if (agnosticSymbolType == null || positionInStaffStr == null) {
+            return createSymbol(regionID, boundingBox, strokes, null);
+        } else {
+            AgnosticSymbol agnosticSymbol = new AgnosticSymbol(AgnosticVersion.v2,
+                    AgnosticSymbolTypeFactory.parseString(agnosticSymbolType),
+                    PositionInStaff.parseString(positionInStaffStr));
+            return createSymbol(regionID, boundingBox, strokes, agnosticSymbol);
+        }
+    }
+
+    @Transactional
+    public SymbolCreationResult createSymbol(long regionID, BoundingBox boundingBox, String agnosticSymbolType, String positionInStaffStr) throws IM3WSException, IM3Exception {
+        if (agnosticSymbolType == null || positionInStaffStr == null) {
+            return createSymbol(regionID, boundingBox, (Strokes)null, null);
+        } else {
+            AgnosticSymbol agnosticSymbol = new AgnosticSymbol(AgnosticVersion.v2,
+                    AgnosticSymbolTypeFactory.parseString(agnosticSymbolType),
+                    PositionInStaff.parseString(positionInStaffStr));
+            return createSymbol(regionID, boundingBox, null, agnosticSymbol);
+        }
+    }
 
 
-        return createSymbol(regionID, boundingBox, calcoStrokes, agnosticSymbolType);
+    @Transactional
+    public SymbolCreationResult createSymbol(long regionID, es.ua.dlsi.grfia.im3ws.muret.controller.payload.Point[][] points, String agnosticSymbolType, String positionInStaffStr) throws IM3WSException, IM3Exception {
+        BBoxStrokes bBoxStrokes = new BBoxStrokes(points);
+        return createSymbol(regionID, bBoxStrokes.getBoundingBox(), bBoxStrokes.getCalcoStrokes(), agnosticSymbolType, positionInStaffStr);
     }
 
     /**
@@ -172,4 +210,23 @@ public class AgnosticRepresentationModel {
         persistentRegion.getSymbols().remove(persistentSymbol.get());
         return symbolID;
     }
+
+    /*@Transactional
+    public List<AgnosticSymbolTypeAndPosition> classifySymbol(long regionID, BoundingBox boundingBox) throws IM3WSException, IM3Exception {
+        Region persistentRegion = getRegion(regionID);
+        boundingBox.adjustToFitInto(persistentRegion.getBoundingBox());
+        Image persistentImage = persistentRegion.getPage().getImage();
+
+        long imageID = persistentImage.getId();
+        Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.getProject().getPath(),
+                MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());
+
+        return symbolClassifierClient.classifyImage(imageID, imagePath, boundingBox);
+    }
+
+    @Transactional
+    public List<AgnosticSymbolTypeAndPosition> classifySymbol(long regionID, es.ua.dlsi.grfia.im3ws.muret.controller.payload.Point[][] points) throws IM3WSException, IM3Exception {
+        BBoxStrokes bBoxStrokes = new BBoxStrokes(points);
+        return classifySymbol(regionID, bBoxStrokes.getBoundingBox());
+    }*/
 }

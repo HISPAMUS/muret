@@ -58,7 +58,7 @@ public class AgnosticSymbolFont {
                 //[attr.transform]="'scale(1, -1) translate(0, ' + computeSVGSymbolTranslateY(svgAgnosticSymbolSet)+ ')' "
                 String symbolTransform = "scale(1, -1) translate(0, " + (em - descent) + ")";
                 result.add(new AgnosticTypeSVGPath(agnosticSymbolType, glyph.getPath(), glyph.getDefaultHorizontalAdvance(),
-                        viewBox.toString(), symbolTransform, layoutFont.getDefaultLineSpace(agnosticSymbolType)));
+                        viewBox.toString(), symbolTransform, layoutFont.getDefaultPositionInStaff(agnosticSymbolType)));
             } catch (Throwable t) {
                 // TODO
                 // TODO Si algún glifo no está es porque la tipografía no lo tiene, y puede que esté bien que esté ausente (p.ej. # en mensural printed)

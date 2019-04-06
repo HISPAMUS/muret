@@ -6,6 +6,8 @@ import {SVGSet} from '../model/svgset';
 import {AgnosticSymbol} from '../../../core/model/entities/agnosticSymbol';
 import {BoundingBox} from '../../../core/model/entities/bounding-box';
 import {Point} from '../../../core/model/entities/point';
+import {AgnosticSymbolAndPosition} from '../model/agnostic-symbol-and-position';
+import {SymbolCreationResult} from '../model/symbol-creation-result';
 
 @Injectable()
 export class AgnosticRepresentationService {
@@ -30,15 +32,10 @@ export class AgnosticRepresentationService {
     return result;
   }
 
-  changeSymbolType$(agnosticSymbol: AgnosticSymbol, agnosticSymbolType: string): Observable<AgnosticSymbol> {
-    const url = `agnostic/changeAgnosticSymbolType/${agnosticSymbol.id}/${agnosticSymbolType}`;
+  changeSymbol$(agnosticSymbol: AgnosticSymbol, agnosticSymbolType: string, positionInStaff: string): Observable<AgnosticSymbol> {
+    const url = `agnostic/changeAgnosticSymbol/${agnosticSymbol.id}/${agnosticSymbolType}/${positionInStaff}`;
     return this.apiRestClientService.get$<AgnosticSymbol>(url);
 
-  }
-
-  changeSymbolPositionInStaff$(agnosticSymbol: AgnosticSymbol, difference: number): Observable<AgnosticSymbol> {
-    const url = `agnostic/changeAgnosticPositionInStaff/${agnosticSymbol.id}/${difference}`;
-    return this.apiRestClientService.get$<AgnosticSymbol>(url);
   }
 
   changeSymbolBoundingBox$(symbol: AgnosticSymbol, fromX: number, fromY: number, toX: number, toY: number): Observable<AgnosticSymbol> {
@@ -53,25 +50,51 @@ export class AgnosticRepresentationService {
   }
 
 
-  createSymbolFromBoundingBox$(regionID: number, boundingBox: BoundingBox, agnosticSymbolType: string): Observable<AgnosticSymbol> {
+  createSymbolFromBoundingBox$(regionID: number, boundingBox: BoundingBox, agnosticSymbolType: string, positionInStaff: string):
+    Observable<SymbolCreationResult> {
+    const symbolCreation = {
+      regionID,
+      agnosticSymbolType,
+      positionInStaff,
+      boundingBox
+    };
+
+    return this.apiRestClientService.post$<SymbolCreationResult>('agnostic/createSymbolFromBoundingBox', symbolCreation);
+  }
+
+  createSymbolFromStrokes$(regionID: number, points: Point[][], agnosticSymbolType: string, positionInStaff: string):
+    Observable<SymbolCreationResult> {
+    const symbolCreation = {
+      regionID,
+      agnosticSymbolType,
+      positionInStaff,
+      points
+    };
+
+    return this.apiRestClientService.post$<SymbolCreationResult>('agnostic/createSymbolFromStrokes', symbolCreation);
+  }
+
+  /*classifySymbolFromBoundingBox$(regionID: number, boundingBox: BoundingBox, agnosticSymbolType: string):
+  Observable<AgnosticSymbolAndPosition[]> {
     const symbolCreation = {
       regionID,
       agnosticSymbolType,
       boundingBox
     };
 
-    return this.apiRestClientService.post$<AgnosticSymbol>('agnostic/createSymbolFromBoundingBox', symbolCreation);
+    return this.apiRestClientService.post$<AgnosticSymbolAndPosition[]>('agnostic/classifySymbolFromBoundingBox', symbolCreation);
   }
 
-  createSymbolFromStrokes$(regionID: number, points: Point[][], agnosticSymbolType: string): Observable<AgnosticSymbol> {
+  classifySymbolFromStrokes$(regionID: number, points: Point[][], agnosticSymbolType: string): Observable<AgnosticSymbolAndPosition[]> {
     const symbolCreation = {
       regionID,
       agnosticSymbolType,
       points
     };
 
-    return this.apiRestClientService.post$<AgnosticSymbol>('agnostic/createSymbolFromStrokes', symbolCreation);
-  }
+    return this.apiRestClientService.post$<AgnosticSymbolAndPosition[]>('agnostic/classifySymbolFromStrokes', symbolCreation);
+  }*/
+
 
   deleteSymbol$(symbolID: number): Observable<number> {
     return this.apiRestClientService.delete$<number>('agnostic/deleteSymbol', symbolID);

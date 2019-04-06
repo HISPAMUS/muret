@@ -70,4 +70,5 @@ export class CrudToolbarComponent implements OnInit {
         return 'Viewing';
     }
   }
+
 }

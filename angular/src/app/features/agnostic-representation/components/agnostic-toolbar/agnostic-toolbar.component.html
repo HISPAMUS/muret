@@ -1,11 +1,44 @@
+<div *ngIf="showFilter()" id="agnosticSymbolFilter" class="btn-group btn-group-toggle" ngbRadioGroup
+     name="modeRadioButtonGroup" [(ngModel)]="symbolsFilter">
+
+  <label ngbButtonLabel>
+    <input name="modeRadioButton" ngbButton type="radio" [value]="'clef.'" ><span>Clefs</span>
+  </label>
+
+  <label ngbButtonLabel>
+    <input name="modeRadioButton" ngbButton type="radio" [value]="'metersign.'" ><span>Meters</span>
+  </label>
+
+  <label ngbButtonLabel>
+    <input name="modeRadioButton" ngbButton type="radio" [value]="'note.'" ><span>Notes</span>
+  </label>
+
+  <label ngbButtonLabel>
+    <input name="modeRadioButton" ngbButton type="radio" [value]="'note.beam'" ><span>Beamed notes</span>
+  </label>
+
+  <label ngbButtonLabel>
+    <input name="modeRadioButton" ngbButton type="radio" [value]="'rest.'" ><span>Rests</span>
+  </label>
+
+  <label ngbButtonLabel>
+    <input name="modeRadioButton" ngbButton type="radio" [value]="'accidental.'" ><span>Accidentals</span>
+  </label>
+
+  <label ngbButtonLabel>
+    <input name="modeRadioButton" ngbButton type="radio" [value]="'other'" ><span>Other</span>
+  </label>
+
+</div>
+
 <div class="btn-toolbar" role="toolbar" aria-label="Agnostic toolbar" id="agnosticToolbarEditButtons">
-  <div class="btn-group mr-2" role="group" aria-label="Symbol edition">
-    <button type="button" class="btn btn-primary" title="Move pitch down"  (click)="movePitchDownSelectedSymbol()">
+  <div class="btn-group-toggle mr-2" role="group" aria-label="Symbol edition" ngbRadioGroup>
+    <!--<button type="button" class="btn btn-primary" title="Move pitch down"  (click)="movePitchDownSelectedSymbol()">
       <fa-icon icon="angle-down"></fa-icon>
     </button>
     <button type="button" class="btn btn-primary" title="Move pitch up" (click)="movePitchUpSelectedSymbol()">
       <fa-icon icon="angle-up"></fa-icon>
-    </button>
+    </button>-->
     &nbsp;
     <!--<button type="button" class="btn btn-primary" title="Delete" (click)="deleteSelectedSymbol()">
       <fa-icon icon="trash"></fa-icon>
@@ -20,22 +53,23 @@
             [attr.aria-expanded]="!isCollapsed(category)" aria-controls="collapseExample">
       {{category.name}}
     </button>-->
-    <form>
-      <label *ngIf="inAddingMode()" class="btn-light mb-2" ngbButtonLabel title="Use classifier">
+      <!--<label *ngIf="inAddingMode()" class="btn-light mb-2" ngbButtonLabel title="Use classifier">
         <input name="symbolTypeRadioButton" ngbButton type="checkbox" [(ngModel)]="classifier">
         Use classifier
-      </label>
+      </label>-->
 
-      <ng-container *ngIf="svgAgnosticSymbolSet; else loadingSymbols"
+    <ng-container *ngIf="svgAgnosticSymbolSet; else loadingSymbols"
                     ngbRadioGroup name="symbolTypesRadioGroup" [(ngModel)]="selectedAgnosticSymbolType"
       >
 
-        <label *ngFor="let svgSymbol of svgAgnosticSymbolSet.paths; trackBy: trackSVGSymbolFn" class="btn-light mb-2" ngbButtonLabel [title]="svgSymbol.agnosticTypeString">
-          <input name="symbolTypeRadioButton" ngbButton type="radio" [value]="svgSymbol.agnosticTypeString"/>
-          <p>{{svgSymbol.agnosticTypeString}}</p>
-          <app-agnostic-toolbar-icon [buttonWidth]="100" [buttonHeight]="100" [symbolID]="svgSymbol.agnosticTypeString"
+        <label *ngFor="let svgSymbol of getFilteredSymbols(); trackBy: trackSVGSymbolFn"
+               ngbButtonLabel [title]="svgSymbol.agnosticTypeString"
+               placement="bottom" ngbTooltip="{{svgSymbol.agnosticTypeString}}"
+        >
+          <input name="symbolTypeRadioButton" ngbButton type="radio" [value]="svgSymbol.agnosticTypeString" (click)="onRadioButtonClick(svgSymbol)"/>
+          <app-agnostic-toolbar-icon [buttonWidth]="buttonWidth" [buttonHeight]="buttonWidth" [symbolID]="svgSymbol.agnosticTypeString"
                                      [symbolPathD]="svgSymbol.svgPathD" [symbolTransform]="svgSymbol.symbolTransform"
-                                     [symbolViewBox]="svgSymbol.viewBox" [defaultLineSpace]="svgSymbol.defaultLineSpace"
+                                     [symbolViewBox]="svgSymbol.viewBox" [positionInStaff]="svgSymbol.defaultPositionInStaff"
           >
           </app-agnostic-toolbar-icon>
         </label>
@@ -54,6 +88,5 @@
           &nbsp;
         </ng-container>
       </ng-container>-->
-    </form>
   </div>
 </div>

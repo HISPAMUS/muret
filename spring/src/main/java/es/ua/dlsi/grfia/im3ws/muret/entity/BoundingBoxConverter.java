@@ -1,5 +1,7 @@
 package es.ua.dlsi.grfia.im3ws.muret.entity;
 
+import es.ua.dlsi.im3.core.IM3RuntimeException;
+
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
@@ -29,6 +31,8 @@ public class BoundingBoxConverter implements AttributeConverter<BoundingBox, Str
             int toX = Integer.parseInt(fields[2]);
             int toY = Integer.parseInt(fields[3]);
             return new BoundingBox(fromX, fromY, toX, toY);
+        } catch (IM3RuntimeException t) {
+            throw t;
         } catch (Throwable t) {
             throw new RuntimeException("Invalid bounding box string, expected 4 integer fields comma separated in: '" + s + "'");
         }

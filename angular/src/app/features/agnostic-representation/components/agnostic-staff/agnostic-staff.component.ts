@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
 import {
@@ -10,6 +10,7 @@ import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {SVGSet} from '../../model/svgset';
 import {SelectSymbol} from '../../store/actions/agnostic-representation.actions';
 import {AgnosticTypeSVGPath} from '../../model/agnostic-type-svgpath';
+import {PositionInStaffService} from '../../services/position-in-staff.service';
 
 interface StaffLine {
   index: number;
@@ -26,9 +27,10 @@ const UNSELECTED_COLOR = 'black';
 })
 export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   @Input() regionCropped: BoundingBox; // see ngOnInit below
-  @Input() mode: 'eIdle' | 'eInserting' | 'eEditing' | 'eSelecting';
   @Input() svgAgnosticSymbolSet: SVGSet;
 
+  modeValue: 'eIdle' | 'eInserting' | 'eEditing' | 'eSelecting';
+  @Output() modeChange = new EventEmitter();
   symbolHeight = 50; // 87.5px // TODO
   em = 50; // TODO variable - ver también el cálculo del tamaño de los use en el svg
 
@@ -46,15 +48,27 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   private selectedSymbolSubscription: Subscription;
   private selectedSymbol: AgnosticSymbol;
 
-  constructor(private store: Store<any>) {
+  constructor(private store: Store<any>, private positionInStaffService: PositionInStaffService) {
     this.agnosticSymbols$ = store.select(selectAgnosticSymbols);
     this.selectedSymbolSubscription = store.select(selectSelectedSymbol).subscribe(next => {
       this.selectedSymbol = next as any as AgnosticSymbol;
     });
   }
 
+  @Input()
+  get mode() {
+    return this.modeValue;
+  }
+
+  set mode(val) {
+    if (this.modeValue !== val) {
+      this.modeValue = val;
+      this.modeChange.emit(this.modeValue);
+    }
+  }
+
   ngOnInit() {
-    this.margin = this.em / 2;
+    this.margin = this.em;
     this.staffLines = new Array();
     this.staffSpaceHeight = this.em / 4;
     for (let i = 4; i >= 0; i--) {
@@ -102,21 +116,10 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   computeAgnosticStaffSymbolY(symbol: AgnosticSymbol): number {
-    const lineSpace = this.positionInStaffToLineSpace(symbol.positionInStaff);
+    const lineSpace = this.positionInStaffService.positionInStaffToLineSpace(symbol.positionInStaff);
     const heightDifference = -(this.staffSpaceHeight * (lineSpace / 2.0));
     const y = this.staffBottomLineY  + heightDifference;
     return y;
-  }
-
-  private positionInStaffToLineSpace(positionInStaff: string): number {
-    const value = Number(positionInStaff.substr(1));
-    if (positionInStaff.charAt(0) === 'L') {
-      return (value - 1) * 2;
-    } else if (positionInStaff.charAt(0) === 'S') {
-      return (value) * 2 - 1;
-    } else {
-      throw new Error('Invalid positionInStaff, it should start with L or S: ' + positionInStaff);
-    }
   }
 
   /*computeSVGSymbolViewBox(svgSet: SVGSet, svgSymbol: AgnosticTypeSVGPath) {
@@ -140,9 +143,21 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
+  private selectSymbolRequest(agnosticSymbol: AgnosticSymbol) {
+    this.store.dispatch(new SelectSymbol(agnosticSymbol.id));
+  }
+
   onSymbolMouseDown(agnosticSymbol: AgnosticSymbol) {
     if (this.mode === 'eEditing') {
-      this.store.dispatch(new SelectSymbol(agnosticSymbol.id));
+      this.selectSymbolRequest(agnosticSymbol);
     }
   }
+
+  onDblClick(agnosticSymbol: AgnosticSymbol) {
+    if (this.mode === 'eIdle') {
+      this.mode = 'eEditing';
+      this.selectSymbolRequest(agnosticSymbol);
+    }
+  }
+
 }

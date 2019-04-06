@@ -2,10 +2,24 @@
   <!-- hidden - used to get the size of the image -->
   <img (load)="onBackgroundHiddenImageElementLoaded($event)" id="backgroundHiddenImageElement" *ngIf="backgroundImage" [src]="unsafeBackgroundImage"/>
 
-  <svg version="1.1" [ngClass]="cursorClass" #canvas xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-       (mousedown)="onMouseDown($event)" (mouseup)="onMouseUp($event)" (mousemove)="onMouseMove($event)"
+  <svg id="canvas" version="1.1" [ngClass]="cursorClass" #canvas xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
        [attr.width]="scaledImageWidth" [attr.height]="scaledImageHeight"
-       [attr.viewBox]="viewBox">
+       [attr.viewBox]="viewBox"
+       (mousedown)="onMouseDown($event)" (touchstart)="onTouchStart($event)"
+       (mouseup)="onMouseUp($event)" (touchend)="onTouchEnd($event)"
+       (mousemove)="onMouseMove($event)" (touchmove)="onTouchMove($event)"
+  >
+
+    <!--
+       (tap)="onPanStart($event)"
+       (panstart)="onPanStart($event)"
+       (panmove)="onPanMove($event)"
+       (panend)="onPanEnd($event)"
+-->
+    <!--(mousedown)="onMouseDown($event)" (touchstart)="onTouchStart($event)"
+    (mouseup)="onMouseUp($event)" (touchend)="onTouchEnd($event)"
+    (mousemove)="onMouseMove($event)" (touchmove)="onTouchMove($event)"-->
+
     <image *ngIf="backgroundImage" [attr.xlink:href]="backgroundImage" preserveAspectRatio="xMinYMin slice"
            [attr.width]="viewPortWidth" [attr.height]="viewPortHeight"/>
 
@@ -13,7 +27,7 @@
 
     <!--<g *ngFor="let shape of shapes; trackBy: trackByShapeFn">-->
     <!-- Force repainting DOM because otherwise it does not create the shape again and it causes problems -->
-    <g *ngFor="let shape of shapes">
+    <g *ngFor="let shape of shapes" (dblclick)="onDblClickOnShape(shape)">
       <ng-container [ngSwitch]="shape.type">
         <ng-container *ngSwitchCase="'Rectangle'">
           <g appRectangle [appRectangle]="shape" [shape]="shape" [editing]="isEditing()" [selected]="isSelected(shape)"></g>

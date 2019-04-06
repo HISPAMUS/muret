@@ -3,35 +3,32 @@
            name="modeRadioButtonGroup" [(ngModel)]="mode">
 
         <label ngbButtonLabel>
-          <a (click)="zoomOut()"><fa-icon icon="search-minus" class="icons"></fa-icon></a>
+          <a (click)="zoomOut()"><fa-icon icon="search-minus" class="icons" size="lg"></fa-icon></a>
         </label>
 
         <label ngbButtonLabel>
-          <a (click)="zoomIn()"><fa-icon icon="search-plus" class="icons"></fa-icon></a>
+          <a (click)="zoomIn()"><fa-icon icon="search-plus" class="icons" size="lg"></fa-icon></a>
         </label>
         <label ngbButtonLabel>
-          <a (click)="zoomFit()"><fa-icon icon="expand" class="icons"></fa-icon></a>
+          <a (click)="zoomFit()"><fa-icon icon="expand" class="icons" size="lg"></fa-icon></a>
         </label>
 
-        &nbsp;
-        &nbsp;
-        &nbsp;
         <label ngbButtonLabel>
           <input name="modeRadioButton" ngbButton type="radio" [value]="'eIdle'">
-          <fa-icon icon="eye" class="icons"></fa-icon>
+          <fa-icon icon="eye" class="icons" size="lg"></fa-icon>
         </label>
 
         <label ngbButtonLabel>
           <input name="modeRadioButton" ngbButton type="radio" [value]="'eAdding'" >
-          <fa-icon icon="plus" class="icons"></fa-icon>
+          <fa-icon icon="plus" class="icons" size="lg"></fa-icon>
         </label>
         <label ngbButtonLabel>
           <input name="modeRadioButton" ngbButton type="radio" [value]="'eEditing'" >
-          <fa-icon icon="edit" class="icons"></fa-icon>
+          <fa-icon icon="edit" class="icons" size="lg"></fa-icon>
         </label>
         <label ngbButtonLabel>
           <button [disabled]="!isEditingMode()" (click)="deleteSelected()">
-            <fa-icon icon="minus" class="icons"></fa-icon>
+            <fa-icon icon="minus" class="icons" size="lg"></fa-icon>
           </button>
         </label>
 
@@ -40,13 +37,13 @@
 
         <label ngbButtonLabel>
           <button (click)="clear()">
-            <fa-icon icon="trash" class="icons"></fa-icon>
+            <fa-icon icon="trash" class="icons" size="lg"></fa-icon>
           </button>
         </label>
         &nbsp;
         &nbsp;
         <label ngbButtonLabel id="labelMode">
-          {{displayMode()}}
+          <h5>{{displayMode()}}</h5>
         </label>
       </div>
     </form>

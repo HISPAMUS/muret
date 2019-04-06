@@ -4,5 +4,5 @@ export interface AgnosticTypeSVGPath {
   horizAdvX: number;
   viewBox: string;
   symbolTransform: string;
-  defaultLineSpace: number;
+  defaultPositionInStaff: string;
 }

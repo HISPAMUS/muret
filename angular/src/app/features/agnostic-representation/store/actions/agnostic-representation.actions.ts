@@ -4,6 +4,7 @@ import {SVGSet} from '../../model/svgset';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {Point} from '../../../../core/model/entities/point';
+import {SymbolCreationResult} from '../../model/symbol-creation-result';
 
 export enum AgnosticRepresentationActionTypes {
   InitRegion = '[AgnosticRepresentation] Init region',
@@ -13,10 +14,12 @@ export enum AgnosticRepresentationActionTypes {
   DeselectSymbol = '[AgnosticRepresentation] Deselect symbol',
   GetSVGSet = '[AgnosticRepresentation] Get SVG set',
   GetSVGSetSucccess = '[AgnosticRepresentation] Get SVG set success',
-  ChangeSymbolType = '[AgnosticRepresentation] Change symbol type',
-  ChangeSymbolPositionInStaff = '[AgnosticRepresentation] Change symbol position in staff',
+  ChangeSymbol = '[AgnosticRepresentation] Change symbol',
   ChangeSymbolBoundingBox = '[AgnosticRepresentation] Change symbol bounding box',
   ChangeSymbolSuccess = '[AgnosticRepresentation] Change symbol success',
+  /*ClassifySymbolFromBoundingBox = '[AgnosticRepresentation] Classify symbol from bounding box',
+  ClassifySymbolFromStrokes = '[AgnosticRepresentation] Classify symbol from strokes',
+  ClassifySymbolSuccess = '[AgnosticRepresentation] Classify symbol success',*/
   CreateSymbolFromBoundingBox = '[AgnosticRepresentation] Create symbol from bounding box',
   CreateSymbolFromStrokes = '[AgnosticRepresentation] Create symbol from strokes',
   CreateSymbolSuccess = '[AgnosticRepresentation] Create symbol success',
@@ -59,9 +62,9 @@ export class GetSVGSetSucccess implements Action {
   constructor(public svgSet: SVGSet) {}
 }
 
-export class ChangeSymbolType implements Action {
-  public readonly type = AgnosticRepresentationActionTypes.ChangeSymbolType;
-  constructor(public agnosticSymbol: AgnosticSymbol, public agnosticSymbolType: string) {}
+export class ChangeSymbol implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.ChangeSymbol;
+  constructor(public agnosticSymbol: AgnosticSymbol, public agnosticSymbolType: string, public positionInStaff: string) {}
 }
 
 export class ChangeSymbolSuccess implements Action {
@@ -69,29 +72,40 @@ export class ChangeSymbolSuccess implements Action {
   constructor(public agnosticSymbol: AgnosticSymbol) {}
 }
 
-export class ChangeSymbolPositionInStaff implements Action {
-  public readonly type = AgnosticRepresentationActionTypes.ChangeSymbolPositionInStaff;
-  constructor(public agnosticSymbol: AgnosticSymbol, public difference: number) {}
-}
-
 export class ChangeSymbolBoundingBox implements Action {
   public readonly type = AgnosticRepresentationActionTypes.ChangeSymbolBoundingBox;
   constructor(public agnosticSymbol: AgnosticSymbol, public boundingBox: BoundingBox) {}
 }
 
+/*export class ClassifySymbolFromBoundingBox implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.ClassifySymbolFromBoundingBox;
+  constructor(public regionID: number, public boundingBox: BoundingBox) {}
+}
+
+export class ClassifySymbolFromStrokes implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.ClassifySymbolFromStrokes;
+  constructor(public regionID: number, public points: Point[][]) {}
+}
+
+export class ClassifySymbolSuccess implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.ClassifySymbolSuccess
+  constructor(public classifiedSymbols: AgnosticSymbolAndPosition[]) {}
+}*/
+
 export class CreateSymbolFromBoundingBox implements Action {
   public readonly type = AgnosticRepresentationActionTypes.CreateSymbolFromBoundingBox;
-  constructor(public regionID: number, public boundingBox: BoundingBox, public agnosticSymbolType: string) {}
+  constructor(public regionID: number, public boundingBox: BoundingBox, public agnosticSymbolType: string, public positionInStaff: string) {
+  }
 }
 
 export class CreateSymbolFromStrokes implements Action {
   public readonly type = AgnosticRepresentationActionTypes.CreateSymbolFromStrokes;
-  constructor(public regionID: number, public points: Point[][], public agnosticSymbolType: string) {}
+  constructor(public regionID: number, public points: Point[][], public agnosticSymbolType: string, public positionInStaff: string) {}
 }
 
 export class CreateSymbolSuccess implements Action {
-  public readonly type = AgnosticRepresentationActionTypes.CreateSymbolSuccess
-  constructor(public createdSymbol: AgnosticSymbol) {}
+  public readonly type = AgnosticRepresentationActionTypes.CreateSymbolSuccess;
+  constructor(public symbolCreationResult: SymbolCreationResult) {}
 }
 
 export class DeleteSymbol implements Action {
@@ -106,5 +120,6 @@ export class DeleteSymbolSuccess implements Action {
 
 export type AgnosticRepresentationActions =
   InitRegion | GetRegion | GetRegionSuccess | GetSVGSet | GetSVGSetSucccess | SelectSymbol | DeselectSymbol |
-  ChangeSymbolType  | ChangeSymbolBoundingBox | ChangeSymbolPositionInStaff | ChangeSymbolSuccess |
+  ChangeSymbol | ChangeSymbolBoundingBox | ChangeSymbolSuccess |
+  // ClassifySymbolFromBoundingBox | ClassifySymbolFromStrokes | ClassifySymbolSuccess |
   CreateSymbolFromBoundingBox | CreateSymbolFromStrokes | CreateSymbolSuccess | DeleteSymbol | DeleteSymbolSuccess;

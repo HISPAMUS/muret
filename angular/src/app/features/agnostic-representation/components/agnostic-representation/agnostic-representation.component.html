@@ -1,39 +1,49 @@
 <div class="container-fluid">
-  <!-- menu -->
-  <div class="row">
-    <nav class="col-1">
-      <div>
-        <h5>{{ filename$ | async}}</h5>
-        <app-crud-toolbar [(mode)]="mode" (modeChange)="onModeChange($event)" (onDelete)="deleteSelectedSymbol()">
+  <nav class="row">
+    <div class="col-9">
+      <ng-container *ngIf="selectedRegion$ | async">
+        <app-crud-toolbar (onClear)="clear()" (modeChange)="onModeChange($event)" (onDelete)="deleteSelectedSymbol()" [(mode)]="mode" (onZoomFit)="zoomFit()" (onZoomIn)="zoomIn()" (onZoomOut)="zoomOut()">
         </app-crud-toolbar>
+      </ng-container>
 
-        <form>
-          <div [hidden]="!isEditingMode() && !isAddingMode()" class="btn-group-vertical btn-group-toggle" ngbRadioGroup
-               name="addMethodRadioButtonGroup" [(ngModel)]="addMethodType">
-            <label class="btn-light" ngbButtonLabel>
-              <input ngbButton type="radio" name="addMethodRadioButton" [value]="'boundingbox'"> Bounding box
-            </label>
-            <label class="btn-light" ngbButtonLabel>
-              <input ngbButton type="radio" name="addMethodRadioButton" [value]="'strokes'"> Strokes
-            </label>
+      <!--<form>
+        <div [hidden]="!isEditingMode() && !isAddingMode()" class="btn-group-vertical btn-group-toggle" ngbRadioGroup
+             name="addMethodRadioButtonGroup" [(ngModel)]="addMethodType">
+          <label class="btn-light" ngbButtonLabel>
+            <input ngbButton type="radio" name="addMethodRadioButton" [value]="'boundingbox'"> Bounding box
+          </label>
+          <label class="btn-light" ngbButtonLabel>
+            <input ngbButton type="radio" name="addMethodRadioButton" [value]="'strokes'"> Strokes
+          </label>
 
-          </div>
-        </form>
+        </div>
+      </form>-->
 
+    </div>
+    <div class="col-3" id="linksPhases">
+      Go to:
+      <button (click)="openDocumentAnalysis()">Doc. analysis</button>
+      <button (click)="openSemanticRepresentation()" disabled>Semantic</button>
+    </div>
+  </nav>
+
+  <aside id="addMode" class="row" [hidden]="!isEditingMode() && !isAddingMode()">
+    <div class="col-12">
+      <div class="btn-group btn-group-toggle" ngbRadioGroup
+           name="addMethodRadioButtonGroup" [(ngModel)]="addMethodType">
+        <label ngbButtonLabel>
+          <input ngbButton type="radio" name="addMethodRadioButton" [value]="'boundingbox'"> Bounding box
+        </label>
+        <label ngbButtonLabel>
+          <input ngbButton type="radio" name="addMethodRadioButton" [value]="'strokes'"> Strokes
+        </label>
       </div>
-      <br>
-      <br>
-      <button (click)="openDocumentAnalysis()">Document analysis</button>
-      <button (click)="openSemanticRepresentation()" disabled>Semantic representation</button>
-    </nav>
+    </div>
+  </aside>
 
-    <div class="col-11">
+  <div class="row">
+    <div class="col-12">
       <div *ngIf="selectedRegion$ | async as selectedRegion; else noRegionSelected">
-        <aside>
-          <button (click)="zoomOut()"><fa-icon icon="search-minus"></fa-icon></button>
-          <button (click)="zoomIn()"><fa-icon icon="search-plus"></fa-icon></button>
-          <button (click)="zoomFit()"><fa-icon icon="expand"></fa-icon></button>
-        </aside>
         <section class="row">
           <div class="col">
             <app-image [imageID]="imageID" [shapes]="selectedRegionShapes"
@@ -47,16 +57,22 @@
             ></app-image>
           </div>
         </section>
-        <section class="row">
-          <div class="col">
-            Selected symbol ID: {{selectedSymbol?.id}}
+        <section class="row" *ngIf="selectedSymbol">
+          <div class="offset-1 col-3">
+            <p>Selected symbol ID: <strong>{{selectedSymbol?.id}}</strong></p>
+          </div>
+          <div class="col-4">
+            <p>Agnostic symbol type: <strong>{{selectedSymbol?.agnosticSymbolType}}</strong></p>
+          </div>
+          <div class="col-4">
+            <p>Position in staff: <strong>{{selectedSymbol?.positionInStaff}}</strong></p>
           </div>
         </section>
         <section class="row">
           <div class="col">
             <app-agnostic-staff
                                 [regionCropped]="selectedRegion.boundingBox"
-                                [mode]="mode" [svgAgnosticSymbolSet]="svgSet$ | async"
+                                [(mode)]="mode" [svgAgnosticSymbolSet]="svgSet$ | async"
             >
             </app-agnostic-staff>
           </div>
@@ -67,28 +83,62 @@
           <p>Select a region</p>
         </div>
       </ng-template>
-      <section class="row">
-        <div class="col">
-          <app-agnostic-toolbar *ngIf="isAddOrEditMode()"
-                                [mode]="mode" [classifier]="classifier" (classifierChanged)="onClassifierChanged($event)"
-                                [svgAgnosticSymbolSet]="svgSet$ | async"
-                                (agnosticSymbolTypeSelected)="onAgnosticSymbolTypeSelected($event)"
-                                [selectedAgnosticSymbolType]="selectedAgnosticSymbolType"
-                                (pitchDown)="movePitchDownSelectedSymbol()"
-                                (pitchUp)="movePitchUpSelectedSymbol()">
-          </app-agnostic-toolbar>
-          <!-- [agnosticSymbolToolbarCategories]="agnosticSymbolToolbarCategories"-->
-        </div>
-      </section>
-      <section class="row">
-        <div class="col">
-          <app-image [imageID]="imageID" [shapes]="imagePreviewShapes" [zoomFactor]="imagePreviewZoomFactor"
-                     [(selectedShapeID)]="selectedRegionShapeID"
-                     [mode]="'eSelecting'">
-          </app-image>
-        </div>
-      </section>
-
     </div>
   </div>
+
+  <section class="row d-flex justify-content-center" *ngIf="classifiedSymbols">
+    <div class="col-2">
+      <p>Select a symbol type:</p>
+    </div>
+    <div class="col-10">
+      <app-agnostic-toolbar [mode]="mode"
+                            [svgAgnosticSymbolSet]="svgSet$ | async"
+                            (agnosticSymbolSelected)="onAgnosticSymbolTypeSelected($event)"
+                            [selectedAgnosticSymbolType]="selectedAgnosticSymbolType"
+                            [filter]="classifiedSymbols"
+      >
+      </app-agnostic-toolbar>
+    </div>
+  </section>
+
+  <section class="row">
+    <div class="col-1">
+      <ng-container *ngIf="selectedSymbol">
+        <button type="button" class="btn btn-primary" title="Move pitch up" (click)="movePitchUpSelectedSymbol()">
+          <fa-icon icon="angle-up"  size="2x"></fa-icon>
+        </button>
+        <p>Move pitch</p>
+        <button type="button" class="btn btn-primary" title="Move pitch down"  (click)="movePitchDownSelectedSymbol()">
+          <fa-icon icon="angle-down" size="2x"></fa-icon>
+        </button>
+      </ng-container>
+    </div>
+    <div class="col-7">
+      <app-agnostic-toolbar *ngIf="selectedSymbol"
+                            [mode]="mode" [classifier]="classifier" (classifierChanged)="onClassifierChanged($event)"
+                            [svgAgnosticSymbolSet]="svgSet$ | async"
+                            (agnosticSymbolSelected)="onAgnosticSymbolTypeSelected($event)"
+                            (pitchDown)="movePitchDownSelectedSymbol()"
+                            (pitchUp)="movePitchUpSelectedSymbol()">
+      </app-agnostic-toolbar>
+      <!-- [agnosticSymbolToolbarCategories]="agnosticSymbolToolbarCategories"-->
+    </div>
+
+
+    <div [ngClass]="imagePreviewClass">
+      <div id="imagePreviewIcons">
+        <button (click)="toggleImagePreview()">
+          <fa-icon *ngIf="isImagePreviewMinimized" icon="expand-arrows-alt" class="icons"></fa-icon>
+          <fa-icon *ngIf="!isImagePreviewMinimized" icon="compress-arrows-alt" class="icons"></fa-icon>
+        </button>
+        <span>Region selection</span>
+      </div>
+      <app-image [imageID]="imageID" [shapes]="imagePreviewShapes" [zoomFactor]="imagePreviewZoomFactor"
+                 [(selectedShapeID)]="selectedRegionShapeID"
+                 [mode]="'eSelecting'">
+      </app-image>
+    </div>
+
+  </section>
+
 </div>

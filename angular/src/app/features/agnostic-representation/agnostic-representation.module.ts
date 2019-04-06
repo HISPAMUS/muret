@@ -12,12 +12,13 @@ import {DocumentAnalysisModule} from '../document-analysis/document-analysis.mod
 import { AgnosticStaffComponent } from './components/agnostic-staff/agnostic-staff.component';
 import { AgnosticToolbarComponent } from './components/agnostic-toolbar/agnostic-toolbar.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import {NgbButtonsModule, NgbCollapseModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbButtonsModule, NgbCollapseModule, NgbTooltipModule} from '@ng-bootstrap/ng-bootstrap';
 import {AngularSvgIconModule} from 'angular-svg-icon';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SharedModule} from '../../shared/shared.module';
 import {BreadcrumbModule} from '../../breadcrumb/breadcrumb.module';
-import { AgnosticToolbarIconComponent } from './components/agnostic-toolbar-button/agnostic-toolbar-icon.component';
+import { AgnosticToolbarIconComponent } from './components/agnostic-toolbar-icon/agnostic-toolbar-icon.component';
+import {PositionInStaffService} from './services/position-in-staff.service';
 
 @NgModule({
   declarations: [AgnosticRepresentationComponent, AgnosticStaffComponent, AgnosticToolbarComponent, AgnosticToolbarIconComponent],
@@ -30,6 +31,7 @@ import { AgnosticToolbarIconComponent } from './components/agnostic-toolbar-butt
     ReactiveFormsModule,
     NgbButtonsModule,
     NgbCollapseModule,
+    NgbTooltipModule,
     SharedModule,
     BreadcrumbModule,
     StoreModule.forFeature('agnostic-representation', agnosticRepresentationReducers),
@@ -38,7 +40,7 @@ import { AgnosticToolbarIconComponent } from './components/agnostic-toolbar-butt
     DocumentAnalysisModule
   ],
   providers: [
-    AgnosticRepresentationService
+    AgnosticRepresentationService, PositionInStaffService
   ]
 })
 export class AgnosticRepresentationModule { }

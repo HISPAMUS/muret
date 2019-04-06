@@ -27,6 +27,7 @@
 }
 
 
+/* TODO Radio boxes con texto repetido en Agnostic */
 #regionTypesEdit * {
   color: white;
   font-weight: lighter;
@@ -37,6 +38,7 @@
   font-weight: bold;
 }
 
+/* TODO Repetido en Agnostic */
 #linksPhases {
   color: white;
 }

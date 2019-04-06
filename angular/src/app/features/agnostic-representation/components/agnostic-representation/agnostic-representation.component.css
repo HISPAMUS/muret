@@ -4,3 +4,55 @@
   font-weight: bolder;
   text-align: center;
 }
+
+.imagePreviewMaximized {
+  position: fixed;
+  bottom: 5px;
+  right: 5px;
+  z-index: 100;
+  max-height: 90vh;
+  width: 99vw;
+}
+
+#imagePreviewIcons {
+  background-color: #7DE2DB;
+}
+
+#imagePreviewIcons * {
+  color: white;
+}
+
+#imagePreviewIcons span {
+  color: white;
+}
+
+#imagePreviewIcons button {
+  background-color: #7DE2DB;
+  border-color: #7DE2DB;
+}
+
+/* TODO Radio boxes con texto repetido en Agnostic */
+#addMode * {
+  color: white;
+  font-weight: lighter;
+}
+
+#addMode .active {
+  color: #D91E63;
+  font-weight: bold;
+}
+
+/* TODO Repetido en Document Analysis */
+#linksPhases {
+  color: white;
+}
+
+#linksPhases button {
+  color: #7DE2DB;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+#linksPhases button:disabled {
+  color: gray;
+}

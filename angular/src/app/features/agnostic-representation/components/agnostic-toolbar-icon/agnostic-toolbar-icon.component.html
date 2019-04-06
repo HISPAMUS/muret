@@ -7,13 +7,13 @@
   <g>
     <svg:line *ngFor="let line of linesY; trackBy: trackByLineFn"
               attr.x1="0" [attr.y1]="line" [attr.x2]="buttonWidth" [attr.y2]="line"
-              stroke="black"
+              stroke="#CCCCCC"
               stroke-width="1"
     />
   </g>
 
   <!-- TODO Por qué height 50? -->
-  <use fill="blue" height="50" style="opacity:1.0" [attr.xlink:href]="'#' + symbolID" [attr.x]="getX()"
+  <use fill="#7DE2DB" [attr.height]="iconHeight" style="opacity:1.0" [attr.xlink:href]="'#' + symbolID" [attr.x]="getX()"
        [attr.y]="computeAgnosticStaffSymbolY()"></use>
 
 </svg>

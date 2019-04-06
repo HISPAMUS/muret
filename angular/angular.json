@@ -25,7 +25,9 @@
             "styles": [
               "src/styles.css",
             ],
-            "scripts": [],
+            "scripts": [
+              // "./node_modules/pressure/dist/pressure.min.js"
+            ],
             "es5BrowserSupport": true
           },
           "configurations": {

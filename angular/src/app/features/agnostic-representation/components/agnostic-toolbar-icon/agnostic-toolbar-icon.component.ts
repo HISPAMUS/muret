@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {PositionInStaffService} from '../../services/position-in-staff.service';
 
 @Component({
   selector: 'app-agnostic-toolbar-icon',
@@ -12,14 +13,15 @@ export class AgnosticToolbarIconComponent implements OnInit {
   @Input() symbolPathD: string;
   @Input() symbolTransform: string;
   @Input() symbolID: string;
-  @Input() defaultLineSpace: number;
+  @Input() positionInStaff: string;
+  iconHeight: number;
 
   linesY: Array<number> = new Array<number>();
 
   private buttonViewBox: string;
   private staffSpaceHeight: number;
 
-  constructor() { }
+  constructor(private positionInStaffService: PositionInStaffService) { }
 
   ngOnInit() {
     this.buttonViewBox = `0 0 ${this.buttonWidth} ${this.buttonHeight}`;
@@ -31,6 +33,8 @@ export class AgnosticToolbarIconComponent implements OnInit {
     for (let i = 0; i < 5; i++) {
       this.linesY[i] = marginTop + this.staffSpaceHeight * i;
     }
+
+    this.iconHeight = staffHeight;
   }
 
   trackByLineFn(index, item: number) {
@@ -38,7 +42,8 @@ export class AgnosticToolbarIconComponent implements OnInit {
   }
 
   computeAgnosticStaffSymbolY(): number {
-    const heightDifference = -(this.staffSpaceHeight * (this.defaultLineSpace / 2.0));
+    const lineSpace = this.positionInStaffService.positionInStaffToLineSpace(this.positionInStaff);
+    const heightDifference = -(this.staffSpaceHeight * (lineSpace / 2.0));
     const y = this.linesY[4]  + heightDifference;
     return y;
   }

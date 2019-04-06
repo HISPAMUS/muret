@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.im3ws.muret.model;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
+import es.ua.dlsi.grfia.im3ws.muret.controller.payload.AgnosticSymbolTypeAndPosition;
 import es.ua.dlsi.grfia.im3ws.muret.entity.BoundingBox;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.score.PositionInStaff;
@@ -11,9 +12,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * It uses the Python classifier through a REST API
@@ -100,7 +99,17 @@ public class SymbolClassifierClient {
                     '}';
         }
     }
-    public AgnosticSymbol classifyImage(long imageID, Path path, BoundingBox boundingBox) throws IM3WSException, IM3Exception {
+
+    /**
+     *
+     * @param imageID
+     * @param path
+     * @param boundingBox
+     * @return A sorted list of possibilities
+     * @throws IM3WSException
+     * @throws IM3Exception
+     */
+    public List<AgnosticSymbolTypeAndPosition> classifyImage(long imageID, Path path, BoundingBox boundingBox) throws IM3WSException, IM3Exception {
         if (!checkImageExists(imageID)) {
             this.uploadImage(imageID, path);
         }
@@ -113,7 +122,10 @@ public class SymbolClassifierClient {
 
         ShapePosition response = this.restClient.post("image/" + imageID + "/bbox", ShapePosition.class, postContent);
 
-        AgnosticSymbol result = new AgnosticSymbol(AgnosticVersion.v2, AgnosticSymbolTypeFactory.parseString(response.shape), PositionInStaff.parseString(response.position));
+        AgnosticSymbolTypeAndPosition agnosticSymbol = new AgnosticSymbolTypeAndPosition(response.shape, response.position);
+        // TODO Ahora el clasificador sólo está devolviendo uno
+        List<AgnosticSymbolTypeAndPosition> result = new ArrayList<>();
+        result.add(agnosticSymbol);
         return result;
     }
 
@@ -131,7 +143,7 @@ public class SymbolClassifierClient {
 
         // 47,71,146,226 -> Clef.G2
         Path path2 = Paths.get("/Applications/MAMP/htdocs/muret/b-59-850/previews/12609.JPG");
-        AgnosticSymbol agnosticSymbol = classifiersRESTClient.classifyImage(2271, path2, new BoundingBox(47, 71, 146, 226));
+        List<AgnosticSymbolTypeAndPosition> agnosticSymbol = classifiersRESTClient.classifyImage(2271, path2, new BoundingBox(47, 71, 146, 226));
         System.out.println("Classified as " + agnosticSymbol);
     }
 

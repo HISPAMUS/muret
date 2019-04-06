@@ -8,6 +8,7 @@ import { TextComponent } from './components/text/text.component';
 import { PolylinesComponent } from './components/polylines/polylines.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 
+
 @NgModule({
   declarations: [SvgCanvasComponent, ShapeComponent, RectangleComponent, LineComponent, TextComponent, PolylinesComponent],
   imports: [

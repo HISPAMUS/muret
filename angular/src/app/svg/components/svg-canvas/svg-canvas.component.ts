@@ -1,4 +1,8 @@
 import {
+  AfterContentChecked,
+  AfterContentInit,
+  AfterViewChecked,
+  AfterViewInit,
   Component,
   ComponentFactoryResolver,
   ElementRef,
@@ -6,9 +10,9 @@ import {
   Input,
   OnChanges,
   OnInit,
-  Output,
+  Output, QueryList,
   SimpleChanges,
-  ViewChild
+  ViewChild, ViewChildren
 } from '@angular/core';
 import {ShapeComponent} from '../shape/shape.component';
 import {Rectangle} from '../../model/rectangle';
@@ -19,6 +23,8 @@ import {Text} from '../../model/text';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {BoundingBox} from '../../../core/model/entities/bounding-box';
 import {Polylines} from '../../model/polylines';
+import {RectangleComponent} from '../rectangle/rectangle.component';
+
 
 @Component({
   selector: 'app-svg-canvas',
@@ -33,7 +39,7 @@ import {Polylines} from '../../model/polylines';
  *
  * It also implements the resizing of elements without CDK drag&drop
  */
-export class SvgCanvasComponent implements OnInit, OnChanges {
+export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecked {
   @Input() backgroundImage: string;
   @Input() shapes: Shape[];
   @Input() zoomFactor: number;
@@ -48,7 +54,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
 
   @ViewChild('canvas') canvas: ElementRef;
   @ViewChild('svgContent') svgContent: ElementRef;
-  /// @ViewChildren(ShapeComponent) shapeComponents: QueryList<ShapeComponent>;
+  // @ViewChildren(RectangleComponent) rectangleComponents: QueryList<RectangleComponent>;
 
   // interaction
   @Output() svgMouseEvent = new EventEmitter<Coordinate>(); // only emitted on eIdle state
@@ -71,7 +77,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   private selectedComponent: ShapeComponent;
   private unsafeBackgroundImage: SafeResourceUrl;
   private shapeWithoutComponent: Rectangle | Line | Text | Polylines;
-  private polylinesCreationTimeout: number;
+  private polylinesCreationTimeout: any;
   private proportion: number;
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver,
@@ -88,6 +94,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     this.computeViewBox(); // it costs less to compute the change than checking if it has changed
     this.computeScaledImageSize();
+
   }
 
   @Input()
@@ -99,6 +106,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
     this.modeValue = val;
     this.modeChange.emit(this.modeValue);
     this.updateCursor();
+    this.selectedShapeID = null;
+    this.selectedComponent = null;
   }
 
   @Input()
@@ -109,9 +118,15 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   set selectedShapeID(id: string) {
     if (this.selectedShapeIDValue !== id) {
       this.selectedShapeIDValue = id;
-      this.selectedComponent = this.findEventTargetComponent(id);
     }
   }
+
+  ngAfterContentChecked(): void {
+    if (this.mode === 'eEditing') {
+      this.selectedComponent = this.findEventTargetComponent(this.selectedShapeIDValue);
+    }
+  }
+
 
   private findEventTargetComponent(targetID: string): ShapeComponent {
     if (!this.shapes || !targetID) {
@@ -181,9 +196,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   }
 
   // ----------- Interaction ---------
-  onMouseDown($event) {
-    const svgCoordinate = this.screenCoordinateToSVGCoordinate($event.timeStamp, $event.offsetX, $event.offsetY);
-
+  onDrawStart(target: any, timeStamp: number, x: number, y: number) {
+    const svgCoordinate = this.screenCoordinateToSVGCoordinate(timeStamp, x, y);
     switch (this.mode) {
       case 'eAdding':
         if (this.polylinesCreationTimeout) {
@@ -195,19 +209,27 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
         }
         break;
       case 'eSelecting':
-        this.selectedShapeID = $event.target.id;
+        this.selectedShapeID = target.id;
         this.selectedShapeIDChange.emit(this.selectedShapeID);
         break;
       case 'eEditing':
         this.selectedShapeID = null;
         // when auth clicks over a svg shape, it is sent to this method as event
-        this.selectedShapeID = $event.target.id;
+        this.selectedShapeID = target.id;
         this.selectedShapeIDChange.emit(this.selectedShapeID);
         break;
     }
   }
 
-  screenCoordinateToSVGCoordinate(timestamp: number, screenX: number, screenY: number): Coordinate {
+  /*@HostListener('dblclick')
+  onDblClick() {
+    if (this.mode === 'eIdle') {
+      this.mode = 'eEditing';
+    }
+  }*/
+
+
+  screenCoordinateToSVGCoordinate(timestamp: number, x: number, y: number): Coordinate {
     let xScale: number;
     let yScale: number;
 
@@ -228,12 +250,12 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
 
     return {
       timestamp,
-      x: screenX * xScale + xOffset,
-      y: screenY * yScale + yOffset
+      x: x * xScale + xOffset,
+      y: y * yScale + yOffset
     };
   }
 
-  onMouseMove($event) {
+  onDrawMove(timeStamp: number, x: number, y: number) {
     switch (this.mode) {
       case 'eAdding':
         if (!this.selectedComponent && this.shapeWithoutComponent) {
@@ -242,30 +264,28 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
         }
 
         if (this.selectedComponent && !this.polylinesCreationTimeout) {
-          const svgCoordinate = this.screenCoordinateToSVGCoordinate($event.timeStamp, $event.offsetX, $event.offsetY);
+          const svgCoordinate = this.screenCoordinateToSVGCoordinate(timeStamp, x, y);
           this.selectedComponent.draw(svgCoordinate);
         }
         break;
       case 'eEditing':
         if (this.selectedComponent && this.selectedComponent.isHandleSelected()) {
-          const svgCoordinate = this.screenCoordinateToSVGCoordinate($event.timeStamp, $event.offsetX, $event.offsetY);
+          const svgCoordinate = this.screenCoordinateToSVGCoordinate(timeStamp, x, y);
           this.selectedComponent.onHandleMouseMove(svgCoordinate.x, svgCoordinate.y);
         }
         break;
     }
   }
 
-  onMouseUp($event): void {
+  onDrawEnd(): void {
     switch (this.mode) {
       case 'eAdding':
-        $event.stopPropagation();
         this.endShapeDraw();
         break;
       case 'eEditing':
         if (this.selectedComponent && this.selectedComponent.isHandleSelected()) {
           this.selectedComponent.deselectHandle();
           this.svgShapeChanged.emit(this.selectedComponent.shape);
-          $event.stopPropagation();
         }
         break;
     }
@@ -274,8 +294,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
   private createShape(coordinate: Coordinate) {
     const shape = this.createShapeFromTypeName(this.nextShapeToAdd);
     shape.fillColor = 'transparent';
-    shape.strokeColor = 'black';
-    shape.strokeWidth = 3;
+    shape.strokeColor = 'lightgreen';
+    shape.strokeWidth = 2;
     shape.fromX = coordinate.x;
     shape.fromY = coordinate.y;
     this.shapes.push(shape);
@@ -298,6 +318,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
         } else {
           this.selectedShapeID = null;
           this.svgShapeCreated.emit(shape);
+          this.selectedComponent = null;
+          // this.shapes = this.shapes.filter(s => s != null);
         }
       }
     }
@@ -343,4 +365,93 @@ export class SvgCanvasComponent implements OnInit, OnChanges {
       this.scaledImageHeight = this.scaledImageWidth / this.proportion;
     }
   }
+
+
+  onTouchStart($event) {
+    $event.preventDefault(); // avoid scrolling
+
+    if ($event.targetTouches) {
+      const coord = this.recoverOffsetValues($event);
+      this.onDrawStart($event.target, $event.timeStamp, coord[0], coord[1]);
+    }
+  }
+
+  onMouseDown($event) {
+    if (!this.isTouchDevice()) {
+      $event.stopPropagation();
+      this.onDrawStart($event.target, $event.timeStamp, $event.offsetX, $event.offsetY);
+    }
+  }
+
+  /*getTouchOffsetX(event) {
+    const rect = event.target.getBoundingClientRect();
+    return Math.round(event.targetTouches[0].clientX - rect.left);
+  }
+
+  getTouchOffsetY(event) {
+    const rect = event.target.getBoundingClientRect();
+    return Math.round(event.targetTouches[0].clientY - rect.top);
+  }*/
+
+  // https://stackoverflow.com/questions/17130940/retrieve-the-same-offsetx-on-touch-like-mouse-event/33756703
+  recoverOffsetValues(e) {
+    // const rect = e.target.getBoundingClientRect();
+    // const bodyRect = document.body.getBoundingClientRect();
+    const rect = this.canvas.nativeElement.getBoundingClientRect();
+    const bodyRect = document.body.getBoundingClientRect();
+    const x = Math.round(e.targetTouches[0].pageX - (rect.left - bodyRect.left));
+    const y = Math.round(e.targetTouches[0].pageY - (rect.top - bodyRect.top));
+
+    return [x, y];
+  }
+
+  onTouchMove($event) {
+    $event.preventDefault(); // avoid scrolling
+    if ($event.targetTouches) {
+      const coord = this.recoverOffsetValues($event);
+      this.onDrawMove($event.timeStamp, coord[0], coord[1]);
+    }
+  }
+
+  onMouseMove($event) {
+    this.onDrawMove($event.timeStamp, $event.offsetX, $event.offsetY);
+  }
+
+  onTouchEnd($event) {
+    $event.preventDefault(); // avoid scrolling
+    this.onDrawEnd();
+  }
+
+  onMouseUp($event) {
+    $event.stopPropagation();
+    this.onDrawEnd();
+  }
+
+  isTouchDevice() {
+    return 'ontouchstart' in document.documentElement;
+  }
+
+  onDblClickOnShape(shape: Shape) {
+    if (this.mode === 'eIdle') {
+      this.mode = 'eEditing';
+      this.selectedShapeID = shape.id;
+      this.selectedShapeIDChange.emit(this.selectedShapeID);
+    }
+  }
+
+  onPanStart($event) {
+    this.onDrawStart($event.target, $event.timeStamp, $event.center.x, $event.center.y);
+  }
+
+  onPanMove($event) {
+    this.onDrawMove($event.timeStamp, $event.center.x, $event.center.y);
+  }
+
+  onPanEnd($event) {
+    this.onDrawEnd();
+  }
+
+
 }
+
+// Llevar todo lo de touch a servicio
