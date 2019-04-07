@@ -30,6 +30,7 @@ export class TrainingSetsComponent implements OnInit, OnDestroy {
 
   projects: Project[];
   exporters: TrainingSetExporter[];
+  exporting: boolean;
 
   constructor(private store: Store<any>,
               private formBuilder: FormBuilder,
@@ -91,8 +92,10 @@ export class TrainingSetsComponent implements OnInit, OnDestroy {
 
     // we better perform it using directly the service rather than using redux because we don't want to save the blob state
     this.currentCursor = 'wait';
+    this.exporting = true;
     this.exporterService.downloadTrainingSet$(this.selectedExporterId, selectedProjectIDS).subscribe(data => {
       const blob1 = new Blob([data], { type: 'application/x-gzip' });
+      this.exporting = false;
       saveAs.saveAs(blob1, 'training_set.tgz'); // TODO file name
       this.currentCursor = 'default';
     });
@@ -103,5 +106,13 @@ export class TrainingSetsComponent implements OnInit, OnDestroy {
     this.authSubscription.unsubscribe();
     this.userSubscription.unsubscribe();
     this.exportersSubscription.unsubscribe();
+  }
+
+  getButtonLabel() {
+    if (this.exporting) {
+      return 'Exporting... (it can take several minutes)';
+    } else {
+      return 'Export training set';
+    }
   }
 }

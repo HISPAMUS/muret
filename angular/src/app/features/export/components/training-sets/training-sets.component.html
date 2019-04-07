@@ -39,7 +39,7 @@
 
     <div class="row">
       <div class="col offset-2">
-        <button [disabled]="!form.valid" class="btn btn-primary btn-lg">Export training set</button>
+        <button [disabled]="!form.valid || exporting" class="btn btn-primary btn-lg">{{getButtonLabel()}}</button>
       </div>
     </div>
 
