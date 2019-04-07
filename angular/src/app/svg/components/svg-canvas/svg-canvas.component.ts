@@ -1,8 +1,5 @@
 import {
   AfterContentChecked,
-  AfterContentInit,
-  AfterViewChecked,
-  AfterViewInit,
   Component,
   ComponentFactoryResolver,
   ElementRef,
@@ -10,9 +7,9 @@ import {
   Input,
   OnChanges,
   OnInit,
-  Output, QueryList,
+  Output,
   SimpleChanges,
-  ViewChild, ViewChildren
+  ViewChild,
 } from '@angular/core';
 import {ShapeComponent} from '../shape/shape.component';
 import {Rectangle} from '../../model/rectangle';
@@ -23,7 +20,6 @@ import {Text} from '../../model/text';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {BoundingBox} from '../../../core/model/entities/bounding-box';
 import {Polylines} from '../../model/polylines';
-import {RectangleComponent} from '../rectangle/rectangle.component';
 
 
 @Component({
@@ -149,9 +145,6 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
       this.viewBox = `0 0 ${this.viewPortWidth} ${this.viewPortHeight}`;
       this.proportion = this.viewPortWidth / this.viewPortHeight;
     }
-
-    // this.heightPercentString = this.heightPercentage + '%';
-    // this.widthPercentString = this.widthPercentage + '%';
   }
 
   private createShapeFromTypeName(nextShapeToDraw: 'Rectangle' | 'Line' | 'Text' | 'Polylines') {
@@ -189,10 +182,6 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
 
   private changeCursor(cursor: string) {
     this.cursorClass = cursor;
-  }
-
-  private findShape(id: string): Shape {
-    return this.shapes.find(s => s.id === id);
   }
 
   // ----------- Interaction ---------
@@ -344,7 +333,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize(event) {
+  onResize($event) {
     this.computeScaledImageSize();
   }
 
@@ -361,8 +350,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
 
   private computeScaledImageSize() {
     if (this.svgContent.nativeElement && this.proportion) {
-      this.scaledImageWidth = this.zoomFactor * this.svgContent.nativeElement.clientWidth;
-      this.scaledImageHeight = this.scaledImageWidth / this.proportion;
+      this.scaledImageWidth = Math.round(this.zoomFactor * this.svgContent.nativeElement.clientWidth);
+      this.scaledImageHeight = Math.round(this.scaledImageWidth / this.proportion);
     }
   }
 
@@ -382,16 +371,6 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
       this.onDrawStart($event.target, $event.timeStamp, $event.offsetX, $event.offsetY);
     }
   }
-
-  /*getTouchOffsetX(event) {
-    const rect = event.target.getBoundingClientRect();
-    return Math.round(event.targetTouches[0].clientX - rect.left);
-  }
-
-  getTouchOffsetY(event) {
-    const rect = event.target.getBoundingClientRect();
-    return Math.round(event.targetTouches[0].clientY - rect.top);
-  }*/
 
   // https://stackoverflow.com/questions/17130940/retrieve-the-same-offsetx-on-touch-like-mouse-event/33756703
   recoverOffsetValues(e) {
@@ -438,20 +417,6 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
       this.selectedShapeIDChange.emit(this.selectedShapeID);
     }
   }
-
-  onPanStart($event) {
-    this.onDrawStart($event.target, $event.timeStamp, $event.center.x, $event.center.y);
-  }
-
-  onPanMove($event) {
-    this.onDrawMove($event.timeStamp, $event.center.x, $event.center.y);
-  }
-
-  onPanEnd($event) {
-    this.onDrawEnd();
-  }
-
-
 }
 
 // Llevar todo lo de touch a servicio

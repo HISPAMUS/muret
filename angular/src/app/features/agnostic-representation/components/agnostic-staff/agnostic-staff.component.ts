@@ -33,6 +33,8 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   @Output() modeChange = new EventEmitter();
   symbolHeight = 50; // 87.5px // TODO
   em = 50; // TODO variable - ver también el cálculo del tamaño de los use en el svg
+  LEDGER_LINE_OFFSET: number = this.em / 4;
+  LEDGER_LINE_WIDTH: number = this.em / 1.5;
 
   margin: number;
 
@@ -43,6 +45,7 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   width: number;
   staffLines: StaffLine[]; // TODO El nº de pentagramas debería depender del tipo de partitura
   private staffBottomLineY: number;
+  private staffTopLineY: number;
 
   agnosticSymbols$: Observable<AgnosticSymbol[]>;
   private selectedSymbolSubscription: Subscription;
@@ -81,6 +84,8 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
 
       if (i === 4) {
         this.staffBottomLineY = line.y;
+      } else if (i === 0) {
+        this.staffTopLineY = line.y;
       }
     }
   }
@@ -115,6 +120,10 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
     return index;
   }
 
+  trackByLedgerLineFn(index, item: number) {
+    return item;
+  }
+
   computeAgnosticStaffSymbolY(symbol: AgnosticSymbol): number {
     const lineSpace = this.positionInStaffService.positionInStaffToLineSpace(symbol.positionInStaff);
     const heightDifference = -(this.staffSpaceHeight * (lineSpace / 2.0));
@@ -122,9 +131,39 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
     return y;
   }
 
-  /*computeSVGSymbolViewBox(svgSet: SVGSet, svgSymbol: AgnosticTypeSVGPath) {
-    return `0 ${-(svgSet.em - svgSet.descent)} ${svgSet.em + svgSymbol.horizAdvX} ${svgSet.em}`;
-  }*/
+
+  computeLedgerLines(agnosticSymbol: AgnosticSymbol, lines: number): number {
+    const lineSpace = this.positionInStaffService.positionInStaffToLineSpace(agnosticSymbol.positionInStaff);
+    if (lineSpace < 0) {
+      return -lineSpace / 2;
+    } else if (lineSpace > (lines - 1) * 2) {
+      return -(lineSpace - (lines - 1) * 2) / 2;
+    } else {
+      return 0;
+    }
+  }
+
+  /**
+   * Returns the positions of the ledger lines
+   */
+  getLedgerLines(agnosticSymbol: AgnosticSymbol): number[] {
+    const result = new Array<number>();
+    const nll = this.computeLedgerLines(agnosticSymbol, 5);
+
+    if (nll < 0) {
+      for (let i = 1; i <= -nll; i++) {
+        const y = this.staffTopLineY - i * this.staffSpaceHeight;
+        result.push(y);
+      }
+    } else if (nll > 0) {
+      for (let i = 1; i <= nll; i++) {
+        const y = this.staffBottomLineY + i * this.staffSpaceHeight;
+        result.push(y);
+      }
+    }
+    return result;
+  }
+
 
   onMouseDown($event) {
   }

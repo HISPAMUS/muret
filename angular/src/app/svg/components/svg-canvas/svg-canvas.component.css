@@ -1,6 +1,6 @@
 #canvas {
-  width: 100%;
-  height: auto;
+  /*width: 100%;
+  height: auto; - with this it does not zoom */
 }
 
 #backgroundHiddenImageElement {

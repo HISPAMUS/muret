@@ -66,8 +66,6 @@ public class AgnosticSymbolFont {
             }
         }
 
-        Collections.sort(result, Comparator.comparing(AgnosticTypeSVGPath::getAgnosticTypeString));
-
         return result;
     }
 
