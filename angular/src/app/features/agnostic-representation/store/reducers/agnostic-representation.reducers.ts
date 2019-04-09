@@ -54,7 +54,7 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
       } else {
         newState.selectedSymbolID = null;
       }
-      newState.classifiedSymbols = action.symbolCreationResult.classifiedSymbols;;
+      newState.classifiedSymbols = action.symbolCreationResult.classifiedSymbols;
       return newState;
     }
     /*case AgnosticRepresentationActionTypes.ClassifySymbolSuccess: {
@@ -71,6 +71,20 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
         newState.agnosticSymbols = newState.agnosticSymbols.filter(symbol => symbol.id !== action.deletedAgnosticSymbolID);
       }
       newState.selectedRegion.symbols = newState.agnosticSymbols; // same object
+      return newState;
+    }
+    case AgnosticRepresentationActionTypes.ClassifyRegionEndToEndSuccess: {
+      const newState = {...state};
+      newState.classifiedSymbols = null;
+      newState.agnosticSymbols = action.classifiedSymbols;
+      newState.selectedSymbolID = null;
+      return newState;
+    }
+    case AgnosticRepresentationActionTypes.ClearRegionSymbolsSuccess: {
+      const newState = {...state};
+      newState.classifiedSymbols = null;
+      newState.agnosticSymbols = null;
+      newState.selectedSymbolID = null;
       return newState;
     }
     default: {

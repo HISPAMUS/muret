@@ -18,7 +18,7 @@ import {
 } from '../../../document-analysis/store/actions/document-analysis.actions';
 import {
   ChangeSymbol,
-  ChangeSymbolBoundingBox,
+  ChangeSymbolBoundingBox, ClassifyRegionEndToEnd, ClearRegionSymbols,
   CreateSymbolFromBoundingBox, CreateSymbolFromStrokes,
   DeleteSymbol, DeselectSymbol,
   GetRegion, GetSVGSet, InitRegion,
@@ -39,6 +39,7 @@ import {AgnosticSymbolAndPosition} from '../../model/agnostic-symbol-and-positio
 import {Point} from '../../../../core/model/entities/point';
 import {AgnosticTypeSVGPath} from '../../model/agnostic-type-svgpath';
 import {PositionInStaffService} from '../../services/position-in-staff.service';
+import {Line} from '../../../../svg/model/line';
 
 const USE_SYMBOL_CLASSIFIER = 'USE_SYMBOL_CLASSIFIER'; // see es.ua.dlsi.grfia.im3ws.muret.model.AgnosticRepresentationModel
 
@@ -116,9 +117,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     });
 
     this.agnosticSymbolsSubscription = this.store.select(selectAgnosticSymbols).subscribe(next => {
-      if (next) {
-        this.drawSelectedRegionSymbols(next);
-      }
+      this.drawSelectedRegionSymbols(next);
     });
     this.selectedRegionSubscription = this.store.select(selectSelectedRegion).subscribe(next => {
       this.selectedRegion = next;
@@ -267,6 +266,24 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     shapes.push(rect);
     return rect;
   }
+
+  private drawLine(shapes: Shape[], modelObject: AgnosticSymbol, layer: string, id: number, approxX: number, color: string) {
+    const line = new Line();
+    line.id = layer + 'approxLines' + id;
+    line.fromX = approxX;
+    line.toX = approxX;
+    line.fromY = 0;
+    line.toY = 10000; // TODO
+    line.strokeColor = color;
+    line.strokeWidth = 2;
+    line.strokeDashArray = '10';
+    line.layer = layer;
+    line.data = modelObject;
+    shapes.push(line);
+    return line;
+  }
+
+
   private drawImagePreviewRegion(region: Region) {
     this.drawBox(this.imagePreviewShapes, region,
       region.regionType.name, region.id, region.boundingBox, '#' + region.regionType.hexargb ).data = region;
@@ -276,14 +293,22 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.selectedRegionShapes = new Array();
     if (agnosticSymbols) {
       agnosticSymbols.forEach(symbol => {
-        this.drawBox(this.selectedRegionShapes, symbol,
-          symbol.agnosticSymbolType, symbol.id, symbol.boundingBox, 'red');
-        // console.log(JSON.stringify(symbol.boundingBox, null, 4));
+        const color = 'red';
+        if (symbol.boundingBox) {
+          this.drawBox(this.selectedRegionShapes, symbol,
+            symbol.agnosticSymbolType, symbol.id, symbol.boundingBox, color);
+        }
 
         if (symbol.strokes) {
           this.drawStrokes(this.selectedRegionShapes, symbol,
-            symbol.agnosticSymbolType, symbol.id, symbol.strokes, 'red');
+            symbol.agnosticSymbolType, symbol.id, symbol.strokes, color);
         }
+
+        if (symbol.approximateX) {
+          this.drawLine(this.selectedRegionShapes, symbol,
+            symbol.agnosticSymbolType, symbol.id, symbol.approximateX, color);
+        }
+
       });
     }
   }
@@ -430,10 +455,6 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     }
   }
 
-  clear() {
-
-  }
-
   toggleImagePreview() {
     this.isImagePreviewMinimized = !this.isImagePreviewMinimized;
     if (this.isImagePreviewMinimized) {
@@ -497,6 +518,25 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     return this.creatingStrokes != null || this.creatingBoundingBox != null;
   }*/
 
+  classifyEnd2End() {
+    this.dialogsService.showConfirmarion('Classify end to end?', 'This action will delete previous symbols and cannot be undone')
+      .subscribe((isConfirmed) => {
+        if (isConfirmed) {
+          this.store.dispatch(new ClassifyRegionEndToEnd(this.selectedRegion.id));
+        }
+      });
+
+  }
+
+
+  clear() {
+    this.dialogsService.showConfirmarion('Clear region symbols?', 'This action cannot be undone')
+      .subscribe((isConfirmed) => {
+        if (isConfirmed) {
+          this.store.dispatch(new ClearRegionSymbols(this.selectedRegion.id));
+        }
+      });
+  }
 }
 
 

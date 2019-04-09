@@ -24,7 +24,11 @@ export enum AgnosticRepresentationActionTypes {
   CreateSymbolFromStrokes = '[AgnosticRepresentation] Create symbol from strokes',
   CreateSymbolSuccess = '[AgnosticRepresentation] Create symbol success',
   DeleteSymbol = '[AgnosticRepresentation] Delete symbol',
-  DeleteSymbolSuccess = '[AgnosticRepresentation] Delete symbol success'
+  DeleteSymbolSuccess = '[AgnosticRepresentation] Delete symbol success',
+  ClassifyRegionEndToEnd = '[AgnosticRepresentation] Classify region end-to-end',
+  ClassifyRegionEndToEndSuccess = '[AgnosticRepresentation] Classify region end-to-end success',
+  ClearRegionSymbols = '[AgnosticRepresentation] Clear region symbols',
+  ClearRegionSymbolsSuccess = '[AgnosticRepresentation] Clear region symbols success'
 }
 
 export class InitRegion implements Action {
@@ -118,8 +122,30 @@ export class DeleteSymbolSuccess implements Action {
   constructor(public deletedAgnosticSymbolID: number) {}
 }
 
+export class ClassifyRegionEndToEnd implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.ClassifyRegionEndToEnd;
+  constructor(public regionID: number) {}
+}
+
+export class ClassifyRegionEndToEndSuccess implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.ClassifyRegionEndToEndSuccess;
+  constructor(public classifiedSymbols: AgnosticSymbol[]) {}
+}
+
+export class ClearRegionSymbols implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.ClearRegionSymbols;
+  constructor(public regionID: number) {}
+}
+
+export class ClearRegionSymbolsSuccess implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.ClearRegionSymbolsSuccess;
+  constructor(public deleted: boolean) {}
+}
+
 export type AgnosticRepresentationActions =
   InitRegion | GetRegion | GetRegionSuccess | GetSVGSet | GetSVGSetSucccess | SelectSymbol | DeselectSymbol |
   ChangeSymbol | ChangeSymbolBoundingBox | ChangeSymbolSuccess |
   // ClassifySymbolFromBoundingBox | ClassifySymbolFromStrokes | ClassifySymbolSuccess |
-  CreateSymbolFromBoundingBox | CreateSymbolFromStrokes | CreateSymbolSuccess | DeleteSymbol | DeleteSymbolSuccess;
+  CreateSymbolFromBoundingBox | CreateSymbolFromStrokes | CreateSymbolSuccess | DeleteSymbol | DeleteSymbolSuccess |
+  ClassifyRegionEndToEnd | ClassifyRegionEndToEndSuccess |
+  ClearRegionSymbols | ClearRegionSymbolsSuccess;

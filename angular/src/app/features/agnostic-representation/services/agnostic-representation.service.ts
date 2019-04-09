@@ -100,4 +100,16 @@ export class AgnosticRepresentationService {
     return this.apiRestClientService.delete$<number>('agnostic/deleteSymbol', symbolID);
   }
 
+  classifyRegionEndToEnd$(regionID: number): Observable<AgnosticSymbol[]> {
+    const url = `agnostic/classifyRegionEndToEnd/${regionID}`;
+    return this.apiRestClientService.get$<AgnosticSymbol[]>(url);
+  }
+
+  clearRegionSymbols$(regionID: number): Observable<boolean> {
+    if (regionID) { // TODO It's invoked twice !!
+      return this.apiRestClientService.delete$<boolean>('agnostic/clearRegionSymbols', regionID);
+    }
+  }
+
+
 }

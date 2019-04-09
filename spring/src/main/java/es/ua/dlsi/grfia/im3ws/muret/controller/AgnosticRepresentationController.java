@@ -1,7 +1,6 @@
 package es.ua.dlsi.grfia.im3ws.muret.controller;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
-import es.ua.dlsi.grfia.im3ws.muret.controller.payload.AgnosticSymbolTypeAndPosition;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.SymbolCreationFromBoundingBox;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.SymbolCreationFromStrokes;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.SymbolCreationResult;
@@ -156,5 +155,23 @@ public class AgnosticRepresentationController {
                 symbolCreationFromStrokes.getAgnosticSymbolType(), symbolCreationFromStrokes.getPositionInStaff());
     }
 
+    @GetMapping(path = {"classifyRegionEndToEnd/{regionID}"})
+    public List<Symbol> classifyRegionEndToEnd(@PathVariable(name="regionID") Long regionID) throws IM3WSException {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Classifying region end to end");
+        Objects.requireNonNull(regionID, "regionID cannot be null");
 
+        try {
+            return this.agnosticRepresentationModel.classifyRegionEndToEnd(regionID);
+        } catch (IM3Exception e) {
+            throw new IM3WSException(e);
+        }
+    }
+
+    @DeleteMapping(path = {"clearRegionSymbols/{regionID}"})
+    public boolean clearRegionSymbols$(@PathVariable(name="regionID") Long regionID) throws IM3WSException {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Clear region symbols");
+        Objects.requireNonNull(regionID, "regionID cannot be null");
+
+        return this.agnosticRepresentationModel.clearRegionSymbols(regionID);
+    }
 }

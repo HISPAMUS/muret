@@ -11,30 +11,38 @@ public class BoundingBoxConverter implements AttributeConverter<BoundingBox, Str
 
     @Override
     public String convertToDatabaseColumn(BoundingBox boundingBox) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(boundingBox.getFromX());
-        stringBuilder.append(',');
-        stringBuilder.append(boundingBox.getFromY());
-        stringBuilder.append(',');
-        stringBuilder.append(boundingBox.getToX());
-        stringBuilder.append(',');
-        stringBuilder.append(boundingBox.getToY());
-        return stringBuilder.toString();
+        if (boundingBox != null) {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(boundingBox.getFromX());
+            stringBuilder.append(',');
+            stringBuilder.append(boundingBox.getFromY());
+            stringBuilder.append(',');
+            stringBuilder.append(boundingBox.getToX());
+            stringBuilder.append(',');
+            stringBuilder.append(boundingBox.getToY());
+            return stringBuilder.toString();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public BoundingBox convertToEntityAttribute(String s) {
-        String [] fields = s.split(COMMA);
-        try {
-            int fromX = Integer.parseInt(fields[0]);
-            int fromY = Integer.parseInt(fields[1]);
-            int toX = Integer.parseInt(fields[2]);
-            int toY = Integer.parseInt(fields[3]);
-            return new BoundingBox(fromX, fromY, toX, toY);
-        } catch (IM3RuntimeException t) {
-            throw t;
-        } catch (Throwable t) {
-            throw new RuntimeException("Invalid bounding box string, expected 4 integer fields comma separated in: '" + s + "'");
+        if (s == null) {
+            return null;
+        } else {
+            String[] fields = s.split(COMMA);
+            try {
+                int fromX = Integer.parseInt(fields[0]);
+                int fromY = Integer.parseInt(fields[1]);
+                int toX = Integer.parseInt(fields[2]);
+                int toY = Integer.parseInt(fields[3]);
+                return new BoundingBox(fromX, fromY, toX, toY);
+            } catch (IM3RuntimeException t) {
+                throw t;
+            } catch (Throwable t) {
+                throw new RuntimeException("Invalid bounding box string, expected 4 integer fields comma separated in: '" + s + "'");
+            }
         }
     }
 }

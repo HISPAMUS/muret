@@ -9,7 +9,6 @@ import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {Region} from '../../../../core/model/entities/region';
 import {Store} from '@ngrx/store';
 import {DocumentAnalysisState} from '../../store/state/document-analysis.state';
-import { Location } from '@angular/common';
 
 import {
   ChangePageBoundingBox,
@@ -20,7 +19,7 @@ import {
 } from '../../store/actions/document-analysis.actions';
 import {
   selectFileName,
-  selectDocumentType, selectPages,
+  selectPages,
   selectRegionTypes
 } from '../../store/selectors/document-analysis.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';

@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -229,4 +230,37 @@ public class AgnosticRepresentationModel {
         BBoxStrokes bBoxStrokes = new BBoxStrokes(points);
         return classifySymbol(regionID, bBoxStrokes.getBoundingBox());
     }*/
+
+    @Transactional
+    public List<Symbol> classifyRegionEndToEnd(Long regionID) throws IM3WSException, IM3Exception {
+        Region persistentRegion = getRegion(regionID);
+
+        persistentRegion.getSymbols().clear(); // first remove previous
+
+        Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "DEVOLVIENDO VALORES A PIÑON");
+
+        ArrayList<Symbol> classifiedSymbols = new ArrayList<>();
+        classifiedSymbols.add(new Symbol(persistentRegion, AgnosticSymbol.parseAgnosticString(AgnosticVersion.v2, "clef.G:L3"), null, null, null, 206));
+        classifiedSymbols.add(new Symbol(persistentRegion, AgnosticSymbol.parseAgnosticString(AgnosticVersion.v2, "metersign.CcutZ:L3"), null, null, null, 291));
+        classifiedSymbols.add(new Symbol(persistentRegion, AgnosticSymbol.parseAgnosticString(AgnosticVersion.v2, "note.half_down:S5"), null, null, null, 441));
+        classifiedSymbols.add(new Symbol(persistentRegion, AgnosticSymbol.parseAgnosticString(AgnosticVersion.v2, "note.half_down:S5"), null, null, null, 523));
+        classifiedSymbols.add(new Symbol(persistentRegion, AgnosticSymbol.parseAgnosticString(AgnosticVersion.v2, "note.eighthVoid_down:L3"), null, null, null, 592));
+
+        for (Symbol symbol: classifiedSymbols) {
+            persistentRegion.getSymbols().add(symbol);
+        }
+
+        return persistentRegion.getSymbols();
+
+    }
+
+    @Transactional
+    public boolean clearRegionSymbols(Long regionID) throws IM3WSException {
+        Region persistentRegion = getRegion(regionID);
+        persistentRegion.getSymbols().clear();
+        return true;
+    }
+
+
+
 }

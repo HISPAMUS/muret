@@ -199,4 +199,11 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
+  getX(agnosticSymbol: AgnosticSymbol) {
+    if (agnosticSymbol.boundingBox) {
+      return agnosticSymbol.boundingBox.fromX;
+    } else {
+      return agnosticSymbol.approximateX;
+    }
+  }
 }

@@ -27,7 +27,7 @@
         <ng-container *ngFor="let agnosticSymbol of agnosticSymbols">
           <svg:use
                    [attr.xlink:href]="'#' + agnosticSymbol.agnosticSymbolType"
-                   [attr.x]="agnosticSymbol.boundingBox.fromX"
+                   [attr.x]="getX(agnosticSymbol)"
                    [attr.y]="computeAgnosticStaffSymbolY(agnosticSymbol)"
                    style="opacity:1.0" [attr.height]="symbolHeight"
                    (mousedown)="onSymbolMouseDown(agnosticSymbol)"
@@ -36,8 +36,8 @@
           />
 
           <svg:line *ngFor="let ledgerLineY of getLedgerLines(agnosticSymbol); trackBy: trackByLedgerLineFn()"
-                    attr.x1="{{agnosticSymbol.boundingBox.fromX - LEDGER_LINE_OFFSET}}" attr.y1="{{ledgerLineY}}"
-                    attr.x2="{{agnosticSymbol.boundingBox.fromX + LEDGER_LINE_WIDTH}}" attr.y2="{{ledgerLineY}}"
+                    attr.x1="{{getX(agnosticSymbol) - LEDGER_LINE_OFFSET}}" attr.y1="{{ledgerLineY}}"
+                    attr.x2="{{getX(agnosticSymbol) + LEDGER_LINE_WIDTH}}" attr.y2="{{ledgerLineY}}"
                     stroke="black"
                     stroke-width="1"
           />

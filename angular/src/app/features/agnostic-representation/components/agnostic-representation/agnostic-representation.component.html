@@ -1,24 +1,17 @@
 <div class="container-fluid">
   <nav class="row">
-    <div class="col-9">
+    <div class="col-7">
       <ng-container *ngIf="selectedRegion$ | async">
         <app-crud-toolbar (onClear)="clear()" (modeChange)="onModeChange($event)" (onDelete)="deleteSelectedSymbol()" [(mode)]="mode" (onZoomFit)="zoomFit()" (onZoomIn)="zoomIn()" (onZoomOut)="zoomOut()">
         </app-crud-toolbar>
       </ng-container>
-
-      <!--<form>
-        <div [hidden]="!isEditingMode() && !isAddingMode()" class="btn-group-vertical btn-group-toggle" ngbRadioGroup
-             name="addMethodRadioButtonGroup" [(ngModel)]="addMethodType">
-          <label class="btn-light" ngbButtonLabel>
-            <input ngbButton type="radio" name="addMethodRadioButton" [value]="'boundingbox'"> Bounding box
-          </label>
-          <label class="btn-light" ngbButtonLabel>
-            <input ngbButton type="radio" name="addMethodRadioButton" [value]="'strokes'"> Strokes
-          </label>
-
-        </div>
-      </form>-->
-
+    </div>
+    <div class="col-2">
+      <ng-container *ngIf="selectedRegion$ | async">
+        <button type="button" class="btn btn-primary" title="Move pitch down"  (click)="classifyEnd2End()">
+          End-to-end
+        </button>
+      </ng-container>
     </div>
     <div class="col-3" id="linksPhases">
       Go to:
@@ -123,7 +116,6 @@
       </app-agnostic-toolbar>
       <!-- [agnosticSymbolToolbarCategories]="agnosticSymbolToolbarCategories"-->
     </div>
-
 
     <div [ngClass]="imagePreviewClass">
       <div id="imagePreviewIcons">

@@ -9,7 +9,7 @@ import {
   GetRegion,
   GetRegionSuccess,
   GetSVGSet,
-  GetSVGSetSucccess
+  GetSVGSetSucccess, ClassifyRegionEndToEnd, ClassifyRegionEndToEndSuccess, ClearRegionSymbols, ClearRegionSymbolsSuccess
 } from '../actions/agnostic-representation.actions';
 import {AgnosticRepresentationService} from '../../services/agnostic-representation.service';
 import {Region} from '../../../../core/model/entities/region';
@@ -106,6 +106,24 @@ export class AgnosticRepresentationEffects {
       this.agnosticRepresentationService.deleteSymbol$(action.agnosticSymbolID)),
     switchMap((deletedSymbolID: number) => {
       return of(new DeleteSymbolSuccess(deletedSymbolID));
+    })
+  );
+  @Effect()
+  classifyRegionEndToEnd$ = this.actions$.pipe(
+    ofType<ClassifyRegionEndToEnd>(AgnosticRepresentationActionTypes.ClassifyRegionEndToEnd),
+    switchMap((action: ClassifyRegionEndToEnd) =>
+      this.agnosticRepresentationService.classifyRegionEndToEnd$(action.regionID)),
+    switchMap((classifiedSymbols: AgnosticSymbol[]) => {
+      return of(new ClassifyRegionEndToEndSuccess(classifiedSymbols));
+    })
+  );
+  @Effect()
+  clearRegionSymbols$ = this.actions$.pipe(
+    ofType<ClearRegionSymbols>(AgnosticRepresentationActionTypes.ClearRegionSymbols),
+    switchMap((action: ClearRegionSymbols) =>
+      this.agnosticRepresentationService.clearRegionSymbols$(action.regionID)),
+    switchMap((deleted: boolean) => { // it always returns true
+      return of(new ClearRegionSymbolsSuccess(deleted));
     })
   );
 }

@@ -19,6 +19,7 @@ public interface ISymbolProjection {
 
     String getComments();
     BoundingBox getBoundingBox();
+    Integer getApproximateX();
 
     // see https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#expressions
     @Value("#{target.getPositionInStaff()}")
