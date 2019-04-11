@@ -81,6 +81,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   classifiedSymbolsSubscription: Subscription;
   private creatingBoundingBox: BoundingBox;
   private creatingStrokes: Point[][];
+  endToEndButtonLabel = 'End-to-end';
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>,
               private dialogsService: DialogsService, private positionInStaffService: PositionInStaffService) {
@@ -117,6 +118,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     });
 
     this.agnosticSymbolsSubscription = this.store.select(selectAgnosticSymbols).subscribe(next => {
+      this.endToEndButtonLabel = 'End-to-end'; // we may come here after classifying
       this.drawSelectedRegionSymbols(next);
     });
     this.selectedRegionSubscription = this.store.select(selectSelectedRegion).subscribe(next => {
@@ -522,7 +524,9 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.dialogsService.showConfirmarion('Classify end to end?', 'This action will delete previous symbols and cannot be undone')
       .subscribe((isConfirmed) => {
         if (isConfirmed) {
+          this.endToEndButtonLabel = 'Classifying...';
           this.store.dispatch(new ClassifyRegionEndToEnd(this.selectedRegion.id));
+          this.mode = 'eEditing';
         }
       });
 

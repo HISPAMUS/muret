@@ -18,6 +18,8 @@ import java.util.*;
  * It uses the Python classifier through a REST API
  */
 public class SymbolClassifierClient {
+    private static final int N_PREDICTIONS_SHAPE = 5;
+    private static final int N_PREDICTIONS_POSITION = 2;
     ClassifiersRESTClient restClient;
 
     public SymbolClassifierClient(String restServerURL) {
@@ -72,30 +74,30 @@ public class SymbolClassifierClient {
     }
 
     static class ShapePosition { // it must be static for letting Jackson instantiate it from JSon responses
-        String shape;
-        String position;
+        String [] shape;
+        String [] position;
 
-        public String getShape() {
+        public String[] getShape() {
             return shape;
         }
 
-        public void setShape(String shape) {
+        public void setShape(String[] shape) {
             this.shape = shape;
         }
 
-        public String getPosition() {
+        public String[] getPosition() {
             return position;
         }
 
-        public void setPosition(String position) {
+        public void setPosition(String[] position) {
             this.position = position;
         }
 
         @Override
         public String toString() {
             return "ShapePosition{" +
-                    "shape='" + shape + '\'' +
-                    ", position='" + position + '\'' +
+                    "shape=" + Arrays.toString(shape) +
+                    ", position=" + Arrays.toString(position) +
                     '}';
         }
     }
@@ -119,13 +121,25 @@ public class SymbolClassifierClient {
         postContent.put("top", boundingBox.getFromY());
         postContent.put("right", boundingBox.getToX());
         postContent.put("bottom", boundingBox.getToY());
+        postContent.put("predictions", N_PREDICTIONS_SHAPE);
 
         ShapePosition response = this.restClient.post("image/" + imageID + "/bbox", ShapePosition.class, postContent);
 
-        AgnosticSymbolTypeAndPosition agnosticSymbol = new AgnosticSymbolTypeAndPosition(response.shape, response.position);
-        // TODO Ahora el clasificador sólo está devolviendo uno
         List<AgnosticSymbolTypeAndPosition> result = new ArrayList<>();
-        result.add(agnosticSymbol);
+
+        // take just the first position retrieved
+        //TODO ¿Cómo lo hacemos?
+        for (int i=0; i<response.getShape().length; i++) {
+            for (int j = 0; j < N_PREDICTIONS_POSITION && j < response.getPosition().length; j++) {
+                String shape = response.shape[i];
+                // TODO Parche
+                if (shape.equals("repetitionDots")) {
+                    shape = "colon";
+                }
+                AgnosticSymbolTypeAndPosition agnosticSymbol = new AgnosticSymbolTypeAndPosition(shape, response.position[j]);
+                result.add(agnosticSymbol);
+            }
+        }
         return result;
     }
 

@@ -8,8 +8,8 @@
     </div>
     <div class="col-2">
       <ng-container *ngIf="selectedRegion$ | async">
-        <button type="button" class="btn btn-primary" title="Move pitch down"  (click)="classifyEnd2End()">
-          End-to-end
+        <button type="button" class="btn btn-primary" title="End to end"  (click)="classifyEnd2End()">
+          {{endToEndButtonLabel}}
         </button>
       </ng-container>
     </div>

@@ -47,14 +47,21 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
     }
    case AgnosticRepresentationActionTypes.CreateSymbolSuccess: {
       const newState = {...state};
-      newState.agnosticSymbols = [...newState.agnosticSymbols, action.symbolCreationResult.agnosticSymbol];
       newState.selectedRegion.symbols = newState.agnosticSymbols; // same object
       if (action.symbolCreationResult) {
+        if (newState.agnosticSymbols) {
+          newState.agnosticSymbols = [...newState.agnosticSymbols, action.symbolCreationResult.agnosticSymbol];
+        } else {
+          newState.agnosticSymbols = [action.symbolCreationResult.agnosticSymbol];
+        }
+
         newState.selectedSymbolID = action.symbolCreationResult.agnosticSymbol.id;
+        newState.classifiedSymbols = action.symbolCreationResult.classifiedSymbols;
       } else {
+        newState.agnosticSymbols = [...newState.agnosticSymbols, null];
         newState.selectedSymbolID = null;
+        newState.classifiedSymbols = null;
       }
-      newState.classifiedSymbols = action.symbolCreationResult.classifiedSymbols;
       return newState;
     }
     /*case AgnosticRepresentationActionTypes.ClassifySymbolSuccess: {
