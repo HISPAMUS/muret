@@ -6,7 +6,7 @@ import {SimpleModalModule} from 'ngx-simple-modal';
 import { AlertComponent } from './components/error-modal-message/alert.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { CrudToolbarComponent } from './components/crud-toolbar/crud-toolbar.component';
-import {NgbButtonsModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbButtonsModule, NgbTooltipModule} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
@@ -16,7 +16,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     SimpleModalModule,
     FormsModule,
     ReactiveFormsModule,
-    NgbButtonsModule
+    NgbButtonsModule,
+    NgbTooltipModule
   ],
   declarations: [
     StateComponent,

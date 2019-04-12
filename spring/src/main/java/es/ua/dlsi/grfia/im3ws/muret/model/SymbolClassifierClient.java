@@ -131,16 +131,28 @@ public class SymbolClassifierClient {
         //TODO ¿Cómo lo hacemos?
         for (int i=0; i<response.getShape().length; i++) {
             for (int j = 0; j < N_PREDICTIONS_POSITION && j < response.getPosition().length; j++) {
-                String shape = response.shape[i];
-                // TODO Parche
-                if (shape.equals("repetitionDots")) {
-                    shape = "colon";
-                }
+                String shape = correctShape(response.shape[i]); // TODO Parche
                 AgnosticSymbolTypeAndPosition agnosticSymbol = new AgnosticSymbolTypeAndPosition(shape, response.position[j]);
                 result.add(agnosticSymbol);
             }
         }
         return result;
+    }
+
+    private String correctShape(String s) {
+        switch (s) {
+            case "repetitionDots":
+                return "colon";
+            case "smudge":
+                return "defect.smudge";
+            case "inkBlot":
+                return "defect.inkBlot";
+            case "paperHole":
+                return "defect.paperHole";
+            default:
+                return s;
+        }
+
     }
 
     public static void main(String [] args) throws IM3WSException, IM3Exception {

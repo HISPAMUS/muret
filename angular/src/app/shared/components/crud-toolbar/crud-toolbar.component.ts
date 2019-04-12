@@ -1,4 +1,5 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
+import {DeselectSymbol} from '../../../features/agnostic-representation/store/actions/agnostic-representation.actions';
 
 
 @Component({
@@ -71,4 +72,27 @@ export class CrudToolbarComponent implements OnInit {
     }
   }
 
+  isAddingMode() {
+    return this.mode === 'eAdding';
+  }
+
+  @HostListener('window:keypress', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    switch (event.code) {
+      case 'Delete':
+        if (this.mode === 'eEditing' || this.mode === 'eAdding') {
+          this.onDelete.emit();
+        }
+        break;
+      case 'Escape':
+        this.mode = 'eIdle';
+        break;
+      case 'KeyA':
+        this.mode = 'eAdding';
+        break;
+      case 'KeyE':
+        this.mode = 'eEditing';
+        break;
+    }
+  }
 }

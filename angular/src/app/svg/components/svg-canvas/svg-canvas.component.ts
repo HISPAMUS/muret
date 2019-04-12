@@ -75,6 +75,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   private shapeWithoutComponent: Rectangle | Line | Text | Polylines;
   private polylinesCreationTimeout: any;
   private proportion: number;
+  private TIMEOUT = 1500;
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver,
               private sanitizer: DomSanitizer) {
@@ -189,11 +190,11 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
     const svgCoordinate = this.screenCoordinateToSVGCoordinate(timeStamp, x, y);
     switch (this.mode) {
       case 'eAdding':
+        this.selectedShapeID = null;
         if (this.polylinesCreationTimeout) {
           clearTimeout(this.polylinesCreationTimeout);
           this.polylinesCreationTimeout = null;
         } else {
-          this.selectedShapeID = null;
           this.createShape(svgCoordinate);
         }
         break;
@@ -303,7 +304,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
             this.selectedShapeID = null;
             this.svgShapeCreated.emit(shape);
             this.polylinesCreationTimeout = null;
-          }, 1000); // TODO parametrizar timeout
+            this.selectedComponent = null;
+          }, this.TIMEOUT);
         } else {
           this.selectedShapeID = null;
           this.svgShapeCreated.emit(shape);

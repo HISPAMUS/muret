@@ -21,6 +21,12 @@ a {
   margin-top: 25px;
 }
 
+hr {
+  border-color: darkgray;
+  border-style: solid;
+  border-width: 1px;
+}
+
 /* Cursors */
 .cursorAuto            { cursor: auto; }
 .cursorDefault         { cursor: default; }

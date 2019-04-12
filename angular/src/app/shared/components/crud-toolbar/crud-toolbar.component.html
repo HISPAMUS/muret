@@ -14,20 +14,20 @@
         </label>
 
         <label ngbButtonLabel>
-          <input name="modeRadioButton" ngbButton type="radio" [value]="'eIdle'">
+          <input name="modeRadioButton" ngbButton type="radio" [value]="'eIdle'" ngbTooltip="View (shortcut: ESC)" placement="bottom">
           <fa-icon icon="eye" class="icons" size="lg"></fa-icon>
         </label>
 
         <label ngbButtonLabel>
-          <input name="modeRadioButton" ngbButton type="radio" [value]="'eAdding'" >
+          <input name="modeRadioButton" ngbButton type="radio" [value]="'eAdding'"  ngbTooltip="View (shortcut: a)" placement="bottom">
           <fa-icon icon="plus" class="icons" size="lg"></fa-icon>
         </label>
         <label ngbButtonLabel>
-          <input name="modeRadioButton" ngbButton type="radio" [value]="'eEditing'" >
+          <input name="modeRadioButton" ngbButton type="radio" [value]="'eEditing'"  ngbTooltip="View (shortcut: e)" placement="bottom">
           <fa-icon icon="edit" class="icons" size="lg"></fa-icon>
         </label>
         <label ngbButtonLabel>
-          <button [disabled]="!isEditingMode()" (click)="deleteSelected()">
+          <button [disabled]="!isEditingMode() && !isAddingMode()" (click)="deleteSelected()">
             <fa-icon icon="minus" class="icons" size="lg"></fa-icon>
           </button>
         </label>

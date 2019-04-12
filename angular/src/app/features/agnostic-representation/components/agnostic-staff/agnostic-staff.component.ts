@@ -56,6 +56,7 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
     this.selectedSymbolSubscription = store.select(selectSelectedSymbol).subscribe(next => {
       this.selectedSymbol = next as any as AgnosticSymbol;
     });
+
   }
 
   @Input()
@@ -72,6 +73,9 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnInit() {
     this.margin = this.em;
+
+    this.computeViewBox();
+
     this.staffLines = new Array();
     this.staffSpaceHeight = this.em / 4;
     for (let i = 4; i >= 0; i--) {
@@ -92,12 +96,7 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
 
 
   ngOnChanges(changes: SimpleChanges): void {
-    // this.viewBox = `0 0 ${this.width} ${this.margin * 2 + this.em}`;
-    // in order to use the same horizontal scale of the selected region (see AgnosticRepresentationComponent) we use its same x viewBox
-    this.width = this.regionCropped.toX - this.regionCropped.fromX;
-    const viewBoxHeight =  this.regionCropped.toY - this.regionCropped.fromY;
-    // this.height = this.margin * 2 + this.em;
-    this.viewBox = `${this.regionCropped.fromX} 0 ${this.width} ${viewBoxHeight}`;
+    this.computeViewBox();
   }
 
   ngOnDestroy(): void {
@@ -205,5 +204,17 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
     } else {
       return agnosticSymbol.approximateX;
     }
+  }
+
+  private computeViewBox() {
+    // this.viewBox = `0 0 ${this.width} ${this.margin * 2 + this.em}`;
+    // in order to use the same horizontal scale of the selected region (see AgnosticRepresentationComponent) we use its same x viewBox
+    this.width = this.regionCropped.toX - this.regionCropped.fromX;
+    this.height = this.margin * 2 + this.em;
+
+    const viewBoxHeight =  this.regionCropped.toY - this.regionCropped.fromY;
+    this.viewBox = `${this.regionCropped.fromX} 0 ${this.width} ${viewBoxHeight}`;
+    // this.viewBox = `${this.regionCropped.fromX} 0 ${this.width} ${this.height}`;
+
   }
 }

@@ -41,8 +41,6 @@ import {AgnosticTypeSVGPath} from '../../model/agnostic-type-svgpath';
 import {PositionInStaffService} from '../../services/position-in-staff.service';
 import {Line} from '../../../../svg/model/line';
 
-const USE_SYMBOL_CLASSIFIER = 'USE_SYMBOL_CLASSIFIER'; // see es.ua.dlsi.grfia.im3ws.muret.model.AgnosticRepresentationModel
-
 @Component({
   selector: 'app-agnostic-representation',
   templateUrl: './agnostic-representation.component.html',
@@ -61,9 +59,6 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   imagePreviewZoomFactor = 1;
   selectedRegionShapes: Shape[];
   selectedRegionZoomFactor = 1;
-
-  // TODO manuscript vs printed - data from store
-  // agnosticSymbolToolbarCategories: AgnosticSymbolToolbarCategory[] = AGNOSTIC_SYMBOL_TOOLBAR_CATEGORIES.get('eMensural');
 
   mode: 'eIdle' | 'eAdding' | 'eEditing' | 'eSelecting';
   private selectedShapeIDValue: string;
@@ -303,7 +298,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
         if (symbol.strokes) {
           this.drawStrokes(this.selectedRegionShapes, symbol,
-            symbol.agnosticSymbolType, symbol.id, symbol.strokes, color);
+            symbol.agnosticSymbolType, symbol.id, symbol.strokes, 'yellow');
         }
 
         if (symbol.approximateX) {
@@ -313,12 +308,6 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
       });
     }
-  }
-
-
-
-  isAddOrEditMode() {
-    return this.mode === 'eAdding' || this.mode === 'eEditing';
   }
 
 
@@ -473,26 +462,6 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     return index;
   }
 
-  /*onNewAgnosticSymbolTypeSelected(agnosticSymbolType: string) {
-    if (agnosticSymbolType) {
-      const agnosticSymbolTypeAndPosition = this.classifiedSymbols.find(cs => cs.agnosticSymbolType === agnosticSymbolType);
-
-      if (this.creatingBoundingBox) {
-        this.store.dispatch(new CreateSymbolFromBoundingBox(
-          this.selectedRegion.id, this.creatingBoundingBox, agnosticSymbolTypeAndPosition.agnosticSymbolType,
-          agnosticSymbolTypeAndPosition.positionInStaff));
-
-      } else if (this.creatingStrokes) {
-        this.store.dispatch(new CreateSymbolFromStrokes(
-          this.selectedRegion.id, this.creatingStrokes, agnosticSymbolTypeAndPosition.agnosticSymbolType,
-          agnosticSymbolTypeAndPosition.positionInStaff));
-      } else {
-        throw new Error('At least a bounding box or strokes should be not null');
-      }
-      this.creatingBoundingBox = null;
-      this.creatingStrokes = null;
-    }
-  }*/
 
   onAgnosticSymbolTypeSelected(agnosticTypeSVGPath: AgnosticTypeSVGPath) {
     let agnosticSymbolTypeAndPosition = null;
@@ -514,11 +483,6 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     }
   }
 
-
-
-  /*isAddingShape() {
-    return this.creatingStrokes != null || this.creatingBoundingBox != null;
-  }*/
 
   classifyEnd2End() {
     this.dialogsService.showConfirmarion('Classify end to end?', 'This action will delete previous symbols and cannot be undone')
@@ -542,32 +506,3 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
       });
   }
 }
-
-
-/*if (!this.selectedAgnosticSymbolType) {
-  this.dialogsService.showError('Shape creation', 'A symbol type must be selected first');
-  this.selectedRegionShapes = this.selectedRegionShapes.filter(s => s !== shape); // remove erroneous shape
-} else {
-  const agnosticSymbolType = this.classifier ? USE_SYMBOL_CLASSIFIER : this.selectedAgnosticSymbolType;
-
-  if (shape instanceof Rectangle) {
-    const rect = shape;
-    this.store.dispatch(new CreateSymbolFromBoundingBox(
-      this.selectedRegion.id,
-      {
-        fromX: rect.fromX,
-        fromY: rect.fromY,
-        toX: rect.fromX + rect.width,
-        toY: rect.fromY + rect.height
-      },
-      agnosticSymbolType));
-  } else if (shape instanceof Polylines) {
-    this.store.dispatch(new CreateSymbolFromStrokes(
-      this.selectedRegion.id,
-      shape.polylines.map(polyline => polyline.pointsValue),
-      agnosticSymbolType
-      ));
-  } else {
-    throw new Error('Unsupported shape type: ' + shape.constructor.name);
-  }
-}*/

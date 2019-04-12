@@ -150,6 +150,7 @@ public class AgnosticRepresentationModel {
             symbol.setAgnosticSymbol(agnosticSymbol);
             boundingBox.adjustToFitInto(persistentRegion.getBoundingBox());
             symbol.setBoundingBox(boundingBox);
+            symbol.setStrokes(strokes);
             symbol.setRegion(getRegion(regionID));
             Symbol persistentSymbol = symbolRepository.save(symbol);
             persistentRegion.getSymbols().add(persistentSymbol);

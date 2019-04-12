@@ -20,7 +20,7 @@
     </div>
   </nav>
 
-  <aside id="addMode" class="row" [hidden]="!isEditingMode() && !isAddingMode()">
+  <aside id="addMode" class="row" [hidden]="!isAddingMode()">
     <div class="col-12">
       <div class="btn-group btn-group-toggle" ngbRadioGroup
            name="addMethodRadioButtonGroup" [(ngModel)]="addMethodType">
@@ -107,6 +107,7 @@
       </ng-container>
     </div>
     <div class="col-7">
+      <hr *ngIf="selectedSymbol">
       <app-agnostic-toolbar *ngIf="selectedSymbol"
                             [mode]="mode" [classifier]="classifier" (classifierChanged)="onClassifierChanged($event)"
                             [svgAgnosticSymbolSet]="svgSet$ | async"
