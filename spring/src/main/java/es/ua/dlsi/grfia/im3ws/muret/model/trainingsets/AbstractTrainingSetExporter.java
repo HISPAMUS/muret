@@ -6,11 +6,13 @@ public abstract class AbstractTrainingSetExporter implements ITrainingSetExporte
     int id;
     String name;
     String description;
+    boolean adminPermissionRequired;
 
-    public AbstractTrainingSetExporter(int id, String name, String description) {
+    public AbstractTrainingSetExporter(int id, String name, String description, boolean adminPermissionRequired) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.adminPermissionRequired = adminPermissionRequired;
     }
 
     @Override
@@ -38,5 +40,14 @@ public abstract class AbstractTrainingSetExporter implements ITrainingSetExporte
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public boolean isAdminPermissionRequired() {
+        return adminPermissionRequired;
+    }
+
+    public void setAdminPermissionRequired(boolean adminPermissionRequired) {
+        this.adminPermissionRequired = adminPermissionRequired;
     }
 }

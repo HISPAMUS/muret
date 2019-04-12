@@ -23,4 +23,5 @@ public interface ITrainingSetExporter {
      */
     Path generate(Path muretFolder, Collection<Project> projectCollection) throws ExportException;
 
+    boolean isAdminPermissionRequired();
 }

@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  */
 public class SymbolClassifierClient {
     private static final int N_PREDICTIONS_SHAPE = 5;
-    private static final int N_PREDICTIONS_POSITION = 2;
+    private static final int N_PREDICTIONS_POSITION = 1;
     ClassifiersRESTClient restClient;
 
     public SymbolClassifierClient(String restServerURL) {

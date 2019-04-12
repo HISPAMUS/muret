@@ -30,7 +30,7 @@ public class AgnosticSymbolImagesTextFile extends AbstractTrainingSetExporter {
     private final boolean fixedSize;
 
     public AgnosticSymbolImagesTextFile(int id, boolean margin, boolean fixedSize) {
-        super(id, constructName(margin, fixedSize), constructDescription(margin, fixedSize)); 
+        super(id, constructName(margin, fixedSize), constructDescription(margin, fixedSize), true);
         this.useMargin = margin;
         this.fixedSize = fixedSize;
     }
