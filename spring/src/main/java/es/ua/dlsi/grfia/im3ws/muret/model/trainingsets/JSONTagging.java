@@ -9,7 +9,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.transaction.Transactional;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -41,10 +40,12 @@ public class JSONTagging extends AbstractTrainingSetExporter {
                         :"JSON files with images, pages, regions, symbols",
                 "It generates a compressed file containing a folder for each project and a JSON file for each image with its relative file name. " +
                         "This JSON file encodes the bounding boxes of pages, regions, and symbols. For each region its region type is also exported. " +
-                        "For each symbol both its agnostic encoding is appended and, if present, the strokes information"
+                        "For each symbol both its agnostic encoding is appended and, if present, the strokes information",
+                false
                 );
         this.includeStrokes = includeStrokes;
     }
+
 
     @Override
     public Path generate(Path muretFolder, Collection<Project> projectCollection) throws ExportException {

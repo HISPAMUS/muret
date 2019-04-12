@@ -1,22 +1,49 @@
-<form>
-  <div class="btn-group-vertical btn-group-toggle" ngbRadioGroup
-       name="modeRadioButtonGroup" [(ngModel)]="mode">
-    <label ngbButtonLabel class="btn-light">
-      <input name="modeRadioButton" ngbButton type="radio" [value]="'eIdle'"> View
-    </label>
-    <label ngbButtonLabel class="btn-light">
-      <input name="modeRadioButton" ngbButton type="radio" [value]="'eEditing'" > Edit
-    </label>
-    <label ngbButtonLabel class="btn-light">
-      <input name="modeRadioButton" ngbButton type="radio" [value]="'eAdding'" > Add
-    </label>
+    <form>
+      <div class="iconRadioGroup btn-group btn-group-toggle" ngbRadioGroup
+           name="modeRadioButtonGroup" [(ngModel)]="mode">
 
-    <label ngbButtonLabel class="btn-light">
-      <button (click)="clear()">Clear</button>
-    </label>
-    <label ngbButtonLabel class="btn-light">
-      <button [disabled]="!isEditingMode()" (click)="deleteSelected()">Delete</button>
-    </label>
-  </div>
-  <hr>
-</form>
+        <label ngbButtonLabel>
+          <a (click)="zoomOut()"><fa-icon icon="search-minus" class="icons" size="lg"></fa-icon></a>
+        </label>
+
+        <label ngbButtonLabel>
+          <a (click)="zoomIn()"><fa-icon icon="search-plus" class="icons" size="lg"></fa-icon></a>
+        </label>
+        <label ngbButtonLabel>
+          <a (click)="zoomFit()"><fa-icon icon="expand" class="icons" size="lg"></fa-icon></a>
+        </label>
+
+        <label ngbButtonLabel>
+          <input name="modeRadioButton" ngbButton type="radio" [value]="'eIdle'" ngbTooltip="View (shortcut: ESC)" placement="bottom">
+          <fa-icon icon="eye" class="icons" size="lg"></fa-icon>
+        </label>
+
+        <label ngbButtonLabel>
+          <input name="modeRadioButton" ngbButton type="radio" [value]="'eAdding'"  ngbTooltip="View (shortcut: a)" placement="bottom">
+          <fa-icon icon="plus" class="icons" size="lg"></fa-icon>
+        </label>
+        <label ngbButtonLabel>
+          <input name="modeRadioButton" ngbButton type="radio" [value]="'eEditing'"  ngbTooltip="View (shortcut: e)" placement="bottom">
+          <fa-icon icon="edit" class="icons" size="lg"></fa-icon>
+        </label>
+        <label ngbButtonLabel>
+          <button [disabled]="!isEditingMode() && !isAddingMode()" (click)="deleteSelected()">
+            <fa-icon icon="minus" class="icons" size="lg"></fa-icon>
+          </button>
+        </label>
+
+        &nbsp;
+        &nbsp;
+
+        <label ngbButtonLabel>
+          <button (click)="clear()">
+            <fa-icon icon="trash" class="icons" size="lg"></fa-icon>
+          </button>
+        </label>
+        &nbsp;
+        &nbsp;
+        <label ngbButtonLabel id="labelMode">
+          <h5>{{displayMode()}}</h5>
+        </label>
+      </div>
+    </form>

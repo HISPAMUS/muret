@@ -4,6 +4,6 @@ import {Entity} from './entity';
 
 export interface User extends Entity {
   username: string;
-  projectsCreated: Project[];
-  permissions: Permissions[];
+  projectsCreated?: Project[];
+  permissions?: Permissions[];
 }

@@ -56,6 +56,14 @@ public class ProjectController {
         this.stateRepository = stateRepository;
     }
 
+    @PostMapping(path = {"/new"})
+    public Project newProject(@RequestBody Project project) throws IM3WSException {
+        return projectModel.newProject(project);
+    }
+
+
+    // --- TODO usado hasta aquí ----
+
     // angular ng2-file-upload uploads files one by one
     @PostMapping("uploadProjectImage")
     public UploadFileResponse uploadFile(@RequestParam("projectid") Integer projectid, @RequestParam("file") MultipartFile file) throws IM3Exception {
@@ -113,11 +121,6 @@ public class ProjectController {
                 .collect(Collectors.toList());
     }*/
 
-
-    @PostMapping(path = {"/new"})
-    public Project newProject(@RequestBody Project project) throws IM3WSException {
-        return projectModel.newProject(project);
-    }
 
     @GetMapping(path = {"/statistics/{id}"})
     public ProjectStatistics getProjectStatistics(@PathVariable("id") Integer id) throws IM3WSException {

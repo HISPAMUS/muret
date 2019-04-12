@@ -16,4 +16,9 @@ export class ProjectService {
   public getProjectImages$(id: number): Observable<Image[]> {
     return this.apiRestClientService.getDetailsExcerptProjection$<Image>('projects', 'images', id);
   }
+
+
+  public getProjectUploadURL(): string {
+    return this.apiRestClientService.url + '/project/uploadProjectImage';
+  }
 }

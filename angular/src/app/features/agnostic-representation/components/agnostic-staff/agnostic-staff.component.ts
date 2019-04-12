@@ -1,16 +1,28 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
 import {
   selectAgnosticSymbols,
   selectSelectedSymbol,
-  selectSVGAgnosticSymbolSet
 } from '../../store/selectors/agnostic-representation.selector';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {SVGSet} from '../../model/svgset';
-import {GetSVGSet, SelectSymbol} from '../../store/actions/agnostic-representation.actions';
+import {SelectSymbol} from '../../store/actions/agnostic-representation.actions';
 import {AgnosticTypeSVGPath} from '../../model/agnostic-type-svgpath';
+import {PositionInStaffService} from '../../services/position-in-staff.service';
 
 interface StaffLine {
   index: number;
@@ -27,12 +39,18 @@ const UNSELECTED_COLOR = 'black';
 })
 export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   @Input() regionCropped: BoundingBox; // see ngOnInit below
-  @Input() manuscriptType: string;
-  @Input() notationType: string;
-  @Input() mode: 'eIdle' | 'eInserting' | 'eEditing' | 'eSelecting';
+  @Input() svgAgnosticSymbolSet: SVGSet;
 
-  em = 100; // TODO variable - ver también el cálculo del tamaño de los use en el svg
-  margin = 1 * this.em;
+  modeValue: 'eIdle' | 'eInserting' | 'eEditing' | 'eSelecting';
+  @Output() modeChange = new EventEmitter();
+  symbolHeight = 50; // 87.5px // TODO
+  em = 50; // TODO variable - ver también el cálculo del tamaño de los use en el svg
+  LEDGER_LINE_OFFSET: number = this.em / 4;
+  LEDGER_LINE_WIDTH: number = this.em / 1.5;
+
+  @ViewChild('agnosticStaff') agnosticStaff: ElementRef;
+
+  margin: number;
 
   staffSpaceHeight: number;
   cursorClass: string;
@@ -41,22 +59,36 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   width: number;
   staffLines: StaffLine[]; // TODO El nº de pentagramas debería depender del tipo de partitura
   private staffBottomLineY: number;
+  private staffTopLineY: number;
 
   agnosticSymbols$: Observable<AgnosticSymbol[]>;
-  svgAgnosticSymbolSet$: Observable<SVGSet>;
   private selectedSymbolSubscription: Subscription;
   private selectedSymbol: AgnosticSymbol;
 
-  constructor(private store: Store<any>) {
+  constructor(private store: Store<any>, private positionInStaffService: PositionInStaffService) {
     this.agnosticSymbols$ = store.select(selectAgnosticSymbols);
-    this.svgAgnosticSymbolSet$ = store.select(selectSVGAgnosticSymbolSet);
     this.selectedSymbolSubscription = store.select(selectSelectedSymbol).subscribe(next => {
       this.selectedSymbol = next as any as AgnosticSymbol;
     });
+
+  }
+
+  @Input()
+  get mode() {
+    return this.modeValue;
+  }
+
+  set mode(val) {
+    if (this.modeValue !== val) {
+      this.modeValue = val;
+      this.modeChange.emit(this.modeValue);
+    }
   }
 
   ngOnInit() {
-    this.store.dispatch(new GetSVGSet(this.notationType, this.manuscriptType));
+    this.margin = this.em;
+
+    this.computeViewBox();
 
     this.staffLines = new Array();
     this.staffSpaceHeight = this.em / 4;
@@ -70,17 +102,14 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
 
       if (i === 4) {
         this.staffBottomLineY = line.y;
+      } else if (i === 0) {
+        this.staffTopLineY = line.y;
       }
     }
   }
 
-
   ngOnChanges(changes: SimpleChanges): void {
-    // this.viewBox = `0 0 ${this.width} ${this.margin * 2 + this.em}`;
-    // in order to use the same horizontal scale of the selected region (see AgnosticRepresentationComponent) we use its same x viewBox
-    this.width = this.regionCropped.toX - this.regionCropped.fromX;
-    this.height = this.margin * 2 + this.em;
-    this.viewBox = `${this.regionCropped.fromX} 0 ${this.width} ${this.height}`;
+    this.computeViewBox();
   }
 
   ngOnDestroy(): void {
@@ -95,35 +124,58 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
     return item.id;
   }
 
-  trackByLineFn(index, item: AgnosticSymbol) {
-    return index;
+  trackByLineFn(index, item: StaffLine) {
+    return item.index;
   }
 
   trackByAgnosticSymbolTypeFn(index, item: AgnosticTypeSVGPath) {
     return index;
   }
 
+  trackByLedgerLineFn(index, item: number) {
+    return item;
+  }
+
   computeAgnosticStaffSymbolY(symbol: AgnosticSymbol): number {
-    const lineSpace = this.positionInStaffToLineSpace(symbol.positionInStaff);
+    const lineSpace = this.positionInStaffService.positionInStaffToLineSpace(symbol.positionInStaff);
     const heightDifference = -(this.staffSpaceHeight * (lineSpace / 2.0));
     const y = this.staffBottomLineY  + heightDifference;
     return y;
   }
 
-  private positionInStaffToLineSpace(positionInStaff: string): number {
-    const value = Number(positionInStaff.substr(1));
-    if (positionInStaff.charAt(0) === 'L') {
-      return (value - 1) * 2;
-    } else if (positionInStaff.charAt(0) === 'S') {
-      return (value) * 2 - 1;
+
+  computeLedgerLines(agnosticSymbol: AgnosticSymbol, lines: number): number {
+    const lineSpace = this.positionInStaffService.positionInStaffToLineSpace(agnosticSymbol.positionInStaff);
+    if (lineSpace < 0) {
+      return -lineSpace / 2;
+    } else if (lineSpace > (lines - 1) * 2) {
+      return -(lineSpace - (lines - 1) * 2) / 2;
     } else {
-      throw new Error('Invalid positionInStaff, it should start with L or S: ' + positionInStaff);
+      return 0;
     }
   }
 
-  computeSVGSymbolViewBox(svgSet: SVGSet, svgSymbol: AgnosticTypeSVGPath) {
-    return `0 ${-(svgSet.em - svgSet.descent)} ${svgSet.em + svgSymbol.horizAdvX} ${svgSet.em}`;
+  /**
+   * Returns the positions of the ledger lines
+   */
+  getLedgerLines(agnosticSymbol: AgnosticSymbol): number[] {
+    const result = new Array<number>();
+    const nll = this.computeLedgerLines(agnosticSymbol, 5);
+
+    if (nll < 0) {
+      for (let i = 1; i <= -nll; i++) {
+        const y = this.staffTopLineY - i * this.staffSpaceHeight;
+        result.push(y);
+      }
+    } else if (nll > 0) {
+      for (let i = 1; i <= nll; i++) {
+        const y = this.staffBottomLineY + i * this.staffSpaceHeight;
+        result.push(y);
+      }
+    }
+    return result;
   }
+
 
   onMouseDown($event) {
   }
@@ -142,14 +194,54 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
+  private selectSymbolRequest(agnosticSymbol: AgnosticSymbol) {
+    this.store.dispatch(new SelectSymbol(agnosticSymbol.id));
+  }
+
   onSymbolMouseDown(agnosticSymbol: AgnosticSymbol) {
     if (this.mode === 'eEditing') {
-      this.store.dispatch(new SelectSymbol(agnosticSymbol.id));
+      this.selectSymbolRequest(agnosticSymbol);
     }
   }
 
-  computeSVGSymbolTranslateY(svgSet: SVGSet) {
-    return svgSet.em - svgSet.descent;
+  onDblClick(agnosticSymbol: AgnosticSymbol) {
+    if (this.mode === 'eIdle') {
+      this.mode = 'eEditing';
+      this.selectSymbolRequest(agnosticSymbol);
+    }
+  }
+
+  getX(agnosticSymbol: AgnosticSymbol) {
+    let x: number;
+    if (agnosticSymbol.boundingBox) {
+      x = agnosticSymbol.boundingBox.fromX;
+    } else {
+      x = agnosticSymbol.approximateX;
+    }
+    return this.width * (x - this.regionCropped.fromX) / (this.regionCropped.toX - this.regionCropped.fromX);
+  }
+
+  private computeViewBox() {
+    /*// this.viewBox = `0 0 ${this.width} ${this.margin * 2 + this.em}`;
+    // in order to use the same horizontal scale of the selected region (see AgnosticRepresentationComponent) we use its same x viewBox
+    this.width = this.regionCropped.toX - this.regionCropped.fromX;
+    this.height = this.margin * 2 + this.em;
+
+    const viewBoxHeight =  this.regionCropped.toY - this.regionCropped.fromY;
+    this.viewBox = `${this.regionCropped.fromX} 0 ${this.width} ${viewBoxHeight}`;
+    // this.viewBox = `${this.regionCropped.fromX} 0 ${this.width} ${this.height}`;*/
+
+    const w = this.agnosticStaff.nativeElement.clientWidth;
+
+    this.width = w;
+    this.height = this.margin * 2 + this.em;
+
+    this.viewBox = `0 0 ${this.width} ${this.height}`;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize($event) {
+    this.computeViewBox();
   }
 
 }

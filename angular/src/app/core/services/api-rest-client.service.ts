@@ -11,7 +11,7 @@ import {ErrorHandlingService} from './error-handling.service';
 })
 // Based on the code in https://medium.com/@krishna.acondy/a-generic-http-service-approach-for-angular-applications-a7bd8ff6a068
 export class ApiRestClientService {
-  private url = environment.apiEndpoint;
+  url = environment.apiEndpoint;
 
   constructor(private httpClient: HttpClient,
               private errorHandlingService: ErrorHandlingService,

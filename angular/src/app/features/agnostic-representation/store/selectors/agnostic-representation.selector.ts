@@ -24,3 +24,7 @@ export const selectSelectedSymbol = createSelector (
     state.agnosticSymbols == null ? null : state.agnosticSymbols.find(s => s.id === state.selectedSymbolID)
 );
 
+export const selectClassifiedSymbols = createSelector (
+  agnosticRepresentationState,
+  (state: AgnosticRepresentationState) => state.classifiedSymbols
+);

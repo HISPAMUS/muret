@@ -36,6 +36,9 @@ public class Symbol {
     @Convert(converter = StrokesConverter.class)
     private Strokes strokes;
 
+    @Column (name = "approximate_x")
+    private Integer approximateX;
+
     @Column (name="agnostic_encoding")
     @Convert(converter = AgnosticSymbolConverter.class)
     private AgnosticSymbol agnosticSymbol;
@@ -43,12 +46,13 @@ public class Symbol {
     public Symbol() {
     }
 
-    public Symbol(Region region, AgnosticSymbol agnosticSymbol, BoundingBox boundingBox, String comments, Strokes strokes) {
+    public Symbol(Region region, AgnosticSymbol agnosticSymbol, BoundingBox boundingBox, String comments, Strokes strokes, Integer approximateX) {
         this.region = region;
         this.agnosticSymbol = agnosticSymbol;
         this.boundingBox = boundingBox;
         this.strokes = strokes;
         this.comments = comments;
+        this.approximateX = approximateX;
     }
 
     public Long getId() {
@@ -108,5 +112,13 @@ public class Symbol {
 
     public void setStrokes(Strokes strokes) {
         this.strokes = strokes;
+    }
+
+    public Integer getApproximateX() {
+        return approximateX;
+    }
+
+    public void setApproximateX(Integer approximateX) {
+        this.approximateX = approximateX;
     }
 }

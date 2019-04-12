@@ -14,8 +14,8 @@ export class DialogsService {
 
   public showConfirmarion(title: string, message: string): Observable<boolean> {
     return this.simpleModalService.addModal(ConfirmDialogComponent, {
-      title: 'Clear document analysis?',
-      message: 'This action cannot be undone'
+      title,
+      message
     });
   }
 

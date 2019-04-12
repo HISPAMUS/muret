@@ -27,6 +27,7 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
     case AgnosticRepresentationActionTypes.SelectSymbol: {
       const newState = {...state};
       newState.selectedSymbolID = action.agnosticSymbolID;
+      newState.classifiedSymbols = null;
       return newState;
     }
     case AgnosticRepresentationActionTypes.DeselectSymbol: {
@@ -44,13 +45,30 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
       }
       return newState;
     }
-    case AgnosticRepresentationActionTypes.CreateSymbolSuccess: {
+   case AgnosticRepresentationActionTypes.CreateSymbolSuccess: {
       const newState = {...state};
-      newState.agnosticSymbols = [...newState.agnosticSymbols, action.createdSymbol];
       newState.selectedRegion.symbols = newState.agnosticSymbols; // same object
-      newState.selectedSymbolID = action.createdSymbol.id;
+      if (action.symbolCreationResult) {
+        if (newState.agnosticSymbols) {
+          newState.agnosticSymbols = [...newState.agnosticSymbols, action.symbolCreationResult.agnosticSymbol];
+        } else {
+          newState.agnosticSymbols = [action.symbolCreationResult.agnosticSymbol];
+        }
+
+        newState.selectedSymbolID = action.symbolCreationResult.agnosticSymbol.id;
+        newState.classifiedSymbols = action.symbolCreationResult.classifiedSymbols;
+      } else {
+        newState.agnosticSymbols = [...newState.agnosticSymbols, null];
+        newState.selectedSymbolID = null;
+        newState.classifiedSymbols = null;
+      }
       return newState;
     }
+    /*case AgnosticRepresentationActionTypes.ClassifySymbolSuccess: {
+      const newState = {...state};
+      newState.classifiedSymbols = [...action.classifiedSymbols];
+      return newState;
+    }*/
     case AgnosticRepresentationActionTypes.DeleteSymbolSuccess: {
       const newState = {...state};
       newState.selectedSymbolID = null;
@@ -60,6 +78,20 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
         newState.agnosticSymbols = newState.agnosticSymbols.filter(symbol => symbol.id !== action.deletedAgnosticSymbolID);
       }
       newState.selectedRegion.symbols = newState.agnosticSymbols; // same object
+      return newState;
+    }
+    case AgnosticRepresentationActionTypes.ClassifyRegionEndToEndSuccess: {
+      const newState = {...state};
+      newState.classifiedSymbols = null;
+      newState.agnosticSymbols = action.classifiedSymbols;
+      newState.selectedSymbolID = null;
+      return newState;
+    }
+    case AgnosticRepresentationActionTypes.ClearRegionSymbolsSuccess: {
+      const newState = {...state};
+      newState.classifiedSymbols = null;
+      newState.agnosticSymbols = null;
+      newState.selectedSymbolID = null;
       return newState;
     }
     default: {

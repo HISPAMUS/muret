@@ -3,6 +3,7 @@ package es.ua.dlsi.grfia.im3ws.muret.model.trainingsets;
 import es.ua.dlsi.grfia.im3ws.muret.model.ITrainingSetExporter;
 import es.ua.dlsi.im3.core.IM3Exception;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -17,7 +18,12 @@ public class TrainingSetsFactory {
         this.trainingSetExporters = Arrays.asList(
                 new ImagesExporter(0),
                 new JSONTagging(1,true),
-                new JSONTagging(2, false));
+                new JSONTagging(2, false),
+                new AgnosticSymbolImagesTextFile(3, false, false),
+                new AgnosticSymbolImagesTextFile(4, false, true),
+                new AgnosticSymbolImagesTextFile(5, true, false),
+                new AgnosticSymbolImagesTextFile(6, true, true)
+                );
 
     }
 

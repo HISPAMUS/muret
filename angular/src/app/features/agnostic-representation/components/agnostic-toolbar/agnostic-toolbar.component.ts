@@ -1,7 +1,9 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {AgnosticSymbolToolbarCategory} from '../../model/agnostic-symbol-toolbar-category';
 import {Store} from '@ngrx/store';
 import {AgnosticRepresentationState} from '../../store/state/agnostic-representation.state';
+import {SVGSet} from '../../model/svgset';
+import {AgnosticTypeSVGPath} from '../../model/agnostic-type-svgpath';
+import {AgnosticSymbolAndPosition} from '../../model/agnostic-symbol-and-position';
 
 @Component({
   selector: 'app-agnostic-toolbar',
@@ -9,29 +11,24 @@ import {AgnosticRepresentationState} from '../../store/state/agnostic-representa
   styleUrls: ['./agnostic-toolbar.component.css']
 })
 export class AgnosticToolbarComponent implements OnInit, OnDestroy {
-  @Input() agnosticSymbolToolbarCategories: AgnosticSymbolToolbarCategory[];
-  @Input() notationType: string;
-  @Input() manuscriptType: string;
+  @Input() svgAgnosticSymbolSet: SVGSet;
   @Input() mode: 'eIdle' | 'eAdding' | 'eSelecting' | 'eEditing';
-  @Output() onAgnosticSymbolTypeSelected = new EventEmitter<string>();
-  @Output() onPitchUp = new EventEmitter();
-  @Output() onPitchDown = new EventEmitter();
+  @Input() filter: AgnosticSymbolAndPosition[];
+  @Output() agnosticSymbolSelected = new EventEmitter<AgnosticTypeSVGPath>();
+  @Output() pitchUp = new EventEmitter();
+  @Output() pitchDown = new EventEmitter();
   @Output() classifierChanged = new EventEmitter<boolean>();
 
   private selectedAgnosticSymbolTypeValue: string;
 
-  collapsed: Map<string, boolean>;
   classifierValue = true;
-
+  symbolsFilter = 'note.'; // default value
+  buttonWidth: number;
 
   constructor(public store: Store<AgnosticRepresentationState>) {
   }
 
   ngOnInit() {
-    this.collapsed = new Map();
-    this.agnosticSymbolToolbarCategories.forEach(category => {
-      this.collapsed.set(category.name, false);
-    });
   }
 
   ngOnDestroy(): void {
@@ -45,7 +42,6 @@ export class AgnosticToolbarComponent implements OnInit, OnDestroy {
   set selectedAgnosticSymbolType(val) {
     if (this.selectedAgnosticSymbolTypeValue !== val) {
       this.selectedAgnosticSymbolTypeValue = val;
-      this.onAgnosticSymbolTypeSelected.emit(this.selectedAgnosticSymbolTypeValue);
     }
   }
 
@@ -61,24 +57,53 @@ export class AgnosticToolbarComponent implements OnInit, OnDestroy {
     }
   }
 
-  isCollapsed(category: AgnosticSymbolToolbarCategory): boolean {
-    return this.collapsed.get(category.name);
-  }
-
-  toggleCollapsed(category: AgnosticSymbolToolbarCategory) {
-    const prev = this.collapsed.get(category.name);
-    this.collapsed.set(category.name, !prev);
-  }
-
-  inAddingMode() {
+  /*inAddingMode() {
     return this.mode === 'eAdding';
   }
 
   movePitchDownSelectedSymbol() {
-    this.onPitchDown.emit();
+    this.pitchDown.emit();
   }
 
   movePitchUpSelectedSymbol() {
-    this.onPitchUp.emit();
+    this.pitchUp.emit();
+  }*/
+
+  trackSVGSymbolFn(index, item: AgnosticTypeSVGPath) {
+    return index;
+  }
+
+  getFilteredSymbols() {
+    this.buttonWidth = 70;
+    if (this.filter) { // from input
+      const filterAgnosticTypes = this.filter.map(agnosticTypePosition => agnosticTypePosition.agnosticSymbolType);
+      const result = this.svgAgnosticSymbolSet.paths.filter(
+        value => filterAgnosticTypes.includes(value.agnosticTypeString)
+      );
+      return result;
+    } else {
+      switch (this.symbolsFilter) {
+        case 'rest.':
+          this.buttonWidth = 100;
+          return this.svgAgnosticSymbolSet.paths.filter(value => value.agnosticTypeString.includes(this.symbolsFilter));
+        case 'note.':
+          this.buttonWidth = 55;
+          return this.svgAgnosticSymbolSet.paths.filter(value => value.agnosticTypeString.includes(this.symbolsFilter)
+            && !value.agnosticTypeString.includes('beam'));
+        case 'other':
+          return this.svgAgnosticSymbolSet.paths.filter(value => value.agnosticTypeString.includes('defect') ||
+            value.agnosticTypeString.includes('slur') || !value.agnosticTypeString.includes('.'));
+        default:
+          return this.svgAgnosticSymbolSet.paths.filter(value => value.agnosticTypeString.includes(this.symbolsFilter));
+      }
+    }
+  }
+
+  showFilter() {
+    return undefined === this.filter || this.filter === null;
+  }
+
+  onRadioButtonClick(svgSymbol: AgnosticTypeSVGPath) {
+    this.agnosticSymbolSelected.emit(svgSymbol);
   }
 }

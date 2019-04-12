@@ -11,13 +11,16 @@ import {ProjectService} from './services/project.service';
 import {ProjectEffects} from './store/effects/project.effects';
 import {projectReducers} from './store/reducers/project.reducers';
 import {BreadcrumbModule} from '../../breadcrumb/breadcrumb.module';
+import { UploadImagesComponent } from './components/upload-images/upload-images.component';
+import {FileUploadModule} from 'ng2-file-upload';
 
 @NgModule({
-  declarations: [ProjectComponent, ImageThumbnailComponent],
+  declarations: [ProjectComponent, ImageThumbnailComponent, UploadImagesComponent],
   imports: [
     CommonModule,
     ProjectRoutingModule,
     LightboxModule,
+    FileUploadModule,
     StoreModule.forFeature('project', projectReducers),
     EffectsModule.forFeature([ProjectEffects]),
     BreadcrumbModule,

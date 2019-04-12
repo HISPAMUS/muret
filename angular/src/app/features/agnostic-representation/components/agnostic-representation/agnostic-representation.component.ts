@@ -7,34 +7,39 @@ import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {Rectangle} from '../../../../svg/model/rectangle';
 import {Region} from '../../../../core/model/entities/region';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
-import {selectFileName, selectPages} from '../../../document-analysis/store/selectors/document-analysis.selector';
+import {
+  selectFileName,
+  selectDocumentType,
+  selectPages
+} from '../../../document-analysis/store/selectors/document-analysis.selector';
 import {Store} from '@ngrx/store';
 import {
   GetImageProjection
 } from '../../../document-analysis/store/actions/document-analysis.actions';
 import {
-  ChangeSymbolBoundingBox,
-  ChangeSymbolPositionInStaff,
-  ChangeSymbolType,
+  ChangeSymbol,
+  ChangeSymbolBoundingBox, ClassifyRegionEndToEnd, ClearRegionSymbols,
   CreateSymbolFromBoundingBox, CreateSymbolFromStrokes,
   DeleteSymbol, DeselectSymbol,
-  GetRegion, InitRegion,
+  GetRegion, GetSVGSet, InitRegion,
   SelectSymbol
 } from '../../store/actions/agnostic-representation.actions';
 import {
-  selectAgnosticSymbols,
+  selectAgnosticSymbols, selectClassifiedSymbols,
   selectSelectedRegion,
-  selectSelectedSymbol
+  selectSelectedSymbol, selectSVGAgnosticSymbolSet
 } from '../../store/selectors/agnostic-representation.selector';
-import {AgnosticSymbolToolbarCategory} from '../../model/agnostic-symbol-toolbar-category';
-import {AGNOSTIC_SYMBOL_TOOLBAR_CATEGORIES} from '../../model/agnostic-symbol-toolbar-categories';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {Polylines} from '../../../../svg/model/polylines';
 import {Strokes} from '../../../../core/model/entities/strokes';
 import {Polyline} from '../../../../svg/model/polyline';
 import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
-
-const USE_SYMBOL_CLASSIFIER = 'USE_SYMBOL_CLASSIFIER'; // see es.ua.dlsi.grfia.im3ws.muret.model.AgnosticRepresentationModel
+import {SVGSet} from '../../model/svgset';
+import {AgnosticSymbolAndPosition} from '../../model/agnostic-symbol-and-position';
+import {Point} from '../../../../core/model/entities/point';
+import {AgnosticTypeSVGPath} from '../../model/agnostic-type-svgpath';
+import {PositionInStaffService} from '../../services/position-in-staff.service';
+import {Line} from '../../../../svg/model/line';
 
 @Component({
   selector: 'app-agnostic-representation',
@@ -46,7 +51,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   pagesSubscription: Subscription;
   agnosticSymbolsSubscription: Subscription;
   selectedRegionSubscription: Subscription;
-  private selectedSymbol: AgnosticSymbol;
+  selectedSymbol: AgnosticSymbol;
   selectedRegion: Region;
   selectedRegion$: Observable<Region>;
   selectedSymbolSubscription: Subscription;
@@ -55,11 +60,6 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   selectedRegionShapes: Shape[];
   selectedRegionZoomFactor = 1;
 
-  // TODO manuscript vs printed - data from store
-  agnosticSymbolToolbarCategories: AgnosticSymbolToolbarCategory[] = AGNOSTIC_SYMBOL_TOOLBAR_CATEGORIES.get('eMensural');
-  notationType = 'eMensural';
-  manuscriptType = 'eHandwritten';
-
   mode: 'eIdle' | 'eAdding' | 'eEditing' | 'eSelecting';
   private selectedShapeIDValue: string;
   nextShapeToDraw: 'Rectangle' | 'Polylines';
@@ -67,20 +67,34 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   private selectedRegionShapeIDValue: string;
   addMethodTypeValue: 'boundingbox' | 'strokes' ;
   classifier = true;
+  svgSet$: Observable<SVGSet>;
   filename$: Observable<string>;
+  private documentTypeSubscription: Subscription;
+  isImagePreviewMinimized = true;
+  imagePreviewClass = 'col-4';
+  classifiedSymbols: AgnosticSymbolAndPosition[];
+  classifiedSymbolsSubscription: Subscription;
+  private creatingBoundingBox: BoundingBox;
+  private creatingStrokes: Point[][];
+  endToEndButtonLabel = 'End-to-end';
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>,
-              private dialogsService: DialogsService) {
+              private dialogsService: DialogsService, private positionInStaffService: PositionInStaffService) {
     this.selectedRegion$ = store.select(selectSelectedRegion);
     this.mode = 'eIdle';
     this.selectedRegionShapeIDValue = null;
     this.filename$ = store.select(selectFileName);
+    this.documentTypeSubscription  = store.select(selectDocumentType).subscribe(next => {
+      if (next) {
+        this.store.dispatch(new GetSVGSet(next.notationType, next.manuscriptType));
+      }
+    });
+    this.svgSet$ = store.select(selectSVGAgnosticSymbolSet);
     this.addMethodType = 'boundingbox';
-
-    this.store.dispatch(new InitRegion());
   }
 
   ngOnInit() {
+    this.store.dispatch(new InitRegion());
     // request store data
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.imageID = +params.get('id'); // + converts the string to number
@@ -99,9 +113,8 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     });
 
     this.agnosticSymbolsSubscription = this.store.select(selectAgnosticSymbols).subscribe(next => {
-      if (next) {
-        this.drawSelectedRegionSymbols(next);
-      }
+      this.endToEndButtonLabel = 'End-to-end'; // we may come here after classifying
+      this.drawSelectedRegionSymbols(next);
     });
     this.selectedRegionSubscription = this.store.select(selectSelectedRegion).subscribe(next => {
       this.selectedRegion = next;
@@ -109,7 +122,9 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.selectedSymbolSubscription = this.store.select(selectSelectedSymbol).subscribe(next => {
       this.setSelectedSymbol(next);
     });
-
+    this.classifiedSymbolsSubscription = this.store.select(selectClassifiedSymbols).subscribe(next => {
+      this.classifiedSymbols = next;
+    });
 
     this.mode = 'eIdle';
   }
@@ -119,6 +134,8 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.agnosticSymbolsSubscription.unsubscribe();
     this.selectedRegionSubscription.unsubscribe();
     this.selectedSymbolSubscription.unsubscribe();
+    this.documentTypeSubscription.unsubscribe();
+    this.classifiedSymbolsSubscription.unsubscribe();
   }
 
   private findSelectedShape(): Shape {
@@ -246,6 +263,24 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     shapes.push(rect);
     return rect;
   }
+
+  private drawLine(shapes: Shape[], modelObject: AgnosticSymbol, layer: string, id: number, approxX: number, color: string) {
+    const line = new Line();
+    line.id = layer + 'approxLines' + id;
+    line.fromX = approxX;
+    line.toX = approxX;
+    line.fromY = 0;
+    line.toY = 10000; // TODO
+    line.strokeColor = color;
+    line.strokeWidth = 2;
+    line.strokeDashArray = '10';
+    line.layer = layer;
+    line.data = modelObject;
+    shapes.push(line);
+    return line;
+  }
+
+
   private drawImagePreviewRegion(region: Region) {
     this.drawBox(this.imagePreviewShapes, region,
       region.regionType.name, region.id, region.boundingBox, '#' + region.regionType.hexargb ).data = region;
@@ -255,74 +290,65 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.selectedRegionShapes = new Array();
     if (agnosticSymbols) {
       agnosticSymbols.forEach(symbol => {
-        this.drawBox(this.selectedRegionShapes, symbol,
-          symbol.agnosticSymbolType, symbol.id, symbol.boundingBox, 'red');
-        // console.log(JSON.stringify(symbol.boundingBox, null, 4));
+        const color = 'red';
+        if (symbol.boundingBox) {
+          this.drawBox(this.selectedRegionShapes, symbol,
+            symbol.agnosticSymbolType, symbol.id, symbol.boundingBox, color);
+        }
 
         if (symbol.strokes) {
           this.drawStrokes(this.selectedRegionShapes, symbol,
-            symbol.agnosticSymbolType, symbol.id, symbol.strokes, 'red');
+            symbol.agnosticSymbolType, symbol.id, symbol.strokes, 'yellow');
         }
+
+        if (symbol.approximateX) {
+          this.drawLine(this.selectedRegionShapes, symbol,
+            symbol.agnosticSymbolType, symbol.id, symbol.approximateX, color);
+        }
+
       });
     }
   }
 
 
-
-  isAddOrEditMode() {
-    return this.mode === 'eAdding' || this.mode === 'eEditing';
-  }
-
   onSymbolCreated(shape: Shape) {
-    if (!this.selectedAgnosticSymbolType) {
-      this.dialogsService.showError('Shape creation', 'A symbol type must be selected first');
-      this.selectedRegionShapes = this.selectedRegionShapes.filter(s => s !== shape); // remove erroneous shape
-    } else {
-      const agnosticSymbolType = this.classifier ? USE_SYMBOL_CLASSIFIER : this.selectedAgnosticSymbolType;
+    if (shape instanceof Rectangle) {
+      const rect = shape;
+      this.creatingBoundingBox = {
+        fromX: rect.fromX,
+        fromY: rect.fromY,
+        toX: rect.fromX + rect.width,
+        toY: rect.fromY + rect.height
+      };
 
-      if (shape instanceof Rectangle) {
-        const rect = shape;
-        this.store.dispatch(new CreateSymbolFromBoundingBox(
-          this.selectedRegion.id,
-          {
-            fromX: rect.fromX,
-            fromY: rect.fromY,
-            toX: rect.fromX + rect.width,
-            toY: rect.fromY + rect.height
-          },
-          agnosticSymbolType));
-      } else if (shape instanceof Polylines) {
-        this.store.dispatch(new CreateSymbolFromStrokes(
-          this.selectedRegion.id,
-          shape.polylines.map(polyline => polyline.pointsValue),
-          agnosticSymbolType
-          ));
-      } else {
-        throw new Error('Unsupported shape type: ' + shape.constructor.name);
-      }
+      this.store.dispatch(new CreateSymbolFromBoundingBox(
+        this.selectedRegion.id, this.creatingBoundingBox, null, null));
+    } else if (shape instanceof Polylines) {
+      this.creatingStrokes = shape.polylines.map(polyline => polyline.pointsValue);
+      this.store.dispatch(new CreateSymbolFromStrokes(
+        this.selectedRegion.id, this.creatingStrokes, null, null
+      ));
+    } else {
+      throw new Error('Unsupported shape type: ' + shape.constructor.name);
     }
   }
 
-  onAgnosticSymbolTypeSelected($event: string) {
-    this.selectedAgnosticSymbolType = $event;
+  private movePitch(displacement: number) {
+    if (this.selectedSymbol) {
+      const positionInStaff = this.selectedSymbol.positionInStaff;
+      const newPositionInStaff = this.positionInStaffService.movePitch(positionInStaff, displacement);
 
-    if (this.isEditingMode()) {
-      if (this.selectedSymbol && this.selectedSymbol.agnosticSymbolType !== $event) {
-        this.store.dispatch(new ChangeSymbolType(this.selectedSymbol, $event));
-      }
+      this.store.dispatch(new ChangeSymbol(this.selectedSymbol, this.selectedSymbol.agnosticSymbolType, newPositionInStaff));
     }
+
   }
 
   movePitchDownSelectedSymbol() {
-    if (this.selectedSymbol) {
-      this.store.dispatch(new ChangeSymbolPositionInStaff(this.selectedSymbol, -1));
-    }
+    this.movePitch(-1);
   }
 
   movePitchUpSelectedSymbol() {
-    if (this.selectedSymbol) {
-      this.store.dispatch(new ChangeSymbolPositionInStaff(this.selectedSymbol, 1));
-    }
+    this.movePitch(+1);
   }
 
 
@@ -397,7 +423,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
   @HostListener('window:keydown', ['$event']) // keydown to prevent scroll
   keyEvent(event: KeyboardEvent) {
-    if (this.mode === 'eEditing') {
+    if (this.mode === 'eEditing' || this.mode === 'eAdding') {
       switch (event.code) {
         case 'Delete':
           this.deleteSelectedSymbol();
@@ -420,4 +446,63 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     }
   }
 
+  toggleImagePreview() {
+    this.isImagePreviewMinimized = !this.isImagePreviewMinimized;
+    if (this.isImagePreviewMinimized) {
+      this.imagePreviewZoomFactor = 1.01; // force recompute sizes
+      this.imagePreviewClass = 'col-4';
+    } else {
+      this.imagePreviewZoomFactor = 0.99; // force recompute sizes
+      this.imagePreviewClass = 'imagePreviewMaximized';
+    }
+
+  }
+
+  trackClassifiedSymbol(index, item: AgnosticSymbolAndPosition) {
+    return index;
+  }
+
+
+  onAgnosticSymbolTypeSelected(agnosticTypeSVGPath: AgnosticTypeSVGPath) {
+    let agnosticSymbolTypeAndPosition = null;
+    if (this.classifiedSymbols) {
+      agnosticSymbolTypeAndPosition = this.classifiedSymbols.find(cs => cs.agnosticSymbolType === agnosticTypeSVGPath.agnosticTypeString);
+    }
+
+    const agnosticType = agnosticTypeSVGPath.agnosticTypeString;
+    let positionInStaff: string;
+    if (agnosticSymbolTypeAndPosition) {
+      positionInStaff = agnosticSymbolTypeAndPosition.positionInStaff;
+    } else {
+      positionInStaff = agnosticTypeSVGPath.defaultPositionInStaff;
+    }
+
+    if (this.selectedSymbol &&
+      (this.selectedSymbol.agnosticSymbolType !== agnosticType || this.selectedSymbol.positionInStaff !== positionInStaff)) {
+      this.store.dispatch(new ChangeSymbol(this.selectedSymbol, agnosticType, positionInStaff));
+    }
+  }
+
+
+  classifyEnd2End() {
+    this.dialogsService.showConfirmarion('Classify end to end?', 'This action will delete previous symbols and cannot be undone')
+      .subscribe((isConfirmed) => {
+        if (isConfirmed) {
+          this.endToEndButtonLabel = 'Classifying...';
+          this.store.dispatch(new ClassifyRegionEndToEnd(this.selectedRegion.id));
+          this.mode = 'eEditing';
+        }
+      });
+
+  }
+
+
+  clear() {
+    this.dialogsService.showConfirmarion('Clear region symbols?', 'This action cannot be undone')
+      .subscribe((isConfirmed) => {
+        if (isConfirmed) {
+          this.store.dispatch(new ClearRegionSymbols(this.selectedRegion.id));
+        }
+      });
+  }
 }

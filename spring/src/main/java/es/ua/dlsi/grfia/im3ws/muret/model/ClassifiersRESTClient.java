@@ -1,5 +1,6 @@
 package es.ua.dlsi.grfia.im3ws.muret.model;
 
+import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -58,7 +59,7 @@ public class ClassifiersRESTClient {
      * @param responseType
      * @param <T>
      */
-    public <T> T post(String endpoint, Class<T> responseType, Map<String, Object> postContent) {
+    public <T> T post(String endpoint, Class<T> responseType, Map<String, Object> postContent) throws IM3WSException {
         RestTemplate restTemplate = new RestTemplate();
         String url = getURL(endpoint);
 
@@ -67,9 +68,13 @@ public class ClassifiersRESTClient {
             postContent.forEach((k, v) -> body.add(k, v));
         }
 
-        T result = restTemplate.postForObject(url, body, responseType);
-        Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Result of POST {0}={1}", new Object[]{url, result});
-        return result;
+        try {
+            T result = restTemplate.postForObject(url, body, responseType);
+            Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Result of POST {0}={1}", new Object[]{url, result});
+            return result;
+        } catch (Throwable t) {
+            throw new IM3WSException(t);
+        }
     }
 
     /**

@@ -10,11 +10,14 @@
 
     <label class="row" formArrayName="exportersFormArray" *ngFor="let rb of form['controls'].exportersFormArray['controls']; let i = index">
       <div class="offset-1 col-1 text-right">
-        <input type="radio" checked name="exportersRadioButton" value="{{i}}" (change)="onExporterSelected(i)">
+        <input type="radio" checked name="exportersRadioButton" value="{{i}}" (change)="onExporterSelected(i)"
+               [disabled]="doesNotHavePermission(exporters[i])"
+        >
       </div>
       <div class="col-9">
         <h4>{{exporters[i].name}}</h4>
         <p>{{exporters[i].description}}</p>
+        <p *ngIf="exporters[i].adminPermissionRequired">Needs administrator permission</p>
       </div>
     </label>
 
@@ -39,7 +42,7 @@
 
     <div class="row">
       <div class="col offset-2">
-        <button [disabled]="!form.valid" class="btn btn-primary btn-lg">Export training set</button>
+        <button [disabled]="!form.valid || exporting" class="btn btn-primary btn-lg">{{getButtonLabel()}}</button>
       </div>
     </div>
 

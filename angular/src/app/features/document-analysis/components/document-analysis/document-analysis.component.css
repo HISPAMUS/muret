@@ -1,0 +1,54 @@
+#docAnalysisStatusBar {
+  position: fixed;
+  z-index: 100;
+  bottom: 0;
+  height: 1em;
+  background-color: #7DE2DB;
+}
+
+#footerIdImage {
+  font-size: small;
+  color: #103339;
+  text-align: right;
+  height: 1em;
+}
+
+.sidebar {
+  background-color: #7DE2DB;
+  color: black;
+}
+
+.sidebar * {
+  font-size: small;
+}
+
+#regionTypesFilter label {
+  margin-bottom: 0;
+}
+
+
+/* TODO Radio boxes con texto repetido en Agnostic */
+#regionTypesEdit * {
+  color: white;
+  font-weight: lighter;
+}
+
+#regionTypesEdit .active {
+  color: #D91E63;
+  font-weight: bold;
+}
+
+/* TODO Repetido en Agnostic */
+#linksPhases {
+  color: white;
+}
+
+#linksPhases button {
+  color: #7DE2DB;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+#linksPhases button:disabled {
+  color: gray;
+}

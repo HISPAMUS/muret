@@ -5,6 +5,10 @@ import es.ua.dlsi.grfia.im3ws.muret.entity.ManuscriptType;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.score.NotationType;
 import es.ua.dlsi.im3.core.score.layout.LayoutFont;
+import es.ua.dlsi.im3.core.score.layout.fonts.AgnosticMensuralHandwrittenFont;
+import es.ua.dlsi.im3.core.score.layout.fonts.AgnosticMensuralPrintedFont;
+import es.ua.dlsi.im3.core.score.layout.fonts.AgnosticModernHandwrittenFont;
+import es.ua.dlsi.im3.core.score.layout.fonts.AgnosticModernPrintedFont;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,10 +30,10 @@ public class AgnosticSymbolFontSingleton {
     private AgnosticSymbolFontSingleton() {
         layoutFonts = new AgnosticSymbolFont[NotationType.values().length][ManuscriptType.values().length];
         try {
-            layoutFonts[NotationType.eMensural.ordinal()][ManuscriptType.eHandwritten.ordinal()] = new HandwrittenMensuralAgnosticSymbolFont();
-            layoutFonts[NotationType.eMensural.ordinal()][ManuscriptType.ePrinted.ordinal()] = null;
-            layoutFonts[NotationType.eModern.ordinal()][ManuscriptType.ePrinted.ordinal()] = new PrintedModernAgnosticSymbolFont();
-            layoutFonts[NotationType.eModern.ordinal()][ManuscriptType.eHandwritten.ordinal()] = null;
+            layoutFonts[NotationType.eMensural.ordinal()][ManuscriptType.eHandwritten.ordinal()] = new AgnosticSymbolFont(new AgnosticMensuralHandwrittenFont());
+            layoutFonts[NotationType.eMensural.ordinal()][ManuscriptType.ePrinted.ordinal()] = new AgnosticSymbolFont(new AgnosticMensuralPrintedFont());
+            layoutFonts[NotationType.eModern.ordinal()][ManuscriptType.ePrinted.ordinal()] = new AgnosticSymbolFont(new AgnosticModernPrintedFont());
+            layoutFonts[NotationType.eModern.ordinal()][ManuscriptType.eHandwritten.ordinal()] = new AgnosticSymbolFont(new AgnosticModernHandwrittenFont());
         } catch (IM3Exception e) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Cannot load font", e);
             throw new RuntimeException(e);

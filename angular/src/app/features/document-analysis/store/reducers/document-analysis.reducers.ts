@@ -23,8 +23,10 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
         imageHeight: action.documentAnalysisImageProjection.height,
         filename: action.documentAnalysisImageProjection.filename,
         pages: action.documentAnalysisImageProjection.pages,
-        manuscriptType: action.documentAnalysisImageProjection.manuscriptType,
-        notationType: action.documentAnalysisImageProjection.notationType,
+        documentType: {
+          manuscriptType: action.documentAnalysisImageProjection.manuscriptType,
+          notationType: action.documentAnalysisImageProjection.notationType
+        }
       };
     }
     case DocumentAnalysisActionTypes.GetImageURLSuccess: {

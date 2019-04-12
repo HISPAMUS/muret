@@ -1,0 +1,26 @@
+.icons {
+  color: #7DE2DB;
+}
+
+.iconRadioGroup .active * {
+  color: #D91E63;
+}
+
+.iconRadioGroup button:disabled * {
+  color: gray;
+}
+
+.iconRadioGroup button {
+  background-color: transparent;
+  border-color: transparent;
+}
+
+#labelMode {
+  font-size: small;
+  color: #D91E63;
+}
+
+/*input[type=radio] + .icons {
+  color: red;
+  background-color: yellow;
+}*/

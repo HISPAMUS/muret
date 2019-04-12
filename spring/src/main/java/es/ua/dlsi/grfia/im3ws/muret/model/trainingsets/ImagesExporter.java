@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  */
 public class ImagesExporter extends AbstractTrainingSetExporter {
     public ImagesExporter(int id) {
-        super(id, "Images exporter", "It exports the original images in the selected projects in a compressed file");
+        super(id, "Images exporter", "It exports the original images in the selected projects in a compressed file", true);
     }
 
     @Override

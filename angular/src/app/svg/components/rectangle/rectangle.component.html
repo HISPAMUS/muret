@@ -3,7 +3,7 @@
           attr.stroke="{{appRectangle.strokeColor}}"
           attr.stroke-width="{{appRectangle.strokeWidth}}"
           attr.stroke-dasharray="{{appRectangle.strokeDashArray}}"
-          attr.fill="{{appRectangle.fillColor}}"
+          attr.fill="{{appRectangle.fillColor}}" opacity="0.8"
           *ngIf="!appRectangle.hidden"
 />
 <svg:text *ngIf="appRectangle.label" attr.x="{{appRectangle.fromX+3}}" attr.y="{{ appRectangle.fromY+8 }}">{{ appRectangle.label }}</svg:text>
@@ -11,25 +11,25 @@
 <svg:g *ngIf="editing && selected">
   <svg:circle  attr.cx="{{appRectangle.fromX}}" attr.cy="{{appRectangle.fromY}}" attr.r="{{appRectangle.strokeWidth*3}}"
                attr.stroke="{{appRectangle.strokeColor}}" attr.stroke-width="0" attr.fill="{{appRectangle.strokeColor}}"
-               class="cursorNWresize"
-               (mousedown)="onHandleMouseDown($event, 'svgTopLeftHandle')"
+               class="cursorNWresize" opacity="0.5"
+               (mousedown)="onHandleMouseDown($event, 'svgTopLeftHandle')" (touchstart)="onHandleMouseDown($event, 'svgTopLeftHandle')"
   />
 
   <svg:circle  attr.cx="{{appRectangle.fromX + appRectangle.width}}" attr.cy="{{appRectangle.fromY}}" attr.r="{{appRectangle.strokeWidth*3}}"
                attr.stroke="{{appRectangle.strokeColor}}" attr.stroke-width="0" attr.fill="{{appRectangle.strokeColor}}"
-               class="cursorNEresize"
-               (mousedown)="onHandleMouseDown($event, 'svgTopRightHandle')"
+               class="cursorNEresize" opacity="0.5"
+               (mousedown)="onHandleMouseDown($event, 'svgTopRightHandle')" (touchstart)="onHandleMouseDown($event, 'svgTopRightHandle')"
   />
 
   <svg:circle  attr.cx="{{appRectangle.fromX}}" attr.cy="{{appRectangle.fromY + appRectangle.height}}" attr.r="{{appRectangle.strokeWidth*3}}"
                attr.stroke="{{appRectangle.strokeColor}}" attr.stroke-width="0" attr.fill="{{appRectangle.strokeColor}}"
-               class="cursorSWresize"
-               (mousedown)="onHandleMouseDown($event, 'svgBottomLeftHandle')"
+               class="cursorSWresize" opacity="0.5"
+               (mousedown)="onHandleMouseDown($event, 'svgBottomLeftHandle')" (touchstart)="onHandleMouseDown($event, 'svgBottomLeftHandle')"
   />
 
   <svg:circle  attr.cx="{{appRectangle.fromX + appRectangle.width}}" attr.cy="{{appRectangle.fromY  + appRectangle.height}}" attr.r="{{appRectangle.strokeWidth*3}}"
                attr.stroke="{{appRectangle.strokeColor}}" attr.stroke-width="0" attr.fill="{{appRectangle.strokeColor}}"
-               class="cursorSEresize"
-               (mousedown)="onHandleMouseDown($event, 'svgBottomRightHandle')"
+               class="cursorSEresize" opacity="0.5"
+               (mousedown)="onHandleMouseDown($event, 'svgBottomRightHandle')" (touchstart)="onHandleMouseDown($event, 'svgBottomRightHandle')"
   />
 </svg:g>

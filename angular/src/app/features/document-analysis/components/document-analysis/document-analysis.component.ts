@@ -1,4 +1,4 @@
-import {Component, HostListener, OnDestroy, OnInit, Self, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, OnDestroy, OnInit, Self, ViewChild} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Rectangle} from '../../../../svg/model/rectangle';
@@ -9,7 +9,6 @@ import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {Region} from '../../../../core/model/entities/region';
 import {Store} from '@ngrx/store';
 import {DocumentAnalysisState} from '../../store/state/document-analysis.state';
-import { Location } from '@angular/common';
 
 import {
   ChangePageBoundingBox,
@@ -20,12 +19,12 @@ import {
 } from '../../store/actions/document-analysis.actions';
 import {
   selectFileName,
-  selectManuscriptType,
-  selectNotationType, selectPages,
+  selectPages,
   selectRegionTypes
 } from '../../store/selectors/document-analysis.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-document-analysis',
@@ -36,17 +35,16 @@ import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.act
 export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   imageID: number;
   filename$: Observable<string>;
-  notationType$: Observable<'eMensural' | 'eModern'>;
-  manuscriptType$: Observable<'eHandwritten' | 'ePrinted'>;
   regionTypes$: Observable<RegionType[]>;
   pagesSubscription: Subscription;
   mode: 'eIdle' |'eSelecting' | 'eEditing' | 'eAdding';
   selectedRegionTypeID: number | 'page';
   zoomFactor = 1;
+  @ViewChild('regionTypesModal') regionTypesModal: ElementRef;
 
   // tools
   private selectedShapeValue: string;
-  private nextDrawShape: string | RegionType;
+  // private nextDrawShape: string | RegionType;
   shapes: Shape[];
 
   // end tools
@@ -56,12 +54,10 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               private router: Router,
               private dialogsService: DialogsService,
-              private location: Location
+              private modalService: NgbModal
               ) {
     this.regionTypes$ = store.select(selectRegionTypes);
     this.filename$ = store.select(selectFileName);
-    this.notationType$ = store.select(selectNotationType);
-    this.manuscriptType$ = store.select(selectManuscriptType);
     this.mode = 'eIdle';
     this.selectedRegionTypeID = 'page';
   }
@@ -111,7 +107,11 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
 
       const shape = this.findSelectedShape();
       if (shape) {
-        this.selectedRegionTypeID = shape.data.regionType.id;
+        if (shape.data.regionType) {
+          this.selectedRegionTypeID = shape.data.regionType.id;
+        } else {
+          this.selectedRegionTypeID = 'page';
+        }
       } else {
         this.selectedRegionTypeID = null;
       }
@@ -199,8 +199,6 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
       } else {
         this.store.dispatch(new ChangeRegionType(shape.data, regionType));
       }
-    } else {
-      this.nextDrawShape = regionType;
     }
   }
 
@@ -208,7 +206,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
     if (this.isEditingMode()) {
       this.dialogsService.showError('Page', 'Cannot set page in editing mode');
     } else {
-      this.nextDrawShape = 'page';
+      // this.nextDrawShape = 'page';
     }
   }
 
@@ -246,7 +244,9 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   }
 
   onShapeCreated(shape: Shape) {
-    if (!this.nextDrawShape) {
+    this.openRegionTypesModal(shape);
+
+    /*if (!this.nextDrawShape) {
       this.dialogsService.showError('Shape creation', 'Page or region type must be selected first');
       this.shapes = this.shapes.filter(s => s !== shape); // remove erroneous shape
     } else {
@@ -264,7 +264,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
           toX: rectangle.fromX + rectangle.width,
           toY: rectangle.fromY + rectangle.height}));
       }
-    }
+    }*/
   }
 
 
@@ -298,6 +298,39 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
     } else if (event.code === 'Escape') {
       this.mode = 'eIdle';
     }
+  }
+
+  beatufyRegionName(name: string): string {
+    const result = name.replace(/_/g, ' ');
+    return result.charAt(0).toUpperCase() + result.slice(1); // first char uppercase
+  }
+
+  inIdleMode() {
+    return this.mode === 'eIdle';
+  }
+
+  openRegionTypesModal(newShape: Shape) {
+    this.modalService.open(this.regionTypesModal, {size: 'lg', ariaLabelledBy: 'Region types'}).result.then((result) => {
+      // accepted
+      const rectangle = newShape as Rectangle;
+
+      const nextDrawShape = result;
+      if (nextDrawShape === 'page') {
+        this.store.dispatch(new CreatePage(this.imageID, {fromX: rectangle.fromX,
+          fromY: rectangle.fromY,
+          toX: rectangle.fromX + rectangle.width,
+          toY: rectangle.fromY + rectangle.height}));
+      } else {
+        this.store.dispatch(new CreateRegion(this.imageID, nextDrawShape as RegionType,
+          {fromX: rectangle.fromX,
+            fromY: rectangle.fromY,
+            toX: rectangle.fromX + rectangle.width,
+            toY: rectangle.fromY + rectangle.height}));
+      }
+    }, (reason) => {
+      // CANCEL
+      this.shapes = this.shapes.filter(s => s !== newShape); // remove erroneous shape
+    });
   }
 }
 
