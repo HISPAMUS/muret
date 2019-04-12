@@ -51,7 +51,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   pagesSubscription: Subscription;
   agnosticSymbolsSubscription: Subscription;
   selectedRegionSubscription: Subscription;
-  private selectedSymbol: AgnosticSymbol;
+  selectedSymbol: AgnosticSymbol;
   selectedRegion: Region;
   selectedRegion$: Observable<Region>;
   selectedSymbolSubscription: Subscription;

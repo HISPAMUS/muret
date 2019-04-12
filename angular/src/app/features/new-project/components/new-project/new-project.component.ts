@@ -29,7 +29,7 @@ export class NewProjectComponent implements OnInit, OnDestroy {
     manuscriptType: ['eHandwritten', Validators.required],
     comments: ['']
   });
-  private user: User;
+  user: User;
 
   constructor(private fb: FormBuilder, private store: Store<NewProjectState>, private router: Router) {
     this.authSubscription = this.store.select(selectAuthState).subscribe(next => {

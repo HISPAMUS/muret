@@ -18,7 +18,7 @@ export class AgnosticToolbarIconComponent implements OnInit {
 
   linesY: Array<number> = new Array<number>();
 
-  private buttonViewBox: string;
+  buttonViewBox: string;
   private staffSpaceHeight: number;
 
   constructor(private positionInStaffService: PositionInStaffService) { }
