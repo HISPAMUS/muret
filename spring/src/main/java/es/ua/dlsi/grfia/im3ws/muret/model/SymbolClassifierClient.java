@@ -13,6 +13,8 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * It uses the Python classifier through a REST API
@@ -111,7 +113,7 @@ public class SymbolClassifierClient {
      * @throws IM3WSException
      * @throws IM3Exception
      */
-    public List<AgnosticSymbolTypeAndPosition> classifyImage(long imageID, Path path, BoundingBox boundingBox) throws IM3WSException, IM3Exception {
+    public List<AgnosticSymbolTypeAndPosition> classifyImage(long imageID, Path path, BoundingBox boundingBox) throws IM3WSException {
         if (!checkImageExists(imageID)) {
             this.uploadImage(imageID, path);
         }
@@ -123,20 +125,26 @@ public class SymbolClassifierClient {
         postContent.put("bottom", boundingBox.getToY());
         postContent.put("predictions", N_PREDICTIONS_SHAPE);
 
-        ShapePosition response = this.restClient.post("image/" + imageID + "/bbox", ShapePosition.class, postContent);
+        try {
+            ShapePosition response = this.restClient.post("image/" + imageID + "/bbox", ShapePosition.class, postContent);
 
-        List<AgnosticSymbolTypeAndPosition> result = new ArrayList<>();
 
-        // take just the first position retrieved
-        //TODO ¿Cómo lo hacemos?
-        for (int i=0; i<response.getShape().length; i++) {
-            for (int j = 0; j < N_PREDICTIONS_POSITION && j < response.getPosition().length; j++) {
-                String shape = correctShape(response.shape[i]); // TODO Parche
-                AgnosticSymbolTypeAndPosition agnosticSymbol = new AgnosticSymbolTypeAndPosition(shape, response.position[j]);
-                result.add(agnosticSymbol);
+            List<AgnosticSymbolTypeAndPosition> result = new ArrayList<>();
+
+            // take just the first position retrieved
+            //TODO ¿Cómo lo hacemos?
+            for (int i = 0; i < response.getShape().length; i++) {
+                for (int j = 0; j < N_PREDICTIONS_POSITION && j < response.getPosition().length; j++) {
+                    String shape = correctShape(response.shape[i]); // TODO Parche
+                    AgnosticSymbolTypeAndPosition agnosticSymbol = new AgnosticSymbolTypeAndPosition(shape, response.position[j]);
+                    result.add(agnosticSymbol);
+                }
             }
+            return result;
+        } catch (Throwable t) {
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING,  "Cannot classify " + path.toString() + " with bounding box " + boundingBox, t);
+            return null;
         }
-        return result;
     }
 
     private String correctShape(String s) {

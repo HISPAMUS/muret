@@ -1,4 +1,4 @@
-<div id="agnosticStaff">
+<div #agnosticStaff id="agnosticStaff">
   <svg [ngClass]="cursorClass" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
        (mousedown)="onMouseDown($event)" (mouseup)="onMouseUp($event)" (mousemove)="onMouseMove($event)"
         width="100%" [attr.height.px]="height"
@@ -15,10 +15,12 @@
     <g>
       <svg:line *ngFor="let line of staffLines; trackBy: trackByLineFn"
                 id="{{line.index}}"
-                attr.x1="{{this.regionCropped.fromX}}" attr.y1="{{line.y}}" attr.x2="{{this.regionCropped.toX}}" attr.y2="{{line.y}}"
                 stroke="black"
                 stroke-width="1"
+                attr.x1="0" attr.y1="{{line.y}}" attr.x2="{{this.width-5}}" attr.y2="{{line.y}}"
       />
+      <!--  svg:line attr.x1="{{this.regionCropped.fromX}}" attr.y1="{{line.y}}" attr.x2="{{this.regionCropped.toX}}" attr.y2="{{line.y}}"-->
+
     </g>
     <g>
       <!-- Don't use the trackBy because it does not refresh symbols on having the same id <svg:use *ngFor="let agnosticSymbol of agnosticSymbols; trackBy: trackBySymbolFn"-->

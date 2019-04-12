@@ -14,6 +14,8 @@ import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbolType;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbolTypeFactory;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
+import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Defect;
+import es.ua.dlsi.im3.omr.encoding.enums.Defects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -145,22 +147,22 @@ public class AgnosticRepresentationModel {
             }
         }
 
-        if (agnosticSymbol != null) {
-            Symbol symbol = new Symbol();
-            symbol.setAgnosticSymbol(agnosticSymbol);
-            boundingBox.adjustToFitInto(persistentRegion.getBoundingBox());
-            symbol.setBoundingBox(boundingBox);
-            symbol.setStrokes(strokes);
-            symbol.setRegion(getRegion(regionID));
-            Symbol persistentSymbol = symbolRepository.save(symbol);
-            persistentRegion.getSymbols().add(persistentSymbol);
-            //regionRepository.save(persistentRegion);
-
-            SymbolCreationResult result = new SymbolCreationResult(persistentSymbol, otherPossibilities);
-            return result;
-        } else {
-            return null;
+        if (agnosticSymbol == null) { // because maybe an error has ocurred
+            agnosticSymbol = new AgnosticSymbol(AgnosticVersion.v2, new Defect(Defects.smudge), PositionsInStaff.LINE_3);
         }
+
+        Symbol symbol = new Symbol();
+        symbol.setAgnosticSymbol(agnosticSymbol);
+        boundingBox.adjustToFitInto(persistentRegion.getBoundingBox());
+        symbol.setBoundingBox(boundingBox);
+        symbol.setStrokes(strokes);
+        symbol.setRegion(getRegion(regionID));
+        Symbol persistentSymbol = symbolRepository.save(symbol);
+        persistentRegion.getSymbols().add(persistentSymbol);
+        //regionRepository.save(persistentRegion);
+
+        SymbolCreationResult result = new SymbolCreationResult(persistentSymbol, otherPossibilities);
+        return result;
     }
 
 

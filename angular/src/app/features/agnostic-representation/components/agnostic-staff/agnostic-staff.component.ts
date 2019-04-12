@@ -1,4 +1,16 @@
-import {Component, EventEmitter, HostListener, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
 import {
@@ -36,12 +48,14 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   LEDGER_LINE_OFFSET: number = this.em / 4;
   LEDGER_LINE_WIDTH: number = this.em / 1.5;
 
+  @ViewChild('agnosticStaff') agnosticStaff: ElementRef;
+
   margin: number;
 
   staffSpaceHeight: number;
   cursorClass: string;
   viewBox: string;
-  height: number; // TODO No se usa pero funciona, con valor puesto no va
+  height: number;
   width: number;
   staffLines: StaffLine[]; // TODO El nº de pentagramas debería depender del tipo de partitura
   private staffBottomLineY: number;
@@ -93,7 +107,6 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
       }
     }
   }
-
 
   ngOnChanges(changes: SimpleChanges): void {
     this.computeViewBox();
@@ -199,22 +212,36 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   getX(agnosticSymbol: AgnosticSymbol) {
+    let x: number;
     if (agnosticSymbol.boundingBox) {
-      return agnosticSymbol.boundingBox.fromX;
+      x = agnosticSymbol.boundingBox.fromX;
     } else {
-      return agnosticSymbol.approximateX;
+      x = agnosticSymbol.approximateX;
     }
+    return this.width * (x - this.regionCropped.fromX) / (this.regionCropped.toX - this.regionCropped.fromX);
   }
 
   private computeViewBox() {
-    // this.viewBox = `0 0 ${this.width} ${this.margin * 2 + this.em}`;
+    /*// this.viewBox = `0 0 ${this.width} ${this.margin * 2 + this.em}`;
     // in order to use the same horizontal scale of the selected region (see AgnosticRepresentationComponent) we use its same x viewBox
     this.width = this.regionCropped.toX - this.regionCropped.fromX;
     this.height = this.margin * 2 + this.em;
 
     const viewBoxHeight =  this.regionCropped.toY - this.regionCropped.fromY;
     this.viewBox = `${this.regionCropped.fromX} 0 ${this.width} ${viewBoxHeight}`;
-    // this.viewBox = `${this.regionCropped.fromX} 0 ${this.width} ${this.height}`;
+    // this.viewBox = `${this.regionCropped.fromX} 0 ${this.width} ${this.height}`;*/
 
+    const w = this.agnosticStaff.nativeElement.clientWidth;
+
+    this.width = w;
+    this.height = this.margin * 2 + this.em;
+
+    this.viewBox = `0 0 ${this.width} ${this.height}`;
   }
+
+  @HostListener('window:resize', ['$event'])
+  onResize($event) {
+    this.computeViewBox();
+  }
+
 }
