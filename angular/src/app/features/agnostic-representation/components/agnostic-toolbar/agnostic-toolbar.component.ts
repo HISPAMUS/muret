@@ -14,6 +14,8 @@ export class AgnosticToolbarComponent implements OnInit, OnDestroy {
   @Input() svgAgnosticSymbolSet: SVGSet;
   @Input() mode: 'eIdle' | 'eAdding' | 'eSelecting' | 'eEditing';
   @Input() filter: AgnosticSymbolAndPosition[];
+  @Input() frequentSymbols: Set<string>;
+
   @Output() agnosticSymbolSelected = new EventEmitter<AgnosticTypeSVGPath>();
   @Output() pitchUp = new EventEmitter();
   @Output() pitchDown = new EventEmitter();
@@ -22,7 +24,7 @@ export class AgnosticToolbarComponent implements OnInit, OnDestroy {
   private selectedAgnosticSymbolTypeValue: string;
 
   classifierValue = true;
-  symbolsFilter = 'note.'; // default value
+  symbolsFilter = 'frequent'; // default value
   buttonWidth: number;
 
   constructor(public store: Store<AgnosticRepresentationState>) {
@@ -92,7 +94,14 @@ export class AgnosticToolbarComponent implements OnInit, OnDestroy {
             && !value.agnosticTypeString.includes('beam'));
         case 'other':
           return this.svgAgnosticSymbolSet.paths.filter(value => value.agnosticTypeString.includes('defect') ||
+            value.agnosticTypeString.includes('fermata') ||
             value.agnosticTypeString.includes('slur') || !value.agnosticTypeString.includes('.'));
+        case 'clefsmeters':
+          return this.svgAgnosticSymbolSet.paths.filter(value => value.agnosticTypeString.includes('clef') ||
+            value.agnosticTypeString.includes('metersign'));
+        case 'frequent':
+          return this.svgAgnosticSymbolSet.paths.filter(value => this.frequentSymbols.has(value.agnosticTypeString)).
+            sort((a, b) => a.agnosticTypeString.localeCompare(b.agnosticTypeString));
         default:
           return this.svgAgnosticSymbolSet.paths.filter(value => value.agnosticTypeString.includes(this.symbolsFilter));
       }

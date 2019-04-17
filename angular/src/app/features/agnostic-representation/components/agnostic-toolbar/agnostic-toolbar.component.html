@@ -2,11 +2,7 @@
      name="modeRadioButtonGroup" [(ngModel)]="symbolsFilter">
 
   <label ngbButtonLabel>
-    <input name="modeRadioButton" ngbButton type="radio" [value]="'clef.'" ><span>Clefs</span>
-  </label>
-
-  <label ngbButtonLabel>
-    <input name="modeRadioButton" ngbButton type="radio" [value]="'metersign.'" ><span>Meters</span>
+    <input name="modeRadioButton" ngbButton type="radio" [value]="'clefsmeters'" ><span>Clefs Meters</span>
   </label>
 
   <label ngbButtonLabel>
@@ -27,6 +23,10 @@
 
   <label ngbButtonLabel>
     <input name="modeRadioButton" ngbButton type="radio" [value]="'other'" ><span>Other</span>
+  </label>
+
+  <label ngbButtonLabel *ngIf="frequentSymbols">
+    <input name="modeRadioButton" ngbButton type="radio" [value]="'frequent'" ><span>Frequent</span>
   </label>
 
 </div>

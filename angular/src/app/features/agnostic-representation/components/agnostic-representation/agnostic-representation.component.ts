@@ -77,6 +77,9 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   private creatingBoundingBox: BoundingBox;
   private creatingStrokes: Point[][];
   endToEndButtonLabel = 'End-to-end';
+  frequentSymbols: Set<string> = new Set<string>();
+  lines = ['L5', 'L4', 'L3', 'L2', 'L1'];
+  spaces = ['S4', 'S3', 'S2', 'S1'];
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>,
               private dialogsService: DialogsService, private positionInStaffService: PositionInStaffService) {
@@ -115,6 +118,9 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.agnosticSymbolsSubscription = this.store.select(selectAgnosticSymbols).subscribe(next => {
       this.endToEndButtonLabel = 'End-to-end'; // we may come here after classifying
       this.drawSelectedRegionSymbols(next);
+      if (next) {
+        next.forEach(value => this.frequentSymbols.add(value.agnosticSymbolType));
+      }
     });
     this.selectedRegionSubscription = this.store.select(selectSelectedRegion).subscribe(next => {
       this.selectedRegion = next;
@@ -248,7 +254,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
 
   private drawBox(shapes: Shape[], modelObject: Region | AgnosticSymbol,
-                  layer: string, id: number, boundingBox: BoundingBox, color: string): Rectangle {
+                  layer: string, id: number, boundingBox: BoundingBox, color: string, strokeWidth: number): Rectangle {
     const rect = new Rectangle();
     rect.id = layer + id;
     rect.fromX = boundingBox.fromX;
@@ -257,7 +263,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     rect.height  = boundingBox.toY - boundingBox.fromY;
     rect.fillColor = 'transparent';
     rect.strokeColor = color;
-    rect.strokeWidth = 3;
+    rect.strokeWidth = strokeWidth;
     rect.layer = layer;
     rect.data = modelObject;
     shapes.push(rect);
@@ -283,7 +289,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
   private drawImagePreviewRegion(region: Region) {
     this.drawBox(this.imagePreviewShapes, region,
-      region.regionType.name, region.id, region.boundingBox, '#' + region.regionType.hexargb ).data = region;
+      region.regionType.name, region.id, region.boundingBox, '#' + region.regionType.hexargb, 5 ).data = region;
   }
 
   private drawSelectedRegionSymbols(agnosticSymbols: AgnosticSymbol[]) {
@@ -293,7 +299,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
         const color = 'red';
         if (symbol.boundingBox) {
           this.drawBox(this.selectedRegionShapes, symbol,
-            symbol.agnosticSymbolType, symbol.id, symbol.boundingBox, color);
+            symbol.agnosticSymbolType, symbol.id, symbol.boundingBox, color, 1);
         }
 
         if (symbol.strokes) {
@@ -351,6 +357,12 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.movePitch(+1);
   }
 
+  changeLineSpace(linespace: string) {
+    if (this.selectedSymbol) {
+      const newPositionInStaff = linespace;
+      this.store.dispatch(new ChangeSymbol(this.selectedSymbol, this.selectedSymbol.agnosticSymbolType, newPositionInStaff));
+    }
+  }
 
   deleteSelectedSymbol() {
     if (this.selectedSymbol) {
@@ -505,4 +517,6 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
         }
       });
   }
+
+
 }

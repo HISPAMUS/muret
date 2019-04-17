@@ -62,7 +62,8 @@ const routes = [
 
 @NgModule({
     imports: [
-        RouterModule.forRoot(routes)
+        RouterModule.forRoot(routes, { useHash: true }) // to allow reloading in production
+      // see https://stackoverflow.com/questions/52416210/angular-static-base-url-and-routing-with-hash-is-true#
     ],
     exports: [
         RouterModule

@@ -290,6 +290,9 @@ public class DocumentAnalysisModel {
         region.setPage(parentPage);
         region.setBoundingBox(boundingBox);
         regionRepository.save(region);
+        if (parentPage.getRegions() == null) {
+            parentPage.setRegions(new ArrayList<>());
+        }
         parentPage.getRegions().add(region);
 
         return persistentImage.getPages();
