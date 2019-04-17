@@ -359,7 +359,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
 
 
   onTouchStart($event) {
-    $event.preventDefault(); // avoid scrolling
+    this.preventScroll($event);
 
     if ($event.targetTouches) {
       const coord = this.recoverOffsetValues($event);
@@ -386,8 +386,14 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
     return [x, y];
   }
 
+  preventScroll($event) {
+    if (this.mode === 'eAdding' || this.mode === 'eEditing' && this.selectedShapeID) {
+      $event.preventDefault(); // avoid scrolling
+    }
+  }
   onTouchMove($event) {
-    $event.preventDefault(); // avoid scrolling
+    this.preventScroll($event);
+
     if ($event.targetTouches) {
       const coord = this.recoverOffsetValues($event);
       this.onDrawMove($event.timeStamp, coord[0], coord[1]);
@@ -399,7 +405,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   }
 
   onTouchEnd($event) {
-    $event.preventDefault(); // avoid scrolling
+    this.preventScroll($event);
     this.onDrawEnd();
   }
 

@@ -138,7 +138,11 @@ public class AgnosticRepresentationModel {
             Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.getProject().getPath(),
                     MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());
 
-            otherPossibilities= symbolClassifierClient.classifyImage(imageID, imagePath, boundingBox);
+            try {
+                otherPossibilities = symbolClassifierClient.classifyImage(imageID, imagePath, boundingBox);
+            } catch (Throwable t) {
+                Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Error from classifying server", t);
+            }
 
             if (otherPossibilities != null && otherPossibilities.size() > 0) {
                 AgnosticSymbolType agnosticSymbolType = AgnosticSymbolTypeFactory.parseString(otherPossibilities.get(0).getAgnosticSymbolType());
