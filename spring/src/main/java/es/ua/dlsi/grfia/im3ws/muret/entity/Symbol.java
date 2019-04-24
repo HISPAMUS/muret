@@ -10,7 +10,7 @@ import javax.persistence.*;
  * @author drizo
  */
 @Entity
-public class Symbol {
+public class Symbol extends Auditable {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)

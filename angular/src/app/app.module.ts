@@ -35,6 +35,8 @@ import {environment} from '../environments/environment';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {faAngleDown} from '@fortawesome/free-solid-svg-icons/faAngleDown';
 import {faAngleUp} from '@fortawesome/free-solid-svg-icons/faAngleUp';
+import {faAngleDoubleUp} from '@fortawesome/free-solid-svg-icons/faAngleDoubleUp';
+import {faAngleDoubleDown} from '@fortawesome/free-solid-svg-icons/faAngleDoubleDown';
 import {faTrash} from '@fortawesome/free-solid-svg-icons/faTrash';
 import {faPlus} from '@fortawesome/free-solid-svg-icons/faPlus';
 import {faEdit} from '@fortawesome/free-solid-svg-icons/faEdit';
@@ -42,7 +44,7 @@ import {faMinus} from '@fortawesome/free-solid-svg-icons/faMinus';
 import {faEye} from '@fortawesome/free-solid-svg-icons/faEye';
 import {faExpandArrowsAlt} from '@fortawesome/free-solid-svg-icons/faExpandArrowsAlt';
 import {faCompressArrowsAlt} from '@fortawesome/free-solid-svg-icons/faCompressArrowsAlt';
-
+import {faCommentDots} from '@fortawesome/free-solid-svg-icons/faCommentDots';
 
 @NgModule({
   declarations: [
@@ -91,12 +93,16 @@ export class AppModule {
     library.add(faUserClock);
     library.add(faAngleDown);
     library.add(faAngleUp);
+    library.add(faAngleDoubleDown);
+    library.add(faAngleDoubleUp);
     library.add(faTrash);
     library.add(faPlus);
     library.add(faEdit);
     library.add(faMinus);
     library.add(faEye);
     library.add(faExpandArrowsAlt);
-    library.add(faCompressArrowsAlt)
+    library.add(faCompressArrowsAlt);
+    library.add(faCompressArrowsAlt);
+    library.add(faCommentDots);
   }
 }

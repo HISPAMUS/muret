@@ -8,6 +8,7 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
 import { CrudToolbarComponent } from './components/crud-toolbar/crud-toolbar.component';
 import {NgbButtonsModule, NgbTooltipModule} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {InputDialogComponent} from './components/input-dialog/input-dialog.component';
 
 @NgModule({
   imports: [
@@ -23,17 +24,20 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     StateComponent,
     AlertComponent,
     ConfirmDialogComponent,
+    InputDialogComponent,
     CrudToolbarComponent
   ],
   exports: [
     StateComponent,
     AlertComponent,
     ConfirmDialogComponent,
+    InputDialogComponent,
     CrudToolbarComponent
   ],
   entryComponents: [
     AlertComponent,
     ConfirmDialogComponent,
+    InputDialogComponent,
     CrudToolbarComponent
   ],
   providers: []

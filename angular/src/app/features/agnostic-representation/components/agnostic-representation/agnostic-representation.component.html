@@ -1,8 +1,11 @@
 <div class="container-fluid">
   <nav class="row">
-    <div class="col-7">
+    <div class="col-6">
       <ng-container *ngIf="selectedRegion$ | async">
-        <app-crud-toolbar (onClear)="clear()" (modeChange)="onModeChange($event)" (onDelete)="deleteSelectedSymbol()" [(mode)]="mode" (onZoomFit)="zoomFit()" (onZoomIn)="zoomIn()" (onZoomOut)="zoomOut()">
+        <app-crud-toolbar (onClear)="clear()" (modeChange)="onModeChange($event)" (onDelete)="deleteSelectedSymbol()"
+                          [(mode)]="mode" (onZoomFit)="zoomFit()" (onZoomIn)="zoomIn()" (onZoomOut)="zoomOut()"
+                          (onAddComment)="addComment()"
+        >
         </app-crud-toolbar>
       </ng-container>
     </div>
@@ -13,7 +16,7 @@
         </button>
       </ng-container>
     </div>
-    <div class="col-3" id="linksPhases">
+    <div class="col-4" id="linksPhases">
       Go to:
       <button (click)="openDocumentAnalysis()">Doc. analysis</button>
       <button (click)="openSemanticRepresentation()" disabled>Semantic</button>
@@ -66,6 +69,7 @@
             <app-agnostic-staff
                                 [regionCropped]="selectedRegion.boundingBox"
                                 [(mode)]="mode" [svgAgnosticSymbolSet]="svgSet$ | async"
+                                (commentClicked)="onCommentClicked($event)"
             >
             </app-agnostic-staff>
           </div>
@@ -156,3 +160,14 @@
   </section>
 
 </div>
+
+<!--<div id="comments" [ngClass]="enlargedCommentsBox ? 'enlargedComments' : 'reducedComments'">
+  Comments:
+  <textarea placeholder="Write comments here..."
+            (focusout)="saveComments($event)"
+  >{{selectedSymbol?.comments}}</textarea>
+  <a [routerLink]="" (click)="toggleComments()">
+    <fa-icon icon="angle-double-down" size="2x" *ngIf="enlargedCommentsBox"></fa-icon>
+    <fa-icon icon="angle-double-up" size="2x" *ngIf="!enlargedCommentsBox"></fa-icon>
+  </a>
+</div>-->

@@ -18,7 +18,7 @@ import {
 } from '../../../document-analysis/store/actions/document-analysis.actions';
 import {
   ChangeSymbol,
-  ChangeSymbolBoundingBox, ClassifyRegionEndToEnd, ClearRegionSymbols,
+  ChangeSymbolBoundingBox, ChangeSymbolComments, ClassifyRegionEndToEnd, ClearRegionSymbols,
   CreateSymbolFromBoundingBox, CreateSymbolFromStrokes,
   DeleteSymbol, DeselectSymbol,
   GetRegion, GetSVGSet, InitRegion,
@@ -77,9 +77,10 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   private creatingBoundingBox: BoundingBox;
   private creatingStrokes: Point[][];
   endToEndButtonLabel = 'End-to-end';
-  frequentSymbols: Set<string> = new Set<string>();
+  frequentSymbols: Map<string, number> = new Map<string, number>(); // key = agnostic type, value = frequency
   lines = ['L5', 'L4', 'L3', 'L2', 'L1'];
   spaces = ['S4', 'S3', 'S2', 'S1'];
+  enlargedCommentsBox = false;
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>,
               private dialogsService: DialogsService, private positionInStaffService: PositionInStaffService) {
@@ -118,9 +119,6 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.agnosticSymbolsSubscription = this.store.select(selectAgnosticSymbols).subscribe(next => {
       this.endToEndButtonLabel = 'End-to-end'; // we may come here after classifying
       this.drawSelectedRegionSymbols(next);
-      if (next) {
-        next.forEach(value => this.frequentSymbols.add(value.agnosticSymbolType));
-      }
     });
     this.selectedRegionSubscription = this.store.select(selectSelectedRegion).subscribe(next => {
       this.selectedRegion = next;
@@ -476,6 +474,8 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
 
   onAgnosticSymbolTypeSelected(agnosticTypeSVGPath: AgnosticTypeSVGPath) {
+    this.incrementFrequency(agnosticTypeSVGPath.agnosticTypeString);
+
     let agnosticSymbolTypeAndPosition = null;
     if (this.classifiedSymbols) {
       agnosticSymbolTypeAndPosition = this.classifiedSymbols.find(cs => cs.agnosticSymbolType === agnosticTypeSVGPath.agnosticTypeString);
@@ -519,4 +519,36 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   }
 
 
+  private incrementFrequency(agnosticTypeString: string) {
+    const val = this.frequentSymbols.get(agnosticTypeString);
+    if (!val) {
+      this.frequentSymbols.set(agnosticTypeString, 1);
+    } else {
+      this.frequentSymbols.set(agnosticTypeString, val + 1);
+    }
+  }
+
+  /*toggleComments() {
+    this.enlargedCommentsBox = !this.enlargedCommentsBox;
+  }*/
+  addComment() {
+    if (this.selectedSymbol != null && this.selectedSymbol !== undefined) {
+      this.editAddComment(this.selectedSymbol);
+    }
+  }
+
+  onCommentClicked(agnosticSymbol: AgnosticSymbol) {
+    console.log('Doble click');
+    this.editAddComment(agnosticSymbol);
+  }
+
+  private editAddComment(agnosticSymbol: AgnosticSymbol) {
+    this.dialogsService.showInput('Comments', agnosticSymbol.comments)
+      .subscribe((text) => {
+        if (text) {
+          this.store.dispatch(new ChangeSymbolComments(agnosticSymbol, text));
+        }
+      });
+
+  }
 }

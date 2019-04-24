@@ -16,6 +16,7 @@ export enum AgnosticRepresentationActionTypes {
   GetSVGSetSucccess = '[AgnosticRepresentation] Get SVG set success',
   ChangeSymbol = '[AgnosticRepresentation] Change symbol',
   ChangeSymbolBoundingBox = '[AgnosticRepresentation] Change symbol bounding box',
+  ChangeSymbolComments = '[AgnosticRepresentation] Change symbol comments',
   ChangeSymbolSuccess = '[AgnosticRepresentation] Change symbol success',
   /*ClassifySymbolFromBoundingBox = '[AgnosticRepresentation] Classify symbol from bounding box',
   ClassifySymbolFromStrokes = '[AgnosticRepresentation] Classify symbol from strokes',
@@ -81,6 +82,11 @@ export class ChangeSymbolBoundingBox implements Action {
   constructor(public agnosticSymbol: AgnosticSymbol, public boundingBox: BoundingBox) {}
 }
 
+export class ChangeSymbolComments implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.ChangeSymbolComments;
+  constructor(public agnosticSymbol: AgnosticSymbol, public comments: string) {}
+}
+
 /*export class ClassifySymbolFromBoundingBox implements Action {
   public readonly type = AgnosticRepresentationActionTypes.ClassifySymbolFromBoundingBox;
   constructor(public regionID: number, public boundingBox: BoundingBox) {}
@@ -144,7 +150,7 @@ export class ClearRegionSymbolsSuccess implements Action {
 
 export type AgnosticRepresentationActions =
   InitRegion | GetRegion | GetRegionSuccess | GetSVGSet | GetSVGSetSucccess | SelectSymbol | DeselectSymbol |
-  ChangeSymbol | ChangeSymbolBoundingBox | ChangeSymbolSuccess |
+  ChangeSymbol | ChangeSymbolComments | ChangeSymbolBoundingBox | ChangeSymbolSuccess |
   // ClassifySymbolFromBoundingBox | ClassifySymbolFromStrokes | ClassifySymbolSuccess |
   CreateSymbolFromBoundingBox | CreateSymbolFromStrokes | CreateSymbolSuccess | DeleteSymbol | DeleteSymbolSuccess |
   ClassifyRegionEndToEnd | ClassifyRegionEndToEndSuccess |

@@ -27,13 +27,15 @@
           <fa-icon icon="edit" class="icons" size="lg"></fa-icon>
         </label>
         <label ngbButtonLabel>
+          <button [disabled]="!isEditingMode() && !isAddingMode()" (click)="addCommentToSelected()">
+            <fa-icon icon="comment-dots" class="icons" size="lg"></fa-icon>
+          </button>
+        </label>
+        <label ngbButtonLabel>
           <button [disabled]="!isEditingMode() && !isAddingMode()" (click)="deleteSelected()">
             <fa-icon icon="minus" class="icons" size="lg"></fa-icon>
           </button>
         </label>
-
-        &nbsp;
-        &nbsp;
 
         <label ngbButtonLabel>
           <button (click)="clear()">
@@ -42,8 +44,8 @@
         </label>
         &nbsp;
         &nbsp;
-        <label ngbButtonLabel id="labelMode">
+        <!--<label ngbButtonLabel id="labelMode">
           <h5>{{displayMode()}}</h5>
-        </label>
+        </label>-->
       </div>
     </form>

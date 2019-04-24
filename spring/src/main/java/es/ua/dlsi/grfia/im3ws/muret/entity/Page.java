@@ -13,7 +13,7 @@ import java.util.List;
  * @author drizo
  */
 @Entity
-public class Page {
+public class Page extends Auditable {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)

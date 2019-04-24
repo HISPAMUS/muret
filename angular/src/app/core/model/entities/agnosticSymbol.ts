@@ -9,4 +9,5 @@ export interface AgnosticSymbol extends Entity {
   positionInStaff: string;
   agnosticSymbolType: string;
   approximateX?: number;
+  comments: string;
 }

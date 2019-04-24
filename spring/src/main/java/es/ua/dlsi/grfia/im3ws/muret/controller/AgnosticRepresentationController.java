@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.im3ws.muret.controller;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
+import es.ua.dlsi.grfia.im3ws.muret.controller.payload.CommentsBody;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.SymbolCreationFromBoundingBox;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.SymbolCreationFromStrokes;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.SymbolCreationResult;
@@ -110,6 +111,17 @@ public class AgnosticRepresentationController {
             throw new IM3WSException("Cannot find a symbol with id " + boundingBox.getId());
         }
         symbol.get().setBoundingBox(boundingBox);
+        symbolRepository.save(symbol.get());
+        return symbol.get();
+    }
+
+    @PutMapping(path = {"symbolCommentsUpdate"})
+    public Symbol symbolCommentsUpdate(@RequestBody CommentsBody commentsBody) throws IM3WSException {
+        Optional<Symbol> symbol = symbolRepository.findById(commentsBody.getId());
+        if (!symbol.isPresent()) {
+            throw new IM3WSException("Cannot find a symbol with id " + commentsBody.getId());
+        }
+        symbol.get().setComments(commentsBody.getComments());
         symbolRepository.save(symbol.get());
         return symbol.get();
     }

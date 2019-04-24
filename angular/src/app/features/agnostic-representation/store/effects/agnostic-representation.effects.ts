@@ -3,13 +3,24 @@ import { Effect, ofType, Actions } from '@ngrx/effects';
 import { of } from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 import {
-  AgnosticRepresentationActionTypes, ChangeSymbolBoundingBox,
-  ChangeSymbol, ChangeSymbolSuccess,
-  CreateSymbolFromBoundingBox, CreateSymbolFromStrokes, CreateSymbolSuccess, DeleteSymbol, DeleteSymbolSuccess,
+  AgnosticRepresentationActionTypes,
+  ChangeSymbolBoundingBox,
+  ChangeSymbol,
+  ChangeSymbolSuccess,
+  CreateSymbolFromBoundingBox,
+  CreateSymbolFromStrokes,
+  CreateSymbolSuccess,
+  DeleteSymbol,
+  DeleteSymbolSuccess,
   GetRegion,
   GetRegionSuccess,
   GetSVGSet,
-  GetSVGSetSucccess, ClassifyRegionEndToEnd, ClassifyRegionEndToEndSuccess, ClearRegionSymbols, ClearRegionSymbolsSuccess
+  GetSVGSetSucccess,
+  ClassifyRegionEndToEnd,
+  ClassifyRegionEndToEndSuccess,
+  ClearRegionSymbols,
+  ClearRegionSymbolsSuccess,
+  ChangeSymbolComments
 } from '../actions/agnostic-representation.actions';
 import {AgnosticRepresentationService} from '../../services/agnostic-representation.service';
 import {Region} from '../../../../core/model/entities/region';
@@ -57,6 +68,16 @@ export class AgnosticRepresentationEffects {
       this.agnosticRepresentationService.changeSymbolBoundingBox$(action.agnosticSymbol,
         action.boundingBox.fromX, action.boundingBox.fromY,
         action.boundingBox.toX, action.boundingBox.toY)),
+    switchMap((agnosticSymbol: AgnosticSymbol) => {
+      return of(new ChangeSymbolSuccess(agnosticSymbol));
+    })
+  );
+  @Effect()
+  changeSymbolComments$ = this.actions$.pipe(
+    ofType<ChangeSymbolComments>(AgnosticRepresentationActionTypes.ChangeSymbolComments),
+    switchMap((action: ChangeSymbolComments) =>
+      this.agnosticRepresentationService.changeSymbolComments$(action.agnosticSymbol,
+        action.comments)),
     switchMap((agnosticSymbol: AgnosticSymbol) => {
       return of(new ChangeSymbolSuccess(agnosticSymbol));
     })

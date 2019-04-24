@@ -56,3 +56,27 @@
 #linksPhases button:disabled {
   color: gray;
 }
+
+#comments {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background-color: gray;
+  z-index: 100;
+  width: 100vw;
+}
+
+#comments textarea {
+  float: left;
+  width: 95vw;
+  margin-right: 1em;
+  height: 100%;
+}
+
+.enlargedComments {
+  height: 20em;
+}
+
+.reducedComments {
+  height: 2em;
+}

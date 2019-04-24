@@ -49,6 +49,13 @@ export class AgnosticRepresentationService {
     return this.apiRestClientService.put$<AgnosticSymbol>('agnostic/symbolBoundingBoxUpdate', boundingBox);
   }
 
+  changeSymbolComments$(symbol: AgnosticSymbol, comments: string) {
+    const params = {
+      id: symbol.id,
+      comments
+    };
+    return this.apiRestClientService.put$<AgnosticSymbol>('agnostic/symbolCommentsUpdate', params);
+  }
 
   createSymbolFromBoundingBox$(regionID: number, boundingBox: BoundingBox, agnosticSymbolType: string, positionInStaff: string):
     Observable<SymbolCreationResult> {

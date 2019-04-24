@@ -12,7 +12,7 @@ import java.util.List;
  * @author drizo
  */
 @Entity
-public class Image {
+public class Image extends Auditable {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -12,7 +12,7 @@ import java.util.List;
  * @author drizo
  */
 @Entity
-public class Region {
+public class Region extends Auditable {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
