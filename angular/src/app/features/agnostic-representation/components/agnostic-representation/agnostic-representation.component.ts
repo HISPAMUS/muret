@@ -547,6 +547,8 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
       .subscribe((text) => {
         if (text) {
           this.store.dispatch(new ChangeSymbolComments(agnosticSymbol, text));
+        } else if (agnosticSymbol.comments) {
+          this.store.dispatch(new ChangeSymbolComments(agnosticSymbol, null));
         }
       });
 
