@@ -37,13 +37,16 @@ public class AgnosticRepresentationModel {
     private final SymbolRepository symbolRepository;
     private final SymbolClassifierClient symbolClassifierClient;
     private final MURETConfiguration muretConfiguration;
+    private final ActionLogAgnosticModel actionLogAgnosticModel;
+
 
 
     @Autowired
-    public AgnosticRepresentationModel(MURETConfiguration muretConfiguration, RegionRepository regionRepository, SymbolRepository symbolRepository) {
+    public AgnosticRepresentationModel(MURETConfiguration muretConfiguration, RegionRepository regionRepository, SymbolRepository symbolRepository, ActionLogAgnosticModel actionLogAgnosticModel) {
         this.muretConfiguration = muretConfiguration;
         this.regionRepository = regionRepository;
         this.symbolRepository = symbolRepository;
+        this.actionLogAgnosticModel = actionLogAgnosticModel;
         this.symbolClassifierClient = new SymbolClassifierClient(muretConfiguration.getPythonclassifiers());
 
     }
@@ -85,6 +88,7 @@ public class AgnosticRepresentationModel {
         return persistentRegion.get();
     }
 
+
     class BBoxStrokes {
         CalcoStrokes calcoStrokes;
         BoundingBox boundingBox;
@@ -125,6 +129,36 @@ public class AgnosticRepresentationModel {
         public BoundingBox getBoundingBox() {
             return boundingBox;
         }
+    }
+
+
+    public Symbol changeAgnosticSymbol(Long symbolID, String agnosticSymbolTypeString, String positionInStaffString) throws IM3WSException, IM3Exception {
+        Optional<Symbol> symbol = symbolRepository.findById(symbolID);
+        if (!symbol.isPresent()) {
+            throw new IM3WSException("Cannot find a symbol with id " + symbolID);
+        }
+
+        Symbol s = symbol.get();
+        actionLogAgnosticModel.logChangeSymbolType(s);
+        AgnosticSymbolType agnosticSymbolType = AgnosticSymbolTypeFactory.parseString(agnosticSymbolTypeString);
+        PositionInStaff positionInStaff = PositionInStaff.parseString(positionInStaffString);
+        s.setAgnosticSymbol(new AgnosticSymbol(AgnosticVersion.v2, agnosticSymbolType, positionInStaff));
+        //return symbolRepository.update(symbol.get());
+        return symbolRepository.save(s);
+    }
+
+    public Symbol symbolBoundingBoxUpdate(BoundingBox boundingBox) throws IM3WSException {
+        Optional<Symbol> symbol = symbolRepository.findById(boundingBox.getId());
+        if (!symbol.isPresent()) {
+            throw new IM3WSException("Cannot find a symbol with id " + boundingBox.getId());
+        }
+
+        Symbol s = symbol.get();
+        actionLogAgnosticModel.logChangeSymbolBoundingBox(s);
+
+        s.setBoundingBox(boundingBox);
+        symbolRepository.save(s);
+        return symbol.get();
     }
 
     @Transactional
@@ -184,21 +218,26 @@ public class AgnosticRepresentationModel {
 
     @Transactional
     public SymbolCreationResult createSymbol(long regionID, BoundingBox boundingBox, String agnosticSymbolType, String positionInStaffStr) throws IM3WSException, IM3Exception {
+        SymbolCreationResult result;
         if (agnosticSymbolType == null || positionInStaffStr == null) {
-            return createSymbol(regionID, boundingBox, (Strokes)null, null);
+            result = createSymbol(regionID, boundingBox, (Strokes)null, null);
         } else {
             AgnosticSymbol agnosticSymbol = new AgnosticSymbol(AgnosticVersion.v2,
                     AgnosticSymbolTypeFactory.parseString(agnosticSymbolType),
                     PositionInStaff.parseString(positionInStaffStr));
-            return createSymbol(regionID, boundingBox, null, agnosticSymbol);
+            result = createSymbol(regionID, boundingBox, null, agnosticSymbol);
         }
+        actionLogAgnosticModel.logCreateSymbolFromBoundingBox(result.getAgnosticSymbol());
+        return result;
     }
 
 
     @Transactional
     public SymbolCreationResult createSymbol(long regionID, es.ua.dlsi.grfia.im3ws.muret.controller.payload.Point[][] points, String agnosticSymbolType, String positionInStaffStr) throws IM3WSException, IM3Exception {
         BBoxStrokes bBoxStrokes = new BBoxStrokes(points);
-        return createSymbol(regionID, bBoxStrokes.getBoundingBox(), bBoxStrokes.getCalcoStrokes(), agnosticSymbolType, positionInStaffStr);
+        SymbolCreationResult result = createSymbol(regionID, bBoxStrokes.getBoundingBox(), bBoxStrokes.getCalcoStrokes(), agnosticSymbolType, positionInStaffStr);
+        actionLogAgnosticModel.logCreateSymbolFromStrokes(result.getAgnosticSymbol());
+        return result;
     }
 
     /**
@@ -214,6 +253,7 @@ public class AgnosticRepresentationModel {
             throw new IM3WSException("Cannot find symbol with ID=" + symbolID);
         }
 
+        this.actionLogAgnosticModel.logSymbolDelete(persistentSymbol.get());
         Region persistentRegion = getRegion(persistentSymbol.get().getRegion().getId());
         persistentRegion.getSymbols().remove(persistentSymbol.get());
         return symbolID;
@@ -257,6 +297,7 @@ public class AgnosticRepresentationModel {
             persistentRegion.getSymbols().add(symbol);
         }
 
+        actionLogAgnosticModel.logEndToEnd(persistentRegion);
         return persistentRegion.getSymbols();
 
     }
@@ -265,6 +306,7 @@ public class AgnosticRepresentationModel {
     public boolean clearRegionSymbols(Long regionID) throws IM3WSException {
         Region persistentRegion = getRegion(regionID);
         persistentRegion.getSymbols().clear();
+        actionLogAgnosticModel.logRegionClear(persistentRegion);
         return true;
     }
 

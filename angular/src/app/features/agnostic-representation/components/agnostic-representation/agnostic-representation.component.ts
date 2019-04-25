@@ -538,7 +538,6 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   onCommentClicked(agnosticSymbol: AgnosticSymbol) {
-    console.log('Doble click');
     this.editAddComment(agnosticSymbol);
   }
 

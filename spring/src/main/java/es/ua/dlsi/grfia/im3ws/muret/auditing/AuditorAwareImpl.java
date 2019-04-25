@@ -11,10 +11,12 @@ import java.util.Optional;
 public class AuditorAwareImpl implements AuditorAware<User> {
     @Override
     public Optional<User> getCurrentAuditor() {
+        return Optional.of(getCurrentUser());
+    }
 
+    public static User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
-        //TODO
-        return Optional.of(userPrinciple.getUser());
+        return userPrinciple.getUser();
     }
 }

@@ -6,6 +6,7 @@ import es.ua.dlsi.grfia.im3ws.muret.controller.payload.SymbolCreationFromBoundin
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.SymbolCreationFromStrokes;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.SymbolCreationResult;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
+import es.ua.dlsi.grfia.im3ws.muret.model.ActionLogAgnosticModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticRepresentationModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticSymbolFont;
 import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticSymbolFontSingleton;
@@ -21,6 +22,7 @@ import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -43,7 +45,8 @@ public class AgnosticRepresentationController {
             //ClassifierRepository classifierRepository,
             AgnosticRepresentationModel agnosticRepresentationModel,
             SymbolRepository symbolRepository,
-            RegionRepository regionRepository) {
+            RegionRepository regionRepository
+            ) {
         //this.classifierRepository = classifierRepository;
         this.agnosticRepresentationModel = agnosticRepresentationModel;
         this.symbolRepository = symbolRepository;
@@ -74,21 +77,13 @@ public class AgnosticRepresentationController {
         }
     }
 
+    @Transactional
     @GetMapping(path = {"changeAgnosticSymbol/{symbolID}/{agnosticSymbolTypeString}/{positionInStaffString}"})
     public Symbol changeAgnosticSymbol(@PathVariable("symbolID") Long symbolID,
                                            @PathVariable("agnosticSymbolTypeString") String agnosticSymbolTypeString,
                                            @PathVariable("positionInStaffString") String positionInStaffString
     ) throws IM3WSException, IM3Exception {
-        Optional<Symbol> symbol = symbolRepository.findById(symbolID);
-        if (!symbol.isPresent()) {
-            throw new IM3WSException("Cannot find a symbol with id " + symbolID);
-        }
-
-        AgnosticSymbolType agnosticSymbolType = AgnosticSymbolTypeFactory.parseString(agnosticSymbolTypeString);
-        PositionInStaff positionInStaff = PositionInStaff.parseString(positionInStaffString);
-        symbol.get().setAgnosticSymbol(new AgnosticSymbol(AgnosticVersion.v2, agnosticSymbolType, positionInStaff));
-        //return symbolRepository.update(symbol.get());
-        return symbolRepository.save(symbol.get());
+        return this.agnosticRepresentationModel.changeAgnosticSymbol(symbolID, agnosticSymbolTypeString, positionInStaffString);
     }
 
     /*@GetMapping(path = {"changeAgnosticPositionInStaff/{symbolID}/{difference}"})
@@ -104,15 +99,10 @@ public class AgnosticRepresentationController {
         return symbolRepository.save(symbol.get());
     }*/
 
+    @Transactional
     @PutMapping(path = {"symbolBoundingBoxUpdate"})
     public Symbol symbolBoundingBoxUpdate(@RequestBody BoundingBox boundingBox) throws IM3WSException {
-        Optional<Symbol> symbol = symbolRepository.findById(boundingBox.getId());
-        if (!symbol.isPresent()) {
-            throw new IM3WSException("Cannot find a symbol with id " + boundingBox.getId());
-        }
-        symbol.get().setBoundingBox(boundingBox);
-        symbolRepository.save(symbol.get());
-        return symbol.get();
+        return this.agnosticRepresentationModel.symbolBoundingBoxUpdate(boundingBox);
     }
 
     @PutMapping(path = {"symbolCommentsUpdate"})
@@ -133,6 +123,7 @@ public class AgnosticRepresentationController {
      */
     @DeleteMapping(path = {"deleteSymbol/{symbolID}"})
     public long deleteSymbol(@PathVariable("symbolID") long symbolID) throws IM3WSException {
+
         return this.agnosticRepresentationModel.deleteSymbol(symbolID);
     }
 
