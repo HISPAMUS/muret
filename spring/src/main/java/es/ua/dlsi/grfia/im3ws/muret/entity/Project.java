@@ -47,6 +47,10 @@ public class Project extends Auditable {
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "project")
     private List<Image> images;
 
+    @JsonManagedReference
+    @OneToMany(fetch=FetchType.LAZY, mappedBy = "project")
+    private List<Part> parts;
+
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="state_id")
     State state;
@@ -54,7 +58,7 @@ public class Project extends Auditable {
     public Project() {
     }
 
-    public Project(String name, String path, String composer, Date creationDate, Date lastModifiedDate, User createdBy, User lastModifiedBy , String thumbnailBase64Encoding, String comments, String imagesOrdering, NotationType notationType, ManuscriptType manuscriptType, State state, List<Image> images) {
+    public Project(String name, String path, String composer, Date creationDate, Date lastModifiedDate, User createdBy, User lastModifiedBy , String thumbnailBase64Encoding, String comments, String imagesOrdering, NotationType notationType, ManuscriptType manuscriptType, State state, List<Image> images, List<Part> parts) {
         this.name = name;
         this.composer = composer;
         this.notationType = notationType;
@@ -163,6 +167,14 @@ public class Project extends Auditable {
 
     public void setImagesOrdering(String imagesOrdering) {
         this.imagesOrdering = imagesOrdering;
+    }
+
+    public List<Part> getParts() {
+        return parts;
+    }
+
+    public void setParts(List<Part> parts) {
+        this.parts = parts;
     }
 
     @Override

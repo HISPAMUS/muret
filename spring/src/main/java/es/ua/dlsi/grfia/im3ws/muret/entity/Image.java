@@ -2,7 +2,6 @@ package es.ua.dlsi.grfia.im3ws.muret.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 import java.util.LinkedList;
@@ -43,17 +42,25 @@ public class Image extends Auditable {
     @JoinColumn(name="state_id")
     State state;
 
+    /**
+     * It can be null because the part is assigned to other element of the score
+     */
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name="instrument_id")
+    private Part part;
 
     public Image() {
     }
 
-    public Image(String path, String comments, Integer width, Integer height, Project project, State state) {
+    public Image(String path, String comments, Integer width, Integer height, Project project, State state, Part part) {
         this.filename = path;
         this.project = project;
         this.width = width;
         this.height = height;
         this.comments = comments;
         this.state = state;
+        this.part = part;
     }
     public Long getId() {
         return id;
@@ -133,5 +140,13 @@ public class Image extends Auditable {
             pages = new LinkedList<>();
         }
         pages.add(page);
+    }
+
+    public Part getPart() {
+        return part;
+    }
+
+    public void setPart(Part part) {
+        this.part = part;
     }
 }

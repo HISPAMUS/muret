@@ -21,9 +21,9 @@ public class AgnosticSymbolConverter implements AttributeConverter<AgnosticSymbo
     @Override
     public AgnosticSymbol convertToEntityAttribute(String s) {
         try {
-            return AgnosticSymbol.parseAgnosticString(AgnosticVersion.v2, s);
+            return AgnosticSymbol.parseAgnosticString(AgnosticVersion.v2, s.trim());
         } catch (IM3Exception e) {
-            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot convert agnostic string'" + s + "'");
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot convert agnostic string' " + s.trim() + "'");
             throw new RuntimeException(e);
         }
     }

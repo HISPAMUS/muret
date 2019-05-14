@@ -3,7 +3,6 @@ package es.ua.dlsi.grfia.im3ws.muret.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 import java.util.List;
@@ -45,21 +44,31 @@ public class Region extends Auditable {
     @JoinColumn(name="regiontype_id")
     RegionType regionType;
 
+    /**
+     * It can be null because the part is assigned to other element of the score
+     */
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name="instrument_id")
+    private Part part;
+
     public Region() {
     }
 
-    public Region(Page page, BoundingBox boundingBox, String comments, RegionType regionType, List<Symbol> symbols) {
+    public Region(Page page, BoundingBox boundingBox, String comments, RegionType regionType, List<Symbol> symbols, Part part) {
         this.boundingBox = boundingBox;
         this.page = page;
         this.regionType = regionType;
         this.symbols = symbols;
         this.comments = comments;
+        this.part = part;
     }
 
-    public Region(Page page, RegionType regionType, int fromX, int fromY, int toX, int toY) {
+    public Region(Page page, RegionType regionType, int fromX, int fromY, int toX, int toY, Part part) {
         this.page = page;
         this.regionType = regionType;
         this.boundingBox = new BoundingBox(fromX, fromY, toX, toY);
+        this.part = part;
     }
 
     public Long getId() {
@@ -111,6 +120,13 @@ public class Region extends Auditable {
         this.symbols = symbols;
     }
 
+    public Part getPart() {
+        return part;
+    }
+
+    public void setPart(Part part) {
+        this.part = part;
+    }
     @Override
     public String toString() {
         return "Region{" +

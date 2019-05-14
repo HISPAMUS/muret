@@ -2,7 +2,10 @@ package es.ua.dlsi.grfia.im3ws.muret.model.trainingsets;
 
 import es.ua.dlsi.grfia.im3ws.muret.model.ITrainingSetExporter;
 import es.ua.dlsi.im3.core.IM3Exception;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityManagerFactory;
 import java.io.File;
 import java.util.*;
 
@@ -14,15 +17,15 @@ public class TrainingSetsFactory {
 
     private List<ITrainingSetExporter> trainingSetExporters;
 
-    private TrainingSetsFactory() {
+    public TrainingSetsFactory() {
         this.trainingSetExporters = Arrays.asList(
                 new ImagesExporter(0),
                 new JSONTagging(1,true),
-                new JSONTagging(2, false),
-                new AgnosticSymbolImagesTextFile(3, false, false),
+                new JSONTagging(2, false)
+                /*new AgnosticSymbolImagesTextFile(3, false, false), // just used in command line (see ExportTrainingSet)
                 new AgnosticSymbolImagesTextFile(4, false, true),
                 new AgnosticSymbolImagesTextFile(5, true, false),
-                new AgnosticSymbolImagesTextFile(6, true, true)
+                new AgnosticSymbolImagesTextFile(6, true, true)*/
                 );
 
     }
@@ -38,7 +41,7 @@ public class TrainingSetsFactory {
         return trainingSetExporters.get(index);
     }
 
-    public static synchronized TrainingSetsFactory getInstance() {
+    public static synchronized TrainingSetsFactory getInstance(EntityManagerFactory entityManagerFactory) {
         if (instance == null) {
             instance = new TrainingSetsFactory();
         }
