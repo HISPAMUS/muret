@@ -44,7 +44,7 @@ public class Page extends Auditable {
      */
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name="instrument_id")
+    @JoinColumn(name="part_id")
     private Part part;
 
     public Page() {

@@ -104,7 +104,8 @@ public class ProjectScoreSongPart {
         return projectScoreSongSystem;
     }
 
-    public void addSemanticEncoding(SemanticEncoding semanticEncoding) throws IM3Exception {
+    public void addSemanticEncoding(ProjectScoreSongSystem projectScoreSystem, SemanticEncoding semanticEncoding) throws IM3Exception {
+        //TODO que el system pueda no ser el último!!!
         Semantic2IMCore semantic2IMCore = new Semantic2IMCore();
         //TODO sólo para un pentagrama
         ScoreLayer layer = scorePart.getUniqueVoice();
@@ -122,6 +123,7 @@ public class ProjectScoreSongPart {
             }
             layer.getStaff().addCoreSymbol(timedElementInStaff);
         }
+        projectScoreSystem.setTo(layer.getDuration());
         System.out.println("---");
     }
 }

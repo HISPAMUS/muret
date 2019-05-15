@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -32,7 +33,7 @@ import static org.junit.Assert.*;
 public class ProjectModelTest {
 
     @Test
-    public void transductionTest() throws IM3Exception, FileNotFoundException {
+    public void transductionTest() throws IM3Exception, IOException {
         MURETConfiguration muretConfiguration =
                 new MURETConfiguration(null, null, TestFileUtils.createTempFolder("muretprojectmodel").getAbsolutePath(),  null, 0, 0, true);
 
@@ -89,8 +90,13 @@ public class ProjectModelTest {
             transduction.getSemanticEncoding().getSymbols().forEach(semanticSymbol -> System.out.println(semanticSymbol.toSemanticString()));
 
             projectModel.addSemanticTransduction(project, partName, regionIDS[i], boundingBoxes[i], transduction.getSemanticEncoding());
+
+            Notation notationPrinted = projectModel.render(project, partName, regionIDS[i], NotationType.eMensural, ManuscriptType.ePrinted, false, Renderer.verovio);
+            Files.write(Paths.get("/tmp", "staff_" + i + ".mei"), Collections.singleton(notationPrinted.getContent()));
             i++;
         }
+
+        //TODO renderizar ahora sólo un pentagrama
 
         /*
 

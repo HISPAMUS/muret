@@ -47,7 +47,7 @@ public class Image extends Auditable {
      */
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name="instrument_id")
+    @JoinColumn(name="part_id")
     private Part part;
 
     public Image() {

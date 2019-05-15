@@ -206,6 +206,19 @@ public class ProjectModel {
         }
     }
 
+
+    public Notation render(Project project, String partName, Long regionID, NotationType notationType, ManuscriptType manuscriptType, boolean mensustriche, Renderer renderer) throws IM3Exception {
+        ProjectScoreSong projectScoreSong = getProjectScoreSong(project);
+        ProjectScoreSongPart projectScorePart = projectScoreSong.getScorePart(partName);
+        ProjectScoreSongSystem projectScoreSystem = projectScorePart.getScoreSongSystem(regionID);
+        if (projectScoreSystem == null) {
+            throw new IM3Exception("Cannot find score system for region ID " + regionID + " in part '" + partName + "'");
+        }
+
+        Segment segment = new Segment(projectScoreSystem.getFrom(), projectScoreSystem.getTo());
+        return render(projectScorePart.getScorePart(), segment, notationType, manuscriptType, mensustriche, renderer);
+    }
+
     public void addPart(Project project, String tiple) throws IM3Exception {
         ProjectScoreSong projectScoreSong = getProjectScoreSong(project);
         projectScoreSong.addPart(tiple);
@@ -230,7 +243,7 @@ public class ProjectModel {
             //TODO añadir a page
         }
 
-        projectScorePart.addSemanticEncoding(semanticEncoding);
+        projectScorePart.addSemanticEncoding(projectScoreSystem, semanticEncoding);
         projectScoreSong.save();
     }
 
