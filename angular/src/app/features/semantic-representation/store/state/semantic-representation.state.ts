@@ -1,9 +1,12 @@
+import {Region} from '../../../../core/model/entities/region';
+import {Notation} from '../../services/notation';
+
 export interface SemanticRepresentationState {
-  nada: string;
+  notation: Notation;
 }
 
 export const initialSemanticRepresentationState: SemanticRepresentationState = {
-  nada: null,
+  notation: null
 };
 
 export function getInitialState(): SemanticRepresentationState {

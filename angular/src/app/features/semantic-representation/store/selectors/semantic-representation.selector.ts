@@ -3,7 +3,7 @@ import {SemanticRepresentationState} from '../state/semantic-representation.stat
 
 export const semanticRepresentationState = createFeatureSelector<SemanticRepresentationState>('semantic-representation');
 
-export const selectNada = createSelector(
+export const selectNotation = createSelector(
   semanticRepresentationState,
-  (state: SemanticRepresentationState) => state.nada
+  (state: SemanticRepresentationState) => state.notation
 );

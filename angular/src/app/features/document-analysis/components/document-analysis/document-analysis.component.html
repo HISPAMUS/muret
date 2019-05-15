@@ -7,7 +7,7 @@
     <div class="col-3" id="linksPhases">
       Go to:
       <button (click)="openAgnosticRepresentation()">Agnostic</button>
-      <button (click)="openSemanticRepresentation()" disabled>Semantic</button>
+      <button (click)="openSemanticRepresentation()">Semantic</button>
     </div>
   </nav>
 
@@ -75,6 +75,18 @@
     </div>
   </section>
     <!-- end image -->
+
+  <section class="row">
+    <div class="col">
+      <!--TODO -->
+      <ng-container *ngIf="imagePart$ | async as imagePart; else noPartAssigned">
+        <p>Part: {{imagePart.name}}</p>
+      </ng-container>
+      <ng-template #noPartAssigned>
+        <p>No part assigned</p>
+      </ng-template>
+    </div>
+  </section>
 </div>
 
 <footer id="docAnalysisStatusBar" class="container-fluid">

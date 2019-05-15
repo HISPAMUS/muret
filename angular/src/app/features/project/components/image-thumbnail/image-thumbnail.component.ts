@@ -40,10 +40,6 @@ export class ImageThumbnailComponent implements OnInit {
       imageBlob => this.imageThumbnail.nativeElement.src = window.URL.createObjectURL(imageBlob));*/
   }
 
-  openImage() {
-    this.router.navigate(['documentanalysis', this.image.id]);
-  }
-
   previewImage() {
     this.imageFilesService.getPreviewImageBlob$(this.projectPath, this.image.id).subscribe(imageBlob => {
       const albums = []; // used by Lightbox
@@ -57,5 +53,17 @@ export class ImageThumbnailComponent implements OnInit {
       this.lightbox.open(albums);
       // window.open(window.URL.createObjectURL(imageBlob), 'Preview ' + this.image.filename, 'widthPercentage=1280,heightPercentage=720');
     });
+  }
+
+  openDocumentAnalysis() {
+    this.router.navigate(['documentanalysis', this.image.id]);
+  }
+
+  openAgnostic() {
+    this.router.navigate(['agnosticrepresentation', this.image.id]);
+  }
+
+  openSemantic() {
+    this.router.navigate(['semanticrepresentation', this.image.id]);
   }
 }

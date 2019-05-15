@@ -13,18 +13,19 @@ import {DocumentAnalysisState} from '../../store/state/document-analysis.state';
 import {
   ChangePageBoundingBox,
   ChangeRegionBoundingBox,
-  ChangeRegionType, Clear, CreatePage, CreateRegion, DeletePage, DeleteRegion,
+  ChangeRegionType, Clear, CreatePage, CreateRegion, DeletePage, DeleteRegion, GetImagePart,
   GetImageProjection,
   GetRegionTypes
 } from '../../store/actions/document-analysis.actions';
 import {
-  selectFileName,
+  selectFileName, selectImagePart,
   selectPages,
   selectRegionTypes
 } from '../../store/selectors/document-analysis.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {Part} from '../../../../core/model/entities/part';
 
 @Component({
   selector: 'app-document-analysis',
@@ -36,6 +37,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   imageID: number;
   filename$: Observable<string>;
   regionTypes$: Observable<RegionType[]>;
+  imagePart$: Observable<Part>;
   pagesSubscription: Subscription;
   mode: 'eIdle' |'eSelecting' | 'eEditing' | 'eAdding';
   selectedRegionTypeID: number | 'page';
@@ -69,6 +71,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.imageID = +params.get('id'); // + converts the string to number
       this.store.dispatch(new GetImageProjection(+this.imageID));
+      this.store.dispatch(new GetImagePart(+this.imageID));
       setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
         this.store.dispatch(new ActivateLink({title: 'Document analysis', routerLink: 'documentanalysis/' + this.imageID}));
       });
@@ -79,6 +82,8 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
         this.drawPagesAndRegions(next);
       }
     });
+
+    this.imagePart$ = this.store.select(selectImagePart);
   }
 
   ngOnDestroy(): void {

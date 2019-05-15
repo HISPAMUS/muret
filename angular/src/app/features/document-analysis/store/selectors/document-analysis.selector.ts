@@ -18,6 +18,10 @@ export const selectFileName = createSelector(
   (state: DocumentAnalysisState) => state.filename
 );
 
+export const selectImagePart = createSelector(
+  documentAnalysisState,
+  (state: DocumentAnalysisState) => state.imagePart
+);
 
 export const selectDocumentType = createSelector(
   documentAnalysisState,

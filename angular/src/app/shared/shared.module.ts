@@ -9,6 +9,7 @@ import { CrudToolbarComponent } from './components/crud-toolbar/crud-toolbar.com
 import {NgbButtonsModule, NgbTooltipModule} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InputDialogComponent} from './components/input-dialog/input-dialog.component';
+import { SafePipe } from './pipes/safe.pipe';
 
 @NgModule({
   imports: [
@@ -25,14 +26,16 @@ import {InputDialogComponent} from './components/input-dialog/input-dialog.compo
     AlertComponent,
     ConfirmDialogComponent,
     InputDialogComponent,
-    CrudToolbarComponent
+    CrudToolbarComponent,
+    SafePipe
   ],
   exports: [
     StateComponent,
     AlertComponent,
     ConfirmDialogComponent,
     InputDialogComponent,
-    CrudToolbarComponent
+    CrudToolbarComponent,
+    SafePipe
   ],
   entryComponents: [
     AlertComponent,

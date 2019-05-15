@@ -118,7 +118,7 @@ export class TrainingSetsComponent implements OnInit, OnDestroy {
 
   doesNotHavePermission(trainingSetExporter: TrainingSetExporter) {
     if (trainingSetExporter.adminPermissionRequired) {
-      return true; // TODO - depende de usuario
+      return false; // true; // TODO - depende de usuario
     }
     return false;
   }

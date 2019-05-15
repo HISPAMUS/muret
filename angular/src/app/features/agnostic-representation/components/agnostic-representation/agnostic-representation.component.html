@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <nav class="row">
     <div class="col-6">
-      <ng-container *ngIf="selectedRegion$ | async">
+      <ng-container *ngIf="selectedRegion">
         <app-crud-toolbar (onClear)="clear()" (modeChange)="onModeChange($event)" (onDelete)="deleteSelectedSymbol()"
                           [(mode)]="mode" (onZoomFit)="zoomFit()" (onZoomIn)="zoomIn()" (onZoomOut)="zoomOut()"
                           (onAddComment)="addComment()"
@@ -10,7 +10,7 @@
       </ng-container>
     </div>
     <div class="col-2">
-      <ng-container *ngIf="selectedRegion$ | async">
+      <ng-container *ngIf="selectedRegion">
         <button type="button" class="btn btn-primary" title="End to end"  (click)="classifyEnd2End()">
           {{endToEndButtonLabel}}
         </button>
@@ -19,7 +19,7 @@
     <div class="col-4" id="linksPhases">
       Go to:
       <button (click)="openDocumentAnalysis()">Doc. analysis</button>
-      <button (click)="openSemanticRepresentation()" disabled>Semantic</button>
+      <button (click)="openSemanticRepresentation()">Semantic</button>
     </div>
   </nav>
 
@@ -39,7 +39,8 @@
 
   <div class="row">
     <div class="col-12">
-      <div *ngIf="selectedRegion$ | async as selectedRegion; else noRegionSelected">
+      <p>Selected region {{selectedRegion}}</p>
+      <div *ngIf="selectedRegion; else noRegionSelected">
         <section class="row">
           <div class="col">
             <app-image [imageID]="imageID" [shapes]="selectedRegionShapes"
@@ -143,20 +144,10 @@
       <!-- [agnosticSymbolToolbarCategories]="agnosticSymbolToolbarCategories"-->
     </div>
 
-    <div [ngClass]="imagePreviewClass">
-      <div id="imagePreviewIcons">
-        <button (click)="toggleImagePreview()">
-          <fa-icon *ngIf="isImagePreviewMinimized" icon="expand-arrows-alt" class="icons"></fa-icon>
-          <fa-icon *ngIf="!isImagePreviewMinimized" icon="compress-arrows-alt" class="icons"></fa-icon>
-        </button>
-        <span>Region selection</span>
-      </div>
-      <app-image [imageID]="imageID" [shapes]="imagePreviewShapes" [zoomFactor]="imagePreviewZoomFactor"
-                 [(selectedShapeID)]="selectedRegionShapeID"
-                 [mode]="'eSelecting'">
-      </app-image>
+    <div class="col-4">
+      <app-image-preview [imageID]="imageID" (selectedRegion)="setSelectedRegion($event)">
+      </app-image-preview>
     </div>
-
   </section>
 
 </div>

@@ -17,7 +17,7 @@ import {
   CreateRegion,
   CreateRegionSuccess,
   DeletePage, DeletePageSuccess, DeleteRegion, DeleteRegionSuccess,
-  DocumentAnalysisActionTypes,
+  DocumentAnalysisActionTypes, GetImagePart, GetImagePartSuccess,
   GetImageProjection,
   GetImageProjectionSuccess,
   GetImageURL,
@@ -30,6 +30,7 @@ import {RegionType} from '../../../../core/model/entities/region-type';
 import {ImageFilesService} from '../../../../core/services/image-files.service';
 import {Region} from '../../../../core/model/entities/region';
 import {Page} from '../../../../core/model/entities/page';
+import {Part} from '../../../../core/model/entities/part';
 
 @Injectable()
 export class DocumentAnalysisEffects {
@@ -46,6 +47,16 @@ export class DocumentAnalysisEffects {
     switchMap((imageID) => this.documentAnalysisService.getDocumentAnalysisImageProjection$(imageID)),
     switchMap((imageProjection: DocumentAnalysisImageProjection) => {
       return of(new GetImageProjectionSuccess(imageProjection));
+    })
+  );
+
+  @Effect()
+  getImagePart$ = this.actions$.pipe(
+    ofType<GetImagePart>(DocumentAnalysisActionTypes.GetImagePart),
+    map((action: GetImagePart) => action),
+    switchMap((action) => this.documentAnalysisService.getImagePart$(action.imageID)),
+    switchMap((part: Part) => {
+      return of(new GetImagePartSuccess(part));
     })
   );
 

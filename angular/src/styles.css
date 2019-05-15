@@ -60,3 +60,20 @@ hr {
 .cursorSWresize       { cursor: sw-resize; }
 .cursorNESWresize     { cursor: nesw-resize; }
 .cursorNWSEresize     { cursor: nwse-resize; }
+
+
+/* Used in Document analysis, agnostic and semantic representations */
+#linksPhases {
+  color: white;
+}
+
+#linksPhases button {
+  color: #7DE2DB;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+#linksPhases button:disabled {
+  color: gray;
+}
+
