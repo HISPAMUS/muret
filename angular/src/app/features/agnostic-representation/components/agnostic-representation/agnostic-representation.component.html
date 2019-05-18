@@ -39,8 +39,8 @@
 
   <div class="row">
     <div class="col-12">
-      <p>Selected region {{selectedRegion}}</p>
       <div *ngIf="selectedRegion; else noRegionSelected">
+        <p>Image: {{imageID}} - {{filename$ | async}}| Selected region: {{selectedRegion.id}}</p>
         <section class="row">
           <div class="col">
             <app-image [imageID]="imageID" [shapes]="selectedRegionShapes"
@@ -77,6 +77,7 @@
         </section>
       </div>
       <ng-template #noRegionSelected>
+        <p>Image: {{imageID}} - {{filename$ | async}}</p>
         <div class="jumbotron align-content-md-center" id="jumbotronSelectRegion">
           <p>Select a region</p>
         </div>

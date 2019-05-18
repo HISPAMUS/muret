@@ -33,18 +33,21 @@ public class TrainingSetsController {
     private final MURETConfiguration muretConfiguration;
     private final ProjectRepository projectRepository;
     private final EntityManagerFactory entityManagerFactory;
+    private final TrainingSetsFactory trainingSetsFactory;
 
 
     @Autowired
-    public TrainingSetsController(MURETConfiguration muretConfiguration, ProjectRepository projectRepository, EntityManagerFactory entityManagerFactory) {
+    public TrainingSetsController(MURETConfiguration muretConfiguration, ProjectRepository projectRepository, EntityManagerFactory entityManagerFactory, TrainingSetsFactory trainingSetsFactory) {
         this.muretConfiguration = muretConfiguration;
         this.projectRepository = projectRepository;
         this.entityManagerFactory = entityManagerFactory;
+        this.trainingSetsFactory = trainingSetsFactory;
     }
 
     @GetMapping(path = {"/exporters"})
     public Collection<ITrainingSetExporter> getTrainingSetExporters()  {
-        return TrainingSetsFactory.getInstance(entityManagerFactory).getTrainingSetExporters();
+       // return TrainingSetsFactory.getInstance(entityManagerFactory).getTrainingSetExporters();
+        return trainingSetsFactory.getTrainingSetExporters();
     }
 
     /**
@@ -58,7 +61,8 @@ public class TrainingSetsController {
     @ResponseBody
     public ResponseEntity<?> download(@PathVariable Integer exporterIndex, @PathVariable List<Integer> projectIds) throws IM3WSException {
         try {
-            ITrainingSetExporter exporter = TrainingSetsFactory.getInstance(entityManagerFactory).getTrainingSetExporter(exporterIndex);
+            //ITrainingSetExporter exporter = TrainingSetsFactory.getInstance(entityManagerFactory).getTrainingSetExporter(exporterIndex);
+            ITrainingSetExporter exporter = trainingSetsFactory.getTrainingSetExporter(exporterIndex);
             ArrayList<Project> projectArrayList = new ArrayList<>();
             for (Integer projectID: projectIds) {
                 Optional<Project> project = projectRepository.findById(projectID);

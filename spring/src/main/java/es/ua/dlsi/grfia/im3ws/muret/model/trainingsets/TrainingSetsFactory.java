@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.im3ws.muret.model.trainingsets;
 
 import es.ua.dlsi.grfia.im3ws.muret.model.ITrainingSetExporter;
+import es.ua.dlsi.grfia.im3ws.muret.model.ProjectModel;
 import es.ua.dlsi.im3.core.IM3Exception;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,20 +13,23 @@ import java.util.*;
 /**
  * @author drizo
  */
+@Component
 public class TrainingSetsFactory {
-    private static TrainingSetsFactory instance = null;
+    //private static TrainingSetsFactory instance = null;
 
     private List<ITrainingSetExporter> trainingSetExporters;
 
-    public TrainingSetsFactory() {
+    @Autowired
+    public TrainingSetsFactory(ProjectModel projectModel) {
         this.trainingSetExporters = Arrays.asList(
                 new ImagesExporter(0),
                 new JSONTagging(1,true),
-                new JSONTagging(2, false)
-                /*new AgnosticSymbolImagesTextFile(3, false, false), // just used in command line (see ExportTrainingSet)
-                new AgnosticSymbolImagesTextFile(4, false, true),
-                new AgnosticSymbolImagesTextFile(5, true, false),
-                new AgnosticSymbolImagesTextFile(6, true, true)*/
+                new JSONTagging(2, false),
+                new AgnosticSemanticTrainingSetExporter(3, projectModel)
+                /*new AgnosticSymbolImagesTextFile(4, false, false), // just used in command line (see ExportTrainingSet)
+                new AgnosticSymbolImagesTextFile(5, false, true),
+                new AgnosticSymbolImagesTextFile(6, true, false),
+                new AgnosticSymbolImagesTextFile(7, true, true)*/
                 );
 
     }
@@ -41,11 +45,11 @@ public class TrainingSetsFactory {
         return trainingSetExporters.get(index);
     }
 
-    public static synchronized TrainingSetsFactory getInstance(EntityManagerFactory entityManagerFactory) {
+    /*public static synchronized TrainingSetsFactory getInstance(EntityManagerFactory entityManagerFactory) {
         if (instance == null) {
             instance = new TrainingSetsFactory();
         }
         return instance;
-    }
+    }*/
 }
 

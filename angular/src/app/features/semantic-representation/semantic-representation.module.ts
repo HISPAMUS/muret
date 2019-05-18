@@ -16,6 +16,7 @@ import {SharedModule} from '../../shared/shared.module';
 import {NotationService} from './services/notation.service';
 import {DocumentAnalysisModule} from '../document-analysis/document-analysis.module';
 import {NgbCollapseModule} from '@ng-bootstrap/ng-bootstrap';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [SemanticRepresentationComponent, NotationComponent],
@@ -23,6 +24,7 @@ import {NgbCollapseModule} from '@ng-bootstrap/ng-bootstrap';
     CommonModule,
     FontAwesomeModule,
     BreadcrumbModule,
+    FormsModule,
     SharedModule,
     SemanticRepresentationRoutingModule,
     AgnosticRepresentationModule,
@@ -30,6 +32,7 @@ import {NgbCollapseModule} from '@ng-bootstrap/ng-bootstrap';
     StoreModule.forFeature('semantic-representation', semanticRepresentationReducers),
     EffectsModule.forFeature([SemanticRepresentationEffects]),
     NgbCollapseModule,
+    FormsModule,
 
   ],
   providers: [

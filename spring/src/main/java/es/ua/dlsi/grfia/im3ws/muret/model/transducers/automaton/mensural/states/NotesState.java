@@ -67,7 +67,9 @@ public class NotesState extends TransducerState {
         } else if (token.getSymbol() instanceof Dot) {
             SemanticSymbol lastSymbol = transduction.getLastSymbol();
             DurationalSymbol durationalSymbol = (DurationalSymbol) lastSymbol.getSymbol();
-            durationalSymbol.setDots(durationalSymbol.getDots()+1);
+            durationalSymbol.setDots(durationalSymbol.getDots() + 1);
+        } else if (token.getSymbol() instanceof Ligature) {
+            // TODO We don't treat them yet
         } else {
             throw new IM3RuntimeException("Invalid token: " + token);
         }

@@ -11,7 +11,7 @@ import java.util.List;
  * @author drizo
  */
 @Entity
-public class Page extends Auditable {
+public class Page extends Auditable implements IAssignableToPart {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -110,10 +110,12 @@ public class Page extends Auditable {
         }
         regions.add(newRegion);
     }
+    @Override
     public Part getPart() {
         return part;
     }
 
+    @Override
     public void setPart(Part part) {
         this.part = part;
     }

@@ -1,5 +1,6 @@
 package es.ua.dlsi.grfia.im3ws.muret.model;
 
+import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Notation;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Renderer;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Project;
@@ -21,16 +22,16 @@ public class SemanticRepresentationModel {
         this.projectModel = projectModel;
     }
 
-    public Notation getNotation(Project project, String partName, Region region, boolean mensustriche, Renderer renderer) throws IM3Exception {
+    public Notation getNotation(Project project, String partName, Region region, boolean mensustriche, Renderer renderer) throws IM3WSException {
         ProjectScoreSong projectScoreSong = projectModel.getProjectScoreSong(project);
         ProjectScoreSongPart projectScoreSongPart = projectScoreSong.getScorePart(partName);
         if (projectScoreSongPart == null) {
-            throw new IM3Exception("Cannot find a part with name '" + partName + "'");
+            projectScoreSongPart = projectScoreSong.addPart(partName);
         }
 
         ProjectScoreSongSystem system = projectScoreSongPart.getScoreSongSystem(region.getId());
         if (system == null) {
-            throw new IM3Exception("Cannot find a system with id '" + region + "'");
+            system = projectScoreSongPart.addProjectScoreSystem(region.getId(), region.getBoundingBox());
         }
 
         Segment segment = new Segment(system.getFrom(), system.getTo());
@@ -42,7 +43,7 @@ public class SemanticRepresentationModel {
      * @param staff
      * @return MEI
      */
-    public Notation computeSemanticFromAgnostic(Project project, String partName, Region staff, boolean mensustriche, Renderer renderer) throws FileNotFoundException, IM3Exception {
+    public Notation computeSemanticFromAgnostic(Project project, String partName, Region staff, boolean mensustriche, Renderer renderer) throws FileNotFoundException, IM3Exception, IM3WSException {
         AgnosticEncoding agnosticEncoding = new AgnosticEncoding();
         staff.getSymbols().stream().sorted((o1, o2) -> {
             int diff = o1.getBoundingBox().getFromX() - o2.getBoundingBox().getFromX();
@@ -83,6 +84,10 @@ public class SemanticRepresentationModel {
             projectModel.addToPart(part, timedElementInStaff);
         }*/
 
+        if (semantic.getSemanticEncoding().getSymbols().isEmpty()) {
+            throw new IM3WSException("Cannot translate from agnostic");
+        }
+        projectModel.addSemanticEncoding(project, partName, staff.getId(), staff.getBoundingBox(), semantic.getSemanticEncoding());
         return getNotation(project, partName, staff, mensustriche, renderer);
     }
 
@@ -91,7 +96,12 @@ public class SemanticRepresentationModel {
      * @param project
      * @return
      */
-    private ProjectScoreSong getScoreSong(Project project) throws IM3Exception {
+    private ProjectScoreSong getScoreSong(Project project) throws IM3WSException {
         return projectModel.getProjectScoreSong(project);
+    }
+
+    public Notation sendSemanticEncoding(Project project, String partName, Region region, boolean mensustriche, Renderer renderer, String semanticEncoding) throws IM3WSException {
+        projectModel.addSemanticEncoding(project, partName, region.getId(), region.getBoundingBox(), semanticEncoding);
+        return getNotation(project, partName, region, mensustriche, renderer);
     }
 }

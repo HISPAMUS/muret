@@ -11,7 +11,7 @@ import java.util.List;
  * @author drizo
  */
 @Entity
-public class Image extends Auditable {
+public class Image extends Auditable implements IAssignableToPart {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -142,10 +142,12 @@ public class Image extends Auditable {
         pages.add(page);
     }
 
+    @Override
     public Part getPart() {
         return part;
     }
 
+    @Override
     public void setPart(Part part) {
         this.part = part;
     }

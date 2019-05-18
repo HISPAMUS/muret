@@ -1,13 +1,16 @@
 package es.ua.dlsi.grfia.im3ws.muret.model;
 
+import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.io.ExportException;
+import es.ua.dlsi.im3.core.io.ImportException;
 import es.ua.dlsi.im3.core.score.*;
 import es.ua.dlsi.im3.core.score.io.mei.MEISongExporter;
 import es.ua.dlsi.im3.core.score.io.mei.MEISongImporter;
 import es.ua.dlsi.im3.core.score.staves.Pentagram;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 
 /**
@@ -23,7 +26,7 @@ public class ProjectScoreSong {
      */
     LinkedHashMap<String, ProjectScoreSongPart> parts;
 
-    public ProjectScoreSong(File file, NotationType notationType) throws IM3Exception {
+    public ProjectScoreSong(File file, NotationType notationType) throws IM3WSException {
         this.notationType = notationType;
         this.file = file;
         if (file.exists()) {
@@ -33,7 +36,7 @@ public class ProjectScoreSong {
         }
     }
 
-    private void createEmpty() throws ExportException {
+    private void createEmpty() throws IM3WSException {
         if (!file.exists()) {
             file.getParentFile().mkdirs();
         }
@@ -42,14 +45,22 @@ public class ProjectScoreSong {
         save();
     }
 
-    public void save() throws ExportException {
+    public void save() throws IM3WSException {
         MEISongExporter exporter = new MEISongExporter();
-        exporter.exportSongAsParts(file, scoreSong);
+        try {
+            exporter.exportSongAsParts(file, scoreSong);
+        } catch (ExportException e) {
+            throw new IM3WSException(e);
+        }
     }
 
-    private void read() throws IM3Exception {
+    private void read() throws IM3WSException {
         MEISongImporter importer = new MEISongImporter();
-        scoreSong = importer.importSong(file);
+        try {
+            scoreSong = importer.importSong(file);
+        } catch (ImportException e) {
+            throw new IM3WSException(e);
+        }
         readParts();
     }
 
@@ -57,19 +68,19 @@ public class ProjectScoreSong {
         return scoreSong;
     }
 
-    public ProjectScoreSong(ScoreSong scoreSong) throws IM3Exception {
+    public ProjectScoreSong(ScoreSong scoreSong) throws IM3WSException {
         this.scoreSong = scoreSong;
         if (scoreSong.getFacsimile() == null) {
-            throw new IM3Exception("The project score song needs a score song with facsimile");
+            throw new IM3WSException("The project score song needs a score song with facsimile");
         }
         readParts();
     }
 
-    private void readParts() throws IM3Exception {
+    private void readParts() throws IM3WSException {
         this.parts = new LinkedHashMap<>();
         for (ScorePart scorePart: scoreSong.getParts()) {
             if (scorePart.getName() == null) {
-                throw new IM3Exception("Cannot work with unnamed parts");
+                throw new IM3WSException("Cannot work with unnamed parts");
             }
             parts.put(scorePart.getName(), new ProjectScoreSongPart(scorePart));
         }
@@ -80,22 +91,31 @@ public class ProjectScoreSong {
         return this.parts.get(partName);
     }
 
-    public void addPart(String partName) throws IM3Exception {
+    public ProjectScoreSongPart addPart(String partName) throws IM3WSException {
         if (this.parts == null) {
             this.parts = new LinkedHashMap<>();
         }
-        Staff staff = new Pentagram(scoreSong, "1", 1); //TODO
-        staff.setName(partName);
-        staff.setNotationType(notationType);
-        scoreSong.addStaff(staff);
         ScorePart scorePart = scoreSong.addPart();
-        scorePart.setName(partName);
-        scorePart.addStaff(staff);
-        scorePart.addScoreLayer(staff);
+        try {
+            Staff staff = new Pentagram(scoreSong, "1", 1); //TODO
+            staff.setName(partName);
+            staff.setNotationType(notationType);
+            scoreSong.addStaff(staff);
+            scorePart.setName(partName);
+            scorePart.addStaff(staff);
+            scorePart.addScoreLayer(staff);
+        } catch (IM3Exception e) {
+            throw new IM3WSException(e);
+        }
 
         ProjectScoreSongPart projectScoreSongPart = new ProjectScoreSongPart(scorePart);
         this.parts.put(partName, projectScoreSongPart);
         this.save();
+        return projectScoreSongPart;
+    }
+
+    public Collection<ProjectScoreSongPart> getScoreParts() {
+        return this.parts.values();
     }
 
 }

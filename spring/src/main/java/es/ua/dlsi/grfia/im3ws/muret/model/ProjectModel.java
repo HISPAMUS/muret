@@ -12,6 +12,8 @@ import es.ua.dlsi.grfia.im3ws.muret.repository.ProjectRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.UserRepository;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.conversions.MensuralToModern;
+import es.ua.dlsi.im3.core.io.ExportException;
+import es.ua.dlsi.im3.core.io.ImportException;
 import es.ua.dlsi.im3.core.score.*;
 import es.ua.dlsi.im3.core.score.clefs.ClefF4;
 import es.ua.dlsi.im3.core.score.clefs.ClefG2;
@@ -22,8 +24,12 @@ import es.ua.dlsi.im3.core.score.layout.HorizontalLayout;
 import es.ua.dlsi.im3.core.score.layout.ScoreLayout;
 import es.ua.dlsi.im3.core.score.layout.svg.SVGExporter;
 import es.ua.dlsi.im3.core.utils.FileUtils;
-import es.ua.dlsi.im3.omr.encoding.semantic.Semantic2IMCore;
-import es.ua.dlsi.im3.omr.encoding.semantic.SemanticEncoding;
+import es.ua.dlsi.im3.omr.encoding.Encoder;
+import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
+import es.ua.dlsi.im3.omr.encoding.enums.ClefNote;
+import es.ua.dlsi.im3.omr.encoding.semantic.*;
+import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.Clef;
+import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.Note;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -138,7 +144,7 @@ public class ProjectModel {
         File file = Paths.get(path.toFile().getAbsolutePath(), project.getPath() + ".mei").toFile();
         return file;
     }
-    public synchronized ProjectScoreSong getProjectScoreSong(Project project) throws IM3Exception {
+    public synchronized ProjectScoreSong getProjectScoreSong(Project project) throws IM3WSException {
         ProjectScoreSong projectScoreSong = projectScoreSongHashMap.get(project.getId());
         if (projectScoreSong == null) {
             File file = getProjectFile(project);
@@ -148,78 +154,108 @@ public class ProjectModel {
         return projectScoreSong;
     }
 
-    public Notation render(ScoreSong scoreSong, NotationType notationType, ManuscriptType manuscriptType, boolean mensustriche, Renderer renderer) throws IM3Exception {
-        if (renderer == Renderer.im3) {
-            if (mensustriche) {
-                Clef[] modernClefs = new Clef [] {
-                        new ClefG2(), new ClefG2(), new ClefG2(), new ClefF4(),
-                        new ClefG2(), new ClefG2(), new ClefF4(), new ClefF4(),
-                        new ClefF4()
-                };
+    /*public Notation render(ScoreSong scoreSong, NotationType notationType, ManuscriptType manuscriptType, boolean mensustriche, Renderer renderer) throws IM3WSException {
+        try {
+            if (renderer == Renderer.im3) {
+                if (mensustriche) {
+                    Clef[] modernClefs = new Clef[]{
+                            new ClefG2(), new ClefG2(), new ClefG2(), new ClefF4(),
+                            new ClefG2(), new ClefG2(), new ClefF4(), new ClefF4(),
+                            new ClefF4()
+                    };
 
-                MensuralToModern mensuralToModern = new MensuralToModern(modernClefs);
-                //TODO Parámetro
-                //ScoreSong modern = mensuralToModern.convertIntoNewSong(mensural, Intervals.FOURTH_PERFECT_DESC); // ésta genera más sostenidos
-                ScoreSong modern = mensuralToModern.convertIntoNewSong(scoreSong, Intervals.FIFTH_PERFECT_DESC);
-                mensuralToModern.merge(scoreSong, modern);
+                    MensuralToModern mensuralToModern = new MensuralToModern(modernClefs);
+                    //TODO Parámetro
+                    //ScoreSong modern = mensuralToModern.convertIntoNewSong(mensural, Intervals.FOURTH_PERFECT_DESC); // ésta genera más sostenidos
+                    ScoreSong modern = mensuralToModern.convertIntoNewSong(scoreSong, Intervals.FIFTH_PERFECT_DESC);
+                    mensuralToModern.merge(scoreSong, modern);
+                }
+
+                ScoreLayout layout = new HorizontalLayout(scoreSong,
+                        new CoordinateComponent(1000),
+                        new CoordinateComponent(400)); //TODO
+                layout.layout(true);
+                SVGExporter svgExporter = new SVGExporter();
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                svgExporter.exportLayout(outputStream, layout);
+                return new Notation(NotationResponseType.svg, outputStream.toString());
+            } else if (renderer == Renderer.verovio) {
+                MEISongExporter exporter = new MEISongExporter();
+                return new Notation(NotationResponseType.mei, exporter.exportSong(scoreSong));
+            } else {
+                throw new IM3WSException("Unknown renderer: " + renderer);
             }
-
-            ScoreLayout layout = new HorizontalLayout(scoreSong,
-                    new CoordinateComponent(1000),
-                    new CoordinateComponent(400)); //TODO
-            layout.layout(true);
-            SVGExporter svgExporter = new SVGExporter();
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            svgExporter.exportLayout(outputStream, layout);
-            return new Notation(NotationResponseType.svg, outputStream.toString());
-        } else if (renderer == Renderer.verovio) {
-            MEISongExporter exporter = new MEISongExporter();
-            return new Notation(NotationResponseType.mei, exporter.exportSong(scoreSong));
-        } else {
-            throw new IM3Exception("Unknown renderer: " + renderer);
+        } catch (IM3Exception e) {
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot render", e);
+            return new Notation(e.getMessage());
         }
-    }
+    }*/
 
-    public Notation render(ScorePart scorePart, NotationType notationType, ManuscriptType manuscriptType, boolean mensustriche, Renderer renderer) throws IM3Exception {
+    /*public Notation render(ScorePart scorePart, NotationType notationType, ManuscriptType manuscriptType, boolean mensustriche, Renderer renderer) throws IM3WSException {
         if (renderer == Renderer.im3) {
-            throw new IM3Exception("Unimplemented");
+            throw new IM3WSException("Unimplemented");
         } else if (renderer == Renderer.verovio) {
             MEISongExporter exporter = new MEISongExporter();
             ArrayList<ScorePart> scorePartArrayList = new ArrayList<>();
             scorePartArrayList.add(scorePart);
             return new Notation(NotationResponseType.mei, exporter.exportPart(scorePart, null));
         } else {
-            throw new IM3Exception("Unknown renderer: " + renderer);
+            throw new IM3WSException("Unknown renderer: " + renderer);
         }
-    }
+    }*/
 
-    public Notation render(ScorePart scorePart, Segment segment, NotationType notationType, ManuscriptType manuscriptType, boolean mensustriche, Renderer renderer) throws IM3Exception {
+    public Notation render(ScorePart scorePart, Segment segment, NotationType notationType, ManuscriptType manuscriptType, boolean mensustriche, Renderer renderer) throws IM3WSException{
         if (renderer == Renderer.im3) {
-            throw new IM3Exception("Unimplemented");
+            throw new IM3WSException("Unimplemented");
         } else if (renderer == Renderer.verovio) {
+            if (scorePart.getStaves().size() != 1) {
+                return new Notation("Currently we can handle just 1 staff parts, and there are " + scorePart.getStaves().size());
+            }
+
             MEISongExporter exporter = new MEISongExporter();
             ArrayList<ScorePart> scorePartArrayList = new ArrayList<>();
             scorePartArrayList.add(scorePart);
-            return new Notation(NotationResponseType.mei, exporter.exportPart(scorePart, segment));
+            String mei = null;
+            try {
+                mei = exporter.exportPart(scorePart, segment);
+            } catch (ExportException e) {
+                Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot export part to MEI", e);
+                return new Notation("Cannot export to MEI: " + e.getMessage());
+            }
+
+            String semanticEncoding = null;
+            try {
+                Encoder encoder = new Encoder(AgnosticVersion.v2, false);
+                encoder.encode(scorePart.getStaves().get(0), segment);
+                SemanticExporter semanticExporter = new SemanticExporter();
+                semanticEncoding = semanticExporter.export(encoder.getSemanticEncoding());
+            } catch (IM3Exception e) {
+                Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot export part to semantic encoding", e);
+                return new Notation("Cannot export to MEI: " + e.getMessage());
+            }
+
+            return new Notation(NotationResponseType.mei, mei, semanticEncoding);
+
+
         } else {
-            throw new IM3Exception("Unknown renderer: " + renderer);
+            throw new IM3WSException("Unknown renderer: " + renderer);
         }
     }
 
 
-    public Notation render(Project project, String partName, Long regionID, NotationType notationType, ManuscriptType manuscriptType, boolean mensustriche, Renderer renderer) throws IM3Exception {
+    public Notation render(Project project, String partName, Long regionID, NotationType notationType, ManuscriptType manuscriptType, boolean mensustriche, Renderer renderer) throws IM3WSException {
         ProjectScoreSong projectScoreSong = getProjectScoreSong(project);
         ProjectScoreSongPart projectScorePart = projectScoreSong.getScorePart(partName);
         ProjectScoreSongSystem projectScoreSystem = projectScorePart.getScoreSongSystem(regionID);
         if (projectScoreSystem == null) {
-            throw new IM3Exception("Cannot find score system for region ID " + regionID + " in part '" + partName + "'");
+            throw new IM3WSException("Cannot find score system for region ID " + regionID + " in part '" + partName + "'");
         }
 
         Segment segment = new Segment(projectScoreSystem.getFrom(), projectScoreSystem.getTo());
         return render(projectScorePart.getScorePart(), segment, notationType, manuscriptType, mensustriche, renderer);
     }
 
-    public void addPart(Project project, String tiple) throws IM3Exception {
+    public void addPart(Project project, String tiple) throws IM3WSException {
         ProjectScoreSong projectScoreSong = getProjectScoreSong(project);
         projectScoreSong.addPart(tiple);
     }
@@ -234,7 +270,22 @@ public class ProjectModel {
         projectScoreSongHashMap.remove(project);
     }
 
-    public void addSemanticTransduction(Project project, String partName, long regionID, BoundingBox boundingBox, SemanticEncoding semanticEncoding) throws IM3Exception {
+    public void addSemanticEncoding(Project project, String partName, long regionID, BoundingBox boundingBox, String semanticEncodingString) throws IM3WSException {
+        try {
+            //ScoreSong scoreSong = semanticImporter.importSong(semanticEncodingString);
+            //TODO Que el importer saque directamente a semantic sequence
+            System.err.println("TODODODODODODOD SemanticEncoding de ejemplo A MANO ");
+            SemanticEncoding semanticEncoding = new SemanticEncoding();
+            semanticEncoding.add(new SemanticSymbol(new Clef(ClefNote.F, 3)));
+            semanticEncoding.add(new SemanticSymbol(new Note(false, new ScientificPitch(PitchClasses.A, 4), Figures.SEMIBREVE, 0, false, false, null)));
+            semanticEncoding.add(new SemanticSymbol(new Note(false, new ScientificPitch(PitchClasses.B, 4), Figures.MINIM, 0, false, false, null)));
+            addSemanticEncoding(project, partName, regionID, boundingBox, semanticEncoding);
+        } catch (Exception e) {
+            throw new IM3WSException(e);
+        }
+
+    }
+    public void addSemanticEncoding(Project project, String partName, long regionID, BoundingBox boundingBox, SemanticEncoding semanticEncoding) throws IM3WSException {
         ProjectScoreSong projectScoreSong = getProjectScoreSong(project);
         ProjectScoreSongPart projectScorePart = projectScoreSong.getScorePart(partName);
         ProjectScoreSongSystem projectScoreSystem = projectScorePart.getScoreSongSystem(regionID);
@@ -245,6 +296,16 @@ public class ProjectModel {
 
         projectScorePart.addSemanticEncoding(projectScoreSystem, semanticEncoding);
         projectScoreSong.save();
+    }
+
+    /**
+     * It removes all elements in the part
+     * @param project
+     * @param partName
+     * @param regionID
+     */
+    public void clearSystem(Project project, String partName, long regionID) {
+        //TODO
     }
 
     //TODO esto sólo funciona con 1 pentagrama y 1 layer

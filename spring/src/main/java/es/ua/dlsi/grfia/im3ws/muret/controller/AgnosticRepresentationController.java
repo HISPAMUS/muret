@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.im3ws.muret.controller;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
+import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.CommentsBody;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.SymbolCreationFromBoundingBox;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.SymbolCreationFromStrokes;
@@ -10,6 +11,8 @@ import es.ua.dlsi.grfia.im3ws.muret.model.ActionLogAgnosticModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticRepresentationModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticSymbolFont;
 import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticSymbolFontSingleton;
+import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
+import es.ua.dlsi.grfia.im3ws.muret.repository.PageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.SymbolRepository;
 import es.ua.dlsi.im3.core.IM3Exception;
@@ -34,24 +37,17 @@ import java.util.logging.Logger;
  */
 @RequestMapping("agnostic")
 @RestController
-public class AgnosticRepresentationController {
-    private final RegionRepository regionRepository;
-    private final SymbolRepository symbolRepository;
+public class AgnosticRepresentationController extends MuRETBaseController {
     private final AgnosticRepresentationModel agnosticRepresentationModel;
     //private final ClassifierRepository classifierRepository;
 
+
     @Autowired
-    public AgnosticRepresentationController(
-            //ClassifierRepository classifierRepository,
-            AgnosticRepresentationModel agnosticRepresentationModel,
-            SymbolRepository symbolRepository,
-            RegionRepository regionRepository
-            ) {
-        //this.classifierRepository = classifierRepository;
+    public AgnosticRepresentationController(MURETConfiguration muretConfiguration, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository, AgnosticRepresentationModel agnosticRepresentationModel) {
+        super(muretConfiguration, imageRepository, pageRepository, regionRepository, symbolRepository);
         this.agnosticRepresentationModel = agnosticRepresentationModel;
-        this.symbolRepository = symbolRepository;
-        this.regionRepository = regionRepository;
     }
+
 
     /**
      *
@@ -107,13 +103,10 @@ public class AgnosticRepresentationController {
 
     @PutMapping(path = {"symbolCommentsUpdate"})
     public Symbol symbolCommentsUpdate(@RequestBody CommentsBody commentsBody) throws IM3WSException {
-        Optional<Symbol> symbol = symbolRepository.findById(commentsBody.getId());
-        if (!symbol.isPresent()) {
-            throw new IM3WSException("Cannot find a symbol with id " + commentsBody.getId());
-        }
-        symbol.get().setComments(commentsBody.getComments());
-        symbolRepository.save(symbol.get());
-        return symbol.get();
+        Symbol symbol = getSymbol(commentsBody.getId());
+        symbol.setComments(commentsBody.getComments());
+        symbolRepository.save(symbol);
+        return symbol;
     }
 
     /**

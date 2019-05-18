@@ -8,7 +8,7 @@ import {Region} from '../../../../core/model/entities/region';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
 import {
   selectFileName,
-  selectDocumentType,
+  selectDocumentType, selectImageURL, selectImageHeight,
 } from '../../../document-analysis/store/selectors/document-analysis.selector';
 import {Store} from '@ngrx/store';
 import {

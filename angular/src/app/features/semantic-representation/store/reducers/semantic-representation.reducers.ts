@@ -10,7 +10,17 @@ export function semanticRepresentationReducers(state = initialSemanticRepresenta
       newState.notation = action.notation;
       return newState;
     }
+    case SemanticRepresentationActionTypes.ClearNotation: {
+      const newState = {...state};
+      newState.notation = null;
+      return newState;
+    }
     case SemanticRepresentationActionTypes.GetNotationSuccess: {
+      const newState = {...state};
+      newState.notation = action.notation;
+      return newState;
+    }
+    case SemanticRepresentationActionTypes.SendSemanticEncodingSuccess: {
       const newState = {...state};
       newState.notation = action.notation;
       return newState;

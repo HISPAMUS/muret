@@ -6,7 +6,7 @@ import {SemanticRepresentationService} from '../../services/semantic-representat
 import {
   ConvertAgnostic2Semantic,
   ConvertAgnostic2SemanticSuccess, GetNotation, GetNotationSuccess,
-  SemanticRepresentationActionTypes
+  SemanticRepresentationActionTypes, SendSemanticEncoding, SendSemanticEncodingSuccess
 } from '../actions/semantic-representation.actions';
 import {Notation} from '../../services/notation';
 
@@ -29,12 +29,22 @@ export class SemanticRepresentationEffects {
   );
 
   @Effect()
-  getMEI$ = this.actions$.pipe(
+  getNotation$ = this.actions$.pipe(
     ofType<GetNotation>(SemanticRepresentationActionTypes.GetNotation),
     switchMap((action: GetNotation) =>
-      this.semanticRepresentationService.getNotation$(action.region)),
+      this.semanticRepresentationService.getNotation$(action.region, action.mensustriche, action.renderer)),
     switchMap((notation: Notation) => {
       return of(new GetNotationSuccess(notation));
+    })
+  );
+
+  @Effect()
+  sendSemanticEncoding$ = this.actions$.pipe(
+    ofType<SendSemanticEncoding>(SemanticRepresentationActionTypes.SendSemanticEncoding),
+    switchMap((action: SendSemanticEncoding) =>
+      this.semanticRepresentationService.sendSemanticEncoding$(action.region, action.semanticEncoding, action.mensustriche, action.renderer)),
+    switchMap((notation: Notation) => {
+      return of(new SendSemanticEncodingSuccess(notation));
     })
   );
 

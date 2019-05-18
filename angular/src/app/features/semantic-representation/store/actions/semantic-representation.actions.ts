@@ -7,6 +7,9 @@ export enum SemanticRepresentationActionTypes {
   ConvertAgnostic2SemanticSuccess = '[SemanticRepresentation] Convert agnostic to semantic success',
   GetNotation = '[SemanticRepresentation] Get notation',
   GetNotationSuccess = '[SemanticRepresentation] Get notation success',
+  ClearNotation = '[SemanticRepresentation] Clear notation',
+  SendSemanticEncoding = '[SemanticRepresentation] Send semantic encoding',
+  SendSemanticEncodingSuccess = '[SemanticRepresentation] Send semantic encoding success'
 }
 
 export class ConvertAgnostic2Semantic implements Action {
@@ -21,7 +24,7 @@ export class ConvertAgnostic2SemanticSuccess implements Action {
 
 export class GetNotation implements Action {
   public readonly type = SemanticRepresentationActionTypes.GetNotation;
-  constructor(public region: Region) {}
+  constructor(public region: Region, public mensustriche: boolean, public renderer: 'verovio' | 'im3') {}
 }
 
 export class GetNotationSuccess implements Action {
@@ -29,5 +32,21 @@ export class GetNotationSuccess implements Action {
   constructor(public notation: Notation) {}
 }
 
+export class ClearNotation implements Action {
+  public readonly type = SemanticRepresentationActionTypes.ClearNotation;
+  constructor() {}
+}
+
+export class SendSemanticEncoding implements Action {
+  public readonly type = SemanticRepresentationActionTypes.SendSemanticEncoding;
+  constructor(public region: Region, public semanticEncoding: string, public mensustriche: boolean, public renderer: 'verovio' | 'im3') {}
+}
+
+export class SendSemanticEncodingSuccess implements Action {
+  public readonly type = SemanticRepresentationActionTypes.SendSemanticEncodingSuccess;
+  constructor(public notation: Notation) {}
+}
+
 export type SemanticRepresentationActions =
-  ConvertAgnostic2Semantic | ConvertAgnostic2SemanticSuccess | GetNotation | GetNotationSuccess;
+  ConvertAgnostic2Semantic | ConvertAgnostic2SemanticSuccess | GetNotation | GetNotationSuccess | ClearNotation |
+  SendSemanticEncoding | SendSemanticEncodingSuccess;
