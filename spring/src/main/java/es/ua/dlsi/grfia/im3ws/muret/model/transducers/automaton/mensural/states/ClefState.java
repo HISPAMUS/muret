@@ -4,8 +4,10 @@ import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.SemanticTransduc
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.TransducerState;
 import es.ua.dlsi.im3.core.IM3RuntimeException;
 import es.ua.dlsi.im3.core.adt.dfa.State;
+import es.ua.dlsi.im3.core.io.ImportException;
+import es.ua.dlsi.im3.core.score.NotationType;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
-import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.Clef;
+import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticClef;
 
 public class ClefState extends TransducerState {
     public ClefState(int number) {
@@ -13,7 +15,7 @@ public class ClefState extends TransducerState {
     }
 
     @Override
-    public void onEnter(AgnosticSymbol token, State previousState, SemanticTransduction transduction)  {
+    public void onEnter(AgnosticSymbol token, State previousState, SemanticTransduction transduction) throws ImportException {
         if (!(token.getSymbol() instanceof es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Clef)) {
             // the automaton has an error
             throw new IM3RuntimeException("Expected an clef and found a " + token.getSymbol());
@@ -25,7 +27,7 @@ public class ClefState extends TransducerState {
             throw new IM3RuntimeException("Value of clef is null");
         }
 
-        Clef semanticClef = new Clef(symbol.getClefNote(), token.getPositionInStaff().getLine());
+        SemanticClef semanticClef = new SemanticClef(NotationType.eMensural, symbol.getClefNote(), token.getPositionInStaff().getLine());
         transduction.add(semanticClef);
     }
 }

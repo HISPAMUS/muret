@@ -11,7 +11,7 @@ import {
   GetNotation,
   SendSemanticEncoding
 } from '../../store/actions/semantic-representation.actions';
-import {selectNotation} from '../../store/selectors/semantic-representation.selector';
+  import {selectNotation} from '../../store/selectors/semantic-representation.selector';
   import {Notation} from '../../services/notation';
 
 @Component({
@@ -78,7 +78,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
       this.selectedRegion = $event;
       this.errorMessage = null;
-      this.notationCode = null;
+      this.notation = null;
       this.semanticEncoding = '';
 
       if (this.selectedRegion) {

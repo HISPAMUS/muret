@@ -52,16 +52,20 @@ public class Region extends Auditable implements IAssignableToPart {
     @JoinColumn(name="part_id")
     private Part part;
 
+    @Column (name = "semantic_encoding")
+    private String semanticEncoding;
+
     public Region() {
     }
 
-    public Region(Page page, BoundingBox boundingBox, String comments, RegionType regionType, List<Symbol> symbols, Part part) {
+    public Region(Page page, BoundingBox boundingBox, String comments, RegionType regionType, List<Symbol> symbols, Part part, String semanticEncoding) {
         this.boundingBox = boundingBox;
         this.page = page;
         this.regionType = regionType;
         this.symbols = symbols;
         this.comments = comments;
         this.part = part;
+        this.semanticEncoding = semanticEncoding;
     }
 
     public Region(Page page, RegionType regionType, int fromX, int fromY, int toX, int toY, Part part) {
@@ -128,6 +132,14 @@ public class Region extends Auditable implements IAssignableToPart {
     @Override
     public void setPart(Part part) {
         this.part = part;
+    }
+
+    public String getSemanticEncoding() {
+        return semanticEncoding;
+    }
+
+    public void setSemanticEncoding(String semanticEncoding) {
+        this.semanticEncoding = semanticEncoding;
     }
 
     @Override

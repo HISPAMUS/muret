@@ -5,21 +5,19 @@ import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.TransducerState;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.IM3RuntimeException;
 import es.ua.dlsi.im3.core.adt.dfa.State;
-import es.ua.dlsi.im3.core.adt.dfa.Transduction;
+import es.ua.dlsi.im3.core.io.ImportException;
 import es.ua.dlsi.im3.core.score.Accidentals;
 import es.ua.dlsi.im3.core.score.Clef;
 import es.ua.dlsi.im3.core.score.*;
-import es.ua.dlsi.im3.core.score.clefs.ClefG2;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Custos;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.*;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbol;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbolType;
-import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.DurationalSymbol;
-import es.ua.dlsi.im3.omr.language.OMRTransduction;
+import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticClef;
+import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticNote;
+import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticRest;
 import es.ua.dlsi.im3.omr.language.mensural.states.AccNoteState;
-import es.ua.dlsi.im3.omr.language.mensural.states.OMRState;
-import org.apache.commons.math3.fraction.BigFraction;
 
 // TODO: 5/10/17 Mirar si podemos compartir algo con modern 
 public class NotesState extends TransducerState {
@@ -28,7 +26,7 @@ public class NotesState extends TransducerState {
     }
 
     @Override
-    public void onEnter(AgnosticSymbol token, State previousState, SemanticTransduction transduction) {
+    public void onEnter(AgnosticSymbol token, State previousState, SemanticTransduction transduction) throws ImportException {
         System.err.println("TO-DO Alteraciones anteriores y armadura en NotesState");
 
         Accidentals accidental = null;
@@ -41,12 +39,12 @@ public class NotesState extends TransducerState {
             try {
                 Figures figures = parseFigure(value.getDurationSpecification());
 
-                es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.Clef clef = findLastClef(transduction);
+                SemanticClef clef = findLastClef(transduction);
 
                 ScientificPitch scientificPitch = parsePitch(clef, token.getPositionInStaff(), accidental);
 
                 //TODO fermata ...
-                es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.Note note = new es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.Note(false, scientificPitch, figures, 0, false, false, null);
+                SemanticNote note = new SemanticNote(false, scientificPitch, figures, 0, false, false, null);
                 transduction.add(note);
 
             } catch (IM3Exception e) {
@@ -61,13 +59,17 @@ public class NotesState extends TransducerState {
             Figures figures = convert(value.getRestFigures());
 
             //TODO fermata ...
-            es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.Rest rest = new es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.Rest(figures, 0, false, null);
+            SemanticRest rest = new SemanticRest(figures, 0, false, null);
             transduction.add(rest);
 
         } else if (token.getSymbol() instanceof Dot) {
             SemanticSymbol lastSymbol = transduction.getLastSymbol();
-            DurationalSymbol durationalSymbol = (DurationalSymbol) lastSymbol.getSymbol();
-            durationalSymbol.setDots(durationalSymbol.getDots() + 1);
+            if (lastSymbol.getSymbol().getCoreSymbol() instanceof SingleFigureAtom) {
+                SingleFigureAtom sfa = (SingleFigureAtom) lastSymbol.getSymbol().getCoreSymbol();
+                sfa.getAtomFigure().addDot(); // TODO podría ser de puntillo de división
+            } else {
+                throw new ImportException("Last symbol should be a single figure atom"); // TODO y los acordes
+            }
         } else if (token.getSymbol() instanceof Ligature) {
             // TODO We don't treat them yet
         } else {
@@ -129,11 +131,11 @@ public class NotesState extends TransducerState {
         }*/
     }
 
-    es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.Clef findLastClef(SemanticTransduction transduction) {
+    SemanticClef findLastClef(SemanticTransduction transduction) {
         for (SemanticSymbol symbol: transduction.getSemanticEncoding().getSymbols()) {
             SemanticSymbolType symbolType = symbol.getSymbol();
-            if (symbolType instanceof es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.Clef) {
-                return (es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.Clef)symbol.getSymbol();
+            if (symbolType instanceof SemanticClef) {
+                return (SemanticClef)symbol.getSymbol();
             }
         }
         throw new IM3RuntimeException("Cannot find a clef");
@@ -183,9 +185,8 @@ public class NotesState extends TransducerState {
         }
     }
 
-    private ScientificPitch parsePitch(es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.Clef clef, PositionInStaff positionInStaff, Accidentals accidental) throws IM3Exception {
-        Clef imcoreClef = clef.getIM3Clef(NotationType.eMensural);
-        ScientificPitch sp = Staff.computeScientificPitch(imcoreClef, positionInStaff);
+    private ScientificPitch parsePitch(SemanticClef clef, PositionInStaff positionInStaff, Accidentals accidental) throws IM3Exception {
+        ScientificPitch sp = Staff.computeScientificPitch(clef.getCoreSymbol(), positionInStaff);
         if (accidental != null) {
             sp.getPitchClass().setAccidental(accidental);
         }

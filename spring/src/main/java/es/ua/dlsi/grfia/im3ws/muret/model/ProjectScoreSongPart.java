@@ -109,29 +109,33 @@ public class ProjectScoreSongPart {
         return projectScoreSongSystem;
     }
 
-    // TODO Quitar primero lo que había
     public void addSemanticEncoding(ProjectScoreSongSystem projectScoreSystem, SemanticEncoding semanticEncoding) throws IM3WSException {
-        //TODO que el system pueda no ser el último!!!
+
         Semantic2IMCore semantic2IMCore = new Semantic2IMCore();
-        //TODO sólo para un pentagrama
+        //TODO sólo va para un pentagrama
         ScoreLayer layer = null;
         try {
             layer = scorePart.getUniqueVoice();
-            TimeSignature lastTimeSignature = layer.getStaff().getLastTimeSignature();
-            KeySignature lastKeySignature = layer.getStaff().getRunningKeySignatureOrNullAt(layer.getDuration());
-            List<ITimedElementInStaff> elementInStaffList = semantic2IMCore.convert(layer.getStaff().getNotationType(), lastTimeSignature, lastKeySignature, semanticEncoding);
 
-            for (ITimedElementInStaff timedElementInStaff : elementInStaffList) {
-                if (timedElementInStaff instanceof Atom) {
-                    layer.add((Atom) timedElementInStaff);
-                }
-
-                if (timedElementInStaff instanceof ITimedElementWithSet) {
-                    ((ITimedElementWithSet) timedElementInStaff).setTime(layer.getDuration());
-                }
-                layer.getStaff().addCoreSymbol(timedElementInStaff);
+            // first find the point at the score where the system is and remove from it to the next system or the end
+            SystemBeginning systemBeginning = projectScoreSystem.getSystemBeginning();
+            SystemBeginning nextSystemBeginning = scorePart.getPageSystemBeginnings().getSystemBeginningAfter(systemBeginning.getTime());
+            if (nextSystemBeginning != null) {
+                layer.remove(systemBeginning.getTime(), nextSystemBeginning.getTime());
+                layer.getStaff().remove(systemBeginning.getTime(), nextSystemBeginning.getTime());
+            } else {
+                layer.remove(systemBeginning.getTime(), Time.TIME_MAX);
+                layer.getStaff().remove(systemBeginning.getTime(), Time.TIME_MAX);
             }
-            projectScoreSystem.setTo(layer.getDuration());
+
+            // now insert the new content
+            TimeSignature lastTimeSignature = layer.getStaff().getRunningTimeSignatureOrNullAt(systemBeginning.getTime());
+            KeySignature lastKeySignature = layer.getStaff().getRunningKeySignatureOrNullAt(layer.getDuration());
+            List<ITimedElementInStaff> newElements = semantic2IMCore.convert(layer.getStaff().getNotationType(), lastTimeSignature, lastKeySignature, semanticEncoding);
+
+            Time to = layer.insertAt(systemBeginning.getTime(), newElements);
+
+            projectScoreSystem.setTo(to);
         } catch (IM3Exception e) {
             throw new IM3WSException(e);
         }

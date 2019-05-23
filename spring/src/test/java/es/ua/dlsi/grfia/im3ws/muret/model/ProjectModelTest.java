@@ -38,7 +38,8 @@ public class ProjectModelTest {
     }
     @Test
     public void transductionTest() throws IM3Exception, IOException, IM3WSException {
-        MURETConfiguration muretConfiguration =
+        //TODO
+        /*MURETConfiguration muretConfiguration =
                 new MURETConfiguration(null, null, TestFileUtils.createTempFolder("muretprojectmodel").getAbsolutePath(),  null, 0, 0, true);
 
         ProjectModel projectModel = new ProjectModel(null, null, muretConfiguration);
@@ -83,7 +84,7 @@ public class ProjectModelTest {
             SemanticTransduction transduction = transducer.transduce(agnosticEncoding);
             assertTrue("Not empty", !transduction.getSemanticEncoding().getSymbols().isEmpty());
 
-            transduction.getSemanticEncoding().getSymbols().forEach(semanticSymbol -> System.out.println(semanticSymbol.toSemanticString()));
+            // transduction.getSemanticEncoding().getSymbols().forEach(semanticSymbol -> System.out.println(semanticSymbol.toSemanticString()));
 
             projectModel.addSemanticEncoding(project, partName, regionIDS[i], boundingBoxes[i], transduction.getSemanticEncoding());
 
@@ -104,7 +105,7 @@ public class ProjectModelTest {
 
             Notation notationPrinted = projectModel.render(project, partName, regionIDS[j], NotationType.eMensural, ManuscriptType.ePrinted, false, Renderer.verovio);
             Files.write(Paths.get("/tmp", "staff_again_" + j + ".mei"), Collections.singleton(notationPrinted.getContent()));
-        }
+        }*/
 
 
         /*Notation notationPrinted = projectModel.render(song, NotationType.eMensural, ManuscriptType.ePrinted, false, Renderer.verovio);

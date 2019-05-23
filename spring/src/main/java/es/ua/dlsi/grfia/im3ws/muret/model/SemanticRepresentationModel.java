@@ -2,27 +2,73 @@ package es.ua.dlsi.grfia.im3ws.muret.model;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Notation;
+import es.ua.dlsi.grfia.im3ws.muret.controller.payload.NotationResponseType;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Renderer;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Project;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Region;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.Agnostic2SemanticTransducer;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.SemanticTransduction;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.MensuralAgnostic2SemanticTransducer;
+import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.score.*;
+import es.ua.dlsi.im3.core.score.io.mei.MEISongExporter;
+import es.ua.dlsi.im3.core.score.staves.Pentagram;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticEncoding;
+import es.ua.dlsi.im3.omr.encoding.semantic.KernSemanticExporter;
+import es.ua.dlsi.im3.omr.encoding.semantic.MensSemanticImporter;
+import es.ua.dlsi.im3.omr.encoding.semantic.Semantic2IMCore;
+import es.ua.dlsi.im3.omr.encoding.semantic.SemanticEncoding;
 
 import java.io.FileNotFoundException;
+import java.util.List;
 
 public class SemanticRepresentationModel {
 
     private final ProjectModel projectModel;
+    private final RegionRepository regionRepository;
 
-    public SemanticRepresentationModel(ProjectModel projectModel) {
+    public SemanticRepresentationModel(ProjectModel projectModel, RegionRepository regionRepository) {
         this.projectModel = projectModel;
+        this.regionRepository = regionRepository;
     }
 
     public Notation getNotation(Project project, String partName, Region region, boolean mensustriche, Renderer renderer) throws IM3WSException {
+
+        if (region.getSemanticEncoding() == null) {
+            return new Notation("Region has not a semantic encoding yet");
+        }
+
+        //TODO Ahora sólo lo guardo en la región
+        MensSemanticImporter mensSemanticImporter = new MensSemanticImporter(); //TODO Sólo va para mensural
+        try {
+            SemanticEncoding semantic = mensSemanticImporter.importString(project.getNotationType(), region.getSemanticEncoding());
+            Semantic2IMCore semantic2IMCore = new Semantic2IMCore();
+            //TODO compases y tonalidad anteriores
+            List<ITimedElementInStaff> items = semantic2IMCore.convert(project.getNotationType(), null, null, semantic);
+            ScoreSong song = new ScoreSong();
+            ScorePart part = song.addPart();
+            ScoreLayer layer = part.addScoreLayer();
+            Staff staff = new Pentagram(song, "1", 1);
+            staff.setNotationType(project.getNotationType());
+            song.addStaff(staff);
+            part.addStaff(staff);
+            staff.addLayer(layer);
+            for (ITimedElementInStaff timedElementInStaff: items) {
+                if (timedElementInStaff instanceof Atom) {
+                    layer.add((Atom) timedElementInStaff);
+                } else {
+                    staff.addElementWithoutLayer((IStaffElementWithoutLayer) timedElementInStaff);
+                }
+            }
+            MEISongExporter exporter = new MEISongExporter();
+            String mei = exporter.exportSong(song);
+            return new Notation(NotationResponseType.mei, mei, region.getSemanticEncoding());
+        } catch (IM3Exception e) {
+            return new Notation("Cannot import semantic encoding: " + e.getMessage());
+        }
+
+        /*
         ProjectScoreSong projectScoreSong = projectModel.getProjectScoreSong(project);
         ProjectScoreSongPart projectScoreSongPart = projectScoreSong.getScorePart(partName);
         if (projectScoreSongPart == null) {
@@ -35,7 +81,8 @@ public class SemanticRepresentationModel {
         }
 
         Segment segment = new Segment(system.getFrom(), system.getTo());
-        return projectModel.render(projectScoreSongPart.getScorePart(), segment, project.getNotationType(), project.getManuscriptType(), mensustriche, renderer);
+        return projectModel.render(projectScoreSongPart.getScorePart(), segment, project.getNotationType(), project.getManuscriptType(), mensustriche, renderer);*/
+
     }
 
     /**
@@ -87,7 +134,9 @@ public class SemanticRepresentationModel {
         if (semantic.getSemanticEncoding().getSymbols().isEmpty()) {
             throw new IM3WSException("Cannot translate from agnostic");
         }
-        projectModel.addSemanticEncoding(project, partName, staff.getId(), staff.getBoundingBox(), semantic.getSemanticEncoding());
+        //projectModel.addSemanticEncoding(project, partName, staff.getId(), staff.getBoundingBox(), semantic.getSemanticEncoding());
+        KernSemanticExporter kernSemanticExporter = new KernSemanticExporter();
+        sendSemanticEncoding(project, partName, staff, mensustriche, renderer, kernSemanticExporter.export(semantic.getSemanticEncoding()));
         return getNotation(project, partName, staff, mensustriche, renderer);
     }
 
@@ -101,7 +150,10 @@ public class SemanticRepresentationModel {
     }
 
     public Notation sendSemanticEncoding(Project project, String partName, Region region, boolean mensustriche, Renderer renderer, String semanticEncoding) throws IM3WSException {
-        projectModel.addSemanticEncoding(project, partName, region.getId(), region.getBoundingBox(), semanticEncoding);
+        //projectModel.addSemanticEncoding(project, partName, region.getId(), region.getBoundingBox(), semanticEncoding);
+        //TODO Ahora sólo lo guardo en la región
+        region.setSemanticEncoding(semanticEncoding);
+        regionRepository.save(region);
         return getNotation(project, partName, region, mensustriche, renderer);
     }
 }

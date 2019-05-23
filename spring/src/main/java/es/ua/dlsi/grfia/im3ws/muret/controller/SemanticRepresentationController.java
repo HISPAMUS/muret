@@ -34,7 +34,7 @@ public class SemanticRepresentationController extends MuRETBaseController {
     public SemanticRepresentationController(MURETConfiguration muretConfiguration, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository, ProjectModel projectModel) {
         super(muretConfiguration, imageRepository, pageRepository, regionRepository, symbolRepository);
         this.projectModel = projectModel;
-        this.semanticRepresentationModel = new SemanticRepresentationModel(projectModel);
+        this.semanticRepresentationModel = new SemanticRepresentationModel(projectModel, regionRepository);
         this.partsModel = new PartsModel();
     }
 
@@ -74,12 +74,15 @@ public class SemanticRepresentationController extends MuRETBaseController {
 
         Region region = getRegion(staffID);
         Project project = region.getPage().getImage().getProject();
-        Part part = partsModel.findPart(region);
+        //TODO Ahora sólo lo guardo en la región
+        /*Part part = partsModel.findPart(region);
         if (part == null) {
             throw new IM3WSException("The staff has not an associated part yet");
-        }
+        }*/
+        Part part = null;
+        String partName = "";
 
-        Notation result = semanticRepresentationModel.getNotation(project, part.getName(), region, mensustriche, renderer);
+        Notation result = semanticRepresentationModel.getNotation(project, partName, region, mensustriche, renderer);
         return result;
     }
 
@@ -87,15 +90,20 @@ public class SemanticRepresentationController extends MuRETBaseController {
     @Transactional
     public Notation sendSemanticEncoding(@PathVariable(name="staffID") Long staffID, @PathVariable(name="mensustriche") boolean mensustriche, @PathVariable(name="renderer") Renderer renderer, @RequestBody String semanticEncoding) throws IM3WSException {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Sending semantic encoding for region ID {0}", staffID);
-
         Region region = getRegion(staffID);
         Project project = region.getPage().getImage().getProject();
+
+        //TODO Ahora sólo lo guardo en la región
+        /*
         Part part = partsModel.findPart(region);
         if (part == null) {
             throw new IM3WSException("The staff has not an associated part yet");
-        }
+        }*/
 
-        Notation result = semanticRepresentationModel.sendSemanticEncoding(project, part.getName(), region, mensustriche, renderer, semanticEncoding);
+        Part part = null;
+        String partName = "";
+
+        Notation result = semanticRepresentationModel.sendSemanticEncoding(project, partName, region, mensustriche, renderer, semanticEncoding);
         return result;
     }
 

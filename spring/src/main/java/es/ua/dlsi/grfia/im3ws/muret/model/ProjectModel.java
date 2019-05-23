@@ -11,33 +11,28 @@ import es.ua.dlsi.grfia.im3ws.muret.entity.Project;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ProjectRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.UserRepository;
 import es.ua.dlsi.im3.core.IM3Exception;
-import es.ua.dlsi.im3.core.conversions.MensuralToModern;
 import es.ua.dlsi.im3.core.io.ExportException;
-import es.ua.dlsi.im3.core.io.ImportException;
-import es.ua.dlsi.im3.core.score.*;
-import es.ua.dlsi.im3.core.score.clefs.ClefF4;
-import es.ua.dlsi.im3.core.score.clefs.ClefG2;
+import es.ua.dlsi.im3.core.score.NotationType;
+import es.ua.dlsi.im3.core.score.ScorePart;
+import es.ua.dlsi.im3.core.score.Segment;
 import es.ua.dlsi.im3.core.score.io.mei.MEISongExporter;
-import es.ua.dlsi.im3.core.score.io.mei.MEISongImporter;
-import es.ua.dlsi.im3.core.score.layout.CoordinateComponent;
-import es.ua.dlsi.im3.core.score.layout.HorizontalLayout;
-import es.ua.dlsi.im3.core.score.layout.ScoreLayout;
-import es.ua.dlsi.im3.core.score.layout.svg.SVGExporter;
 import es.ua.dlsi.im3.core.utils.FileUtils;
 import es.ua.dlsi.im3.omr.encoding.Encoder;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
-import es.ua.dlsi.im3.omr.encoding.enums.ClefNote;
-import es.ua.dlsi.im3.omr.encoding.semantic.*;
-import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.Clef;
-import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.Note;
+import es.ua.dlsi.im3.omr.encoding.semantic.KernSemanticExporter;
+import es.ua.dlsi.im3.omr.encoding.semantic.MensSemanticImporter;
+import es.ua.dlsi.im3.omr.encoding.semantic.SemanticEncoding;
+import es.ua.dlsi.im3.omr.encoding.semantic.SemanticExporter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -204,7 +199,8 @@ public class ProjectModel {
         }
     }*/
 
-    public Notation render(ScorePart scorePart, Segment segment, NotationType notationType, ManuscriptType manuscriptType, boolean mensustriche, Renderer renderer) throws IM3WSException{
+    //TODO Ahora sólo lo guardo en la región
+    /*public Notation render(ScorePart scorePart, Segment segment, NotationType notationType, ManuscriptType manuscriptType, boolean mensustriche, Renderer renderer) throws IM3WSException{
         if (renderer == Renderer.im3) {
             throw new IM3WSException("Unimplemented");
         } else if (renderer == Renderer.verovio) {
@@ -227,8 +223,10 @@ public class ProjectModel {
             try {
                 Encoder encoder = new Encoder(AgnosticVersion.v2, false);
                 encoder.encode(scorePart.getStaves().get(0), segment);
-                SemanticExporter semanticExporter = new SemanticExporter();
-                semanticEncoding = semanticExporter.export(encoder.getSemanticEncoding());
+                //SemanticExporter semanticExporter = new SemanticExporter();
+                //semanticEncoding = semanticExporter.export(encoder.getSemanticEncoding());
+                KernSemanticExporter kernSemanticExporter = new KernSemanticExporter();
+                semanticEncoding = kernSemanticExporter.export(encoder.getSemanticEncoding());
             } catch (IM3Exception e) {
                 Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot export part to semantic encoding", e);
                 return new Notation("Cannot export to MEI: " + e.getMessage());
@@ -253,11 +251,11 @@ public class ProjectModel {
 
         Segment segment = new Segment(projectScoreSystem.getFrom(), projectScoreSystem.getTo());
         return render(projectScorePart.getScorePart(), segment, notationType, manuscriptType, mensustriche, renderer);
-    }
+    }*/
 
-    public void addPart(Project project, String tiple) throws IM3WSException {
+    public void addPart(Project project, String partName) throws IM3WSException {
         ProjectScoreSong projectScoreSong = getProjectScoreSong(project);
-        projectScoreSong.addPart(tiple);
+        projectScoreSong.addPart(partName);
     }
 
     /**
@@ -270,15 +268,14 @@ public class ProjectModel {
         projectScoreSongHashMap.remove(project);
     }
 
-    public void addSemanticEncoding(Project project, String partName, long regionID, BoundingBox boundingBox, String semanticEncodingString) throws IM3WSException {
+    //TODO Ahora sólo lo guardo en la región
+    /*public void addSemanticEncoding(Project project, String partName, long regionID, BoundingBox boundingBox, String semanticEncodingString) throws IM3WSException {
         try {
-            //ScoreSong scoreSong = semanticImporter.importSong(semanticEncodingString);
-            //TODO Que el importer saque directamente a semantic sequence
-            System.err.println("TODODODODODODOD SemanticEncoding de ejemplo A MANO ");
-            SemanticEncoding semanticEncoding = new SemanticEncoding();
-            semanticEncoding.add(new SemanticSymbol(new Clef(ClefNote.F, 3)));
-            semanticEncoding.add(new SemanticSymbol(new Note(false, new ScientificPitch(PitchClasses.A, 4), Figures.SEMIBREVE, 0, false, false, null)));
-            semanticEncoding.add(new SemanticSymbol(new Note(false, new ScientificPitch(PitchClasses.B, 4), Figures.MINIM, 0, false, false, null)));
+            if (project.getNotationType() != NotationType.eMensural) {
+                throw new IM3WSException("Currently only mensural notation is supported");
+            }
+            MensSemanticImporter importer = new MensSemanticImporter();
+            SemanticEncoding semanticEncoding = importer.importString(NotationType.eMensural, semanticEncodingString);
             addSemanticEncoding(project, partName, regionID, boundingBox, semanticEncoding);
         } catch (Exception e) {
             throw new IM3WSException(e);
@@ -297,16 +294,16 @@ public class ProjectModel {
         projectScorePart.addSemanticEncoding(projectScoreSystem, semanticEncoding);
         projectScoreSong.save();
     }
-
+*/
     /**
      * It removes all elements in the part
      * @param project
      * @param partName
      * @param regionID
      */
-    public void clearSystem(Project project, String partName, long regionID) {
+    /*public void clearSystem(Project project, String partName, long regionID) {
         //TODO
-    }
+    }*/
 
     //TODO esto sólo funciona con 1 pentagrama y 1 layer
     /*public void addToPart(ProjectScoreSongPart part, ITimedElementInStaff timedElementInStaff) throws IM3Exception {
