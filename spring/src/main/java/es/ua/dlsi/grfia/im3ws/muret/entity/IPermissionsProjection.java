@@ -15,5 +15,5 @@ public interface IPermissionsProjection {
     int getId();
 
     char getPermission();
-    IProjectProjection getProject();
+    ICollectionProjection getCollection();
 }

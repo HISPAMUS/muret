@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.Collection;
 import java.util.concurrent.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -99,7 +100,7 @@ public class AgnosticSymbolImagesTextFile extends AbstractTrainingSetExporter {
         ps.print(FIELD_SEPARATOR);
         ps.print("Agnostic symbol");
         ps.print(FIELD_SEPARATOR);
-        if (fixedSize) {
+        /*if (fixedSize) {
             if (useMargin) {
                 ps.print("Image pixels (including margin):");
                 ps.print(FIXED_SIZE*3);
@@ -121,7 +122,11 @@ public class AgnosticSymbolImagesTextFile extends AbstractTrainingSetExporter {
                 ps.print(FIELD_SEPARATOR);
                 ps.println("Height");
             }
-        }
+        }*/
+
+        ps.print("Width");
+        ps.print(FIELD_SEPARATOR);
+        ps.println("Height");
 
         int nimage = 1;
         for (Image image: project.getImages()) {

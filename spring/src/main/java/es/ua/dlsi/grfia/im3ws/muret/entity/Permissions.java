@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 /**
- * Project permissions
+ * Collection permissions
  * @author drizo
  */
 @Entity
@@ -23,8 +23,8 @@ public class Permissions {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="project_id", referencedColumnName="id")
-    private Project project;
+    @JoinColumn(name="collection_id", referencedColumnName="id")
+    private Collection collection;
 
     @Column
     char permissions;
@@ -32,9 +32,9 @@ public class Permissions {
     public Permissions() {
     }
 
-    public Permissions(User user, Project project, char permissions) {
+    public Permissions(User user, Collection collection, char permissions) {
         this.user = user;
-        this.project = project;
+        this.collection = collection;
         this.permissions = permissions;
     }
 
@@ -54,12 +54,12 @@ public class Permissions {
         this.user = user;
     }
 
-    public Project getProject() {
-        return project;
+    public Collection getCollection() {
+        return collection;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setCollection(Collection collection) {
+        this.collection = collection;
     }
 
     public char getPermission() {
@@ -76,13 +76,13 @@ public class Permissions {
         if (o == null || getClass() != o.getClass()) return false;
         Permissions that = (Permissions) o;
         return Objects.equals(user, that.user) &&
-                Objects.equals(project, that.project) &&
+                Objects.equals(collection, that.collection) &&
                 Objects.equals(permissions, that.permissions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(user, project, permissions);
+        return Objects.hash(user, collection, permissions);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class Permissions {
         return "Permissions{" +
                 "id=" + id +
                 ", user=" + user +
-                ", project=" + project +
+                ", collection=" + collection +
                 ", permission='" + permissions + '\'' +
                 '}';
     }

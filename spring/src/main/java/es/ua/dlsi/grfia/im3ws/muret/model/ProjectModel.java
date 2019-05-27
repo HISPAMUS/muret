@@ -6,6 +6,7 @@ import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Notation;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.NotationResponseType;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Renderer;
 import es.ua.dlsi.grfia.im3ws.muret.entity.BoundingBox;
+import es.ua.dlsi.grfia.im3ws.muret.entity.Collection;
 import es.ua.dlsi.grfia.im3ws.muret.entity.ManuscriptType;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Project;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ProjectRepository;
@@ -108,7 +109,8 @@ public class ProjectModel {
                     project.getManuscriptType(),
                     null,
                     null,
-                    null
+                    null,
+                    project.getCollection()
             );
 
             return projectRepository.save(newProject);

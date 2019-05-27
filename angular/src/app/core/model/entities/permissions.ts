@@ -1,7 +1,7 @@
-import {Project} from './project';
 import {Entity} from './entity';
+import {Collection} from './collection';
 
 export interface Permissions extends Entity {
   permission: string;
-  project: Project;
+  collection: Collection;
 }

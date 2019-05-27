@@ -1,13 +1,12 @@
 import {Component, OnDestroy, OnInit, Self} from '@angular/core';
 import {Project} from '../../../../core/model/entities/project';
 import {Permissions} from '../../../../core/model/entities/permissions';
-import {Observable, Subscription} from 'rxjs';
-import {User} from '../../../../core/model/entities/user';
+import {Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
-import {selectLoggedInUser} from '../../../../core/store/selectors/user.selector';
-import {GetUser} from '../../../../core/store/actions/user.actions';
-import {selectAuthState} from '../../../../auth/store/selectors/auth.selector';
-import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
+import {Collection} from '../../../../core/model/entities/collection';
+import {ActivatedRoute, ParamMap} from '@angular/router';
+import {GetCollection} from '../../store/actions/projects.actions';
+import {selectCollection} from '../../store/selectors/projects.selector';
 
 @Component({
   selector: 'app-projects',
@@ -16,20 +15,19 @@ import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.act
 })
 
 export class ProjectsComponent implements OnInit, OnDestroy {
-  private authSubscription: Subscription;
+  private collection$: Observable<Collection>;
+  private collectionID: number;
 
-  user$: Observable<User>;
+  constructor(private route: ActivatedRoute, private store: Store<any>) {
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      this.collectionID = +this.route.snapshot.paramMap.get('id'); // + converts the string to number
+      this.store.dispatch(new GetCollection(this.collectionID));
+    });
 
-  constructor(private store: Store<any>) {
-    this.user$ = this.store.select(selectLoggedInUser);
-
-    this.store.dispatch(new ActivateLink({title: 'Projects', routerLink: 'projects'}));
+    this.collection$ = store.select(selectCollection);
   }
 
   ngOnInit(): void {
-    this.authSubscription = this.store.select(selectAuthState).subscribe(next => {
-      this.store.dispatch(new GetUser(next.userID));
-    });
   }
 
   trackByProjectFn(index, item: Project) {
@@ -42,6 +40,5 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy(): void {
-    this.authSubscription.unsubscribe();
   }
 }

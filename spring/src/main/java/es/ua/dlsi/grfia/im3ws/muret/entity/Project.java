@@ -1,5 +1,6 @@
 package es.ua.dlsi.grfia.im3ws.muret.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import es.ua.dlsi.im3.core.score.NotationType;
 
@@ -55,10 +56,16 @@ public class Project extends Auditable {
     @JoinColumn(name="state_id")
     State state;
 
+    @JsonBackReference
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="collection_id", nullable = false)
+    private Collection collection;
+
+
     public Project() {
     }
 
-    public Project(String name, String path, String composer, Date creationDate, Date lastModifiedDate, User createdBy, User lastModifiedBy , String thumbnailBase64Encoding, String comments, String imagesOrdering, NotationType notationType, ManuscriptType manuscriptType, State state, List<Image> images, List<Part> parts) {
+    public Project(String name, String path, String composer, Date creationDate, Date lastModifiedDate, User createdBy, User lastModifiedBy , String thumbnailBase64Encoding, String comments, String imagesOrdering, NotationType notationType, ManuscriptType manuscriptType, State state, List<Image> images, List<Part> parts, Collection collection) {
         this.name = name;
         this.composer = composer;
         this.notationType = notationType;
@@ -73,6 +80,8 @@ public class Project extends Auditable {
         this.imagesOrdering = imagesOrdering;
         this.manuscriptType = manuscriptType;
         this.state = state;
+        this.parts = parts;
+        this.collection = collection;
     }
     public Integer getId() {
         return id;
@@ -175,6 +184,14 @@ public class Project extends Auditable {
 
     public void setParts(List<Part> parts) {
         this.parts = parts;
+    }
+
+    public Collection getCollection() {
+        return collection;
+    }
+
+    public void setCollection(Collection collection) {
+        this.collection = collection;
     }
 
     @Override

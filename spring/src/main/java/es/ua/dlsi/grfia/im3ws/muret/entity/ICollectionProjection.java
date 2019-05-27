@@ -9,13 +9,12 @@ import java.util.List;
  * Note this projection must be defined in the same package as the entity class
  * @author drizo
  */
-@Projection(name = "excerpt", types = { User.class })
-public interface IUserProjection {
+@Projection(name = "excerpt", types = { Collection.class })
+public interface ICollectionProjection {
     @Value("#{target.id}")
     int getId();
 
-    String getUsername();
-    // List<IProjectProjection> getProjectsCreated();
-    List<IPermissionsProjection> getPermissions();
-
+    String getName();
+    String getComments();
+    List<IProjectProjection> getProjects();
 }
