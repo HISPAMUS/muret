@@ -50,12 +50,15 @@ public class SemanticRepresentationController extends MuRETBaseController {
 
         Region region = getRegion(staffID);
         Project project = region.getPage().getImage().getProject();
-        Part part = partsModel.findPart(region);
+        //TODO Ahora sólo lo guardo en la región
+        /*Part part = partsModel.findPart(region);
         if (part == null) {
             throw new IM3WSException("The staff has not an associated part yet");
-        }
+        }*/
+        Part part = null;
+        String partName = "";
         try {
-            Notation result = semanticRepresentationModel.computeSemanticFromAgnostic(project, part.getName(), region, mensustriche, renderer);
+            Notation result = semanticRepresentationModel.computeSemanticFromAgnostic(project, partName, region, mensustriche, renderer);
             return result;
         } catch (Exception e) {
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot convert to semantic", e);

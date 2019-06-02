@@ -11,14 +11,21 @@
         <div class="row">
           <div class="col-6">
             <p>
-              <label>Project name <input type="text" formControlName="name" size="128"> (required)</label>
+              <label>Collection</label>&nbsp;
+                <select formControlName="collections"[(ngModel)]="selectedCollectionID">
+                <option [label] ="collection.name" *ngFor="let collection of collections$ | async" [value]="collection">{{collection.name}}</option>
+            </select>
+            </p>
+
+            <p>
+              <label>Project name <input type="text" formControlName="name" size="80"> (required)</label>
             </p>
             <p>
-              <label>Composer <input type="text" formControlName="composer" size="128"></label>
+              <label>Composer <input type="text" formControlName="composer" size="80"></label>
             </p>
             <p>
-              <input type="radio" name="notationResponseType" formControlName="notationResponseType" value="eMensural" checked>Mensural &nbsp;
-              <input type="radio" name="notationResponseType" formControlName="notationResponseType" value="eModern">Modern &nbsp; (required)
+              <input type="radio" name="notationType" formControlName="notationType" value="eMensural" checked>Mensural &nbsp;
+              <input type="radio" name="notationType" formControlName="notationType" value="eModern">Modern &nbsp; (required)
             </p>
             <p>
               <input type="radio" name="manuscriptType" formControlName="manuscriptType" value="eHandwritten" checked>Handwritten &nbsp;

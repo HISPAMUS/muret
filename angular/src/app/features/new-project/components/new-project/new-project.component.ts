@@ -3,14 +3,12 @@ import {FormBuilder, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {NewProjectState} from '../../store/state/new-project.state';
 import {Store} from '@ngrx/store';
-import {CreateProject, CreateProjectReset} from '../../store/actions/new-project.actions';
-import {Subscription} from 'rxjs';
-import {selectNewProject} from '../../store/selectors/new-project.selector';
+import {CreateProject, CreateProjectReset, GetCollections} from '../../store/actions/new-project.actions';
+import {Observable, Subscription} from 'rxjs';
+import {selectCollections, selectNewProject} from '../../store/selectors/new-project.selector';
 import {User} from '../../../../core/model/entities/user';
 import {selectAuthState} from '../../../../auth/store/selectors/auth.selector';
-import {GetUser} from '../../../../core/store/actions/user.actions';
-import {Project} from '../../../../core/model/entities/project';
-import {Permissions} from '../../../../core/model/entities/permissions';
+import {Collection} from '../../../../core/model/entities/collection';
 
 @Component({
   selector: 'app-new-project',
@@ -21,15 +19,18 @@ export class NewProjectComponent implements OnInit, OnDestroy {
   imgSrc: string;
   createProjectSuccessSubscription: Subscription;
   authSubscription: Subscription;
+  collections$: Observable<Collection[]>;
 
   newProjectForm = this.fb.group({
     name: ['', Validators.required],
     composer: [''],
     notationType: ['eMensural', Validators.required],
     manuscriptType: ['eHandwritten', Validators.required],
-    comments: ['']
+    comments: [''],
+    collections: [Validators.required]
   });
   user: User;
+  selectedCollectionID: number;
 
   constructor(private fb: FormBuilder, private store: Store<NewProjectState>, private router: Router) {
     this.authSubscription = this.store.select(selectAuthState).subscribe(next => {
@@ -42,6 +43,8 @@ export class NewProjectComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.store.dispatch(new CreateProjectReset());
+    this.store.dispatch(new GetCollections());
+    this.collections$ = this.store.select(selectCollections);
 
     this.createProjectSuccessSubscription = this.store.select(selectNewProject).subscribe(next => {
       if (next) {
@@ -67,7 +70,8 @@ export class NewProjectComponent implements OnInit, OnDestroy {
       this.newProjectForm.controls.composer.value,
       this.newProjectForm.controls.notationType.value,
       this.newProjectForm.controls.manuscriptType.value,
-      this.newProjectForm.controls.comments.value, this.imgSrc
+      this.newProjectForm.controls.comments.value, this.imgSrc,
+      this.selectedCollectionID
     ));
   }
 

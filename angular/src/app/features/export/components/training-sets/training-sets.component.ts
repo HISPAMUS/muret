@@ -67,11 +67,14 @@ export class TrainingSetsComponent implements OnInit, OnDestroy {
     this.userSubscription = this.store.select(selectLoggedInUser).subscribe(next => {
       const projectsFormArray = (this.form.get('projectsFormArray') as FormArray);
       if (next && projectsFormArray.controls.length === 0) {
-        this.projects = flatten([...next.projectsCreated, ...next.permissions.map((permission) => permission.collection.projects)]);
-        const controls = this.projects.map(c => new FormControl(false));
-        controls.forEach(c => {
-          projectsFormArray.push(c);
-        });
+        if (next && next.permissions) {
+          this.projects = flatten([...next.permissions.map((permission) => permission.collection.projects)]);
+          const controls = this.projects.map(c => new FormControl(false));
+          controls.forEach(c => {
+            projectsFormArray.push(c);
+          });
+        }
+        // this.projects = flatten([...next.projectsCreated, ...next.permissions.map((permission) => permission.collection.projects)]);
       }
     });
   }

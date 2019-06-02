@@ -7,3 +7,8 @@ export const selectNewProject = createSelector(
   newProjectState,
   (state: NewProjectState) => state.project
 );
+
+export const selectCollections = createSelector(
+  newProjectState,
+  (state: NewProjectState) => state.collections
+);
