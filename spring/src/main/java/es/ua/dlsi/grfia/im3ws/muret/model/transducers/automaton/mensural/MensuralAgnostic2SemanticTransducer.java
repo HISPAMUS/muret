@@ -14,7 +14,6 @@ import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Custos;
 import es.ua.dlsi.im3.omr.encoding.semantic.Semantic2IMCore;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticEncoding;
 import es.ua.dlsi.im3.omr.language.GraphicalSymbolAlphabet;
-import es.ua.dlsi.im3.omr.language.mensural.BarLineState;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apache.commons.math3.fraction.Fraction;
 

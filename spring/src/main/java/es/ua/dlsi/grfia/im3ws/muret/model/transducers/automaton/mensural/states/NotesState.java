@@ -145,16 +145,16 @@ public class NotesState extends TransducerState {
     private Figures convert(RestFigures value) {
         switch (value) {
             case fusa:
+            case eighth:
                 return Figures.FUSA;
             case breve:
                 return Figures.BREVE;
-            case eighth:
-                return Figures.FUSA;
             case half:
                 return Figures.MINIM;
             case longa2:
                 return Figures.LONGA;
             case quarter:
+            case seminima:
                 return Figures.SEMIMINIM;
             case whole:
                 return Figures.SEMIBREVE;
@@ -166,31 +166,44 @@ public class NotesState extends TransducerState {
     //TODO Esto es solo para compases binarios
     private Figures convert(NoteFigures value) {
         switch (value) {
+            case breveBlack:
             case breve:
                 return Figures.BREVE;
             case eighth:
-                return Figures.FUSA;
             case eighthCut:
                 return Figures.FUSA;
             case half:
                 return Figures.MINIM;
             case longa:
                 return Figures.LONGA;
+            case eighthVoid:
             case quarter:
                 return Figures.SEMIMINIM;
             case whole:
+            case wholeBlack:
                 return Figures.SEMIBREVE;
+            case tripleWholeStem:
+            case doubleWholeStem:
+            case doubleWholeBlackStem:
+            case doubleWhole:
+            case quadrupleWholeStem:
+                return Figures.MAXIMA;
             default:
                 throw new IM3RuntimeException("Unsupported figure " + value);
         }
     }
 
     private ScientificPitch parsePitch(SemanticClef clef, PositionInStaff positionInStaff, Accidentals accidental) throws IM3Exception {
-        ScientificPitch sp = Staff.computeScientificPitch(clef.getCoreSymbol(), positionInStaff);
-        if (accidental != null) {
-            sp.getPitchClass().setAccidental(accidental);
+        try {
+            ScientificPitch sp = Staff.computeScientificPitch(clef.getCoreSymbol(), positionInStaff);
+            if (accidental != null) {
+                sp.getPitchClass().setAccidental(accidental);
+            }
+            return sp;
+        } catch (Throwable t) {
+            t.printStackTrace();
+            throw new IM3Exception("Cannot parse pitch for " + clef.toKernSemanticString() + ", position " + positionInStaff + ", accidental " + accidental);
         }
-        return sp;
     }
 
     private Figures parseFigure(INoteDurationSpecification durationSpecification) throws IM3Exception {

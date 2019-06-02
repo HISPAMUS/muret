@@ -85,12 +85,7 @@ public class SemanticRepresentationModel {
 
     }
 
-    /**
-     *
-     * @param staff
-     * @return MEI
-     */
-    public Notation computeSemanticFromAgnostic(Project project, String partName, Region staff, boolean mensustriche, Renderer renderer) throws FileNotFoundException, IM3Exception, IM3WSException {
+    public static AgnosticEncoding region2Agnostic(Region staff) throws IM3Exception {
         AgnosticEncoding agnosticEncoding = new AgnosticEncoding();
         staff.getSymbols().stream().sorted((o1, o2) -> {
             int diff = o1.getBoundingBox().getFromX() - o2.getBoundingBox().getFromX();
@@ -106,6 +101,16 @@ public class SemanticRepresentationModel {
         if (agnosticEncoding.getSymbols().isEmpty()) {
             throw new IM3Exception("There are not agnostic symbols to convert");
         }
+        return agnosticEncoding;
+    }
+
+    /**
+     *
+     * @param staff
+     * @return MEI
+     */
+    public Notation computeSemanticFromAgnostic(Project project, String partName, Region staff, boolean mensustriche, Renderer renderer) throws FileNotFoundException, IM3Exception, IM3WSException {
+        AgnosticEncoding agnosticEncoding = region2Agnostic(staff);
 
         Agnostic2SemanticTransducer agnostic2SemanticTransducer;
         if (project.getNotationType() == NotationType.eMensural) {
