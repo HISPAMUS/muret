@@ -9,25 +9,47 @@ import es.ua.dlsi.im3.core.io.ImportException;
 import es.ua.dlsi.im3.core.score.Accidentals;
 import es.ua.dlsi.im3.core.score.Clef;
 import es.ua.dlsi.im3.core.score.*;
+import es.ua.dlsi.im3.core.score.mensural.meters.hispanic.TimeSignatureProporcionMayor;
+import es.ua.dlsi.im3.core.score.mensural.meters.hispanic.TimeSignatureProporcionMenor;
+import es.ua.dlsi.im3.core.score.meters.SignTimeSignature;
+import es.ua.dlsi.im3.core.score.meters.TimeSignatureCommonTime;
+import es.ua.dlsi.im3.core.score.meters.TimeSignatureCutTime;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Custos;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.*;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbol;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbolType;
-import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticClef;
-import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticNote;
-import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticRest;
+import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.*;
 import es.ua.dlsi.im3.omr.language.mensural.states.AccNoteState;
 
-// TODO: 5/10/17 Mirar si podemos compartir algo con modern 
+// TODO: 5/10/17 Mirar si podemos compartir algo con modern
 public class NotesState extends TransducerState {
     public NotesState(int number, String name) {
         super(number, "notes");
     }
 
+    class FiguresColoration {
+        Figures figure;
+        Boolean colored;
+
+        public FiguresColoration(Figures figure, Boolean colored) {
+            this.figure = figure;
+            this.colored = colored;
+        }
+
+        public Figures getFigure() {
+            return figure;
+        }
+
+        public Boolean getColored() {
+            return colored;
+        }
+    }
+
     @Override
     public void onEnter(AgnosticSymbol token, State previousState, SemanticTransduction transduction) throws ImportException {
-        System.err.println("TO-DO Alteraciones anteriores y armadura en NotesState");
+        SemanticKeySignature keySignature = findLastKeySignature(transduction);
+        SemanticTimeSignature timeSignature = findLastTimeSignature(transduction);
 
         Accidentals accidental = null;
         if (previousState instanceof AccNoteState) {
@@ -37,14 +59,43 @@ public class NotesState extends TransducerState {
         if (token.getSymbol() instanceof Note) {
             Note value = ((Note) token.getSymbol());
             try {
-                Figures figures = parseFigure(value.getDurationSpecification());
+                boolean inTernaryRhythm = computeInTernaryRhythm(timeSignature);
+                FiguresColoration figuresColoration = parseFigure(value.getDurationSpecification(), inTernaryRhythm);
 
                 SemanticClef clef = findLastClef(transduction);
 
                 ScientificPitch scientificPitch = parsePitch(clef, token.getPositionInStaff(), accidental);
 
+                Accidentals keySignatureAccidental = null;
+                if (keySignature != null) {
+                    keySignatureAccidental = keySignature.getCoreSymbol().getAccidentalOf(scientificPitch.getPitchClass().getNoteName());
+                }
+
+                Accidentals visualAccidental = null;
+                Accidentals actualAccidental = null;
+
+                if (keySignatureAccidental != null) {
+                    if (keySignatureAccidental == Accidentals.FLAT && scientificPitch.getPitchClass().getAccidental() == Accidentals.SHARP) {
+                        actualAccidental = Accidentals.NATURAL;
+                        visualAccidental = Accidentals.SHARP;
+                    } else {
+                        if (scientificPitch.getPitchClass().getAccidental() == null) {
+                            actualAccidental = keySignatureAccidental;
+                            visualAccidental = scientificPitch.getPitchClass().getAccidental();
+                        } else {
+                            actualAccidental = scientificPitch.getPitchClass().getAccidental();
+                            visualAccidental =  scientificPitch.getPitchClass().getAccidental();;
+                        }
+                    }
+                } else {
+                    actualAccidental = scientificPitch.getPitchClass().getAccidental();
+                    visualAccidental =  scientificPitch.getPitchClass().getAccidental();;
+                }
+
+                scientificPitch.getPitchClass().setAccidental(actualAccidental);
+
                 //TODO fermata ...
-                SemanticNote note = new SemanticNote(false, scientificPitch, figures, 0, false, false, null);
+                SemanticNote note = new SemanticNote(false, scientificPitch, visualAccidental, figuresColoration.getFigure(), 0, false, false, null, figuresColoration.getColored());
                 transduction.add(note);
 
             } catch (IM3Exception e) {
@@ -131,6 +182,33 @@ public class NotesState extends TransducerState {
         }*/
     }
 
+    //TODO Mejor en IMCore
+    // TODO añadir contexto (pentagrama anterior)
+    private boolean computeInTernaryRhythm(SemanticTimeSignature semanticTimeSignature) throws ImportException {
+        if (semanticTimeSignature == null) {
+            System.err.println("TO-DO compás pentagrama anterior");
+            return false;
+        }
+        TimeSignature ts = (TimeSignature) semanticTimeSignature.getCoreSymbol();
+        if (ts instanceof TimeSignatureCommonTime || ts instanceof TimeSignatureCutTime) {
+            return false;
+        } else if (ts instanceof TimeSignatureProporcionMayor || ts instanceof TimeSignatureProporcionMenor) {
+            return true;
+        } else {
+            throw new ImportException("Unsupported meter type:  " + ts.getClass());
+        }
+    }
+
+    private SemanticTimeSignature findLastTimeSignature(SemanticTransduction transduction) {
+        for (SemanticSymbol symbol: transduction.getSemanticEncoding().getSymbols()) {
+            SemanticSymbolType symbolType = symbol.getSymbol();
+            if (symbolType instanceof SemanticTimeSignature) {
+                return (SemanticTimeSignature)symbol.getSymbol();
+            }
+        }
+        return null;
+    }
+
     SemanticClef findLastClef(SemanticTransduction transduction) {
         for (SemanticSymbol symbol: transduction.getSemanticEncoding().getSymbols()) {
             SemanticSymbolType symbolType = symbol.getSymbol();
@@ -139,6 +217,16 @@ public class NotesState extends TransducerState {
             }
         }
         throw new IM3RuntimeException("Cannot find a clef");
+    }
+
+    SemanticKeySignature findLastKeySignature(SemanticTransduction transduction) {
+        for (SemanticSymbol symbol: transduction.getSemanticEncoding().getSymbols()) {
+            SemanticSymbolType symbolType = symbol.getSymbol();
+            if (symbolType instanceof SemanticKeySignature) {
+                return (SemanticKeySignature)symbol.getSymbol();
+            }
+        }
+        return null;
     }
 
     //TODO Esto es solo para compases binarios
@@ -164,30 +252,46 @@ public class NotesState extends TransducerState {
     }
 
     //TODO Esto es solo para compases binarios
-    private Figures convert(NoteFigures value) {
+    private FiguresColoration convert(NoteFigures value, boolean ternaryRhythm) {
         switch (value) {
-            case breveBlack:
-            case breve:
-                return Figures.BREVE;
-            case eighth:
-            case eighthCut:
-                return Figures.FUSA;
-            case half:
-                return Figures.MINIM;
-            case longa:
-                return Figures.LONGA;
-            case eighthVoid:
-            case quarter:
-                return Figures.SEMIMINIM;
-            case whole:
-            case wholeBlack:
-                return Figures.SEMIBREVE;
-            case tripleWholeStem:
-            case doubleWholeStem:
             case doubleWholeBlackStem:
+                return new FiguresColoration(Figures.MAXIMA, true);
+            case tripleWholeStem:
+                return new FiguresColoration(Figures.MAXIMA, true);
+            case doubleWholeStem:
+                return new FiguresColoration(Figures.MAXIMA, true);
             case doubleWhole:
+                return new FiguresColoration(Figures.MAXIMA, true);
             case quadrupleWholeStem:
-                return Figures.MAXIMA;
+                return new FiguresColoration(Figures.MAXIMA, true);
+            case longa:
+                return new FiguresColoration(Figures.LONGA, null);
+            case breveBlack:
+                return new FiguresColoration(Figures.BREVE, true);
+            case breve:
+                return new FiguresColoration(Figures.BREVE, false);
+            case whole:
+                return new FiguresColoration(Figures.SEMIBREVE, false);
+            case wholeBlack:
+                return new FiguresColoration(Figures.SEMIBREVE, true);
+            case half:
+                if (ternaryRhythm) {
+                    return new FiguresColoration(Figures.SEMIMINIM, true);
+                } else {
+                    return new FiguresColoration(Figures.MINIM, null);
+                }
+            case quarter:
+                if (ternaryRhythm) {
+                    return new FiguresColoration(Figures.MINIM, true);
+                } else {
+                    return new FiguresColoration(Figures.SEMIMINIM, null);
+                }
+            case eighthVoid:
+                return new FiguresColoration(Figures.SEMIMINIM, null);
+            case eighth:
+                return new FiguresColoration(Figures.FUSA, null);
+            case eighthCut:
+                return new FiguresColoration(Figures.SEMIFUSA, null);
             default:
                 throw new IM3RuntimeException("Unsupported figure " + value);
         }
@@ -206,13 +310,13 @@ public class NotesState extends TransducerState {
         }
     }
 
-    private Figures parseFigure(INoteDurationSpecification durationSpecification) throws IM3Exception {
+    private FiguresColoration parseFigure(INoteDurationSpecification durationSpecification, boolean inTernaryRhythm) throws IM3Exception {
         if (durationSpecification instanceof Beam) {
             Beam beam = (Beam) durationSpecification;
-            return Figures.findFigureWithFlags(beam.getBeams(), NotationType.eMensural);
+            return new FiguresColoration(Figures.findFigureWithFlags(beam.getBeams(), NotationType.eMensural), null);
         } else if (durationSpecification instanceof NoteFigures) {
             NoteFigures noteFigures = (NoteFigures) durationSpecification;
-            return convert(noteFigures);
+            return convert(noteFigures, inTernaryRhythm);
         } else {
             throw new IM3Exception("Unsupported durationSpecification: " + durationSpecification);
         }
