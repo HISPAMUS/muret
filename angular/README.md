@@ -12,6 +12,11 @@ Components don't include business logic, rather, it is contained in different Se
   
 https://www.npmjs.com/package/angular-svg
 
+-----
+Update (with npm install -g npm-check-updates)
+https://www.npmjs.com/package/npm-check-updates
+ncu -g
+ncu
 ----
 Redux pattern application in MuRET explained in redux.md
 Redux + auth: https://mherman.org/blog/authentication-in-angular-with-ngrx/
