@@ -25,7 +25,7 @@ export class NewProjectEffects {
     ofType<CreateProject>(NewProjectActionTypes.CreateProject),
     switchMap((action: CreateProject) =>
       this.newProjectService.newProject$(action.user, action.name, action.composer, action.notationType,
-      action.manuscriptType, action.comments, action.imgSrc, action.collection)),
+      action.manuscriptType, action.comments, action.imgSrc, action.collectionID)),
     switchMap((project: Project) => {
       return of(new CreateProjectSuccess(project));
     })

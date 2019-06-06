@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, OnDestroy, OnInit, Self, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, Self, ViewChild} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Rectangle} from '../../../../svg/model/rectangle';
@@ -33,7 +33,7 @@ import {Part} from '../../../../core/model/entities/part';
   styleUrls: ['./document-analysis.component.css'],
   providers: []
 })
-export class DocumentAnalysisComponent implements OnInit, OnDestroy {
+export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewInit {
   imageID: number;
   filename$: Observable<string>;
   regionTypes$: Observable<RegionType[]>;
@@ -42,7 +42,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   mode: 'eIdle' |'eSelecting' | 'eEditing' | 'eAdding';
   selectedRegionTypeID: number | 'page';
   zoomFactor = 1;
-  @ViewChild('regionTypesModal') regionTypesModal: ElementRef;
+  @ViewChild('regionTypesModal', {static: true}) regionTypesModal: ElementRef;
 
   // tools
   private selectedShapeValue: string;
@@ -77,13 +77,17 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
       });
     });
 
+    this.imagePart$ = this.store.select(selectImagePart);
+
+  }
+
+  ngAfterViewInit(): void {
     this.pagesSubscription = this.store.select(selectPages).subscribe(next => {
       if (next) {
         this.drawPagesAndRegions(next);
       }
     });
 
-    this.imagePart$ = this.store.select(selectImagePart);
   }
 
   ngOnDestroy(): void {

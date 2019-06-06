@@ -7,56 +7,56 @@ import {ErrorInterceptor, TokenInterceptor} from './auth/token-interceptor.servi
 const routes = [
   {
     path: 'login',
-    loadChildren: './auth/auth.module#AuthModule'
+    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
   },
   {
     path: 'about',
-    loadChildren: './features/about/about.module#AboutModule'
+    loadChildren: () => import('./features/about/about.module').then(m => m.AboutModule)
   },
   {
     path: 'home',
     canActivate: [AuthGuard],
-    loadChildren: './features/home/home.module#HomeModule'
+    loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule)
   },
   {
     canActivate: [AuthGuard],
     path: 'export',
-    loadChildren: './features/export/export.module#ExportModule'
+    loadChildren: () => import('./features/export/export.module').then(m => m.ExportModule)
   },
   {
     canActivate: [AuthGuard],
     path: 'projects',
-    loadChildren: './features/projects/projects.module#ProjectsModule'
+    loadChildren: () => import('./features/projects/projects.module').then(m => m.ProjectsModule)
   },
   {
     canActivate: [AuthGuard],
     path: 'project',
-    loadChildren: './features/project/project.module#ProjectModule'
+    loadChildren: () => import('./features/project/project.module').then(m => m.ProjectModule)
   },
   {
     canActivate: [AuthGuard],
     path: 'newproject',
-    loadChildren: './features/new-project/new-project.module#NewProjectModule'
+    loadChildren: () => import('./features/new-project/new-project.module').then(m => m.NewProjectModule)
   },
   {
     canActivate: [AuthGuard],
     path: 'documentanalysis',
-    loadChildren: './features/document-analysis/document-analysis.module#DocumentAnalysisModule'
+    loadChildren: () => import('./features/document-analysis/document-analysis.module').then(m => m.DocumentAnalysisModule)
   },
   {
     canActivate: [AuthGuard],
     path: 'agnosticrepresentation',
-    loadChildren: './features/agnostic-representation/agnostic-representation.module#AgnosticRepresentationModule'
+    loadChildren: () => import('./features/agnostic-representation/agnostic-representation.module').then(m => m.AgnosticRepresentationModule)
   },
   {
     canActivate: [AuthGuard],
     path: 'semanticrepresentation',
-    loadChildren: './features/semantic-representation/semantic-representation.module#SemanticRepresentationModule'
+    loadChildren: () => import('./features/semantic-representation/semantic-representation.module').then(m => m.SemanticRepresentationModule)
   },
   {
     canActivate: [AuthGuard],
     path: '',
-    loadChildren: './features/home/home.module#HomeModule'
+    loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule)
   }
 ];
 

@@ -48,8 +48,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   private modeValue: 'eIdle' | 'eAdding' | 'eEditing' | 'eSelecting';
   @Output() modeChange = new EventEmitter();
 
-  @ViewChild('canvas') canvas: ElementRef;
-  @ViewChild('svgContent') svgContent: ElementRef;
+  @ViewChild('canvas', {static: true}) canvas: ElementRef; // with false it fails
+  @ViewChild('svgContent', {static: true}) svgContent: ElementRef;
   // @ViewChildren(RectangleComponent) rectangleComponents: QueryList<RectangleComponent>;
 
   // interaction

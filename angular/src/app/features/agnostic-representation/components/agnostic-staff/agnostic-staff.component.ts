@@ -50,7 +50,7 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   LEDGER_LINE_OFFSET: number = this.em / 4;
   LEDGER_LINE_WIDTH: number = this.em / 1.5;
 
-  @ViewChild('agnosticStaff') agnosticStaff: ElementRef;
+  @ViewChild('agnosticStaff', {static: true}) agnosticStaff: ElementRef;
 
   margin: number;
 

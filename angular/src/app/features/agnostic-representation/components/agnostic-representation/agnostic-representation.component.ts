@@ -481,6 +481,8 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   setSelectedRegion($event: Region) {
-    this.selectedRegion = $event;
+    setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
+      this.selectedRegion = $event;
+    });
   }
 }
