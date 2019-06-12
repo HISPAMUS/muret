@@ -15,8 +15,8 @@ import {selectCollection} from '../../store/selectors/projects.selector';
 })
 
 export class ProjectsComponent implements OnInit, OnDestroy {
-  private collection$: Observable<Collection>;
-  private collectionID: number;
+  collection$: Observable<Collection>;
+  collectionID: number;
 
   constructor(private route: ActivatedRoute, private store: Store<any>) {
     this.route.paramMap.subscribe((params: ParamMap) => {
