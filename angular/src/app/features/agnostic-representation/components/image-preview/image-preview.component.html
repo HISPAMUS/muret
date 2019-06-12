@@ -1,0 +1,13 @@
+<div [ngClass]="imagePreviewClass">
+  <div id="imagePreviewIcons">
+    <button (click)="toggleImagePreview()">
+      <fa-icon *ngIf="isImagePreviewMinimized" icon="expand-arrows-alt" class="icons"></fa-icon>
+      <fa-icon *ngIf="!isImagePreviewMinimized" icon="compress-arrows-alt" class="icons"></fa-icon>
+    </button>
+    <span>Region selection</span>
+  </div>
+  <app-image [imageID]="imageID" [shapes]="imagePreviewShapes" [zoomFactor]="imagePreviewZoomFactor"
+             [(selectedShapeID)]="selectedRegionShapeID"
+             [mode]="'eSelecting'">
+  </app-image>
+</div>

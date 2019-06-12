@@ -4,6 +4,7 @@ import {Clear} from '../../features/document-analysis/store/actions/document-ana
 import {SimpleModalService} from 'ngx-simple-modal';
 import {Observable, of} from 'rxjs';
 import {AlertComponent} from '../components/error-modal-message/alert.component';
+import {InputDialogComponent} from '../components/input-dialog/input-dialog.component';
 
 @Injectable({
   providedIn: 'root'
@@ -25,4 +26,12 @@ export class DialogsService {
       message
     });
   }
+
+  public showInput(title: string, currentValue: string): Observable<string> {
+    return this.simpleModalService.addModal(InputDialogComponent, {
+      title,
+      currentValue
+    });
+  }
+
 }

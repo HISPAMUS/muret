@@ -14,22 +14,22 @@ import java.util.Objects;
 public class UserPrinciple implements UserDetails {
 	private static final long serialVersionUID = 1L;
 
-	private Integer id;
-
-    private String username;
-
-    @JsonIgnore
-    private String password;
-
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrinciple(Integer id, String username, String password,
+    User user;
+
+    public UserPrinciple(User user, Collection<? extends GrantedAuthority> authorities) {
+        this.authorities = authorities;
+        this.user = user;
+    }
+
+    /*public UserPrinciple(Integer id, String username, String password,
 			    		Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.authorities = authorities;
-    }
+    }*/
 
     public static UserPrinciple build(User user) {
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -37,26 +37,28 @@ public class UserPrinciple implements UserDetails {
             authorities.add(new SimpleGrantedAuthority(User.ADMINISTRATOR_ROLE));
         }
 
-        return new UserPrinciple(
+        /*return new UserPrinciple(
                 user.getId(),
                 user.getUsername(),
                 user.getPassword(),
                 authorities
-        );
+        );*/
+        return new UserPrinciple(user, authorities);
     }
 
     public Integer getId() {
-        return id;
+        return user.getId();
     }
 
     @Override
     public String getUsername() {
-        return username;
+        return user.getUsername();
     }
 
+    @JsonIgnore
     @Override
     public String getPassword() {
-        return password;
+        return user.getPassword();
     }
 
     @Override
@@ -90,6 +92,10 @@ public class UserPrinciple implements UserDetails {
         if (o == null || getClass() != o.getClass()) return false;
         
         UserPrinciple user = (UserPrinciple) o;
-        return Objects.equals(id, user.id);
+        return Objects.equals(user, user.user);
+    }
+
+    public User getUser() {
+        return user;
     }
 }

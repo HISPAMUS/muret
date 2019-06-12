@@ -29,6 +29,12 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
         }
       };
     }
+    case DocumentAnalysisActionTypes.GetImagePartSuccess: {
+      return {
+        ...state,
+        imagePart: action.part
+      };
+    }
     case DocumentAnalysisActionTypes.GetImageURLSuccess: {
       return {
         ...state,

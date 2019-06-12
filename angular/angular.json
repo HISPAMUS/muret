@@ -26,7 +26,7 @@
               "src/styles.css",
             ],
             "scripts": [
-              // "./node_modules/pressure/dist/pressure.min.js"
+              "lib/verovio-toolkit.js"
             ],
             "es5BrowserSupport": true
           },
@@ -50,8 +50,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "5mb",
+                  "maximumError": "8mb"
                 }
               ]
             }

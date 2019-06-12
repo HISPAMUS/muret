@@ -12,6 +12,7 @@ import {GetUser} from '../../../../core/store/actions/user.actions';
 import {selectAuthState} from '../../../../auth/store/selectors/auth.selector';
 import {selectLoggedInUser} from '../../../../core/store/selectors/user.selector';
 import {selectTrainingSetExporters} from '../../store/selectors/training-set-exporters.selector';
+import {flatten} from '@angular/compiler';
 
 
 @Component({
@@ -66,11 +67,14 @@ export class TrainingSetsComponent implements OnInit, OnDestroy {
     this.userSubscription = this.store.select(selectLoggedInUser).subscribe(next => {
       const projectsFormArray = (this.form.get('projectsFormArray') as FormArray);
       if (next && projectsFormArray.controls.length === 0) {
-        this.projects = [...next.projectsCreated, ...next.permissions.map((permission) => permission.project)];
-        const controls = this.projects.map(c => new FormControl(false));
-        controls.forEach(c => {
-          projectsFormArray.push(c);
-        });
+        if (next && next.permissions) {
+          this.projects = flatten([...next.permissions.map((permission) => permission.collection.projects)]);
+          const controls = this.projects.map(c => new FormControl(false));
+          controls.forEach(c => {
+            projectsFormArray.push(c);
+          });
+        }
+        // this.projects = flatten([...next.projectsCreated, ...next.permissions.map((permission) => permission.collection.projects)]);
       }
     });
   }
@@ -118,7 +122,7 @@ export class TrainingSetsComponent implements OnInit, OnDestroy {
 
   doesNotHavePermission(trainingSetExporter: TrainingSetExporter) {
     if (trainingSetExporter.adminPermissionRequired) {
-      return true; // TODO - depende de usuario
+      return false; // true; // TODO - depende de usuario
     }
     return false;
   }

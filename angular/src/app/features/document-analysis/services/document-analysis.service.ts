@@ -6,6 +6,7 @@ import {RegionType} from '../../../core/model/entities/region-type';
 import {Page} from '../../../core/model/entities/page';
 import {Region} from '../../../core/model/entities/region';
 import {BoundingBox} from '../../../core/model/entities/bounding-box';
+import {Part} from '../../../core/model/entities/part';
 
 @Injectable() // non-singleton
 export class DocumentAnalysisService {
@@ -14,6 +15,11 @@ export class DocumentAnalysisService {
 
   public getDocumentAnalysisImageProjection$(id: number): Observable<DocumentAnalysisImageProjection> {
     return this.apiRestClientService.getProjectionOf$<DocumentAnalysisImageProjection>(id, 'images', 'documentAnalysisImage');
+  }
+
+  public getImagePart$(id: number): Observable<Part> {
+    const url = 'parts/get/image/' + id;
+    return this.apiRestClientService.get$<Part>(url);
   }
 
   public getRegionTypes$(): Observable<RegionType[]> {

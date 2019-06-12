@@ -2,7 +2,6 @@ package es.ua.dlsi.grfia.im3ws.muret.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonView;
 import es.ua.dlsi.im3.core.score.NotationType;
 
 import javax.persistence.*;
@@ -13,7 +12,7 @@ import java.util.List;
  * @author drizo
  */
 @Entity
-public class Project {
+public class Project extends Auditable {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,10 +21,6 @@ public class Project {
     private String name;
     @Column
     private String path;
-    @Column
-    private Date created;
-    @Column
-    private Date lastChange;
     @Column
     private String composer;
     @Column
@@ -49,42 +44,44 @@ public class Project {
     @Column (name = "thumbnail_base64_encoding", columnDefinition = "LONGTEXT")
     private String thumbnailBase64Encoding;
 
-    @JsonBackReference (value="createdBy") // it avoids circular relationships
-    @ManyToOne
-    @JoinColumn(name="created_by", referencedColumnName="id")
-    private User createdBy;
-
-    @JsonBackReference (value="changedBy") // it avoids circular relationships
-    @ManyToOne
-    @JoinColumn(name="changed_by", referencedColumnName="id")
-    private User changedBy;
-
     @JsonManagedReference
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "project")
     private List<Image> images;
+
+    @JsonManagedReference
+    @OneToMany(fetch=FetchType.LAZY, mappedBy = "project")
+    private List<Part> parts;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="state_id")
     State state;
 
+    @JsonBackReference
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="collection_id", nullable = false)
+    private Collection collection;
+
+
     public Project() {
     }
 
-    public Project(String name, String path, String composer, Date created, Date lastChange, User createdBy, User changedBy, String thumbnailBase64Encoding, String comments, String imagesOrdering, NotationType notationType, ManuscriptType manuscriptType, State state, List<Image> images) {
+    public Project(String name, String path, String composer, Date creationDate, Date lastModifiedDate, User createdBy, User lastModifiedBy , String thumbnailBase64Encoding, String comments, String imagesOrdering, NotationType notationType, ManuscriptType manuscriptType, State state, List<Image> images, List<Part> parts, Collection collection) {
         this.name = name;
         this.composer = composer;
         this.notationType = notationType;
         this.path = path;
         this.thumbnailBase64Encoding = thumbnailBase64Encoding;
-        this.created = created;
-        this.lastChange = lastChange;
+        this.createdDate = creationDate;
+        this.lastModifiedDate = lastModifiedDate;
         this.createdBy = createdBy;
-        this.changedBy = changedBy;
+        this.lastModifiedBy = lastModifiedBy;
         this.images = images;
         this.comments = comments;
         this.imagesOrdering = imagesOrdering;
         this.manuscriptType = manuscriptType;
         this.state = state;
+        this.parts = parts;
+        this.collection = collection;
     }
     public Integer getId() {
         return id;
@@ -117,36 +114,12 @@ public class Project {
         this.path = path;
     }
 
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getLastChange() {
-        return lastChange;
-    }
-
-    public void setLastChange(Date lastChange) {
-        this.lastChange = lastChange;
-    }
-
     public User getCreatedBy() {
         return createdBy;
     }
 
     public void setCreatedBy(User createdBy) {
         this.createdBy = createdBy;
-    }
-
-    public User getChangedBy() {
-        return changedBy;
-    }
-
-    public void setChangedBy(User changedBy) {
-        this.changedBy = changedBy;
     }
 
     public List<Image> getImages() {
@@ -205,16 +178,28 @@ public class Project {
         this.imagesOrdering = imagesOrdering;
     }
 
+    public List<Part> getParts() {
+        return parts;
+    }
+
+    public void setParts(List<Part> parts) {
+        this.parts = parts;
+    }
+
+    public Collection getCollection() {
+        return collection;
+    }
+
+    public void setCollection(Collection collection) {
+        this.collection = collection;
+    }
+
     @Override
     public String toString() {
         return "Project{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", path='" + path + '\'' +
-                ", created=" + created +
-                ", lastChange=" + lastChange +
-                ", createdBy=" + createdBy +
-                ", changedBy=" + changedBy +
                 '}';
     }
 }

@@ -4,6 +4,7 @@ import {RegionType} from '../../../../core/model/entities/region-type';
 import {Region} from '../../../../core/model/entities/region';
 import {Page} from '../../../../core/model/entities/page';
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
+import {Part} from '../../../../core/model/entities/part';
 
 export enum DocumentAnalysisActionTypes {
   GetImageProjection = '[DocumentAnalysis] Get image projection',
@@ -12,6 +13,9 @@ export enum DocumentAnalysisActionTypes {
   GetImageURLSuccess = '[DocumentAnalysis] Get image URL success',
   GetRegionTypes = '[DocumentAnalysis] Get region types',
   GetRegionTypesSuccess = '[DocumentAnalysis] Get region types success',
+
+  GetImagePart = '[DocumentAnalysis] Get image part',
+  GetImagePartSuccess = '[DocumentAnalysis] Get image part success',
 
   // SelectPage = '[DocumentAnalysis] Select page',
 
@@ -50,6 +54,16 @@ export class GetImageProjection implements Action {
 export class GetImageProjectionSuccess implements Action {
   public readonly type = DocumentAnalysisActionTypes.GetImageProjectionSuccess;
   constructor(public documentAnalysisImageProjection: DocumentAnalysisImageProjection) {}
+}
+
+export class GetImagePart implements Action {
+  public readonly type = DocumentAnalysisActionTypes.GetImagePart;
+  constructor(public imageID: number) {}
+}
+
+export class GetImagePartSuccess implements Action {
+  public readonly type = DocumentAnalysisActionTypes.GetImagePartSuccess;
+  constructor(public part: Part) {}
 }
 
 export class GetImageURL implements Action {
@@ -170,6 +184,7 @@ export class SelectRegion implements Action {
 
 export type DocumentAnalysisActions =
   GetImageProjection | GetImageProjectionSuccess |
+  GetImagePart | GetImagePartSuccess |
   GetRegionTypes | GetRegionTypesSuccess |
   GetImageURL | GetImageURLSuccess |
  // SelectPage | SelectRegion |

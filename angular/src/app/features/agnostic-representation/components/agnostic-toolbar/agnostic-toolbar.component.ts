@@ -14,7 +14,7 @@ export class AgnosticToolbarComponent implements OnInit, OnDestroy {
   @Input() svgAgnosticSymbolSet: SVGSet;
   @Input() mode: 'eIdle' | 'eAdding' | 'eSelecting' | 'eEditing';
   @Input() filter: AgnosticSymbolAndPosition[];
-  @Input() frequentSymbols: Set<string>;
+  @Input() frequentSymbols: Map<string, number>; // key = agnostic key value, value = frequency
 
   @Output() agnosticSymbolSelected = new EventEmitter<AgnosticTypeSVGPath>();
   @Output() pitchUp = new EventEmitter();
@@ -101,7 +101,8 @@ export class AgnosticToolbarComponent implements OnInit, OnDestroy {
             value.agnosticTypeString.includes('metersign'));
         case 'frequent':
           return this.svgAgnosticSymbolSet.paths.filter(value => this.frequentSymbols.has(value.agnosticTypeString)).
-            sort((a, b) => a.agnosticTypeString.localeCompare(b.agnosticTypeString));
+            sort((a, b) => this.frequentSymbols.get(b.agnosticTypeString) - this.frequentSymbols.get(a.agnosticTypeString));
+          // sort decreasing order
         default:
           return this.svgAgnosticSymbolSet.paths.filter(value => value.agnosticTypeString.includes(this.symbolsFilter));
       }

@@ -15,7 +15,7 @@ public interface IUserProjection {
     int getId();
 
     String getUsername();
-    List<IProjectProjection> getProjectsCreated();
+    // List<IProjectProjection> getProjectsCreated();
     List<IPermissionsProjection> getPermissions();
 
 }

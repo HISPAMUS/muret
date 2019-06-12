@@ -99,7 +99,7 @@ public class ProjectController {
 
         //TODO Atómico
         //TODO Ordenación
-        Image image = new Image(fileName, null, fullImage.getWidth(), fullImage.getHeight(), project.get(), null);
+        Image image = new Image(fileName, null, fullImage.getWidth(), fullImage.getHeight(), project.get(), null, null);
         imageRepository.save(image);
 
         return new UploadFileResponse(fileName, file.getContentType(), file.getSize());

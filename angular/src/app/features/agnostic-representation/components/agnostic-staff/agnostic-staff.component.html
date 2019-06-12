@@ -11,6 +11,15 @@
       <svg:path [attr.d]="path.svgPathD" [attr.transform]="path.symbolTransform">
       </svg:path>
     </svg:symbol>
+
+    <svg:symbol id="annotation" viewBox="0 0 612 612" preserveAspectRatio="xMinYMid" overflow="visible">
+      <path d="M401.6,325.1H210.4c-10.6,0-19.1,8.6-19.1,19.1s8.6,19.1,19.1,19.1h191.2c10.6,0,19.1-8.6,19.1-19.1
+				S412.2,325.1,401.6,325.1z M439.9,210.4H172.1c-10.6,0-19.1,8.6-19.1,19.1s8.6,19.1,19.1,19.1h267.8c10.6,0,19.1-8.6,19.1-19.1
+				S450.4,210.4,439.9,210.4z M306,0C137,0,0,119.9,0,267.8c0,84.5,44.8,159.8,114.8,208.8V612l134-81.3c18.6,3.1,37.6,4.8,57.2,4.8
+				c169,0,306-119.9,306-267.8S475,0,306,0z M306,497.2c-22.3,0-43.9-2.6-64.6-7l-90,54.1l1.2-88.7
+				c-69-41.5-114.3-110.1-114.3-187.9C38.2,141,158.1,38.2,306,38.2S573.8,141,573.8,267.8S453.9,497.2,306,497.2z"/>
+    </svg:symbol>
+
       <!--symbol viewBox="3391 0 16391 8242">  transform="scale(1, -1)"  TO-DO Ver vbox en svg fuente -->
     <g>
       <svg:line *ngFor="let line of staffLines; trackBy: trackByLineFn"
@@ -43,6 +52,14 @@
                     stroke="black"
                     stroke-width="1"
           />
+
+          <svg:use *ngIf="hasComment(agnosticSymbol)" xlink:href="#annotation" [attr.x]="getX(agnosticSymbol)" [attr.y]="5"
+                   fill="blue" [attr.height]="annotationHeight"
+                   (touchstart)="doCommentClicked(agnosticSymbol)"
+                   (mousedown)="doCommentClicked(agnosticSymbol)"
+          >
+
+          </svg:use>
         </ng-container>
       </ng-container>
       <!-- TODO 87.5px a piñón para altura espacio 100px-->

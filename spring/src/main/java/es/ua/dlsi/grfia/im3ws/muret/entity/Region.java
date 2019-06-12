@@ -3,7 +3,6 @@ package es.ua.dlsi.grfia.im3ws.muret.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.List;
  * @author drizo
  */
 @Entity
-public class Region {
+public class Region extends Auditable implements IAssignableToPart {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,21 +44,35 @@ public class Region {
     @JoinColumn(name="regiontype_id")
     RegionType regionType;
 
+    /**
+     * It can be null because the part is assigned to other element of the score
+     */
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name="part_id")
+    private Part part;
+
+    @Column (name = "semantic_encoding")
+    private String semanticEncoding;
+
     public Region() {
     }
 
-    public Region(Page page, BoundingBox boundingBox, String comments, RegionType regionType, List<Symbol> symbols) {
+    public Region(Page page, BoundingBox boundingBox, String comments, RegionType regionType, List<Symbol> symbols, Part part, String semanticEncoding) {
         this.boundingBox = boundingBox;
         this.page = page;
         this.regionType = regionType;
         this.symbols = symbols;
         this.comments = comments;
+        this.part = part;
+        this.semanticEncoding = semanticEncoding;
     }
 
-    public Region(Page page, RegionType regionType, int fromX, int fromY, int toX, int toY) {
+    public Region(Page page, RegionType regionType, int fromX, int fromY, int toX, int toY, Part part) {
         this.page = page;
         this.regionType = regionType;
         this.boundingBox = new BoundingBox(fromX, fromY, toX, toY);
+        this.part = part;
     }
 
     public Long getId() {
@@ -109,6 +122,24 @@ public class Region {
 
     public void setSymbols(List<Symbol> symbols) {
         this.symbols = symbols;
+    }
+
+    @Override
+    public Part getPart() {
+        return part;
+    }
+
+    @Override
+    public void setPart(Part part) {
+        this.part = part;
+    }
+
+    public String getSemanticEncoding() {
+        return semanticEncoding;
+    }
+
+    public void setSemanticEncoding(String semanticEncoding) {
+        this.semanticEncoding = semanticEncoding;
     }
 
     @Override

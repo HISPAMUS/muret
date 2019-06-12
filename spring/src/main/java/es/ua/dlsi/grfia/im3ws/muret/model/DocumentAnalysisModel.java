@@ -51,8 +51,8 @@ public class DocumentAnalysisModel {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Splitting page at {0}", x);
 
         if (image.getPages() == null || image.getPages().isEmpty()) {
-            Page omrPage1 = new Page(image, 0, 0, x, image.getHeight(), null, null);
-            Page omrPage2 = new Page(image, x + 1, 0, image.getWidth(), image.getHeight(), null, null);
+            Page omrPage1 = new Page(image, 0, 0, x, image.getHeight(), null, null, null);
+            Page omrPage2 = new Page(image, x + 1, 0, image.getWidth(), image.getHeight(), null, null, null);
 
             image.addPage(pageRepository.save(omrPage1));
             image.addPage(pageRepository.save(omrPage2));
@@ -68,7 +68,7 @@ public class DocumentAnalysisModel {
                 if (page.getBoundingBox().getFromX() < x && x < page.getBoundingBox().getFromX() + page.getBoundingBox().getWidth()) {
                     Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Splitting page {0}", page);
 
-                    Page newPage = new Page(image, x, 0, page.getBoundingBox().getFromX() + page.getBoundingBox().getWidth(), image.getHeight(), null, null);
+                    Page newPage = new Page(image, x, 0, page.getBoundingBox().getFromX() + page.getBoundingBox().getWidth(), image.getHeight(), null, null, null);
                     page.getBoundingBox().setWidth(x - page.getBoundingBox().getFromX() - 1);
                     pageRepository.save(page);
 
@@ -78,7 +78,7 @@ public class DocumentAnalysisModel {
                     // create a region for new page
                     Region newRegion = new Region(newPage, null,
                             newPage.getBoundingBox().getFromX(), newPage.getBoundingBox().getFromY(),
-                            newPage.getBoundingBox().getToX(), newPage.getBoundingBox().getToY());
+                            newPage.getBoundingBox().getToX(), newPage.getBoundingBox().getToY(), null);
                     newRegion = regionRepository.save(newRegion);
                     newPage.addRegion(newRegion);
 
@@ -113,7 +113,7 @@ public class DocumentAnalysisModel {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Splitting region at {0},{1}", new Object[]{x, y});
         if (image.getPages() == null || image.getPages().isEmpty()) {
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, "No page, creating a single page");
-            Page omrPage1 = new Page(image, 0, 0, image.getWidth(), image.getHeight(), null, null);
+            Page omrPage1 = new Page(image, 0, 0, image.getWidth(), image.getHeight(), null, null, null);
             image.addPage(pageRepository.save(omrPage1));
         }
 
@@ -146,7 +146,7 @@ public class DocumentAnalysisModel {
             throw new IM3WSException("Cannot find 'undefined' region type");
         }
 
-        Page onePage = new Page(image, ONE_PAGE_MARGIN, ONE_PAGE_MARGIN, image.getWidth()-ONE_PAGE_MARGIN, image.getHeight()-ONE_PAGE_MARGIN, null, null);
+        Page onePage = new Page(image, ONE_PAGE_MARGIN, ONE_PAGE_MARGIN, image.getWidth()-ONE_PAGE_MARGIN, image.getHeight()-ONE_PAGE_MARGIN, null, null, null);
 
         LinkedList<Symbol> symbols = new LinkedList<>();
         for (Page page : image.getPages()) {
@@ -159,7 +159,7 @@ public class DocumentAnalysisModel {
         }
 
         if (symbols.size() > 0) {
-            Region oneRegion = new Region(onePage, regionType, ONE_PAGE_REGION_MARGIN, ONE_PAGE_REGION_MARGIN, image.getWidth()-ONE_PAGE_REGION_MARGIN, image.getHeight()-ONE_PAGE_REGION_MARGIN);
+            Region oneRegion = new Region(onePage, regionType, ONE_PAGE_REGION_MARGIN, ONE_PAGE_REGION_MARGIN, image.getWidth()-ONE_PAGE_REGION_MARGIN, image.getHeight()-ONE_PAGE_REGION_MARGIN, null);
             onePage.addRegion(oneRegion);
 
             for (Symbol omrSymbol : symbols) { // avoid concurrent modification above
@@ -178,8 +178,8 @@ public class DocumentAnalysisModel {
     @Transactional
     public void splitRegionAt(Page page, int y) throws IM3WSException {
         if (page.getRegions() == null || page.getRegions().isEmpty()) {
-            Region omrRegion1 = regionRepository.save(new Region(page, null, page.getBoundingBox().getFromX(), 0, page.getBoundingBox().getToX(), y - 1));
-            Region omrRegion2 = regionRepository.save(new Region(page, null, page.getBoundingBox().getFromX(), y, page.getBoundingBox().getToX(), page.getBoundingBox().getToY()));
+            Region omrRegion1 = regionRepository.save(new Region(page, null, page.getBoundingBox().getFromX(), 0, page.getBoundingBox().getToX(), y - 1, null));
+            Region omrRegion2 = regionRepository.save(new Region(page, null, page.getBoundingBox().getFromX(), y, page.getBoundingBox().getToX(), page.getBoundingBox().getToY(), null));
             page.addRegion(omrRegion1);
             page.addRegion(omrRegion2);
         } else {
@@ -210,7 +210,7 @@ public class DocumentAnalysisModel {
                     regionRepository.save(region);
 
                     Region newRegion = regionRepository.save(new Region(page, null, region.getBoundingBox().getFromX(), splitYTakingIntoAccountTopSymbol,
-                            region.getBoundingBox().getToX(), toY));
+                            region.getBoundingBox().getToX(), toY, null));
                     page.addRegion(newRegion);
 
                     for (Symbol symbol : symbolsToMoveToNewRegion) {

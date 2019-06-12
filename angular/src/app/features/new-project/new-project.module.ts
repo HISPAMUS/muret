@@ -9,7 +9,7 @@ import {EffectsModule} from '@ngrx/effects';
 import {newProjectReducers} from './store/reducers/new-project.reducers';
 import {NewProjectEffects} from './store/effects/new-project.effects';
 import {NewProjectService} from './new-project.service';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [NewProjectComponent],
@@ -20,6 +20,7 @@ import {ReactiveFormsModule} from '@angular/forms';
     ReactiveFormsModule,
     StoreModule.forFeature('new-project', newProjectReducers),
     EffectsModule.forFeature([NewProjectEffects]),
+    FormsModule,
   ],
   providers: [NewProjectService]
 })

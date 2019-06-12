@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, OnDestroy, OnInit, Self, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, Self, ViewChild} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Rectangle} from '../../../../svg/model/rectangle';
@@ -13,18 +13,19 @@ import {DocumentAnalysisState} from '../../store/state/document-analysis.state';
 import {
   ChangePageBoundingBox,
   ChangeRegionBoundingBox,
-  ChangeRegionType, Clear, CreatePage, CreateRegion, DeletePage, DeleteRegion,
+  ChangeRegionType, Clear, CreatePage, CreateRegion, DeletePage, DeleteRegion, GetImagePart,
   GetImageProjection,
   GetRegionTypes
 } from '../../store/actions/document-analysis.actions';
 import {
-  selectFileName,
+  selectFileName, selectImagePart,
   selectPages,
   selectRegionTypes
 } from '../../store/selectors/document-analysis.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {Part} from '../../../../core/model/entities/part';
 
 @Component({
   selector: 'app-document-analysis',
@@ -32,15 +33,16 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./document-analysis.component.css'],
   providers: []
 })
-export class DocumentAnalysisComponent implements OnInit, OnDestroy {
+export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewInit {
   imageID: number;
   filename$: Observable<string>;
   regionTypes$: Observable<RegionType[]>;
+  imagePart$: Observable<Part>;
   pagesSubscription: Subscription;
   mode: 'eIdle' |'eSelecting' | 'eEditing' | 'eAdding';
   selectedRegionTypeID: number | 'page';
   zoomFactor = 1;
-  @ViewChild('regionTypesModal') regionTypesModal: ElementRef;
+  @ViewChild('regionTypesModal', {static: true}) regionTypesModal: ElementRef;
 
   // tools
   private selectedShapeValue: string;
@@ -69,16 +71,23 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.imageID = +params.get('id'); // + converts the string to number
       this.store.dispatch(new GetImageProjection(+this.imageID));
+      this.store.dispatch(new GetImagePart(+this.imageID));
       setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
         this.store.dispatch(new ActivateLink({title: 'Document analysis', routerLink: 'documentanalysis/' + this.imageID}));
       });
     });
 
+    this.imagePart$ = this.store.select(selectImagePart);
+
+  }
+
+  ngAfterViewInit(): void {
     this.pagesSubscription = this.store.select(selectPages).subscribe(next => {
       if (next) {
         this.drawPagesAndRegions(next);
       }
     });
+
   }
 
   ngOnDestroy(): void {

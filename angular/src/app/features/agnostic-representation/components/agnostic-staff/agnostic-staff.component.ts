@@ -43,12 +43,14 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
 
   modeValue: 'eIdle' | 'eInserting' | 'eEditing' | 'eSelecting';
   @Output() modeChange = new EventEmitter();
+  @Output() commentClicked = new EventEmitter<AgnosticSymbol>();
   symbolHeight = 50; // 87.5px // TODO
+  annotationHeight = 25; // TODO
   em = 50; // TODO variable - ver también el cálculo del tamaño de los use en el svg
   LEDGER_LINE_OFFSET: number = this.em / 4;
   LEDGER_LINE_WIDTH: number = this.em / 1.5;
 
-  @ViewChild('agnosticStaff') agnosticStaff: ElementRef;
+  @ViewChild('agnosticStaff', {static: true}) agnosticStaff: ElementRef;
 
   margin: number;
 
@@ -244,4 +246,11 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
     this.computeViewBox();
   }
 
+  hasComment(agnosticSymbol: AgnosticSymbol) {
+    return agnosticSymbol.comments != null;
+  }
+
+  doCommentClicked(agnosticSymbol: AgnosticSymbol) {
+    this.commentClicked.emit(agnosticSymbol);
+  }
 }

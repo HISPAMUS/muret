@@ -3,11 +3,19 @@ package es.ua.dlsi.grfia.im3ws.muret.model.trainingsets;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.im3.core.IM3Exception;
+import es.ua.dlsi.im3.core.IM3RuntimeException;
+import es.ua.dlsi.im3.core.adt.Pair;
 import es.ua.dlsi.im3.core.adt.graphics.BoundingBoxXY;
 import es.ua.dlsi.im3.core.utils.FileCompressors;
 import es.ua.dlsi.im3.core.utils.ImageUtils;
 import es.ua.dlsi.im3.core.io.ExportException;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
+import javax.persistence.EntityManagerFactory;
+import javax.transaction.Transactional;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,7 +23,9 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.*;
 import java.util.Collection;
+import java.util.concurrent.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -80,7 +90,7 @@ public class AgnosticSymbolImagesTextFile extends AbstractTrainingSetExporter {
     }
 
 
-    public void generateProjectTextFile(Path muretFolder, Project project, File outputTextFile, boolean fixedSize) throws FileNotFoundException, IM3Exception {
+    public void generateProjectTextFile(Path muretFolder, Project project, File outputTextFile, boolean fixedSize) throws FileNotFoundException, IM3Exception, InterruptedException {
         PrintStream ps = new PrintStream(outputTextFile);
         ps.print("#Image");
         ps.print(FIELD_SEPARATOR);
@@ -90,7 +100,7 @@ public class AgnosticSymbolImagesTextFile extends AbstractTrainingSetExporter {
         ps.print(FIELD_SEPARATOR);
         ps.print("Agnostic symbol");
         ps.print(FIELD_SEPARATOR);
-        if (fixedSize) {
+        /*if (fixedSize) {
             if (useMargin) {
                 ps.print("Image pixels (including margin):");
                 ps.print(FIXED_SIZE*3);
@@ -112,20 +122,31 @@ public class AgnosticSymbolImagesTextFile extends AbstractTrainingSetExporter {
                 ps.print(FIELD_SEPARATOR);
                 ps.println("Height");
             }
-        }
+        }*/
 
+        ps.print("Width");
+        ps.print(FIELD_SEPARATOR);
+        ps.println("Height");
+
+        int nimage = 1;
         for (Image image: project.getImages()) {
-            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Exporting image " + image.getFilename());
+            System.out.println("\tExporting image " + nimage + " of " + project.getImages().size());
+            nimage++;
+            StringBuilder sbImage = new StringBuilder();
+            //Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Exporting image " + image.getFilename());
+
             int npage = 1;
             Path imagePath = Paths.get(muretFolder.toFile().getPath(), project.getPath(),
                     MURETConfiguration.MASTER_IMAGES, image.getFilename());
-            for (Page page: image.getPages()) {
+            for (Page page : image.getPages()) {
                 if (!page.getRegions().isEmpty()) {
                     int nregion = 1;
                     for (Region region : page.getRegions()) {
+                        //Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Exporting region " + region.getId());
+
                         if (!region.getSymbols().isEmpty()) {
                             for (Symbol symbol : region.getSymbols()) {
-                                printSymbol(ps, imagePath.toFile(), image, npage, nregion, symbol, fixedSize);
+                                printSymbol(sbImage, imagePath.toFile(), image, npage, nregion, symbol, fixedSize);
                             }
                             nregion++;
                         }
@@ -133,22 +154,21 @@ public class AgnosticSymbolImagesTextFile extends AbstractTrainingSetExporter {
                     npage++;
                 }
             }
-
+            ps.print(sbImage.toString());
         }
+
         ps.close();
     }
 
-    private void printSymbol(PrintStream ps, File imageFile, Image image, int page, int region, Symbol symbol, boolean fixedSize) throws IM3Exception {
-        ps.print(image.getFilename());
-        ps.print(FIELD_SEPARATOR);
-        ps.print(page);
-        ps.print(FIELD_SEPARATOR);
-        ps.print(region);
-        ps.print(FIELD_SEPARATOR);
-        ps.print(symbol.getAgnosticSymbol().getAgnosticString());
-        ps.print(FIELD_SEPARATOR);
-
-        StringBuilder stringBuilder = new StringBuilder();
+    private void printSymbol(StringBuilder sb, File imageFile, Image image, int page, int region, Symbol symbol, boolean fixedSize) throws IM3Exception {
+        sb.append(image.getFilename());
+        sb.append(FIELD_SEPARATOR);
+        sb.append(page);
+        sb.append(FIELD_SEPARATOR);
+        sb.append(region);
+        sb.append(FIELD_SEPARATOR);
+        sb.append(symbol.getAgnosticSymbol().getAgnosticString());
+        sb.append(FIELD_SEPARATOR);
 
         BoundingBoxXY boundingBoxXY;
         if (useMargin) {
@@ -173,29 +193,29 @@ public class AgnosticSymbolImagesTextFile extends AbstractTrainingSetExporter {
                 if (first) {
                     first = false;
                 } else {
-                    stringBuilder.append(',');
+                    sb.append(',');
                 }
-                stringBuilder.append(imagePixels[i]);
+                sb.append(imagePixels[i]);
             }
         } else {
             int [][] imagePixels = getGrayscaleImagePixels(imageFile, boundingBoxXY);
-            ps.print(imagePixels.length);
-            ps.print(FIELD_SEPARATOR);
-            ps.print(imagePixels[0].length);
-            ps.print(FIELD_SEPARATOR);
+            sb.append(imagePixels.length);
+            sb.append(FIELD_SEPARATOR);
+            sb.append(imagePixels[0].length);
+            sb.append(FIELD_SEPARATOR);
             boolean first = true;
             for (int i = 0; i < imagePixels.length; i++) {
                 for (int j = 0; j < imagePixels[i].length; j++) {
                     if (first) {
                         first = false;
                     } else {
-                        stringBuilder.append(',');
+                        sb.append(',');
                     }
-                    stringBuilder.append(imagePixels[i][j]);
+                    sb.append(imagePixels[i][j]);
                 }
             }
         }
-        ps.println(stringBuilder);
+        sb.append('\n');
     }
 
     private int[][] getGrayscaleImagePixels(File imageFile, BoundingBoxXY boundingBoxXY) throws IM3Exception {

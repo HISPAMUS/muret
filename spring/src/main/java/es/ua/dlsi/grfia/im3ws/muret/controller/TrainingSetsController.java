@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManagerFactory;
 import javax.transaction.Transactional;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,18 +31,23 @@ import java.util.logging.Logger;
 @Transactional // this solves the error: "springboot "failed to lazily initialize a collection of role": could not initialize proxy - no Session
 public class TrainingSetsController {
     private final MURETConfiguration muretConfiguration;
-
     private final ProjectRepository projectRepository;
+    private final EntityManagerFactory entityManagerFactory;
+    private final TrainingSetsFactory trainingSetsFactory;
+
 
     @Autowired
-    public TrainingSetsController(MURETConfiguration muretConfiguration, ProjectRepository projectRepository) {
+    public TrainingSetsController(MURETConfiguration muretConfiguration, ProjectRepository projectRepository, EntityManagerFactory entityManagerFactory, TrainingSetsFactory trainingSetsFactory) {
         this.muretConfiguration = muretConfiguration;
         this.projectRepository = projectRepository;
+        this.entityManagerFactory = entityManagerFactory;
+        this.trainingSetsFactory = trainingSetsFactory;
     }
 
     @GetMapping(path = {"/exporters"})
     public Collection<ITrainingSetExporter> getTrainingSetExporters()  {
-        return TrainingSetsFactory.getInstance().getTrainingSetExporters();
+       // return TrainingSetsFactory.getInstance(entityManagerFactory).getTrainingSetExporters();
+        return trainingSetsFactory.getTrainingSetExporters();
     }
 
     /**
@@ -55,8 +61,8 @@ public class TrainingSetsController {
     @ResponseBody
     public ResponseEntity<?> download(@PathVariable Integer exporterIndex, @PathVariable List<Integer> projectIds) throws IM3WSException {
         try {
-            ITrainingSetExporter exporter = TrainingSetsFactory.getInstance().getTrainingSetExporter(exporterIndex);
-
+            //ITrainingSetExporter exporter = TrainingSetsFactory.getInstance(entityManagerFactory).getTrainingSetExporter(exporterIndex);
+            ITrainingSetExporter exporter = trainingSetsFactory.getTrainingSetExporter(exporterIndex);
             ArrayList<Project> projectArrayList = new ArrayList<>();
             for (Integer projectID: projectIds) {
                 Optional<Project> project = projectRepository.findById(projectID);

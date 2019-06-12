@@ -1,14 +1,12 @@
 package es.ua.dlsi.grfia.im3ws.muret.controller;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
+import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.PageCreation;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.RegionCreation;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.model.DocumentAnalysisModel;
-import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
-import es.ua.dlsi.grfia.im3ws.muret.repository.PageRepository;
-import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
-import es.ua.dlsi.grfia.im3ws.muret.repository.RegionTypeRepository;
+import es.ua.dlsi.grfia.im3ws.muret.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,68 +20,51 @@ import java.util.Optional;
  */
 @RequestMapping("documentanalysis")
 @RestController
-public class DocumentAnalysisController {
-
-    private final ImageRepository imageRepository;
-
-    private final RegionRepository regionRepository;
-
-    private final PageRepository pageRepository;
+public class DocumentAnalysisController extends MuRETBaseController {
 
     private final RegionTypeRepository regionTypeRepository;
 
     private final DocumentAnalysisModel documentAnalysisModel;
 
     @Autowired
-    public DocumentAnalysisController(ImageRepository imageRepository, RegionRepository regionRepository, PageRepository pageRepository, RegionTypeRepository regionTypeRepository, DocumentAnalysisModel documentAnalysisModel) {
-        this.imageRepository = imageRepository;
-        this.regionRepository = regionRepository;
-        this.pageRepository = pageRepository;
+    public DocumentAnalysisController(MURETConfiguration muretConfiguration, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository, RegionTypeRepository regionTypeRepository, DocumentAnalysisModel documentAnalysisModel) {
+        super(muretConfiguration, imageRepository, pageRepository, regionRepository, symbolRepository);
         this.regionTypeRepository = regionTypeRepository;
         this.documentAnalysisModel = documentAnalysisModel;
     }
 
-
     @PutMapping(path = {"pageBoundingBoxUpdate"})
     public Page pageBoundingBoxUpdate(@RequestBody BoundingBox boundingBox) throws IM3WSException {
-        Optional<Page> page = pageRepository.findById(boundingBox.getId());
-        if (!page.isPresent()) {
-            throw new IM3WSException("Cannot find a page with id " + boundingBox.getId());
-        }
-        page.get().setBoundingBox(boundingBox);
-        pageRepository.save(page.get());
-        return page.get();
+        Page page = getPage(boundingBox.getId());
+        page.setBoundingBox(boundingBox);
+        pageRepository.save(page);
+        return page;
     }
 
     @PutMapping(path = {"regionUpdate"})
     public Region regionUpdate(@RequestBody Region region) throws IM3WSException {
-        Optional<Region> persistentRegion = regionRepository.findById(region.getId());
-        if (!persistentRegion.isPresent()) {
-            throw new IM3WSException("Cannot find a region with id " + region.getId());
-        }
+        Region persistentRegion = getRegion(region.getId());
+
         if (region.getBoundingBox() != null) {
-            persistentRegion.get().setBoundingBox(region.getBoundingBox());
+            persistentRegion.setBoundingBox(region.getBoundingBox());
         }
-        if (region.getRegionType() != null && !Objects.equals(persistentRegion.get().getRegionType(), region.getRegionType())) {
+        if (region.getRegionType() != null && !Objects.equals(persistentRegion.getRegionType(), region.getRegionType())) {
             Optional<RegionType> persistentRegionType = regionTypeRepository.findById(region.getRegionType().getId());
             if (!persistentRegionType.isPresent()) {
                 throw new IM3WSException("Cannot find a region type with id " + region.getRegionType().getId());
             }
 
-            persistentRegion.get().setRegionType(persistentRegionType.get());
+            persistentRegion.setRegionType(persistentRegionType.get());
         }
-        regionRepository.save(persistentRegion.get());
-        return persistentRegion.get();
+        regionRepository.save(persistentRegion);
+        return persistentRegion;
     }
 
     @Transactional // keep session open - avoid "failed to lazily initialize a collection" error
     @DeleteMapping(path = {"clear/{imageID}"})
     public List<Page> clear(@PathVariable("imageID") long imageID) throws IM3WSException {
-        Optional<Image> persistentImage = imageRepository.findById(imageID);
-        if (!persistentImage.isPresent()) {
-            throw new IM3WSException("Cannot find a image with id " + imageID);
-        }
-        List<Page> createdPages = this.documentAnalysisModel.leaveJustOnePageAndRegion(persistentImage.get());
+        Image persistentImage = getImage(imageID);
+        List<Page> createdPages = this.documentAnalysisModel.leaveJustOnePageAndRegion(persistentImage);
         return createdPages;
     }
 

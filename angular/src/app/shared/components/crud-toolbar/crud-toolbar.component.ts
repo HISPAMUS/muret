@@ -16,6 +16,7 @@ export class CrudToolbarComponent implements OnInit {
   @Output() onZoomIn = new EventEmitter();
   @Output() onZoomOut = new EventEmitter();
   @Output() onZoomFit = new EventEmitter();
+  @Output() onAddComment = new EventEmitter();
 
   constructor() {
     // ------- menus --------
@@ -76,7 +77,7 @@ export class CrudToolbarComponent implements OnInit {
     return this.mode === 'eAdding';
   }
 
-  @HostListener('window:keypress', ['$event'])
+  @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
     switch (event.code) {
       case 'Delete':
@@ -88,11 +89,19 @@ export class CrudToolbarComponent implements OnInit {
         this.mode = 'eIdle';
         break;
       case 'KeyA':
-        this.mode = 'eAdding';
+        if (event.altKey) {
+          this.mode = 'eAdding';
+        }
         break;
       case 'KeyE':
-        this.mode = 'eEditing';
+        if (event.altKey) {
+          this.mode = 'eEditing';
+        }
         break;
     }
+  }
+
+  addCommentToSelected() {
+    this.onAddComment.emit();
   }
 }

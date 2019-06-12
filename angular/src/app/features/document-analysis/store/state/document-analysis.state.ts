@@ -1,5 +1,6 @@
 import {RegionType} from '../../../../core/model/entities/region-type';
 import {Page} from '../../../../core/model/entities/page';
+import {Part} from '../../../../core/model/entities/part';
 
 export interface DocumentType {
   manuscriptType?: 'eHandwritten' | 'ePrinted';
@@ -12,6 +13,7 @@ export interface DocumentAnalysisState {
   filename: string;
   imageWidth: number;
   imageHeight: number;
+  imagePart: Part;
   pages: Page[];
   documentType: DocumentType;
 //  selectedRegion: Region;
@@ -24,6 +26,7 @@ export const initialDocumentAnalysisState: DocumentAnalysisState = {
   filename: null,
   imageWidth: 0,
   imageHeight: 0,
+  imagePart: null,
   pages: null,
   documentType: null
   // selectedRegion: null,

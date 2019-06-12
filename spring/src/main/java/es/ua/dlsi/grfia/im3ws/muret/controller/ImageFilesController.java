@@ -4,6 +4,9 @@ import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Image;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
+import es.ua.dlsi.grfia.im3ws.muret.repository.PageRepository;
+import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
+import es.ua.dlsi.grfia.im3ws.muret.repository.SymbolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
@@ -21,14 +24,11 @@ import java.util.Optional;
 
 @RequestMapping("imagefiles")
 @RestController
-public class ImageFilesController {
-    private final MURETConfiguration muretConfiguration;
-    private final ImageRepository imageRepository;
+public class ImageFilesController extends MuRETBaseController {
 
     @Autowired
-    public ImageFilesController(MURETConfiguration muretConfiguration, ImageRepository imageRepository) {
-        this.muretConfiguration = muretConfiguration;
-        this.imageRepository = imageRepository;
+    public ImageFilesController(MURETConfiguration muretConfiguration, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository) {
+        super(muretConfiguration, imageRepository, pageRepository, regionRepository, symbolRepository);
     }
 
     /**
@@ -41,21 +41,16 @@ public class ImageFilesController {
      * @throws FileNotFoundException
      */
     private ResponseEntity<InputStreamResource> getImage(String projectPath, Long imageID, String imagesRelativePath) throws IM3WSException, FileNotFoundException {
-        Optional<Image> image = imageRepository.findById(imageID);
-        if (!image.isPresent()) {
-            throw new IM3WSException("Cannot find an image with id " + imageID);
-        }
-
-        Image img = image.get();
+        Image image = getImage(imageID);
 
         if (projectPath == null) {
-            projectPath = img.getProject().getPath();
+            projectPath = image.getProject().getPath();
         }
 
         //avoid another query File projectFolder = new File(muretConfiguration.getFolder(), image.get().getProject().getPath());
         File projectFolder = new File(muretConfiguration.getFolder(), projectPath);
         File masterImagesFolder = new File(projectFolder, imagesRelativePath);
-        File imageFile = new File(masterImagesFolder, image.get().getFilename());
+        File imageFile = new File(masterImagesFolder, image.getFilename());
         if (!imageFile.exists()) {
             throw new IM3WSException("Image '" + imageFile.getAbsolutePath() + "' for image with ID=" + imageID + " does not exist");
         }

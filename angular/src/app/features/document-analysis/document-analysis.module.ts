@@ -13,7 +13,7 @@ import {EffectsModule} from '@ngrx/effects';
 import {documentAnalysisReducers} from './store/reducers/document-analysis.reducers';
 import {DocumentAnalysisEffects} from './store/effects/document-analysis.effects';
 import {DocumentAnalysisService} from './services/document-analysis.service';
-import { ImageComponent } from './image/image.component';
+import { ImageComponent } from './components/image/image.component';
 import {BreadcrumbModule} from '../../breadcrumb/breadcrumb.module';
 
 @NgModule({

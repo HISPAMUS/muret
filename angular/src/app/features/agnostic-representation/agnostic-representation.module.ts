@@ -19,9 +19,10 @@ import {SharedModule} from '../../shared/shared.module';
 import {BreadcrumbModule} from '../../breadcrumb/breadcrumb.module';
 import { AgnosticToolbarIconComponent } from './components/agnostic-toolbar-icon/agnostic-toolbar-icon.component';
 import {PositionInStaffService} from './services/position-in-staff.service';
+import { ImagePreviewComponent } from './components/image-preview/image-preview.component';
 
 @NgModule({
-  declarations: [AgnosticRepresentationComponent, AgnosticStaffComponent, AgnosticToolbarComponent, AgnosticToolbarIconComponent],
+  declarations: [AgnosticRepresentationComponent, AgnosticStaffComponent, AgnosticToolbarComponent, AgnosticToolbarIconComponent, ImagePreviewComponent],
   imports: [
     CommonModule,
     FontAwesomeModule,
@@ -38,6 +39,12 @@ import {PositionInStaffService} from './services/position-in-staff.service';
     EffectsModule.forFeature([AgnosticRepresentationEffects]),
     // for Image component - set after routing for avoiding document analysis route override this module routes and store
     DocumentAnalysisModule
+  ],
+  exports: [
+    ImagePreviewComponent
+  ],
+  entryComponents: [
+    ImagePreviewComponent
   ],
   providers: [
     AgnosticRepresentationService, PositionInStaffService
