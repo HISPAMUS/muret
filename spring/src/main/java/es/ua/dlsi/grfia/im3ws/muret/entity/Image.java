@@ -25,13 +25,12 @@ public class Image extends Auditable implements IAssignableToPart {
     @Column
     private Integer height;
 
-    @JsonBackReference
+    @JsonBackReference (value="project")
     @ManyToOne(fetch=FetchType.LAZY)
-    //@JoinColumn(name="project_id", referencedColumnName="id")
     @JoinColumn(name="project_id", nullable = false)
     private Project project;
 
-    @JsonManagedReference
+    @JsonManagedReference (value="image")
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "image",
             cascade = CascadeType.ALL,
             orphanRemoval = true) // orphanRemoval = remove dependent rather than set the FK to null

@@ -19,7 +19,7 @@ public class Symbol extends Auditable {
     @Column
     String comments;
 
-    @JsonBackReference
+    @JsonBackReference (value="region")
     @ManyToOne(fetch=FetchType.EAGER)
     //@JoinColumn(name="region_id", referencedColumnName="id")
     @JoinColumn(name="region_id", nullable = false)

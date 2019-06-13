@@ -20,7 +20,7 @@ public class Collection {
     @Column
     private String comments;
 
-    @JsonManagedReference
+    @JsonManagedReference (value="collection")
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "collection")
     private List<Project> projects;
 
@@ -64,6 +64,10 @@ public class Collection {
 
     public List<Project> getProjects() {
         return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
     }
 
     @Override
