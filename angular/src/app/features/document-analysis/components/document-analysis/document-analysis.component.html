@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <nav class="row">
+  <nav class="row" id="docAnalysisToolBar">
     <div class="col-9">
       <app-crud-toolbar (onClear)="clear()" (onDelete)="deleteSelected()" [(mode)]="mode" (onZoomFit)="zoomFit()" (onZoomIn)="zoomIn()" (onZoomOut)="zoomOut()">
       </app-crud-toolbar>
@@ -63,7 +63,7 @@
   </ng-template>
 
   <!-- image -->
-  <section class="row">
+  <section class="row" id="docAnalysisImage">
     <div class="col">
       <app-image [imageID]="imageID" [shapes]="shapes" [zoomFactor]="zoomFactor"
       (svgShapeCreated)="onShapeCreated($event)"
@@ -76,7 +76,7 @@
   </section>
     <!-- end image -->
 
-  <section class="row">
+  <section class="row" id="partName">
     <div class="col">
       <!--TODO -->
       <ng-container *ngIf="imagePart$ | async as imagePart; else noPartAssigned">
