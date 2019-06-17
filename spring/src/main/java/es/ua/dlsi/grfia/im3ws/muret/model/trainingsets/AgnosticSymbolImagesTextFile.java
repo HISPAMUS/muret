@@ -17,9 +17,9 @@ import org.hibernate.Transaction;
 import javax.persistence.EntityManagerFactory;
 import javax.transaction.Transactional;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintStream;
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -89,17 +89,29 @@ public class AgnosticSymbolImagesTextFile extends AbstractTrainingSetExporter {
         }
     }
 
+    private void write(FileChannel channel, String string) throws IOException {
+        byte[] strBytes = string.getBytes();
+        ByteBuffer buffer = ByteBuffer.allocate(strBytes.length);
+        buffer.put(strBytes);
+        buffer.flip();
+        channel.write(buffer);
+    }
 
-    public void generateProjectTextFile(Path muretFolder, Project project, File outputTextFile, boolean fixedSize) throws FileNotFoundException, IM3Exception, InterruptedException {
-        PrintStream ps = new PrintStream(outputTextFile);
-        ps.print("#Image");
-        ps.print(FIELD_SEPARATOR);
-        ps.print("Page");
-        ps.print(FIELD_SEPARATOR);
-        ps.print("Region");
-        ps.print(FIELD_SEPARATOR);
-        ps.print("Agnostic symbol");
-        ps.print(FIELD_SEPARATOR);
+
+    public void generateProjectTextFile(Path muretFolder, Project project, File outputTextFile, boolean fixedSize) throws IOException, IM3Exception, InterruptedException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(outputTextFile,true),8192*40);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("#Image");
+        sb.append(FIELD_SEPARATOR);
+        sb.append("Page");
+        sb.append(FIELD_SEPARATOR);
+        sb.append("Region");
+        sb.append(FIELD_SEPARATOR);
+        sb.append("Agnostic symbol");
+        sb.append(FIELD_SEPARATOR);
+
+
         /*if (fixedSize) {
             if (useMargin) {
                 ps.print("Image pixels (including margin):");
@@ -124,15 +136,16 @@ public class AgnosticSymbolImagesTextFile extends AbstractTrainingSetExporter {
             }
         }*/
 
-        ps.print("Width");
-        ps.print(FIELD_SEPARATOR);
-        ps.println("Height");
+        sb.append("Width");
+        sb.append(FIELD_SEPARATOR);
+        sb.append("Height\n");
+
+        writer.write(sb.toString());
 
         int nimage = 1;
         for (Image image: project.getImages()) {
             System.out.println("\tExporting image " + nimage + " of " + project.getImages().size());
             nimage++;
-            StringBuilder sbImage = new StringBuilder();
             //Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Exporting image " + image.getFilename());
 
             int npage = 1;
@@ -141,23 +154,26 @@ public class AgnosticSymbolImagesTextFile extends AbstractTrainingSetExporter {
             for (Page page : image.getPages()) {
                 if (!page.getRegions().isEmpty()) {
                     int nregion = 1;
+                    StringBuilder sbRegion = new StringBuilder();
+
                     for (Region region : page.getRegions()) {
                         //Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Exporting region " + region.getId());
 
                         if (!region.getSymbols().isEmpty()) {
                             for (Symbol symbol : region.getSymbols()) {
-                                printSymbol(sbImage, imagePath.toFile(), image, npage, nregion, symbol, fixedSize);
+                                printSymbol(sbRegion, imagePath.toFile(), image, npage, nregion, symbol, fixedSize);
                             }
                             nregion++;
                         }
                     }
+
+                    writer.write(sbRegion.toString());
                     npage++;
                 }
             }
-            ps.print(sbImage.toString());
         }
 
-        ps.close();
+        writer.close();
     }
 
     private void printSymbol(StringBuilder sb, File imageFile, Image image, int page, int region, Symbol symbol, boolean fixedSize) throws IM3Exception {
