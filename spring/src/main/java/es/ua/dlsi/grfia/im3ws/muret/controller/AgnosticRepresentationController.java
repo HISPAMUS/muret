@@ -64,10 +64,11 @@ public class AgnosticRepresentationController extends MuRETBaseController {
         AgnosticSymbolFont agnosticSymbolFont = AgnosticSymbolFontSingleton.getInstance().getLayoutFont(notationType, manuscriptType);
 
         try {
-            return new SVGSet(agnosticSymbolFont.getLayoutFont().getSVGFont().getAscent(),
+            SVGSet result = new SVGSet(agnosticSymbolFont.getLayoutFont().getSVGFont().getAscent(),
                     agnosticSymbolFont.getLayoutFont().getSVGFont().getDescent(),
                     agnosticSymbolFont.getLayoutFont().getSVGFont().getUnitsPerEM(),
                     agnosticSymbolFont.getFullSVGSetPathd());
+            return result;
         } catch (IM3Exception e) {
             throw new IM3WSException(e);
         }

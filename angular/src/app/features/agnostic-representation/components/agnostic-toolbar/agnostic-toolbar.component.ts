@@ -94,7 +94,7 @@ export class AgnosticToolbarComponent implements OnInit, OnDestroy {
             && !value.agnosticTypeString.includes('beam'));
         case 'other':
           return this.svgAgnosticSymbolSet.paths.filter(value => value.agnosticTypeString.includes('defect') ||
-            value.agnosticTypeString.includes('fermata') ||
+            value.agnosticTypeString.includes('fermata') || value.agnosticTypeString.includes('digit') ||
             value.agnosticTypeString.includes('slur') || !value.agnosticTypeString.includes('.'));
         case 'clefsmeters':
           return this.svgAgnosticSymbolSet.paths.filter(value => value.agnosticTypeString.includes('clef') ||

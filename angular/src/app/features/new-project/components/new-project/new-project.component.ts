@@ -30,7 +30,6 @@ export class NewProjectComponent implements OnInit, OnDestroy {
     collections: [Validators.required]
   });
   user: User;
-  selectedCollectionID: number;
 
   constructor(private fb: FormBuilder, private store: Store<NewProjectState>, private router: Router) {
     this.authSubscription = this.store.select(selectAuthState).subscribe(next => {
@@ -64,20 +63,21 @@ export class NewProjectComponent implements OnInit, OnDestroy {
     if (!this.user) {
       throw new Error('User not selected yet!');
     }
-    this.store.dispatch(new CreateProject(
+
+    const cp = new CreateProject(
       this.user,
       this.newProjectForm.controls.name.value,
       this.newProjectForm.controls.composer.value,
       this.newProjectForm.controls.notationType.value,
       this.newProjectForm.controls.manuscriptType.value,
       this.newProjectForm.controls.comments.value, this.imgSrc,
-      this.selectedCollectionID
-    ));
+      this.newProjectForm.controls.collections.value
+    );
+    this.store.dispatch(cp);
   }
 
   ngOnDestroy(): void {
     this.createProjectSuccessSubscription.unsubscribe();
     this.authSubscription.unsubscribe();
   }
-
 }

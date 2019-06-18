@@ -353,7 +353,6 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
         shape.hidden = this.regionTypeFilterOut.has(shape.layer);
       });
     }
-
   }
 }
 

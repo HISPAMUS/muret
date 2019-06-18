@@ -14,5 +14,5 @@ export interface Project extends Entity {
   manuscriptType: string;
   state: State;
   composer: string;
-  collection_id: Collection;
+  collection: Collection;
 }
