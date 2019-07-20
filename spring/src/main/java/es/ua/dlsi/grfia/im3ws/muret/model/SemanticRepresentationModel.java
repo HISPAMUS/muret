@@ -141,7 +141,8 @@ public class SemanticRepresentationModel {
         }
         //projectModel.addSemanticEncoding(project, partName, staff.getId(), staff.getBoundingBox(), semantic.getSemanticEncoding());
         KernSemanticExporter kernSemanticExporter = new KernSemanticExporter();
-        sendSemanticEncoding(project, partName, staff, mensustriche, renderer, kernSemanticExporter.export(semantic.getSemanticEncoding()));
+        String kernExport = kernSemanticExporter.export(semantic.getSemanticEncoding());
+        sendSemanticEncoding(project, partName, staff, mensustriche, renderer, kernExport);
         return getNotation(project, partName, staff, mensustriche, renderer);
     }
 

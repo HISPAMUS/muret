@@ -69,9 +69,7 @@ public class VerifyAgnosticSemanticTransducer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken("davidrizo", "nose"));
-        SecurityContextHolder.getContext().setAuthentication(authentication); // required from the auditing framework
+        new AuthenticateForScripts(authenticationManager).authenticate("davidrizo", "nose");
 
         for (Region region: regionRepository.findAll()) {
             Project project = region.getPage().getImage().getProject();

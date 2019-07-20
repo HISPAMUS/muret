@@ -27,10 +27,16 @@
     </section>
 
     <aside>
-      <button class="btn btn-primary" (click)="convertAgnosticSemantic()">Convert from agnostic</button>
-      <button class="btn btn-primary" (click)="isManualEntryCollapsed = !isManualEntryCollapsed"
-              [attr.aria-expanded]="!isManualEntryCollapsed" aria-controls="manualEntryPanel">
+      <button class="btn btn-primary" (click)="convertAgnosticSemantic()">
+        Convert from agnostic
+      </button>
+      <button class="btn btn-primary" (click)="showManualEntry()"
+              [attr.aria-expanded]="isManualEntrySelected()" aria-controls="manualEntryPanel">
         Manual entry
+      </button>
+      <button class="btn btn-secondary" (click)="showMEI()"
+              [attr.aria-expanded]="isMEISelected()" aria-controls="meiPanel">
+        Show MEI
       </button>
     </aside>
   </div>
@@ -43,7 +49,7 @@
 
   <section class="row">
     <div id="manualEntryPanel" class="col-8">
-      <div class="card" [ngbCollapse]="isManualEntryCollapsed">
+      <div class="card" [ngbCollapse]="isManualEntryCollapsed()">
         <div class="card-title">
           <h5>Use **kern or **mens here:</h5>
         </div>
@@ -55,6 +61,17 @@
           <button class="btn-secondary" (click)="sendSemanticEncoding()">
             Send semantic encoding
           </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="meiPanel" class="col-8">
+      <div class="card" [ngbCollapse]="isMEICollapsed()">
+        <div class="card-title">
+          <h5>MEI:</h5>
+        </div>
+        <div *ngIf="notation" class="card-body">
+          <p>{{notation.content}}</p>
         </div>
       </div>
     </div>

@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -117,12 +119,31 @@ public class JSONTagging extends AbstractTrainingSetExporter {
                             JSONArray jsonSymbols = new JSONArray();
                             jsonRegion.put("symbols", jsonSymbols);
 
-                            for (Symbol symbol : region.getSymbols()) {
+
+                            ArrayList<Symbol> symbols = new ArrayList<>();
+                            symbols.addAll(region.getSymbols());
+
+                            // sort first by x, then by y
+                            symbols.sort((o1, o2) -> {
+                                if (o1.getBoundingBox().getFromX() < o2.getBoundingBox().getFromX()) {
+                                    return -1;
+                                } else if (o1.getBoundingBox().getFromX() > o2.getBoundingBox().getFromX()) {
+                                    return 1;
+                                } else if (o1.getBoundingBox().getFromY() < o2.getBoundingBox().getFromY()) {
+                                    return -1;
+                                } else if (o1.getBoundingBox().getFromY() > o2.getBoundingBox().getFromY()) {
+                                    return 1;
+                                } else {
+                                    return o1.hashCode() - o2.hashCode();
+                                }
+                            });
+
+                            for (Symbol symbol : symbols) {
                                 JSONObject jsonSymbol = new JSONObject();
                                 jsonSymbols.add(jsonSymbol);
                                 jsonSymbol.put("id", symbol.getId());
                                 jsonSymbol.put("agnostic_symbol_type", symbol.getAgnosticSymbolType());
-                                jsonSymbol.put("position_in_straff", symbol.getPositionInStaff());
+                                jsonSymbol.put("position_in_staff", symbol.getPositionInStaff());
                                 putBoundingBox(jsonSymbol, symbol.getBoundingBox());
                                 
                                 if (includeStrokes && symbol.getStrokes() != null && !symbol.getStrokes().getStrokeList().isEmpty()) {

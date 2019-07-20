@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Project;
 import es.ua.dlsi.grfia.im3ws.muret.model.ITrainingSetExporter;
 import es.ua.dlsi.grfia.im3ws.muret.model.trainingsets.AgnosticSymbolImagesTextFile;
+import es.ua.dlsi.grfia.im3ws.muret.model.trainingsets.JSONTagging;
 import es.ua.dlsi.grfia.im3ws.muret.repository.*;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.utils.FileUtils;
@@ -15,6 +16,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.authentication.AuthenticationManager;
 
 import javax.transaction.Transactional;
 import java.io.File;
@@ -38,6 +40,10 @@ public class ExportTrainingSet implements CommandLineRunner {
     @Autowired
     ProjectRepository projectRepository;
 
+    @Autowired
+    AuthenticationManager authenticationManager;
+
+
     List<ITrainingSetExporter> trainingSetExporters;
 
     private final MURETConfiguration muretConfiguration;
@@ -54,7 +60,8 @@ public class ExportTrainingSet implements CommandLineRunner {
                 new AgnosticSymbolImagesTextFile(3, false, false),
                 new AgnosticSymbolImagesTextFile(4, false, true),
                 new AgnosticSymbolImagesTextFile(5, true, false),
-                new AgnosticSymbolImagesTextFile(6, true, true));
+                new AgnosticSymbolImagesTextFile(6, true, true),
+                new JSONTagging(7, false));
     }
 
     @Override
@@ -126,6 +133,9 @@ public class ExportTrainingSet implements CommandLineRunner {
     }
 
     private void export(String output, String[] projectIDS, String[] exporterIDS) throws IM3Exception, IOException {
+        new AuthenticateForScripts(authenticationManager).consoleAuthenticate();
+
+
         File folderOutput = new File(output);
         if (!folderOutput.exists()) {
             folderOutput.mkdirs();

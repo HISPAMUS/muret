@@ -25,7 +25,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   notationSubscription: Subscription;
   selectedRegionZoomFactor = 1;
   selectedRegion: Region;
-  isManualEntryCollapsed = true;
+  encodingPaneType: 'none' | 'manual' | 'mei';
   errorMessage: string = null;
   semanticEncoding = '';
   private semanticEncodingTextAreaContent: string;
@@ -96,5 +96,30 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
   sendSemanticEncoding() {
     this.store.dispatch(new SendSemanticEncoding(this.selectedRegion, this.semanticEncodingTextAreaContent, false, 'verovio')); // TODO
+  }
+
+  isManualEntryCollapsed() {
+    return this.encodingPaneType !== 'manual';
+  }
+
+  isMEICollapsed() {
+    return this.encodingPaneType !== 'mei';
+  }
+
+  isManualEntrySelected() {
+    return this.encodingPaneType === 'manual';
+  }
+
+  isMEISelected() {
+    return this.encodingPaneType === 'mei';
+  }
+
+  showManualEntry() {
+    this.encodingPaneType = 'manual';
+  }
+
+
+  showMEI() {
+    this.encodingPaneType = 'mei';
   }
 }
