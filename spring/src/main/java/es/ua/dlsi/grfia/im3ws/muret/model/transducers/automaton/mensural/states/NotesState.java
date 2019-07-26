@@ -7,20 +7,21 @@ import es.ua.dlsi.im3.core.IM3RuntimeException;
 import es.ua.dlsi.im3.core.adt.dfa.State;
 import es.ua.dlsi.im3.core.io.ImportException;
 import es.ua.dlsi.im3.core.score.Accidentals;
-import es.ua.dlsi.im3.core.score.Clef;
 import es.ua.dlsi.im3.core.score.*;
+import es.ua.dlsi.im3.core.score.mensural.meters.Perfection;
+import es.ua.dlsi.im3.core.score.mensural.meters.TempusPerfectumCumProlationePerfecta;
+import es.ua.dlsi.im3.core.score.mensural.meters.TimeSignatureMensural;
 import es.ua.dlsi.im3.core.score.mensural.meters.hispanic.TimeSignatureProporcionMayor;
 import es.ua.dlsi.im3.core.score.mensural.meters.hispanic.TimeSignatureProporcionMenor;
-import es.ua.dlsi.im3.core.score.meters.SignTimeSignature;
 import es.ua.dlsi.im3.core.score.meters.TimeSignatureCommonTime;
 import es.ua.dlsi.im3.core.score.meters.TimeSignatureCutTime;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Custos;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.*;
+import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbol;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbolType;
 import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.*;
-import es.ua.dlsi.im3.omr.language.mensural.states.AccNoteState;
 
 // TODO: 5/10/17 Mirar si podemos compartir algo con modern
 public class NotesState extends TransducerState {
@@ -111,6 +112,7 @@ public class NotesState extends TransducerState {
 
             //TODO fermata ...
             SemanticRest rest = new SemanticRest(figures, 0, false, null);
+            rest.setLinePosition(token.getPositionInStaff().getLine());
             transduction.add(rest);
 
         } else if (token.getSymbol() instanceof Dot) {
@@ -194,6 +196,8 @@ public class NotesState extends TransducerState {
             return false;
         } else if (ts instanceof TimeSignatureProporcionMayor || ts instanceof TimeSignatureProporcionMenor) {
             return true;
+        } else if (ts instanceof TimeSignatureMensural) {
+            return ((TimeSignatureMensural)ts).getProlatio() == Perfection.perfectum;
         } else {
             throw new ImportException("Unsupported meter type:  " + ts.getClass());
         }
@@ -209,7 +213,7 @@ public class NotesState extends TransducerState {
         return null;
     }
 
-    SemanticClef findLastClef(SemanticTransduction transduction) {
+    static SemanticClef findLastClef(SemanticTransduction transduction) {
         for (SemanticSymbol symbol: transduction.getSemanticEncoding().getSymbols()) {
             SemanticSymbolType symbolType = symbol.getSymbol();
             if (symbolType instanceof SemanticClef) {
@@ -219,7 +223,7 @@ public class NotesState extends TransducerState {
         throw new IM3RuntimeException("Cannot find a clef");
     }
 
-    SemanticKeySignature findLastKeySignature(SemanticTransduction transduction) {
+    static SemanticKeySignature findLastKeySignature(SemanticTransduction transduction) {
         for (SemanticSymbol symbol: transduction.getSemanticEncoding().getSymbols()) {
             SemanticSymbolType symbolType = symbol.getSymbol();
             if (symbolType instanceof SemanticKeySignature) {
@@ -297,7 +301,7 @@ public class NotesState extends TransducerState {
         }
     }
 
-    private ScientificPitch parsePitch(SemanticClef clef, PositionInStaff positionInStaff, Accidentals accidental) throws IM3Exception {
+    static ScientificPitch parsePitch(SemanticClef clef, PositionInStaff positionInStaff, Accidentals accidental) throws IM3Exception {
         try {
             ScientificPitch sp = Staff.computeScientificPitch(clef.getCoreSymbol(), positionInStaff);
             if (accidental != null) {

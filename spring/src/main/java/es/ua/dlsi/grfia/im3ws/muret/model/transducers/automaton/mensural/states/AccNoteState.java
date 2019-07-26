@@ -18,8 +18,6 @@ public class AccNoteState extends TransducerState {
 
     @Override
     public void onEnter(AgnosticSymbol token, State previousState, SemanticTransduction transduction) {
-        /*super.onEnter(token, previousState, transduction);
-
         if (!(token.getSymbol() instanceof es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Accidental)) {
             // the automaton has an error
             throw new IM3RuntimeException("Expected an accidental and found a " + token.getSymbol());
@@ -46,7 +44,7 @@ public class AccNoteState extends TransducerState {
             default:
                 transduction.setZeroProbability();
                 break;
-        }*/
+        }
     }
 
     public Accidentals getAccidental() {

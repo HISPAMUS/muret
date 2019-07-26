@@ -59,7 +59,7 @@ public class MensuralAgnostic2SemanticTransducer extends Agnostic2SemanticTransd
         transitions.add(new Transition<>(clef, new Accidental(), keysig));
         transitions.add(new Transition<>(clef, new Note(), notes)); // for second systems ...
         transitions.add(new Transition<>(clef, new Rest(), notes)); // for second systems ...
-        transitions.add(new Transition<>(clef, new Ligature(), notes));
+        transitions.add(new Transition<>(clef, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
         transitions.add(new Transition<>(clef, new MeterSign(), timesig));
 
         transitions.add(new Transition<>(keysig, new Accidental(), keysig));
@@ -67,12 +67,12 @@ public class MensuralAgnostic2SemanticTransducer extends Agnostic2SemanticTransd
 
         transitions.add(new Transition<>(keysig, new Note(), notes)); //TODO no está esto bien del todo.. ver 2º 7 3º pentagrama RISM
         transitions.add(new Transition<>(keysig, new Rest(), notes)); //TODO no está esto bien del todo.. ver 2º 7 3º pentagrama RISM
-        transitions.add(new Transition<>(keysig, new Ligature(), notes));
+        transitions.add(new Transition<>(keysig, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
 
         transitions.add(new Transition<>(timesig, new Accidental(), noteacc));
         transitions.add(new Transition<>(timesig, new Note(), notes));
         transitions.add(new Transition<>(timesig, new Rest(), notes));
-        transitions.add(new Transition<>(timesig, new Ligature(), notes));
+        transitions.add(new Transition<>(timesig, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
 
         transitions.add(new Transition<>(notes, new Accidental(), noteacc));
         transitions.add(new Transition<>(barline, new Accidental(), noteacc));
@@ -80,11 +80,11 @@ public class MensuralAgnostic2SemanticTransducer extends Agnostic2SemanticTransd
         transitions.add(new Transition<>(notes, new Note(), notes));
         transitions.add(new Transition<>(notes, new Dot(), notes));
         transitions.add(new Transition<>(notes, new Rest(), notes));
-        transitions.add(new Transition<>(notes, new Ligature(), notes));
+        transitions.add(new Transition<>(notes, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
         transitions.add(new Transition<>(notes, new Custos(), custos));
         transitions.add(new Transition<>(barline, new Note(), notes));
         transitions.add(new Transition<>(barline, new Rest(), notes));
-        transitions.add(new Transition<>(barline, new Ligature(), notes));
+        transitions.add(new Transition<>(barline, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
         transitions.add(new Transition<>(noteacc, new Note(), notes));
         transitions.add(new Transition<>(notes, new VerticalLine(), barline));
 

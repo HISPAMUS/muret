@@ -5,6 +5,7 @@ import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.TransducerState;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.IM3RuntimeException;
 import es.ua.dlsi.im3.core.adt.dfa.State;
+import es.ua.dlsi.im3.core.score.NotationType;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.MeterSign;
 import es.ua.dlsi.im3.omr.encoding.enums.MeterSigns;
@@ -33,7 +34,7 @@ public class TimeSignatureState extends TransducerState {
         if (meterSigns == null) {
             throw new IM3RuntimeException("Meter signs cannot be null");
         }
-        SemanticMeterSignTimeSignature meterSignTimeSignature = new SemanticMeterSignTimeSignature(meterSigns);
+        SemanticMeterSignTimeSignature meterSignTimeSignature = new SemanticMeterSignTimeSignature(NotationType.eMensural, meterSigns);
         transduction.add(meterSignTimeSignature);
     }
 }
