@@ -24,6 +24,7 @@ public class CustosState extends TransducerState {
 
         Custos custos = new Custos(scientificPitch);
         SemanticCustos semanticCustos = new SemanticCustos(custos);
+        semanticCustos.setAgnosticIDs(token.getId());
         transduction.add(semanticCustos);
     }
 }

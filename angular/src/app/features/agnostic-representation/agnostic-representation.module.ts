@@ -41,10 +41,10 @@ import { ImagePreviewComponent } from './components/image-preview/image-preview.
     DocumentAnalysisModule
   ],
   exports: [
-    ImagePreviewComponent
+    ImagePreviewComponent, AgnosticStaffComponent
   ],
   entryComponents: [
-    ImagePreviewComponent
+    ImagePreviewComponent, AgnosticStaffComponent
   ],
   providers: [
     AgnosticRepresentationService, PositionInStaffService

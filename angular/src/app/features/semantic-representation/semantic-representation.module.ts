@@ -17,6 +17,7 @@ import {NotationService} from './services/notation.service';
 import {DocumentAnalysisModule} from '../document-analysis/document-analysis.module';
 import {NgbCollapseModule} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule} from '@angular/forms';
+import {AgGridModule} from 'ag-grid-angular';
 
 @NgModule({
   declarations: [SemanticRepresentationComponent, NotationComponent],
@@ -33,6 +34,7 @@ import {FormsModule} from '@angular/forms';
     EffectsModule.forFeature([SemanticRepresentationEffects]),
     NgbCollapseModule,
     FormsModule,
+    AgGridModule,
 
   ],
   providers: [

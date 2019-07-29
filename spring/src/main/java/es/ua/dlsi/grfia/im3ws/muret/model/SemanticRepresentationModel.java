@@ -96,7 +96,10 @@ public class SemanticRepresentationModel {
                 }
             }
             return diff;
-        }).forEach(symbol -> agnosticEncoding.add(symbol.getAgnosticSymbol()));
+        }).forEach(symbol -> {
+            symbol.getAgnosticSymbol().setId(symbol.getId()); // associate the symbol ID to the agnostic symbol
+            agnosticEncoding.add(symbol.getAgnosticSymbol());
+        });
 
         if (agnosticEncoding.getSymbols().isEmpty()) {
             throw new IM3Exception("There are not agnostic symbols to convert");

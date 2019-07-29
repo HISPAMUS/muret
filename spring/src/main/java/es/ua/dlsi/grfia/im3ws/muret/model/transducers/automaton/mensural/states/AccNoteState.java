@@ -12,12 +12,16 @@ import es.ua.dlsi.im3.omr.language.OMRTransduction;
 public class AccNoteState extends TransducerState {
     private Accidentals accidental;
 
+    private Long agnosticID;
+
     public AccNoteState(int number) {
         super(number, "accnote");
     }
 
     @Override
     public void onEnter(AgnosticSymbol token, State previousState, SemanticTransduction transduction) {
+        agnosticID = token.getId();
+
         if (!(token.getSymbol() instanceof es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Accidental)) {
             // the automaton has an error
             throw new IM3RuntimeException("Expected an accidental and found a " + token.getSymbol());
@@ -49,5 +53,9 @@ public class AccNoteState extends TransducerState {
 
     public Accidentals getAccidental() {
         return accidental;
+    }
+
+    public Long getAgnosticID() {
+        return agnosticID;
     }
 }

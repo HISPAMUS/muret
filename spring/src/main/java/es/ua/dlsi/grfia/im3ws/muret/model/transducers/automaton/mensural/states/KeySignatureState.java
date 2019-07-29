@@ -5,21 +5,22 @@ import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.TransducerState;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.IM3RuntimeException;
 import es.ua.dlsi.im3.core.adt.dfa.State;
-import es.ua.dlsi.im3.core.adt.dfa.Transduction;
 import es.ua.dlsi.im3.core.score.*;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Accidental;
-import es.ua.dlsi.im3.omr.language.OMRTransduction;
-import es.ua.dlsi.im3.omr.language.mensural.states.OMRState;
+import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticKeySignature;
 
 import java.util.ArrayList;
 
 public class KeySignatureState extends TransducerState {
     ArrayList<PositionInStaff> positions;
     ArrayList<Accidentals> accidentals;
+    ArrayList<Long> agnosticIDs;
+
 
     public KeySignatureState(int number) {
         super(number, "keySig");
+        agnosticIDs = new ArrayList<>();
     }
 
     @Override
@@ -53,11 +54,12 @@ public class KeySignatureState extends TransducerState {
                 //throw new IM3Exception("Cannot generate use this accidental in a key signature: " + token.getValue());
         }
         positions.add(token.getPositionInStaff());
+        agnosticIDs.add(token.getId());
     }
 
     @Override
     public void onExit(State nextState, boolean isStateChange, SemanticTransduction transduction) {
-       /* if (accidentals == null) {
+       if (accidentals == null) {
             // If no accidental has been found no key signature is indicated in the score
             // Not to be confused with the presence of a CM or Am key
             throw new IM3RuntimeException("Cannot generate a key signature without keys");
@@ -73,13 +75,16 @@ public class KeySignatureState extends TransducerState {
                 } else {
                     key = new Key(accidentals.size(), Mode.UNKNOWN);
                 }
-                transduction.getStaff().addKeySignature(new KeySignature(transduction.getStaff().getNotationResponseType(), key));
+                KeySignature keySignature = new KeySignature(NotationType.eMensural, key);
+                SemanticKeySignature semanticKeySignature = new SemanticKeySignature(keySignature);
+                semanticKeySignature.setAgnosticIDs(agnosticIDs);
+                transduction.add(semanticKeySignature);
             } catch (IM3Exception e) {
                 throw new IM3RuntimeException(e);
             }
 
             positions = null;
             accidentals = null;
-        }*/
+        }
     }
 }
