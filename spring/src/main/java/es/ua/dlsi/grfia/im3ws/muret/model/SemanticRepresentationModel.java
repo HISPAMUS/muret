@@ -39,6 +39,7 @@ public class SemanticRepresentationModel {
             return new Notation("Region has not a semantic encoding yet");
         }
 
+        //TODO Código duplicado en ProjectModel - exportMEI
         //TODO Ahora sólo lo guardo en la región
         MensSemanticImporter mensSemanticImporter = new MensSemanticImporter(); //TODO Sólo va para mensural
         try {

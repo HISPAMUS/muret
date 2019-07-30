@@ -5,35 +5,26 @@ import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Notation;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.NotationResponseType;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Renderer;
-import es.ua.dlsi.grfia.im3ws.muret.entity.BoundingBox;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Collection;
-import es.ua.dlsi.grfia.im3ws.muret.entity.ManuscriptType;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Project;
+import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ProjectRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.UserRepository;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.io.ExportException;
-import es.ua.dlsi.im3.core.score.NotationType;
-import es.ua.dlsi.im3.core.score.ScorePart;
-import es.ua.dlsi.im3.core.score.Segment;
+import es.ua.dlsi.im3.core.score.*;
+import es.ua.dlsi.im3.core.score.clefs.ClefG2;
 import es.ua.dlsi.im3.core.score.io.mei.MEISongExporter;
+import es.ua.dlsi.im3.core.score.staves.Pentagram;
 import es.ua.dlsi.im3.core.utils.FileUtils;
 import es.ua.dlsi.im3.omr.encoding.Encoder;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
-import es.ua.dlsi.im3.omr.encoding.semantic.KernSemanticExporter;
-import es.ua.dlsi.im3.omr.encoding.semantic.MensSemanticImporter;
-import es.ua.dlsi.im3.omr.encoding.semantic.SemanticEncoding;
-import es.ua.dlsi.im3.omr.encoding.semantic.SemanticExporter;
+import es.ua.dlsi.im3.omr.encoding.semantic.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Stack;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -322,7 +313,118 @@ public class ProjectModel {
         }
     }*/
 
-    public String exportMEI(Project project) {
-        return "ESTO ES UNA PRUEBA " + project.getName();
+    //TODO BORRAR
+    public String nada() {
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<?xml-model href=\"http://music-encoding.org/schema/4.0.0/mei-all.rng\" type=\"application/xml\" schematypens=\"http://relaxng.org/ns/structure/1.0\"?>\n" +
+                "<?xml-model href=\"http://music-encoding.org/schema/4.0.0/mei-all.rng\" type=\"application/xml\" schematypens=\"http://purl.oclc.org/dsdl/schematron\"?>\n" +
+                "<mei xmlns=\"http://www.music-encoding.org/ns/mei\" meiversion=\"4.0.0\">\n" +
+                "    <meiHead>\n" +
+                "        <fileDesc>\n" +
+                "            <titleStmt>\n" +
+                "                <title />\n" +
+                "            </titleStmt>\n" +
+                "            <pubStmt />\n" +
+                "        </fileDesc>\n" +
+                "        <encodingDesc>\n" +
+                "            <appInfo>\n" +
+                "                <application isodate=\"2019-07-30T20:52:23\" version=\"2.2.0-dev-724637b\">\n" +
+                "                    <name>Verovio</name>\n" +
+                "                    <p>Transcoded from Humdrum</p>\n" +
+                "                </application>\n" +
+                "            </appInfo>\n" +
+                "        </encodingDesc>\n" +
+                "        <workList>\n" +
+                "            <work>\n" +
+                "                <title />\n" +
+                "            </work>\n" +
+                "        </workList>\n" +
+                "    </meiHead>\n" +
+                "    <music>\n" +
+                "        <body>\n" +
+                "            <mdiv xml:id=\"mdiv-0000001875122450\">\n" +
+                "                <score xml:id=\"score-0000000808117618\">\n" +
+                "                    <scoreDef xml:id=\"scoredef-0000000605239052\" midi.bpm=\"400\">\n" +
+                "                        <staffGrp xml:id=\"staffgrp-0000001443844955\">\n" +
+                "                            <staffDef xml:id=\"staffdef-0000000545218833\" clef.shape=\"F\" clef.line=\"4\" key.sig=\"0\" mensur.sign=\"C\" mensur.slash=\"1\" n=\"1\" notationtype=\"mensural.white\" lines=\"5\">\n" +
+                "                                <label xml:id=\"label-0000000630793959\" />\n" +
+                "                            </staffDef>\n" +
+                "                        </staffGrp>\n" +
+                "                    </scoreDef>\n" +
+                "                    <section xml:id=\"section-L1F1\">\n" +
+                "                        <measure xml:id=\"measure-L1\" right=\"invis\" n=\"0\">\n" +
+                "                            <staff xml:id=\"staff-0000001177131203\" n=\"1\">\n" +
+                "                                <layer xml:id=\"layer-L1F1N1\" n=\"1\">\n" +
+                "                                    <note xml:id=\"note-L7F1\" dur=\"brevis\" oct=\"2\" pname=\"f\" />\n" +
+                "                                </layer>\n" +
+                "                            </staff>\n" +
+                "                        </measure>\n" +
+                "                    </section>\n" +
+                "                </score>\n" +
+                "            </mdiv>\n" +
+                "        </body>\n" +
+                "    </music>\n" +
+                "</mei>\n";
+    }
+
+    public String exportMEI(Project project) throws IM3Exception {
+        ScoreSong song = new ScoreSong();
+        HashMap<Part, ScorePart> scorePartHashMap = new HashMap<>();
+        HashMap<Part, Staff> staves = new HashMap<>();
+        int cont = 1;
+        for (Part part: project.getParts()) {
+            ScorePart scorePart = new ScorePart(song, cont); //TODO Ordenación de partes
+            scorePart.setName(part.getName());
+            scorePartHashMap.put(part, scorePart);
+            Pentagram pentagram = new Pentagram(song, new Integer(cont).toString(), cont);
+            pentagram.setNotationType(project.getNotationType());
+            ScoreLayer layer = scorePart.addScoreLayer();
+            pentagram.addLayer(layer);
+            pentagram.setName(part.getName());
+            staves.put(part, pentagram);
+            scorePart.addStaff(pentagram);
+            song.addStaff(pentagram);
+            cont++;
+        }
+
+        for (Image image: project.getImages()) {
+            Part imagePart = image.getPart();
+            for (Page page: image.getPages()) {
+                Part pagePart = page.getPart() == null ? imagePart : page.getPart();
+                for (Region region: page.getRegions()) {
+                    Part regionPart = region.getPart() == null ? pagePart : region.getPart();
+                    if (regionPart == null) {
+                        Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Region {0} has not a part assigned", region.getId());
+                    } else {
+                        //TODO Código duplicado en SemanticRepresentationModel - getNotation
+                        MensSemanticImporter mensSemanticImporter = new MensSemanticImporter(); //TODO Sólo va para mensural
+                        SemanticEncoding semantic = mensSemanticImporter.importString(project.getNotationType(), region.getSemanticEncoding());
+                        Semantic2IMCore semantic2IMCore = new Semantic2IMCore();
+                        //TODO compases y tonalidad anteriores
+                        List<ITimedElementInStaff> items = semantic2IMCore.convert(project.getNotationType(), null, null, semantic);
+
+                        Staff staff = staves.get(regionPart);
+                        if (staff == null) {
+                            throw new IM3Exception("Cannot find the staff for the region " + region.getId());
+                        }
+
+                        ScoreLayer layer = staff.getLayers().get(0);
+
+                        for (ITimedElementInStaff timedElementInStaff : items) {
+                            if (timedElementInStaff instanceof Atom) {
+                                layer.add((Atom) timedElementInStaff);
+                            } else {
+                                staff.addElementWithoutLayer((IStaffElementWithoutLayer) timedElementInStaff);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        MEISongExporter exporter = new MEISongExporter();
+        String mei = exporter.exportSong(song);
+        System.out.println(mei);
+        return mei;
     }
 }

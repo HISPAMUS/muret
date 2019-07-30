@@ -184,13 +184,19 @@ public class ProjectController {
     }
 
     @GetMapping(path = {"/exportMEI/{projectID}"})
+    @Transactional
     public StringResponse exportMEI(@PathVariable("projectID") Integer projectID) throws IM3WSException {
         Optional<Project> project = projectRepository.findById(projectID);
         if (!project.isPresent()) {
             throw new IM3WSException("Cannot find a project with id " + projectID);
         }
 
-        return new StringResponse(projectModel.exportMEI(project.get()));
+        try {
+            return new StringResponse(projectModel.exportMEI(project.get()));
+        } catch (IM3Exception e) {
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Error exporting MEI", e);
+            throw new IM3WSException(e);
+        }
     }
 
 }
