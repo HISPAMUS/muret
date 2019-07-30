@@ -14,6 +14,7 @@ import {BreadcrumbModule} from '../../breadcrumb/breadcrumb.module';
 import { UploadImagesComponent } from './components/upload-images/upload-images.component';
 import {FileUploadModule} from 'ng2-file-upload';
 import { ProjectScoreViewerComponent } from './components/project-score-viewer/project-score-viewer.component';
+import {SharedModule} from '../../shared/shared.module';
 
 @NgModule({
   declarations: [ProjectComponent, ImageThumbnailComponent, UploadImagesComponent, ProjectScoreViewerComponent],
@@ -26,6 +27,7 @@ import { ProjectScoreViewerComponent } from './components/project-score-viewer/p
     StoreModule.forFeature('project', projectReducers),
     EffectsModule.forFeature([ProjectEffects]),
     BreadcrumbModule,
+    SharedModule,
   ],
   providers: [
     ProjectService
