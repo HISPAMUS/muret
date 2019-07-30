@@ -10,7 +10,7 @@ import javax.persistence.*;
  * @author drizo
  */
 @Entity
-public class Symbol extends Auditable {
+public class Symbol extends Auditable implements IAssignableToPart{
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,16 +43,25 @@ public class Symbol extends Auditable {
     @Convert(converter = AgnosticSymbolConverter.class)
     private AgnosticSymbol agnosticSymbol;
 
+    /**
+     * It can be null because the part is assigned to other element of the score
+     */
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name="part_id")
+    private Part part;
+
     public Symbol() {
     }
 
-    public Symbol(Region region, AgnosticSymbol agnosticSymbol, BoundingBox boundingBox, String comments, Strokes strokes, Integer approximateX) {
+    public Symbol(Region region, AgnosticSymbol agnosticSymbol, BoundingBox boundingBox, String comments, Strokes strokes, Part part, Integer approximateX) {
         this.region = region;
         this.agnosticSymbol = agnosticSymbol;
         this.boundingBox = boundingBox;
         this.strokes = strokes;
         this.comments = comments;
         this.approximateX = approximateX;
+        this.part = part;
     }
 
     public Long getId() {
@@ -120,5 +129,13 @@ public class Symbol extends Auditable {
 
     public void setApproximateX(Integer approximateX) {
         this.approximateX = approximateX;
+    }
+
+    public Part getPart() {
+        return part;
+    }
+
+    public void setPart(Part part) {
+        this.part = part;
     }
 }

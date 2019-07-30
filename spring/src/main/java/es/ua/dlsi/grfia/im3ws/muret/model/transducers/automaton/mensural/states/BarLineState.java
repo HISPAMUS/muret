@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.SemanticTransduc
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.TransducerState;
 import es.ua.dlsi.im3.core.adt.dfa.State;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
+import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticBarline;
 
 public class BarLineState extends TransducerState {
     public BarLineState(int number) {
@@ -12,6 +13,15 @@ public class BarLineState extends TransducerState {
 
     @Override
     public void onEnter(AgnosticSymbol token, State previousState, SemanticTransduction transduction)  {
+        if (previousState instanceof BarLineState) {
+            SemanticBarline semanticBarline = (SemanticBarline) transduction.getLastSymbol().getSymbol();
+            semanticBarline.getCoreSymbol().setEndBarline(true);
+            semanticBarline.addAgnosticID(token.getId());
+        } else {
+            SemanticBarline semanticBarline = new SemanticBarline();
+            semanticBarline.addAgnosticID(token.getId());
+            transduction.add(semanticBarline);
+        }
         // TODO: 5/10/17 Tipo de barra?
         /*
         Time time = Time.TIME_ZERO;

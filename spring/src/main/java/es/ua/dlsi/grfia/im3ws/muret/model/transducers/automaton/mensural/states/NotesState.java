@@ -8,6 +8,7 @@ import es.ua.dlsi.im3.core.adt.dfa.State;
 import es.ua.dlsi.im3.core.io.ImportException;
 import es.ua.dlsi.im3.core.score.Accidentals;
 import es.ua.dlsi.im3.core.score.*;
+import es.ua.dlsi.im3.core.score.mensural.ligature.LigatureFactory;
 import es.ua.dlsi.im3.core.score.mensural.meters.Perfection;
 import es.ua.dlsi.im3.core.score.mensural.meters.TimeSignatureMensural;
 import es.ua.dlsi.im3.core.score.mensural.meters.hispanic.TimeSignatureProporcionMayor;
@@ -15,7 +16,6 @@ import es.ua.dlsi.im3.core.score.mensural.meters.hispanic.TimeSignatureProporcio
 import es.ua.dlsi.im3.core.score.meters.TimeSignatureCommonTime;
 import es.ua.dlsi.im3.core.score.meters.TimeSignatureCutTime;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
-import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Custos;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.*;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbol;
@@ -23,6 +23,7 @@ import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbolType;
 import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 // TODO: 5/10/17 Mirar si podemos compartir algo con modern
 public class NotesState extends TransducerState {
@@ -104,6 +105,18 @@ public class NotesState extends TransducerState {
 
                 //TODO fermata ...
                 SemanticNote note = new SemanticNote(false, scientificPitch, visualAccidental, figuresColoration.getFigure(), 0, false, false, null, figuresColoration.getColored());
+
+                if (value != null && value.getStemDirection() != null && token.getPositionInStaff().equals(PositionsInStaff.LINE_3)) {
+                    switch (value.getStemDirection()) {
+                        case up:
+                            note.getCoreSymbol().setExplicitStemDirection(StemDirection.up);
+                            break;
+                        case down:
+                            note.getCoreSymbol().setExplicitStemDirection(StemDirection.down);
+                            break;
+                    }
+                }
+
                 note.setAgnosticIDs(agnosticIDs);
                 transduction.add(note);
 
@@ -132,7 +145,18 @@ public class NotesState extends TransducerState {
                 throw new ImportException("Last symbol should be a single figure atom"); // TODO y los acordes
             }
         } else if (token.getSymbol() instanceof Ligature) {
-            // TODO We don't treat them yet
+            //TODO Currently we always add the same kind of ligature
+            SimpleNote simpleNote1 = new SimpleNote(Figures.SEMIBREVE, 0, new ScientificPitch(PitchClasses.A, 2));
+            SimpleNote simpleNote2 = new SimpleNote(Figures.SEMIBREVE, 0, new ScientificPitch(PitchClasses.B, 2));
+            es.ua.dlsi.im3.core.score.Ligature ligature = null;
+            try {
+                ligature = LigatureFactory.createLigature(Arrays.asList(simpleNote1, simpleNote2), LigatureType.recta);
+            } catch (IM3Exception e) {
+                throw new IM3RuntimeException(e);
+            }
+            SemanticLigature semanticLigature = new SemanticLigature(ligature);
+            semanticLigature.setAgnosticIDs(agnosticIDs);
+            transduction.add(semanticLigature);
         } else {
             throw new IM3RuntimeException("Invalid token: " + token);
         }

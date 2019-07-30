@@ -76,6 +76,7 @@ public class MensuralAgnostic2SemanticTransducer extends Agnostic2SemanticTransd
 
         transitions.add(new Transition<>(notes, new Accidental(), noteacc));
         transitions.add(new Transition<>(barline, new Accidental(), noteacc));
+        transitions.add(new Transition<>(barline, new Clef(), clef));
 
         transitions.add(new Transition<>(notes, new Note(), notes));
         transitions.add(new Transition<>(notes, new Dot(), notes));
@@ -87,6 +88,7 @@ public class MensuralAgnostic2SemanticTransducer extends Agnostic2SemanticTransd
         transitions.add(new Transition<>(barline, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
         transitions.add(new Transition<>(noteacc, new Note(), notes));
         transitions.add(new Transition<>(notes, new VerticalLine(), barline));
+        transitions.add(new Transition<>(barline, new VerticalLine(), barline));
 
         //TODO Añadir defect en todo
 

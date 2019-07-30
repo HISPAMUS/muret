@@ -126,7 +126,8 @@ public class SymbolClassifierClient {
         postContent.put("predictions", N_PREDICTIONS_SHAPE);
 
         try {
-            ShapePosition response = this.restClient.post("image/" + imageID + "/bbox", ShapePosition.class, postContent);
+            //ShapePosition response = this.restClient.post("image/" + imageID + "/bbox", ShapePosition.class, postContent);
+            ShapePosition response = this.restClient.post("image/" + imageID + "/symbol", ShapePosition.class, postContent);
 
 
             List<AgnosticSymbolTypeAndPosition> result = new ArrayList<>();

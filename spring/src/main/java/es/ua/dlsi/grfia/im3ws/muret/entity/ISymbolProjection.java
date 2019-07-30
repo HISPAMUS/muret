@@ -31,4 +31,5 @@ public interface ISymbolProjection {
     @Value("#{target.getStrokes()}")
     Strokes getStrokes();
 
+    Part getPart();
 }

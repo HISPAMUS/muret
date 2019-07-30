@@ -38,7 +38,6 @@ public class SemanticRepresentationController extends MuRETBaseController {
         this.partsModel = new PartsModel();
     }
 
-
     /**
      * @param staffID
      * @throws IM3WSException
@@ -109,5 +108,4 @@ public class SemanticRepresentationController extends MuRETBaseController {
         Notation result = semanticRepresentationModel.sendSemanticEncoding(project, partName, region, mensustriche, renderer, semanticEncoding);
         return result;
     }
-
 }

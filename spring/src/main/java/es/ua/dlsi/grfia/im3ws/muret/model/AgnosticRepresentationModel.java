@@ -287,11 +287,11 @@ public class AgnosticRepresentationModel {
         Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "DEVOLVIENDO VALORES A PIÑON");
 
         ArrayList<Symbol> classifiedSymbols = new ArrayList<>();
-        classifiedSymbols.add(new Symbol(persistentRegion, AgnosticSymbol.parseAgnosticString(AgnosticVersion.v2, "clef.G:L3"), null, null, null, 206));
-        classifiedSymbols.add(new Symbol(persistentRegion, AgnosticSymbol.parseAgnosticString(AgnosticVersion.v2, "metersign.CcutZ:L3"), null, null, null, 291));
-        classifiedSymbols.add(new Symbol(persistentRegion, AgnosticSymbol.parseAgnosticString(AgnosticVersion.v2, "note.half_down:S5"), null, null, null, 441));
-        classifiedSymbols.add(new Symbol(persistentRegion, AgnosticSymbol.parseAgnosticString(AgnosticVersion.v2, "note.half_down:S5"), null, null, null, 523));
-        classifiedSymbols.add(new Symbol(persistentRegion, AgnosticSymbol.parseAgnosticString(AgnosticVersion.v2, "note.eighthVoid_down:L3"), null, null, null, 592));
+        classifiedSymbols.add(new Symbol(persistentRegion, AgnosticSymbol.parseAgnosticString(AgnosticVersion.v2, "clef.G:L3"), null, null, null, null, 206));
+        classifiedSymbols.add(new Symbol(persistentRegion, AgnosticSymbol.parseAgnosticString(AgnosticVersion.v2, "metersign.CcutZ:L3"), null, null, null, null, 291));
+        classifiedSymbols.add(new Symbol(persistentRegion, AgnosticSymbol.parseAgnosticString(AgnosticVersion.v2, "note.half_down:S5"), null, null, null, null, 441));
+        classifiedSymbols.add(new Symbol(persistentRegion, AgnosticSymbol.parseAgnosticString(AgnosticVersion.v2, "note.half_down:S5"), null, null, null, null, 523));
+        classifiedSymbols.add(new Symbol(persistentRegion, AgnosticSymbol.parseAgnosticString(AgnosticVersion.v2, "note.eighthVoid_down:L3"), null, null, null, null, 592));
 
         for (Symbol symbol: classifiedSymbols) {
             persistentRegion.getSymbols().add(symbol);

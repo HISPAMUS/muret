@@ -8,5 +8,5 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  * @author drizo
  */
 @RepositoryRestResource
-public interface PartRepository extends CrudRepository<Part, Integer> {
+public interface PartRepository extends CrudRepository<Part, Long> {
 }
