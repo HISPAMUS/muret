@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.im3ws.muret.controller;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
+import es.ua.dlsi.grfia.im3ws.controller.StringResponse;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.ProjectStatistics;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.StringBody;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.UploadFileResponse;
@@ -181,4 +182,15 @@ public class ProjectController {
             }
         }
     }
+
+    @GetMapping(path = {"/exportMEI/{projectID}"})
+    public StringResponse exportMEI(@PathVariable("projectID") Integer projectID) throws IM3WSException {
+        Optional<Project> project = projectRepository.findById(projectID);
+        if (!project.isPresent()) {
+            throw new IM3WSException("Cannot find a project with id " + projectID);
+        }
+
+        return new StringResponse(projectModel.exportMEI(project.get()));
+    }
+
 }

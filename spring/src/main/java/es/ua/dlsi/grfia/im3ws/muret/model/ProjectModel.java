@@ -300,8 +300,6 @@ public class ProjectModel {
     /**
      * It removes all elements in the part
      * @param project
-     * @param partName
-     * @param regionID
      */
     /*public void clearSystem(Project project, String partName, long regionID) {
         //TODO
@@ -323,4 +321,8 @@ public class ProjectModel {
             layer.add((Atom) timedElementInStaff);
         }
     }*/
+
+    public String exportMEI(Project project) {
+        return "ESTO ES UNA PRUEBA " + project.getName();
+    }
 }

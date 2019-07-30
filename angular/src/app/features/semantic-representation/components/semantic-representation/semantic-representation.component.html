@@ -33,7 +33,25 @@
             </ng-container>
           </div>
     </section>
+    <section class="row">
+      <div class="col-2">
+        <app-part-selection [label]="'Region part'" [parts$]="projectParts$"
+                            (clearPart)="clearRegionPart()" (selectPart)="updateRegionPart($event)"
+                            (createPart)="createRegionPart($event)"
+        >
 
+
+        </app-part-selection>
+      </div>
+      <div class="col-6">
+        <ng-container *ngIf="selectedRegion?.part">
+          Specific region part: {{selectedRegion?.part.name}}
+        </ng-container>
+      </div>
+      <div class="col-4">
+        Inherited part (from page or image): {{regionPart$ | async}}
+      </div>
+    </section>
     <aside>
       <button class="btn btn-primary" (click)="convertAgnosticSemantic()">
         Convert from agnostic

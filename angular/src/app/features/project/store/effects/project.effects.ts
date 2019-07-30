@@ -3,9 +3,18 @@ import { Effect, ofType, Actions } from '@ngrx/effects';
 import { of } from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 import {ProjectService} from '../../services/project.service';
-import {GetImages, GetImagesSuccess, GetProject, GetProjectSuccess, ProjectActionTypes} from '../actions/project.actions';
+import {
+  ExportMEI,
+  ExportMEISuccess,
+  GetImages,
+  GetImagesSuccess,
+  GetProject,
+  GetProjectSuccess,
+  ProjectActionTypes
+} from '../actions/project.actions';
 import {Project} from '../../../../core/model/entities/project';
 import {Image} from '../../../../core/model/entities/image';
+import {StringResponse} from '../../../../core/model/restapi/string-response';
 
 @Injectable()
 export class ProjectEffects {
@@ -34,4 +43,13 @@ export class ProjectEffects {
     })
   );
 
+  @Effect()
+  exportMEI$ = this.actions$.pipe(
+    ofType<ExportMEI>(ProjectActionTypes.ExportMEI),
+    map((action: ExportMEI) => action.projectID),
+    switchMap((projectID) => this.projectService.exportMEI$(projectID)),
+    switchMap((mei: StringResponse) => {
+      return of(new ExportMEISuccess(mei.response));
+    })
+  );
 }

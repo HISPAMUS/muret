@@ -2,6 +2,7 @@ import {Image} from './image';
 import {State} from './state';
 import {Entity} from './entity';
 import {Collection} from './collection';
+import {Part} from './part';
 
 export interface Project extends Entity {
   name: string;
@@ -15,4 +16,5 @@ export interface Project extends Entity {
   state: State;
   composer: string;
   collection: Collection;
+  part: Part[];
 }

@@ -17,6 +17,10 @@ import {
   import {selectAgnosticSymbols} from '../../../agnostic-representation/store/selectors/agnostic-representation.selector';
   import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
   import {Rectangle} from '../../../../svg/model/rectangle';
+  import {selectProjectParts} from '../../../document-analysis/store/selectors/document-analysis.selector';
+  import {Part} from '../../../../core/model/entities/part';
+  import {selectRegionPart} from '../../../parts/store/selectors/parts.selector';
+  import {CreateRegionPart, GetRegionPart, UpdateRegionPart} from '../../../parts/store/actions/parts.actions';
 
   @Component({
   selector: 'app-semantic-representation',
@@ -49,8 +53,13 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   private gridApi;
   private gridColumnApi;
 
-  private defaultColDef: { resizable: boolean; editable: boolean };
+  defaultColDef: { resizable: boolean; editable: boolean };
   private string: string;
+
+  projectParts$: Observable<Part[]>;
+  // imagePart$: Observable<Part>;
+  // pagePart$: Observable<Part>;
+  regionPart$: Observable<Part>;
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>) {
     this.defaultColDef = {
@@ -86,6 +95,11 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     this.agnosticSymbolsSubscription = this.store.select(selectAgnosticSymbols).subscribe(next => {
       this.drawSelectedRegionSymbols(next);
     });
+
+    this.projectParts$ = this.store.select(selectProjectParts);
+    // this.imagePart$ = this.store.select(selectImagePart);
+    // this.pagePart$ = this.store.select(selectPagePart);
+    this.regionPart$ = this.store.select(selectRegionPart);
   }
 
   ngOnDestroy(): void {
@@ -116,6 +130,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
       if (this.selectedRegion) {
         this.store.dispatch(new GetNotation(this.selectedRegion, false, 'verovio')); // TODO
+        this.store.dispatch(new GetRegionPart(this.selectedRegion));
       } else {
         this.store.dispatch(new ClearNotation());
       }
@@ -204,6 +219,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   }*/
   @HostListener('document:keydown.tab', ['$event'])
   keyEvent(event: KeyboardEvent) {
+    // TODO Lo dejamos?
     event.preventDefault(); // avoid change control default behaviour
   }
 
@@ -219,7 +235,9 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
         });
       }
     });
-    this.gridApi.setRowData(newItems);
+    if (this.gridApi) {
+      this.gridApi.setRowData(newItems);
+    }
     // this.gridApi.updateRowData({ add: newItems });
   }
 
@@ -293,7 +311,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
       const index = selectedNode[0].childIndex;
       const res = this.gridApi.updateRowData({
         add: [newItem],
-        addIndex: index+1 // selectedNode.childIndex
+        addIndex: index + 1 // selectedNode.childIndex
       });
 
     }
@@ -316,4 +334,15 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     }
 
 
+    clearRegionPart() {
+      this.store.dispatch(new UpdateRegionPart(this.selectedRegion, null));
+    }
+
+    updateRegionPart($event: Part) {
+      this.store.dispatch(new UpdateRegionPart(this.selectedRegion, $event));
+    }
+
+    createRegionPart($event: string) {
+      this.store.dispatch(new CreateRegionPart(this.selectedRegion, $event));
+    }
   }

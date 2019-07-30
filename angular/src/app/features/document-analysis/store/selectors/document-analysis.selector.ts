@@ -23,6 +23,11 @@ export const selectImagePart = createSelector(
   (state: DocumentAnalysisState) => state.imagePart
 );
 
+export const selectProjectParts = createSelector(
+  documentAnalysisState,
+  (state: DocumentAnalysisState) => state.projectParts
+);
+
 export const selectDocumentType = createSelector(
   documentAnalysisState,
   (state: DocumentAnalysisState) => state.documentType
@@ -44,3 +49,4 @@ export const selectRegionTypes = createSelector(
   documentAnalysisState,
   (state: DocumentAnalysisState) => state.regionTypes
 );
+

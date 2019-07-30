@@ -18,6 +18,7 @@ import {DocumentAnalysisModule} from '../document-analysis/document-analysis.mod
 import {NgbCollapseModule} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule} from '@angular/forms';
 import {AgGridModule} from 'ag-grid-angular';
+import {PartsModule} from '../parts/parts.module';
 
 @NgModule({
   declarations: [SemanticRepresentationComponent, NotationComponent],
@@ -30,6 +31,7 @@ import {AgGridModule} from 'ag-grid-angular';
     SemanticRepresentationRoutingModule,
     AgnosticRepresentationModule,
     DocumentAnalysisModule,
+    PartsModule,
     StoreModule.forFeature('semantic-representation', semanticRepresentationReducers),
     EffectsModule.forFeature([SemanticRepresentationEffects]),
     NgbCollapseModule,

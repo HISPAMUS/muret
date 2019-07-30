@@ -3,6 +3,7 @@ import {Project} from '../../../core/model/entities/project';
 import {Observable} from 'rxjs';
 import {Image} from '../../../core/model/entities/image';
 import {ApiRestClientService} from '../../../core/services/api-rest-client.service';
+import {StringResponse} from '../../../core/model/restapi/string-response';
 
 @Injectable() // non-singleton
 export class ProjectService {
@@ -20,5 +21,10 @@ export class ProjectService {
 
   public getProjectUploadURL(): string {
     return this.apiRestClientService.url + '/project/uploadProjectImage';
+  }
+
+  exportMEI$(projectID: number): Observable<StringResponse> {
+    const url = `project/exportMEI/${projectID}`;
+    return this.apiRestClientService.get$<StringResponse>(url);
   }
 }

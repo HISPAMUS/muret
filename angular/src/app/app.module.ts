@@ -46,6 +46,7 @@ import {faExpandArrowsAlt} from '@fortawesome/free-solid-svg-icons/faExpandArrow
 import {faCompressArrowsAlt} from '@fortawesome/free-solid-svg-icons/faCompressArrowsAlt';
 import {faCommentDots} from '@fortawesome/free-solid-svg-icons/faCommentDots';
 import {AgGridModule} from 'ag-grid-angular';
+import {PartsModule} from './features/parts/parts.module';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import {AgGridModule} from 'ag-grid-angular';
     DocumentAnalysisModule,
     AgnosticRepresentationModule,
     SemanticRepresentationModule,
+    PartsModule,
     StoreModule.forRoot({
       /* an empty object here  */
     }),

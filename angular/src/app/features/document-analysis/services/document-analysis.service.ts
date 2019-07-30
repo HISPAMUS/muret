@@ -17,11 +17,6 @@ export class DocumentAnalysisService {
     return this.apiRestClientService.getProjectionOf$<DocumentAnalysisImageProjection>(id, 'images', 'documentAnalysisImage');
   }
 
-  public getImagePart$(id: number): Observable<Part> {
-    const url = 'parts/get/image/' + id;
-    return this.apiRestClientService.get$<Part>(url);
-  }
-
   public getRegionTypes$(): Observable<RegionType[]> {
     return this.apiRestClientService.getListExcerptProjection$<RegionType>('regionTypes');
   }
@@ -49,6 +44,7 @@ export class DocumentAnalysisService {
     const newRegion: Region = {
       id: region.id,
       boundingBox,
+      part: region.part,
       regionType: region.regionType
     };
 
@@ -58,6 +54,7 @@ export class DocumentAnalysisService {
   updateRegionType(region: Region, regionType: RegionType) {
     const newRegion: Region = {
       id: region.id,
+      part: region.part,
       regionType
     };
 

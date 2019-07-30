@@ -42,4 +42,8 @@ export class ProjectComponent implements OnInit {
   uploadImages() {
     this.router.navigate(['/project/uploadImages', this.projectID]);
   }
+
+  viewFullScore() {
+    this.router.navigate(['/project/scoreView', this.projectID]);
+  }
 }

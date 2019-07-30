@@ -1,4 +1,5 @@
 import {Image} from '../entities/image';
+import {Part} from '../entities/part';
 
 // special projection
 export interface DocumentAnalysisImageProjection extends Image {
@@ -7,4 +8,5 @@ export interface DocumentAnalysisImageProjection extends Image {
   height: number;
   manuscriptType: 'eHandwritten' | 'ePrinted';
   notationType: 'eMensural' | 'eModern';
+  projectParts: Part[];
 }

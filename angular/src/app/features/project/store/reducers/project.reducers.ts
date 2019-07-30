@@ -15,6 +15,18 @@ export function projectReducers(state = initialProjectState, action: ProjectActi
         images: action.images
       };
     }
+    case ProjectActionTypes.ExportMEI: {
+      return {
+        ...state,
+        mei: null
+      };
+    }
+    case ProjectActionTypes.ExportMEISuccess: {
+      return {
+        ...state,
+        mei: action.mei
+      };
+    }
     default: {
       return state;
     }
