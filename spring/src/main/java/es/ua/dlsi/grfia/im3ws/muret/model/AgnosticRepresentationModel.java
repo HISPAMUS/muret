@@ -22,7 +22,6 @@ import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -35,7 +34,7 @@ public class AgnosticRepresentationModel {
     private static final String AGNOSTIC_SYMBOL_TYPE_FROM_CLASSIFIER = "USE_SYMBOL_CLASSIFIER";
     private final RegionRepository regionRepository;
     private final SymbolRepository symbolRepository;
-    private final SymbolClassifierClient symbolClassifierClient;
+    private final ClassifierClient classifierClient;
     private final MURETConfiguration muretConfiguration;
     private final ActionLogAgnosticModel actionLogAgnosticModel;
 
@@ -47,7 +46,7 @@ public class AgnosticRepresentationModel {
         this.regionRepository = regionRepository;
         this.symbolRepository = symbolRepository;
         this.actionLogAgnosticModel = actionLogAgnosticModel;
-        this.symbolClassifierClient = new SymbolClassifierClient(muretConfiguration.getPythonclassifiers());
+        this.classifierClient = new ClassifierClient(muretConfiguration.getPythonclassifiers());
 
     }
 
@@ -173,7 +172,7 @@ public class AgnosticRepresentationModel {
                     MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());
 
             try {
-                otherPossibilities = symbolClassifierClient.classifyImage(imageID, imagePath, boundingBox);
+                otherPossibilities = classifierClient.classifySymbolInImage(imageID, imagePath, boundingBox);
             } catch (Throwable t) {
                 Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Error from classifying server", t);
             }
@@ -269,7 +268,7 @@ public class AgnosticRepresentationModel {
         Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.getProject().getPath(),
                 MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());
 
-        return symbolClassifierClient.classifyImage(imageID, imagePath, boundingBox);
+        return classifierClient.classifySymbolInImage(imageID, imagePath, boundingBox);
     }
 
     @Transactional
@@ -282,6 +281,31 @@ public class AgnosticRepresentationModel {
     public List<Symbol> classifyRegionEndToEnd(Long regionID) throws IM3WSException, IM3Exception {
         Region persistentRegion = getRegion(regionID);
 
+        persistentRegion.getSymbols().clear(); // first remove previous
+
+        Image persistentImage = persistentRegion.getPage().getImage();
+        long imageID = persistentImage.getId();
+        Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.getProject().getPath(),
+                MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());
+
+        List<AgnosticSymbolTypeAndPosition> items = classifierClient.classifyEndToEnd(imageID, imagePath, persistentRegion.getBoundingBox());
+        for (AgnosticSymbolTypeAndPosition item: items) {
+            //TODO Ver si los valores que me devuelven son absolutos o relativos al bounding box
+            //TODO Ahora están puestos a ojo
+            BoundingBox symbolBB = new BoundingBox(item.getStart()*100, persistentRegion.getBoundingBox().getFromY(), item.getEnd()*100+50, persistentRegion.getBoundingBox().getToY());
+            AgnosticSymbolType agnosticSymbolType = AgnosticSymbolTypeFactory.parseString(item.getAgnosticSymbolType());
+            PositionInStaff positionInStaff = PositionInStaff.parseString(item.getPositionInStaff());
+            AgnosticSymbol agnosticSymbol = new AgnosticSymbol(AgnosticVersion.v2, agnosticSymbolType, positionInStaff);
+
+            Symbol symbol = new Symbol(persistentRegion, agnosticSymbol, symbolBB, null, null, null, null);
+            persistentRegion.getSymbols().add(symbol);
+        }
+
+        actionLogAgnosticModel.logEndToEnd(persistentRegion);
+        return persistentRegion.getSymbols();
+
+
+        /*
         persistentRegion.getSymbols().clear(); // first remove previous
 
         Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "DEVOLVIENDO VALORES A PIÑON");
@@ -298,7 +322,9 @@ public class AgnosticRepresentationModel {
         }
 
         actionLogAgnosticModel.logEndToEnd(persistentRegion);
-        return persistentRegion.getSymbols();
+        return persistentRegion.getSymbols();*/
+
+
 
     }
 
