@@ -4,44 +4,40 @@ import {PartsActions, PartsActionTypes} from '../actions/parts.actions';
 export function partsReducers(state = initialSemanticRepresentationState, action: PartsActions):
   PartsState {
   switch (action.type) {
-    case PartsActionTypes.GetImagePartSuccess: {
-      const newState = {...state};
-      newState.imagePart = action.part;
-      break;
-    }
+    case PartsActionTypes.GetImagePartSuccess:
+    case PartsActionTypes.CreateImagePartSuccess:
     case PartsActionTypes.UpdateImagePartSuccess: {
-      const newState = {...state};
-      newState.imagePart = action.image.part;
+      return {
+        ...state,
+        imagePart: action.part
+      };
       break;
     }
+    case PartsActionTypes.CreatePagePartSuccess:
+    case PartsActionTypes.UpdatePagePartSuccess:
     case PartsActionTypes.GetPagePartSuccess: {
-      const newState = {...state};
-      newState.pagePart = action.part;
+      return {
+        ...state,
+        pagePart: action.part
+      };
       break;
     }
-    case PartsActionTypes.UpdatePagePartSuccess: {
-      const newState = {...state};
-      newState.pagePart = action.page.part;
+    case PartsActionTypes.CreateRegionPartSuccess:
+    case PartsActionTypes.UpdateRegionPartSuccess:
+    case PartsActionTypes.GetRegionPartSuccess: {
+      return {
+        ...state,
+        regionPart: action.part
+      };
       break;
     }
-    case PartsActionTypes.GetPagePartSuccess: {
-      const newState = {...state};
-      newState.pagePart = action.part;
-      break;
-    }
-    case PartsActionTypes.UpdatePagePartSuccess: {
-      const newState = {...state};
-      newState.pagePart = action.page.part;
-      break;
-    }
+    case PartsActionTypes.CreateSymbolPartSuccess:
+    case PartsActionTypes.UpdateSymbolPartSuccess:
     case PartsActionTypes.GetSymbolPartSuccess: {
-      const newState = {...state};
-      newState.symbolPart = action.part;
-      break;
-    }
-    case PartsActionTypes.UpdateSymbolPartSuccess: {
-      const newState = {...state};
-      newState.symbolPart = action.symbol.part;
+      return {
+        ...state,
+        symbolPart: action.part
+      };
       break;
     }
     default: {

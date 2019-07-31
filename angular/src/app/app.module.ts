@@ -67,12 +67,12 @@ import {PartsModule} from './features/parts/parts.module';
     AppRoutingModule,
     AboutModule,
     ExportModule,
+    PartsModule,
     ProjectsModule,
     NewProjectModule,
     DocumentAnalysisModule,
     AgnosticRepresentationModule,
     SemanticRepresentationModule,
-    PartsModule,
     StoreModule.forRoot({
       /* an empty object here  */
     }),

@@ -14,9 +14,9 @@ import {FormsModule} from '@angular/forms';
   imports: [
     CommonModule,
     NgbDropdownModule,
+    FormsModule,
     StoreModule.forFeature('parts', partsReducers),
     EffectsModule.forFeature([PartsEffects]),
-    FormsModule,
   ],
   exports: [
     PartSelectionComponent

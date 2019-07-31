@@ -60,7 +60,7 @@ public class PartsController extends MuRETBaseController {
 
     @PutMapping(path = {"set/{partAssignedToType}/{targetID}/{partID}"})
     @Transactional
-    public IAssignableToPart setPart(@PathVariable(name="partAssignedToType") PartAssignedToType partAssignedToType, @PathVariable(name="targetID") Long targetID, @PathVariable(name="partID") Long partID) throws IM3WSException {
+    public Part setPart(@PathVariable(name="partAssignedToType") PartAssignedToType partAssignedToType, @PathVariable(name="targetID") Long targetID, @PathVariable(name="partID") Long partID) throws IM3WSException {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Setting part name of type {0} with id {1} to part with ID {2}", new Object[] {partAssignedToType, targetID, partID});
         Part part = getPart(partID);
 
@@ -69,22 +69,22 @@ public class PartsController extends MuRETBaseController {
                 Image image = getImage(targetID);
                 image.setPart(part);
                 imageRepository.save(image);
-                return image;
+                return part;
             case page:
                 Page page = getPage(targetID);
                 page.setPart(part);
                 pageRepository.save(page);
-                return page;
+                return part;
             case region:
                 Region region = getRegion(targetID);
                 region.setPart(part);
                 regionRepository.save(region);
-                return region;
+                return part;
             case symbol:
                 Symbol symbol = getSymbol(targetID);
                 symbol.setPart(part);
                 symbolRepository.save(symbol);
-                return symbol;
+                return part;
             default:
                 throw new IM3WSException("Invalid assignable to part type: " + partAssignedToType);
         }
@@ -92,7 +92,7 @@ public class PartsController extends MuRETBaseController {
 
     @PutMapping(path = {"create/{partAssignedToType}/{targetID}/{partName}"})
     @Transactional
-    public IAssignableToPart createPart(@PathVariable(name="partAssignedToType") PartAssignedToType partAssignedToType, @PathVariable(name="targetID") Long targetID, @PathVariable(name="partName") String partName) throws IM3WSException {
+    public Part createPart(@PathVariable(name="partAssignedToType") PartAssignedToType partAssignedToType, @PathVariable(name="targetID") Long targetID, @PathVariable(name="partName") String partName) throws IM3WSException {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Setting part name of type {0} with id {1} to part with ID {2}", new Object[] {partAssignedToType, targetID, partName});
         Part part = new Part();
         part.setName(partName);
@@ -104,28 +104,28 @@ public class PartsController extends MuRETBaseController {
                 part = partRepository.save(part);
                 image.setPart(part);
                 imageRepository.save(image);
-                return image;
+                return part;
             case page:
                 Page page = getPage(targetID);
                 part.setProject(page.getImage().getProject());
                 page.setPart(part);
                 part = partRepository.save(part);
                 pageRepository.save(page);
-                return page;
+                return part;
             case region:
                 Region region = getRegion(targetID);
                 part.setProject(region.getPage().getImage().getProject());
                 part = partRepository.save(part);
                 region.setPart(part);
                 regionRepository.save(region);
-                return region;
+                return part;
             case symbol:
                 Symbol symbol = getSymbol(targetID);
                 part.setProject(symbol.getRegion().getPage().getImage().getProject());
                 part = partRepository.save(part);
                 symbol.setPart(part);
                 symbolRepository.save(symbol);
-                return symbol;
+                return part;
             default:
                 throw new IM3WSException("Invalid assignable to part type: " + partAssignedToType);
         }

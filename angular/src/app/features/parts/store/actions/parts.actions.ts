@@ -51,7 +51,7 @@ export class UpdateImagePart implements Action {
 
 export class UpdateImagePartSuccess implements Action {
   public readonly type = PartsActionTypes.UpdateImagePartSuccess;
-  constructor(public image: Image) {}
+  constructor(public part: Part) {}
 }
 
 export class GetPagePart implements Action {
@@ -71,7 +71,7 @@ export class UpdatePagePart implements Action {
 
 export class UpdatePagePartSuccess implements Action {
   public readonly type = PartsActionTypes.UpdatePagePartSuccess;
-  constructor(public page: Page) {}
+  constructor(public part: Part) {}
 }
 
 export class GetRegionPart implements Action {
@@ -91,7 +91,7 @@ export class UpdateRegionPart implements Action {
 
 export class UpdateRegionPartSuccess implements Action {
   public readonly type = PartsActionTypes.UpdateRegionPartSuccess;
-  constructor(public region: Region) {}
+  constructor(public part: Part) {}
 }
 
 export class GetSymbolPart implements Action {
@@ -111,7 +111,7 @@ export class UpdateSymbolPart implements Action {
 
 export class UpdateSymbolPartSuccess implements Action {
   public readonly type = PartsActionTypes.UpdateSymbolPartSuccess;
-  constructor(public symbol: AgnosticSymbol) {}
+  constructor(public part: Part) {}
 }
 
 export class CreateImagePart implements Action {
@@ -121,7 +121,7 @@ export class CreateImagePart implements Action {
 
 export class CreateImagePartSuccess implements Action {
   public readonly type = PartsActionTypes.CreateImagePartSuccess;
-  constructor(public image: Image) {}
+  constructor(public part: Part) {}
 }
 
 export class CreatePagePart implements Action {
@@ -131,7 +131,7 @@ export class CreatePagePart implements Action {
 
 export class CreatePagePartSuccess implements Action {
   public readonly type = PartsActionTypes.CreatePagePartSuccess;
-  constructor(public page: Page) {}
+  constructor(public part: Part) {}
 }
 
 export class CreateRegionPart implements Action {
@@ -141,7 +141,7 @@ export class CreateRegionPart implements Action {
 
 export class CreateRegionPartSuccess implements Action {
   public readonly type = PartsActionTypes.CreateRegionPartSuccess;
-  constructor(public region: Region) {}
+  constructor(public part: Part) {}
 }
 
 export class CreateSymbolPart implements Action {
@@ -151,7 +151,7 @@ export class CreateSymbolPart implements Action {
 
 export class CreateSymbolPartSuccess implements Action {
   public readonly type = PartsActionTypes.CreateSymbolPartSuccess;
-  constructor(public symbol: AgnosticSymbol) {}
+  constructor(public part: Part) {}
 }
 
 export type PartsActions =

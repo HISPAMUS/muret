@@ -44,12 +44,9 @@
         </app-part-selection>
       </div>
       <div class="col-6">
-        <ng-container *ngIf="selectedRegion?.part">
-          Specific region part: {{selectedRegion?.part.name}}
+        <ng-container *ngIf="(regionPart$ | async) as regionPart ">
+          {{regionPart.name}}
         </ng-container>
-      </div>
-      <div class="col-4">
-        Inherited part (from page or image): {{regionPart$ | async}}
       </div>
     </section>
     <aside>
