@@ -12,16 +12,17 @@ import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.SemanticTransduc
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.MensuralAgnostic2SemanticTransducer;
 import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
 import es.ua.dlsi.im3.core.IM3Exception;
+import es.ua.dlsi.im3.core.adt.Pair;
 import es.ua.dlsi.im3.core.score.*;
 import es.ua.dlsi.im3.core.score.io.mei.MEISongExporter;
 import es.ua.dlsi.im3.core.score.staves.Pentagram;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticEncoding;
-import es.ua.dlsi.im3.omr.encoding.semantic.KernSemanticExporter;
-import es.ua.dlsi.im3.omr.encoding.semantic.MensSemanticImporter;
-import es.ua.dlsi.im3.omr.encoding.semantic.Semantic2IMCore;
-import es.ua.dlsi.im3.omr.encoding.semantic.SemanticEncoding;
+import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
+import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.HorizontalSeparator;
+import es.ua.dlsi.im3.omr.encoding.semantic.*;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SemanticRepresentationModel {
@@ -47,7 +48,7 @@ public class SemanticRepresentationModel {
             SemanticEncoding semantic = mensSemanticImporter.importString(project.getNotationType(), region.getSemanticEncoding());
             Semantic2IMCore semantic2IMCore = new Semantic2IMCore();
             //TODO compases y tonalidad anteriores
-            List<ITimedElementInStaff> items = semantic2IMCore.convert(project.getNotationType(), null, null, semantic);
+            List<Pair<SemanticSymbol, ITimedElementInStaff>> items = semantic2IMCore.convert(project.getNotationType(), null, null, semantic);
             ScoreSong song = new ScoreSong();
             ScorePart part = song.addPart();
             ScoreLayer layer = part.addScoreLayer();
@@ -56,7 +57,8 @@ public class SemanticRepresentationModel {
             song.addStaff(staff);
             part.addStaff(staff);
             staff.addLayer(layer);
-            for (ITimedElementInStaff timedElementInStaff: items) {
+            for (Pair<SemanticSymbol, ITimedElementInStaff> item: items) {
+                ITimedElementInStaff timedElementInStaff = item.getY();
                 if (timedElementInStaff instanceof Atom) {
                     layer.add((Atom) timedElementInStaff);
                 } else {
@@ -87,13 +89,18 @@ public class SemanticRepresentationModel {
 
     }
 
-    public static AgnosticEncoding region2Agnostic(Region staff) throws IM3Exception {
+    public static AgnosticEncoding region2Agnostic(Region staff, boolean addSeparator) throws IM3Exception {
         AgnosticEncoding agnosticEncoding = new AgnosticEncoding();
 
-        staff.getSymbols().stream().sorted(Symbol.getHorizontalPositionComparator()).forEach(symbol -> {
+        ArrayList<Symbol> symbols = new ArrayList<>(staff.getSymbols());
+        for (int i=0; i<symbols.size(); i++) {
+            Symbol symbol = symbols.get(i);
             symbol.getAgnosticSymbol().setId(symbol.getId()); // associate the symbol ID to the agnostic symbol
             agnosticEncoding.add(symbol.getAgnosticSymbol());
-        });
+            if (addSeparator && i < symbols.size() - 1) {
+                agnosticEncoding.add(new HorizontalSeparator(AgnosticVersion.v2));
+            }
+        }
 
         if (agnosticEncoding.getSymbols().isEmpty()) {
             throw new IM3Exception("There are not agnostic symbols to convert");
@@ -107,7 +114,7 @@ public class SemanticRepresentationModel {
      * @return MEI
      */
     public Notation computeSemanticFromAgnostic(Project project, String partName, Region staff, boolean mensustriche, Renderer renderer) throws FileNotFoundException, IM3Exception, IM3WSException {
-        AgnosticEncoding agnosticEncoding = region2Agnostic(staff);
+        AgnosticEncoding agnosticEncoding = region2Agnostic(staff, false);
 
         Agnostic2SemanticTransducer agnostic2SemanticTransducer;
         if (project.getNotationType() == NotationType.eMensural) {

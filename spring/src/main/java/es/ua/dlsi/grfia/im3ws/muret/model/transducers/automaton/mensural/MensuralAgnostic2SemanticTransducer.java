@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.im3ws.muret.model.transducers.Agnostic2SemanticTransduce
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.SemanticTransduction;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.states.*;
 import es.ua.dlsi.im3.core.IM3Exception;
+import es.ua.dlsi.im3.core.adt.Pair;
 import es.ua.dlsi.im3.core.adt.dfa.*;
 import es.ua.dlsi.im3.core.score.*;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticEncoding;
@@ -13,6 +14,7 @@ import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Clef;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Custos;
 import es.ua.dlsi.im3.omr.encoding.semantic.Semantic2IMCore;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticEncoding;
+import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbol;
 import es.ua.dlsi.im3.omr.language.GraphicalSymbolAlphabet;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apache.commons.math3.fraction.Fraction;
@@ -21,6 +23,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -116,6 +119,12 @@ public class MensuralAgnostic2SemanticTransducer extends Agnostic2SemanticTransd
     @Override
     public List<ITimedElementInStaff> semantic2IMCore(TimeSignature lastTimeSignature, KeySignature lastKeySignature, SemanticEncoding semanticEncoding) throws IM3Exception {
         Semantic2IMCore semantic2ScoreSong = new Semantic2IMCore();
-        return semantic2ScoreSong.convert(NotationType.eMensural, lastTimeSignature, lastKeySignature, semanticEncoding);
+        LinkedList<ITimedElementInStaff> result = new LinkedList<>();
+        List<Pair<SemanticSymbol, ITimedElementInStaff>> pairs = semantic2ScoreSong.convert(NotationType.eMensural, lastTimeSignature, lastKeySignature, semanticEncoding);
+        pairs.forEach(pair -> {
+            result.add(pair.getY());
+        });
+
+        return result;
     }
 }

@@ -1,18 +1,17 @@
 package es.ua.dlsi.grfia.im3ws.muret.model.trainingsets;
 
-import es.ua.dlsi.grfia.im3ws.muret.entity.Project;
-import es.ua.dlsi.grfia.im3ws.muret.model.ProjectModel;
-import es.ua.dlsi.grfia.im3ws.muret.model.ProjectScoreSong;
-import es.ua.dlsi.grfia.im3ws.muret.model.ProjectScoreSongPart;
-import es.ua.dlsi.grfia.im3ws.muret.model.ProjectScoreSongSystem;
+import es.ua.dlsi.grfia.im3ws.muret.entity.*;
+import es.ua.dlsi.grfia.im3ws.muret.model.*;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.io.ExportException;
 import es.ua.dlsi.im3.core.score.Segment;
 import es.ua.dlsi.im3.core.score.Staff;
 import es.ua.dlsi.im3.core.utils.FileCompressors;
 import es.ua.dlsi.im3.omr.encoding.Encoder;
+import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticEncoding;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticExporter;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
+import es.ua.dlsi.im3.omr.encoding.semantic.KernSemanticExporter;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticExporter;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -22,6 +21,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,8 +44,9 @@ public class AgnosticSemanticTrainingSetExporter extends AbstractTrainingSetExpo
 
             for (Project project : projectCollection) {
                 File jsonFile = new File(directory.toFile(), project.getPath() + ".json");
-                ProjectScoreSong projectScoreSong = projectModel.getProjectScoreSong(project);
-                export(projectScoreSong, jsonFile);
+                //ProjectScoreSong projectScoreSong = projectModel.getProjectScoreSong(project);
+                //export(projectScoreSong, jsonFile);
+                export(project, jsonFile);
             }
 
             File resultTGZ = File.createTempFile("json_agnostic_semantic_pairs", ".tar.gz");
@@ -59,9 +60,17 @@ public class AgnosticSemanticTrainingSetExporter extends AbstractTrainingSetExpo
         }
     }
 
+    /**
+     * @deprecated
+     * @param projectScoreSong
+     * @param outputJSonFile
+     * @throws IOException
+     * @throws IM3Exception
+     */
     private void export(ProjectScoreSong projectScoreSong, File outputJSonFile) throws IOException, IM3Exception {
         JSONObject projectJSON = new JSONObject();
         JSONArray jsonSystems = new JSONArray();
+
         for (ProjectScoreSongPart projectScoreSongPart: projectScoreSong.getScoreParts()) {
             //TODO esto va sólo para un pentagrama
             if (projectScoreSongPart.getScorePart().getStaves().size() > 1) {
@@ -90,5 +99,52 @@ public class AgnosticSemanticTrainingSetExporter extends AbstractTrainingSetExpo
         String jsonString = projectJSON.toJSONString();
         file.write(jsonString);
         file.close();
+    }
+
+    private void export(Project project, File outputJSonFile) throws IOException, IM3Exception {
+        JSONObject projectJSON = new JSONObject();
+        JSONArray jsonSystems = new JSONArray();
+
+        for (Image image: project.getImages()) {
+            for (Page page: image.getPages()) {
+                for (Region region: page.getRegions()) {
+                    if (region.getSymbols() != null && !region.getSymbols().isEmpty() && region.getSemanticEncoding() != null) {
+                        JSONObject systemJSON = new JSONObject();
+
+                        ArrayList<Symbol> symbolArrayList = new ArrayList<>(region.getSymbols());
+                        symbolArrayList.sort(Symbol.getHorizontalPositionComparator());
+
+                        AgnosticEncoding agnostic = SemanticRepresentationModel.region2Agnostic(region, true);
+                        AgnosticExporter agnosticExporter = new AgnosticExporter(AgnosticVersion.v2);
+                        String agnosticSequence = agnosticExporter.export(agnostic);
+
+                        systemJSON.put("region_id", region.getId());
+                        systemJSON.put("agnostic", agnosticSequence);
+                        systemJSON.put("semantic", removeIDS(region.getSemanticEncoding()));
+                        jsonSystems.add(systemJSON);
+
+                    }
+                }
+            }
+        }
+
+        projectJSON.put("regions", jsonSystems);
+
+
+        FileWriter file = new FileWriter(outputJSonFile);
+        String jsonString = projectJSON.toJSONString();
+        file.write(jsonString);
+        file.close();
+    }
+
+    private String removeIDS(String semanticWithIDS) {
+        StringBuilder stringBuilder = new StringBuilder();
+        String [] tokens = semanticWithIDS.split(Character.toString(KernSemanticExporter.TOKEN_SEPARATOR));
+        for (String tokenWithID: tokens) {
+            String [] elements = tokenWithID.split(KernSemanticExporter.IDS_SEPARATOR);
+            stringBuilder.append(elements[0]);
+            stringBuilder.append(KernSemanticExporter.TOKEN_SEPARATOR);
+        }
+        return stringBuilder.toString();
     }
 }

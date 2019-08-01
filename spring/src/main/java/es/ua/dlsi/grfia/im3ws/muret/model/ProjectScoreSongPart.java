@@ -3,9 +3,12 @@ package es.ua.dlsi.grfia.im3ws.muret.model;
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.muret.entity.BoundingBox;
 import es.ua.dlsi.im3.core.IM3Exception;
+import es.ua.dlsi.im3.core.adt.Pair;
+import es.ua.dlsi.im3.core.adt.TimedElementCollection;
 import es.ua.dlsi.im3.core.score.*;
 import es.ua.dlsi.im3.omr.encoding.semantic.Semantic2IMCore;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticEncoding;
+import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbol;
 
 import java.util.*;
 
@@ -131,8 +134,12 @@ public class ProjectScoreSongPart {
             // now insert the new content
             TimeSignature lastTimeSignature = layer.getStaff().getRunningTimeSignatureOrNullAt(systemBeginning.getTime());
             KeySignature lastKeySignature = layer.getStaff().getRunningKeySignatureOrNullAt(layer.getDuration());
-            List<ITimedElementInStaff> newElements = semantic2IMCore.convert(layer.getStaff().getNotationType(), lastTimeSignature, lastKeySignature, semanticEncoding);
+            List<Pair<SemanticSymbol, ITimedElementInStaff>> newElementsPairs = semantic2IMCore.convert(layer.getStaff().getNotationType(), lastTimeSignature, lastKeySignature, semanticEncoding);
 
+            LinkedList<ITimedElementInStaff> newElements = new LinkedList<>();
+            newElementsPairs.forEach(pair -> {
+                newElements.add(pair.getY());
+            });
             Time to = layer.insertAt(systemBeginning.getTime(), newElements);
 
             projectScoreSystem.setTo(to);
