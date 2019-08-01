@@ -124,19 +124,7 @@ public class JSONTagging extends AbstractTrainingSetExporter {
                             symbols.addAll(region.getSymbols());
 
                             // sort first by x, then by y
-                            symbols.sort((o1, o2) -> {
-                                if (o1.getBoundingBox().getFromX() < o2.getBoundingBox().getFromX()) {
-                                    return -1;
-                                } else if (o1.getBoundingBox().getFromX() > o2.getBoundingBox().getFromX()) {
-                                    return 1;
-                                } else if (o1.getBoundingBox().getFromY() < o2.getBoundingBox().getFromY()) {
-                                    return -1;
-                                } else if (o1.getBoundingBox().getFromY() > o2.getBoundingBox().getFromY()) {
-                                    return 1;
-                                } else {
-                                    return o1.hashCode() - o2.hashCode();
-                                }
-                            });
+                            symbols.sort(Symbol.getHorizontalPositionComparator());
 
                             for (Symbol symbol : symbols) {
                                 JSONObject jsonSymbol = new JSONObject();

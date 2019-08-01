@@ -19,5 +19,5 @@ public interface IProjectProjection {
     String getComments();
     State getState();
     String getThumbnailBase64Encoding();
-    Part [] getParts();
+    IPartProjection [] getParts();
 }

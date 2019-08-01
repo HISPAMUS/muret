@@ -9,9 +9,14 @@ import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ProjectRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.UserRepository;
 import es.ua.dlsi.im3.core.IM3Exception;
+import es.ua.dlsi.im3.core.adt.Pair;
+import es.ua.dlsi.im3.core.adt.graphics.BoundingBoxXY;
 import es.ua.dlsi.im3.core.io.ExportException;
 import es.ua.dlsi.im3.core.score.*;
 import es.ua.dlsi.im3.core.score.clefs.ClefG2;
+import es.ua.dlsi.im3.core.score.facsimile.Graphic;
+import es.ua.dlsi.im3.core.score.facsimile.Surface;
+import es.ua.dlsi.im3.core.score.facsimile.Zone;
 import es.ua.dlsi.im3.core.score.io.mei.MEISongExporter;
 import es.ua.dlsi.im3.core.score.staves.Pentagram;
 import es.ua.dlsi.im3.core.utils.FileUtils;
@@ -33,6 +38,7 @@ import java.util.logging.Logger;
  */
 @Component
 public class ProjectModel {
+    private static final String SYMBOL_STR = "symbol";
     private final UserRepository userRepository;
 
     private final ProjectRepository projectRepository;
@@ -290,7 +296,6 @@ public class ProjectModel {
 */
     /**
      * It removes all elements in the part
-     * @param project
      */
     /*public void clearSystem(Project project, String partName, long regionID) {
         //TODO
@@ -313,108 +318,181 @@ public class ProjectModel {
         }
     }*/
 
-    //TODO BORRAR
-    public String nada() {
-        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<?xml-model href=\"http://music-encoding.org/schema/4.0.0/mei-all.rng\" type=\"application/xml\" schematypens=\"http://relaxng.org/ns/structure/1.0\"?>\n" +
-                "<?xml-model href=\"http://music-encoding.org/schema/4.0.0/mei-all.rng\" type=\"application/xml\" schematypens=\"http://purl.oclc.org/dsdl/schematron\"?>\n" +
-                "<mei xmlns=\"http://www.music-encoding.org/ns/mei\" meiversion=\"4.0.0\">\n" +
-                "    <meiHead>\n" +
-                "        <fileDesc>\n" +
-                "            <titleStmt>\n" +
-                "                <title />\n" +
-                "            </titleStmt>\n" +
-                "            <pubStmt />\n" +
-                "        </fileDesc>\n" +
-                "        <encodingDesc>\n" +
-                "            <appInfo>\n" +
-                "                <application isodate=\"2019-07-30T20:52:23\" version=\"2.2.0-dev-724637b\">\n" +
-                "                    <name>Verovio</name>\n" +
-                "                    <p>Transcoded from Humdrum</p>\n" +
-                "                </application>\n" +
-                "            </appInfo>\n" +
-                "        </encodingDesc>\n" +
-                "        <workList>\n" +
-                "            <work>\n" +
-                "                <title />\n" +
-                "            </work>\n" +
-                "        </workList>\n" +
-                "    </meiHead>\n" +
-                "    <music>\n" +
-                "        <body>\n" +
-                "            <mdiv xml:id=\"mdiv-0000001875122450\">\n" +
-                "                <score xml:id=\"score-0000000808117618\">\n" +
-                "                    <scoreDef xml:id=\"scoredef-0000000605239052\" midi.bpm=\"400\">\n" +
-                "                        <staffGrp xml:id=\"staffgrp-0000001443844955\">\n" +
-                "                            <staffDef xml:id=\"staffdef-0000000545218833\" clef.shape=\"F\" clef.line=\"4\" key.sig=\"0\" mensur.sign=\"C\" mensur.slash=\"1\" n=\"1\" notationtype=\"mensural.white\" lines=\"5\">\n" +
-                "                                <label xml:id=\"label-0000000630793959\" />\n" +
-                "                            </staffDef>\n" +
-                "                        </staffGrp>\n" +
-                "                    </scoreDef>\n" +
-                "                    <section xml:id=\"section-L1F1\">\n" +
-                "                        <measure xml:id=\"measure-L1\" right=\"invis\" n=\"0\">\n" +
-                "                            <staff xml:id=\"staff-0000001177131203\" n=\"1\">\n" +
-                "                                <layer xml:id=\"layer-L1F1N1\" n=\"1\">\n" +
-                "                                    <note xml:id=\"note-L7F1\" dur=\"brevis\" oct=\"2\" pname=\"f\" />\n" +
-                "                                </layer>\n" +
-                "                            </staff>\n" +
-                "                        </measure>\n" +
-                "                    </section>\n" +
-                "                </score>\n" +
-                "            </mdiv>\n" +
-                "        </body>\n" +
-                "    </music>\n" +
-                "</mei>\n";
+
+    private String generateID(Symbol symbol) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(SYMBOL_STR);
+        stringBuilder.append('_');
+        stringBuilder.append(symbol.getId());
+        return stringBuilder.toString();
     }
 
-    public String exportMEI(Project project) throws IM3Exception {
+    private String generateID(Long id) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(SYMBOL_STR);
+        stringBuilder.append('_');
+        stringBuilder.append(id);
+        return stringBuilder.toString();
+    }
+
+    /**
+     *
+     * @param project
+     * @param specificPart If null, the full score is rendered
+     * @return
+     * @throws IM3Exception
+     */
+    public String exportMEI(Project project, Part specificPart, boolean partsAndFacsimile) throws IM3Exception {
         ScoreSong song = new ScoreSong();
+        song.addTitle(project.getName());
+
+        Facsimile facsimile = new Facsimile();
+        if (partsAndFacsimile) {
+            song.setFacsimile(facsimile);
+        }
+
         HashMap<Part, ScorePart> scorePartHashMap = new HashMap<>();
         HashMap<Part, Staff> staves = new HashMap<>();
+        HashMap<Part, Clef> lastClefs = new HashMap<>();
+
         int cont = 1;
+        ScorePart scoreSpecificPart = null;
         for (Part part: project.getParts()) {
-            ScorePart scorePart = new ScorePart(song, cont); //TODO Ordenación de partes
-            scorePart.setName(part.getName());
-            scorePartHashMap.put(part, scorePart);
-            Pentagram pentagram = new Pentagram(song, new Integer(cont).toString(), cont);
-            pentagram.setNotationType(project.getNotationType());
-            ScoreLayer layer = scorePart.addScoreLayer();
-            pentagram.addLayer(layer);
-            pentagram.setName(part.getName());
-            staves.put(part, pentagram);
-            scorePart.addStaff(pentagram);
-            song.addStaff(pentagram);
-            cont++;
+            if (specificPart == null || part.getId() == specificPart.getId()) {
+                ScorePart scorePart = new ScorePart(song, cont); //TODO Ordenación de partes
+                song.addPart(scorePart);
+                scorePart.setName(part.getName());
+                scorePartHashMap.put(part, scorePart);
+
+                if (specificPart != null) {
+                    scoreSpecificPart = scorePart;
+                }
+
+                Pentagram pentagram = new Pentagram(song, new Integer(cont).toString(), cont);
+                pentagram.setNotationType(project.getNotationType());
+                ScoreLayer layer = scorePart.addScoreLayer();
+                pentagram.addLayer(layer);
+                pentagram.setName(part.getName());
+                staves.put(part, pentagram);
+                scorePart.addStaff(pentagram);
+                song.addStaff(pentagram);
+                cont++;
+            }
         }
 
         for (Image image: project.getImages()) {
             Part imagePart = image.getPart();
             for (Page page: image.getPages()) {
+                String lastPageID = "page_" + page.getId();
+                Surface imageSurface = null;
+                if (partsAndFacsimile) {
+                    imageSurface = new Surface();
+                    imageSurface.setID(lastPageID);
+                    imageSurface.setBoundingBox(new BoundingBoxXY(0, 0, image.getWidth(), image.getHeight()));
+
+                    Graphic graphic = new Graphic();
+                    graphic.setTarget(project.getPath() + "/" + image.getFilename());
+                    imageSurface.addGraphic(graphic);
+
+                    facsimile.addSurface(imageSurface);
+                }
+
+
+                boolean newPage = true;
                 Part pagePart = page.getPart() == null ? imagePart : page.getPart();
                 for (Region region: page.getRegions()) {
+                    String lastRegionID = "region_" + region.getId();
+                    if (imageSurface != null) {
+                        Zone zone = new Zone();
+                        zone.setID(lastRegionID);
+                        zone.setBoundingBox(getBoundingBox(region.getBoundingBox()));
+                        zone.setType("region");
+                        imageSurface.addZone(zone);
+
+                        for (Symbol symbol: region.getSymbols()) {
+                            Zone symbolZone = new Zone();
+                            symbolZone.setID(generateID(symbol));
+                            symbolZone.setBoundingBox(getBoundingBox(symbol.getBoundingBox()));
+                            symbolZone.setType(SYMBOL_STR);
+                            imageSurface.addZone(symbolZone);
+                        }
+                    }
+
+
                     Part regionPart = region.getPart() == null ? pagePart : region.getPart();
                     if (regionPart == null) {
                         Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Region {0} has not a part assigned", region.getId());
                     } else {
-                        //TODO Código duplicado en SemanticRepresentationModel - getNotation
-                        MensSemanticImporter mensSemanticImporter = new MensSemanticImporter(); //TODO Sólo va para mensural
-                        SemanticEncoding semantic = mensSemanticImporter.importString(project.getNotationType(), region.getSemanticEncoding());
-                        Semantic2IMCore semantic2IMCore = new Semantic2IMCore();
-                        //TODO compases y tonalidad anteriores
-                        List<ITimedElementInStaff> items = semantic2IMCore.convert(project.getNotationType(), null, null, semantic);
+                        if (specificPart == null || regionPart.getId() == specificPart.getId()) {
+                            Clef lastClef = lastClefs.get(regionPart);
 
-                        Staff staff = staves.get(regionPart);
-                        if (staff == null) {
-                            throw new IM3Exception("Cannot find the staff for the region " + region.getId());
-                        }
+                            //TODO Código duplicado en SemanticRepresentationModel - getNotation
+                            MensSemanticImporter mensSemanticImporter = new MensSemanticImporter(); //TODO Sólo va para mensural
+                            SemanticEncoding semantic = mensSemanticImporter.importString(project.getNotationType(), region.getSemanticEncoding());
+                            Semantic2IMCore semantic2IMCore = new Semantic2IMCore();
+                            //TODO compases y tonalidad anteriores
+                            List<Pair<SemanticSymbol, ITimedElementInStaff>> items = semantic2IMCore.convert(project.getNotationType(), null, null, semantic);
 
-                        ScoreLayer layer = staff.getLayers().get(0);
+                            Staff staff = staves.get(regionPart);
+                            if (staff == null) {
+                                throw new IM3Exception("Cannot find the staff for the region " + region.getId());
+                            }
 
-                        for (ITimedElementInStaff timedElementInStaff : items) {
-                            if (timedElementInStaff instanceof Atom) {
-                                layer.add((Atom) timedElementInStaff);
-                            } else {
-                                staff.addElementWithoutLayer((IStaffElementWithoutLayer) timedElementInStaff);
+                            ScoreLayer layer = staff.getLayers().get(0);
+                            ScorePart scorePart = scorePartHashMap.get(regionPart);
+                            if (scorePart == null) {
+                                throw new IM3Exception("Cannot find the score part for the region " + region.getId());
+                            }
+                            Time time = staff.getDuration();
+                            if (partsAndFacsimile || specificPart != null) {
+                                if (newPage) {
+                                    newPage = false;
+                                    PageBeginning pageBeginning = new PageBeginning(time, true);
+                                    if (partsAndFacsimile) {
+                                        pageBeginning.setFacsimileElementID(lastPageID);
+                                    }
+                                    scorePart.addPageBeginning(pageBeginning);
+                                }
+                                SystemBeginning systemBeginning = new SystemBeginning(time, true);
+                                if (partsAndFacsimile) {
+                                    systemBeginning.setFacsimileElementID(lastRegionID);
+                                }
+                                scorePart.addSystemBeginning(systemBeginning);
+                            }
+
+                            for (Pair<SemanticSymbol, ITimedElementInStaff> pair : items) {
+                                SemanticSymbol semanticSymbol = pair.getX();
+                                ITimedElementInStaff timedElementInStaff = pair.getY();
+
+                                if (semanticSymbol.getSymbol().getAgnosticIDs() != null && semanticSymbol.getSymbol().getAgnosticIDs().length > 0) {
+                                    //TODO We can only reference to one symbol - maybe, when the semantic symbol corresponds to several agnostic,
+                                    // we could export the merged bounding box of all agnostic symbols
+                                    // Now we just reference to the first one
+
+                                    Long agnosticID = semanticSymbol.getSymbol().getAgnosticIDs()[0];
+                                    String referencedSymbolID = generateID(agnosticID);
+                                    timedElementInStaff.setFacsimileElementID(referencedSymbolID);
+                                }
+                                if (timedElementInStaff instanceof Atom) {
+                                    Atom atom = (Atom) timedElementInStaff;
+                                    layer.add(atom);
+                                } else {
+                                    boolean insert = true;
+                                    if (timedElementInStaff instanceof Clef) {
+                                        if (lastClef == null || !lastClef.equals(timedElementInStaff)) {
+                                            lastClef = (Clef) timedElementInStaff;
+                                            lastClefs.put(regionPart, lastClef);
+                                        } else {
+                                            insert = false;
+                                        }
+                                    } else if (timedElementInStaff instanceof Custos) {
+                                        insert = partsAndFacsimile || specificPart != null;
+                                    }
+
+                                    if (insert) {
+                                        staff.addElementWithoutLayer((IStaffElementWithoutLayer) timedElementInStaff);
+                                    }
+                                }
                             }
                         }
                     }
@@ -423,8 +501,24 @@ public class ProjectModel {
         }
 
         MEISongExporter exporter = new MEISongExporter();
-        String mei = exporter.exportSong(song);
-        System.out.println(mei);
+        String mei = null;
+        if (partsAndFacsimile) {
+            mei = exporter.exportSongAsParts(song);
+        } else {
+            if (specificPart == null) {
+                mei = exporter.exportSong(song);
+            } else {
+                mei = exporter.exportPart(scoreSpecificPart, null);
+            }
+        }
+
         return mei;
+    }
+
+    private BoundingBoxXY getBoundingBox(BoundingBox boundingBox) throws IM3Exception {
+        return new BoundingBoxXY(
+                boundingBox.getFromX(), boundingBox.getFromY(),
+                boundingBox.getToX(), boundingBox.getToY()
+                );
     }
 }

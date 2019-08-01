@@ -7,10 +7,12 @@ import es.ua.dlsi.grfia.im3ws.muret.controller.payload.ProjectStatistics;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.StringBody;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.UploadFileResponse;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Image;
+import es.ua.dlsi.grfia.im3ws.muret.entity.Part;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Project;
 import es.ua.dlsi.grfia.im3ws.muret.entity.State;
 import es.ua.dlsi.grfia.im3ws.muret.model.ProjectModel;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
+import es.ua.dlsi.grfia.im3ws.muret.repository.PartRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ProjectRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.StateRepository;
 import es.ua.dlsi.grfia.im3ws.service.FileStorageService;
@@ -44,18 +46,20 @@ public class ProjectController {
     private final ProjectRepository projectRepository;
     private final ImageRepository imageRepository;
     private final StateRepository stateRepository;
+    private final PartRepository partRepository;
     private final ProjectModel projectModel;
 
     @Autowired
     public ProjectController(ProjectModel projectModel, FileStorageService fileStorageService,
                              MURETConfiguration muretConfiguration, ProjectRepository projectRepository, ImageRepository imageRepository,
-                             StateRepository stateRepository) {
+                             StateRepository stateRepository, PartRepository partRepository) {
         this.projectModel = projectModel;
         this.fileStorageService = fileStorageService;
         this.muretConfiguration = muretConfiguration;
         this.projectRepository = projectRepository;
         this.imageRepository = imageRepository;
         this.stateRepository = stateRepository;
+        this.partRepository = partRepository;
     }
 
     @PostMapping(path = {"/new"})
@@ -183,20 +187,55 @@ public class ProjectController {
         }
     }
 
-    @GetMapping(path = {"/exportMEI/{projectID}"})
+    @GetMapping(path = {"/exportFullScoreMEI/{projectID}"})
     @Transactional
-    public StringResponse exportMEI(@PathVariable("projectID") Integer projectID) throws IM3WSException {
+    public StringResponse exportFullScoreMEI(@PathVariable("projectID") Integer projectID) throws IM3WSException {
+        return exportMEI(projectID, null);
+    }
+
+    @GetMapping(path = {"/exportPartMEI/{projectID}/{partID}"})
+    @Transactional
+    public StringResponse exportPartMEI(@PathVariable("projectID") Integer projectID, @PathVariable("partID") Long partID) throws IM3WSException {
+        return exportMEI(projectID, partID);
+    }
+
+    private StringResponse exportMEI(Integer projectID, Long partID) throws IM3WSException {
         Optional<Project> project = projectRepository.findById(projectID);
         if (!project.isPresent()) {
             throw new IM3WSException("Cannot find a project with id " + projectID);
         }
 
+        Part part = null;
+
+        if (partID != null) {
+            Optional<Part> opart = partRepository.findById(partID);
+            if (!opart.isPresent()) {
+                throw new IM3WSException("Cannot find a part with id " + partID);
+            }
+            part = opart.get();
+        }
+
         try {
-            return new StringResponse(projectModel.exportMEI(project.get()));
+            return new StringResponse(projectModel.exportMEI(project.get(), part, false));
         } catch (IM3Exception e) {
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Error exporting MEI", e);
             throw new IM3WSException(e);
         }
     }
 
+    @GetMapping(path = {"/exportMEIPartsFacsimile/{projectID}"})
+    @Transactional
+    public StringResponse exportMEIPartsFacsimile(@PathVariable("projectID") Integer projectID) throws IM3WSException {
+        Optional<Project> project = projectRepository.findById(projectID);
+        if (!project.isPresent()) {
+            throw new IM3WSException("Cannot find a project with id " + projectID);
+        }
+
+        try {
+            return new StringResponse(projectModel.exportMEI(project.get(), null, true));
+        } catch (IM3Exception e) {
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Error exporting MEI parts facsimile", e);
+            throw new IM3WSException(e);
+        }
+    }
 }

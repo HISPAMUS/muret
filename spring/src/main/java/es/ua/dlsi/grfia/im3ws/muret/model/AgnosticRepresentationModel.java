@@ -290,14 +290,14 @@ public class AgnosticRepresentationModel {
 
         List<AgnosticSymbolTypeAndPosition> items = classifierClient.classifyEndToEnd(imageID, imagePath, persistentRegion.getBoundingBox());
         for (AgnosticSymbolTypeAndPosition item: items) {
-            //TODO Ver si los valores que me devuelven son absolutos o relativos al bounding box
-            //TODO Ahora están puestos a ojo
-            BoundingBox symbolBB = new BoundingBox(item.getStart()*100, persistentRegion.getBoundingBox().getFromY(), item.getEnd()*100+50, persistentRegion.getBoundingBox().getToY());
+            /*BoundingBox symbolBB = new BoundingBox(persistentRegion.getBoundingBox().getFromX()+ item.getStart(),
+                    persistentRegion.getBoundingBox().getFromY(), persistentRegion.getBoundingBox().getFromX() + item.getEnd(),
+                    persistentRegion.getBoundingBox().getToY());*/
             AgnosticSymbolType agnosticSymbolType = AgnosticSymbolTypeFactory.parseString(item.getAgnosticSymbolType());
             PositionInStaff positionInStaff = PositionInStaff.parseString(item.getPositionInStaff());
             AgnosticSymbol agnosticSymbol = new AgnosticSymbol(AgnosticVersion.v2, agnosticSymbolType, positionInStaff);
-
-            Symbol symbol = new Symbol(persistentRegion, agnosticSymbol, symbolBB, null, null, null, null);
+            Symbol symbol = new Symbol(persistentRegion, agnosticSymbol, null, null, null, null, null);
+            symbol.setApproximateX(persistentRegion.getBoundingBox().getFromX()+ item.getStart());
             persistentRegion.getSymbols().add(symbol);
         }
 

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,16 +20,42 @@ import java.util.logging.Logger;
 @RequestMapping("parts")
 @RestController
 public class PartsController extends MuRETBaseController {
+    private final ProjectRepository projectRepository;
     private final PartRepository partRepository;
     PartsModel partsModel;
 
     @Autowired
-    public PartsController(MURETConfiguration muretConfiguration, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository, PartRepository partRepository) {
+    public PartsController(MURETConfiguration muretConfiguration, ProjectRepository projectRepository, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository, PartRepository partRepository) {
         super(muretConfiguration, imageRepository, pageRepository, regionRepository, symbolRepository);
         partsModel = new PartsModel();
+        this.projectRepository = projectRepository;
         this.partRepository = partRepository;
     }
 
+    @GetMapping(path = {"project/{projectID}"})
+    @Transactional
+    public List<Part> getProjectParts(@PathVariable(name="projectID") Integer projectID) throws IM3WSException {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Getting parts of project with id {0}", projectID);
+        /*Optional<Project> project = projectRepository.findById(projectID);
+        if (!project.isPresent()) {
+            throw new IM3WSException("Cannot find a project with ID = " + projectID);
+        }*
+        List<Part> result = project.get().getParts();*/
+        List<Part> result = partRepository.findByProjectId(projectID);
+        return result;
+    }
+
+    @GetMapping(path = {"imageProjectParts/{imageID}"})
+    @Transactional
+    public List<Part> getImageProjectParts(@PathVariable(name="imageID") Long imageID) throws IM3WSException {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Getting parts of image with id {0}", imageID);
+        Optional<Image> image = imageRepository.findById(imageID);
+        if (!image.isPresent()) {
+            throw new IM3WSException("Cannot find an image with ID = " + imageID);
+        }
+        List<Part> result = partRepository.findByProjectId(image.get().getProject().getId());
+        return result;
+    }
 
     @GetMapping(path = {"get/{partAssignedToType}/{targetID}"})
     @Transactional

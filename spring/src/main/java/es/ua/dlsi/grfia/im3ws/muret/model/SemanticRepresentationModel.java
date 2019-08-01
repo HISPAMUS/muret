@@ -6,6 +6,7 @@ import es.ua.dlsi.grfia.im3ws.muret.controller.payload.NotationResponseType;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Renderer;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Project;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Region;
+import es.ua.dlsi.grfia.im3ws.muret.entity.Symbol;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.Agnostic2SemanticTransducer;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.SemanticTransduction;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.MensuralAgnostic2SemanticTransducer;
@@ -88,16 +89,8 @@ public class SemanticRepresentationModel {
 
     public static AgnosticEncoding region2Agnostic(Region staff) throws IM3Exception {
         AgnosticEncoding agnosticEncoding = new AgnosticEncoding();
-        staff.getSymbols().stream().sorted((o1, o2) -> {
-            int diff = o1.getBoundingBox().getFromX() - o2.getBoundingBox().getFromX();
-            if (diff == 0) {
-                diff = o1.getBoundingBox().getFromY() - o2.getBoundingBox().getFromY();
-                if (diff == 0) {
-                    diff = o1.hashCode() - o2.hashCode();
-                }
-            }
-            return diff;
-        }).forEach(symbol -> {
+
+        staff.getSymbols().stream().sorted(Symbol.getHorizontalPositionComparator()).forEach(symbol -> {
             symbol.getAgnosticSymbol().setId(symbol.getId()); // associate the symbol ID to the agnostic symbol
             agnosticEncoding.add(symbol.getAgnosticSymbol());
         });

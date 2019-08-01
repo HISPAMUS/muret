@@ -5,12 +5,34 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
 
 import javax.persistence.*;
+import java.util.Comparator;
 
 /**
  * @author drizo
  */
 @Entity
 public class Symbol extends Auditable implements IAssignableToPart{
+    private static Comparator<? super Symbol> horizontalPositionComparator = new Comparator<Symbol>() {
+        @Override
+        public int compare(Symbol o1, Symbol o2) {
+            Integer o1x = o1.getApproximateX();
+            Integer o2x = o2.getApproximateX();
+            int diff = 0;
+            if (o1x != null && o2x != null) {
+                diff = o1x - o2x;
+                if (diff == 0) {
+                } else if (o1.getBoundingBox() != null && o2.getBoundingBox() != null) {
+                    diff = o1.getBoundingBox().getFromY() - o2.getBoundingBox().getFromY();
+                }
+            }
+
+            if (diff == 0) {
+                diff = o1.hashCode() - o2.hashCode();
+            }
+
+            return diff;
+        }
+    };
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,6 +84,10 @@ public class Symbol extends Auditable implements IAssignableToPart{
         this.comments = comments;
         this.approximateX = approximateX;
         this.part = part;
+    }
+
+    public static Comparator<? super Symbol> getHorizontalPositionComparator() {
+        return horizontalPositionComparator;
     }
 
     public Long getId() {
@@ -137,5 +163,16 @@ public class Symbol extends Auditable implements IAssignableToPart{
 
     public void setPart(Part part) {
         this.part = part;
+    }
+
+    @Transient
+    public Integer getX() {
+        if (this.getApproximateX() != null) {
+            return this.getApproximateX();
+        } else if (this.getBoundingBox() != null) {
+            return this.getBoundingBox().getFromX();
+        } else {
+            return null;
+        }
     }
 }

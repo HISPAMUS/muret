@@ -115,7 +115,11 @@ public class ProjectScoreSong {
     }
 
     public Collection<ProjectScoreSongPart> getScoreParts() {
-        return this.parts.values();
+        if (this.parts == null) {
+            return null;
+        } else {
+            return this.parts.values();
+        }
     }
 
 }
