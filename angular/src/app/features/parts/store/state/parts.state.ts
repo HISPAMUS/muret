@@ -1,6 +1,7 @@
 import {Part} from '../../../../core/model/entities/part';
 
 export interface PartsState {
+  projectParts: Part[],
   imagePart: Part,
   pagePart: Part,
   regionPart: Part,
@@ -8,6 +9,7 @@ export interface PartsState {
 }
 
 export const initialSemanticRepresentationState: PartsState = {
+  projectParts: null,
   imagePart: null,
   pagePart: null,
   regionPart: null,

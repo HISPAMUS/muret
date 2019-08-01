@@ -24,7 +24,6 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
         filename: action.documentAnalysisImageProjection.filename,
         pages: action.documentAnalysisImageProjection.pages,
         imagePart: action.documentAnalysisImageProjection.part,
-        projectParts: action.documentAnalysisImageProjection.projectParts,
         documentType: {
           manuscriptType: action.documentAnalysisImageProjection.manuscriptType,
           notationType: action.documentAnalysisImageProjection.notationType

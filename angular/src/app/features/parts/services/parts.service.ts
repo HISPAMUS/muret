@@ -14,6 +14,16 @@ export class PartsService {
   constructor(private apiRestClientService: ApiRestClientService) {
   }
 
+  getProjectParts$(projectID: number): Observable<Part[]> {
+    const url = 'parts/project/' + projectID;
+    return this.apiRestClientService.get$<Part[]>(url);
+  }
+
+  getImageProjectParts$(imageID: number) {
+    const url = 'parts/imageProjectParts/' + imageID;
+    return this.apiRestClientService.get$<Part[]>(url);
+  }
+
   public getImagePart$(id: number): Observable<Part> {
     const url = 'parts/get/image/' + id;
     return this.apiRestClientService.get$<Part>(url);
@@ -34,51 +44,52 @@ export class PartsService {
     return this.apiRestClientService.get$<Part>(url);
   }
 
-  updateImagePart$(image: Image, part: Part): Observable<Image> {
+  updateImagePart$(image: Image, part: Part): Observable<Part> {
     if (part == null) {
-      return this.apiRestClientService.put$<Image>('parts/clear/image/' + image.id, null);
+      return this.apiRestClientService.put$<Part>('parts/clear/image/' + image.id, null);
     } else {
-      return this.apiRestClientService.put$<Image>('parts/set/image/' + image.id + '/' + part.id, null);
+      return this.apiRestClientService.put$<Part>('parts/set/image/' + image.id + '/' + part.id, null);
     }
   }
 
-  updatePagePart$(page: Page, part: Part): Observable<Page> {
+  updatePagePart$(page: Page, part: Part): Observable<Part> {
     if (part == null) {
-      return this.apiRestClientService.put$<Page>('parts/clear/page/' + page.id, null);
+      return this.apiRestClientService.put$<Part>('parts/clear/page/' + page.id, null);
     } else {
-      return this.apiRestClientService.put$<Page>('parts/set/page/' + page.id + '/' + part.id, null);
+      return this.apiRestClientService.put$<Part>('parts/set/page/' + page.id + '/' + part.id, null);
     }
   }
 
-  updateRegionPart$(region: Region, part: Part): Observable<Region> {
+  updateRegionPart$(region: Region, part: Part): Observable<Part> {
     if (part == null) {
-      return this.apiRestClientService.put$<Region>('parts/clear/region/' + region.id, null);
+      return this.apiRestClientService.put$<Part>('parts/clear/region/' + region.id, null);
     } else {
-      return this.apiRestClientService.put$<Region>('parts/set/region/' + region.id + '/' + part.id, null);
+      return this.apiRestClientService.put$<Part>('parts/set/region/' + region.id + '/' + part.id, null);
     }
   }
 
-  updateSymbolPart$(symbol: AgnosticSymbol, part: Part): Observable<AgnosticSymbol> {
+  updateSymbolPart$(symbol: AgnosticSymbol, part: Part): Observable<Part> {
     if (part == null) {
-      return this.apiRestClientService.put$<AgnosticSymbol>('parts/clear/symbol/' + symbol.id, null);
+      return this.apiRestClientService.put$<Part>('parts/clear/symbol/' + symbol.id, null);
     } else {
-      return this.apiRestClientService.put$<AgnosticSymbol>('parts/set/page/' + symbol.id + '/' + part.id, null);
+      return this.apiRestClientService.put$<Part>('parts/set/page/' + symbol.id + '/' + part.id, null);
     }
   }
 
-  createImagePart$(image: Image, partName: string): Observable<Image> {
-    return this.apiRestClientService.put$<Image>('parts/create/image/' + image.id + '/' + partName, null);
+  createImagePart$(image: Image, partName: string): Observable<Part> {
+    return this.apiRestClientService.put$<Part>('parts/create/image/' + image.id + '/' + partName, null);
   }
 
-  createPagePart$(page: Page, partName: string): Observable<Page> {
-    return this.apiRestClientService.put$<Page>('parts/create/page/' + page.id + '/' + partName, null);
+  createPagePart$(page: Page, partName: string): Observable<Part> {
+    return this.apiRestClientService.put$<Part>('parts/create/page/' + page.id + '/' + partName, null);
   }
 
-  createRegionPart$(region: Region, partName: string): Observable<Region> {
-    return this.apiRestClientService.put$<Region>('parts/create/region/' + region.id + '/' + partName, null);
+  createRegionPart$(region: Region, partName: string): Observable<Part> {
+    return this.apiRestClientService.put$<Part>('parts/create/region/' + region.id + '/' + partName, null);
   }
 
-  createSymbolPart$(symbol: AgnosticSymbol, partName: string): Observable<AgnosticSymbol> {
-    return this.apiRestClientService.put$<AgnosticSymbol>('parts/create/page/' + symbol.id + '/' + partName, null);
+  createSymbolPart$(symbol: AgnosticSymbol, partName: string): Observable<Part> {
+    return this.apiRestClientService.put$<Part>('parts/create/page/' + symbol.id + '/' + partName, null);
   }
+
 }

@@ -14,7 +14,8 @@ const optionsStaff = {
 const optionsScore = {
   scale: 75,
   adjustPageHeight: 1,
-  breaks: 'encoded'
+  breaks: 'encoded',
+  evenNoteSpacing: 1
 };
 
 @Injectable()

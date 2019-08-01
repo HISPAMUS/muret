@@ -6,7 +6,7 @@ import {Project} from '../../../../core/model/entities/project';
 import {Store} from '@ngrx/store';
 import {ProjectState} from '../../store/state/project.state';
 import {selectImages, selectProject} from '../../store/selectors/project.selector';
-import {GetImages, GetProject} from '../../store/actions/project.actions';
+import {ExportMEIPartsFacsimile, ExportMEIPartsFacsimileSuccess, GetImages, GetProject} from '../../store/actions/project.actions';
 import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
 
 @Component({

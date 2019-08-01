@@ -14,7 +14,6 @@ export interface DocumentAnalysisState {
   imageWidth: number;
   imageHeight: number;
   imagePart: Part;
-  projectParts: Part[];
   pages: Page[];
   documentType: DocumentType;
 //  selectedRegion: Region;
@@ -28,7 +27,6 @@ export const initialDocumentAnalysisState: DocumentAnalysisState = {
   imageWidth: 0,
   imageHeight: 0,
   imagePart: null,
-  projectParts: null,
   pages: null,
   documentType: null
   // selectedRegion: null,

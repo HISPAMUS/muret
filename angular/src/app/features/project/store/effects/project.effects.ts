@@ -4,7 +4,7 @@ import { of } from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 import {ProjectService} from '../../services/project.service';
 import {
-  ExportMEI,
+  ExportMEI, ExportMEIPartsFacsimile, ExportMEIPartsFacsimileSuccess,
   ExportMEISuccess,
   GetImages,
   GetImagesSuccess,
@@ -44,12 +44,22 @@ export class ProjectEffects {
   );
 
   @Effect()
+  exportMEIPartsFacsimile$ = this.actions$.pipe(
+    ofType<ExportMEIPartsFacsimile>(ProjectActionTypes.ExportMEIPartsFacsimile),
+    switchMap((action: ExportMEIPartsFacsimile) => this.projectService.exportMEIPartsFacsimile$(action.projectID)),
+    switchMap((mei: StringResponse) => {
+      return of(new ExportMEIPartsFacsimileSuccess(mei.response));
+    })
+  );
+
+  @Effect()
   exportMEI$ = this.actions$.pipe(
     ofType<ExportMEI>(ProjectActionTypes.ExportMEI),
-    map((action: ExportMEI) => action.projectID),
-    switchMap((projectID) => this.projectService.exportMEI$(projectID)),
+    switchMap((action: ExportMEI) => this.projectService.exportMEI$(action.projectID, action.partID)),
     switchMap((mei: StringResponse) => {
       return of(new ExportMEISuccess(mei.response));
     })
   );
+
+
 }

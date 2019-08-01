@@ -1,7 +1,7 @@
 <div ngbDropdown class="d-inline-block">
   <button class="btn btn-outline-primary" id="dropdownForm1" ngbDropdownToggle>{{label}}</button>
   <div ngbDropdownMenu aria-labelledby="dropdownForm1">
-    <button *ngFor="let part of parts$ | async" ngbDropdownItem (click)="select(part)">{{part.name}}</button>
+    <button *ngFor="let part of parts" ngbDropdownItem (click)="select(part)">{{part.name}}</button>
     <div class="dropdown-divider"></div>
     <button ngbDropdownItem (click)="clear()">Clear part</button>
     <div class="dropdown-divider"></div>

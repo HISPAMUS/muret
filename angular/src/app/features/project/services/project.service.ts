@@ -23,8 +23,19 @@ export class ProjectService {
     return this.apiRestClientService.url + '/project/uploadProjectImage';
   }
 
-  exportMEI$(projectID: number): Observable<StringResponse> {
-    const url = `project/exportMEI/${projectID}`;
+  exportMEIPartsFacsimile$(projectID: number) {
+    const url = `project/exportMEIPartsFacsimile/${projectID}`;
     return this.apiRestClientService.get$<StringResponse>(url);
   }
+
+  exportMEI$(projectID: number, partID: number): Observable<StringResponse> {
+    let url: string;
+    if (partID) {
+      url = `project/exportPartMEI/${projectID}/${partID}`;
+    } else {
+      url = `project/exportFullScoreMEI/${projectID}`;
+    }
+    return this.apiRestClientService.get$<StringResponse>(url);
+  }
+
 }

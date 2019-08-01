@@ -16,5 +16,5 @@ export interface Project extends Entity {
   state: State;
   composer: string;
   collection: Collection;
-  part: Part[];
+  parts: Part[];
 }

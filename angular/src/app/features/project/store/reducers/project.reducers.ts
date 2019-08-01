@@ -1,5 +1,6 @@
 import {ProjectActions, ProjectActionTypes} from '../actions/project.actions';
 import {initialProjectState, ProjectState} from '../state/project.state';
+import { saveAs } from 'file-saver';
 
 export function projectReducers(state = initialProjectState, action: ProjectActions): ProjectState {
   switch (action.type) {
@@ -26,6 +27,11 @@ export function projectReducers(state = initialProjectState, action: ProjectActi
         ...state,
         mei: action.mei
       };
+    }
+    case ProjectActionTypes.ExportMEIPartsFacsimileSuccess: {
+      const blob = new Blob([action.mei], { type: 'text/plain' });
+      saveAs(blob, 'parts_facsimile.mei');
+      return {...state};
     }
     default: {
       return state;

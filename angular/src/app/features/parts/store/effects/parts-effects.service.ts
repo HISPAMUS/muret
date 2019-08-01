@@ -12,9 +12,9 @@ import {
   CreateRegionPartSuccess,
   CreateSymbolPart, CreateSymbolPartSuccess,
   GetImagePart,
-  GetImagePartSuccess,
+  GetImagePartSuccess, GetImageProjectParts, GetImageProjectPartsSuccess,
   GetPagePart,
-  GetPagePartSuccess,
+  GetPagePartSuccess, GetProjectParts, GetProjectPartsSuccess,
   GetRegionPart,
   GetRegionPartSuccess,
   GetSymbolPart,
@@ -42,7 +42,25 @@ export class PartsEffects {
     private actions$: Actions,
   ) {}
 
+  @Effect()
+  getProjectParts$ = this.actions$.pipe(
+    ofType<GetProjectParts>(PartsActionTypes.GetProjectParts),
+    map((action: GetProjectParts) => action),
+    switchMap((action) => this.partsService.getProjectParts$(action.projectID)),
+    switchMap((parts: Part[]) => {
+      return of(new GetProjectPartsSuccess(parts));
+    })
+  );
 
+  @Effect()
+  getImageProjectParts$ = this.actions$.pipe(
+    ofType<GetImageProjectParts>(PartsActionTypes.GetImageProjectParts),
+    map((action: GetImageProjectParts) => action),
+    switchMap((action) => this.partsService.getImageProjectParts$(action.imageID)),
+    switchMap((parts: Part[]) => {
+      return of(new GetImageProjectPartsSuccess(parts));
+    })
+  );
   @Effect()
   getImagePart$ = this.actions$.pipe(
     ofType<GetImagePart>(PartsActionTypes.GetImagePart),
@@ -58,8 +76,8 @@ export class PartsEffects {
     ofType<UpdateImagePart>(PartsActionTypes.UpdateImagePart),
     switchMap((action: UpdateImagePart) =>
       this.partsService.updateImagePart$(action.image, action.part)),
-    switchMap((image: Image) => {
-      return of(new UpdateImagePartSuccess(image));
+    switchMap((part: Part) => {
+      return of(new UpdateImagePartSuccess(part));
     })
   );
 
@@ -78,8 +96,8 @@ export class PartsEffects {
     ofType<UpdatePagePart>(PartsActionTypes.UpdatePagePart),
     switchMap((action: UpdatePagePart) =>
       this.partsService.updatePagePart$(action.page, action.part)),
-    switchMap((page: Page) => {
-      return of(new UpdatePagePartSuccess(page));
+    switchMap((part: Part) => {
+      return of(new UpdatePagePartSuccess(part));
     })
   );
 
@@ -98,8 +116,8 @@ export class PartsEffects {
     ofType<UpdateRegionPart>(PartsActionTypes.UpdateRegionPart),
     switchMap((action: UpdateRegionPart) =>
       this.partsService.updateRegionPart$(action.region, action.part)),
-    switchMap((region: Region) => {
-      return of(new UpdateRegionPartSuccess(region));
+    switchMap((part: Part) => {
+      return of(new UpdateRegionPartSuccess(part));
     })
   );
 
@@ -118,8 +136,8 @@ export class PartsEffects {
     ofType<UpdateSymbolPart>(PartsActionTypes.UpdateSymbolPart),
     switchMap((action: UpdateSymbolPart) =>
       this.partsService.updateSymbolPart$(action.symbol, action.part)),
-    switchMap((symbol: AgnosticSymbol) => {
-      return of(new UpdateSymbolPartSuccess(symbol));
+    switchMap((part: Part) => {
+      return of(new UpdateSymbolPartSuccess(part));
     })
   );
 
@@ -128,8 +146,8 @@ export class PartsEffects {
     ofType<CreateImagePart>(PartsActionTypes.CreateImagePart),
     switchMap((action: CreateImagePart) =>
       this.partsService.createImagePart$(action.image, action.partName)),
-    switchMap((image: Image) => {
-      return of(new CreateImagePartSuccess(image));
+    switchMap((part: Part) => {
+      return of(new CreateImagePartSuccess(part));
     })
   );
 
@@ -138,8 +156,8 @@ export class PartsEffects {
     ofType<CreatePagePart>(PartsActionTypes.CreatePagePart),
     switchMap((action: CreatePagePart) =>
       this.partsService.createPagePart$(action.page, action.partName)),
-    switchMap((page: Page) => {
-      return of(new CreatePagePartSuccess(page));
+    switchMap((part: Part) => {
+      return of(new CreatePagePartSuccess(part));
     })
   );
 
@@ -148,8 +166,8 @@ export class PartsEffects {
     ofType<CreateRegionPart>(PartsActionTypes.CreateRegionPart),
     switchMap((action: CreateRegionPart) =>
       this.partsService.createRegionPart$(action.region, action.partName)),
-    switchMap((region: Region) => {
-      return of(new CreateRegionPartSuccess(region));
+    switchMap((part: Part) => {
+      return of(new CreateRegionPartSuccess(part));
     })
   );
 
@@ -158,8 +176,8 @@ export class PartsEffects {
     ofType<CreateSymbolPart>(PartsActionTypes.CreateSymbolPart),
     switchMap((action: CreateSymbolPart) =>
       this.partsService.createSymbolPart$(action.symbol, action.partName)),
-    switchMap((symbol: AgnosticSymbol) => {
-      return of(new CreateSymbolPartSuccess(symbol));
+    switchMap((part: Part) => {
+      return of(new CreateSymbolPartSuccess(part));
     })
   );
 }

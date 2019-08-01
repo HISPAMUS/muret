@@ -9,6 +9,8 @@ export enum ProjectActionTypes {
   GetImagesSuccess = '[Project] Get images success',
   ExportMEI = '[Project] Export MEI',
   ExportMEISuccess = '[Project] Export MEI success',
+  ExportMEIPartsFacsimile = '[Project] Export MEI parts and facsimile',
+  ExportMEIPartsFacsimileSuccess = '[Project] Export MEI parts and facsimile success',
 }
 
 export class GetProject implements Action {
@@ -33,7 +35,7 @@ export class GetImagesSuccess implements Action {
 
 export class ExportMEI implements Action {
   public readonly type = ProjectActionTypes.ExportMEI;
-  constructor(public projectID: number) {}
+  constructor(public projectID: number, public partID: number) {}
 }
 
 export class ExportMEISuccess implements Action {
@@ -41,5 +43,15 @@ export class ExportMEISuccess implements Action {
   constructor(public mei: string) {}
 }
 
+export class ExportMEIPartsFacsimile implements Action {
+  public readonly type = ProjectActionTypes.ExportMEIPartsFacsimile;
+  constructor(public projectID: number) {}
+}
+
+export class ExportMEIPartsFacsimileSuccess implements Action {
+  public readonly type = ProjectActionTypes.ExportMEIPartsFacsimileSuccess;
+  constructor(public mei: string) {}
+}
 export type ProjectActions =
-  GetProject | GetProjectSuccess | GetImages | GetImagesSuccess | ExportMEI | ExportMEISuccess;
+  GetProject | GetProjectSuccess | GetImages | GetImagesSuccess | ExportMEI | ExportMEISuccess |
+  ExportMEIPartsFacsimile | ExportMEIPartsFacsimileSuccess;

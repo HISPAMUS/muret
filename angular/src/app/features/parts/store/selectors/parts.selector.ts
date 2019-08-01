@@ -3,6 +3,11 @@ import {PartsState} from '../state/parts.state';
 
 export const partsState = createFeatureSelector<PartsState>('parts');
 
+export const selectProjectParts = createSelector(
+  partsState,
+  (state: PartsState) => state.projectParts
+);
+
 export const selectImagePart = createSelector(
   partsState,
   (state: PartsState) => state.imagePart

@@ -17,10 +17,9 @@ import {
   import {selectAgnosticSymbols} from '../../../agnostic-representation/store/selectors/agnostic-representation.selector';
   import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
   import {Rectangle} from '../../../../svg/model/rectangle';
-  import {selectProjectParts} from '../../../document-analysis/store/selectors/document-analysis.selector';
   import {Part} from '../../../../core/model/entities/part';
-  import {selectRegionPart} from '../../../parts/store/selectors/parts.selector';
-  import {CreateRegionPart, GetRegionPart, UpdateRegionPart} from '../../../parts/store/actions/parts.actions';
+  import {selectProjectParts, selectRegionPart} from '../../../parts/store/selectors/parts.selector';
+  import {CreateRegionPart, GetImageProjectParts, GetRegionPart, UpdateRegionPart} from '../../../parts/store/actions/parts.actions';
 
   @Component({
   selector: 'app-semantic-representation',
@@ -72,6 +71,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.imageID = +params.get('id'); // + converts the string to number
       this.store.dispatch(new GetImageProjection(+this.imageID));
+      this.store.dispatch(new GetImageProjectParts(+this.imageID));
 
       setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
         this.store.dispatch(new ActivateLink({title: 'Semantic', routerLink: 'semanticrepresentation/' + this.imageID}));
@@ -344,5 +344,6 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
     createRegionPart($event: string) {
       this.store.dispatch(new CreateRegionPart(this.selectedRegion, $event));
+      this.store.dispatch(new GetImageProjectParts(+this.imageID)); // to update the drop down
     }
   }

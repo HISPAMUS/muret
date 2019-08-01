@@ -35,13 +35,13 @@
     </section>
     <section class="row">
       <div class="col-2">
-        <app-part-selection [label]="'Region part'" [parts$]="projectParts$"
-                            (clearPart)="clearRegionPart()" (selectPart)="updateRegionPart($event)"
-                            (createPart)="createRegionPart($event)"
-        >
-
-
+        <ng-container *ngIf="(projectParts$ | async) as parts">
+          <app-part-selection [label]="'Region part'" [parts]="parts"
+                              (clearPart)="clearRegionPart()" (selectPart)="updateRegionPart($event)"
+                              (createPart)="createRegionPart($event)"
+          >
         </app-part-selection>
+        </ng-container>
       </div>
       <div class="col-6">
         <ng-container *ngIf="(regionPart$ | async) as regionPart ">

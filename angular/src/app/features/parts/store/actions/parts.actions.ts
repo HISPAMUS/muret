@@ -6,6 +6,12 @@ import {Page} from '../../../../core/model/entities/page';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
 
 export enum PartsActionTypes {
+  GetProjectParts = '[Parts] Get project parts',
+  GetProjectPartsSuccess = '[Parts] Get project parts success',
+
+  GetImageProjectParts = '[Parts] Get image project parts',
+  GetImageProjectPartsSuccess = '[Parts] Get image project parts success',
+
   GetImagePart = '[Parts] Get image part',
   GetImagePartSuccess = '[Parts] Get image part success',
   GetPagePart = '[Parts] Get page part',
@@ -32,6 +38,26 @@ export enum PartsActionTypes {
   UpdateRegionPartSuccess = '[Parts] Update region part  success',
   UpdateSymbolPart = '[Parts] Update symbol part',
   UpdateSymbolPartSuccess = '[Parts] Update symbol part  success'
+}
+
+export class GetProjectParts implements Action {
+  public readonly type = PartsActionTypes.GetProjectParts;
+  constructor(public projectID: number) {}
+}
+
+export class GetProjectPartsSuccess implements Action {
+  public readonly type = PartsActionTypes.GetProjectPartsSuccess;
+  constructor(public parts: Part[]) {}
+}
+
+export class GetImageProjectParts implements Action {
+  public readonly type = PartsActionTypes.GetImageProjectParts;
+  constructor(public imageID: number) {}
+}
+
+export class GetImageProjectPartsSuccess implements Action {
+  public readonly type = PartsActionTypes.GetImageProjectPartsSuccess;
+  constructor(public parts: Part[]) {}
 }
 
 export class GetImagePart implements Action {
@@ -155,6 +181,8 @@ export class CreateSymbolPartSuccess implements Action {
 }
 
 export type PartsActions =
+  GetProjectParts | GetProjectPartsSuccess |
+  GetImageProjectParts | GetImageProjectPartsSuccess |
   GetImagePart | GetImagePartSuccess | UpdateImagePart | UpdateImagePartSuccess |
   GetPagePart | GetPagePartSuccess | UpdatePagePart | UpdatePagePartSuccess |
   GetRegionPart | GetRegionPartSuccess | UpdateRegionPart | UpdateRegionPartSuccess |

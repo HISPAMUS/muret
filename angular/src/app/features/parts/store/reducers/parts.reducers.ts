@@ -4,6 +4,13 @@ import {PartsActions, PartsActionTypes} from '../actions/parts.actions';
 export function partsReducers(state = initialSemanticRepresentationState, action: PartsActions):
   PartsState {
   switch (action.type) {
+    case PartsActionTypes.GetProjectPartsSuccess:
+    case PartsActionTypes.GetImageProjectPartsSuccess:
+      return {
+        ...state,
+        projectParts: action.parts
+      };
+      break;
     case PartsActionTypes.GetImagePartSuccess:
     case PartsActionTypes.CreateImagePartSuccess:
     case PartsActionTypes.UpdateImagePartSuccess: {
