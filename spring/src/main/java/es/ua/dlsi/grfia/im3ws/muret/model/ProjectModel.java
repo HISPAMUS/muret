@@ -38,7 +38,6 @@ import java.util.logging.Logger;
  */
 @Component
 public class ProjectModel {
-    private static final String SYMBOL_STR = "symbol";
     private final UserRepository userRepository;
 
     private final ProjectRepository projectRepository;
@@ -130,7 +129,7 @@ public class ProjectModel {
      * @return
      */
     public File exportFullProject(Project project) {
-        throw new UnsupportedOperationException("TO-DO");
+        throw new UnsupportedOperationException("TO-DO"); // TODO tiene que ver con el MEI con facsimile y los bounding boxes (export images)
     }
 
     private File getProjectFile(Project project) {
@@ -267,6 +266,7 @@ public class ProjectModel {
         projectScoreSongHashMap.remove(project);
     }
 
+
     //TODO Ahora sólo lo guardo en la región
     /*public void addSemanticEncoding(Project project, String partName, long regionID, BoundingBox boundingBox, String semanticEncodingString) throws IM3WSException {
         try {
@@ -317,208 +317,4 @@ public class ProjectModel {
             layer.add((Atom) timedElementInStaff);
         }
     }*/
-
-
-    private String generateID(Symbol symbol) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(SYMBOL_STR);
-        stringBuilder.append('_');
-        stringBuilder.append(symbol.getId());
-        return stringBuilder.toString();
-    }
-
-    private String generateID(Long id) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(SYMBOL_STR);
-        stringBuilder.append('_');
-        stringBuilder.append(id);
-        return stringBuilder.toString();
-    }
-
-    /**
-     *
-     * @param project
-     * @param specificPart If null, the full score is rendered
-     * @return
-     * @throws IM3Exception
-     */
-    public String exportMEI(Project project, Part specificPart, boolean partsAndFacsimile) throws IM3Exception {
-        ScoreSong song = new ScoreSong();
-        song.addTitle(project.getName());
-
-        Facsimile facsimile = new Facsimile();
-        if (partsAndFacsimile) {
-            song.setFacsimile(facsimile);
-        }
-
-        HashMap<Part, ScorePart> scorePartHashMap = new HashMap<>();
-        HashMap<Part, Staff> staves = new HashMap<>();
-        HashMap<Part, Clef> lastClefs = new HashMap<>();
-
-        int cont = 1;
-        ScorePart scoreSpecificPart = null;
-        for (Part part: project.getParts()) {
-            if (specificPart == null || part.getId() == specificPart.getId()) {
-                ScorePart scorePart = new ScorePart(song, cont); //TODO Ordenación de partes
-                song.addPart(scorePart);
-                scorePart.setName(part.getName());
-                scorePartHashMap.put(part, scorePart);
-
-                if (specificPart != null) {
-                    scoreSpecificPart = scorePart;
-                }
-
-                Pentagram pentagram = new Pentagram(song, new Integer(cont).toString(), cont);
-                pentagram.setNotationType(project.getNotationType());
-                ScoreLayer layer = scorePart.addScoreLayer();
-                pentagram.addLayer(layer);
-                pentagram.setName(part.getName());
-                staves.put(part, pentagram);
-                scorePart.addStaff(pentagram);
-                song.addStaff(pentagram);
-                cont++;
-            }
-        }
-
-        for (Image image: project.getImages()) {
-            Part imagePart = image.getPart();
-            for (Page page: image.getPages()) {
-                String lastPageID = "page_" + page.getId();
-                Surface imageSurface = null;
-                if (partsAndFacsimile) {
-                    imageSurface = new Surface();
-                    imageSurface.setID(lastPageID);
-                    imageSurface.setBoundingBox(new BoundingBoxXY(0, 0, image.getWidth(), image.getHeight()));
-
-                    Graphic graphic = new Graphic();
-                    graphic.setTarget(project.getPath() + "/" + image.getFilename());
-                    imageSurface.addGraphic(graphic);
-
-                    facsimile.addSurface(imageSurface);
-                }
-
-
-                boolean newPage = true;
-                Part pagePart = page.getPart() == null ? imagePart : page.getPart();
-                for (Region region: page.getRegions()) {
-                    String lastRegionID = "region_" + region.getId();
-                    if (imageSurface != null) {
-                        Zone zone = new Zone();
-                        zone.setID(lastRegionID);
-                        zone.setBoundingBox(getBoundingBox(region.getBoundingBox()));
-                        zone.setType("region");
-                        imageSurface.addZone(zone);
-
-                        for (Symbol symbol: region.getSymbols()) {
-                            Zone symbolZone = new Zone();
-                            symbolZone.setID(generateID(symbol));
-                            symbolZone.setBoundingBox(getBoundingBox(symbol.getBoundingBox()));
-                            symbolZone.setType(SYMBOL_STR);
-                            imageSurface.addZone(symbolZone);
-                        }
-                    }
-
-
-                    Part regionPart = region.getPart() == null ? pagePart : region.getPart();
-                    if (regionPart == null) {
-                        Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Region {0} has not a part assigned", region.getId());
-                    } else {
-                        if (specificPart == null || regionPart.getId() == specificPart.getId()) {
-                            Clef lastClef = lastClefs.get(regionPart);
-
-                            //TODO Código duplicado en SemanticRepresentationModel - getNotation
-                            MensSemanticImporter mensSemanticImporter = new MensSemanticImporter(); //TODO Sólo va para mensural
-                            SemanticEncoding semantic = mensSemanticImporter.importString(project.getNotationType(), region.getSemanticEncoding());
-                            Semantic2IMCore semantic2IMCore = new Semantic2IMCore();
-                            //TODO compases y tonalidad anteriores
-                            List<Pair<SemanticSymbol, ITimedElementInStaff>> items = semantic2IMCore.convert(project.getNotationType(), null, null, semantic);
-
-                            Staff staff = staves.get(regionPart);
-                            if (staff == null) {
-                                throw new IM3Exception("Cannot find the staff for the region " + region.getId());
-                            }
-
-                            ScoreLayer layer = staff.getLayers().get(0);
-                            ScorePart scorePart = scorePartHashMap.get(regionPart);
-                            if (scorePart == null) {
-                                throw new IM3Exception("Cannot find the score part for the region " + region.getId());
-                            }
-                            Time time = staff.getDuration();
-                            if (partsAndFacsimile || specificPart != null) {
-                                if (newPage) {
-                                    newPage = false;
-                                    PageBeginning pageBeginning = new PageBeginning(time, true);
-                                    if (partsAndFacsimile) {
-                                        pageBeginning.setFacsimileElementID(lastPageID);
-                                    }
-                                    scorePart.addPageBeginning(pageBeginning);
-                                }
-                                SystemBeginning systemBeginning = new SystemBeginning(time, true);
-                                if (partsAndFacsimile) {
-                                    systemBeginning.setFacsimileElementID(lastRegionID);
-                                }
-                                scorePart.addSystemBeginning(systemBeginning);
-                            }
-
-                            for (Pair<SemanticSymbol, ITimedElementInStaff> pair : items) {
-                                SemanticSymbol semanticSymbol = pair.getX();
-                                ITimedElementInStaff timedElementInStaff = pair.getY();
-
-                                if (semanticSymbol.getSymbol().getAgnosticIDs() != null && semanticSymbol.getSymbol().getAgnosticIDs().length > 0) {
-                                    //TODO We can only reference to one symbol - maybe, when the semantic symbol corresponds to several agnostic,
-                                    // we could export the merged bounding box of all agnostic symbols
-                                    // Now we just reference to the first one
-
-                                    Long agnosticID = semanticSymbol.getSymbol().getAgnosticIDs()[0];
-                                    String referencedSymbolID = generateID(agnosticID);
-                                    timedElementInStaff.setFacsimileElementID(referencedSymbolID);
-                                }
-                                if (timedElementInStaff instanceof Atom) {
-                                    Atom atom = (Atom) timedElementInStaff;
-                                    layer.add(atom);
-                                } else {
-                                    boolean insert = true;
-                                    if (timedElementInStaff instanceof Clef) {
-                                        if (lastClef == null || !lastClef.equals(timedElementInStaff)) {
-                                            lastClef = (Clef) timedElementInStaff;
-                                            lastClefs.put(regionPart, lastClef);
-                                        } else {
-                                            insert = false;
-                                        }
-                                    } else if (timedElementInStaff instanceof Custos) {
-                                        insert = partsAndFacsimile || specificPart != null;
-                                    }
-
-                                    if (insert) {
-                                        staff.addElementWithoutLayer((IStaffElementWithoutLayer) timedElementInStaff);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        MEISongExporter exporter = new MEISongExporter();
-        String mei = null;
-        if (partsAndFacsimile) {
-            mei = exporter.exportSongAsParts(song);
-        } else {
-            if (specificPart == null) {
-                mei = exporter.exportSong(song);
-            } else {
-                mei = exporter.exportPart(scoreSpecificPart, null);
-            }
-        }
-
-        return mei;
-    }
-
-    private BoundingBoxXY getBoundingBox(BoundingBox boundingBox) throws IM3Exception {
-        return new BoundingBoxXY(
-                boundingBox.getFromX(), boundingBox.getFromY(),
-                boundingBox.getToX(), boundingBox.getToY()
-                );
-    }
 }

@@ -29,65 +29,14 @@ public class SemanticRepresentationModel {
 
     private final ProjectModel projectModel;
     private final RegionRepository regionRepository;
+    private NotationModel notationModel;
 
     public SemanticRepresentationModel(ProjectModel projectModel, RegionRepository regionRepository) {
         this.projectModel = projectModel;
         this.regionRepository = regionRepository;
+        this.notationModel = new NotationModel();
     }
 
-    public Notation getNotation(Project project, String partName, Region region, boolean mensustriche, Renderer renderer) throws IM3WSException {
-
-        if (region.getSemanticEncoding() == null) {
-            return new Notation("Region has not a semantic encoding yet");
-        }
-
-        //TODO Código duplicado en ProjectModel - exportMEI
-        //TODO Ahora sólo lo guardo en la región
-        MensSemanticImporter mensSemanticImporter = new MensSemanticImporter(); //TODO Sólo va para mensural
-        try {
-            SemanticEncoding semantic = mensSemanticImporter.importString(project.getNotationType(), region.getSemanticEncoding());
-            Semantic2IMCore semantic2IMCore = new Semantic2IMCore();
-            //TODO compases y tonalidad anteriores
-            List<Pair<SemanticSymbol, ITimedElementInStaff>> items = semantic2IMCore.convert(project.getNotationType(), null, null, semantic);
-            ScoreSong song = new ScoreSong();
-            ScorePart part = song.addPart();
-            ScoreLayer layer = part.addScoreLayer();
-            Staff staff = new Pentagram(song, "1", 1);
-            staff.setNotationType(project.getNotationType());
-            song.addStaff(staff);
-            part.addStaff(staff);
-            staff.addLayer(layer);
-            for (Pair<SemanticSymbol, ITimedElementInStaff> item: items) {
-                ITimedElementInStaff timedElementInStaff = item.getY();
-                if (timedElementInStaff instanceof Atom) {
-                    layer.add((Atom) timedElementInStaff);
-                } else {
-                    staff.addElementWithoutLayer((IStaffElementWithoutLayer) timedElementInStaff);
-                }
-            }
-            MEISongExporter exporter = new MEISongExporter();
-            String mei = exporter.exportSong(song);
-            return new Notation(NotationResponseType.mei, mei, region.getSemanticEncoding());
-        } catch (IM3Exception e) {
-            return new Notation("Cannot import semantic encoding: " + e.getMessage());
-        }
-
-        /*
-        ProjectScoreSong projectScoreSong = projectModel.getProjectScoreSong(project);
-        ProjectScoreSongPart projectScoreSongPart = projectScoreSong.getScorePart(partName);
-        if (projectScoreSongPart == null) {
-            projectScoreSongPart = projectScoreSong.addPart(partName);
-        }
-
-        ProjectScoreSongSystem system = projectScoreSongPart.getScoreSongSystem(region.getId());
-        if (system == null) {
-            system = projectScoreSongPart.addProjectScoreSystem(region.getId(), region.getBoundingBox());
-        }
-
-        Segment segment = new Segment(system.getFrom(), system.getTo());
-        return projectModel.render(projectScoreSongPart.getScorePart(), segment, project.getNotationType(), project.getManuscriptType(), mensustriche, renderer);*/
-
-    }
 
     public static AgnosticEncoding region2Agnostic(Region staff, boolean addSeparator) throws IM3Exception {
         AgnosticEncoding agnosticEncoding = new AgnosticEncoding();
@@ -147,7 +96,7 @@ public class SemanticRepresentationModel {
         KernSemanticExporter kernSemanticExporter = new KernSemanticExporter();
         String kernExport = kernSemanticExporter.export(semantic.getSemanticEncoding());
         sendSemanticEncoding(project, partName, staff, mensustriche, renderer, kernExport);
-        return getNotation(project, partName, staff, mensustriche, renderer);
+        return notationModel.getNotation(project, partName, staff, mensustriche, renderer);
     }
 
     /**
@@ -164,6 +113,6 @@ public class SemanticRepresentationModel {
         //TODO Ahora sólo lo guardo en la región
         region.setSemanticEncoding(semanticEncoding);
         regionRepository.save(region);
-        return getNotation(project, partName, region, mensustriche, renderer);
+        return notationModel.getNotation(project, partName, region, mensustriche, renderer);
     }
 }

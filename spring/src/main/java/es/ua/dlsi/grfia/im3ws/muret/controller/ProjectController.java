@@ -1,5 +1,6 @@
 package es.ua.dlsi.grfia.im3ws.muret.controller;
 
+import es.ua.dlsi.grfia.im3ws.BinaryOutputWrapper;
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.controller.StringResponse;
@@ -10,6 +11,7 @@ import es.ua.dlsi.grfia.im3ws.muret.entity.Image;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Part;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Project;
 import es.ua.dlsi.grfia.im3ws.muret.entity.State;
+import es.ua.dlsi.grfia.im3ws.muret.model.NotationModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.ProjectModel;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.PartRepository;
@@ -17,17 +19,24 @@ import es.ua.dlsi.grfia.im3ws.muret.repository.ProjectRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.StateRepository;
 import es.ua.dlsi.grfia.im3ws.service.FileStorageService;
 import es.ua.dlsi.im3.core.IM3Exception;
+import es.ua.dlsi.im3.core.utils.FileCompressors;
 import es.ua.dlsi.im3.core.utils.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,6 +57,7 @@ public class ProjectController {
     private final StateRepository stateRepository;
     private final PartRepository partRepository;
     private final ProjectModel projectModel;
+    private final NotationModel notationModel;
 
     @Autowired
     public ProjectController(ProjectModel projectModel, FileStorageService fileStorageService,
@@ -60,6 +70,7 @@ public class ProjectController {
         this.imageRepository = imageRepository;
         this.stateRepository = stateRepository;
         this.partRepository = partRepository;
+        this.notationModel = new NotationModel();
     }
 
     @PostMapping(path = {"/new"})
@@ -216,7 +227,7 @@ public class ProjectController {
         }
 
         try {
-            return new StringResponse(projectModel.exportMEI(project.get(), part, false));
+            return new StringResponse(notationModel.exportMEI(project.get(), part, false));
         } catch (IM3Exception e) {
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Error exporting MEI", e);
             throw new IM3WSException(e);
@@ -232,10 +243,49 @@ public class ProjectController {
         }
 
         try {
-            return new StringResponse(projectModel.exportMEI(project.get(), null, true));
+            return new StringResponse(notationModel.exportMEI(project.get(), null, true));
         } catch (IM3Exception e) {
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Error exporting MEI parts facsimile", e);
             throw new IM3WSException(e);
+        }
+    }
+
+
+    @RequestMapping(value="/exportMensurstrich/{projectID}", method= RequestMethod.GET, produces="application/x-gzip")
+    @ResponseBody
+    @Transactional
+    public ResponseEntity<?> exportMensurstrich(@PathVariable Integer projectID) throws IM3WSException {
+        Optional<Project> project = projectRepository.findById(projectID);
+        if (!project.isPresent()) {
+            throw new IM3WSException("Cannot find a project with id " + projectID);
+        }
+
+        try {
+            FileCompressors fileCompressors = new FileCompressors();
+            ArrayList<String> prefixes = new ArrayList<>();
+            ArrayList<Path> files = new ArrayList<>();
+
+            Path tgz = Files.createTempFile("mensurstrich_" + projectID, ".tar.gz");
+            String filename = tgz.getFileName().toString();
+            BinaryOutputWrapper output = new BinaryOutputWrapper("application/x-gzip");
+
+            Path tmpDirectory = Files.createTempDirectory("mensurstrich_files_" + projectID);
+            prefixes.add("content");
+            files.add(tmpDirectory);
+            notationModel.generateMensurstrich(tmpDirectory, project.get());
+
+            fileCompressors.tgzFolders(tgz, files, prefixes);
+
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Adding to output file name {0}", filename);
+            output.setFilename(filename);
+            byte[] data = Files.readAllBytes(tgz);
+            output.setData(data);
+
+            return new ResponseEntity<>(output.getData(), output.getHeaders(), HttpStatus.OK);
+        } catch (Exception e) {
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot export", e);
+            throw new IM3WSException(e);
+
         }
     }
 }

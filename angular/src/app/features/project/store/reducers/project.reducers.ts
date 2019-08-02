@@ -33,6 +33,11 @@ export function projectReducers(state = initialProjectState, action: ProjectActi
       saveAs(blob, 'parts_facsimile.mei');
       return {...state};
     }
+    case ProjectActionTypes.ExportMensurstrichSuccess: {
+      const blob = new Blob([action.payload], { type: 'application/x-gzip' });
+      saveAs(blob, 'mensurstrich.tgz');
+      return {...state};
+    }
     default: {
       return state;
     }

@@ -38,4 +38,8 @@ export class ProjectService {
     return this.apiRestClientService.get$<StringResponse>(url);
   }
 
+  exportMensurstrich$(projectID: number): Observable<Blob> {
+    const url = `project/exportMensurstrich/${projectID}`;
+    return this.apiRestClientService.getBlob$(url);
+  }
 }

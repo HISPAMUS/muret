@@ -7,6 +7,7 @@ import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Renderer;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Part;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Project;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Region;
+import es.ua.dlsi.grfia.im3ws.muret.model.NotationModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.ProjectModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.SemanticRepresentationModel;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
@@ -29,6 +30,7 @@ public class SemanticRepresentationController extends MuRETBaseController {
     private final ProjectModel projectModel;
     SemanticRepresentationModel semanticRepresentationModel;
     PartsModel partsModel;
+    private final NotationModel notationModel;
 
     @Autowired
     public SemanticRepresentationController(MURETConfiguration muretConfiguration, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository, ProjectModel projectModel) {
@@ -36,6 +38,7 @@ public class SemanticRepresentationController extends MuRETBaseController {
         this.projectModel = projectModel;
         this.semanticRepresentationModel = new SemanticRepresentationModel(projectModel, regionRepository);
         this.partsModel = new PartsModel();
+        this.notationModel = new NotationModel();
     }
 
     /**
@@ -84,7 +87,7 @@ public class SemanticRepresentationController extends MuRETBaseController {
         Part part = null;
         String partName = "";
 
-        Notation result = semanticRepresentationModel.getNotation(project, partName, region, mensustriche, renderer);
+        Notation result = notationModel.getNotation(project, partName, region, mensustriche, renderer);
         return result;
     }
 
