@@ -20,6 +20,7 @@ import {
   import {Part} from '../../../../core/model/entities/part';
   import {selectProjectParts, selectRegionPart} from '../../../parts/store/selectors/parts.selector';
   import {CreateRegionPart, GetImageProjectParts, GetRegionPart, UpdateRegionPart} from '../../../parts/store/actions/parts.actions';
+  import {GetRegion} from '../../../agnostic-representation/store/actions/agnostic-representation.actions';
 
   @Component({
   selector: 'app-semantic-representation',
@@ -59,6 +60,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   // imagePart$: Observable<Part>;
   // pagePart$: Observable<Part>;
   regionPart$: Observable<Part>;
+    private drawSymbolsPending = true;
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>) {
     this.defaultColDef = {
@@ -93,7 +95,9 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     });
 
     this.agnosticSymbolsSubscription = this.store.select(selectAgnosticSymbols).subscribe(next => {
-      this.drawSelectedRegionSymbols(next);
+        setTimeout( () => { // avoid desync (first region, then symbols)
+          this.drawSelectedRegionSymbols(next);
+        });
     });
 
     this.projectParts$ = this.store.select(selectProjectParts);
@@ -104,6 +108,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.notationSubscription.unsubscribe();
+    this.agnosticSymbolsSubscription.unsubscribe();
   }
 
   openDocumentAnalysis() {
@@ -119,8 +124,8 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   setSelectedRegion($event: Region) {
+    this.selectedRegion = $event;
     setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
-      this.selectedRegion = $event;
       this.errorMessage = null;
       this.notation = null;
       // this.semanticEncoding = '';
@@ -189,11 +194,21 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   private drawAgnosticSymbol(symbol: AgnosticSymbol, cont: number): Rectangle {
     const rect = new Rectangle();
     rect.id = '' + symbol.id;
-    // TODO end-to-end
-    rect.fromX = symbol.boundingBox.fromX;
-    rect.fromY = symbol.boundingBox.fromY;
-    rect.width = symbol.boundingBox.toX - symbol.boundingBox.fromX;
-    rect.height  = symbol.boundingBox.toY - symbol.boundingBox.fromY;
+    // TODO fusionar con Agnóstico
+    if (symbol.approximateX && this.selectedRegion  && this.selectedRegion.boundingBox) {
+      rect.fromX = symbol.approximateX;
+      rect.fromY = this.selectedRegion.boundingBox.fromY;
+      rect.width = 1;
+      rect.height  = this.selectedRegion.boundingBox.toY - this.selectedRegion.boundingBox.fromY;
+    } else if (symbol.boundingBox) {
+      rect.fromX = symbol.boundingBox.fromX;
+      rect.fromY = symbol.boundingBox.fromY;
+      rect.width = symbol.boundingBox.toX - symbol.boundingBox.fromX;
+      rect.height  = symbol.boundingBox.toY - symbol.boundingBox.fromY;
+    } else {
+      return;
+    }
+
     rect.fillColor = 'transparent';
     rect.strokeColor = 'red';
     rect.strokeWidth = 1;
