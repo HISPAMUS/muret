@@ -182,7 +182,18 @@ public class NotationModel {
                         for (Symbol symbol: region.getSymbols()) {
                             Zone symbolZone = new Zone();
                             symbolZone.setID(generateID(symbol));
-                            symbolZone.setBoundingBox(getBoundingBox(symbol.getBoundingBox()));
+
+                            if (symbol.getBoundingBox() != null) {
+                                symbolZone.setBoundingBox(getBoundingBox(symbol.getBoundingBox()));
+                            } else if (symbol.getApproximateX() != null) {
+                                //TODO 25
+                                symbolZone.setBoundingBox(new BoundingBoxXY(symbol.getApproximateX(),
+                                        region.getBoundingBox().getFromY(),
+                                        symbol.getApproximateX()+25,
+                                        region.getBoundingBox().getToY()));
+                            }
+
+
                             symbolZone.setType(SYMBOL_STR);
                             imageSurface.addZone(symbolZone);
                         }

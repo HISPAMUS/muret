@@ -42,6 +42,7 @@ public class SemanticRepresentationModel {
         AgnosticEncoding agnosticEncoding = new AgnosticEncoding();
 
         ArrayList<Symbol> symbols = new ArrayList<>(staff.getSymbols());
+        symbols.sort(Symbol.getHorizontalPositionComparator());
         for (int i=0; i<symbols.size(); i++) {
             Symbol symbol = symbols.get(i);
             symbol.getAgnosticSymbol().setId(symbol.getId()); // associate the symbol ID to the agnostic symbol
@@ -62,7 +63,7 @@ public class SemanticRepresentationModel {
      * @param staff
      * @return MEI
      */
-    public Notation computeSemanticFromAgnostic(Project project, String partName, Region staff, boolean mensustriche, Renderer renderer) throws FileNotFoundException, IM3Exception, IM3WSException {
+    public Notation computeSemanticFromAgnostic(Project project, String partName, Region staff, boolean mensurstrich, Renderer renderer) throws FileNotFoundException, IM3Exception, IM3WSException {
         AgnosticEncoding agnosticEncoding = region2Agnostic(staff, false);
 
         Agnostic2SemanticTransducer agnostic2SemanticTransducer;
@@ -95,8 +96,8 @@ public class SemanticRepresentationModel {
         //projectModel.addSemanticEncoding(project, partName, staff.getId(), staff.getBoundingBox(), semantic.getSemanticEncoding());
         KernSemanticExporter kernSemanticExporter = new KernSemanticExporter();
         String kernExport = kernSemanticExporter.export(semantic.getSemanticEncoding());
-        sendSemanticEncoding(project, partName, staff, mensustriche, renderer, kernExport);
-        return notationModel.getNotation(project, partName, staff, mensustriche, renderer);
+        sendSemanticEncoding(project, partName, staff, mensurstrich, renderer, kernExport);
+        return notationModel.getNotation(project, partName, staff, mensurstrich, renderer);
     }
 
     /**

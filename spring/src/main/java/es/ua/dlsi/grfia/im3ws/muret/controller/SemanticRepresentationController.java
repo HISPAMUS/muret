@@ -45,9 +45,9 @@ public class SemanticRepresentationController extends MuRETBaseController {
      * @param staffID
      * @throws IM3WSException
      */
-    @GetMapping(path = {"agnostic2semantic/{staffID}/{mensustriche}/{renderer}"})
+    @GetMapping(path = {"agnostic2semantic/{staffID}/{mensurstrich}/{renderer}"})
     @Transactional
-    public Notation agnostic2semantic(@PathVariable(name="staffID") Long staffID, @PathVariable(name="mensustriche") boolean mensustriche, @PathVariable(name="renderer") Renderer renderer) throws IM3WSException {
+    public Notation agnostic2semantic(@PathVariable(name="staffID") Long staffID, @PathVariable(name="mensurstrich") boolean mensurstrich, @PathVariable(name="renderer") Renderer renderer) throws IM3WSException {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Converting semantic staff frin agnostic {0}", staffID);
 
         Region region = getRegion(staffID);
@@ -60,7 +60,7 @@ public class SemanticRepresentationController extends MuRETBaseController {
         Part part = null;
         String partName = "";
         try {
-            Notation result = semanticRepresentationModel.computeSemanticFromAgnostic(project, partName, region, mensustriche, renderer);
+            Notation result = semanticRepresentationModel.computeSemanticFromAgnostic(project, partName, region, mensurstrich, renderer);
             return result;
         } catch (Exception e) {
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot convert to semantic", e);

@@ -12,18 +12,27 @@ import java.util.Comparator;
  */
 @Entity
 public class Symbol extends Auditable implements IAssignableToPart{
+    private static Integer getX(Symbol symbol) {
+        if (symbol.getApproximateX() != null) {
+            return symbol.getApproximateX();
+        } else if (symbol.getBoundingBox() != null) {
+            return symbol.getBoundingBox().getFromX();
+        } else {
+            return null;
+        }
+    }
     private static Comparator<? super Symbol> horizontalPositionComparator = new Comparator<Symbol>() {
         @Override
         public int compare(Symbol o1, Symbol o2) {
-            Integer o1x = o1.getApproximateX();
-            Integer o2x = o2.getApproximateX();
+            Integer o1x = getX(o1); // sort using approximateX or bounding box
+            Integer o2x = getX(o2);
             int diff = 0;
             if (o1x != null && o2x != null) {
                 diff = o1x - o2x;
-                if (diff == 0) {
-                } else if (o1.getBoundingBox() != null && o2.getBoundingBox() != null) {
-                    diff = o1.getBoundingBox().getFromY() - o2.getBoundingBox().getFromY();
-                }
+            }
+
+            if (diff == 0 && o1.getBoundingBox() != null && o2.getBoundingBox() != null) {
+                diff = o1.getBoundingBox().getFromY() - o2.getBoundingBox().getFromY();
             }
 
             if (diff == 0) {
