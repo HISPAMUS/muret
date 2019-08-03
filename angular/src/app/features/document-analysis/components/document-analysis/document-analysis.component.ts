@@ -49,6 +49,8 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   // private nextDrawShape: string | RegionType;
   shapes: Shape[];
 
+  regionTypeFilterOut: Set<string>;
+
   // end tools
 
   // @ViewChild('imageComponent') imageComponent: ImageComponent;
@@ -62,6 +64,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     this.filename$ = store.select(selectFileName);
     this.mode = 'eIdle';
     this.selectedRegionTypeID = 'page';
+    this.regionTypeFilterOut = new Set<string>();
   }
 
   ngOnInit() {
@@ -152,6 +155,8 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
         }
       });
     }
+
+    this.applyRegionTypeFilter();
   }
 
   private drawBox(layer: string, id: number, boundingBox: BoundingBox, color: string, data: Region | Page): Rectangle {
@@ -178,13 +183,13 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   onLayerVisibilityChanged($event) {
-    if (this.shapes) {
-      this.shapes.forEach(shape => {
-        if (shape.layer === $event.target.name) {
-          shape.hidden = !($event.target.checked);
-        }
-      });
+    if ($event.target.checked) {
+      this.regionTypeFilterOut.delete($event.target.name);
+    } else {
+      this.regionTypeFilterOut.add($event.target.name);
     }
+
+    this.applyRegionTypeFilter();
   }
 
   // ------------- METHODS that deal with actual data -------------
@@ -340,6 +345,14 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
       // CANCEL
       this.shapes = this.shapes.filter(s => s !== newShape); // remove erroneous shape
     });
+  }
+
+  private applyRegionTypeFilter() {
+    if (this.shapes) {
+      this.shapes.forEach(shape => {
+        shape.hidden = this.regionTypeFilterOut.has(shape.layer);
+      });
+    }
   }
 }
 

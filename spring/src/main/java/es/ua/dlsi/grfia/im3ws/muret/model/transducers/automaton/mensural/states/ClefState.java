@@ -29,6 +29,7 @@ public class ClefState extends TransducerState {
         }
 
         SemanticClef semanticClef = new SemanticClef(NotationType.eMensural, symbol.getClefNote(), token.getPositionInStaff().getLine());
+        semanticClef.setAgnosticIDs(token.getId());
         transduction.add(semanticClef);
     }
 }

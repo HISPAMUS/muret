@@ -44,11 +44,11 @@ public class Project extends Auditable {
     @Column (name = "thumbnail_base64_encoding", columnDefinition = "LONGTEXT")
     private String thumbnailBase64Encoding;
 
-    @JsonManagedReference
+    @JsonManagedReference (value="project")
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "project")
     private List<Image> images;
 
-    @JsonManagedReference
+    @JsonManagedReference (value="project")
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "project")
     private List<Part> parts;
 
@@ -56,7 +56,7 @@ public class Project extends Auditable {
     @JoinColumn(name="state_id")
     State state;
 
-    @JsonBackReference
+    @JsonBackReference (value="collection")
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="collection_id", nullable = false)
     private Collection collection;

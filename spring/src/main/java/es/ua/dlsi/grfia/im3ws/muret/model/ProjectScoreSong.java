@@ -12,7 +12,7 @@ import es.ua.dlsi.im3.core.score.staves.Pentagram;
 import java.io.File;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-
+//TODO Revisar dónde se usa
 /**
  * This class is in charge of handling pages, systems, etc... We don't use ScoreLayout because it contains too much
  * information not required yet by our OMR
@@ -115,7 +115,11 @@ public class ProjectScoreSong {
     }
 
     public Collection<ProjectScoreSongPart> getScoreParts() {
-        return this.parts.values();
+        if (this.parts == null) {
+            return null;
+        } else {
+            return this.parts.values();
+        }
     }
 
 }

@@ -3,10 +3,10 @@ package es.ua.dlsi.grfia.im3ws.muret.model;
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.AgnosticSymbolTypeAndPosition;
 import es.ua.dlsi.grfia.im3ws.muret.entity.BoundingBox;
+import es.ua.dlsi.grfia.im3ws.muret.entity.Region;
+import es.ua.dlsi.grfia.im3ws.muret.entity.Symbol;
 import es.ua.dlsi.im3.core.IM3Exception;
-import es.ua.dlsi.im3.core.score.PositionInStaff;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
-import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbolTypeFactory;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -19,12 +19,12 @@ import java.util.logging.Logger;
 /**
  * It uses the Python classifier through a REST API
  */
-public class SymbolClassifierClient {
+public class ClassifierClient {
     private static final int N_PREDICTIONS_SHAPE = 5;
     private static final int N_PREDICTIONS_POSITION = 1;
     ClassifiersRESTClient restClient;
 
-    public SymbolClassifierClient(String restServerURL) {
+    public ClassifierClient(String restServerURL) {
         this.restClient = new ClassifiersRESTClient(restServerURL);
     }
 
@@ -113,7 +113,7 @@ public class SymbolClassifierClient {
      * @throws IM3WSException
      * @throws IM3Exception
      */
-    public List<AgnosticSymbolTypeAndPosition> classifyImage(long imageID, Path path, BoundingBox boundingBox) throws IM3WSException {
+    public List<AgnosticSymbolTypeAndPosition> classifySymbolInImage(long imageID, Path path, BoundingBox boundingBox) throws IM3WSException {
         if (!checkImageExists(imageID)) {
             this.uploadImage(imageID, path);
         }
@@ -126,7 +126,8 @@ public class SymbolClassifierClient {
         postContent.put("predictions", N_PREDICTIONS_SHAPE);
 
         try {
-            ShapePosition response = this.restClient.post("image/" + imageID + "/bbox", ShapePosition.class, postContent);
+            //ShapePosition response = this.restClient.post("image/" + imageID + "/bbox", ShapePosition.class, postContent);
+            ShapePosition response = this.restClient.post("image/" + imageID + "/symbol", ShapePosition.class, postContent);
 
 
             List<AgnosticSymbolTypeAndPosition> result = new ArrayList<>();
@@ -163,9 +164,79 @@ public class SymbolClassifierClient {
 
     }
 
+
+    static class EndToEndItem { // it must be static for letting Jackson instantiate it from JSon responses
+        int start;
+        int end;
+        String position;
+        String shape;
+
+        public int getStart() {
+            return start;
+        }
+
+        public void setStart(int start) {
+            this.start = start;
+        }
+
+        public int getEnd() {
+            return end;
+        }
+
+        public void setEnd(int end) {
+            this.end = end;
+        }
+
+        public String getPosition() {
+            return position;
+        }
+
+        public void setPosition(String position) {
+            this.position = position;
+        }
+
+        public String getShape() {
+            return shape;
+        }
+
+        public void setShape(String shape) {
+            this.shape = shape;
+        }
+    }
+
+    public List<AgnosticSymbolTypeAndPosition> classifyEndToEnd(long imageID, Path path, BoundingBox boundingBox) throws IM3WSException {
+        if (!checkImageExists(imageID)) {
+            this.uploadImage(imageID, path);
+        }
+
+        Map<String, Object> postContent = new HashMap<>();
+        postContent.put("left", boundingBox.getFromX());
+        postContent.put("top", boundingBox.getFromY());
+        postContent.put("right", boundingBox.getToX());
+        postContent.put("bottom", boundingBox.getToY());
+        postContent.put("predictions", N_PREDICTIONS_SHAPE);
+
+        try {
+            EndToEndItem [] response = this.restClient.post("image/" + imageID + "/e2e", EndToEndItem[].class, postContent);
+
+            List<AgnosticSymbolTypeAndPosition> result = new ArrayList<>();
+            for (EndToEndItem endToEndItem: response) {
+                String shape = correctShape(endToEndItem.shape); // TODO Parche
+                AgnosticSymbolTypeAndPosition agnosticSymbolTypeAndPosition = new AgnosticSymbolTypeAndPosition(shape, endToEndItem.position);
+                agnosticSymbolTypeAndPosition.setStart(endToEndItem.start);
+                agnosticSymbolTypeAndPosition.setEnd(endToEndItem.end);
+                result.add(agnosticSymbolTypeAndPosition);
+            }
+            return result;
+        } catch (Throwable t) {
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING,  "Cannot classify e2e" + path.toString() + " with bounding box " + boundingBox, t);
+            return null;
+        }
+    }
+
     public static void main(String [] args) throws IM3WSException, IM3Exception {
         // used to check it
-        SymbolClassifierClient classifiersRESTClient = new SymbolClassifierClient("http://localhost:9999");
+        ClassifierClient classifiersRESTClient = new ClassifierClient("http://localhost:9999");
         System.out.println("Image 1 exists: " + classifiersRESTClient.checkImageExists(1));
         System.out.println("Image 2 exists: " + classifiersRESTClient.checkImageExists(2));
 
@@ -177,7 +248,7 @@ public class SymbolClassifierClient {
 
         // 47,71,146,226 -> Clef.G2
         Path path2 = Paths.get("/Applications/MAMP/htdocs/muret/b-59-850/previews/12609.JPG");
-        List<AgnosticSymbolTypeAndPosition> agnosticSymbol = classifiersRESTClient.classifyImage(2271, path2, new BoundingBox(47, 71, 146, 226));
+        List<AgnosticSymbolTypeAndPosition> agnosticSymbol = classifiersRESTClient.classifySymbolInImage(2271, path2, new BoundingBox(47, 71, 146, 226));
         System.out.println("Classified as " + agnosticSymbol);
     }
 

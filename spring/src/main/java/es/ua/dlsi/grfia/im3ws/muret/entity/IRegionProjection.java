@@ -18,4 +18,6 @@ public interface IRegionProjection {
     String getComments();
     BoundingBox getBoundingBox();
     IRegionTypeProjection getRegionType();
+
+    Part getPart();
 }

@@ -44,3 +44,4 @@ export const selectRegionTypes = createSelector(
   documentAnalysisState,
   (state: DocumentAnalysisState) => state.regionTypes
 );
+

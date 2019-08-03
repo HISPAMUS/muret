@@ -1,7 +1,9 @@
 #topMenu {
   background-color: #7DE2DB;
+  height: 5vh;
 }
 
 #topMenu a {
   color: #103339;
 }
+

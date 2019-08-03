@@ -22,10 +22,11 @@ public class TrainingSetsFactory {
     @Autowired
     public TrainingSetsFactory(ProjectModel projectModel) {
         this.trainingSetExporters = Arrays.asList(
-                new ImagesExporter(0),
-                new JSONTagging(1,true),
-                new JSONTagging(2, false),
-                new AgnosticSemanticTrainingSetExporter(3, projectModel)
+                new ImagesExporter(projectModel, 0, false),
+                new ImagesExporter(projectModel, 1, true),
+                new JSONTagging(2,true),
+                new JSONTagging(3, false),
+                new AgnosticSemanticTrainingSetExporter(4, projectModel)
                 /*new AgnosticSymbolImagesTextFile(4, false, false), // just used in command line (see ExportTrainingSet)
                 new AgnosticSymbolImagesTextFile(5, false, true),
                 new AgnosticSymbolImagesTextFile(6, true, false),

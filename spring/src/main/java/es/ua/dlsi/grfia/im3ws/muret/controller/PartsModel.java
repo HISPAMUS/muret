@@ -23,12 +23,12 @@ public class PartsModel {
         }
     }
 
-    /*public Part findPart(Symbol symbol) {
+    public Part findPart(Symbol symbol) {
         if (symbol.getPart() == null) {
-            return findPart(symbol.getPage());
+            return findPart(symbol.getRegion());
         } else {
             return symbol.getPart();
         }
-    }*/
+    }
 
 }

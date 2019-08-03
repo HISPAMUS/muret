@@ -21,7 +21,7 @@ public class Part extends Auditable {
     @Column
     private String comments;
 
-    @JsonBackReference
+    @JsonBackReference (value="project")
     @ManyToOne(fetch=FetchType.LAZY)
     //@JoinColumn(name="project_id", referencedColumnName="id")
     @JoinColumn(name="project_id", nullable = false)

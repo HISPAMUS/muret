@@ -27,12 +27,12 @@ public class Page extends Auditable implements IAssignableToPart {
     private String comments;
 
 
-    @JsonBackReference
+    @JsonBackReference (value="image")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="image_id", nullable = false) // use this construct to let orphanRemoval to work well
     Image image;
 
-    @JsonManagedReference
+    @JsonManagedReference (value="page")
     @OneToMany(fetch=FetchType.EAGER, mappedBy = "page",
             cascade = CascadeType.ALL,
             orphanRemoval = true) // orphanRemoval = remove dependent rather than set the FK to null)

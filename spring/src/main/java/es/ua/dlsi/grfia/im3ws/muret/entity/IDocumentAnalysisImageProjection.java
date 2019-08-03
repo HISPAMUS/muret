@@ -32,4 +32,10 @@ public interface IDocumentAnalysisImageProjection {
     NotationType getNotationType();
 
     List<IPageProjection> getPages();
+
+    IPartProjection getPart();
+
+    @Value("#{target.getProject().parts}")
+    List<IPartProjection> getProjectParts();
+
 }

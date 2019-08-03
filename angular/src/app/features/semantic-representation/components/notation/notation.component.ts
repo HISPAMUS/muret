@@ -21,7 +21,7 @@ export class NotationComponent implements OnInit, OnChanges {
     if (this.notation) {
       // TODO ¿se llama dos veces?
       if (this.notation.notationResponseType === 'mei') {
-        this.notationAsSVG = this.notationService.render(this.notation.content);
+        this.notationAsSVG = this.notationService.renderStaff(this.notation.content);
       } else if (this.notation.notationResponseType === 'svg') {
         this.notationAsSVG = this.notation.content;
       } else {

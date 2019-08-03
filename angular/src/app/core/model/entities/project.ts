@@ -2,6 +2,7 @@ import {Image} from './image';
 import {State} from './state';
 import {Entity} from './entity';
 import {Collection} from './collection';
+import {Part} from './part';
 
 export interface Project extends Entity {
   name: string;
@@ -14,5 +15,6 @@ export interface Project extends Entity {
   manuscriptType: string;
   state: State;
   composer: string;
-  collection_id: Collection;
+  collection: Collection;
+  parts: Part[];
 }

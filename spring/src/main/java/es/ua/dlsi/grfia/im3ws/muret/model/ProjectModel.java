@@ -5,35 +5,31 @@ import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Notation;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.NotationResponseType;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Renderer;
-import es.ua.dlsi.grfia.im3ws.muret.entity.BoundingBox;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Collection;
-import es.ua.dlsi.grfia.im3ws.muret.entity.ManuscriptType;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Project;
+import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ProjectRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.UserRepository;
 import es.ua.dlsi.im3.core.IM3Exception;
+import es.ua.dlsi.im3.core.adt.Pair;
+import es.ua.dlsi.im3.core.adt.graphics.BoundingBoxXY;
 import es.ua.dlsi.im3.core.io.ExportException;
-import es.ua.dlsi.im3.core.score.NotationType;
-import es.ua.dlsi.im3.core.score.ScorePart;
-import es.ua.dlsi.im3.core.score.Segment;
+import es.ua.dlsi.im3.core.score.*;
+import es.ua.dlsi.im3.core.score.clefs.ClefG2;
+import es.ua.dlsi.im3.core.score.facsimile.Graphic;
+import es.ua.dlsi.im3.core.score.facsimile.Surface;
+import es.ua.dlsi.im3.core.score.facsimile.Zone;
 import es.ua.dlsi.im3.core.score.io.mei.MEISongExporter;
+import es.ua.dlsi.im3.core.score.staves.Pentagram;
 import es.ua.dlsi.im3.core.utils.FileUtils;
 import es.ua.dlsi.im3.omr.encoding.Encoder;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
-import es.ua.dlsi.im3.omr.encoding.semantic.KernSemanticExporter;
-import es.ua.dlsi.im3.omr.encoding.semantic.MensSemanticImporter;
-import es.ua.dlsi.im3.omr.encoding.semantic.SemanticEncoding;
-import es.ua.dlsi.im3.omr.encoding.semantic.SemanticExporter;
+import es.ua.dlsi.im3.omr.encoding.semantic.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Stack;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -133,7 +129,7 @@ public class ProjectModel {
      * @return
      */
     public File exportFullProject(Project project) {
-        throw new UnsupportedOperationException("TO-DO");
+        throw new UnsupportedOperationException("TO-DO"); // TODO tiene que ver con el MEI con facsimile y los bounding boxes (export images)
     }
 
     private File getProjectFile(Project project) {
@@ -270,6 +266,7 @@ public class ProjectModel {
         projectScoreSongHashMap.remove(project);
     }
 
+
     //TODO Ahora sólo lo guardo en la región
     /*public void addSemanticEncoding(Project project, String partName, long regionID, BoundingBox boundingBox, String semanticEncodingString) throws IM3WSException {
         try {
@@ -299,9 +296,6 @@ public class ProjectModel {
 */
     /**
      * It removes all elements in the part
-     * @param project
-     * @param partName
-     * @param regionID
      */
     /*public void clearSystem(Project project, String partName, long regionID) {
         //TODO

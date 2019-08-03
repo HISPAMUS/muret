@@ -26,13 +26,13 @@ public class Region extends Auditable implements IAssignableToPart {
     @Convert(converter = BoundingBoxConverter.class)
     private BoundingBox boundingBox;
 
-    @JsonBackReference
+    @JsonBackReference (value="page")
     @ManyToOne
     //@JoinColumn(name="page_id", referencedColumnName="id")
     @JoinColumn(name="page_id", nullable = false)
     private Page page;
 
-    @JsonManagedReference
+    @JsonManagedReference (value="region")
     @OneToMany(fetch=FetchType.EAGER, mappedBy = "region",
             cascade = CascadeType.ALL,
             orphanRemoval = true) // orphanRemoval = remove dependent rather than set the FK to null)

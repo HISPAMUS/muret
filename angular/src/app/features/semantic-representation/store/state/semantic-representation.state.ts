@@ -1,4 +1,3 @@
-import {Region} from '../../../../core/model/entities/region';
 import {Notation} from '../../services/notation';
 
 export interface SemanticRepresentationState {

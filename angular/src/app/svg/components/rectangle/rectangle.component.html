@@ -6,7 +6,7 @@
           attr.fill="{{appRectangle.fillColor}}" opacity="0.8"
           *ngIf="!appRectangle.hidden"
 />
-<svg:text *ngIf="appRectangle.label" attr.x="{{appRectangle.fromX+3}}" attr.y="{{ appRectangle.fromY+8 }}">{{ appRectangle.label }}</svg:text>
+<svg:text *ngIf="appRectangle.label" attr.fill="{{appRectangle.labelColor}}" attr.x="{{appRectangle.fromX+3}}" attr.y="{{ appRectangle.fromY+8 }}">{{ appRectangle.label }}</svg:text>
 
 <svg:g *ngIf="editing && selected">
   <svg:circle  attr.cx="{{appRectangle.fromX}}" attr.cy="{{appRectangle.fromY}}" attr.r="{{appRectangle.strokeWidth*3}}"

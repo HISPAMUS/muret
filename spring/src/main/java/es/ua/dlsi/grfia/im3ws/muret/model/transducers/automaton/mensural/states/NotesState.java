@@ -7,20 +7,23 @@ import es.ua.dlsi.im3.core.IM3RuntimeException;
 import es.ua.dlsi.im3.core.adt.dfa.State;
 import es.ua.dlsi.im3.core.io.ImportException;
 import es.ua.dlsi.im3.core.score.Accidentals;
-import es.ua.dlsi.im3.core.score.Clef;
 import es.ua.dlsi.im3.core.score.*;
+import es.ua.dlsi.im3.core.score.mensural.ligature.LigatureFactory;
+import es.ua.dlsi.im3.core.score.mensural.meters.Perfection;
+import es.ua.dlsi.im3.core.score.mensural.meters.TimeSignatureMensural;
 import es.ua.dlsi.im3.core.score.mensural.meters.hispanic.TimeSignatureProporcionMayor;
 import es.ua.dlsi.im3.core.score.mensural.meters.hispanic.TimeSignatureProporcionMenor;
-import es.ua.dlsi.im3.core.score.meters.SignTimeSignature;
 import es.ua.dlsi.im3.core.score.meters.TimeSignatureCommonTime;
 import es.ua.dlsi.im3.core.score.meters.TimeSignatureCutTime;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
-import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Custos;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.*;
+import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbol;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbolType;
 import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.*;
-import es.ua.dlsi.im3.omr.language.mensural.states.AccNoteState;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 // TODO: 5/10/17 Mirar si podemos compartir algo con modern
 public class NotesState extends TransducerState {
@@ -52,9 +55,15 @@ public class NotesState extends TransducerState {
         SemanticTimeSignature timeSignature = findLastTimeSignature(transduction);
 
         Accidentals accidental = null;
+
+        ArrayList<Long> agnosticIDs = new ArrayList<>();
         if (previousState instanceof AccNoteState) {
-            accidental = ((AccNoteState)previousState).getAccidental(); //Ojo, si en el mismo compas hay otra nota alterada no lo ve
+            AccNoteState prevState = (AccNoteState) previousState;
+            accidental = prevState.getAccidental(); //Ojo, si en el mismo compas hay otra nota alterada no lo ve
+            agnosticIDs.add(prevState.getAgnosticID());
         }
+
+        agnosticIDs.add(token.getId());
 
         if (token.getSymbol() instanceof Note) {
             Note value = ((Note) token.getSymbol());
@@ -96,25 +105,39 @@ public class NotesState extends TransducerState {
 
                 //TODO fermata ...
                 SemanticNote note = new SemanticNote(false, scientificPitch, visualAccidental, figuresColoration.getFigure(), 0, false, false, null, figuresColoration.getColored());
+
+                if (value != null && value.getStemDirection() != null && token.getPositionInStaff().equals(PositionsInStaff.LINE_3)) {
+                    switch (value.getStemDirection()) {
+                        case up:
+                            note.getCoreSymbol().setExplicitStemDirection(StemDirection.up);
+                            break;
+                        case down:
+                            note.getCoreSymbol().setExplicitStemDirection(StemDirection.down);
+                            break;
+                    }
+                }
+
+                note.setAgnosticIDs(agnosticIDs);
                 transduction.add(note);
 
             } catch (IM3Exception e) {
                 throw new IM3RuntimeException(e);
             }
-        } else if (token.getSymbol() instanceof Custos) {
-            //TODO código repetido con nota
-            //TODO no está aún en semantic encoding
         } else if (token.getSymbol() instanceof Rest) {
             //TODO si accidental no es nulo la alteración debe ir con alguien
             Rest value = ((Rest) token.getSymbol());
+
             Figures figures = convert(value.getRestFigures());
 
             //TODO fermata ...
             SemanticRest rest = new SemanticRest(figures, 0, false, null);
+            rest.setLinePosition(token.getPositionInStaff().getLine());
+            rest.setAgnosticIDs(agnosticIDs);
             transduction.add(rest);
 
         } else if (token.getSymbol() instanceof Dot) {
             SemanticSymbol lastSymbol = transduction.getLastSymbol();
+            lastSymbol.getSymbol().addAgnosticID(token.getId());
             if (lastSymbol.getSymbol().getCoreSymbol() instanceof SingleFigureAtom) {
                 SingleFigureAtom sfa = (SingleFigureAtom) lastSymbol.getSymbol().getCoreSymbol();
                 sfa.getAtomFigure().addDot(); // TODO podría ser de puntillo de división
@@ -122,7 +145,18 @@ public class NotesState extends TransducerState {
                 throw new ImportException("Last symbol should be a single figure atom"); // TODO y los acordes
             }
         } else if (token.getSymbol() instanceof Ligature) {
-            // TODO We don't treat them yet
+            //TODO Currently we always add the same kind of ligature
+            SimpleNote simpleNote1 = new SimpleNote(Figures.SEMIBREVE, 0, new ScientificPitch(PitchClasses.A, 2));
+            SimpleNote simpleNote2 = new SimpleNote(Figures.SEMIBREVE, 0, new ScientificPitch(PitchClasses.B, 2));
+            es.ua.dlsi.im3.core.score.Ligature ligature = null;
+            try {
+                ligature = LigatureFactory.createLigature(Arrays.asList(simpleNote1, simpleNote2), LigatureType.recta);
+            } catch (IM3Exception e) {
+                throw new IM3RuntimeException(e);
+            }
+            SemanticLigature semanticLigature = new SemanticLigature(ligature);
+            semanticLigature.setAgnosticIDs(agnosticIDs);
+            transduction.add(semanticLigature);
         } else {
             throw new IM3RuntimeException("Invalid token: " + token);
         }
@@ -194,6 +228,8 @@ public class NotesState extends TransducerState {
             return false;
         } else if (ts instanceof TimeSignatureProporcionMayor || ts instanceof TimeSignatureProporcionMenor) {
             return true;
+        } else if (ts instanceof TimeSignatureMensural) {
+            return ((TimeSignatureMensural)ts).getProlatio() == Perfection.perfectum;
         } else {
             throw new ImportException("Unsupported meter type:  " + ts.getClass());
         }
@@ -209,7 +245,7 @@ public class NotesState extends TransducerState {
         return null;
     }
 
-    SemanticClef findLastClef(SemanticTransduction transduction) {
+    static SemanticClef findLastClef(SemanticTransduction transduction) {
         for (SemanticSymbol symbol: transduction.getSemanticEncoding().getSymbols()) {
             SemanticSymbolType symbolType = symbol.getSymbol();
             if (symbolType instanceof SemanticClef) {
@@ -219,7 +255,7 @@ public class NotesState extends TransducerState {
         throw new IM3RuntimeException("Cannot find a clef");
     }
 
-    SemanticKeySignature findLastKeySignature(SemanticTransduction transduction) {
+    static SemanticKeySignature findLastKeySignature(SemanticTransduction transduction) {
         for (SemanticSymbol symbol: transduction.getSemanticEncoding().getSymbols()) {
             SemanticSymbolType symbolType = symbol.getSymbol();
             if (symbolType instanceof SemanticKeySignature) {
@@ -297,7 +333,7 @@ public class NotesState extends TransducerState {
         }
     }
 
-    private ScientificPitch parsePitch(SemanticClef clef, PositionInStaff positionInStaff, Accidentals accidental) throws IM3Exception {
+    static ScientificPitch parsePitch(SemanticClef clef, PositionInStaff positionInStaff, Accidentals accidental) throws IM3Exception {
         try {
             ScientificPitch sp = Staff.computeScientificPitch(clef.getCoreSymbol(), positionInStaff);
             if (accidental != null) {

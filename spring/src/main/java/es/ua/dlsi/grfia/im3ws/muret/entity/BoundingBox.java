@@ -80,6 +80,10 @@ public class BoundingBox {
         return this.toX - this.fromX;
     }
 
+    public int getHeight() {
+        return this.toY - this.fromY;
+    }
+
     public void setWidth(int width) {
         this.toX = this.fromX + width;
     }

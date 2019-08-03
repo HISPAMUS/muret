@@ -13,18 +13,23 @@ import {projectReducers} from './store/reducers/project.reducers';
 import {BreadcrumbModule} from '../../breadcrumb/breadcrumb.module';
 import { UploadImagesComponent } from './components/upload-images/upload-images.component';
 import {FileUploadModule} from 'ng2-file-upload';
+import { ProjectScoreViewerComponent } from './components/project-score-viewer/project-score-viewer.component';
+import {SharedModule} from '../../shared/shared.module';
+import {NgbDropdownModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
-  declarations: [ProjectComponent, ImageThumbnailComponent, UploadImagesComponent],
+  declarations: [ProjectComponent, ImageThumbnailComponent, UploadImagesComponent, ProjectScoreViewerComponent],
   imports: [
     CommonModule,
     ProjectRoutingModule,
     // TODO When > 1.2.0
     /// LightboxModule,
     FileUploadModule,
+    NgbDropdownModule,
     StoreModule.forFeature('project', projectReducers),
     EffectsModule.forFeature([ProjectEffects]),
     BreadcrumbModule,
+    SharedModule,
   ],
   providers: [
     ProjectService

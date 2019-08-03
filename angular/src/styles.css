@@ -1,6 +1,9 @@
 @import "../node_modules/ngx-lightbox/lightbox.css";
 @import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 
+@import "~ag-grid-community/dist/styles/ag-grid.css";
+@import "~ag-grid-community/dist/styles/ag-theme-balham.css";
+
 body {
   font-family: Roboto;
   color: #7DE2DB;

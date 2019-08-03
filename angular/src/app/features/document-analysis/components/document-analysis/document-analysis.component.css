@@ -1,11 +1,28 @@
+#docAnalysisToolBar {
+  height: 5vh; /** see layout.component.css **/
+}
+
+#regionTypesFilter {
+  height: 5vh;
+}
+
 #docAnalysisStatusBar {
+  height: 2vh;
   position: fixed;
   z-index: 100;
   bottom: 0;
-  height: 1em;
   background-color: #7DE2DB;
 }
 
+#partName {
+  height: 3vh;
+}
+
+#docAnalysisImage {
+  /** 100 - 5 (=menu in layout.component.css) - 5 (=#docAnalysisToolBar) - 5 (=regionTypesFilter) - 2 (=docAnalysisStatusBar) - 3 (=partName)) **/
+  max-height: 80vh;
+  overflow: auto;
+}
 #footerIdImage {
   font-size: small;
   color: #103339;

@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.im3ws.muret.model.transducers.Agnostic2SemanticTransduce
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.SemanticTransduction;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.states.*;
 import es.ua.dlsi.im3.core.IM3Exception;
+import es.ua.dlsi.im3.core.adt.Pair;
 import es.ua.dlsi.im3.core.adt.dfa.*;
 import es.ua.dlsi.im3.core.score.*;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticEncoding;
@@ -13,6 +14,7 @@ import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Clef;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Custos;
 import es.ua.dlsi.im3.omr.encoding.semantic.Semantic2IMCore;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticEncoding;
+import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbol;
 import es.ua.dlsi.im3.omr.language.GraphicalSymbolAlphabet;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apache.commons.math3.fraction.Fraction;
@@ -21,6 +23,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -59,7 +62,7 @@ public class MensuralAgnostic2SemanticTransducer extends Agnostic2SemanticTransd
         transitions.add(new Transition<>(clef, new Accidental(), keysig));
         transitions.add(new Transition<>(clef, new Note(), notes)); // for second systems ...
         transitions.add(new Transition<>(clef, new Rest(), notes)); // for second systems ...
-        transitions.add(new Transition<>(clef, new Ligature(), notes));
+        transitions.add(new Transition<>(clef, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
         transitions.add(new Transition<>(clef, new MeterSign(), timesig));
 
         transitions.add(new Transition<>(keysig, new Accidental(), keysig));
@@ -67,26 +70,28 @@ public class MensuralAgnostic2SemanticTransducer extends Agnostic2SemanticTransd
 
         transitions.add(new Transition<>(keysig, new Note(), notes)); //TODO no está esto bien del todo.. ver 2º 7 3º pentagrama RISM
         transitions.add(new Transition<>(keysig, new Rest(), notes)); //TODO no está esto bien del todo.. ver 2º 7 3º pentagrama RISM
-        transitions.add(new Transition<>(keysig, new Ligature(), notes));
+        transitions.add(new Transition<>(keysig, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
 
         transitions.add(new Transition<>(timesig, new Accidental(), noteacc));
         transitions.add(new Transition<>(timesig, new Note(), notes));
         transitions.add(new Transition<>(timesig, new Rest(), notes));
-        transitions.add(new Transition<>(timesig, new Ligature(), notes));
+        transitions.add(new Transition<>(timesig, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
 
         transitions.add(new Transition<>(notes, new Accidental(), noteacc));
         transitions.add(new Transition<>(barline, new Accidental(), noteacc));
+        transitions.add(new Transition<>(barline, new Clef(), clef));
 
         transitions.add(new Transition<>(notes, new Note(), notes));
         transitions.add(new Transition<>(notes, new Dot(), notes));
         transitions.add(new Transition<>(notes, new Rest(), notes));
-        transitions.add(new Transition<>(notes, new Ligature(), notes));
+        transitions.add(new Transition<>(notes, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
         transitions.add(new Transition<>(notes, new Custos(), custos));
         transitions.add(new Transition<>(barline, new Note(), notes));
         transitions.add(new Transition<>(barline, new Rest(), notes));
-        transitions.add(new Transition<>(barline, new Ligature(), notes));
+        transitions.add(new Transition<>(barline, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
         transitions.add(new Transition<>(noteacc, new Note(), notes));
         transitions.add(new Transition<>(notes, new VerticalLine(), barline));
+        transitions.add(new Transition<>(barline, new VerticalLine(), barline));
 
         //TODO Añadir defect en todo
 
@@ -114,6 +119,12 @@ public class MensuralAgnostic2SemanticTransducer extends Agnostic2SemanticTransd
     @Override
     public List<ITimedElementInStaff> semantic2IMCore(TimeSignature lastTimeSignature, KeySignature lastKeySignature, SemanticEncoding semanticEncoding) throws IM3Exception {
         Semantic2IMCore semantic2ScoreSong = new Semantic2IMCore();
-        return semantic2ScoreSong.convert(NotationType.eMensural, lastTimeSignature, lastKeySignature, semanticEncoding);
+        LinkedList<ITimedElementInStaff> result = new LinkedList<>();
+        List<Pair<SemanticSymbol, ITimedElementInStaff>> pairs = semantic2ScoreSong.convert(NotationType.eMensural, lastTimeSignature, lastKeySignature, semanticEncoding);
+        pairs.forEach(pair -> {
+            result.add(pair.getY());
+        });
+
+        return result;
     }
 }

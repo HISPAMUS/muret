@@ -13,3 +13,8 @@ export const selectImages = createSelector(
   (state: ProjectState) => state.images
 );
 
+export const selectProjectMEI = createSelector(
+  projectState,
+  (state: ProjectState) => state.mei
+);
+

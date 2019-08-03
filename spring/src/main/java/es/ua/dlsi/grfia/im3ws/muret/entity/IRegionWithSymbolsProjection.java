@@ -19,4 +19,6 @@ public interface IRegionWithSymbolsProjection {
     BoundingBox getBoundingBox();
     IRegionTypeProjection getRegionType();
     List<ISymbolProjection> getSymbols();
+
+    Part getPart();
 }

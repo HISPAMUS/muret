@@ -17,5 +17,8 @@ public interface IImageProjection {
     State getState();
     String getFilename();
 
+    Part getPart();
 
+    @Value("#{target.getProject().parts}")
+    Part [] getProjectParts();
 }

@@ -45,6 +45,8 @@ import {faEye} from '@fortawesome/free-solid-svg-icons/faEye';
 import {faExpandArrowsAlt} from '@fortawesome/free-solid-svg-icons/faExpandArrowsAlt';
 import {faCompressArrowsAlt} from '@fortawesome/free-solid-svg-icons/faCompressArrowsAlt';
 import {faCommentDots} from '@fortawesome/free-solid-svg-icons/faCommentDots';
+import {AgGridModule} from 'ag-grid-angular';
+import {PartsModule} from './features/parts/parts.module';
 
 @NgModule({
   declarations: [
@@ -52,6 +54,7 @@ import {faCommentDots} from '@fortawesome/free-solid-svg-icons/faCommentDots';
   ],
   imports: [
     BrowserModule,
+    AgGridModule.withComponents([]),
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
@@ -64,6 +67,7 @@ import {faCommentDots} from '@fortawesome/free-solid-svg-icons/faCommentDots';
     AppRoutingModule,
     AboutModule,
     ExportModule,
+    PartsModule,
     ProjectsModule,
     NewProjectModule,
     DocumentAnalysisModule,

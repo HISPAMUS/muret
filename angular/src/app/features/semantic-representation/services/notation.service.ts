@@ -2,12 +2,19 @@ import { Injectable } from '@angular/core';
 
 declare var verovio: any;
 
-const options = {
+const optionsStaff = {
   scale: 100,
   adjustPageHeight: 1,
   breaks: 'encoded',
   noJustification: 1,
   spacingDurDetection: 1,
+  evenNoteSpacing: 1
+};
+
+const optionsScore = {
+  scale: 75,
+  adjustPageHeight: 1,
+  breaks: 'encoded',
   evenNoteSpacing: 1
 };
 
@@ -19,7 +26,11 @@ export class NotationService {
     this.vrvToolkit = new verovio.toolkit();
   }
 
-  public render(mei: string): string {
-    return this.vrvToolkit.renderData(mei, options);
+  public renderStaff(mei: string): string {
+    return this.vrvToolkit.renderData(mei, optionsStaff);
+  }
+
+  public renderScore(mei: string): string {
+    return this.vrvToolkit.renderData(mei, optionsScore);
   }
 }

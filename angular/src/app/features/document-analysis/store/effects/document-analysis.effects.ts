@@ -51,16 +51,6 @@ export class DocumentAnalysisEffects {
   );
 
   @Effect()
-  getImagePart$ = this.actions$.pipe(
-    ofType<GetImagePart>(DocumentAnalysisActionTypes.GetImagePart),
-    map((action: GetImagePart) => action),
-    switchMap((action) => this.documentAnalysisService.getImagePart$(action.imageID)),
-    switchMap((part: Part) => {
-      return of(new GetImagePartSuccess(part));
-    })
-  );
-
-  @Effect()
   getImageURL$ = this.actions$.pipe(
     ofType<GetImageURL>(DocumentAnalysisActionTypes.GetImageURL),
     map((action: GetImageURL) => action),
