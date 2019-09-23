@@ -1,0 +1,42 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <br> <!--TODO maquetación -->
+      <button (click)="exportPartsAndFacsimile()">Export to MEI file with parts and facsimile</button>
+      <br>
+      <button (click)="exportFullMensurstrich()">Export mensurstrich</button>
+    </div>
+  </div>
+
+   <div class="row">
+     <div class="col-12">
+       <h3>MEI Visualization</h3>
+       <p>Select score to be rendered</p>
+
+       <div ngbDropdown class="d-inline-block">
+         <button class="btn btn-outline-primary" id="dropdownForm1" ngbDropdownToggle>Select score to be rendered</button>
+         <div ngbDropdownMenu aria-labelledby="dropdownForm1">
+           <button (click)="renderFullScore()">Full score</button>
+           <ng-container *ngIf="(projectParts$ | async) as projectParts">
+            <button *ngFor="let part of projectParts" ngbDropdownItem (click)="render(part.id)">{{part.name}}</button>
+           </ng-container>
+         </div>
+       </div>
+     </div>
+   </div>
+
+  <div class="row">
+    <div class="col">
+      <button (click)="saveFile()">Save render to file</button>
+    </div>
+  </div>
+
+  <hr>
+
+  <div id="scoreView" class="row">
+    <div class="col-12">
+      <div [innerHTML]="notationAsSVG | safe: 'html'">
+      </div>
+    </div>
+  </div>
+</div>

@@ -45,9 +45,6 @@ public class AgnosticSymbolTypeAndPosition {
 
     @Override
     public String toString() {
-        return "AgnosticSymbolTypeAndPosition{" +
-                "positionInStaff='" + positionInStaff + '\'' +
-                ", agnosticSymbolType='" + agnosticSymbolType + '\'' +
-                '}';
+        return agnosticSymbolType + ":" + positionInStaff;
     }
 }

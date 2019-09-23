@@ -36,6 +36,31 @@ import java.util.logging.Logger;
 public class NotationModel {
     private static final String SYMBOL_STR = "symbol";
 
+    public String getMEINotation(SemanticEncoding semanticEncoding, NotationType notationType) throws IM3WSException, IM3Exception {
+        Semantic2IMCore semantic2IMCore = new Semantic2IMCore();
+        //TODO compases y tonalidad anteriores
+        List<Pair<SemanticSymbol, ITimedElementInStaff>> items = semantic2IMCore.convert(notationType, null, null, semanticEncoding);
+        ScoreSong song = new ScoreSong();
+        ScorePart part = song.addPart();
+        ScoreLayer layer = part.addScoreLayer();
+        Staff staff = new Pentagram(song, "1", 1);
+        staff.setNotationType(notationType);
+        song.addStaff(staff);
+        part.addStaff(staff);
+        staff.addLayer(layer);
+        for (Pair<SemanticSymbol, ITimedElementInStaff> item: items) {
+            ITimedElementInStaff timedElementInStaff = item.getY();
+            if (timedElementInStaff instanceof Atom) {
+                layer.add((Atom) timedElementInStaff);
+            } else {
+                staff.addElementWithoutLayer((IStaffElementWithoutLayer) timedElementInStaff);
+            }
+        }
+        MEISongExporter exporter = new MEISongExporter();
+        String mei = exporter.exportSong(song);
+        return mei;
+    }
+
     public Notation getNotation(Project project, String partName, Region region, boolean mensustriche, Renderer renderer) throws IM3WSException {
 
         if (region.getSemanticEncoding() == null) {
@@ -47,47 +72,11 @@ public class NotationModel {
         MensSemanticImporter mensSemanticImporter = new MensSemanticImporter(); //TODO Sólo va para mensural
         try {
             SemanticEncoding semantic = mensSemanticImporter.importString(project.getNotationType(), region.getSemanticEncoding());
-            Semantic2IMCore semantic2IMCore = new Semantic2IMCore();
-            //TODO compases y tonalidad anteriores
-            List<Pair<SemanticSymbol, ITimedElementInStaff>> items = semantic2IMCore.convert(project.getNotationType(), null, null, semantic);
-            ScoreSong song = new ScoreSong();
-            ScorePart part = song.addPart();
-            ScoreLayer layer = part.addScoreLayer();
-            Staff staff = new Pentagram(song, "1", 1);
-            staff.setNotationType(project.getNotationType());
-            song.addStaff(staff);
-            part.addStaff(staff);
-            staff.addLayer(layer);
-            for (Pair<SemanticSymbol, ITimedElementInStaff> item: items) {
-                ITimedElementInStaff timedElementInStaff = item.getY();
-                if (timedElementInStaff instanceof Atom) {
-                    layer.add((Atom) timedElementInStaff);
-                } else {
-                    staff.addElementWithoutLayer((IStaffElementWithoutLayer) timedElementInStaff);
-                }
-            }
-            MEISongExporter exporter = new MEISongExporter();
-            String mei = exporter.exportSong(song);
+            String mei = getMEINotation(semantic, project.getNotationType());
             return new Notation(NotationResponseType.mei, mei, region.getSemanticEncoding());
         } catch (IM3Exception e) {
             return new Notation("Cannot import semantic encoding: " + e.getMessage());
         }
-
-        /*
-        ProjectScoreSong projectScoreSong = projectModel.getProjectScoreSong(project);
-        ProjectScoreSongPart projectScoreSongPart = projectScoreSong.getScorePart(partName);
-        if (projectScoreSongPart == null) {
-            projectScoreSongPart = projectScoreSong.addPart(partName);
-        }
-
-        ProjectScoreSongSystem system = projectScoreSongPart.getScoreSongSystem(region.getId());
-        if (system == null) {
-            system = projectScoreSongPart.addProjectScoreSystem(region.getId(), region.getBoundingBox());
-        }
-
-        Segment segment = new Segment(system.getFrom(), system.getTo());
-        return projectModel.render(projectScoreSongPart.getScorePart(), segment, project.getNotationType(), project.getManuscriptType(), mensustriche, renderer);*/
-
     }
 
     private String generateID(Symbol symbol) {

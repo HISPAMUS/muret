@@ -1,2 +1,2 @@
 Example:
-./export_training_sets.sh -output /tmp/ts -project 202 -project 203 -project 203 -project 204 -project 205 -exporter 3 -exporter 4 -exporter 5 -exporter 6 
+./export_training_sets.sh -output /tmp/ts -project 202 -project 203 -project 204 -project 205 -exporter 3 -exporter 4 -exporter 5 -exporter 6 
