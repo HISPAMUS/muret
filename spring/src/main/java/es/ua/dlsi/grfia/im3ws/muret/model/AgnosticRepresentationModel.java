@@ -178,8 +178,8 @@ public class AgnosticRepresentationModel {
             }
 
             if (otherPossibilities != null && otherPossibilities.size() > 0) {
-                AgnosticSymbolType agnosticSymbolType = AgnosticSymbolTypeFactory.parseString(otherPossibilities.get(0).getAgnosticSymbolType());
-                PositionInStaff positionInStaff = PositionInStaff.parseString(otherPossibilities.get(0).getPositionInStaff());
+                AgnosticSymbolType agnosticSymbolType = AgnosticSymbolTypeFactory.parseString(otherPossibilities.get(0).getShape());
+                PositionInStaff positionInStaff = PositionInStaff.parseString(otherPossibilities.get(0).getPosition());
                 agnosticSymbol = new AgnosticSymbol(AgnosticVersion.v2, agnosticSymbolType, positionInStaff);
             }
         }
@@ -293,8 +293,8 @@ public class AgnosticRepresentationModel {
             /*BoundingBox symbolBB = new BoundingBox(persistentRegion.getBoundingBox().getFromX()+ item.getStart(),
                     persistentRegion.getBoundingBox().getFromY(), persistentRegion.getBoundingBox().getFromX() + item.getEnd(),
                     persistentRegion.getBoundingBox().getToY());*/
-            AgnosticSymbolType agnosticSymbolType = AgnosticSymbolTypeFactory.parseString(item.getAgnosticSymbolType());
-            PositionInStaff positionInStaff = PositionInStaff.parseString(item.getPositionInStaff());
+            AgnosticSymbolType agnosticSymbolType = AgnosticSymbolTypeFactory.parseString(item.getShape());
+            PositionInStaff positionInStaff = PositionInStaff.parseString(item.getPosition());
             AgnosticSymbol agnosticSymbol = new AgnosticSymbol(AgnosticVersion.v2, agnosticSymbolType, positionInStaff);
             Symbol symbol = new Symbol(persistentRegion, agnosticSymbol, null, null, null, null, null);
             symbol.setApproximateX(persistentRegion.getBoundingBox().getFromX()+ item.getStart());

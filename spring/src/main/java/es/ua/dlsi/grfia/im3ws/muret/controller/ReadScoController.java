@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.im3ws.muret.controller;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.controller.StringResponse;
+import es.ua.dlsi.grfia.im3ws.muret.controller.payload.AgnosticEncodingJSON;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.AgnosticSymbolTypeAndPosition;
 import es.ua.dlsi.grfia.im3ws.muret.model.NotationModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.TranslationModel;
@@ -32,15 +33,6 @@ public class ReadScoController  {
         this.notationModel = new NotationModel();
     }
 
-    class AgnosticEncodingJSON {
-        NotationType notationType;
-        List<AgnosticSymbolTypeAndPosition> agnosticSymbols;
-
-        @Override
-        public String toString() {
-            return notationType + "->" + agnosticSymbols;
-        }
-    }
 
     /**
      *
@@ -54,13 +46,15 @@ public class ReadScoController  {
     public StringResponse agnostic2MEI(@RequestBody AgnosticEncodingJSON agnosticEncodingJSON) throws IM3WSException, IM3Exception, FileNotFoundException {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Converting semantic staff from agnostic {0}", agnosticEncodingJSON);
 
-        NotationType notationType = agnosticEncodingJSON.notationType;
-        List<AgnosticSymbolTypeAndPosition> symbols = agnosticEncodingJSON.agnosticSymbols;
+        NotationType notationType = agnosticEncodingJSON.getNotationType();
+        List<AgnosticSymbolTypeAndPosition> symbols = agnosticEncodingJSON.getAgnosticSymbols();
 
         AgnosticEncoding agnosticEncoding = new AgnosticEncoding();
         for (AgnosticSymbolTypeAndPosition item: symbols) {
-            AgnosticSymbolType agnosticSymbolType = AgnosticSymbolTypeFactory.parseString(item.getAgnosticSymbolType());
-            PositionInStaff positionInStaff = PositionInStaff.parseString(item.getPositionInStaff());
+            System.out.println("Symbol");
+            System.out.println(item);
+            AgnosticSymbolType agnosticSymbolType = AgnosticSymbolTypeFactory.parseString(item.getShape());
+            PositionInStaff positionInStaff = PositionInStaff.parseString(item.getPosition());
             AgnosticSymbol agnosticSymbol = new AgnosticSymbol(AgnosticVersion.v2, agnosticSymbolType, positionInStaff);
             agnosticEncoding.add(agnosticSymbol);
         }
