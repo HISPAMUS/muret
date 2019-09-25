@@ -1,30 +1,30 @@
 package es.ua.dlsi.grfia.im3ws.muret.controller.payload;
 
 public class AgnosticSymbolTypeAndPosition {
-    String positionInStaff;
-    String agnosticSymbolType;
+    String position;
+    String shape;
     int start;
     int end;
 
     public AgnosticSymbolTypeAndPosition(String agnosticSymbolType, String positionInStaff) {
-        this.positionInStaff = positionInStaff;
-        this.agnosticSymbolType = agnosticSymbolType;
+        this.position = positionInStaff;
+        this.shape = agnosticSymbolType;
     }
 
-    public String getPositionInStaff() {
-        return positionInStaff;
+    public String getPosition() {
+        return position;
     }
 
-    public void setPositionInStaff(String positionInStaff) {
-        this.positionInStaff = positionInStaff;
+    public void setPosition(String position) {
+        this.position = position;
     }
 
-    public String getAgnosticSymbolType() {
-        return agnosticSymbolType;
+    public String getShape() {
+        return shape;
     }
 
-    public void setAgnosticSymbolType(String agnosticSymbolType) {
-        this.agnosticSymbolType = agnosticSymbolType;
+    public void setShape(String shape) {
+        this.shape = shape;
     }
 
     public int getStart() {
@@ -45,9 +45,6 @@ public class AgnosticSymbolTypeAndPosition {
 
     @Override
     public String toString() {
-        return "AgnosticSymbolTypeAndPosition{" +
-                "positionInStaff='" + positionInStaff + '\'' +
-                ", agnosticSymbolType='" + agnosticSymbolType + '\'' +
-                '}';
+        return shape + ":" + position;
     }
 }

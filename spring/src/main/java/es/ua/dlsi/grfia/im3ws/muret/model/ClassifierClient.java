@@ -227,6 +227,7 @@ public class ClassifierClient {
                 agnosticSymbolTypeAndPosition.setEnd(endToEndItem.end);
                 result.add(agnosticSymbolTypeAndPosition);
             }
+            System.out.println(result);
             return result;
         } catch (Throwable t) {
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING,  "Cannot classify e2e" + path.toString() + " with bounding box " + boundingBox, t);

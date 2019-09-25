@@ -1,25 +1,27 @@
-package es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.states;
+package es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.modern.states;
 
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.SemanticTransduction;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.TransducerState;
-import es.ua.dlsi.im3.core.IM3Exception;
-import es.ua.dlsi.im3.core.IM3RuntimeException;
 import es.ua.dlsi.im3.core.adt.dfa.State;
-import es.ua.dlsi.im3.core.adt.dfa.Transduction;
-import es.ua.dlsi.im3.core.score.Measure;
-import es.ua.dlsi.im3.core.score.Time;
-import es.ua.dlsi.im3.core.score.TimeSignature;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
-import es.ua.dlsi.im3.omr.language.OMRTransduction;
-import es.ua.dlsi.im3.omr.language.mensural.states.OMRState;
+import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticBarline;
 
-public class EndBarState extends TransducerState {
-    public EndBarState(int number) {
-        super(number, "endbar");
+public class BarLineState extends TransducerState {
+    public BarLineState(int number) {
+        super(number, "barline");
     }
 
     @Override
     public void onEnter(AgnosticSymbol token, State previousState, SemanticTransduction transduction)  {
+        if (previousState instanceof BarLineState) {
+            SemanticBarline semanticBarline = (SemanticBarline) transduction.getLastSymbol().getSymbol();
+            semanticBarline.getCoreSymbol().setEndBarline(true);
+            semanticBarline.addAgnosticID(token.getId());
+        } else {
+            SemanticBarline semanticBarline = new SemanticBarline();
+            semanticBarline.addAgnosticID(token.getId());
+            transduction.add(semanticBarline);
+        }
         // TODO: 5/10/17 Tipo de barra?
         /*
         Time time = Time.TIME_ZERO;

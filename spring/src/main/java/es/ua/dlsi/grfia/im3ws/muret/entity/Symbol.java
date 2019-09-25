@@ -12,20 +12,24 @@ import java.util.Comparator;
  */
 @Entity
 public class Symbol extends Auditable implements IAssignableToPart{
-    private static Integer getX(Symbol symbol) {
+    private static Integer getMiddleX(Symbol symbol) {
         if (symbol.getApproximateX() != null) {
             return symbol.getApproximateX();
         } else if (symbol.getBoundingBox() != null) {
-            return symbol.getBoundingBox().getFromX();
+            return (symbol.getBoundingBox().getFromX() + symbol.getBoundingBox().getToX()) / 2;
         } else {
             return null;
         }
     }
+
+    /**
+     * It orders symbols given its middle horizontal point or its approximate x
+     */
     private static Comparator<? super Symbol> horizontalPositionComparator = new Comparator<Symbol>() {
         @Override
         public int compare(Symbol o1, Symbol o2) {
-            Integer o1x = getX(o1); // sort using approximateX or bounding box
-            Integer o2x = getX(o2);
+            Integer o1x = getMiddleX(o1); // sort using approximateX or bounding box
+            Integer o2x = getMiddleX(o2);
             int diff = 0;
             if (o1x != null && o2x != null) {
                 diff = o1x - o2x;
@@ -175,7 +179,7 @@ public class Symbol extends Auditable implements IAssignableToPart{
     }
 
     @Transient
-    public Integer getX() {
+    public Integer getMiddleX() {
         if (this.getApproximateX() != null) {
             return this.getApproximateX();
         } else if (this.getBoundingBox() != null) {

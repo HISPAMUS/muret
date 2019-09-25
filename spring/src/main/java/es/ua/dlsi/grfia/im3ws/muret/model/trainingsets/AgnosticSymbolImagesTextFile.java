@@ -152,11 +152,13 @@ public class AgnosticSymbolImagesTextFile extends AbstractTrainingSetExporter {
             Path imagePath = Paths.get(muretFolder.toFile().getPath(), project.getPath(),
                     MURETConfiguration.MASTER_IMAGES, image.getFilename());
             for (Page page : image.getPages()) {
+                System.out.println("> Page " + page);
                 if (!page.getRegions().isEmpty()) {
                     int nregion = 1;
                     StringBuilder sbRegion = new StringBuilder();
 
                     for (Region region : page.getRegions()) {
+                        System.out.println("\t> Region " + nregion);
                         //Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Exporting region " + region.getId());
 
                         if (!region.getSymbols().isEmpty()) {
@@ -164,6 +166,13 @@ public class AgnosticSymbolImagesTextFile extends AbstractTrainingSetExporter {
                                 printSymbol(sbRegion, imagePath.toFile(), image, npage, nregion, symbol, fixedSize);
                             }
                             nregion++;
+
+                            /*if (nregion == 7) {
+                                nregion = 1;
+                                npage++;
+                            }*/
+                        } else {
+                            System.out.println("\t\t> Empty region");
                         }
                     }
 

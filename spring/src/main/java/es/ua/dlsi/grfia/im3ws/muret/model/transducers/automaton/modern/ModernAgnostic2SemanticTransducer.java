@@ -1,16 +1,13 @@
-package es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural;
+package es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.modern;
 
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.Agnostic2SemanticTransducer;
-import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.states.ClefState;
-import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.states.TimeSignatureState;
-import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.states.*;
+import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.modern.states.*;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.adt.dfa.*;
 import es.ua.dlsi.im3.core.score.*;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbolType;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.*;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Clef;
-import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Custos;
 import es.ua.dlsi.im3.omr.language.GraphicalSymbolAlphabet;
 import org.apache.commons.math3.fraction.Fraction;
 
@@ -20,13 +17,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 /**
- * See previous implementations in es.ua.dlsi.im3.omr.language
- * We are not using them here for experimentation convenience
+ * @author David Rizo
  */
-public class MensuralAgnostic2SemanticTransducer extends Agnostic2SemanticTransducer {
+public class ModernAgnostic2SemanticTransducer extends Agnostic2SemanticTransducer {
+    public ModernAgnostic2SemanticTransducer() throws IM3Exception, FileNotFoundException {
+        super(NotationType.eModern);
 
-    public MensuralAgnostic2SemanticTransducer() throws IM3Exception, FileNotFoundException {
-        super(NotationType.eMensural);
         HashSet<State> states = new HashSet<>();
         State start = new State(1, "start");
         State clef = new ClefState(2);
@@ -34,7 +30,6 @@ public class MensuralAgnostic2SemanticTransducer extends Agnostic2SemanticTransd
         State timesig = new TimeSignatureState(4);
         State noteacc = new AccNoteState(6);
         State notes = new NotesState(7);
-        State custos = new CustosState(8);
         State barline = new BarLineState(9);
         states.add(start);
         states.add(clef);
@@ -43,12 +38,10 @@ public class MensuralAgnostic2SemanticTransducer extends Agnostic2SemanticTransd
         states.add(noteacc);
         states.add(notes);
         states.add(barline);
-        states.add(custos);
 
         HashMap<State, Fraction> endStates = new HashMap<>();
-        endStates.put(notes, Fraction.ONE_THIRD);
-        endStates.put(custos, Fraction.ONE_THIRD);
-        endStates.put(barline, Fraction.ONE_THIRD);
+        endStates.put(notes, Fraction.TWO_THIRDS);
+        endStates.put(barline, Fraction.TWO_THIRDS);
 
         HashSet<Transition<State, AgnosticSymbolType>> transitions = new HashSet<>();
         transitions.add(new Transition<>(start, new Clef(), clef));
@@ -79,7 +72,6 @@ public class MensuralAgnostic2SemanticTransducer extends Agnostic2SemanticTransd
         transitions.add(new Transition<>(notes, new Dot(), notes));
         transitions.add(new Transition<>(notes, new Rest(), notes));
         transitions.add(new Transition<>(notes, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
-        transitions.add(new Transition<>(notes, new Custos(), custos));
         transitions.add(new Transition<>(barline, new Note(), notes));
         transitions.add(new Transition<>(barline, new Rest(), notes));
         transitions.add(new Transition<>(barline, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
@@ -95,7 +87,7 @@ public class MensuralAgnostic2SemanticTransducer extends Agnostic2SemanticTransd
         dpa.normalizeProbabilities();
 
         System.err.println("TO-DO Quitar escritura DOT");
-        dpa.writeDot(new File("/tmp/dpamensural.dot"));
-
+        dpa.writeDot(new File("/tmp/dpamodern.dot"));
+        dpa.writeDot(new File("/tmp/dpamodern.dot"));
     }
 }

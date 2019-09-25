@@ -60,7 +60,7 @@ public class SemanticRepresentationController extends MuRETBaseController {
         Part part = null;
         String partName = "";
         try {
-            Notation result = semanticRepresentationModel.computeSemanticFromAgnostic(project, partName, region, mensurstrich, renderer);
+            Notation result = semanticRepresentationModel.computeAndSaveSemanticFromAgnostic(project, partName, region, mensurstrich, renderer);
             return result;
         } catch (Exception e) {
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot convert to semantic", e);
