@@ -39,23 +39,34 @@ public class NotationModel {
     public String getMEINotation(SemanticEncoding semanticEncoding, NotationType notationType) throws IM3WSException, IM3Exception {
         Semantic2IMCore semantic2IMCore = new Semantic2IMCore();
         //TODO compases y tonalidad anteriores
-        List<Pair<SemanticSymbol, ITimedElementInStaff>> items = semantic2IMCore.convert(notationType, null, null, semanticEncoding);
-        ScoreSong song = new ScoreSong();
-        ScorePart part = song.addPart();
-        ScoreLayer layer = part.addScoreLayer();
-        Staff staff = new Pentagram(song, "1", 1);
-        staff.setNotationType(notationType);
-        song.addStaff(staff);
-        part.addStaff(staff);
-        staff.addLayer(layer);
-        for (Pair<SemanticSymbol, ITimedElementInStaff> item: items) {
-            ITimedElementInStaff timedElementInStaff = item.getY();
-            if (timedElementInStaff instanceof Atom) {
-                layer.add((Atom) timedElementInStaff);
-            } else {
-                staff.addElementWithoutLayer((IStaffElementWithoutLayer) timedElementInStaff);
+        //TODO URGENT - esta separación no está bien - puesto para prueba de concepto de ReadSCO
+        ScoreSong song = null;
+        if (notationType == NotationType.eMensural) {
+            List<Pair<SemanticSymbol, ITimedElementInStaff>> items = semantic2IMCore.convert(notationType, null, null, semanticEncoding);
+            song = new ScoreSong();
+            ScorePart part = song.addPart();
+            ScoreLayer layer = part.addScoreLayer();
+            Staff staff = new Pentagram(song, "1", 1);
+            staff.setNotationType(notationType);
+            song.addStaff(staff);
+            part.addStaff(staff);
+            staff.addLayer(layer);
+            for (Pair<SemanticSymbol, ITimedElementInStaff> item : items) {
+                ITimedElementInStaff timedElementInStaff = item.getY();
+                if (timedElementInStaff instanceof Atom) {
+                    layer.add((Atom) timedElementInStaff);
+                } else {
+                    staff.addElementWithoutLayer((IStaffElementWithoutLayer) timedElementInStaff);
+                }
             }
+        } else {
+            song = semantic2IMCore.convertToSingleVoicedSong(notationType, semanticEncoding);
         }
+
+        if (notationType == NotationType.eModern && song.getMeasures().isEmpty()) {
+            throw new IM3WSException("Cannot create modern translation in a modern song without bars");
+        }
+
         MEISongExporter exporter = new MEISongExporter();
         String mei = exporter.exportSong(song);
         return mei;
