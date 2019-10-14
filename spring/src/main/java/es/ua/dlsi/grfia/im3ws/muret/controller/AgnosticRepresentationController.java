@@ -49,6 +49,7 @@ public class AgnosticRepresentationController extends MuRETBaseController {
     }
 
 
+    // see JSONTagging.generateDictionary
     /**
      *
      * @param notationType Mensural, modern
@@ -137,9 +138,10 @@ public class AgnosticRepresentationController extends MuRETBaseController {
      */
     @PostMapping(path = {"createSymbolFromBoundingBox"})
     public SymbolCreationResult createSymbolFromBoundingBox(@RequestBody SymbolCreationFromBoundingBox symbolCreationFromBoundingBox) throws IM3WSException, IM3Exception {
-        SymbolCreationResult result = this.agnosticRepresentationModel.createSymbol(symbolCreationFromBoundingBox.getRegionID(), symbolCreationFromBoundingBox.getBoundingBox(),
+        SymbolCreationResult result = this.agnosticRepresentationModel.createSymbol("TODO", symbolCreationFromBoundingBox.getRegionID(), symbolCreationFromBoundingBox.getBoundingBox(),
                 symbolCreationFromBoundingBox.getAgnosticSymbolType(), symbolCreationFromBoundingBox.getPositionInStaff());
         return result;
+        //TODO ModelID
     }
 
     /**
@@ -149,17 +151,19 @@ public class AgnosticRepresentationController extends MuRETBaseController {
      */
     @PostMapping(path = {"createSymbolFromStrokes"})
     public SymbolCreationResult createSymbolFromStrokes(@RequestBody SymbolCreationFromStrokes symbolCreationFromStrokes) throws IM3WSException, IM3Exception {
-        return this.agnosticRepresentationModel.createSymbol(symbolCreationFromStrokes.getRegionID(), symbolCreationFromStrokes.getPoints(),
+        return this.agnosticRepresentationModel.createSymbol("TODO", symbolCreationFromStrokes.getRegionID(), symbolCreationFromStrokes.getPoints(),
                 symbolCreationFromStrokes.getAgnosticSymbolType(), symbolCreationFromStrokes.getPositionInStaff());
+        //TODO ModelID
     }
 
-    @GetMapping(path = {"classifyRegionEndToEnd/{regionID}"})
-    public List<Symbol> classifyRegionEndToEnd(@PathVariable(name="regionID") Long regionID) throws IM3WSException {
+    @GetMapping(path = {"classifyRegionEndToEnd/{modelID}/{regionID}"})
+    public List<Symbol> classifyRegionEndToEnd(@PathVariable(name="modelID") String modelID, @PathVariable(name="regionID") Long regionID) throws IM3WSException {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Classifying region end to end");
+        Objects.requireNonNull(modelID, "modelID cannot be null");
         Objects.requireNonNull(regionID, "regionID cannot be null");
 
         try {
-            return this.agnosticRepresentationModel.classifyRegionEndToEnd(regionID);
+            return this.agnosticRepresentationModel.classifyRegionEndToEnd(modelID, regionID);
         } catch (IM3Exception e) {
             throw new IM3WSException(e);
         }

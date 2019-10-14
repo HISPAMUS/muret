@@ -3,9 +3,16 @@ package es.ua.dlsi.grfia.im3ws.muret.model.trainingsets;
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
+import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticSymbolFont;
+import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticSymbolFontSingleton;
 import es.ua.dlsi.grfia.im3ws.muret.model.ProjectModel;
+import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.io.ExportException;
+import es.ua.dlsi.im3.core.score.PositionInStaff;
+import es.ua.dlsi.im3.core.score.PositionsInStaff;
 import es.ua.dlsi.im3.core.utils.FileCompressors;
+import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticEncoding;
+import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +23,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,9 +47,9 @@ public class JSONTagging extends AbstractTrainingSetExporter {
     public JSONTagging(int id, boolean includeStrokes) {
         super(id,
                 includeStrokes?
-                        "JSON files with images, pages, regions, symbols and strokes"
-                        :"JSON files with images, pages, regions, symbols",
-                "It generates a compressed file containing a folder for each project and a JSON file for each image with its relative file name. " +
+                        "JSON files with images, pages, regions, symbols, symbol dictionary and strokes"
+                        :"JSON files with images, pages, regions, symbols and symbol dictionary",
+                "It generates a compressed file containing a folder for each project and a JSON for the symbol dictionary, and a JSON file for each image with its relative file name. " +
                         "This JSON file encodes the bounding boxes of pages, regions, and symbols. For each region its region type is also exported. " +
                         "For each symbol both its agnostic encoding is appended and, if present, the strokes information",
                 false
@@ -54,8 +62,11 @@ public class JSONTagging extends AbstractTrainingSetExporter {
     public Path generate(Path muretFolder, Collection<Project> projectCollection) throws ExportException {
         try {
             Path directory = Files.createTempDirectory("json_agnostic_symbol_images");
+            File outputJSonDiccFile = new File(directory.toFile(), "dictionary.json");
             for (Project project: projectCollection) {
                 Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Exporting project " + project.getName());
+
+                generateDictionary(project, outputJSonDiccFile);
 
                 File projectFolder = new File(directory.toFile(), project.getPath());
                 projectFolder.mkdirs();
@@ -78,6 +89,34 @@ public class JSONTagging extends AbstractTrainingSetExporter {
         }
     }
 
+    // see AgnosticRepresentationController.getAgnosticSymbolSVGSet
+    private void generateDictionary(Project project, File outputJSonDiccFile) throws IM3WSException, IM3Exception {
+        AgnosticSymbolFont agnosticSymbolFont = AgnosticSymbolFontSingleton.getInstance().getLayoutFont(project.getNotationType(), project.getManuscriptType());
+
+        try {
+            SVGSet result = new SVGSet(agnosticSymbolFont.getLayoutFont().getSVGFont().getAscent(),
+                    agnosticSymbolFont.getLayoutFont().getSVGFont().getDescent(),
+                    agnosticSymbolFont.getLayoutFont().getSVGFont().getUnitsPerEM(),
+                    agnosticSymbolFont.getFullSVGSetPathd());
+            List<AgnosticTypeSVGPath> paths = result.getPaths();
+            List<PositionInStaff> positions = new ArrayList<>();
+            for (int i=PositionsInStaff.FOURTH_BOTTOM_LEDGER_LINE.getLineSpace(); i<=PositionsInStaff.FOURTH_TOP_LEDGER_LINE.getLineSpace(); i++) {
+                positions.add(new PositionInStaff(i));
+            }
+            JSONObject jsonDictionary = new JSONObject();
+
+            JSONArray jsonArray = new JSONArray();
+            for (AgnosticTypeSVGPath agnosticTypeSVGPath: paths) {
+                for (PositionInStaff position : positions) {
+                    String item = agnosticTypeSVGPath.getAgnosticTypeString() + ":" + position.toString();
+                    jsonArray.add(item);
+                }
+            }
+            jsonDictionary.put("agnostic_dictionary", jsonArray);
+        } catch (IM3Exception e) {
+            throw new IM3WSException(e);
+        }
+    }
 
     private void putBoundingBox(JSONObject jsonObject, BoundingBox boundingBox) {
         JSONObject jsonBB = new JSONObject();

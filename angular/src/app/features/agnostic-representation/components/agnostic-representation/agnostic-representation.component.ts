@@ -18,11 +18,13 @@ import {
   ChangeSymbol,
   ChangeSymbolBoundingBox, ChangeSymbolComments, ClassifyRegionEndToEnd, ClearRegionSymbols,
   CreateSymbolFromBoundingBox, CreateSymbolFromStrokes,
-  DeleteSymbol, DeselectSymbol,
-  GetSVGSet, InitRegion,
+  DeleteSymbol, DeselectSymbol, GetAgnosticEnd2EndClassifierModels,
+  GetSVGSet, GetSymbolClassifierModels, InitRegion,
   SelectSymbol
 } from '../../store/actions/agnostic-representation.actions';
 import {
+  selectAgnosticEnd2EndClassifierModels,
+  selectAgnosticSymbolClassifierModels,
   selectAgnosticSymbols, selectClassifiedSymbols,
   selectSelectedSymbol, selectSVGAgnosticSymbolSet
 } from '../../store/selectors/agnostic-representation.selector';
@@ -37,6 +39,7 @@ import {Point} from '../../../../core/model/entities/point';
 import {AgnosticTypeSVGPath} from '../../model/agnostic-type-svgpath';
 import {PositionInStaffService} from '../../services/position-in-staff.service';
 import {Line} from '../../../../svg/model/line';
+import {ClassifierModel} from '../../../../core/model/entities/classifier-model';
 
 @Component({
   selector: 'app-agnostic-representation',
@@ -65,11 +68,14 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   classifiedSymbolsSubscription: Subscription;
   private creatingBoundingBox: BoundingBox;
   private creatingStrokes: Point[][];
-  endToEndButtonLabel = 'End-to-end';
   frequentSymbols: Map<string, number> = new Map<string, number>(); // key = agnostic type, value = frequency
   lines = ['L5', 'L4', 'L3', 'L2', 'L1'];
   spaces = ['S4', 'S3', 'S2', 'S1'];
   // enlargedCommentsBox = false;
+
+  endToEndButtonLabel = 'End-to-end';
+  end2endClassifierModels$: Observable<ClassifierModel[]>;
+  end2EndModelID: string;
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>,
               private dialogsService: DialogsService, private positionInStaffService: PositionInStaffService) {
@@ -79,9 +85,14 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.documentTypeSubscription  = store.select(selectDocumentType).subscribe(next => {
       if (next) {
         this.store.dispatch(new GetSVGSet(next.notationType, next.manuscriptType));
+
+        //TODO enviar collection ID y project ID
+        console.log('TODO Enviando collection ID y project ID = null');
+        this.store.dispatch(new GetAgnosticEnd2EndClassifierModels(0, 0, next.notationType, next.manuscriptType));
       }
     });
     this.svgSet$ = store.select(selectSVGAgnosticSymbolSet);
+    this.end2endClassifierModels$ = store.select(selectAgnosticEnd2EndClassifierModels);
     this.addMethodType = 'boundingbox';
   }
 
@@ -428,7 +439,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
       .subscribe((isConfirmed) => {
         if (isConfirmed) {
           this.endToEndButtonLabel = 'Classifying...';
-          this.store.dispatch(new ClassifyRegionEndToEnd(this.selectedRegion.id));
+          this.store.dispatch(new ClassifyRegionEndToEnd(this.end2EndModelID, this.selectedRegion.id));
           this.mode = 'eEditing';
         }
       });

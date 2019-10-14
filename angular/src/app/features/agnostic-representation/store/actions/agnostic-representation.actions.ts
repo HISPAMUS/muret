@@ -5,6 +5,7 @@ import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {Point} from '../../../../core/model/entities/point';
 import {SymbolCreationResult} from '../../model/symbol-creation-result';
+import {ClassifierModel} from '../../../../core/model/entities/classifier-model';
 
 export enum AgnosticRepresentationActionTypes {
   InitRegion = '[AgnosticRepresentation] Init region',
@@ -29,7 +30,12 @@ export enum AgnosticRepresentationActionTypes {
   ClassifyRegionEndToEnd = '[AgnosticRepresentation] Classify region end-to-end',
   ClassifyRegionEndToEndSuccess = '[AgnosticRepresentation] Classify region end-to-end success',
   ClearRegionSymbols = '[AgnosticRepresentation] Clear region symbols',
-  ClearRegionSymbolsSuccess = '[AgnosticRepresentation] Clear region symbols success'
+  ClearRegionSymbolsSuccess = '[AgnosticRepresentation] Clear region symbols success',
+  GetSymbolClassifierModels = '[AgnosticRepresentation] Get Symbol Classifier Models',
+  GetSymbolClassifierModelsSuccess = '[AgnosticRepresentation] Get Symbol Classifier Models success',
+  GetAgnosticEnd2EndClassifierModels = '[AgnosticRepresentation] Get Agnostic end2end Classifier Models',
+  GetAgnosticEnd2EndClassifierModelsSuccess = '[AgnosticRepresentation] Get Agnostic end2end Classifier Models success',
+
 }
 
 export class InitRegion implements Action {
@@ -130,7 +136,7 @@ export class DeleteSymbolSuccess implements Action {
 
 export class ClassifyRegionEndToEnd implements Action {
   public readonly type = AgnosticRepresentationActionTypes.ClassifyRegionEndToEnd;
-  constructor(public regionID: number) {}
+  constructor(public modelID: string, public regionID: number) {}
 }
 
 export class ClassifyRegionEndToEndSuccess implements Action {
@@ -148,10 +154,36 @@ export class ClearRegionSymbolsSuccess implements Action {
   constructor(public deleted: boolean) {}
 }
 
+
+export class GetSymbolClassifierModels implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.GetSymbolClassifierModels;
+  constructor(public collectionID: number, public projectID: number, public notationType: string, public manuscriptType: string) {}
+}
+
+export class GetSymbolClassifierModelsSuccess implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.GetSymbolClassifierModelsSuccess;
+  constructor(public classifierModels: ClassifierModel[]) {}
+}
+
+export class GetAgnosticEnd2EndClassifierModels implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.GetAgnosticEnd2EndClassifierModels;
+  constructor(public collectionID: number, public projectID: number, public notationType: string, public manuscriptType: string) {}
+}
+
+export class GetAgnosticEnd2EndClassifierModelsSuccess implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.GetAgnosticEnd2EndClassifierModelsSuccess;
+  constructor(public classifierModels: ClassifierModel[]) {
+  }
+}
+
+
+
 export type AgnosticRepresentationActions =
   InitRegion | GetRegion | GetRegionSuccess | GetSVGSet | GetSVGSetSucccess | SelectSymbol | DeselectSymbol |
   ChangeSymbol | ChangeSymbolComments | ChangeSymbolBoundingBox | ChangeSymbolSuccess |
   // ClassifySymbolFromBoundingBox | ClassifySymbolFromStrokes | ClassifySymbolSuccess |
   CreateSymbolFromBoundingBox | CreateSymbolFromStrokes | CreateSymbolSuccess | DeleteSymbol | DeleteSymbolSuccess |
   ClassifyRegionEndToEnd | ClassifyRegionEndToEndSuccess |
-  ClearRegionSymbols | ClearRegionSymbolsSuccess;
+  ClearRegionSymbols | ClearRegionSymbolsSuccess |
+  GetSymbolClassifierModels | GetSymbolClassifierModelsSuccess |
+  GetAgnosticEnd2EndClassifierModels | GetAgnosticEnd2EndClassifierModelsSuccess;

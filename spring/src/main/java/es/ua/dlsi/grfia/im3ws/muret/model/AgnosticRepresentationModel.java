@@ -161,7 +161,7 @@ public class AgnosticRepresentationModel {
     }
 
     @Transactional
-    protected SymbolCreationResult createSymbol(long regionID, BoundingBox boundingBox, Strokes strokes, AgnosticSymbol agnosticSymbol) throws IM3WSException, IM3Exception {
+    protected SymbolCreationResult createSymbol(String modelID, long regionID, BoundingBox boundingBox, Strokes strokes, AgnosticSymbol agnosticSymbol) throws IM3WSException, IM3Exception {
         Region persistentRegion = getRegion(regionID);
 
         List<AgnosticSymbolTypeAndPosition> otherPossibilities = null;
@@ -172,7 +172,7 @@ public class AgnosticRepresentationModel {
                     MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());
 
             try {
-                otherPossibilities = classifierClient.classifySymbolInImage(imageID, imagePath, boundingBox);
+                otherPossibilities = classifierClient.classifySymbolInImage(modelID, imageID, imagePath, boundingBox);
             } catch (Throwable t) {
                 Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Error from classifying server", t);
             }
@@ -204,27 +204,27 @@ public class AgnosticRepresentationModel {
 
 
     @Transactional
-    protected SymbolCreationResult createSymbol(long regionID, BoundingBox boundingBox, Strokes strokes, String agnosticSymbolType, String positionInStaffStr) throws IM3WSException, IM3Exception {
+    protected SymbolCreationResult createSymbol(String modelID, long regionID, BoundingBox boundingBox, Strokes strokes, String agnosticSymbolType, String positionInStaffStr) throws IM3WSException, IM3Exception {
         if (agnosticSymbolType == null || positionInStaffStr == null) {
-            return createSymbol(regionID, boundingBox, strokes, null);
+            return createSymbol(modelID, regionID, boundingBox, strokes, null);
         } else {
             AgnosticSymbol agnosticSymbol = new AgnosticSymbol(AgnosticVersion.v2,
                     AgnosticSymbolTypeFactory.parseString(agnosticSymbolType),
                     PositionInStaff.parseString(positionInStaffStr));
-            return createSymbol(regionID, boundingBox, strokes, agnosticSymbol);
+            return createSymbol(modelID, regionID, boundingBox, strokes, agnosticSymbol);
         }
     }
 
     @Transactional
-    public SymbolCreationResult createSymbol(long regionID, BoundingBox boundingBox, String agnosticSymbolType, String positionInStaffStr) throws IM3WSException, IM3Exception {
+    public SymbolCreationResult createSymbol(String modelID, long regionID, BoundingBox boundingBox, String agnosticSymbolType, String positionInStaffStr) throws IM3WSException, IM3Exception {
         SymbolCreationResult result;
         if (agnosticSymbolType == null || positionInStaffStr == null) {
-            result = createSymbol(regionID, boundingBox, (Strokes)null, null);
+            result = createSymbol(modelID, regionID, boundingBox, (Strokes)null, null);
         } else {
             AgnosticSymbol agnosticSymbol = new AgnosticSymbol(AgnosticVersion.v2,
                     AgnosticSymbolTypeFactory.parseString(agnosticSymbolType),
                     PositionInStaff.parseString(positionInStaffStr));
-            result = createSymbol(regionID, boundingBox, null, agnosticSymbol);
+            result = createSymbol(modelID, regionID, boundingBox, null, agnosticSymbol);
         }
         actionLogAgnosticModel.logCreateSymbolFromBoundingBox(result.getAgnosticSymbol());
         return result;
@@ -232,9 +232,9 @@ public class AgnosticRepresentationModel {
 
 
     @Transactional
-    public SymbolCreationResult createSymbol(long regionID, es.ua.dlsi.grfia.im3ws.muret.controller.payload.Point[][] points, String agnosticSymbolType, String positionInStaffStr) throws IM3WSException, IM3Exception {
+    public SymbolCreationResult createSymbol(String modelID, long regionID, es.ua.dlsi.grfia.im3ws.muret.controller.payload.Point[][] points, String agnosticSymbolType, String positionInStaffStr) throws IM3WSException, IM3Exception {
         BBoxStrokes bBoxStrokes = new BBoxStrokes(points);
-        SymbolCreationResult result = createSymbol(regionID, bBoxStrokes.getBoundingBox(), bBoxStrokes.getCalcoStrokes(), agnosticSymbolType, positionInStaffStr);
+        SymbolCreationResult result = createSymbol(modelID, regionID, bBoxStrokes.getBoundingBox(), bBoxStrokes.getCalcoStrokes(), agnosticSymbolType, positionInStaffStr);
         actionLogAgnosticModel.logCreateSymbolFromStrokes(result.getAgnosticSymbol());
         return result;
     }
@@ -278,7 +278,7 @@ public class AgnosticRepresentationModel {
     }*/
 
     @Transactional
-    public List<Symbol> classifyRegionEndToEnd(Long regionID) throws IM3WSException, IM3Exception {
+    public List<Symbol> classifyRegionEndToEnd(String modelID, Long regionID) throws IM3WSException, IM3Exception {
         Region persistentRegion = getRegion(regionID);
 
         persistentRegion.getSymbols().clear(); // first remove previous
@@ -288,17 +288,19 @@ public class AgnosticRepresentationModel {
         Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.getProject().getPath(),
                 MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());
 
-        List<AgnosticSymbolTypeAndPosition> items = classifierClient.classifyEndToEnd(imageID, imagePath, persistentRegion.getBoundingBox());
-        for (AgnosticSymbolTypeAndPosition item: items) {
-            /*BoundingBox symbolBB = new BoundingBox(persistentRegion.getBoundingBox().getFromX()+ item.getStart(),
-                    persistentRegion.getBoundingBox().getFromY(), persistentRegion.getBoundingBox().getFromX() + item.getEnd(),
-                    persistentRegion.getBoundingBox().getToY());*/
-            AgnosticSymbolType agnosticSymbolType = AgnosticSymbolTypeFactory.parseString(item.getShape());
-            PositionInStaff positionInStaff = PositionInStaff.parseString(item.getPosition());
-            AgnosticSymbol agnosticSymbol = new AgnosticSymbol(AgnosticVersion.v2, agnosticSymbolType, positionInStaff);
-            Symbol symbol = new Symbol(persistentRegion, agnosticSymbol, null, null, null, null, null);
-            symbol.setApproximateX(persistentRegion.getBoundingBox().getFromX()+ item.getStart());
-            persistentRegion.getSymbols().add(symbol);
+        List<AgnosticSymbolTypeAndPosition> items = classifierClient.classifyEndToEnd(modelID, imageID, imagePath, persistentRegion.getBoundingBox());
+        if (items != null) {
+            for (AgnosticSymbolTypeAndPosition item : items) {
+                /*BoundingBox symbolBB = new BoundingBox(persistentRegion.getBoundingBox().getFromX()+ item.getStart(),
+                        persistentRegion.getBoundingBox().getFromY(), persistentRegion.getBoundingBox().getFromX() + item.getEnd(),
+                        persistentRegion.getBoundingBox().getToY());*/
+                AgnosticSymbolType agnosticSymbolType = AgnosticSymbolTypeFactory.parseString(item.getShape());
+                PositionInStaff positionInStaff = PositionInStaff.parseString(item.getPosition());
+                AgnosticSymbol agnosticSymbol = new AgnosticSymbol(AgnosticVersion.v2, agnosticSymbolType, positionInStaff);
+                Symbol symbol = new Symbol(persistentRegion, agnosticSymbol, null, null, null, null, null);
+                symbol.setApproximateX(persistentRegion.getBoundingBox().getFromX() + item.getStart());
+                persistentRegion.getSymbols().add(symbol);
+            }
         }
 
         actionLogAgnosticModel.logEndToEnd(persistentRegion);
