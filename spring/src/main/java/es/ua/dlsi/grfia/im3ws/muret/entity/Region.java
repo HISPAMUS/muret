@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -12,6 +13,27 @@ import java.util.List;
  */
 @Entity
 public class Region extends Auditable implements IAssignableToPart {
+    /**
+     * It orders symbols given its middle horizontal point or its approximate x
+     */
+    private static Comparator<? super Region> verticalPositionComparator = new Comparator<Region>() {
+        @Override
+        public int compare(Region o1, Region o2) {
+            if (o1.getBoundingBox().getFromY() < o2.getBoundingBox().getFromY()) {
+                return -1;
+            } else if (o1.getBoundingBox().getFromY() > o2.getBoundingBox().getFromY()) {
+                return 1;
+            } else {
+                if (o1.getBoundingBox().getFromX() < o2.getBoundingBox().getFromX()) {
+                    return -1;
+                } else if (o1.getBoundingBox().getFromX() > o2.getBoundingBox().getFromX()) {
+                    return 1;
+                } else {
+                    return o1.hashCode() - o2.hashCode();
+                }
+            }
+        }
+    };
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,6 +95,10 @@ public class Region extends Auditable implements IAssignableToPart {
         this.regionType = regionType;
         this.boundingBox = new BoundingBox(fromX, fromY, toX, toY);
         this.part = part;
+    }
+
+    public static Comparator<? super Region> getVerticalPositionComparator() {
+        return verticalPositionComparator;
     }
 
     public Long getId() {
