@@ -1,5 +1,6 @@
 package es.ua.dlsi.grfia.im3ws.muret.model.trainingsets;
 
+import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.model.ProjectModel;
@@ -87,7 +88,7 @@ public class JSONTagging extends AbstractTrainingSetExporter {
         jsonObject.put("bounding_box", jsonBB);
     }
 
-    private void generate(Image image, File outputJSonFile) throws IOException {
+    private void generate(Image image, File outputJSonFile) throws IOException, ExportException {
         JSONObject jsonImage = new JSONObject();
 
         jsonImage.put("id", image.getId());
@@ -132,7 +133,13 @@ public class JSONTagging extends AbstractTrainingSetExporter {
                                 jsonSymbol.put("id", symbol.getId());
                                 jsonSymbol.put("agnostic_symbol_type", symbol.getAgnosticSymbolType());
                                 jsonSymbol.put("position_in_staff", symbol.getPositionInStaff());
-                                putBoundingBox(jsonSymbol, symbol.getBoundingBox());
+                                if (symbol.getBoundingBox() != null) {
+                                    putBoundingBox(jsonSymbol, symbol.getBoundingBox());
+                                } else if (symbol.getApproximateX() != null) {
+                                    jsonSymbol.put("approximateX", symbol.getApproximateX());
+                                } else {
+                                    throw new ExportException("Cannot export a symbol without bounding box or approximate X possition");
+                                }
                                 
                                 if (includeStrokes && symbol.getStrokes() != null && !symbol.getStrokes().getStrokeList().isEmpty()) {
                                     JSONArray jsonStrokes = new JSONArray();
