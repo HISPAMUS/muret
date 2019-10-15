@@ -26,14 +26,14 @@ public class UserManagementController
     @PostMapping("/register")
     public User createUser(@Valid @RequestBody RegisterForm c_newUserData) throws UserManagerException
     {
-        User userToRegister = new User(c_newUserData.getUsername(),
+        User userToRegister = new User(c_newUserData.getFirst_name(),
                                         c_newUserData.getLast_name(),
                                         c_newUserData.getUsername(),
                                         new BCryptPasswordEncoder().encode(c_newUserData.getPassword()),
                                         c_newUserData.getEmail(),
                                         c_newUserData.getAdministrator());
 
-        m_userManager.createUser( userToRegister );
+        m_userManager.createUser( userToRegister, c_newUserData.getAdminCreator() );
 
         return userToRegister;
     }

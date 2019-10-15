@@ -25,12 +25,24 @@ public class UserManagerImpl
     }
 
     @Transactional
-    public void createUser(User c_userToRegister) throws UserManagerException
+    public void createUser(User c_userToRegister, String adminUserName) throws UserManagerException
     {
         if(m_userRepository.existsByUsername((c_userToRegister.getUsername())))
             throw new UserManagerException(HttpStatus.FORBIDDEN, "Error, username already exists");
 
+        checkIfAdmin(adminUserName);
+
         m_userRepository.save(c_userToRegister);
+    }
+
+    private void checkIfAdmin(String adminName) throws UserManagerException
+    {
+       Optional<User> admin = m_userRepository.findByUsername(adminName);
+       if(!admin.isPresent()) throw new UserManagerException(HttpStatus.FORBIDDEN, "Admin account does not exist");
+
+       admin.ifPresent( adminToCheck -> {
+           if(!adminToCheck.isAdministrator()) throw new UserManagerException(HttpStatus.FORBIDDEN, "You don't have permissions to create user account");
+       } );
     }
 
     @Transactional

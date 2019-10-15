@@ -23,6 +23,16 @@ public class RegisterForm
 
     private Boolean administrator = false;
 
+    private String adminCreator;
+
+    public String getAdminCreator() {
+        return adminCreator;
+    }
+
+    public void setAdminCreator(String adminCreator) {
+        this.adminCreator = adminCreator;
+    }
+
     public String getUsername() {
         return username;
     }
