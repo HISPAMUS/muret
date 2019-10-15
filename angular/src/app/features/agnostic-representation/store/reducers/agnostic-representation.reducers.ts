@@ -94,6 +94,16 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
       newState.selectedSymbolID = null;
       return newState;
     }
+    case AgnosticRepresentationActionTypes.GetSymbolClassifierModelsSuccess: {
+      const newState = {...state};
+      newState.symbolClassifierModels = action.classifierModels;
+      return newState;
+    }
+    case AgnosticRepresentationActionTypes.GetAgnosticEnd2EndClassifierModelsSuccess: {
+      const newState = {...state};
+      newState.end2endClassifierModels = action.classifierModels;
+      return newState;
+    }
     default: {
       return state;
     }
