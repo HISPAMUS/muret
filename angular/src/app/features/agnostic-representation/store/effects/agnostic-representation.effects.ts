@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Effect, ofType, Actions } from '@ngrx/effects';
 import { of } from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
+import {map, mergeMap, switchMap} from 'rxjs/operators';
 import {
   AgnosticRepresentationActionTypes,
   ChangeSymbolBoundingBox,
@@ -125,10 +125,13 @@ export class AgnosticRepresentationEffects {
       return of(new ClassifySymbolSuccess(classifiedSymbols));
     })
   );*/
+  /**
+   * Replaced switchMap for mergeMag to avoid sending the event twice
+   */
   @Effect()
   deleteSymbol$ = this.actions$.pipe(
     ofType<DeleteSymbol>(AgnosticRepresentationActionTypes.DeleteSymbol),
-    switchMap((action: DeleteSymbol) =>
+    mergeMap((action: DeleteSymbol) =>
       this.agnosticRepresentationService.deleteSymbol$(action.agnosticSymbolID)),
     switchMap((deletedSymbolID: number) => {
       return of(new DeleteSymbolSuccess(deletedSymbolID));

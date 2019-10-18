@@ -387,7 +387,10 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     if (this.mode === 'eEditing' || this.mode === 'eAdding') {
       switch (event.code) {
         case 'Delete':
-          this.deleteSelectedSymbol();
+          setTimeout( () => {
+            this.deleteSelectedSymbol();
+          }, 1000 ); // patch to avoid calling twice the delete symbol method
+          // TODO why?
           break;
         case 'ArrowDown':
           event.stopImmediatePropagation();
