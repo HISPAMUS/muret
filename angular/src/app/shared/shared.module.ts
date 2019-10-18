@@ -10,6 +10,7 @@ import {NgbButtonsModule, NgbTooltipModule} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InputDialogComponent} from './components/input-dialog/input-dialog.component';
 import { SafePipe } from './pipes/safe.pipe';
+import { ConfirmDialogWarningComponent } from './components/confirm-dialog-warning/confirm-dialog-warning.component';
 
 @NgModule({
   imports: [
@@ -27,7 +28,8 @@ import { SafePipe } from './pipes/safe.pipe';
     ConfirmDialogComponent,
     InputDialogComponent,
     CrudToolbarComponent,
-    SafePipe
+    SafePipe,
+    ConfirmDialogWarningComponent
   ],
   exports: [
     StateComponent,
@@ -35,11 +37,13 @@ import { SafePipe } from './pipes/safe.pipe';
     ConfirmDialogComponent,
     InputDialogComponent,
     CrudToolbarComponent,
+    ConfirmDialogWarningComponent,
     SafePipe
   ],
   entryComponents: [
     AlertComponent,
     ConfirmDialogComponent,
+    ConfirmDialogWarningComponent,
     InputDialogComponent,
     CrudToolbarComponent
   ],

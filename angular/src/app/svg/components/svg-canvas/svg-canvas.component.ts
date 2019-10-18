@@ -77,6 +77,10 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   private proportion: number;
   private TIMEOUT = 1500;
 
+  //Variables to check if user is going backside
+  private originX: number = 0;
+  private originY: number = 0;
+
   constructor(private componentFactoryResolver: ComponentFactoryResolver,
               private sanitizer: DomSanitizer) {
 
@@ -196,6 +200,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
           this.polylinesCreationTimeout = null;
         } else {
           this.createShape(svgCoordinate);
+          this.originX = svgCoordinate.x;
+          this.originY = svgCoordinate.y;
         }
         break;
       case 'eSelecting':
@@ -252,9 +258,13 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
           this.selectedComponent = this.shapeWithoutComponent.shapeComponent;
           this.shapeWithoutComponent = null;
         }
-
         if (this.selectedComponent && !this.polylinesCreationTimeout) {
           const svgCoordinate = this.screenCoordinateToSVGCoordinate(timeStamp, x, y);
+          if(svgCoordinate.x < this.originX)
+          {
+            console.log(svgCoordinate.x)
+            console.log(this.selectedComponent.shape.fromX)
+          }
           this.selectedComponent.draw(svgCoordinate);
         }
         break;
@@ -288,6 +298,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
     shape.strokeWidth = 2;
     shape.fromX = coordinate.x;
     shape.fromY = coordinate.y;
+    shape.originY = coordinate.y;
+    shape.originX = coordinate.x;
     this.shapes.push(shape);
 
     this.shapeWithoutComponent = shape;

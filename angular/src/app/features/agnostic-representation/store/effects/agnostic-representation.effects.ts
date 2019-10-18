@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Effect, ofType, Actions } from '@ngrx/effects';
 import { of } from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
+import {map, mergeMap, switchMap} from 'rxjs/operators';
 import {
   AgnosticRepresentationActionTypes,
   ChangeSymbolBoundingBox,
@@ -20,13 +20,18 @@ import {
   ClassifyRegionEndToEndSuccess,
   ClearRegionSymbols,
   ClearRegionSymbolsSuccess,
-  ChangeSymbolComments
+  ChangeSymbolComments,
+  GetSymbolClassifierModelsSuccess,
+  GetSymbolClassifierModels,
+  GetAgnosticEnd2EndClassifierModels,
+  GetAgnosticEnd2EndClassifierModelsSuccess
 } from '../actions/agnostic-representation.actions';
 import {AgnosticRepresentationService} from '../../services/agnostic-representation.service';
 import {Region} from '../../../../core/model/entities/region';
 import {SVGSet} from '../../model/svgset';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
 import {SymbolCreationResult} from '../../model/symbol-creation-result';
+import {ClassifierModel} from '../../../../core/model/entities/classifier-model';
 
 @Injectable()
 export class AgnosticRepresentationEffects {
@@ -120,10 +125,13 @@ export class AgnosticRepresentationEffects {
       return of(new ClassifySymbolSuccess(classifiedSymbols));
     })
   );*/
+  /**
+   * Replaced switchMap for mergeMag to avoid sending the event twice
+   */
   @Effect()
   deleteSymbol$ = this.actions$.pipe(
     ofType<DeleteSymbol>(AgnosticRepresentationActionTypes.DeleteSymbol),
-    switchMap((action: DeleteSymbol) =>
+    mergeMap((action: DeleteSymbol) =>
       this.agnosticRepresentationService.deleteSymbol$(action.agnosticSymbolID)),
     switchMap((deletedSymbolID: number) => {
       return of(new DeleteSymbolSuccess(deletedSymbolID));
@@ -133,7 +141,7 @@ export class AgnosticRepresentationEffects {
   classifyRegionEndToEnd$ = this.actions$.pipe(
     ofType<ClassifyRegionEndToEnd>(AgnosticRepresentationActionTypes.ClassifyRegionEndToEnd),
     switchMap((action: ClassifyRegionEndToEnd) =>
-      this.agnosticRepresentationService.classifyRegionEndToEnd$(action.regionID)),
+      this.agnosticRepresentationService.classifyRegionEndToEnd$(action.modelID, action.regionID)),
     switchMap((classifiedSymbols: AgnosticSymbol[]) => {
       return of(new ClassifyRegionEndToEndSuccess(classifiedSymbols));
     })
@@ -145,6 +153,26 @@ export class AgnosticRepresentationEffects {
       this.agnosticRepresentationService.clearRegionSymbols$(action.regionID)),
     switchMap((deleted: boolean) => { // it always returns true
       return of(new ClearRegionSymbolsSuccess(deleted));
+    })
+  );
+  @Effect()
+  getSymbolClassifierModels$ = this.actions$.pipe(
+    ofType<GetSymbolClassifierModels>(AgnosticRepresentationActionTypes.GetSymbolClassifierModels),
+    switchMap((action: GetSymbolClassifierModels) =>
+      this.agnosticRepresentationService.getSymbolClassifierModel$(
+        action.collectionID, action.projectID, action.notationType, action.manuscriptType)),
+    switchMap((models: ClassifierModel[]) => {
+      return of(new GetSymbolClassifierModelsSuccess(models));
+    })
+  );
+  @Effect()
+  GetAgnosticEnd2EndClassifierModels = this.actions$.pipe(
+    ofType<GetAgnosticEnd2EndClassifierModels>(AgnosticRepresentationActionTypes.GetAgnosticEnd2EndClassifierModels),
+    switchMap((action: GetAgnosticEnd2EndClassifierModels) =>
+      this.agnosticRepresentationService.getAgnosticEnd2EndClassifierModel$(
+        action.collectionID, action.projectID, action.notationType, action.manuscriptType)),
+    switchMap((models: ClassifierModel[]) => {
+      return of(new GetAgnosticEnd2EndClassifierModelsSuccess(models));
     })
   );
 }

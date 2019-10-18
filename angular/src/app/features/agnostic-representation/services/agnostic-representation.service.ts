@@ -8,6 +8,7 @@ import {BoundingBox} from '../../../core/model/entities/bounding-box';
 import {Point} from '../../../core/model/entities/point';
 import {AgnosticSymbolAndPosition} from '../model/agnostic-symbol-and-position';
 import {SymbolCreationResult} from '../model/symbol-creation-result';
+import {ClassifierModel} from '../../../core/model/entities/classifier-model';
 
 @Injectable()
 export class AgnosticRepresentationService {
@@ -39,6 +40,7 @@ export class AgnosticRepresentationService {
   }
 
   changeSymbolBoundingBox$(symbol: AgnosticSymbol, fromX: number, fromY: number, toX: number, toY: number): Observable<AgnosticSymbol> {
+    console.log('Ey')
     const boundingBox: BoundingBox = {
       id: symbol.id,
       fromX,
@@ -107,8 +109,8 @@ export class AgnosticRepresentationService {
     return this.apiRestClientService.delete$<number>('agnostic/deleteSymbol', symbolID);
   }
 
-  classifyRegionEndToEnd$(regionID: number): Observable<AgnosticSymbol[]> {
-    const url = `agnostic/classifyRegionEndToEnd/${regionID}`;
+  classifyRegionEndToEnd$(modelID: string, regionID: number): Observable<AgnosticSymbol[]> {
+    const url = `agnostic/classifyRegionEndToEnd/${modelID}/${regionID}`;
     return this.apiRestClientService.get$<AgnosticSymbol[]>(url);
   }
 
@@ -118,5 +120,14 @@ export class AgnosticRepresentationService {
     }
   }
 
+  getSymbolClassifierModel$(collectionID: number, projectID: number, notationType: string, manuscriptType: string): Observable<ClassifierModel[]> {
+    const url = `classifierModels/symbols/${collectionID}/${projectID}/${notationType}/${manuscriptType}`;
+    return this.apiRestClientService.get$<ClassifierModel[]>(url);
+  }
+
+  getAgnosticEnd2EndClassifierModel$(collectionID: number, projectID: number, notationType: string, manuscriptType: string): Observable<ClassifierModel[]> {
+    const url = `classifierModels/agnosticEnd2End/${collectionID}/${projectID}/${notationType}/${manuscriptType}`;
+    return this.apiRestClientService.get$<ClassifierModel[]>(url);
+  }
 
 }

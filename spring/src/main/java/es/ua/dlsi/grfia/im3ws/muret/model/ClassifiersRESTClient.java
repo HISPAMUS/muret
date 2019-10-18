@@ -73,6 +73,7 @@ public class ClassifiersRESTClient {
             Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Result of POST {0}={1}", new Object[]{url, result});
             return result;
         } catch (Throwable t) {
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot post: {0}, body {1}, error: {2}", new Object[] {url, body, t});
             throw new IM3WSException(t);
         }
     }

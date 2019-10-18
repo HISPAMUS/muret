@@ -28,3 +28,14 @@ export const selectClassifiedSymbols = createSelector (
   agnosticRepresentationState,
   (state: AgnosticRepresentationState) => state.classifiedSymbols
 );
+
+
+export const selectAgnosticEnd2EndClassifierModels = createSelector (
+  agnosticRepresentationState,
+  (state: AgnosticRepresentationState) => state.end2endClassifierModels
+);
+
+export const selectAgnosticSymbolClassifierModels = createSelector (
+  agnosticRepresentationState,
+  (state: AgnosticRepresentationState) => state.symbolClassifierModels
+);
