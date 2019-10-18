@@ -138,7 +138,8 @@ public class AgnosticRepresentationController extends MuRETBaseController {
      */
     @PostMapping(path = {"createSymbolFromBoundingBox"})
     public SymbolCreationResult createSymbolFromBoundingBox(@RequestBody SymbolCreationFromBoundingBox symbolCreationFromBoundingBox) throws IM3WSException, IM3Exception {
-        SymbolCreationResult result = this.agnosticRepresentationModel.createSymbol("TODO", symbolCreationFromBoundingBox.getRegionID(), symbolCreationFromBoundingBox.getBoundingBox(),
+        //TODO - poner el modelo correcto desde el frontend
+        SymbolCreationResult result = this.agnosticRepresentationModel.createSymbol("zaragoza", symbolCreationFromBoundingBox.getRegionID(), symbolCreationFromBoundingBox.getBoundingBox(),
                 symbolCreationFromBoundingBox.getAgnosticSymbolType(), symbolCreationFromBoundingBox.getPositionInStaff());
         return result;
         //TODO ModelID
