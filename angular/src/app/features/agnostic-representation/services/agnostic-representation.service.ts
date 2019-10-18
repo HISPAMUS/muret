@@ -40,6 +40,7 @@ export class AgnosticRepresentationService {
   }
 
   changeSymbolBoundingBox$(symbol: AgnosticSymbol, fromX: number, fromY: number, toX: number, toY: number): Observable<AgnosticSymbol> {
+    console.log('Ey')
     const boundingBox: BoundingBox = {
       id: symbol.id,
       fromX,

@@ -9,6 +9,5 @@ export class Rectangle extends Shape {
     super('Rectangle');
     this.width = 0;
     this.height = 0;
-
   }
 }

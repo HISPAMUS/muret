@@ -9,9 +9,12 @@
         <label ngbButtonLabel>
           <a (click)="zoomIn()"><fa-icon icon="search-plus" class="icons" size="lg"></fa-icon></a>
         </label>
+
         <label ngbButtonLabel>
           <a (click)="zoomFit()"><fa-icon icon="expand" class="icons" size="lg"></fa-icon></a>
         </label>
+
+        <div class="separator"></div>
 
         <label ngbButtonLabel>
           <input name="modeRadioButton" ngbButton type="radio" [value]="'eIdle'" ngbTooltip="View (shortcut: ESC)" placement="bottom">
@@ -36,6 +39,8 @@
             <fa-icon icon="minus" class="icons" size="lg"></fa-icon>
           </button>
         </label>
+
+        <div class="separator"></div>
 
         <label ngbButtonLabel>
           <button (click)="clear()">

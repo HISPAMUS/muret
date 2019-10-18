@@ -40,6 +40,7 @@ import {AgnosticTypeSVGPath} from '../../model/agnostic-type-svgpath';
 import {PositionInStaffService} from '../../services/position-in-staff.service';
 import {Line} from '../../../../svg/model/line';
 import {ClassifierModel} from '../../../../core/model/entities/classifier-model';
+import { debuglog } from 'util';
 
 @Component({
   selector: 'app-agnostic-representation',
@@ -354,6 +355,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   onSymbolShapeChanged(shape: Shape) {
     // currently we only support bounding box change
     if (shape instanceof Rectangle) {
+      console.log("Ey")
       this.store.dispatch(new ChangeSymbolBoundingBox(shape.data, {
         fromX: shape.fromX,
         fromY: shape.fromY,
@@ -448,10 +450,15 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
 
   clear() {
-    this.dialogsService.showConfirmarion('Clear region symbols?', 'This action cannot be undone')
+    this.dialogsService.showWarningConfirmation('Clear region symbols?', 'You are about to erase all region symbols, this will leave nothing behind')
       .subscribe((isConfirmed) => {
         if (isConfirmed) {
-          this.store.dispatch(new ClearRegionSymbols(this.selectedRegion.id));
+          this.dialogsService.showWarningConfirmation('WARNING', 'Are you sure? This change cannot be undone and all progress will be lost').subscribe((isConfirmed)=>{
+              if(isConfirmed)
+              {
+                this.store.dispatch(new ClearRegionSymbols(this.selectedRegion.id));
+              }
+          })
         }
       });
   }

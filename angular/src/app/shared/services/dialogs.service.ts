@@ -5,6 +5,7 @@ import {SimpleModalService} from 'ngx-simple-modal';
 import {Observable, of} from 'rxjs';
 import {AlertComponent} from '../components/error-modal-message/alert.component';
 import {InputDialogComponent} from '../components/input-dialog/input-dialog.component';
+import { ConfirmDialogWarningComponent } from '../components/confirm-dialog-warning/confirm-dialog-warning.component';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,12 @@ export class DialogsService {
     return this.simpleModalService.addModal(ConfirmDialogComponent, {
       title,
       message
+    });
+  }
+
+  public showWarningConfirmation(title: string, message: string): Observable<boolean>{
+    return this.simpleModalService.addModal(ConfirmDialogWarningComponent, {
+      title, message
     });
   }
 

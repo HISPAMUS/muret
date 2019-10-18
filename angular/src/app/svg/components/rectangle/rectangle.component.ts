@@ -118,8 +118,22 @@ export class RectangleComponent extends ShapeComponent implements OnInit {
   draw(currentPosition: Coordinate): void {
     super.draw(currentPosition);
     if (this.shape instanceof Rectangle) {
-      this.shape.width = Math.abs(currentPosition.x - this.shape.fromX);
-      this.shape.height = Math.abs(currentPosition.y - this.shape.fromY);
+
+      let shapeWidth = currentPosition.x - this.shape.originX;
+      let shapeHeight = currentPosition.y - this.shape.originY;
+
+      if(shapeWidth < 0)
+        this.shape.fromX = currentPosition.x;
+      else
+        this.shape.fromX = this.shape.originX;
+
+      if(shapeHeight < 0)
+        this.shape.fromY = currentPosition.y;
+      else
+        this.shape.fromY = this.shape.originY;
+
+      this.shape.width = Math.abs(shapeWidth);
+      this.shape.height = Math.abs(shapeHeight);
     }
   }
 

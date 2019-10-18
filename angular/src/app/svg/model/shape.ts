@@ -7,6 +7,8 @@ export class Shape {
   id: string;
   fromX: number;
   fromY: number;
+  originX: number;
+  originY: number;
   strokeColor: string;
   fillColor: string;
   strokeWidth: number;
@@ -20,5 +22,7 @@ export class Shape {
   constructor(public type: string) {
     this.fromX = 0;
     this.fromY = 0;
+    this.originX = this.fromX;
+    this.originY = this.fromY;
   }
 }
