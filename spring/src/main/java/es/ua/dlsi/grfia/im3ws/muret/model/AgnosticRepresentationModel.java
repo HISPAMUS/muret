@@ -254,7 +254,7 @@ public class AgnosticRepresentationModel {
 
         this.actionLogAgnosticModel.logSymbolDelete(persistentSymbol.get());
         Region persistentRegion = getRegion(persistentSymbol.get().getRegion().getId());
-        persistentRegion.getSymbols().remove(persistentSymbol.get());
+        persistentRegion.removeSymbol(persistentSymbol.get());
         return symbolID;
     }
 

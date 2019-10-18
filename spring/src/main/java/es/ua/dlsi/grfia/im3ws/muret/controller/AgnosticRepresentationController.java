@@ -151,7 +151,7 @@ public class AgnosticRepresentationController extends MuRETBaseController {
      */
     @PostMapping(path = {"createSymbolFromStrokes"})
     public SymbolCreationResult createSymbolFromStrokes(@RequestBody SymbolCreationFromStrokes symbolCreationFromStrokes) throws IM3WSException, IM3Exception {
-        return this.agnosticRepresentationModel.createSymbol("TODO", symbolCreationFromStrokes.getRegionID(), symbolCreationFromStrokes.getPoints(),
+        return this.agnosticRepresentationModel.createSymbol("zaragoza", symbolCreationFromStrokes.getRegionID(), symbolCreationFromStrokes.getPoints(),
                 symbolCreationFromStrokes.getAgnosticSymbolType(), symbolCreationFromStrokes.getPositionInStaff());
         //TODO ModelID
     }

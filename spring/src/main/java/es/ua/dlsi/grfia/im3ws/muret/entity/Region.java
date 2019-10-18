@@ -176,4 +176,8 @@ public class Region extends Auditable implements IAssignableToPart {
                 ", page=" + page +
                 '}';
     }
+
+    public void removeSymbol(Symbol symbol) {
+        this.symbols.remove(symbol);
+    }
 }
