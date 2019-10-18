@@ -9,6 +9,7 @@ import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -38,6 +39,19 @@ public class ClassifierClient {
             } else {
                 throw new IM3WSException("Wrong response from server", h);
             }
+        }
+    }
+
+    public boolean PingClassifierServer()
+    {
+        try
+        {
+            restClient.get("/ping", String.class);
+            return true;
+        }
+        catch (Exception e)
+        {
+            return false;
         }
     }
 
