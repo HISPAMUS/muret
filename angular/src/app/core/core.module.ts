@@ -7,6 +7,7 @@ import {environment} from '../../environments/environment';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {coreReducers} from './store/reducers/core.reducers';
 import {UserEffects} from './store/effects/user.effects';
+import { ServerStatusEffects } from './store/effects/serverStatus.effects';
 
 @NgModule({
   declarations: [],
@@ -15,7 +16,7 @@ import {UserEffects} from './store/effects/user.effects';
     StoreModule.forFeature('core', coreReducers),
     StoreRouterConnectingModule.forRoot(),
     StoreRouterConnectingModule.forRoot({ stateKey: 'router' }),
-    EffectsModule.forFeature([UserEffects]),
+    EffectsModule.forFeature([UserEffects, ServerStatusEffects]),
     environment.production
       ? []
       : StoreDevtoolsModule.instrument({
