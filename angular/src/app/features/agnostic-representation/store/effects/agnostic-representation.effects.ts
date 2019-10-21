@@ -91,7 +91,7 @@ export class AgnosticRepresentationEffects {
   createSymbolFromBoundingBox$ = this.actions$.pipe(
     ofType<CreateSymbolFromBoundingBox>(AgnosticRepresentationActionTypes.CreateSymbolFromBoundingBox),
     switchMap((action: CreateSymbolFromBoundingBox) =>
-      this.agnosticRepresentationService.createSymbolFromBoundingBox$(action.regionID, action.boundingBox,
+      this.agnosticRepresentationService.createSymbolFromBoundingBox$(action.modelID,action.regionID, action.boundingBox,
         action.agnosticSymbolType, action.positionInStaff)),
     switchMap((symbolCreationResult: SymbolCreationResult) => {
       return of(new CreateSymbolSuccess(symbolCreationResult));
@@ -101,7 +101,7 @@ export class AgnosticRepresentationEffects {
   createSymbolFromStrokes$ = this.actions$.pipe(
     ofType<CreateSymbolFromStrokes>(AgnosticRepresentationActionTypes.CreateSymbolFromStrokes),
     switchMap((action: CreateSymbolFromStrokes) =>
-      this.agnosticRepresentationService.createSymbolFromStrokes$(action.regionID, action.points,
+      this.agnosticRepresentationService.createSymbolFromStrokes$(action.modelID ,action.regionID, action.points,
         action.agnosticSymbolType, action.positionInStaff)),
     switchMap((symbolCreationResult: SymbolCreationResult) => {
       return of(new CreateSymbolSuccess(symbolCreationResult));

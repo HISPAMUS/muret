@@ -59,9 +59,10 @@ export class AgnosticRepresentationService {
     return this.apiRestClientService.put$<AgnosticSymbol>('agnostic/symbolCommentsUpdate', params);
   }
 
-  createSymbolFromBoundingBox$(regionID: number, boundingBox: BoundingBox, agnosticSymbolType: string, positionInStaff: string):
+  createSymbolFromBoundingBox$(modelID: string, regionID: number, boundingBox: BoundingBox, agnosticSymbolType: string, positionInStaff: string):
     Observable<SymbolCreationResult> {
     const symbolCreation = {
+      modelID,
       regionID,
       agnosticSymbolType,
       positionInStaff,
@@ -71,9 +72,10 @@ export class AgnosticRepresentationService {
     return this.apiRestClientService.post$<SymbolCreationResult>('agnostic/createSymbolFromBoundingBox', symbolCreation);
   }
 
-  createSymbolFromStrokes$(regionID: number, points: Point[][], agnosticSymbolType: string, positionInStaff: string):
+  createSymbolFromStrokes$(modelID: string, regionID: number, points: Point[][], agnosticSymbolType: string, positionInStaff: string):
     Observable<SymbolCreationResult> {
     const symbolCreation = {
+      modelID,
       regionID,
       agnosticSymbolType,
       positionInStaff,

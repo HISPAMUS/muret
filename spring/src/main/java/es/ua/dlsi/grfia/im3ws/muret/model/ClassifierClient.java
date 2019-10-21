@@ -266,7 +266,7 @@ public class ClassifierClient {
         postContent.put("notationType", notationType);
         postContent.put("classifierModelType", classifierModelType.toString());
 
-        String url = "models";
+        //String url = "models";
         ClassifierModelResponse response = this.restClient.post("models", ClassifierModelResponse.class, postContent);
 
         return response.getMessage();

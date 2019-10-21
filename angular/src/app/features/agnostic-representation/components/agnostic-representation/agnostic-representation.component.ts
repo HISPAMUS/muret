@@ -76,7 +76,9 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
   endToEndButtonLabel = 'End-to-end';
   end2endClassifierModels$: Observable<ClassifierModel[]>;
+  symbolsClassifierModels$: Observable<ClassifierModel[]>;
   end2EndModelID: string;
+  symbolsClassifierModelID: string;
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>,
               private dialogsService: DialogsService, private positionInStaffService: PositionInStaffService) {
@@ -90,10 +92,28 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
         //TODO enviar collection ID y project ID
         console.log('TODO Enviando collection ID y project ID = null');
         this.store.dispatch(new GetAgnosticEnd2EndClassifierModels(0, 0, next.notationType, next.manuscriptType));
+        this.store.dispatch(new GetSymbolClassifierModels(0,0, next.notationType, next.manuscriptType));
       }
     });
     this.svgSet$ = store.select(selectSVGAgnosticSymbolSet);
+    this.symbolsClassifierModels$ = store.select(selectAgnosticSymbolClassifierModels);
     this.end2endClassifierModels$ = store.select(selectAgnosticEnd2EndClassifierModels);
+
+    this.end2endClassifierModels$.subscribe((result: ClassifierModel[]) => {
+
+        if(result!= null)
+        {
+          this.end2EndModelID = result[result.length - 1].id
+        }
+    })
+
+    this.symbolsClassifierModels$.subscribe((result: ClassifierModel[])=>{
+      if(result!=null)
+      {
+        this.symbolsClassifierModelID = result[result.length -1].id
+      }
+    })
+
     this.addMethodType = 'boundingbox';
   }
 
@@ -275,11 +295,11 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
         toY: rect.fromY + rect.height
       };
 
-      this.store.dispatch(new CreateSymbolFromBoundingBox(
+      this.store.dispatch(new CreateSymbolFromBoundingBox(this.symbolsClassifierModelID,
         this.selectedRegion.id, this.creatingBoundingBox, null, null));
     } else if (shape instanceof Polylines) {
       this.creatingStrokes = shape.polylines.map(polyline => polyline.pointsValue);
-      this.store.dispatch(new CreateSymbolFromStrokes(
+      this.store.dispatch(new CreateSymbolFromStrokes( this.symbolsClassifierModelID,
         this.selectedRegion.id, this.creatingStrokes, null, null
       ));
     } else {

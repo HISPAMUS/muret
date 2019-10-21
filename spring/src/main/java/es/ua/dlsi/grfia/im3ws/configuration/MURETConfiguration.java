@@ -13,6 +13,9 @@ public class MURETConfiguration {
     private String angularurldev;
     private String angularurlprod;
     private String folder;
+    private String warningmail;
+    private String warningsender;
+
     private int thumbnailHeight;
     private int previewHeight;
     private boolean disableSecurity;
@@ -22,7 +25,7 @@ public class MURETConfiguration {
     public MURETConfiguration() {
     }
 
-    public MURETConfiguration(String angularurldev, String angularurlprod, String folder, String pythonclassifiers, int thumbnailHeight, int previewHeight, boolean disableSecurity) {
+    public MURETConfiguration(String angularurldev, String angularurlprod, String folder, String pythonclassifiers, int thumbnailHeight, int previewHeight, boolean disableSecurity, String warningmail, String warningsender) {
         this.folder = folder;
         this.angularurldev = angularurldev;
         this.angularurlprod = angularurlprod;
@@ -31,6 +34,17 @@ public class MURETConfiguration {
         this.previewHeight = previewHeight;
         this.pythonclassifiers = pythonclassifiers;
         this.disableSecurity = disableSecurity;
+
+        this.warningmail = warningmail;
+        this.warningsender = warningsender;
+    }
+
+    public String getWarningmail() {
+        return warningmail;
+    }
+
+    public void setWarningmail(String warningmail) {
+        this.warningmail = warningmail;
     }
 
     public String getFolder() {
@@ -87,5 +101,13 @@ public class MURETConfiguration {
 
     public void setAngularurlprod(String angularurlprod) {
         this.angularurlprod = angularurlprod;
+    }
+
+    public String getWarningsender() {
+        return warningsender;
+    }
+
+    public void setWarningsender(String warningsender) {
+        this.warningsender = warningsender;
     }
 }

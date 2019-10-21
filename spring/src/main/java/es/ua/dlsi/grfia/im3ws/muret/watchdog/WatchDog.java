@@ -5,10 +5,8 @@ import es.ua.dlsi.grfia.im3ws.muret.model.ClassifierClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.aspectj.SpringConfiguredConfiguration;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +18,8 @@ public class WatchDog {
     private boolean m_serverStatus;
     private boolean m_warnSent;
     private final ClassifierClient m_restClient;
+    private String m_mailToWarn;
+    private String m_mailWarner;
 
     private final JavaMailSender m_SMTPClient;
 
@@ -29,6 +29,8 @@ public class WatchDog {
         m_serverStatus = false;
         m_restClient = new ClassifierClient(muretConfiguration.getPythonclassifiers());
         m_SMTPClient = sender;
+        m_mailToWarn = muretConfiguration.getWarningmail();
+        m_mailWarner = muretConfiguration.getWarningsender();
     }
 
     @Scheduled(fixedRate = 60*1000)
@@ -55,9 +57,9 @@ public class WatchDog {
 
         SimpleMailMessage message = new SimpleMailMessage();
 
-        message.setFrom("ariosvila@gmail.com");
+        message.setFrom(m_mailWarner);
 
-        message.setTo("antoniorv6@gmail.com");
+        message.setTo(m_mailToWarn);
         message.setSubject("[WARNING] - HISPAMUS deep server is down");
 
         message.setText("This is an automated message to tell you that HISPAMUS deep server is no longer answering to Muret service\n" +

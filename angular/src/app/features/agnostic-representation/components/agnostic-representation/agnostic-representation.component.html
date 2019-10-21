@@ -18,6 +18,12 @@
             <option *ngFor="let end2endClassifierModel of end2endClassifierModels$ | async" [value]="end2endClassifierModel.id">{{end2endClassifierModel.name}}</option>
           </select>
         </div>
+        <div class="form-group">
+          <label for="agnosticSymbolsClassifierModel">Symbols classifier model</label>
+          <select class="form-control" id="agnosticSymbolsClassifierModel" required [(ngModel)]="symbolsClassifierModelID">
+            <option *ngFor="let symbolModel of symbolsClassifierModels$ | async" [value]="symbolModel.id">{{symbolModel.name}}</option>
+          </select>
+        </div>
 
         <button type="button" class="btn btn-primary" title="End to end"  (click)="classifyEnd2End()">
           {{endToEndButtonLabel}}

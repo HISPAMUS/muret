@@ -139,7 +139,7 @@ public class AgnosticRepresentationController extends MuRETBaseController {
     @PostMapping(path = {"createSymbolFromBoundingBox"})
     public SymbolCreationResult createSymbolFromBoundingBox(@RequestBody SymbolCreationFromBoundingBox symbolCreationFromBoundingBox) throws IM3WSException, IM3Exception {
         //TODO - poner el modelo correcto desde el frontend
-        SymbolCreationResult result = this.agnosticRepresentationModel.createSymbol("zaragoza", symbolCreationFromBoundingBox.getRegionID(), symbolCreationFromBoundingBox.getBoundingBox(),
+        SymbolCreationResult result = this.agnosticRepresentationModel.createSymbol(symbolCreationFromBoundingBox.getModelID(), symbolCreationFromBoundingBox.getRegionID(), symbolCreationFromBoundingBox.getBoundingBox(),
                 symbolCreationFromBoundingBox.getAgnosticSymbolType(), symbolCreationFromBoundingBox.getPositionInStaff());
         return result;
         //TODO ModelID
@@ -152,7 +152,7 @@ public class AgnosticRepresentationController extends MuRETBaseController {
      */
     @PostMapping(path = {"createSymbolFromStrokes"})
     public SymbolCreationResult createSymbolFromStrokes(@RequestBody SymbolCreationFromStrokes symbolCreationFromStrokes) throws IM3WSException, IM3Exception {
-        return this.agnosticRepresentationModel.createSymbol("zaragoza", symbolCreationFromStrokes.getRegionID(), symbolCreationFromStrokes.getPoints(),
+        return this.agnosticRepresentationModel.createSymbol(symbolCreationFromStrokes.getModelID(), symbolCreationFromStrokes.getRegionID(), symbolCreationFromStrokes.getPoints(),
                 symbolCreationFromStrokes.getAgnosticSymbolType(), symbolCreationFromStrokes.getPositionInStaff());
         //TODO ModelID
     }

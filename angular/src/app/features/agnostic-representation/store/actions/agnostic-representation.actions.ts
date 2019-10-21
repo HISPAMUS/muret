@@ -110,13 +110,13 @@ export class ClassifySymbolSuccess implements Action {
 
 export class CreateSymbolFromBoundingBox implements Action {
   public readonly type = AgnosticRepresentationActionTypes.CreateSymbolFromBoundingBox;
-  constructor(public regionID: number, public boundingBox: BoundingBox, public agnosticSymbolType: string, public positionInStaff: string) {
+  constructor(public modelID: string, public regionID: number, public boundingBox: BoundingBox, public agnosticSymbolType: string, public positionInStaff: string) {
   }
 }
 
 export class CreateSymbolFromStrokes implements Action {
   public readonly type = AgnosticRepresentationActionTypes.CreateSymbolFromStrokes;
-  constructor(public regionID: number, public points: Point[][], public agnosticSymbolType: string, public positionInStaff: string) {}
+  constructor(public modelID: string,public regionID: number, public points: Point[][], public agnosticSymbolType: string, public positionInStaff: string) {}
 }
 
 export class CreateSymbolSuccess implements Action {

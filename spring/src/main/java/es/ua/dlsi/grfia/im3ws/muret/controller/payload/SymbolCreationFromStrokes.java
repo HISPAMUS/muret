@@ -3,6 +3,7 @@ package es.ua.dlsi.grfia.im3ws.muret.controller.payload;
 import es.ua.dlsi.im3.core.score.PositionInStaff;
 
 public class SymbolCreationFromStrokes {
+    String modelID;
     long regionID;
     String agnosticSymbolType;
     String positionInStaff;
@@ -11,7 +12,8 @@ public class SymbolCreationFromStrokes {
     public SymbolCreationFromStrokes() {
     }
 
-    public SymbolCreationFromStrokes(long regionID, String agnosticSymbolType, String positionInStaff, Point[][] points) {
+    public SymbolCreationFromStrokes(String modelID,long regionID, String agnosticSymbolType, String positionInStaff, Point[][] points) {
+        this.modelID = modelID;
         this.regionID = regionID;
         this.agnosticSymbolType = agnosticSymbolType;
         this.positionInStaff = positionInStaff;
@@ -49,4 +51,6 @@ public class SymbolCreationFromStrokes {
     public void setPoints(Point[][] points) {
         this.points = points;
     }
+
+    public String getModelID() {return modelID;}
 }
