@@ -446,11 +446,12 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
     const agnosticType = agnosticTypeSVGPath.agnosticTypeString;
     let positionInStaff: string;
-    if (agnosticSymbolTypeAndPosition) {
+    /* this resets the position to the default symbol one if (agnosticSymbolTypeAndPosition) {
       positionInStaff = agnosticSymbolTypeAndPosition.positionInStaff;
     } else {
       positionInStaff = agnosticTypeSVGPath.defaultPositionInStaff;
-    }
+    } */
+    positionInStaff = this.selectedSymbol.positionInStaff;
 
     if (this.selectedSymbol &&
       (this.selectedSymbol.agnosticSymbolType !== agnosticType || this.selectedSymbol.positionInStaff !== positionInStaff)) {
