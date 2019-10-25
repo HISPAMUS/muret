@@ -6,7 +6,7 @@ import {ImageFilesService} from '../../../../core/services/image-files.service';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Project} from '../../../../core/model/entities/project';
-// import {Lightbox, LightboxConfig} from 'ngx-lightbox';
+import {Lightbox, LightboxConfig} from 'ngx-lightbox';
 
 @Component({
   selector: 'app-image-thumbnail',
@@ -24,10 +24,10 @@ export class ImageThumbnailComponent implements OnInit {
 
   constructor(private router: Router,
               private imageFilesService: ImageFilesService,
-              // private lightbox: Lightbox,
-              // private lighboxConfig: LightboxConfig,
+              private lightbox: Lightbox,
+              private lighboxConfig: LightboxConfig,
               private sanitizer: DomSanitizer) {
-    /// lighboxConfig.fitImageInViewPort = true;
+    lighboxConfig.fitImageInViewPort = true;
   }
 
   ngOnInit() {
@@ -49,9 +49,9 @@ export class ImageThumbnailComponent implements OnInit {
       };
 
       albums.push(album);
-      /// this.lightbox.open(albums);
+      this.lightbox.open(albums);
       // TODO volver a dejar Lightbox cuando se actualice de versión 1.2.0
-      window.open(window.URL.createObjectURL(imageBlob), 'Preview ' + this.image.filename, 'widthPercentage=1280,heightPercentage=720');
+      // window.open(window.URL.createObjectURL(imageBlob), 'Preview ' + this.image.filename, 'widthPercentage=1280,heightPercentage=720');
     });
   }
 
