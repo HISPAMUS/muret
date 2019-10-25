@@ -35,7 +35,7 @@ export class AuthEffects {
         catchError((error) => {
           return of(new LogInFailure(error.error.message));
         }));
-    })
+    }),
   );
 
   @Effect({ dispatch: false })

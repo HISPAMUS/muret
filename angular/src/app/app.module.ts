@@ -20,8 +20,7 @@ import {SharedModule} from './shared/shared.module';
 import {intersectionObserverPreset, LazyLoadImageModule} from 'ng-lazyload-image';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
+import {FontAwesomeModule, FaIconLibrary} from '@fortawesome/angular-fontawesome';
 import {faSearchMinus} from '@fortawesome/free-solid-svg-icons';
 import { faSearchPlus } from '@fortawesome/free-solid-svg-icons';
 import { faExpand } from '@fortawesome/free-solid-svg-icons';
@@ -88,25 +87,25 @@ import {PartsModule} from './features/parts/parts.module';
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor() {
-    library.add(faSearchMinus);
-    library.add(faSearchPlus);
-    library.add(faExpand);
-    library.add(faCheck);
-    library.add(faCheckDouble);
-    library.add(faUserClock);
-    library.add(faAngleDown);
-    library.add(faAngleUp);
-    library.add(faAngleDoubleDown);
-    library.add(faAngleDoubleUp);
-    library.add(faTrash);
-    library.add(faPlus);
-    library.add(faEdit);
-    library.add(faMinus);
-    library.add(faEye);
-    library.add(faExpandArrowsAlt);
-    library.add(faCompressArrowsAlt);
-    library.add(faCompressArrowsAlt);
-    library.add(faCommentDots);
+  constructor(library: FaIconLibrary) {
+    library.addIcons(faSearchMinus);
+    library.addIcons(faSearchPlus);
+    library.addIcons(faExpand);
+    library.addIcons(faCheck);
+    library.addIcons(faCheckDouble);
+    library.addIcons(faUserClock);
+    library.addIcons(faAngleDown);
+    library.addIcons(faAngleUp);
+    library.addIcons(faAngleDoubleDown);
+    library.addIcons(faAngleDoubleUp);
+    library.addIcons(faTrash);
+    library.addIcons(faPlus);
+    library.addIcons(faEdit);
+    library.addIcons(faMinus);
+    library.addIcons(faEye);
+    library.addIcons(faExpandArrowsAlt);
+    library.addIcons(faCompressArrowsAlt);
+    library.addIcons(faCompressArrowsAlt);
+    library.addIcons(faCommentDots);
   }
 }
