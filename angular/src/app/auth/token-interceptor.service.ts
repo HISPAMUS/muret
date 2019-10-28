@@ -56,6 +56,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           this.router.navigateByUrl('/login');
           return throwError(response);
         } else {
+          console.log(response)
           this.errorHandlingService.showError('Server error', response.message);
           return null;
         }

@@ -62,7 +62,7 @@ public class ClassifierModelsController {
             return this.classifierClient.getModels(ClassifierModelTypes.eAgnosticEnd2End, collectionID, projectID, notationType, manuscriptType);
         } catch (IM3WSException e) {
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot get classifier models", e);
-            throw e;
+            throw new IM3WSException("There was an error retrieving Agnostic End to end models, it is possible that the folder referenced does not exist in the classification server");
         }
     }
 

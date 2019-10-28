@@ -1,10 +1,12 @@
-<div class="modal-dialog modal-dialog-centered">
+<div class="modal-dialog modal-dialog-centered modal-lg">
   <div class="modal-content">
     <div class="modal-header">
       <h4>{{title || 'Alert!'}}</h4>
     </div>
     <div class="modal-body">
       <p>{{message || 'TADAA-AM!'}}</p>
+      <p hidden #info hidden>{{specificMessage || 'No additional info provided'}}</p>
+      <button type="button" class="btn btn-primary" (click)="showInfo()">Show Details</button>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-danger" (click)="close()">OK</button>

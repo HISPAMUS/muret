@@ -46,6 +46,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   selectedShapeIDValue: string;
 
   private modeValue: 'eIdle' | 'eAdding' | 'eEditing' | 'eSelecting';
+  private isOnDrawProcess : boolean;
+  
   @Output() modeChange = new EventEmitter();
 
   @ViewChild('canvas', {static: true}) canvas: ElementRef; // with false it fails
@@ -86,6 +88,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
 
     this.modeValue = 'eIdle';
     this.updateCursor();
+    this.isOnDrawProcess = false;
   }
 
   ngOnInit() {
@@ -199,9 +202,14 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
           clearTimeout(this.polylinesCreationTimeout);
           this.polylinesCreationTimeout = null;
         } else {
-          this.createShape(svgCoordinate);
-          this.originX = svgCoordinate.x;
-          this.originY = svgCoordinate.y;
+          if(!this.isOnDrawProcess)
+          {
+            console.log("creating shape")
+            this.createShape(svgCoordinate);
+            this.originX = svgCoordinate.x;
+            this.originY = svgCoordinate.y;
+            this.isOnDrawProcess = true;
+          }
         }
         break;
       case 'eSelecting':
@@ -260,11 +268,6 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
         }
         if (this.selectedComponent && !this.polylinesCreationTimeout) {
           const svgCoordinate = this.screenCoordinateToSVGCoordinate(timeStamp, x, y);
-          if(svgCoordinate.x < this.originX)
-          {
-            console.log(svgCoordinate.x)
-            console.log(this.selectedComponent.shape.fromX)
-          }
           this.selectedComponent.draw(svgCoordinate);
         }
         break;
@@ -309,10 +312,10 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
     if (this.selectedComponent) {
       if (this.selectedComponent.isDrawStarted()) { // if no drag has been done no shape is inserted
         const shape = this.selectedComponent.shape;
-
         if (shape instanceof Polylines) {
           shape.startNewPolyline = true;
           this.polylinesCreationTimeout = setTimeout(() => {
+            this.isOnDrawProcess = false;
             this.selectedShapeID = null;
             this.svgShapeCreated.emit(shape);
             this.polylinesCreationTimeout = null;
@@ -322,6 +325,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
           this.selectedShapeID = null;
           this.svgShapeCreated.emit(shape);
           this.selectedComponent = null;
+          this.isOnDrawProcess = false;
           // this.shapes = this.shapes.filter(s => s != null);
         }
       }
