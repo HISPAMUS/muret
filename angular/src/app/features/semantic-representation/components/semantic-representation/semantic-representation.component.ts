@@ -258,7 +258,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
   private findAgnosticID(agnosticSymbolIDs: string) {
     let result: string;
-    if (agnosticSymbolIDs) {
+    if (agnosticSymbolIDs && this.agnosticIDMap) {
       const IDS: string[] = agnosticSymbolIDs.split(',');
       IDS.forEach(id => {
         const simpleID = this.agnosticIDMap.get(Number(id));
@@ -361,4 +361,18 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
       this.store.dispatch(new CreateRegionPart(this.selectedRegion, $event));
       this.store.dispatch(new GetImageProjectParts(+this.imageID)); // to update the drop down
     }
+
+    noErrorMessage() {
+      return this.errorMessage == null || !this.errorMessage;
+    }
+
+    hasErrorMessage() {
+      return this.errorMessage != null && this.errorMessage;
+    }
+
+
+    hasNotation() {
+      return this.notation != null;
+    }
+
   }

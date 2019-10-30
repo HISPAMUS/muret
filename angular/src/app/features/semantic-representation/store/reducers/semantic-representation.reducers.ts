@@ -5,6 +5,10 @@ import {SemanticRepresentationState, initialSemanticRepresentationState} from '.
 export function semanticRepresentationReducers(state = initialSemanticRepresentationState, action: SemanticRepresentationActions):
   SemanticRepresentationState {
   switch (action.type) {
+    case SemanticRepresentationActionTypes.ConvertAgnostic2Semantic: {
+      const newState = {...state};
+      return newState;
+    }
     case SemanticRepresentationActionTypes.ConvertAgnostic2SemanticSuccess: {
       const newState = {...state};
       newState.notation = action.notation;

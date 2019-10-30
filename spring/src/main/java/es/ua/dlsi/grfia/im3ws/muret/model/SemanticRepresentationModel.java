@@ -20,6 +20,8 @@ import es.ua.dlsi.im3.omr.encoding.semantic.*;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SemanticRepresentationModel {
 
@@ -64,11 +66,22 @@ public class SemanticRepresentationModel {
         NotationType notationType = project.getNotationType();
         SemanticTransduction semanticTransduction = new TranslationModel().computeSemanticFromAgnostic(agnosticEncoding, notationType);
 
-        //projectModel.addSemanticEncoding(project, partName, staff.getId(), staff.getBoundingBox(), semantic.getSemanticEncoding());
-        KernSemanticExporter kernSemanticExporter = new KernSemanticExporter();
-        String kernExport = kernSemanticExporter.export(semanticTransduction.getSemanticEncoding());
-        sendSemanticEncoding(project, partName, staff, mensurstrich, renderer, kernExport);
-        return notationModel.getNotation(project, partName, staff, mensurstrich, renderer);
+        Notation result = null;
+        if (semanticTransduction.getErrorMessage() != null) {
+            result = new Notation(semanticTransduction.getErrorMessage());
+        } else {
+            //projectModel.addSemanticEncoding(project, partName, staff.getId(), staff.getBoundingBox(), semantic.getSemanticEncoding());
+            KernSemanticExporter kernSemanticExporter = new KernSemanticExporter();
+            try {
+                String kernExport = kernSemanticExporter.export(semanticTransduction.getSemanticEncoding());
+                sendSemanticEncoding(project, partName, staff, mensurstrich, renderer, kernExport);
+                result = notationModel.getNotation(project, partName, staff, mensurstrich, renderer);
+            } catch (Exception e) {
+                Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot generate the score", e);
+                result = new Notation("Cannot generate the score:" + e.getMessage());
+            }
+        }
+        return result;
     }
 
     /**

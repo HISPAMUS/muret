@@ -4,6 +4,6 @@ import {SemanticRepresentationState} from '../state/semantic-representation.stat
 export const semanticRepresentationState = createFeatureSelector<SemanticRepresentationState>('semantic-representation');
 
 export const selectNotation = createSelector(
-  (state: SemanticRepresentationState)  => state,
-  (state: SemanticRepresentationState) => state.notation
+  semanticRepresentationState,
+  (stateSemantic: SemanticRepresentationState) => stateSemantic.notation
 );

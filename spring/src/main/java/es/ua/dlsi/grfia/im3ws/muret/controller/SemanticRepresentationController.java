@@ -64,7 +64,7 @@ public class SemanticRepresentationController extends MuRETBaseController {
             return result;
         } catch (Exception e) {
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot convert to semantic", e);
-            throw new IM3WSException(e);
+            return new Notation(e.getMessage());
         }
     }
 
