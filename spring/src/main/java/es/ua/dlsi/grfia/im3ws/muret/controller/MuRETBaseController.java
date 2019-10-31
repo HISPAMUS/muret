@@ -38,7 +38,7 @@ public class MuRETBaseController {
     }
 
     protected Image getImage(long imageID) throws IM3WSException {
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "ID: "+ imageID);
+        //Logger.getLogger(this.getClass().getName()).log(Level.INFO, "ID: "+ imageID);
         Optional<Image> image = imageRepository.findById(imageID);
         if (!image.isPresent()) {
             throw new IM3WSException("Cannot find an image with id " + imageID);
