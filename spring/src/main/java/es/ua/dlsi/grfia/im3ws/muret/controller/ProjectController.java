@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.im3ws.BinaryOutputWrapper;
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.controller.StringResponse;
+import es.ua.dlsi.grfia.im3ws.muret.auditing.AuditorAwareImpl;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.ProjectStatistics;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.StringBody;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.UploadFileResponse;
@@ -84,6 +85,9 @@ public class ProjectController {
     // angular ng2-file-upload uploads files one by one
     @PostMapping("uploadProjectImage")
     public UploadFileResponse uploadFile(@RequestParam("projectid") Integer projectid, @RequestParam("file") MultipartFile file) throws IM3Exception {
+
+        //Logger.getLogger(this.getClass().getName()).log(Level.INFO, "User ID: " + AuditorAwareImpl.getCurrentUser().getId().toString());
+
         Optional<Project> project = projectRepository.findById(projectid);
         if (!project.isPresent()) {
             throw new RuntimeException("Project with id " + projectid + " does not exist");
@@ -117,6 +121,7 @@ public class ProjectController {
         //TODO Atómico
         //TODO Ordenación
         Image image = new Image(fileName, null, fullImage.getWidth(), fullImage.getHeight(), project.get(), null, null);
+        image.setCreatedBy(AuditorAwareImpl.getCurrentUser());
         imageRepository.save(image);
 
         return new UploadFileResponse(fileName, file.getContentType(), file.getSize());

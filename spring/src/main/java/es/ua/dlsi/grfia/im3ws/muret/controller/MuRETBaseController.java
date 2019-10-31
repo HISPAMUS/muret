@@ -10,8 +10,11 @@ import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.PageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.SymbolRepository;
+import sun.util.logging.PlatformLogger;
 
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MuRETBaseController {
     protected final MURETConfiguration muretConfiguration;
@@ -35,6 +38,7 @@ public class MuRETBaseController {
     }
 
     protected Image getImage(long imageID) throws IM3WSException {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "ID: "+ imageID);
         Optional<Image> image = imageRepository.findById(imageID);
         if (!image.isPresent()) {
             throw new IM3WSException("Cannot find an image with id " + imageID);

@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.im3ws.muret.auth.controllers;
 
 import javax.validation.Valid;
 
+import es.ua.dlsi.grfia.im3ws.muret.auditing.AuditorAwareImpl;
 import es.ua.dlsi.grfia.im3ws.muret.auth.jwt.JwtProvider;
 import es.ua.dlsi.grfia.im3ws.muret.auth.message.request.LoginForm;
 import es.ua.dlsi.grfia.im3ws.muret.auth.message.response.JwtResponse;
@@ -49,6 +50,8 @@ public class AuthRestAPIs {
 		String jwt = jwtProvider.generateJwtToken(authentication);
 		//UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 		UserPrinciple userDetails = (UserPrinciple) authentication.getPrincipal();
+
+		AuditorAwareImpl.setANONYMUSId(userDetails.getId());
 
 		return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), userDetails.getAuthorities()));
 	}

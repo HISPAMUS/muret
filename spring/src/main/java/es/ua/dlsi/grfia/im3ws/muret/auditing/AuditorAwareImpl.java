@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
+import java.util.logging.Logger;
 
 public class AuditorAwareImpl implements AuditorAware<User> {
     private static User ANONYMOUS = new User();
@@ -30,5 +31,10 @@ public class AuditorAwareImpl implements AuditorAware<User> {
         } else {
             throw new IM3RuntimeException("No authenticated user");
         }
+    }
+
+    public static void setANONYMUSId(int newID)
+    {
+        ANONYMOUS.setId(newID);
     }
 }

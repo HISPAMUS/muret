@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.im3ws.muret.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import es.ua.dlsi.grfia.im3ws.muret.auditing.AuditorAwareImpl;
 
 import javax.persistence.*;
 import java.util.LinkedList;
@@ -140,7 +141,6 @@ public class Image extends Auditable implements IAssignableToPart {
         }
         pages.add(page);
     }
-
     @Override
     public Part getPart() {
         return part;
