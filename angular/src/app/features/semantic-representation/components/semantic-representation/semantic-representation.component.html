@@ -28,7 +28,7 @@
 
     <section class="row">
       <div class="col">
-            <ng-container *ngIf="!errorMessage">
+            <ng-container *ngIf="noErrorMessage()">
               <app-notation [notation]="notation"></app-notation>
             </ng-container>
           </div>
@@ -105,7 +105,7 @@
           <div class="card-title">
             <h5>MEI:</h5>
           </div>
-          <div *ngIf="notation" class="card-body">
+          <div *ngIf="hasNotation()" class="card-body">
             <textarea cols="80" rows="20">{{notation.content}}</textarea>
           </div>
         </div>
@@ -117,7 +117,7 @@
     </div>
   </section>
 
-  <div class="row" *ngIf="errorMessage">
+  <div class="row" *ngIf="hasErrorMessage()">
     <div class="col">
       <p class="alert-warning">{{errorMessage}}</p>
     </div>
