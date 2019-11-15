@@ -46,8 +46,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   selectedShapeIDValue: string;
 
   private modeValue: 'eIdle' | 'eAdding' | 'eEditing' | 'eSelecting';
-  private isOnDrawProcess : boolean;
-  
+  private isOnDrawProcess: boolean;
+
   @Output() modeChange = new EventEmitter();
 
   @ViewChild('canvas', {static: true}) canvas: ElementRef; // with false it fails
@@ -77,11 +77,11 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   private shapeWithoutComponent: Rectangle | Line | Text | Polylines;
   private polylinesCreationTimeout: any;
   private proportion: number;
-  private TIMEOUT = 1500;
+  private TIMEOUT = 500;
 
-  //Variables to check if user is going backside
-  private originX: number = 0;
-  private originY: number = 0;
+  // Variables to check if user is going backside
+  private originX = 0;
+  private originY = 0;
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver,
               private sanitizer: DomSanitizer) {
@@ -202,9 +202,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
           clearTimeout(this.polylinesCreationTimeout);
           this.polylinesCreationTimeout = null;
         } else {
-          if(!this.isOnDrawProcess)
-          {
-            console.log("creating shape")
+          if (!this.isOnDrawProcess) {
+            // console.log("creating shape")
             this.createShape(svgCoordinate);
             this.originX = svgCoordinate.x;
             this.originY = svgCoordinate.y;
