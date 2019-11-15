@@ -89,10 +89,10 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
       if (next) {
         this.store.dispatch(new GetSVGSet(next.notationType, next.manuscriptType));
 
-        //TODO enviar collection ID y project ID
+        // TODO enviar collection ID y project ID
         console.log('TODO Enviando collection ID y project ID = null');
         this.store.dispatch(new GetAgnosticEnd2EndClassifierModels(0, 0, next.notationType, next.manuscriptType));
-        this.store.dispatch(new GetSymbolClassifierModels(0,0, next.notationType, next.manuscriptType));
+        this.store.dispatch(new GetSymbolClassifierModels(0, 0, next.notationType, next.manuscriptType));
       }
     });
     this.svgSet$ = store.select(selectSVGAgnosticSymbolSet);
@@ -101,18 +101,16 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
     this.end2endClassifierModels$.subscribe((result: ClassifierModel[]) => {
 
-        if(result!= null)
-        {
-          this.end2EndModelID = result[result.length - 1].id
+        if (result != null) {
+          this.end2EndModelID = result[result.length - 1].id;
         }
-    })
+    });
 
-    this.symbolsClassifierModels$.subscribe((result: ClassifierModel[])=>{
-      if(result!=null)
-      {
-        this.symbolsClassifierModelID = result[result.length -1].id
+    this.symbolsClassifierModels$.subscribe((result: ClassifierModel[]) => {
+      if (result != null) {
+        this.symbolsClassifierModelID = result[result.length - 1].id;
       }
-    })
+    });
 
     this.addMethodType = 'boundingbox';
   }
@@ -218,7 +216,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     );
     polylines.fillColor = 'transparent';
     polylines.strokeColor = color;
-    polylines.strokeWidth = 1;
+    polylines.strokeWidth = 2;
     polylines.layer = layer;
     polylines.data = modelObject;
     shapes.push(polylines);
@@ -298,6 +296,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
       this.store.dispatch(new CreateSymbolFromBoundingBox(this.symbolsClassifierModelID,
         this.selectedRegion.id, this.creatingBoundingBox, null, null));
     } else if (shape instanceof Polylines) {
+      console.log('shape: ' + shape.polylines.length);
       this.creatingStrokes = shape.polylines.map(polyline => polyline.pointsValue);
       this.store.dispatch(new CreateSymbolFromStrokes( this.symbolsClassifierModelID,
         this.selectedRegion.id, this.creatingStrokes, null, null
@@ -375,7 +374,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   onSymbolShapeChanged(shape: Shape) {
     // currently we only support bounding box change
     if (shape instanceof Rectangle) {
-      console.log("Ey")
+      console.log('Ey');
       this.store.dispatch(new ChangeSymbolBoundingBox(shape.data, {
         fromX: shape.fromX,
         fromY: shape.fromY,
@@ -477,12 +476,12 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.dialogsService.showWarningConfirmation('Clear region symbols?', 'You are about to erase all region symbols, this will leave nothing behind')
       .subscribe((isConfirmed) => {
         if (isConfirmed) {
-          this.dialogsService.showWarningConfirmation('WARNING', 'Are you sure? This change cannot be undone and all progress will be lost').subscribe((isConfirmed)=>{
-              if(isConfirmed)
-              {
+          this.dialogsService.showWarningConfirmation('WARNING',
+            'Are you sure? This change cannot be undone and all progress will be lost').subscribe((isConfirmed) => {
+              if (isConfirmed) {
                 this.store.dispatch(new ClearRegionSymbols(this.selectedRegion.id));
               }
-          })
+          });
         }
       });
   }

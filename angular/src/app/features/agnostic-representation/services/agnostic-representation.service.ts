@@ -40,7 +40,7 @@ export class AgnosticRepresentationService {
   }
 
   changeSymbolBoundingBox$(symbol: AgnosticSymbol, fromX: number, fromY: number, toX: number, toY: number): Observable<AgnosticSymbol> {
-    console.log('Ey')
+    // console.log('Ey')
     const boundingBox: BoundingBox = {
       id: symbol.id,
       fromX,
@@ -59,7 +59,8 @@ export class AgnosticRepresentationService {
     return this.apiRestClientService.put$<AgnosticSymbol>('agnostic/symbolCommentsUpdate', params);
   }
 
-  createSymbolFromBoundingBox$(modelID: string, regionID: number, boundingBox: BoundingBox, agnosticSymbolType: string, positionInStaff: string):
+  createSymbolFromBoundingBox$(modelID: string, regionID: number, boundingBox: BoundingBox, agnosticSymbolType: string,
+                               positionInStaff: string):
     Observable<SymbolCreationResult> {
     const symbolCreation = {
       modelID,
@@ -122,12 +123,14 @@ export class AgnosticRepresentationService {
     }
   }
 
-  getSymbolClassifierModel$(collectionID: number, projectID: number, notationType: string, manuscriptType: string): Observable<ClassifierModel[]> {
+  getSymbolClassifierModel$(collectionID: number, projectID: number,
+                            notationType: string, manuscriptType: string): Observable<ClassifierModel[]> {
     const url = `classifierModels/symbols/${collectionID}/${projectID}/${notationType}/${manuscriptType}`;
     return this.apiRestClientService.get$<ClassifierModel[]>(url);
   }
 
-  getAgnosticEnd2EndClassifierModel$(collectionID: number, projectID: number, notationType: string, manuscriptType: string): Observable<ClassifierModel[]> {
+  getAgnosticEnd2EndClassifierModel$(collectionID: number, projectID: number,
+                                     notationType: string, manuscriptType: string): Observable<ClassifierModel[]> {
     const url = `classifierModels/agnosticEnd2End/${collectionID}/${projectID}/${notationType}/${manuscriptType}`;
     return this.apiRestClientService.get$<ClassifierModel[]>(url);
   }
