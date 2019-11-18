@@ -40,6 +40,7 @@ export class ImageThumbnailComponent implements OnInit {
   }
 
   previewImage() {
+    console.log("clicked!")
     this.imageFilesService.getPreviewImageBlob$(this.projectPath, this.image.id).subscribe(imageBlob => {
       const albums = []; // used by Lightbox
 

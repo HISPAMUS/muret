@@ -1,5 +1,5 @@
 <div class="thumbnail">
-  <div *ngIf="loadedImage$ | async as loadedImage; else loading">
+  <div *ngIf="loadedImage$ | async as loadedImage; else loading" (click)="previewImage()">
     <img [src]="loadedImage" alt="Thumbnail">
   </div>
   <ng-template #loading>
@@ -12,8 +12,6 @@
   <h5>{{image?.filename}}</h5>-->
   <p class="links">
     {{image.filename}}
-    &nbsp;
-    <a class="previewLink" (click)="previewImage()" target="_blank">Preview</a>
     &nbsp;
     <a class="openLink" (click)="openDocumentAnalysis()">Doc.analysis</a>
     <br>
