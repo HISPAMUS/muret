@@ -15,8 +15,12 @@ const optionsScore = {
   scale: 75,
   adjustPageHeight: 1,
   breaks: 'encoded',
-  evenNoteSpacing: 1
+  noJustification: 1,
+  pageWidth: 60000
 };
+
+
+//TODO Values por Verovio
 
 @Injectable()
 export class NotationService {
