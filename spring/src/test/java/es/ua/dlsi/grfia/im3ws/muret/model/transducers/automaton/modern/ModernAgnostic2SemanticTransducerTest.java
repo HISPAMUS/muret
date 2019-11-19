@@ -1,7 +1,6 @@
 package es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.modern;
 
-import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.SemanticTransduction;
-import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.MensuralAgnostic2SemanticTransducer;
+import es.ua.dlsi.grfia.im3ws.muret.model.transducers.SemanticTransduction;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticEncoding;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;

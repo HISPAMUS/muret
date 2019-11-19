@@ -1,4 +1,4 @@
-package es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton;
+package es.ua.dlsi.grfia.im3ws.muret.model.transducers;
 
 import es.ua.dlsi.im3.core.adt.dfa.Transduction;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticEncoding;

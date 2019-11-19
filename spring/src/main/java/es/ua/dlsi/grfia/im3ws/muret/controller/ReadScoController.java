@@ -6,7 +6,7 @@ import es.ua.dlsi.grfia.im3ws.muret.controller.payload.AgnosticEncodingJSON;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.AgnosticSymbolTypeAndPosition;
 import es.ua.dlsi.grfia.im3ws.muret.model.NotationModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.TranslationModel;
-import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.SemanticTransduction;
+import es.ua.dlsi.grfia.im3ws.muret.model.transducers.SemanticTransduction;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.score.NotationType;
 import es.ua.dlsi.im3.core.score.PositionInStaff;

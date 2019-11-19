@@ -1,6 +1,6 @@
 package es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.common;
 
-import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.SemanticTransduction;
+import es.ua.dlsi.grfia.im3ws.muret.model.transducers.SemanticTransduction;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.TransducerState;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.states.AccNoteState;
 import es.ua.dlsi.im3.core.IM3Exception;
@@ -10,12 +10,6 @@ import es.ua.dlsi.im3.core.io.ImportException;
 import es.ua.dlsi.im3.core.score.Accidentals;
 import es.ua.dlsi.im3.core.score.*;
 import es.ua.dlsi.im3.core.score.mensural.ligature.LigatureFactory;
-import es.ua.dlsi.im3.core.score.mensural.meters.Perfection;
-import es.ua.dlsi.im3.core.score.mensural.meters.TimeSignatureMensural;
-import es.ua.dlsi.im3.core.score.mensural.meters.hispanic.TimeSignatureProporcionMayor;
-import es.ua.dlsi.im3.core.score.mensural.meters.hispanic.TimeSignatureProporcionMenor;
-import es.ua.dlsi.im3.core.score.meters.TimeSignatureCommonTime;
-import es.ua.dlsi.im3.core.score.meters.TimeSignatureCutTime;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.*;

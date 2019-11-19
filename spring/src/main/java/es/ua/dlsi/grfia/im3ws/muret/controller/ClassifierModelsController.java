@@ -2,25 +2,12 @@ package es.ua.dlsi.grfia.im3ws.muret.controller;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
-import es.ua.dlsi.grfia.im3ws.controller.StringResponse;
-import es.ua.dlsi.grfia.im3ws.muret.controller.payload.AgnosticEncodingJSON;
-import es.ua.dlsi.grfia.im3ws.muret.controller.payload.AgnosticSymbolTypeAndPosition;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.ClassifierModel;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.ClassifierModelTypes;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Symbol;
 import es.ua.dlsi.grfia.im3ws.muret.model.ClassifierClient;
-import es.ua.dlsi.grfia.im3ws.muret.model.NotationModel;
-import es.ua.dlsi.grfia.im3ws.muret.model.TranslationModel;
-import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.SemanticTransduction;
-import es.ua.dlsi.im3.core.IM3Exception;
-import es.ua.dlsi.im3.core.score.NotationType;
-import es.ua.dlsi.im3.core.score.PositionInStaff;
-import es.ua.dlsi.im3.omr.encoding.agnostic.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
-import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;

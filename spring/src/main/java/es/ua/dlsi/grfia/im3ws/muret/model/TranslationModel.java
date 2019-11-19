@@ -1,8 +1,8 @@
 package es.ua.dlsi.grfia.im3ws.muret.model;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
-import es.ua.dlsi.grfia.im3ws.muret.model.transducers.Agnostic2SemanticTransducer;
-import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.SemanticTransduction;
+import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.Agnostic2SemanticTransducer;
+import es.ua.dlsi.grfia.im3ws.muret.model.transducers.SemanticTransduction;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.MensuralAgnostic2SemanticTransducer;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.modern.ModernAgnostic2SemanticTransducer;
 import es.ua.dlsi.im3.core.IM3Exception;

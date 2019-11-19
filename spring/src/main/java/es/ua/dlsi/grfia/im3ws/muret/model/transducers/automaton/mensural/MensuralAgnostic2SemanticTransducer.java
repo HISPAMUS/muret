@@ -1,6 +1,6 @@
 package es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural;
 
-import es.ua.dlsi.grfia.im3ws.muret.model.transducers.Agnostic2SemanticTransducer;
+import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.Agnostic2SemanticTransducer;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.states.ClefState;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.states.TimeSignatureState;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.states.*;

@@ -1,28 +1,13 @@
 package es.ua.dlsi.grfia.im3ws.muret.model;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
-import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
-import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Notation;
-import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Renderer;
-import es.ua.dlsi.grfia.im3ws.muret.entity.BoundingBox;
 import es.ua.dlsi.grfia.im3ws.muret.entity.ManuscriptType;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Project;
-import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.SemanticTransduction;
-import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.MensuralAgnostic2SemanticTransducer;
 import es.ua.dlsi.im3.core.IM3Exception;
-import es.ua.dlsi.im3.core.TestFileUtils;
 import es.ua.dlsi.im3.core.score.NotationType;
-import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticEncoding;
-import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-
-import static org.junit.Assert.*;
 
 public class ProjectModelTest {
 

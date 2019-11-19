@@ -1,6 +1,7 @@
-package es.ua.dlsi.grfia.im3ws.muret.model.transducers;
+package es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton;
 
-import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.SemanticTransduction;
+import es.ua.dlsi.grfia.im3ws.muret.model.transducers.IAgnostic2SemanticTransducer;
+import es.ua.dlsi.grfia.im3ws.muret.model.transducers.SemanticTransduction;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.adt.Pair;
 import es.ua.dlsi.im3.core.adt.dfa.DeterministicProbabilisticAutomaton;
@@ -18,7 +19,7 @@ import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbol;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class Agnostic2SemanticTransducer {
+public abstract class Agnostic2SemanticTransducer implements IAgnostic2SemanticTransducer {
     protected DeterministicProbabilisticAutomaton<State, AgnosticSymbolType, SemanticTransduction> dpa;
     NotationType notationType;
 
