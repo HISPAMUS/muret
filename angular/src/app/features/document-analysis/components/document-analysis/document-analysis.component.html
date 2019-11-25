@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <nav class="row" id="docAnalysisToolBar">
-    <div class="col-9">
-      <app-crud-toolbar (onClear)="clear()" (onDelete)="deleteSelected()" [(mode)]="mode" (onZoomFit)="zoomFit()" (onZoomIn)="zoomIn()" (onZoomOut)="zoomOut()">
+    <div class="col-6">
+      <app-crud-toolbar (onClear)="clear()" (onDelete)="deleteSelected()" [(mode)]="mode" (change)="onChangeMode()" (onZoomFit)="zoomFit()" (onZoomIn)="zoomIn()" (onZoomOut)="zoomOut()">
       </app-crud-toolbar>
     </div>
     <div class="col-3" id="linksPhases">
@@ -9,8 +9,10 @@
       <button (click)="openAgnosticRepresentation()">Agnostic</button>
       <button (click)="openSemanticRepresentation()">Semantic</button>
     </div>
+    <div class="col-3" *ngIf="regionTypeSelectorVisible">
+        <a (click)="openRegionSelectionModal()">Creating region type of: {{regionTypeName}}</a>
+    </div>
   </nav>
-
   <!-- VIEW FILTER -->
   <div id="regionTypesFilter" class="row" [hidden]="!inIdleMode()">
     <aside class="col btn-group-horizontal sidebar d-flex justify-content-center align-items-center">

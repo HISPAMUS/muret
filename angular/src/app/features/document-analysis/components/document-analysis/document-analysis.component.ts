@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, Self, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, Self, ViewChild, SimpleChanges} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Rectangle} from '../../../../svg/model/rectangle';
@@ -39,6 +39,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   regionTypes$: Observable<RegionType[]>;
   imagePart$: Observable<Part>;
   pagesSubscription: Subscription;
+  regionTypesSubscription: Subscription;
   mode: 'eIdle' |'eSelecting' | 'eEditing' | 'eAdding';
   selectedRegionTypeID: number | 'page';
   zoomFactor = 1;
@@ -48,8 +49,13 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   private selectedShapeValue: string;
   // private nextDrawShape: string | RegionType;
   shapes: Shape[];
+  regionTypesEnum: RegionType[];
 
   regionTypeFilterOut: Set<string>;
+
+  private regionTypeCSelected: number;
+  regionTypeName : string
+  regionTypeSelectorVisible: boolean
 
   // end tools
 
@@ -61,10 +67,18 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
               private modalService: NgbModal
               ) {
     this.regionTypes$ = store.select(selectRegionTypes);
+
+    this.regionTypesSubscription = this.regionTypes$.subscribe((result)=>{
+      this.regionTypesEnum = result;
+    })
+
     this.filename$ = store.select(selectFileName);
     this.mode = 'eIdle';
     this.selectedRegionTypeID = 'page';
     this.regionTypeFilterOut = new Set<string>();
+
+    this.regionTypeName = 'page'
+    this.regionTypeCSelected = 0;
   }
 
   ngOnInit() {
@@ -95,6 +109,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
 
   ngOnDestroy(): void {
     this.pagesSubscription.unsubscribe();
+    this.regionTypesSubscription.unsubscribe();
   }
 
   zoomIn() {
@@ -127,6 +142,10 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
       } else {
         this.selectedRegionTypeID = null;
       }
+
+      console.log("Setting region type")
+      console.log(this.selectedRegionTypeID)
+
     }
   }
 
@@ -202,6 +221,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   setRegionType(regionType: RegionType) {
+
     if (this.isEditingMode() && this.selectedShapeID) {
       const shape = this.findSelectedShape();
       if (!shape) {
@@ -257,8 +277,13 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
       });
   }
 
+  onChangeMode()
+  {
+    this.regionTypeSelectorVisible = this.isAddingMode()
+  }
+
   onShapeCreated(shape: Shape) {
-    this.openRegionTypesModal(shape);
+    this.createNewShape(shape);
 
     /*if (!this.nextDrawShape) {
       this.dialogsService.showError('Shape creation', 'Page or region type must be selected first');
@@ -312,6 +337,17 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     } else if (event.code === 'Escape') {
       this.mode = 'eIdle';
     }
+    if(this.isAddingMode() && event.code === 'KeyB')
+    {
+      console.log('Changing box type!')
+      this.regionTypeCSelected++;
+      
+      if(this.regionTypeCSelected == this.regionTypesEnum.length)
+        this.regionTypeCSelected = 0
+      
+      this.regionTypeName = this.regionTypesEnum[this.regionTypeCSelected].name
+      console.log(this.regionTypeCSelected)
+    }
   }
 
   beatufyRegionName(name: string): string {
@@ -323,29 +359,34 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     return this.mode === 'eIdle';
   }
 
-  openRegionTypesModal(newShape: Shape) {
-    this.modalService.open(this.regionTypesModal, {size: 'lg', ariaLabelledBy: 'Region types'}).result.then((result) => {
-      // accepted
-      const rectangle = newShape as Rectangle;
+  createNewShape(newShape: Shape) {
+    const rectangle = newShape as Rectangle;
 
-      const nextDrawShape = result;
-      if (nextDrawShape === 'page') {
-        this.store.dispatch(new CreatePage(this.imageID, {fromX: rectangle.fromX,
+    const nextDrawShape = this.regionTypesEnum[this.regionTypeCSelected]
+    
+    if (nextDrawShape.name === 'page') {
+      this.store.dispatch(new CreatePage(this.imageID, {fromX: rectangle.fromX,
+        fromY: rectangle.fromY,
+        toX: rectangle.fromX + rectangle.width,
+        toY: rectangle.fromY + rectangle.height}));
+    } else {
+      this.store.dispatch(new CreateRegion(this.imageID, nextDrawShape as RegionType,
+        {fromX: rectangle.fromX,
           fromY: rectangle.fromY,
           toX: rectangle.fromX + rectangle.width,
           toY: rectangle.fromY + rectangle.height}));
-      } else {
-        this.store.dispatch(new CreateRegion(this.imageID, nextDrawShape as RegionType,
-          {fromX: rectangle.fromX,
-            fromY: rectangle.fromY,
-            toX: rectangle.fromX + rectangle.width,
-            toY: rectangle.fromY + rectangle.height}));
-      }
-    }, (reason) => {
-      // CANCEL
-      this.shapes = this.shapes.filter(s => s !== newShape); // remove erroneous shape
-    });
+  
   }
+}
+
+openRegionSelectionModal()
+{
+   this.modalService.open(this.regionTypesModal, {size: 'lg', ariaLabelledBy: 'Region types'}).result.then((result) => {
+    //  // accepted
+      this.regionTypeCSelected = result.id;
+      this.regionTypeName = result.name;
+  })
+}
 
   private applyRegionTypeFilter() {
     if (this.shapes) {
