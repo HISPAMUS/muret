@@ -1,0 +1,21 @@
+<div class="container">
+    <div id="resetpwd" class="row justify-content-around align-items-center">
+        
+      <h1>Reset Password</h1>
+      <form role="form" (submit)="resetPassword()">
+          <div class="form-group">
+              <label for="username">Username:</label>
+              <input type="text" class="form-control" id="username" name="username" [(ngModel)]="resetpwd.username" required>
+          </div>
+          <div class="form-group">
+                <label for="newpd">New password:</label>
+                <input type="password" class="form-control" id="newpwd" name="newpd" [(ngModel)]="resetpwd.newPWD" required>
+          </div>
+          <div class="form-group">
+                <label for="repeatpwd">Repeat password:</label>
+                <input type="password" class="form-control" id="repeatpwd" name="repeatpwd" [(ngModel)]="repeatpwd" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Reset Password</button>
+      </form>
+     </div>
+</div>

@@ -27,9 +27,16 @@ export class DialogsService {
     });
   }
 
-  public showError(title: string, specificMessage: string) {
-    let message: string = "There was an error during the request to the classification server"
-    return this.simpleModalService.addModal(AlertComponent, {
+  public showError(title: string, specificMessage: string, errmessage?: string) {
+    
+    let message: string
+
+    if(errmessage === "")
+       message = "There was an error during the request to the classification server"
+    else
+       message = errmessage
+    
+      return this.simpleModalService.addModal(AlertComponent, {
       title,
       message,
       specificMessage

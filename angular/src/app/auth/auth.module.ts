@@ -9,9 +9,10 @@ import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
 import {authReducers} from './store/reducers/auth.reducers';
 import {authEffects} from './store/effects/auth.effects';
+import { ResetpwdComponent } from './components/resetpwd/resetpwd.component';
 
 @NgModule({
-  declarations: [LoginComponent],
+  declarations: [LoginComponent, ResetpwdComponent],
   imports: [
     CommonModule,
     AuthRoutingModule,

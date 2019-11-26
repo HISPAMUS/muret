@@ -27,6 +27,13 @@
         <div *ngIf="(errorMessage$ | async)?.length > 0" id="loginError" class="alert alert-danger">
           There was a problem logging in: {{errorMessage$ | async}}
         </div>
+
+        <div>
+          <a [routerLink]="'/resetpwd'" color="primary">
+            Forgot your password?
+          </a>
+        </div>
+        <br>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
       <button *ngIf="isDev" class="btn btn-secondary" (click)="dev()">Dev</button>
