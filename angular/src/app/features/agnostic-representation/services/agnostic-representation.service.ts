@@ -123,15 +123,23 @@ export class AgnosticRepresentationService {
     }
   }
 
-  getSymbolClassifierModel$(collectionID: number, projectID: number,
+  /*getSymbolClassifierModel$(collectionID: number, projectID: number,
                             notationType: string, manuscriptType: string): Observable<ClassifierModel[]> {
     const url = `classifierModels/symbols/${collectionID}/${projectID}/${notationType}/${manuscriptType}`;
     return this.apiRestClientService.get$<ClassifierModel[]>(url);
+  }*/
+  getSymbolClassifierModel$(imageID: number): Observable<ClassifierModel[]> {
+    const url = `classifierModels/symbols/${imageID}`;
+    return this.apiRestClientService.get$<ClassifierModel[]>(url);
   }
 
-  getAgnosticEnd2EndClassifierModel$(collectionID: number, projectID: number,
+  /* getAgnosticEnd2EndClassifierModel$(collectionID: number, projectID: number,
                                      notationType: string, manuscriptType: string): Observable<ClassifierModel[]> {
     const url = `classifierModels/agnosticEnd2End/${collectionID}/${projectID}/${notationType}/${manuscriptType}`;
+    return this.apiRestClientService.get$<ClassifierModel[]>(url);
+  } */
+  getAgnosticEnd2EndClassifierModel$(imageID: number): Observable<ClassifierModel[]> {
+    const url = `classifierModels/agnosticEnd2End/${imageID}`;
     return this.apiRestClientService.get$<ClassifierModel[]>(url);
   }
 

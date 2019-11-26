@@ -159,7 +159,8 @@ export class ClearRegionSymbolsSuccess implements Action {
 
 export class GetSymbolClassifierModels implements Action {
   public readonly type = AgnosticRepresentationActionTypes.GetSymbolClassifierModels;
-  constructor(public collectionID: number, public projectID: number, public notationType: string, public manuscriptType: string) {}
+  // constructor(public collectionID: number, public projectID: number, public notationType: string, public manuscriptType: string) {}
+  constructor(public imageID: number) {}
 }
 
 export class GetSymbolClassifierModelsSuccess implements Action {
@@ -169,7 +170,8 @@ export class GetSymbolClassifierModelsSuccess implements Action {
 
 export class GetAgnosticEnd2EndClassifierModels implements Action {
   public readonly type = AgnosticRepresentationActionTypes.GetAgnosticEnd2EndClassifierModels;
-  constructor(public collectionID: number, public projectID: number, public notationType: string, public manuscriptType: string) {}
+  // constructor(public collectionID: number, public projectID: number, public notationType: string, public manuscriptType: string) {}
+  constructor(public imageID: number) {}
 }
 
 export class GetAgnosticEnd2EndClassifierModelsSuccess implements Action {

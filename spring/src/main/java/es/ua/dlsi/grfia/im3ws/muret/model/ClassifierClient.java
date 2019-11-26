@@ -258,7 +258,7 @@ public class ClassifierClient {
         }
     }
 
-    public List<ClassifierModel> getModels(ClassifierModelTypes classifierModelType, Long collectionID, Long projectID, String notationType, String manuscriptType) throws IM3WSException {
+    public List<ClassifierModel> getModels(ClassifierModelTypes classifierModelType, Integer collectionID, Integer projectID, String notationType, String manuscriptType) throws IM3WSException {
         Map<String, Object> postContent = new HashMap<>();
         postContent.put("collection", collectionID);
         postContent.put("project", projectID);

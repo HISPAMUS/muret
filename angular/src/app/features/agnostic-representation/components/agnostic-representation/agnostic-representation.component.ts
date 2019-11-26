@@ -85,14 +85,13 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
     this.mode = 'eIdle';
     this.filename$ = store.select(selectFileName);
+
     this.documentTypeSubscription  = store.select(selectDocumentType).subscribe(next => {
       if (next) {
         this.store.dispatch(new GetSVGSet(next.notationType, next.manuscriptType));
-
-        // TODO enviar collection ID y project ID
-        console.log('TODO Enviando collection ID y project ID = null');
-        this.store.dispatch(new GetAgnosticEnd2EndClassifierModels(0, 0, next.notationType, next.manuscriptType));
-        this.store.dispatch(new GetSymbolClassifierModels(0, 0, next.notationType, next.manuscriptType));
+        // this.store.dispatch(new GetAgnosticEnd2EndClassifierModels(0, 0, next.notationType, next.manuscriptType));
+        // moved to ngOnInit with region ID rather than these values
+        // this.store.dispatch(new GetSymbolClassifierModels(0, 0, next.notationType, next.manuscriptType));
       }
     });
     this.svgSet$ = store.select(selectSVGAgnosticSymbolSet);
@@ -124,6 +123,8 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
       setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
         this.store.dispatch(new ActivateLink({title: 'Agnostic', routerLink: 'agnosticrepresentation/' + this.imageID}));
+        this.store.dispatch(new GetAgnosticEnd2EndClassifierModels(this.imageID));
+        this.store.dispatch(new GetSymbolClassifierModels(this.imageID));
       });
 
     });

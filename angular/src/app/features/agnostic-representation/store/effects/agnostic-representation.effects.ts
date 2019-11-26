@@ -160,7 +160,8 @@ export class AgnosticRepresentationEffects {
     ofType<GetSymbolClassifierModels>(AgnosticRepresentationActionTypes.GetSymbolClassifierModels),
     switchMap((action: GetSymbolClassifierModels) =>
       this.agnosticRepresentationService.getSymbolClassifierModel$(
-        action.collectionID, action.projectID, action.notationType, action.manuscriptType)),
+        action.imageID)),
+        // action.collectionID, action.projectID, action.notationType, action.manuscriptType)),
     switchMap((models: ClassifierModel[]) => {
       return of(new GetSymbolClassifierModelsSuccess(models));
     })
@@ -170,7 +171,8 @@ export class AgnosticRepresentationEffects {
     ofType<GetAgnosticEnd2EndClassifierModels>(AgnosticRepresentationActionTypes.GetAgnosticEnd2EndClassifierModels),
     switchMap((action: GetAgnosticEnd2EndClassifierModels) =>
       this.agnosticRepresentationService.getAgnosticEnd2EndClassifierModel$(
-        action.collectionID, action.projectID, action.notationType, action.manuscriptType)),
+        action.imageID)),
+        // action.collectionID, action.projectID, action.notationType, action.manuscriptType)),
     switchMap((models: ClassifierModel[]) => {
       return of(new GetAgnosticEnd2EndClassifierModelsSuccess(models));
     })
