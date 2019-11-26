@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 
 import {ResetPWD} from '../../models/resetpwd'
 import { DialogsService } from 'src/app/shared/services/dialogs.service';
+import { AuthState } from '../../store/state/auth.state';
+import { Store } from '@ngrx/store';
+import { ResetPassword } from '../../store/actions/auth.actions';
+import { Subscription } from 'rxjs';
+import { selectResetPWDStatus } from '../../store/selectors/auth.selector';
 
 @Component({
   selector: 'app-resetpwd',
@@ -12,9 +17,15 @@ export class ResetpwdComponent implements OnInit {
 
   resetpwd: ResetPWD = {}
   repeatpwd: string
+  pwdresetmsg: Subscription
 
-  constructor(private modalService: DialogsService) 
-  { }
+  constructor(private modalService: DialogsService, private store: Store<AuthState>) 
+  { 
+    this.pwdresetmsg = store.select(selectResetPWDStatus).subscribe((number)=>{
+      if(number == 200)
+        this.modalService.showConfirmarion("Success", "Password reseted correctly")
+    })
+  }
 
   ngOnInit() {
   }
@@ -27,7 +38,8 @@ export class ResetpwdComponent implements OnInit {
       Please be careful with it`, "The passwords submitted do not match")
       return;
     }
-    console.log(this.resetpwd.username)
+    
+    this.store.dispatch(new ResetPassword(this.resetpwd));
   }
 
 }

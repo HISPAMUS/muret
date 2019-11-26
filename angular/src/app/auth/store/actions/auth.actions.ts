@@ -2,6 +2,7 @@ import { Action } from '@ngrx/store';
 import {Credentials} from '../../../auth/models/credentials';
 import {JwtResponse} from '../../../auth/models/jwt-response';
 import {SessionData} from '../../models/session-data';
+import { ResetPWD } from '../../models/resetpwd';
 
 export enum AuthActionTypes {
   LOGIN = '[Auth] Login',
@@ -11,6 +12,8 @@ export enum AuthActionTypes {
   GET_STATUS = '[Auth] GetStatus',
   REFRESH = '[Auth] Refresh',
   REFRESH_LOGGED = '[Auth] Refresh logged',
+  RESET_PASSWORD = '[Auth] Reset password',
+  RESET_PASSWORD_SUCCESS = '[Auth] Reset password success'
 }
 
 export class LogIn implements Action {
@@ -46,6 +49,16 @@ export class RefreshLogged implements Action {
   constructor(public sessionData: SessionData) {}
 }
 
+export class ResetPassword implements Action {
+  readonly type = AuthActionTypes.RESET_PASSWORD;
+  constructor(public payload: ResetPWD){}
+}
+
+export class ResetPasswordSuccess implements Action
+{
+  readonly type = AuthActionTypes.RESET_PASSWORD_SUCCESS;
+}
+
 export type AuthActions =
   | LogIn
   | LogInSuccess
@@ -53,4 +66,6 @@ export type AuthActions =
   | LogOut
   | GetStatus
   | Refresh
-  | RefreshLogged;
+  | RefreshLogged
+  | ResetPassword
+  | ResetPasswordSuccess;

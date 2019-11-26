@@ -6,12 +6,15 @@ import {
   AuthActionTypes,
   LogIn, LogInSuccess, LogInFailure,
   RefreshLogged,
+  ResetPassword,
+  ResetPasswordSuccess,
 } from '../actions/auth.actions';
 import {AuthService} from '../../../auth/services/auth.service';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Observable, of} from 'rxjs';
 import {JwtResponse} from '../../../auth/models/jwt-response';
 import {SessionData} from '../../models/session-data';
+import { StringResponse } from 'src/app/core/model/restapi/string-response';
 
 
 @Injectable()
@@ -69,6 +72,19 @@ export class AuthEffects {
       SessionData.clearSessionData();
     })
   );
+
+  @Effect()
+  ResetPassword: Observable<any> = this.actions.pipe(
+    ofType(AuthActionTypes.RESET_PASSWORD),
+    map((action: ResetPassword)=> action.payload),
+    switchMap(payload => {
+      return this.authService.resetPassword$(payload).pipe(
+        map((response: StringResponse) => {
+          return new ResetPasswordSuccess();
+        })
+      )
+    })
+  )
 
   // @Effect({ dispatch: false })
   /*@Effect()

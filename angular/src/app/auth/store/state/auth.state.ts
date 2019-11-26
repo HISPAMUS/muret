@@ -5,6 +5,7 @@ export interface AuthState {
   errorMessage: string | null;
   accessToken: string | null;
   roles: string[];
+  passwordresetmess: number
 }
 
 export const initialAuthState: AuthState = {
@@ -13,5 +14,6 @@ export const initialAuthState: AuthState = {
   username: null,
   errorMessage: null,
   accessToken: null,
-  roles: []
+  roles: [],
+  passwordresetmess : 0
 };
