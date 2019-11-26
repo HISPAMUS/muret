@@ -1,0 +1,15 @@
+
+section
+{
+    text-align: center;
+    margin-top: 1em;
+}
+div
+{
+    display: inline-block;
+    width: 50%;
+}
+input
+{
+    margin: .5em;
+}

@@ -1,57 +1,58 @@
 <div class="container-fluid pl-0 pr-0">
-  <nav *ngIf="menuVisible" id="topMenu" class="navbar navbar-expand-lg navbar-light">
-    <a class="navbar-brand" routerLink="home">
-      <img src="assets/images/logos/muret_menu.png" alt="Logo MuRET">
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div id="navbarNavDropdown" class="navbar-collapse collapse">
-      <ng-container *ngIf="isAuthenticated$ | async; else notauth">
-        <app-breadcrumb></app-breadcrumb>
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-              <a class="nav-link">Classificaton server status: <strong>{{serverStatus$ | async}}</strong></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="login">Logout as <strong>{{username$ | async}}</strong></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="export/trainingsets">Admin dashboard</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="export/trainingsets">Training sets</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="https://github.com/HISPAMUS/muret/issues" target="_blank">Report an issue</a>
-          </li>
-          <li *ngIf="isDev" class="nav-item">
-            <a class="nav-link" routerLink="/semanticrepresentation/2698">SR1</a>
-          </li>
-          <li *ngIf="isDev" class="nav-item">
-            <a class="nav-link" routerLink="/agnosticrepresentation/2611">AD2</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="about">About</a>
-          </li>
-        </ul>
-      </ng-container>
-      <ng-template #notauth>
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-              <a class="nav-link">Classificaton server status: <strong>{{serverStatus$ | async}}</strong></a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Login <span class="sr-only">Login</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="about">About</a>
-          </li>
-        </ul>
-      </ng-template>
-    </div>
-  </nav>
-</div>
-
-<router-outlet></router-outlet>
-
+    <nav *ngIf="menuVisible" id="topMenu" class="navbar navbar-expand-lg navbar-light">
+      <a class="navbar-brand" routerLink="home">
+        <img src="assets/images/logos/muret_menu.png" alt="Logo MuRET">
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div id="navbarNavDropdown" class="navbar-collapse collapse">
+        <ng-container *ngIf="isAuthenticated$ | async; else notauth">
+          <app-breadcrumb></app-breadcrumb>
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link">Classificaton server status: <strong>{{serverStatus$ | async}}</strong></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="login">Logout as <strong>{{username$ | async}}</strong></a>
+            </li>
+            <li class="nav-item" *ngIf="isAdmin">
+              <a class="nav-link" routerLink="admin">Admin dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="export/trainingsets">Training sets</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://github.com/HISPAMUS/muret/issues" target="_blank">Report an issue</a>
+            </li>
+            <li *ngIf="isDev" class="nav-item">
+              <a class="nav-link" routerLink="/semanticrepresentation/2698">SR1</a>
+            </li>
+            <li *ngIf="isDev" class="nav-item">
+              <a class="nav-link" routerLink="/agnosticrepresentation/2611">AD2</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="about">About</a>
+            </li>
+          </ul>
+        </ng-container>
+        <ng-template #notauth>
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link">Classificaton server status: <strong>{{serverStatus$ | async}}</strong></a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Login <span class="sr-only">Login</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="about">About</a>
+            </li>
+          </ul>
+        </ng-template>
+      </div>
+    </nav>
+  </div>
+  
+  <router-outlet></router-outlet>
+  
+  

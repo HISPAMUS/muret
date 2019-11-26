@@ -1,0 +1,31 @@
+
+<section class="container">
+        <h2>Register a new user</h2>
+        <form (submit)="startRegister()">
+            <div class="form-group">
+                <label for="name">Username</label>
+                <input class="form-control" id="name" type="text" [(ngModel)]="newuserModel.username" name="name">
+                <br>
+                <label for="pwd">Password</label>
+                <input class="form-control" id="pwd" type="password" [(ngModel)]="newuserModel.password" name="pwd">
+                <button class="btn btn-primary" (click)="generateRandomPWD()">Generate random</button>
+                <br>
+                <br>
+                <label for="mail">Email</label>
+                <input class="form-control" id="mail" type="email" [(ngModel)]="newuserModel.email" name="mail">
+                <br>
+                <label for="fname">Name</label>
+                <input class="form-control" id="fname" type="text" [(ngModel)]="newuserModel.first_name" name="fname">
+                <br>
+                <label for="sname">Surname</label>
+                <input class="form-control" id="sname" type="text" [(ngModel)]="newuserModel.last_name" name="sname">
+                <br>
+                <label for="admin">Is an administrator</label>
+                <input class="form-control form-check form-check-inline" id="administrator" type="checkbox" name="admin" [(ngModel)]="newuserModel.administrator">
+                <input type="submit" class="btn btn-primary">
+            </div>
+        </form>
+    </section>
+    
+    
+    

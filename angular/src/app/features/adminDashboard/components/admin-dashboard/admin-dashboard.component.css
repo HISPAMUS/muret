@@ -1,0 +1,11 @@
+*
+{
+    box-sizing: border-box;
+}
+
+.dashboard-button
+{
+    width: 100%;
+    height: 250px;
+    background-color: #7de2db;
+}

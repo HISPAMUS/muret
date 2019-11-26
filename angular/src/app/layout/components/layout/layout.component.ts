@@ -2,7 +2,7 @@ import {Component, isDevMode, OnInit, OnChanges, OnDestroy} from '@angular/core'
 import {Observable, Subscription} from 'rxjs';
 import {CoreState} from '../../../core/store/state/core.state';
 import {Store} from '@ngrx/store';
-import {selectIsAuthenticated, selectUsername} from '../../../auth/store/selectors/auth.selector';
+import {selectIsAuthenticated, selectUsername, selectRole} from '../../../auth/store/selectors/auth.selector';
 import {selectServerStatus } from 'src/app/core/store/selectors/user.selector';
 import { GetServerStatus } from 'src/app/core/store/actions/serverStatus.actions';
 import { DialogsService } from 'src/app/shared/services/dialogs.service';
@@ -18,10 +18,13 @@ export class LayoutComponent implements OnInit, OnDestroy {
   menuVisible = true;
   isAuthenticated$: Observable<boolean>;
   username$: Observable<string>;
+  userRoles$: Observable<string[]>;
   serverStatus$: Observable<string>;
 
   serverStatusSubscription : Subscription;
+  adminStatusSubscription: Subscription;
 
+  isAdmin: boolean;
 
   interval : number;
 
@@ -31,6 +34,8 @@ export class LayoutComponent implements OnInit, OnDestroy {
     this.isAuthenticated$ = this.store.select(selectIsAuthenticated);
     this.username$ = this.store.select(selectUsername);
     this.serverStatus$ = this.store.select(selectServerStatus);
+    this.userRoles$ = this.store.select(selectRole);
+    this.isAdmin = false;
 
     this.serverStatusSubscription = this.serverStatus$.subscribe((status: string) =>{
       if(status === "OFF")
@@ -42,6 +47,18 @@ export class LayoutComponent implements OnInit, OnDestroy {
         }
       }
     })
+
+    this.adminStatusSubscription = this.userRoles$.subscribe((roles: any) => {
+      
+      if(roles.length>0)
+      {
+        for(let object of roles)
+        {
+          this.isAdmin = (object.authority == "ADMIN")
+        } 
+      }
+    })
+    
   }
 
   ngOnInit() 
@@ -54,7 +71,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
   ngOnDestroy()
   {
-
+    this.serverStatusSubscription.unsubscribe();
   }
 
 
