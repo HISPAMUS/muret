@@ -46,10 +46,22 @@ export function authReducers(state = initialAuthState, action: AuthActions): Aut
     case AuthActionTypes.LOGOUT: {
       return initialAuthState;
     }
+    case AuthActionTypes.RESET_PASSWORD : {
+      return {
+        ...state,
+        passwordresetmess : 0
+      }
+    }
     case AuthActionTypes.RESET_PASSWORD_SUCCESS : {
       return {
         ...state,
-        passwordresetmess : 200
+        passwordresetmess : 1
+      }
+    }
+    case AuthActionTypes.RESET_PASSWORD_FAIL : {
+      return {
+        ...state,
+        passwordresetmess: -1
       }
     }
     default: {

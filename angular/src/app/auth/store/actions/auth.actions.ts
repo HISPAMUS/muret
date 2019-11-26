@@ -13,7 +13,8 @@ export enum AuthActionTypes {
   REFRESH = '[Auth] Refresh',
   REFRESH_LOGGED = '[Auth] Refresh logged',
   RESET_PASSWORD = '[Auth] Reset password',
-  RESET_PASSWORD_SUCCESS = '[Auth] Reset password success'
+  RESET_PASSWORD_SUCCESS = '[Auth] Reset password success',
+  RESET_PASSWORD_FAIL = '[Auth] Reset password fail'
 }
 
 export class LogIn implements Action {
@@ -59,6 +60,11 @@ export class ResetPasswordSuccess implements Action
   readonly type = AuthActionTypes.RESET_PASSWORD_SUCCESS;
 }
 
+export class ResetPasswordFail implements Action
+{
+  readonly type = AuthActionTypes.RESET_PASSWORD_FAIL;
+}
+
 export type AuthActions =
   | LogIn
   | LogInSuccess
@@ -68,4 +74,5 @@ export type AuthActions =
   | Refresh
   | RefreshLogged
   | ResetPassword
-  | ResetPasswordSuccess;
+  | ResetPasswordSuccess
+  | ResetPasswordFail;

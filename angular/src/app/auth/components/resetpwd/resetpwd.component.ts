@@ -21,9 +21,12 @@ export class ResetpwdComponent implements OnInit {
 
   constructor(private modalService: DialogsService, private store: Store<AuthState>) 
   { 
+    console.log('Change!!!')
     this.pwdresetmsg = store.select(selectResetPWDStatus).subscribe((number)=>{
-      if(number == 200)
+      if(number == 1)
         this.modalService.showConfirmarion("Success", "Password reseted correctly")
+      else if(number == -1)
+        this.modalService.showError("Error", "The user does not exist", "There was an error resetting the password")
     })
   }
 

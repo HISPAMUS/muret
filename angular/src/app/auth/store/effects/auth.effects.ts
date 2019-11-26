@@ -8,6 +8,7 @@ import {
   RefreshLogged,
   ResetPassword,
   ResetPasswordSuccess,
+  ResetPasswordFail,
 } from '../actions/auth.actions';
 import {AuthService} from '../../../auth/services/auth.service';
 import {Actions, Effect, ofType} from '@ngrx/effects';
@@ -81,6 +82,10 @@ export class AuthEffects {
       return this.authService.resetPassword$(payload).pipe(
         map((response: StringResponse) => {
           return new ResetPasswordSuccess();
+        }),
+        catchError((error : any)=>{
+          console.log(error)
+          return of(new ResetPasswordFail());
         })
       )
     })

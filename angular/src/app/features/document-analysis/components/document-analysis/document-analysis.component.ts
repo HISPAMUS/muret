@@ -339,7 +339,6 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     }
     if(this.isAddingMode() && event.code === 'KeyB')
     {
-      console.log('Changing box type!')
       this.regionTypeCSelected++;
       
       if(this.regionTypeCSelected == this.regionTypesEnum.length)
