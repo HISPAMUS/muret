@@ -21,5 +21,18 @@ public class MensuralAgnostic2SemanticTransducerTest {
         AgnosticEncoding agnosticEncoding = new AgnosticEncoding(AgnosticVersion.v2, sequence);
         SemanticTransduction transduction = transducer.transduce(agnosticEncoding);
         assertNotNull(transduction);
+        assertNull(transduction.getErrorMessage());
+    }
+
+    @Test
+    public void transduceMeterChange() throws FileNotFoundException, IM3Exception {
+        String input = "clef.G:L2\tnote.whole:L5\tnote.whole:L5\tdot:L5\tbarline:L1\tbarline:L1\tmetersign.Ct:L3\tnote.whole:S3\tcustos:L3";
+
+        String [] sequence = input.split("\t");
+        MensuralAgnostic2SemanticTransducer transducer = new MensuralAgnostic2SemanticTransducer();
+        AgnosticEncoding agnosticEncoding = new AgnosticEncoding(AgnosticVersion.v2, sequence);
+        SemanticTransduction transduction = transducer.transduce(agnosticEncoding);
+        assertNotNull(transduction);
+        assertNull(transduction.getErrorMessage());
     }
 }
