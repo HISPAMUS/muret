@@ -89,7 +89,8 @@ public abstract class CommonNotesState extends TransducerState {
                         actualAccidental = Accidentals.NATURAL;
                         visualAccidental = Accidentals.SHARP;
                     } else {
-                        if (scientificPitch.getPitchClass().getAccidental() == null) {
+
+                        if (!scientificPitch.getPitchClass().isAltered()) {
                             actualAccidental = keySignatureAccidental;
                             visualAccidental = scientificPitch.getPitchClass().getAccidental();
                         } else {
