@@ -12,7 +12,9 @@ export enum ProjectActionTypes {
   ExportMEIPartsFacsimile = '[Project] Export MEI parts and facsimile',
   ExportMEIPartsFacsimileSuccess = '[Project] Export MEI parts and facsimile success',
   ExportMensurstrich = '[Project] Export mensurstrich',
-  ExportMensurstrichSuccess = '[Project] mensurstrich success',
+  ExportMensurstrichSuccess = '[Project] Export mensurstrich success',
+  ExportMusicXML = '[Project] Export MusicXML',
+  ExportMusicXMLSuccess = '[Project] Export MusicXML success',
 }
 
 export class GetProject implements Action {
@@ -65,7 +67,17 @@ export class ExportMensurstrichSuccess implements Action {
   constructor(public payload: Blob) {}
 }
 
+export class ExportMusicXML implements Action {
+  public readonly type = ProjectActionTypes.ExportMusicXML;
+  constructor(public projectID: number) {}
+}
+
+export class ExportMusicXMLSuccess implements Action {
+  public readonly type = ProjectActionTypes.ExportMusicXMLSuccess;
+  constructor(public payload: Blob) {}
+}
 export type ProjectActions =
   GetProject | GetProjectSuccess | GetImages | GetImagesSuccess | ExportMEI | ExportMEISuccess |
   ExportMEIPartsFacsimile | ExportMEIPartsFacsimileSuccess |
-  ExportMensurstrich | ExportMensurstrichSuccess;
+  ExportMensurstrich | ExportMensurstrichSuccess |
+  ExportMusicXML | ExportMusicXMLSuccess;

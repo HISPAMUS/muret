@@ -2,7 +2,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {ProjectState} from '../../store/state/project.state';
-import {ExportMEI, ExportMEIPartsFacsimile, ExportMensurstrich, GetProject} from '../../store/actions/project.actions';
+import {ExportMEI, ExportMEIPartsFacsimile, ExportMensurstrich, ExportMusicXML, GetProject} from '../../store/actions/project.actions';
 import {selectProject, selectProjectMEI} from '../../store/selectors/project.selector';
 import {Observable, Subscription} from 'rxjs';
 import {NotationService} from '../../../semantic-representation/services/notation.service';
@@ -75,5 +75,9 @@ export class ProjectScoreViewerComponent implements OnInit, OnDestroy {
 
   exportFullMensurstrich() {
     this.store.dispatch(new ExportMensurstrich(this.projectID));
+  }
+
+  exportMusicXML() {
+    this.store.dispatch(new ExportMusicXML(this.projectID));
   }
 }

@@ -14,6 +14,7 @@ import es.ua.dlsi.im3.core.score.facsimile.Graphic;
 import es.ua.dlsi.im3.core.score.facsimile.Surface;
 import es.ua.dlsi.im3.core.score.facsimile.Zone;
 import es.ua.dlsi.im3.core.score.io.mei.MEISongExporter;
+import es.ua.dlsi.im3.core.score.io.musicxml.MusicXMLExporter;
 import es.ua.dlsi.im3.core.score.layout.CoordinateComponent;
 import es.ua.dlsi.im3.core.score.layout.HorizontalLayout;
 import es.ua.dlsi.im3.core.score.layout.fonts.LayoutFonts;
@@ -350,5 +351,18 @@ public class NotationModel {
         SVGExporter svgExporterMerged = new SVGExporter();
         File svgOutputMerged = new File(tgz.toFile(), project.getPath() + "_mensural_modern_mensurstrich.svg"); //TODO ¿cuando no es mensural?
         svgExporterMerged.exportLayout(svgOutputMerged, horizontalLayoutMerged);
+    }
+
+    public void generateMusicXML(Path tgz, Project project) throws IM3Exception {
+        //TODO ¿Si no es mensural?
+        Pair<ScoreSong, ScorePart> pair = exportScoreSong(project, null, false);
+        ScoreSong mensural = pair.getX();
+
+        MensuralToModern mensuralToModern = new MensuralToModern(null);
+        ScoreSong modern = mensuralToModern.convertIntoNewSong(mensural, Intervals.UNISON_PERFECT);
+
+        MusicXMLExporter musicXMLExporter = new MusicXMLExporter();
+        File musicXMLFile = new File(tgz.toFile(), project.getPath() + ".xml");
+        musicXMLExporter.exportSong(musicXMLFile, modern);
     }
 }

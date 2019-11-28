@@ -5,7 +5,7 @@ import {map, switchMap} from 'rxjs/operators';
 import {ProjectService} from '../../services/project.service';
 import {
   ExportMEI, ExportMEIPartsFacsimile, ExportMEIPartsFacsimileSuccess,
-  ExportMEISuccess, ExportMensurstrich, ExportMensurstrichSuccess,
+  ExportMEISuccess, ExportMensurstrich, ExportMensurstrichSuccess, ExportMusicXML, ExportMusicXMLSuccess,
   GetImages,
   GetImagesSuccess,
   GetProject,
@@ -69,5 +69,12 @@ export class ProjectEffects {
       return of(new ExportMensurstrichSuccess(payload));
     })
   );
-
+  @Effect()
+  exportMusicXML$ = this.actions$.pipe(
+    ofType<ExportMusicXML>(ProjectActionTypes.ExportMusicXML),
+    switchMap((action: ExportMusicXML) => this.projectService.exportMusicXML$(action.projectID)),
+    switchMap((payload: Blob) => {
+      return of(new ExportMusicXMLSuccess(payload));
+    })
+  );
 }

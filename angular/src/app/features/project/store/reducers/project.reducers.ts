@@ -38,6 +38,11 @@ export function projectReducers(state = initialProjectState, action: ProjectActi
       saveAs(blob, 'mensurstrich.tgz');
       return {...state};
     }
+    case ProjectActionTypes.ExportMusicXMLSuccess: {
+      const blob = new Blob([action.payload], { type: 'application/x-gzip' });
+      saveAs(blob, 'musicxml.tgz');
+      return {...state};
+    }
     default: {
       return state;
     }

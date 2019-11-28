@@ -293,4 +293,42 @@ public class ProjectController {
 
         }
     }
+
+    @RequestMapping(value="/exportMusicXML/{projectID}", method= RequestMethod.GET, produces="application/x-gzip")
+    @ResponseBody
+    @Transactional
+    public ResponseEntity<?> exportMusicXML(@PathVariable Integer projectID) throws IM3WSException {
+        Optional<Project> project = projectRepository.findById(projectID);
+        if (!project.isPresent()) {
+            throw new IM3WSException("Cannot find a project with id " + projectID);
+        }
+
+        try {
+            FileCompressors fileCompressors = new FileCompressors();
+            ArrayList<String> prefixes = new ArrayList<>();
+            ArrayList<Path> files = new ArrayList<>();
+
+            Path tgz = Files.createTempFile("musicxml_" + projectID, ".tar.gz");
+            String filename = tgz.getFileName().toString();
+            BinaryOutputWrapper output = new BinaryOutputWrapper("application/x-gzip");
+
+            Path tmpDirectory = Files.createTempDirectory("musicxml_files_" + projectID); //TODO eliminar código duplicado (exportMensurstrich)
+            prefixes.add("content");
+            files.add(tmpDirectory);
+            notationModel.generateMusicXML(tmpDirectory, project.get());
+
+            fileCompressors.tgzFolders(tgz, files, prefixes);
+
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Adding to output file name {0}", filename);
+            output.setFilename(filename);
+            byte[] data = Files.readAllBytes(tgz);
+            output.setData(data);
+
+            return new ResponseEntity<>(output.getData(), output.getHeaders(), HttpStatus.OK);
+        } catch (Exception e) {
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot export", e);
+            throw new IM3WSException(e);
+
+        }
+    }
 }

@@ -42,4 +42,9 @@ export class ProjectService {
     const url = `project/exportMensurstrich/${projectID}`;
     return this.apiRestClientService.getBlob$(url);
   }
+
+  exportMusicXML$(projectID: number): Observable<Blob> {
+    const url = `project/exportMusicXML/${projectID}`;
+    return this.apiRestClientService.getBlob$(url);
+  }
 }
