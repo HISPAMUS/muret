@@ -10,6 +10,8 @@ public class MURETConfiguration {
     public static final String THUMBNAIL_IMAGES = "thumbnails";
     public static final String PREVIEW_IMAGES = "previews";
 
+    public static final String MODELS_FOLDER = "tmp_models";
+
     private String angularurldev;
     private String angularurlprod;
     private String folder;
@@ -41,6 +43,10 @@ public class MURETConfiguration {
 
     public String getWarningmail() {
         return warningmail;
+    }
+
+    public static String getModelsFolder() {
+        return MODELS_FOLDER;
     }
 
     public void setWarningmail(String warningmail) {

@@ -1,10 +1,8 @@
 package es.ua.dlsi.grfia.im3ws.muret.model;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
-import es.ua.dlsi.grfia.im3ws.muret.controller.payload.AgnosticSymbolTypeAndPosition;
-import es.ua.dlsi.grfia.im3ws.muret.controller.payload.ClassifierModel;
-import es.ua.dlsi.grfia.im3ws.muret.controller.payload.ClassifierModelResponse;
-import es.ua.dlsi.grfia.im3ws.muret.controller.payload.ClassifierModelTypes;
+import es.ua.dlsi.grfia.im3ws.controller.StringResponse;
+import es.ua.dlsi.grfia.im3ws.muret.controller.payload.*;
 import es.ua.dlsi.grfia.im3ws.muret.entity.BoundingBox;
 import es.ua.dlsi.grfia.im3ws.muret.entity.ManuscriptType;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Region;
@@ -13,9 +11,13 @@ import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.score.NotationType;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 
+import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -62,6 +64,17 @@ public class ClassifierClient {
 
     public void uploadImage(long imageID, Path path) {
         restClient.uploadFileWithPOST("image", "image", path, Collections.singletonMap("id", imageID));
+    }
+
+    public void uploadModelZip(UploadModel modelData, Path filepath) throws IM3WSException
+    {
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("eName", modelData.geteName());
+        data.put("eCollection", modelData.geteCollection());
+        data.put("eClassifierType", modelData.geteClassifierType());
+        data.put("eNotationType", modelData.geteNotationType());
+        data.put("eManuscriptType", modelData.geteManuscriptType());
+        restClient.uploadFileWithPOST("registerModel", "eModelFile" ,filepath, data);
     }
 
     class BBox {
