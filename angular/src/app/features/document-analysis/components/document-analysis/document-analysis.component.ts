@@ -54,8 +54,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   regionTypeFilterOut: Set<string>;
 
   private regionTypeCSelected: number;
-  regionTypeName : string
-  regionTypeSelectorVisible: boolean
+  private regionTypeINselected: number;
 
   // end tools
 
@@ -77,8 +76,8 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     this.selectedRegionTypeID = 'page';
     this.regionTypeFilterOut = new Set<string>();
 
-    this.regionTypeName = 'page'
     this.regionTypeCSelected = 0;
+    this.regionTypeINselected = 0;
   }
 
   ngOnInit() {
@@ -277,11 +276,6 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
       });
   }
 
-  onChangeMode()
-  {
-    this.regionTypeSelectorVisible = this.isAddingMode()
-  }
-
   onShapeCreated(shape: Shape) {
     this.createNewShape(shape);
 
@@ -340,13 +334,32 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     if(this.isAddingMode() && event.code === 'KeyB')
     {
       this.regionTypeCSelected++;
-      
-      if(this.regionTypeCSelected == this.regionTypesEnum.length)
-        this.regionTypeCSelected = 0
-      
-      this.regionTypeName = this.regionTypesEnum[this.regionTypeCSelected].name
       console.log(this.regionTypeCSelected)
+      if(this.regionTypeCSelected == this.regionTypesEnum.length)
+      {
+        console.log('Changing...')
+        this.regionTypeCSelected = -1
+        this.regionTypeINselected = -1
+        return
+      }
+
+      if(!this.regionTypeCSelected)
+        this.regionTypeINselected = this.regionTypeCSelected
+      else
+        this.regionTypeINselected = this.regionTypeCSelected + 1
+      
+      console.log(this.regionTypeINselected)
     }
+  }
+
+  setRegionCreated(regionType: number)
+  {
+    this.regionTypeINselected = regionType
+
+    if(regionType > 0)
+      regionType -= 1
+    
+    this.regionTypeCSelected = regionType
   }
 
   beatufyRegionName(name: string): string {
@@ -361,7 +374,13 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   createNewShape(newShape: Shape) {
     const rectangle = newShape as Rectangle;
 
-    const nextDrawShape = this.regionTypesEnum[this.regionTypeCSelected]
+    let nextdraw
+    if(this.regionTypeCSelected > -1)
+     nextdraw = this.regionTypesEnum[this.regionTypeCSelected]
+    else
+     nextdraw = {name: 'page'}
+
+    const nextDrawShape = nextdraw
     
     if (nextDrawShape.name === 'page') {
       this.store.dispatch(new CreatePage(this.imageID, {fromX: rectangle.fromX,
@@ -383,7 +402,6 @@ openRegionSelectionModal()
    this.modalService.open(this.regionTypesModal, {size: 'lg', ariaLabelledBy: 'Region types'}).result.then((result) => {
     //  // accepted
       this.regionTypeCSelected = result.id;
-      this.regionTypeName = result.name;
   })
 }
 
