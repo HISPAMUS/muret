@@ -1,0 +1,59 @@
+<section class="container">
+    <h2>Upload a new classifier model</h2>
+    <form (submit)="onSubmit()">
+        <div class="form-group">
+            <label for="name">Classifier name</label>
+            <input class="form-control" id="name" type="text" [(ngModel)]="registerModel.eName" name="name">
+            <br>
+            <label>Notation Type</label>
+                <select class="custom-select" name="notation" id="collection" [(ngModel)]="registerModel.eNotationType">
+                    <option value="eMensural">Mensural</option>
+                    <option value="eModern">Modern</option>
+                </select>
+            <br>
+            <br>
+
+            <label>Manuscript Type</label>
+                <select class="custom-select" name="manuscript" id="manuscript" [(ngModel)]="registerModel.eManuscriptType">
+                    <option value="eHandwritten">Handwritten</option>
+                    <option value="ePrinted">Printed</option>
+                </select>
+            <br>
+            <br>
+
+            <label>Classifier Type</label>
+            <select class="custom-select" name="classifier" id="classifier" [(ngModel)]="registerModel.eClassifierType">
+                <option value="eAgnosticSymbols">Symbols</option>
+                <option value="eAgnosticEnd2End">End 2 End</option>
+            </select>
+            <br>
+            <br>
+
+            <label for="collection">Collection</label>
+                <select class="custom-select" name="collection" id="collection" (change)="getModelProjects()" [(ngModel)]="registerModel.eCollection">
+                    <option [value]="-1">None</option>
+                    <option [label] ="collection.name" *ngFor="let collection of collections$ | async" [value]="collection.id">{{collection.name}}</option>
+                </select>
+            <br>
+
+            <label for="project">Project</label>
+                <select class="custom-select" name="project" id="project" [disabled]="!collectionSelected" [(ngModel)]="registerModel.eProject">
+                    <option [value]="-1">None</option>
+                    <option [label] ="project.name" *ngFor="let project of projects" [value]="project.id">{{project.name}}</option>
+                </select>
+            <br>
+            <br>
+            
+            <div class="row">
+             <div class="col-5">
+              <input type="file" ng2FileSelect [uploader]="uploader"/>
+             </div>
+             </div>
+
+             <br>
+
+            <input type="submit" class="btn btn-primary">
+            
+        </div>
+    </form>
+</section>

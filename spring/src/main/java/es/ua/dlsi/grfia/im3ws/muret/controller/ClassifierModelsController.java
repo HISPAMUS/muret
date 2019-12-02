@@ -119,6 +119,7 @@ public class ClassifierModelsController {
     @Transactional
     public StringResponse uploadModel(UploadModel c_uploadModel) throws IM3WSException
     {
+        System.out.println(c_uploadModel.geteModelFile());
         Path pathToFile = Paths.get(muretconfig.getFolder(), MURETConfiguration.MODELS_FOLDER);
         String fileName = fileStorageService.storeFile(pathToFile, c_uploadModel.geteModelFile());
         Path filePath = Paths.get(pathToFile.toString(), fileName);

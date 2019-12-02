@@ -74,6 +74,7 @@ public class ClassifierClient {
         data.put("eClassifierType", modelData.geteClassifierType());
         data.put("eNotationType", modelData.geteNotationType());
         data.put("eManuscriptType", modelData.geteManuscriptType());
+        data.put("eProject", modelData.geteProject());
         restClient.uploadFileWithPOST("registerModel", "eModelFile" ,filepath, data);
     }
 

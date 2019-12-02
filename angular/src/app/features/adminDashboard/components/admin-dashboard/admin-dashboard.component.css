@@ -9,3 +9,9 @@
     height: 250px;
     background-color: #7de2db;
 }
+
+a
+{
+    text-decoration: none;
+    color: black;
+}

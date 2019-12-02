@@ -12,15 +12,18 @@ import { StoreModule } from '@ngrx/store';
 import { adminDBReducers } from './store/reducers/admindb.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { admindbeffects } from './store/effects/admindb.effects';
+import { RegistermodelComponent } from './components/registermodel/registermodel.component';
+import { FileUploadModule } from 'ng2-file-upload';
 
 
 @NgModule({
-  declarations: [AdminDashboardComponent, RegisterComponent],
+  declarations: [AdminDashboardComponent, RegisterComponent, RegistermodelComponent],
   imports: [
     CommonModule,
     FontAwesomeModule,
     FormsModule,
     ReactiveFormsModule,
+    FileUploadModule,
     NgbButtonsModule,
     NgbCollapseModule,
     NgbTooltipModule,

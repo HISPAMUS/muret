@@ -5,13 +5,21 @@ import org.springframework.web.multipart.MultipartFile;
 public class UploadModel
 {
     private String eName;
-    private String eCollection;
+    private Integer eCollection;
     private String eClassifierType;
     private String eNotationType;
     private String eManuscriptType;
     private String eModelType;
-
+    private Integer eProject;
     private MultipartFile eModelFile;
+
+    public Integer geteProject() {
+        return eProject;
+    }
+
+    public void seteProject(Integer eProject) {
+        this.eProject = eProject;
+    }
 
     public String geteName() {
         return eName;
@@ -21,11 +29,11 @@ public class UploadModel
         this.eName = eName;
     }
 
-    public String geteCollection() {
+    public Integer geteCollection() {
         return eCollection;
     }
 
-    public void seteCollection(String eCollection) {
+    public void seteCollection(Integer eCollection) {
         this.eCollection = eCollection;
     }
 

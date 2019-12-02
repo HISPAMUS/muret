@@ -9,6 +9,7 @@ import { selectUsername } from 'src/app/auth/store/selectors/auth.selector';
 import { RegisterStart } from '../../store/actions/admindb.actions';
 import { selectRegisterStatus } from '../../store/selectors/admindb.selector';
 import { DialogsService } from 'src/app/shared/services/dialogs.service';
+import { Collection } from 'src/app/core/model/entities/collection';
 
 @Component({
   selector: 'app-register',
@@ -21,6 +22,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   username : string
   usernamesubscription : Subscription
   userregistersubscription: Subscription
+  collectionSelected : Collection = null
 
   constructor(private store : Store<AdminDashboardState>, private userstore : Store<CoreState>, private dialogService: DialogsService)
   {
