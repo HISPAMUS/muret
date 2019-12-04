@@ -9,6 +9,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -58,5 +60,16 @@ public class UserManagerImpl
                         m_userRepository.save(updatingUser);
                 }
         );
+    }
+
+    public List<User> getUsers()
+    {
+        List<User> users = new ArrayList<User>();
+
+        Iterable<User> usersFound =  m_userRepository.findAll();
+
+        usersFound.forEach(users::add);
+
+        return users;
     }
 }
