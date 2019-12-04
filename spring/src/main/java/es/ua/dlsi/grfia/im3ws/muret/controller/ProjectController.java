@@ -146,8 +146,20 @@ public class ProjectController {
 
     @GetMapping(path = {"/statistics/{id}"})
     public ProjectStatistics getProjectStatistics(@PathVariable("id") Integer id) throws IM3WSException {
-        throw new UnsupportedOperationException("TO-DO Statistics");
-        //return projectRepository.getProjectStatistics(id);
+        Optional<Project> project = projectRepository.findById(id);
+        if (!project.isPresent()) {
+            throw new IM3WSException("Cannot find a project with id " + id);
+        }
+
+        //TODO All this could be done in just one query with a union
+        int projectID = project.get().getId();
+        ProjectStatistics projectStatistics = new ProjectStatistics();
+        projectStatistics.setAgnosticSymbols(projectRepository.getNumberOfAgnosticSymbols(projectID));
+        projectStatistics.setImages(project.get().getImages().size());
+        projectStatistics.setPages(projectRepository.getNumberOfPages(projectID));
+        projectStatistics.setRegions(projectRepository.getNumberOfRegions(projectID));
+
+        return projectStatistics;
     }
 
     @PutMapping("/composer/{projectID}")
