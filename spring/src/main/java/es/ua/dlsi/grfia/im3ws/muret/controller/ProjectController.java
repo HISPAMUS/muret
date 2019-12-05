@@ -145,6 +145,7 @@ public class ProjectController {
 
 
     @GetMapping(path = {"/statistics/{id}"})
+    @Transactional
     public ProjectStatistics getProjectStatistics(@PathVariable("id") Integer id) throws IM3WSException {
         Optional<Project> project = projectRepository.findById(id);
         if (!project.isPresent()) {

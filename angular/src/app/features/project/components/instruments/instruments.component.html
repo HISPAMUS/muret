@@ -1,37 +1,31 @@
 <div class="container">
-<ng-container *ngIf="project$ | async as project; else loading">
+  <ng-container *ngIf="project$ | async as project; else loading">
 
-  <div class="row titles">
-    <div class="col-7 offset-1 align-self-end">
-      <h4>{{project.name | uppercase}}</h4>
-      <p><a (click)="viewFullScore()">View full score and export</a></p>
-      <p><a (click)="editInstruments()">Instruments</a></p>
-      <p *ngIf="statistics$ | async as statistics">
-        #{{statistics.images}} images, #{{statistics.pages}} pages, #{{statistics.regions}} regions, #{{statistics.agnosticSymbols}} agnostic symbols
-      </p>
-      <p></p>
+    <div class="row titles">
+      <div class="col-7 offset-1 align-self-end">
+        <h3>Instruments</h3>
+        <h4>{{project.name | uppercase}}</h4>
+      </div>
+      <!--<div class="col-4 screenTitle">
+        <img class="img-fluid" src="assets/images/project.png" alt="Order images"/>
+        TODO Instruments
+      </div>-->
     </div>
-    <div class="col-4 screenTitle">
-      <img class="img-fluid" src="assets/images/project.png" alt="Order images"/>
-    </div>
-  </div>
 
-  <div class="row">
-    <div *ngFor="let image of images$ | async; trackBy: trackByImageFn" class="col-6 col-lg-4 projectImageThumbnail" >
-      <app-image-thumbnail [projectPath]="project.path" [image]="image" [attr.data-id]="image.id"></app-image-thumbnail>
+    <div class="row">
+      <div *ngFor="let part of project.parts; trackBy: trackByPartFn" class="col-6 col-lg-4" >
+        <h5>{{part.name}}}</h5>
+        <p>{{part.comments}}</p>
+      </div>
     </div>
-    <div id="uploadImagesButton" class="projectImageThumbnail col-6 col-lg-4 d-flex justify-content-center">
-      <div class="align-self-center"><a (click)="uploadImages()">Upload images...</a></div>
+  </ng-container>
+  <ng-template #loading>
+    <div class="row">
+      <div class="col">
+        <p>Loading project data ...</p>
+      </div>
     </div>
-  </div>
-</ng-container>
-<ng-template #loading>
-  <div class="row">
-    <div class="col">
-      <p>Loading project data ...</p>
-    </div>
-  </div>
-</ng-template>
+  </ng-template>
 </div>
 
 

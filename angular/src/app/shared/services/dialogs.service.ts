@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {ConfirmDialogComponent} from '../components/confirm-dialog/confirm-dialog.component';
-import {Clear} from '../../features/document-analysis/store/actions/document-analysis.actions';
 import {SimpleModalService} from 'ngx-simple-modal';
 import {Observable, of} from 'rxjs';
 import {AlertComponent} from '../components/error-modal-message/alert.component';
@@ -21,6 +20,12 @@ export class DialogsService {
     });
   }
 
+  public showMessage(title: string, message: string) {
+    return this.simpleModalService.addModal(AlertComponent, {
+      title,
+      message
+    });
+  }
   public showWarningConfirmation(title: string, message: string): Observable<boolean>{
     return this.simpleModalService.addModal(ConfirmDialogWarningComponent, {
       title, message
@@ -28,15 +33,15 @@ export class DialogsService {
   }
 
   public showError(title: string, specificMessage: string, errmessage?: string) {
-    
+
     let message: string
 
-    if(errmessage === "")
-       message = "There was an error during the request to the classification server"
-    else
-       message = errmessage
-    
-      return this.simpleModalService.addModal(AlertComponent, {
+    if (errmessage === '') {
+      message = 'There was an error during the request to the classification server'
+    } else {
+      message = errmessage;
+    }
+    return this.simpleModalService.addModal(AlertComponent, {
       title,
       message,
       specificMessage

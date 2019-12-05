@@ -16,9 +16,10 @@ import {FileUploadModule} from 'ng2-file-upload';
 import { ProjectScoreViewerComponent } from './components/project-score-viewer/project-score-viewer.component';
 import {SharedModule} from '../../shared/shared.module';
 import {NgbDropdownModule} from '@ng-bootstrap/ng-bootstrap';
+import { InstrumentsComponent } from './components/instruments/instruments.component';
 
 @NgModule({
-  declarations: [ProjectComponent, ImageThumbnailComponent, UploadImagesComponent, ProjectScoreViewerComponent],
+  declarations: [ProjectComponent, ImageThumbnailComponent, UploadImagesComponent, ProjectScoreViewerComponent, InstrumentsComponent],
   imports: [
     CommonModule,
     ProjectRoutingModule,

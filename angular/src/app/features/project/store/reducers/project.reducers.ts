@@ -43,6 +43,12 @@ export function projectReducers(state = initialProjectState, action: ProjectActi
       saveAs(blob, 'musicxml.tgz');
       return {...state};
     }
+    case ProjectActionTypes.GetProjectStatisticsSuccess: {
+      return {
+        ...state,
+        statistics: action.projectStatistics
+      };
+    }
     default: {
       return state;
     }

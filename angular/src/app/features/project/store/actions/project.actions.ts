@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 import {Project} from '../../../../core/model/entities/project';
 import {Image} from '../../../../core/model/entities/image';
+import {ProjectStatistics} from '../../../../core/model/entities/project-statistics';
 
 export enum ProjectActionTypes {
   GetProject = '[Project] Get project',
@@ -15,6 +16,8 @@ export enum ProjectActionTypes {
   ExportMensurstrichSuccess = '[Project] Export mensurstrich success',
   ExportMusicXML = '[Project] Export MusicXML',
   ExportMusicXMLSuccess = '[Project] Export MusicXML success',
+  GetProjectStatistics = '[Project] Get project statistics',
+  GetProjectStatisticsSuccess = '[Project] Get project statistics success',
 }
 
 export class GetProject implements Action {
@@ -76,8 +79,19 @@ export class ExportMusicXMLSuccess implements Action {
   public readonly type = ProjectActionTypes.ExportMusicXMLSuccess;
   constructor(public payload: Blob) {}
 }
+
+export class GetProjectStatistics implements Action {
+  public readonly type = ProjectActionTypes.GetProjectStatistics;
+  constructor(public projectID: number) {}
+}
+
+export class GetProjectStatisticsSuccess implements Action {
+  public readonly type = ProjectActionTypes.GetProjectStatisticsSuccess;
+  constructor(public projectStatistics: ProjectStatistics) {}
+}
 export type ProjectActions =
   GetProject | GetProjectSuccess | GetImages | GetImagesSuccess | ExportMEI | ExportMEISuccess |
   ExportMEIPartsFacsimile | ExportMEIPartsFacsimileSuccess |
   ExportMensurstrich | ExportMensurstrichSuccess |
-  ExportMusicXML | ExportMusicXMLSuccess;
+  ExportMusicXML | ExportMusicXMLSuccess |
+  GetProjectStatistics | GetProjectStatisticsSuccess;

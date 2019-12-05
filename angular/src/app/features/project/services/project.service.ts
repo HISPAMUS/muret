@@ -4,6 +4,8 @@ import {Observable} from 'rxjs';
 import {Image} from '../../../core/model/entities/image';
 import {ApiRestClientService} from '../../../core/services/api-rest-client.service';
 import {StringResponse} from '../../../core/model/restapi/string-response';
+import {DocumentAnalysisImageProjection} from '../../../core/model/restapi/document-analysis-image-projection';
+import {ProjectStatistics} from '../../../core/model/entities/project-statistics';
 
 @Injectable() // non-singleton
 export class ProjectService {
@@ -18,7 +20,10 @@ export class ProjectService {
     return this.apiRestClientService.getDetailsExcerptProjection$<Image>('projects', 'images', id);
   }
 
-
+  public getProjectStatistics$(id: number): Observable<ProjectStatistics> {
+    const url = `project/statistics/${id}`;
+    return this.apiRestClientService.get$<ProjectStatistics>(url);
+  }
   public getProjectUploadURL(): string {
     return this.apiRestClientService.url + '/project/uploadProjectImage';
   }
