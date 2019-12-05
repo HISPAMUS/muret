@@ -13,7 +13,8 @@ export class ProjectService {
   constructor(private apiRestClientService: ApiRestClientService) { }
 
   public getProject$(id: number): Observable<Project> {
-    return this.apiRestClientService.getOf$<Project>('projects', id);
+    // return this.apiRestClientService.getOf$<Project>('projects', id);
+    return this.apiRestClientService.getExcerptProjectionOf$<Project>(id, 'projects');
   }
 
   public getProjectImages$(id: number): Observable<Image[]> {

@@ -13,9 +13,18 @@
     </div>
 
     <div class="row">
-      <div *ngFor="let part of project.parts; trackBy: trackByPartFn" class="col-6 col-lg-4" >
-        <h5>{{part.name}}}</h5>
+      <div *ngFor="let part of project.parts; trackBy: trackByPartFn" class="col-12" >
+        <h5>{{part.name}}</h5>
         <p>{{part.comments}}</p>
+        <p>Poder renombrar</p>
+        <p>TO-DO Decir en qué imágenes / páginas / regiones / símbolos se ha usado</p>
+        <p>Poder eliminar sólo si no se ha usado</p>
+        <hr>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        TO-DO Botón para añadir
       </div>
     </div>
   </ng-container>
