@@ -30,6 +30,7 @@ import {
 export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
   imageID: number;
+  mynumber: number;
   notationSubscription: Subscription;
   selectedRegionZoomFactor = 1;
   selectedRegion: Region;
@@ -70,6 +71,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.mynumber = 189;
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.imageID = +params.get('id'); // + converts the string to number
       this.store.dispatch(new GetImageProjection(+this.imageID));
@@ -124,8 +126,11 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   setSelectedRegion($event: Region) {
-    this.selectedRegion = $event;
     setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
+      this.selectedRegion = $event;
+      console.log($event)
+      console.log(this.selectedRegion)
+      console.log('Done')
       this.errorMessage = null;
       this.notation = null;
       // this.semanticEncoding = '';

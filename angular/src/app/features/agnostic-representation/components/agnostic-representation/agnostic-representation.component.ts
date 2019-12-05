@@ -79,6 +79,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   symbolsClassifierModels$: Observable<ClassifierModel[]>;
   end2EndModelID: string;
   symbolsClassifierModelID: string;
+  myNumber: number
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>,
               private dialogsService: DialogsService, private positionInStaffService: PositionInStaffService) {
@@ -115,7 +116,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.store.dispatch(new InitRegion());
+    //this.store.dispatch(new InitRegion());
     // request store data
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.imageID = +params.get('id'); // + converts the string to number
@@ -525,6 +526,14 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   setSelectedRegion($event: Region) {
     setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
       this.selectedRegion = $event;
+      console.log($event)
+      console.log(this.selectedRegion)
+      console.log('Done')
     });
+  }
+
+  setMyNumber($event: number)
+  {
+    console.log($event)
   }
 }

@@ -106,6 +106,7 @@ public class WatchDog {
 
                 FileWriter lineWrite = new FileWriter(versionFile);
                 lineWrite.write(patchVersion);
+                lineWrite.close();
             }
         }
         catch (IOException e2)
@@ -131,6 +132,8 @@ public class WatchDog {
         emailMessage.setText(c_patchNotes);
 
         m_SMTPClient.send(emailMessage);
+
+        logger.info("Update sent to all GRFIA members");
     }
 
 }
