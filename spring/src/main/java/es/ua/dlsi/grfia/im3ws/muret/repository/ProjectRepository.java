@@ -19,6 +19,9 @@ public interface ProjectRepository extends CrudRepository<Project, Integer> {
     @Query(value="SELECT count(*) FROM page p, image i, region r WHERE p.image_id = i.id and r.page_id = p.id and project_id = :id ",  nativeQuery = true)
     int getNumberOfRegions(Integer id);
 
+    @Query(value="SELECT count(*) FROM page p, image i, region r WHERE p.image_id = i.id and r.page_id = p.id and project_id = :id and r.regiontype_id = 2",  nativeQuery = true)
+    int getNumberOfStaves(Integer id);
+
     @Query(value="SELECT count(*) FROM page p, image i, region r, symbol s WHERE p.image_id = i.id and r.page_id = p.id and r.id = s.region_id and project_id = :id",  nativeQuery = true)
     int getNumberOfAgnosticSymbols(Integer id);
 }
