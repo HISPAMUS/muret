@@ -15,7 +15,7 @@ import {
 } from '../../store/actions/project.actions';
 import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
-import {ProjectStatistics} from '../../../../core/model/entities/project-statistics';
+import {ProjectStatistics} from '../../../../core/model/restapi/project-statistics';
 
 @Component({
   selector: 'app-project',

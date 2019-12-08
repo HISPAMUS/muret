@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import {TrainingSetExporter} from '../../../../core/model/entities/training-set-exporter';
+import {TrainingSetExporter} from '../../../../core/model/restapi/training-set-exporter';
 
 export enum ExportActionTypes {
   GetTrainingSetExporters = '[Export] Get training set exporters',

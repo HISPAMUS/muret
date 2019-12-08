@@ -49,6 +49,12 @@ export function projectReducers(state = initialProjectState, action: ProjectActi
         statistics: action.projectStatistics
       };
     }
+    case ProjectActionTypes.GetUsesOfPartsSuccess: {
+      return {
+        ...state,
+        usesOfParts: action.usesOfParts
+      };
+    }
     default: {
       return state;
     }

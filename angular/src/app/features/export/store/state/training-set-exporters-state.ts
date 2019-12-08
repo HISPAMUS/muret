@@ -1,4 +1,4 @@
-import {TrainingSetExporter} from '../../../../core/model/entities/training-set-exporter';
+import {TrainingSetExporter} from '../../../../core/model/restapi/training-set-exporter';
 
 export interface TrainingSetExportersState {
   trainingSetExporters: TrainingSetExporter[];

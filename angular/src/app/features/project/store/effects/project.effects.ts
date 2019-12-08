@@ -7,7 +7,7 @@ import {
   ExportMEI, ExportMEIPartsFacsimile, ExportMEIPartsFacsimileSuccess,
   ExportMEISuccess, ExportMensurstrich, ExportMensurstrichSuccess, ExportMusicXML, ExportMusicXMLSuccess,
   GetImages,
-  GetImagesSuccess,
+  GetImagesSuccess, GetUsesOfParts, GetUsesOfPartsSuccess,
   GetProject, GetProjectStatistics, GetProjectStatisticsSuccess,
   GetProjectSuccess,
   ProjectActionTypes
@@ -15,7 +15,8 @@ import {
 import {Project} from '../../../../core/model/entities/project';
 import {Image} from '../../../../core/model/entities/image';
 import {StringResponse} from '../../../../core/model/restapi/string-response';
-import {ProjectStatistics} from '../../../../core/model/entities/project-statistics';
+import {ProjectStatistics} from '../../../../core/model/restapi/project-statistics';
+import {PartUses, UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
 
 @Injectable()
 export class ProjectEffects {
@@ -86,6 +87,16 @@ export class ProjectEffects {
     switchMap((projectID) => this.projectService.getProjectStatistics$(projectID)),
     switchMap((projectStatistics: ProjectStatistics) => {
       return of(new GetProjectStatisticsSuccess(projectStatistics));
+    })
+  );
+
+  @Effect()
+  getUsesOfParts$ = this.actions$.pipe(
+    ofType<GetUsesOfParts>(ProjectActionTypes.GetUsesOfParts),
+    map((action: GetUsesOfParts) => action.partID),
+    switchMap((partID) => this.projectService.getUsesOfParts$(partID)),
+    switchMap((usesOfParts: UsesOfParts) => {
+      return of(new GetUsesOfPartsSuccess(usesOfParts));
     })
   );
 }

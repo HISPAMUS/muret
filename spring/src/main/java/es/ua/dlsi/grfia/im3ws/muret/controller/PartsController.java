@@ -32,6 +32,27 @@ public class PartsController extends MuRETBaseController {
         this.partRepository = partRepository;
     }
 
+    @GetMapping(path = {"uses/{projectID}"})
+    @Transactional
+    public UsesOfParts getUsesOfParts(@PathVariable(name="projectID") Integer projectID) throws IM3WSException {
+        UsesOfParts usesOfParts = new UsesOfParts();
+
+        Optional<Project> project = projectRepository.findById(projectID);
+        if (!project.isPresent()) {
+            throw new IM3WSException("Cannot find a project with id " + project);
+        }
+
+        for (Part part: project.get().getParts()) {
+            Long partID = part.getId();
+            usesOfParts.add(part,
+                    partRepository.getImages(partID),
+                    partRepository.getPages(partID),
+                    partRepository.getRegions(partID),
+                    partRepository.getSymbols(partID));
+        }
+        return usesOfParts;
+    }
+
     @GetMapping(path = {"project/{projectID}"})
     @Transactional
     public List<Part> getProjectParts(@PathVariable(name="projectID") Integer projectID) throws IM3WSException {

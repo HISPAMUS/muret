@@ -5,7 +5,8 @@ import {Image} from '../../../core/model/entities/image';
 import {ApiRestClientService} from '../../../core/services/api-rest-client.service';
 import {StringResponse} from '../../../core/model/restapi/string-response';
 import {DocumentAnalysisImageProjection} from '../../../core/model/restapi/document-analysis-image-projection';
-import {ProjectStatistics} from '../../../core/model/entities/project-statistics';
+import {ProjectStatistics} from '../../../core/model/restapi/project-statistics';
+import {UsesOfParts} from '../../../core/model/restapi/uses-of-parts';
 
 @Injectable() // non-singleton
 export class ProjectService {
@@ -52,5 +53,10 @@ export class ProjectService {
   exportMusicXML$(projectID: number): Observable<Blob> {
     const url = `project/exportMusicXML/${projectID}`;
     return this.apiRestClientService.getBlob$(url);
+  }
+
+  getUsesOfParts$(projectID: number): Observable<UsesOfParts> {
+    const url = `parts/uses/${projectID}`;
+    return this.apiRestClientService.get$<UsesOfParts>(url);
   }
 }

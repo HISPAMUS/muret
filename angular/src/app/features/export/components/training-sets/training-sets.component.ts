@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import saveAs from 'file-saver';
-import {TrainingSetExporter} from '../../../../core/model/entities/training-set-exporter';
+import {TrainingSetExporter} from '../../../../core/model/restapi/training-set-exporter';
 import {Project} from '../../../../core/model/entities/project';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormUtils} from '../../../../shared/utils/form-utils';

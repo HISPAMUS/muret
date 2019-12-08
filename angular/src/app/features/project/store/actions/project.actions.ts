@@ -1,7 +1,8 @@
 import { Action } from '@ngrx/store';
 import {Project} from '../../../../core/model/entities/project';
 import {Image} from '../../../../core/model/entities/image';
-import {ProjectStatistics} from '../../../../core/model/entities/project-statistics';
+import {ProjectStatistics} from '../../../../core/model/restapi/project-statistics';
+import {UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
 
 export enum ProjectActionTypes {
   GetProject = '[Project] Get project',
@@ -18,6 +19,8 @@ export enum ProjectActionTypes {
   ExportMusicXMLSuccess = '[Project] Export MusicXML success',
   GetProjectStatistics = '[Project] Get project statistics',
   GetProjectStatisticsSuccess = '[Project] Get project statistics success',
+  GetUsesOfParts = '[Project] Get uses of parts',
+  GetUsesOfPartsSuccess = '[Project] Get uses of parts success',
 }
 
 export class GetProject implements Action {
@@ -89,9 +92,19 @@ export class GetProjectStatisticsSuccess implements Action {
   public readonly type = ProjectActionTypes.GetProjectStatisticsSuccess;
   constructor(public projectStatistics: ProjectStatistics) {}
 }
+export class GetUsesOfParts implements Action {
+  public readonly type = ProjectActionTypes.GetUsesOfParts;
+  constructor(public partID: number) {}
+}
+
+export class GetUsesOfPartsSuccess implements Action {
+  public readonly type = ProjectActionTypes.GetUsesOfPartsSuccess;
+  constructor(public usesOfParts: UsesOfParts) {}
+}
 export type ProjectActions =
   GetProject | GetProjectSuccess | GetImages | GetImagesSuccess | ExportMEI | ExportMEISuccess |
   ExportMEIPartsFacsimile | ExportMEIPartsFacsimileSuccess |
   ExportMensurstrich | ExportMensurstrichSuccess |
   ExportMusicXML | ExportMusicXMLSuccess |
-  GetProjectStatistics | GetProjectStatisticsSuccess;
+  GetProjectStatistics | GetProjectStatisticsSuccess |
+  GetUsesOfParts | GetUsesOfPartsSuccess;
