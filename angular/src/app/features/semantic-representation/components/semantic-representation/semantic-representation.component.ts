@@ -71,9 +71,15 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.route.paramMap.subscribe((params: ParamMap) => {
-      this.imageID = +params.get('id'); // + converts the string to number
-      this.store.dispatch(new GetImageProjection(+this.imageID));
-      this.store.dispatch(new GetImageProjectParts(+this.imageID));
+      if (params.get('id')) {
+        this.imageID = +params.get('id'); // + converts the string to number
+        this.store.dispatch(new GetImageProjection(+this.imageID));
+        this.store.dispatch(new GetImageProjectParts(+this.imageID));
+      }
+
+      if (params.get('region_id')) {
+        this.store.dispatch(new GetRegion(+params.get('region_id')));
+      }
 
       setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
         this.store.dispatch(new ActivateLink({title: 'Semantic', routerLink: 'semanticrepresentation/' + this.imageID}));

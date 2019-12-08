@@ -22,33 +22,33 @@
           <div *ngIf="partUses.images.length > 0">
             Images:
             <a *ngFor="let image of partUses.images; trackBy: trackByNumberFn" class="col-12" (click)="openImage(image)">
-              {{image}}
+              {{image.y}}
             </a>
           </div>
 
           <div *ngIf="partUses.pages.length > 0">
             Pages:
             <a *ngFor="let page of partUses.pages; trackBy: trackByNumberFn" class="col-12" (click)="openPage(page)">
-              {{page}}
+              {{page.y}}
             </a>
           </div>
 
           <div *ngIf="partUses.regions.length > 0">
             Regions:
-            <a *ngFor="let region of partUses.regions; trackBy: trackByNumberFn" class="col-12" (click)="openRegion(region)">>
-              {{region}}
+            <a *ngFor="let region of partUses.regions; trackBy: trackByNumberFn" class="col-12" (click)="openRegion(region)">
+              {{region.y}}
             </a>
           </div>
 
           <div *ngIf="partUses.symbols.length > 0">
             Symbols:
             <a *ngFor="let symbol of partUses.symbols; trackBy: trackByNumberFn" class="col-12" (click)="openSymbol(symbol)">>
-              {{symbol}}
+              {{symbol.y}}
             </a>
           </div>
 
         </div>
-        <p><button>Rename</button>&nbsp;<button>Delete (just not used)</button></p>
+        <p><button>Rename</button>&nbsp;<button disabled="isDeleteDisabled(partUses)" title="Cannot be deleted if any element is associated to it">Delete</button></p>
         <hr>
       </div>
     </div>

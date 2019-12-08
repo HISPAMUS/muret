@@ -19,9 +19,18 @@ public class UsesOfParts {
     class PartUses {
         Part part;
         List<BigInteger> images;
-        List<BigInteger> pages;
-        List<BigInteger> regions;
-        List<BigInteger> symbols;
+        /**
+         * Image, page
+         */
+        List<IBigIntPair> pages;
+        /**
+         * Image, region
+         */
+        List<IBigIntPair> regions;
+        /**
+         * Image, symbol
+         */
+        List<IBigIntPair> symbols;
 
         public PartUses() {
         }
@@ -34,30 +43,6 @@ public class UsesOfParts {
             this.images = images;
         }
 
-        public List<BigInteger> getPages() {
-            return pages;
-        }
-
-        public void setPages(List<BigInteger> pages) {
-            this.pages = pages;
-        }
-
-        public List<BigInteger> getRegions() {
-            return regions;
-        }
-
-        public void setRegions(List<BigInteger> regions) {
-            this.regions = regions;
-        }
-
-        public List<BigInteger> getSymbols() {
-            return symbols;
-        }
-
-        public void setSymbols(List<BigInteger> symbols) {
-            this.symbols = symbols;
-        }
-
         public Part getPart() {
             return part;
         }
@@ -65,13 +50,39 @@ public class UsesOfParts {
         public void setPart(Part part) {
             this.part = part;
         }
+
+        public List<IBigIntPair> getPages() {
+            return pages;
+        }
+
+        public void setPages(List<IBigIntPair> pages) {
+            this.pages = pages;
+        }
+
+        public List<IBigIntPair> getRegions() {
+            return regions;
+        }
+
+        public void setRegions(List<IBigIntPair> regions) {
+            this.regions = regions;
+        }
+
+        public List<IBigIntPair> getSymbols() {
+            return symbols;
+        }
+
+        public void setSymbols(List<IBigIntPair> symbols) {
+            this.symbols = symbols;
+        }
     }
 
     public List<PartUses> getUses() {
         return uses;
     }
 
-    public void add(Part part, List<BigInteger> images, List<BigInteger> pages, List<BigInteger> regions, List<BigInteger> symbols) {
+    public void add(Part part, List<BigInteger> images, List<IBigIntPair> pages,
+                    List<IBigIntPair> regions, List<IBigIntPair> symbols) {
+
         PartUses pu = new PartUses();
         pu.setPart(part);
         pu.setImages(images);

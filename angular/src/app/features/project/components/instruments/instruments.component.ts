@@ -3,17 +3,13 @@ import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {ProjectState} from '../../store/state/project.state';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
-import {selectImages, selectProject, selectProjectStatistics, selectUsesOfParts} from '../../store/selectors/project.selector';
-import {GetImages, GetProject, GetProjectStatistics, GetUsesOfParts} from '../../store/actions/project.actions';
-import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
+import {selectProject, selectUsesOfParts} from '../../store/selectors/project.selector';
+import {GetProject, GetUsesOfParts} from '../../store/actions/project.actions';
 import {Observable} from 'rxjs';
 import {Project} from '../../../../core/model/entities/project';
-import {Image} from '../../../../core/model/entities/image';
-import {Part} from '../../../../core/model/entities/part';
 import {PartUses, UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
-import {Region} from '../../../../core/model/entities/region';
-import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
-import {Page} from '../../../../core/model/entities/page';
+import {KeyValue} from '@angular/common';
+import {NumberPair} from '../../../../core/model/restapi/number-pair';
 
 @Component({
   selector: 'app-instruments',
@@ -51,15 +47,19 @@ export class InstrumentsComponent implements OnInit {
     this.router.navigate(['semanticrepresentation', image]);
   }
 
-  openPage(image: any) {
-
+  openPage(page: NumberPair) {
+    this.router.navigate(['semanticrepresentation', page.x]);
   }
 
-  openRegion(region: number) {
-
+  openRegion(region: NumberPair) {
+    this.router.navigate(['semanticrepresentation/region', {id: region.x, region_id: region.y}]);
   }
 
-  openSymbol(symbol: number) {
+  openSymbol(symbol: NumberPair) {
     // TODO
+  }
+
+  isDeleteDisabled(partUses: PartUses) {
+    return partUses.symbols.length > 0 || partUses.images.length > 0 || partUses.pages.length > 0 || partUses.images.length > 0;
   }
 }
