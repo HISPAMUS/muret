@@ -27,11 +27,11 @@
    <form>
     <div id="regionTypesEdit" [hidden]="!isAddingMode()" class="form-group btn-group btn-group-toggle" ngbRadioGroup
          name="regionTypeRadioButtonGroup">
-      <label class="btn-toolbar creationtools" [class.active]="-1 === regionTypeINselected" [class.focus]="-1 === regionTypeINelected" ngbButtonLabel>
+      <label class="btn-toolbar creationtools" [class.active]="-1 == regionTypeINselected" ngbButtonLabel>
         <input ngbButton type="radio" name="regionTypeRadioButton" id="-1" [value]="page" (click)="setRegionCreated(-1)">Page
       </label>
       <br>
-      <label *ngFor="let regionType of regionTypes$ | async; trackBy: trackByRegionTypeFn" class="btn-toolbar creationtools" [class.active]="regionType.id === regionTypeINselected" [class.focus]="regionType.id === regionTypeINelected" [id]="regionType.id" ngbButtonLabel>
+      <label *ngFor="let regionType of regionTypes$ | async; trackBy: trackByRegionTypeFn" class="btn-toolbar creationtools" [class.active]="regionType.id == regionTypeINselected"  [id]="regionType.id" ngbButtonLabel>
         <input ngbButton type="radio" name="regionTypeRadioButton" [value]="regionType.id" (click)="setRegionCreated(regionType.id)"> {{beatufyRegionName(regionType.name)}}
       </label>
     </div>

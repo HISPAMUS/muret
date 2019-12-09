@@ -20,7 +20,9 @@ import {
 import {
   selectFileName, selectImagePart,
   selectPages,
-  selectRegionTypes
+  selectRegionTypes,
+  selectImageWidth,
+  selectImageHeight
 } from '../../store/selectors/document-analysis.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
@@ -40,6 +42,8 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   imagePart$: Observable<Part>;
   pagesSubscription: Subscription;
   regionTypesSubscription: Subscription;
+  imagewidthSubscription: Subscription;
+  imageheightSubscription: Subscription;
   mode: 'eIdle' |'eSelecting' | 'eEditing' | 'eAdding';
   selectedRegionTypeID: number | 'page';
   zoomFactor = 1;
@@ -55,6 +59,9 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
 
   public regionTypeCSelected: number;
   public regionTypeINselected: number;
+
+  imageWidth: number;
+  imageHeight: number;
 
   // end tools
 
@@ -94,13 +101,38 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     });
 
     this.imagePart$ = this.store.select(selectImagePart);
+    this.imagewidthSubscription = this.store.select(selectImageWidth).subscribe(value => {
+      this.imageWidth = value
+    })
+
+    this.imageheightSubscription = this.store.select(selectImageHeight).subscribe(value => {
+      this.imageHeight = value
+    })
 
   }
 
   ngAfterViewInit(): void {
     this.pagesSubscription = this.store.select(selectPages).subscribe(next => {
+      debugger
       if (next) {
         this.drawPagesAndRegions(next);
+      }
+      if(next && !next.length)
+      {
+        this.dialogsService.showInput("No pages found. How many pages you wish to create?", "1").subscribe(value => {
+          let pagesToCreate = Number(value);
+          if(pagesToCreate == 2 || pagesToCreate == 1)
+          {
+            let widthStep = this.imageWidth/pagesToCreate 
+            for(let i = 0; i < pagesToCreate; i++)
+            {
+              setTimeout(()=>{this.store.dispatch(new CreatePage(this.imageID, {fromX: widthStep * i,
+                                                                fromY: 0,
+                                                                toX: (widthStep * i) + widthStep,
+                                                                toY: this.imageHeight}));}, 100 * i)
+            }
+          }
+          })
       }
     });
 
