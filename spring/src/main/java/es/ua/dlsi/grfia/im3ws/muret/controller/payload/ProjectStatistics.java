@@ -4,6 +4,7 @@ public class ProjectStatistics {
     int images;
     int pages;
     int regions;
+    int staves;
     int agnosticSymbols;
 
     public int getImages() {
@@ -28,6 +29,14 @@ public class ProjectStatistics {
 
     public void setRegions(int regions) {
         this.regions = regions;
+    }
+
+    public int getStaves() {
+        return staves;
+    }
+
+    public void setStaves(int staves) {
+        this.staves = staves;
     }
 
     public int getAgnosticSymbols() {

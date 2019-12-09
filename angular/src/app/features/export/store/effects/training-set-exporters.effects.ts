@@ -8,7 +8,7 @@ import {
   ExportActionTypes
 } from '../actions/export.actions';
 import {ExporterService} from '../../services/exporter.service';
-import {TrainingSetExporter} from '../../../../core/model/entities/training-set-exporter';
+import {TrainingSetExporter} from '../../../../core/model/restapi/training-set-exporter';
 
 @Injectable()
 export class TrainingSetExportersEffects {

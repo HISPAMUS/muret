@@ -1,6 +1,8 @@
 import { Action } from '@ngrx/store';
 import {Project} from '../../../../core/model/entities/project';
 import {Image} from '../../../../core/model/entities/image';
+import {ProjectStatistics} from '../../../../core/model/restapi/project-statistics';
+import {UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
 
 export enum ProjectActionTypes {
   GetProject = '[Project] Get project',
@@ -15,6 +17,10 @@ export enum ProjectActionTypes {
   ExportMensurstrichSuccess = '[Project] Export mensurstrich success',
   ExportMusicXML = '[Project] Export MusicXML',
   ExportMusicXMLSuccess = '[Project] Export MusicXML success',
+  GetProjectStatistics = '[Project] Get project statistics',
+  GetProjectStatisticsSuccess = '[Project] Get project statistics success',
+  GetUsesOfParts = '[Project] Get uses of parts',
+  GetUsesOfPartsSuccess = '[Project] Get uses of parts success',
 }
 
 export class GetProject implements Action {
@@ -76,8 +82,29 @@ export class ExportMusicXMLSuccess implements Action {
   public readonly type = ProjectActionTypes.ExportMusicXMLSuccess;
   constructor(public payload: Blob) {}
 }
+
+export class GetProjectStatistics implements Action {
+  public readonly type = ProjectActionTypes.GetProjectStatistics;
+  constructor(public projectID: number) {}
+}
+
+export class GetProjectStatisticsSuccess implements Action {
+  public readonly type = ProjectActionTypes.GetProjectStatisticsSuccess;
+  constructor(public projectStatistics: ProjectStatistics) {}
+}
+export class GetUsesOfParts implements Action {
+  public readonly type = ProjectActionTypes.GetUsesOfParts;
+  constructor(public partID: number) {}
+}
+
+export class GetUsesOfPartsSuccess implements Action {
+  public readonly type = ProjectActionTypes.GetUsesOfPartsSuccess;
+  constructor(public usesOfParts: UsesOfParts) {}
+}
 export type ProjectActions =
   GetProject | GetProjectSuccess | GetImages | GetImagesSuccess | ExportMEI | ExportMEISuccess |
   ExportMEIPartsFacsimile | ExportMEIPartsFacsimileSuccess |
   ExportMensurstrich | ExportMensurstrichSuccess |
-  ExportMusicXML | ExportMusicXMLSuccess;
+  ExportMusicXML | ExportMusicXMLSuccess |
+  GetProjectStatistics | GetProjectStatisticsSuccess |
+  GetUsesOfParts | GetUsesOfPartsSuccess;

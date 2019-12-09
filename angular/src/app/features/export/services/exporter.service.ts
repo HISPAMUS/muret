@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs';
 import {UserService} from '../../../core/services/user.service';
 import {TrainingSetExporterService} from './training-set-exporter.service';
-import {TrainingSetExporter} from '../../../core/model/entities/training-set-exporter';
+import {TrainingSetExporter} from '../../../core/model/restapi/training-set-exporter';
 
 @Injectable() // non-singleton
 export class ExporterService {

@@ -18,6 +18,7 @@ public interface IProjectProjection {
     String getComposer();
     String getComments();
     State getState();
+    String getPath();
     String getThumbnailBase64Encoding();
     IPartProjection [] getParts();
 }

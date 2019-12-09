@@ -5,9 +5,17 @@ import {Observable} from 'rxjs';
 import {Project} from '../../../../core/model/entities/project';
 import {Store} from '@ngrx/store';
 import {ProjectState} from '../../store/state/project.state';
-import {selectImages, selectProject} from '../../store/selectors/project.selector';
-import {ExportMEIPartsFacsimile, ExportMEIPartsFacsimileSuccess, GetImages, GetProject} from '../../store/actions/project.actions';
+import {selectImages, selectProject, selectProjectStatistics} from '../../store/selectors/project.selector';
+import {
+  ExportMEIPartsFacsimile,
+  ExportMEIPartsFacsimileSuccess,
+  GetImages,
+  GetProject,
+  GetProjectStatistics
+} from '../../store/actions/project.actions';
 import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
+import {DialogsService} from '../../../../shared/services/dialogs.service';
+import {ProjectStatistics} from '../../../../core/model/restapi/project-statistics';
 
 @Component({
   selector: 'app-project',
@@ -17,11 +25,14 @@ import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.act
 export class ProjectComponent implements OnInit {
   project$: Observable<Project>;
   images$: Observable<Image[]>;
+  statistics$: Observable<ProjectStatistics>;
   private projectID: number;
 
-  constructor(private route: ActivatedRoute, private store: Store<ProjectState>, private router: Router) {
+  constructor(private route: ActivatedRoute, private store: Store<ProjectState>, private router: Router,
+              private dialogsService: DialogsService) {
     this.project$ = this.store.select(selectProject);
     this.images$ = this.store.select(selectImages);
+    this.statistics$ = this.store.select(selectProjectStatistics);
   }
 
   ngOnInit(): void {
@@ -29,6 +40,7 @@ export class ProjectComponent implements OnInit {
       this.projectID = +this.route.snapshot.paramMap.get('id'); // + converts the string to number
       this.store.dispatch(new GetProject(this.projectID));
       this.store.dispatch(new GetImages(this.projectID));
+      this.store.dispatch(new GetProjectStatistics(this.projectID));
       setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
         this.store.dispatch(new ActivateLink({title: 'Project ', routerLink: 'project/' + this.projectID}));
       });
@@ -45,5 +57,9 @@ export class ProjectComponent implements OnInit {
 
   viewFullScore() {
     this.router.navigate(['/project/scoreView', this.projectID]);
+  }
+
+  editInstruments() {
+    this.router.navigate(['/project/instruments', this.projectID]);
   }
 }

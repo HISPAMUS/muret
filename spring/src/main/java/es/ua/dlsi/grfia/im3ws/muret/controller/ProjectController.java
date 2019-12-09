@@ -145,6 +145,7 @@ public class ProjectController {
 
 
     @GetMapping(path = {"/statistics/{id}"})
+    @Transactional
     public ProjectStatistics getProjectStatistics(@PathVariable("id") Integer id) throws IM3WSException {
         Optional<Project> project = projectRepository.findById(id);
         if (!project.isPresent()) {
@@ -158,6 +159,7 @@ public class ProjectController {
         projectStatistics.setImages(project.get().getImages().size());
         projectStatistics.setPages(projectRepository.getNumberOfPages(projectID));
         projectStatistics.setRegions(projectRepository.getNumberOfRegions(projectID));
+        projectStatistics.setStaves(projectRepository.getNumberOfStaves(projectID));
 
         return projectStatistics;
     }

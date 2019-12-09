@@ -4,7 +4,12 @@
   <div class="row titles">
     <div class="col-7 offset-1 align-self-end">
       <h4>{{project.name | uppercase}}</h4>
-      <a (click)="viewFullScore()">View full score and export</a>
+      <p><a (click)="viewFullScore()">View full score and export</a></p>
+      <p><a (click)="editInstruments()">Instruments</a></p>
+      <p *ngIf="statistics$ | async as statistics">
+        #{{statistics.images}} images, #{{statistics.pages}} pages, #{{statistics.regions}} regions (#{{statistics.staves}} staves), #{{statistics.agnosticSymbols}} agnostic symbols
+      </p>
+      <p></p>
     </div>
     <div class="col-4 screenTitle">
       <img class="img-fluid" src="assets/images/project.png" alt="Order images"/>

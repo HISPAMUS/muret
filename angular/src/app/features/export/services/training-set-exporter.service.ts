@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs';
-import {TrainingSetExporter} from '../../../core/model/entities/training-set-exporter';
+import {TrainingSetExporter} from '../../../core/model/restapi/training-set-exporter';
 import {ApiRestClientService} from '../../../core/services/api-rest-client.service';
 
 @Injectable()

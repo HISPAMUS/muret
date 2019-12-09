@@ -18,3 +18,12 @@ export const selectProjectMEI = createSelector(
   (state: ProjectState) => state.mei
 );
 
+export const selectProjectStatistics = createSelector(
+  projectState,
+  (state: ProjectState) => state.statistics
+);
+
+export const selectUsesOfParts = createSelector(
+  projectState,
+  (state: ProjectState) => state.usesOfParts
+);
