@@ -53,8 +53,8 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
 
   regionTypeFilterOut: Set<string>;
 
-  private regionTypeCSelected: number;
-  private regionTypeINselected: number;
+  public regionTypeCSelected: number;
+  public regionTypeINselected: number;
 
   // end tools
 
@@ -76,8 +76,8 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     this.selectedRegionTypeID = 'page';
     this.regionTypeFilterOut = new Set<string>();
 
-    this.regionTypeCSelected = 0;
-    this.regionTypeINselected = 0;
+    this.regionTypeCSelected = 1;
+    this.regionTypeINselected = 2;
   }
 
   ngOnInit() {
