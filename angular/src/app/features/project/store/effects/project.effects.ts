@@ -90,13 +90,5 @@ export class ProjectEffects {
     })
   );
 
-  @Effect()
-  getUsesOfParts$ = this.actions$.pipe(
-    ofType<GetUsesOfParts>(ProjectActionTypes.GetUsesOfParts),
-    map((action: GetUsesOfParts) => action.partID),
-    switchMap((partID) => this.projectService.getUsesOfParts$(partID)),
-    switchMap((usesOfParts: UsesOfParts) => {
-      return of(new GetUsesOfPartsSuccess(usesOfParts));
-    })
-  );
+
 }

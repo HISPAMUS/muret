@@ -74,9 +74,9 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
               ) {
     this.regionTypes$ = store.select(selectRegionTypes);
 
-    this.regionTypesSubscription = this.regionTypes$.subscribe((result)=>{
+    this.regionTypesSubscription = this.regionTypes$.subscribe((result) => {
       this.regionTypesEnum = result;
-    })
+    });
 
     this.filename$ = store.select(selectFileName);
     this.mode = 'eIdle';
@@ -102,37 +102,35 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
 
     this.imagePart$ = this.store.select(selectImagePart);
     this.imagewidthSubscription = this.store.select(selectImageWidth).subscribe(value => {
-      this.imageWidth = value
+      this.imageWidth = value;
     })
 
     this.imageheightSubscription = this.store.select(selectImageHeight).subscribe(value => {
-      this.imageHeight = value
-    })
+      this.imageHeight = value;
+    });
 
   }
 
   ngAfterViewInit(): void {
     this.pagesSubscription = this.store.select(selectPages).subscribe(next => {
-      debugger
       if (next) {
         this.drawPagesAndRegions(next);
       }
-      if(next && !next.length)
-      {
-        this.dialogsService.showInput("No pages found. How many pages you wish to create?", "1").subscribe(value => {
-          let pagesToCreate = Number(value);
-          if(pagesToCreate == 2 || pagesToCreate == 1)
-          {
-            let widthStep = this.imageWidth/pagesToCreate 
+      if (next && !next.length) {
+        this.dialogsService.showInput('Page creation', 'No pages found. How many pages you wish to create?',
+          '1').subscribe(value => {
+          const pagesToCreate = Number(value);
+          if (pagesToCreate === 2 || pagesToCreate === 1) {
+            const widthStep = this.imageWidth / pagesToCreate
             for(let i = 0; i < pagesToCreate; i++)
             {
-              setTimeout(()=>{this.store.dispatch(new CreatePage(this.imageID, {fromX: widthStep * i,
+              setTimeout(() => {this.store.dispatch(new CreatePage(this.imageID, {fromX: widthStep * i,
                                                                 fromY: 0,
                                                                 toX: (widthStep * i) + widthStep,
-                                                                toY: this.imageHeight}));}, 100 * i)
+                                                                toY: this.imageHeight}));}, 100 * i);
             }
           }
-          })
+          });
       }
     });
 
@@ -174,8 +172,8 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
         this.selectedRegionTypeID = null;
       }
 
-      console.log("Setting region type")
-      console.log(this.selectedRegionTypeID)
+      /*// console.log("Setting region type")
+      // console.log(this.selectedRegionTypeID)*/
 
     }
   }
@@ -363,35 +361,35 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     } else if (event.code === 'Escape') {
       this.mode = 'eIdle';
     }
-    if(this.isAddingMode() && event.code === 'KeyB')
-    {
+    if (this.isAddingMode() && event.code === 'KeyB') {
       this.regionTypeCSelected++;
-      console.log(this.regionTypeCSelected)
-      if(this.regionTypeCSelected == this.regionTypesEnum.length)
-      {
-        console.log('Changing...')
+      // console.log(this.regionTypeCSelected)
+      if (this.regionTypeCSelected === this.regionTypesEnum.length) {
+        // console.log('Changing...')
         this.regionTypeCSelected = -1
         this.regionTypeINselected = -1
-        return
+        return;
       }
 
-      if(!this.regionTypeCSelected)
-        this.regionTypeINselected = this.regionTypeCSelected
-      else
-        this.regionTypeINselected = this.regionTypeCSelected + 1
-      
-      console.log(this.regionTypeINselected)
+      if (!this.regionTypeCSelected) {
+        this.regionTypeINselected = this.regionTypeCSelected;
+      } else {
+        this.regionTypeINselected = this.regionTypeCSelected + 1;
+      }
+
+      /*// console.log(this.regionTypeINselected);*/
     }
   }
 
   setRegionCreated(regionType: number)
   {
-    this.regionTypeINselected = regionType
+    this.regionTypeINselected = regionType;
 
-    if(regionType > 0)
-      regionType -= 1
-    
-    this.regionTypeCSelected = regionType
+    if (regionType > 0) {
+      regionType -= 1;
+    }
+
+    this.regionTypeCSelected = regionType;
   }
 
   beatufyRegionName(name: string): string {
@@ -413,7 +411,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
      nextdraw = {name: 'page'}
 
     const nextDrawShape = nextdraw
-    
+
     if (nextDrawShape.name === 'page') {
       this.store.dispatch(new CreatePage(this.imageID, {fromX: rectangle.fromX,
         fromY: rectangle.fromY,
@@ -425,16 +423,15 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
           fromY: rectangle.fromY,
           toX: rectangle.fromX + rectangle.width,
           toY: rectangle.fromY + rectangle.height}));
-  
+
   }
 }
 
-openRegionSelectionModal()
-{
+openRegionSelectionModal() {
    this.modalService.open(this.regionTypesModal, {size: 'lg', ariaLabelledBy: 'Region types'}).result.then((result) => {
     //  // accepted
       this.regionTypeCSelected = result.id;
-  })
+  });
 }
 
   private applyRegionTypeFilter() {

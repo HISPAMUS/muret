@@ -3,13 +3,15 @@ import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {ProjectState} from '../../store/state/project.state';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
-import {selectProject, selectUsesOfParts} from '../../store/selectors/project.selector';
-import {GetProject, GetUsesOfParts} from '../../store/actions/project.actions';
+import {selectProject} from '../../store/selectors/project.selector';
+import {GetProject} from '../../store/actions/project.actions';
 import {Observable} from 'rxjs';
 import {Project} from '../../../../core/model/entities/project';
 import {PartUses, UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
-import {KeyValue} from '@angular/common';
 import {NumberPair} from '../../../../core/model/restapi/number-pair';
+import {Part} from '../../../../core/model/entities/part';
+import {CreatePart, DeletePart, GetUsesOfParts, RenamePart} from '../../../parts/store/actions/parts.actions';
+import {selectUsesOfParts} from '../../../parts/store/selectors/parts.selector';
 
 @Component({
   selector: 'app-instruments',
@@ -59,7 +61,36 @@ export class InstrumentsComponent implements OnInit {
     // TODO
   }
 
-  isDeleteDisabled(partUses: PartUses) {
-    return partUses.symbols.length > 0 || partUses.images.length > 0 || partUses.pages.length > 0 || partUses.images.length > 0;
+  isDeleteDisabled(partUses: PartUses): boolean {
+    return partUses.symbols != null && partUses.symbols.length > 0 ||
+      partUses.regions != null && partUses.regions.length > 0 ||
+      partUses.pages != null && partUses.pages.length > 0 ||
+      partUses.images != null && partUses.images.length > 0;
+  }
+
+  renamePart(part: Part) {
+    this.dialogsService.showInput('Rename part / instrument', 'Set new name for part', part.name).subscribe(newValue => {
+      if (newValue) {
+        this.store.dispatch(new RenamePart(part, newValue));
+        console.error('TODO - actualizar nuevo nomnbre part'); //TODO
+      }
+    });
+  }
+
+  deletePart(part: Part) {
+    this.dialogsService.showWarningConfirmation('Delete part?', 'You are about to delete the part ' + part.name)
+      .subscribe((isConfirmed) => {
+        if (isConfirmed) {
+          this.store.dispatch(new DeletePart(part.id));
+          console.error('TODO - actualizar borrado'); //TODO
+        }
+      });
+  }
+
+  addPart() {
+    this.dialogsService.showInput('Add part / instrument', '', '').subscribe(newValue => {
+      this.store.dispatch(new CreatePart(this.projectID, newValue));
+      console.error('TODO - actualizar nuevo nomnbre part'); //TODO
+    });
   }
 }

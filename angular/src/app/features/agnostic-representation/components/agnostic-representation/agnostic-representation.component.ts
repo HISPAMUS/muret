@@ -512,7 +512,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   private editAddComment(agnosticSymbol: AgnosticSymbol) {
-    this.dialogsService.showInput('Comments', agnosticSymbol.comments)
+    this.dialogsService.showInput('Comments', 'Set agnostic symbol comments', agnosticSymbol.comments)
       .subscribe((text) => {
         if (text) {
           this.store.dispatch(new ChangeSymbolComments(agnosticSymbol, text));

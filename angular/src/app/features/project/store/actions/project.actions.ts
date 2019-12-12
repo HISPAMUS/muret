@@ -19,8 +19,6 @@ export enum ProjectActionTypes {
   ExportMusicXMLSuccess = '[Project] Export MusicXML success',
   GetProjectStatistics = '[Project] Get project statistics',
   GetProjectStatisticsSuccess = '[Project] Get project statistics success',
-  GetUsesOfParts = '[Project] Get uses of parts',
-  GetUsesOfPartsSuccess = '[Project] Get uses of parts success',
 }
 
 export class GetProject implements Action {
@@ -92,19 +90,10 @@ export class GetProjectStatisticsSuccess implements Action {
   public readonly type = ProjectActionTypes.GetProjectStatisticsSuccess;
   constructor(public projectStatistics: ProjectStatistics) {}
 }
-export class GetUsesOfParts implements Action {
-  public readonly type = ProjectActionTypes.GetUsesOfParts;
-  constructor(public partID: number) {}
-}
 
-export class GetUsesOfPartsSuccess implements Action {
-  public readonly type = ProjectActionTypes.GetUsesOfPartsSuccess;
-  constructor(public usesOfParts: UsesOfParts) {}
-}
 export type ProjectActions =
   GetProject | GetProjectSuccess | GetImages | GetImagesSuccess | ExportMEI | ExportMEISuccess |
   ExportMEIPartsFacsimile | ExportMEIPartsFacsimileSuccess |
   ExportMensurstrich | ExportMensurstrichSuccess |
   ExportMusicXML | ExportMusicXMLSuccess |
-  GetProjectStatistics | GetProjectStatisticsSuccess |
-  GetUsesOfParts | GetUsesOfPartsSuccess;
+  GetProjectStatistics | GetProjectStatisticsSuccess;

@@ -4,6 +4,8 @@ import {Part} from '../../../../core/model/entities/part';
 import {Image} from '../../../../core/model/entities/image';
 import {Page} from '../../../../core/model/entities/page';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
+import {UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
+import {GetProjectStatisticsSuccess, ProjectActionTypes} from '../../../project/store/actions/project.actions';
 
 export enum PartsActionTypes {
   GetProjectParts = '[Parts] Get project parts',
@@ -15,29 +17,39 @@ export enum PartsActionTypes {
   GetImagePart = '[Parts] Get image part',
   GetImagePartSuccess = '[Parts] Get image part success',
   GetPagePart = '[Parts] Get page part',
-  GetPagePartSuccess = '[Parts] Get page part  success',
+  GetPagePartSuccess = '[Parts] Get page part success',
   GetRegionPart = '[Parts] Get region part',
-  GetRegionPartSuccess = '[Parts] Get region part  success',
+  GetRegionPartSuccess = '[Parts] Get region part success',
   GetSymbolPart = '[Parts] Get symbol part',
-  GetSymbolPartSuccess = '[Parts] Get symbol part  success',
+  GetSymbolPartSuccess = '[Parts] Get symbol part success',
 
   CreateImagePart = '[Parts] Create image part',
   CreateImagePartSuccess = '[Parts] Create image part success',
   CreatePagePart = '[Parts] Create page part',
-  CreatePagePartSuccess = '[Parts] Create page part  success',
+  CreatePagePartSuccess = '[Parts] Create page part success',
   CreateRegionPart = '[Parts] Create region part',
-  CreateRegionPartSuccess = '[Parts] Create region part  success',
+  CreateRegionPartSuccess = '[Parts] Create region part success',
   CreateSymbolPart = '[Parts] Create symbol part',
-  CreateSymbolPartSuccess = '[Parts] Create symbol part  success',
+  CreateSymbolPartSuccess = '[Parts] Create symbol part success',
 
   UpdateImagePart = '[Parts] Update image part',
   UpdateImagePartSuccess = '[Parts] Update image part success',
   UpdatePagePart = '[Parts] Update page part',
-  UpdatePagePartSuccess = '[Parts] Update page part  success',
+  UpdatePagePartSuccess = '[Parts] Update page part success',
   UpdateRegionPart = '[Parts] Update region part',
-  UpdateRegionPartSuccess = '[Parts] Update region part  success',
+  UpdateRegionPartSuccess = '[Parts] Update region part success',
   UpdateSymbolPart = '[Parts] Update symbol part',
-  UpdateSymbolPartSuccess = '[Parts] Update symbol part  success'
+  UpdateSymbolPartSuccess = '[Parts] Update symbol part success',
+
+  CreatePart = '[Parts] Create part',
+  CreatePartSuccess = '[Parts] Create part success',
+  RenamePart = '[Parts] Rename part',
+  RenamePartSuccess = '[Parts] Rename part success',
+  DeletePart = '[Parts] Delete part',
+  DeletePartSuccess = '[Parts] Delete part success',
+
+  GetUsesOfParts = '[Parts] Get uses of parts',
+  GetUsesOfPartsSuccess = '[Parts] Get uses of parts success'
 }
 
 export class GetProjectParts implements Action {
@@ -180,6 +192,44 @@ export class CreateSymbolPartSuccess implements Action {
   constructor(public part: Part) {}
 }
 
+export class RenamePart implements Action {
+  public readonly type = PartsActionTypes.RenamePart;
+  constructor(public part: Part, public newName: string) {}
+}
+
+export class RenamePartSuccess implements Action {
+  public readonly type = PartsActionTypes.RenamePartSuccess;
+  constructor(public part: Part) {}
+}
+
+export class DeletePart implements Action {
+  public readonly type = PartsActionTypes.DeletePart;
+  constructor(public partID: number) {}
+}
+
+export class DeletePartSuccess implements Action {
+  public readonly type = PartsActionTypes.DeletePartSuccess;
+  constructor(public deletedPartID: number) {}
+}
+
+export class CreatePart implements Action {
+  public readonly type = PartsActionTypes.CreatePart;
+  constructor(public projectID: number, public name: string) {}
+}
+
+export class CreatePartSuccess implements Action {
+  public readonly type = PartsActionTypes.CreatePartSuccess;
+  constructor(public part: Part) {}
+}
+export class GetUsesOfParts implements Action {
+  public readonly type = PartsActionTypes.GetUsesOfParts;
+  constructor(public partID: number) {}
+}
+
+export class GetUsesOfPartsSuccess implements Action {
+  public readonly type = PartsActionTypes.GetUsesOfPartsSuccess;
+  constructor(public usesOfParts: UsesOfParts) {}
+}
 export type PartsActions =
   GetProjectParts | GetProjectPartsSuccess |
   GetImageProjectParts | GetImageProjectPartsSuccess |
@@ -190,4 +240,8 @@ export type PartsActions =
   CreateImagePart | CreateImagePartSuccess |
   CreatePagePart | CreatePagePartSuccess |
   CreateRegionPart | CreateRegionPartSuccess |
-  CreateSymbolPart | CreateSymbolPartSuccess;
+  CreateSymbolPart | CreateSymbolPartSuccess |
+  CreatePart | CreatePartSuccess |
+  RenamePart | RenamePartSuccess |
+  DeletePart | DeletePartSuccess |
+  GetUsesOfParts | GetUsesOfPartsSuccess;

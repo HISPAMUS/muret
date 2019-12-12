@@ -54,9 +54,4 @@ export class ProjectService {
     const url = `project/exportMusicXML/${projectID}`;
     return this.apiRestClientService.getBlob$(url);
   }
-
-  getUsesOfParts$(projectID: number): Observable<UsesOfParts> {
-    const url = `parts/uses/${projectID}`;
-    return this.apiRestClientService.get$<UsesOfParts>(url);
-  }
 }

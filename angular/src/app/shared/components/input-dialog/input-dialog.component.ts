@@ -3,6 +3,7 @@ import {SimpleModalComponent} from 'ngx-simple-modal';
 
 export interface InputModel {
   title: string;
+  message?: string;
   currentValue?: string;
 }
 
@@ -13,12 +14,11 @@ export interface InputModel {
 })
 export class InputDialogComponent extends SimpleModalComponent<InputModel, string> implements InputModel {
   title: string;
-  currentValue: string;
   message: string;
+  currentValue: string;
   constructor() {
     super();
-    this.message = "How many pages do you want to create?"
-    this.currentValue = "1";
+    this.currentValue = '1';
   }
   confirm() {
     // on click on confirm button we set dialog result as true,

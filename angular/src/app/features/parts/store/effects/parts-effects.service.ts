@@ -7,10 +7,10 @@ import {
   CreateImagePart,
   CreateImagePartSuccess,
   CreatePagePart,
-  CreatePagePartSuccess,
+  CreatePagePartSuccess, CreatePart, CreatePartSuccess,
   CreateRegionPart,
   CreateRegionPartSuccess,
-  CreateSymbolPart, CreateSymbolPartSuccess,
+  CreateSymbolPart, CreateSymbolPartSuccess, DeletePart, DeletePartSuccess,
   GetImagePart,
   GetImagePartSuccess, GetImageProjectParts, GetImageProjectPartsSuccess,
   GetPagePart,
@@ -18,8 +18,8 @@ import {
   GetRegionPart,
   GetRegionPartSuccess,
   GetSymbolPart,
-  GetSymbolPartSuccess,
-  PartsActionTypes,
+  GetSymbolPartSuccess, GetUsesOfParts, GetUsesOfPartsSuccess,
+  PartsActionTypes, RenamePart, RenamePartSuccess,
   UpdateImagePart,
   UpdateImagePartSuccess,
   UpdatePagePart,
@@ -30,10 +30,7 @@ import {
   UpdateSymbolPartSuccess
 } from '../actions/parts.actions';
 import {Part} from '../../../../core/model/entities/part';
-import {Image} from '../../../../core/model/entities/image';
-import {Page} from '../../../../core/model/entities/page';
-import {Region} from '../../../../core/model/entities/region';
-import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
+import {UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
 
 @Injectable()
 export class PartsEffects {
@@ -178,6 +175,45 @@ export class PartsEffects {
       this.partsService.createSymbolPart$(action.symbol, action.partName)),
     switchMap((part: Part) => {
       return of(new CreateSymbolPartSuccess(part));
+    })
+  );
+
+  @Effect()
+  renamePart$ = this.actions$.pipe(
+    ofType<RenamePart>(PartsActionTypes.RenamePart),
+    switchMap((action: RenamePart) =>
+      this.partsService.renamePart$(action.part, action.newName)),
+    switchMap((part: Part) => {
+      return of(new RenamePartSuccess(part));
+    })
+  );
+  @Effect()
+  createPart$ = this.actions$.pipe(
+    ofType<CreatePart>(PartsActionTypes.CreatePart),
+    switchMap((action: CreatePart) =>
+      this.partsService.createPart$(action.projectID, action.name)),
+    switchMap((part: Part) => {
+      return of(new CreatePartSuccess(part));
+    })
+  );
+
+  @Effect()
+  deletePart$ = this.actions$.pipe(
+    ofType<DeletePart>(PartsActionTypes.DeletePart),
+    switchMap((action: DeletePart) =>
+      this.partsService.deletePart$(action.partID)),
+    switchMap((deletedPartID: number) => {
+      return of(new DeletePartSuccess(deletedPartID));
+    })
+  );
+
+  @Effect()
+  getUsesOfParts$ = this.actions$.pipe(
+    ofType<GetUsesOfParts>(PartsActionTypes.GetUsesOfParts),
+    map((action: GetUsesOfParts) => action.partID),
+    switchMap((partID) => this.partsService.getUsesOfParts$(partID)),
+    switchMap((usesOfParts: UsesOfParts) => {
+      return of(new GetUsesOfPartsSuccess(usesOfParts));
     })
   );
 }

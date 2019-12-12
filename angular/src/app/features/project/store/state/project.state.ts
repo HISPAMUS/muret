@@ -8,15 +8,13 @@ export interface ProjectState {
   images: Image[];
   mei: string;
   statistics: ProjectStatistics;
-  usesOfParts: UsesOfParts;
 }
 
 export const initialProjectState: ProjectState = {
   project: null,
   images: null,
   mei: null,
-  statistics: null,
-  usesOfParts: null
+  statistics: null
 };
 
 export function getInitialState(): ProjectState {

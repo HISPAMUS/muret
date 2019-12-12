@@ -138,45 +138,66 @@ public class PartsController extends MuRETBaseController {
         }
     }
 
+    private Part createPart(Project project, String partName) {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Creating part {0} for project {1}", new Object[] {project.getId(), partName});
+        Part part = new Part();
+        part.setName(partName);
+        part.setProject(project);
+        part = partRepository.save(part);
+
+        return part;
+    }
+
+    @PutMapping(path = {"create/{projectID}/{partName}"})
+    @Transactional
+    public Part createPart(@PathVariable(name="projectID") Integer projectID, @PathVariable(name="partName") String partName) throws IM3WSException {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Creating part {0} for project {1}", new Object[] {projectID, partName});
+
+        Optional<Project> project = projectRepository.findById(projectID);
+        if (!project.isPresent()) {
+            throw new IM3WSException("Cannot find project with id " + projectID);
+        }
+
+        return createPart(project.get(), partName);
+    }
+
     @PutMapping(path = {"create/{partAssignedToType}/{targetID}/{partName}"})
     @Transactional
     public Part createPart(@PathVariable(name="partAssignedToType") PartAssignedToType partAssignedToType, @PathVariable(name="targetID") Long targetID, @PathVariable(name="partName") String partName) throws IM3WSException {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Setting part name of type {0} with id {1} to part with ID {2}", new Object[] {partAssignedToType, targetID, partName});
-        Part part = new Part();
-        part.setName(partName);
+
+        Part part = null;
 
         switch (partAssignedToType) {
             case image:
                 Image image = getImage(targetID);
-                part.setProject(image.getProject());
-                part = partRepository.save(part);
+                part = createPart(image.getProject(), partName);
                 image.setPart(part);
                 imageRepository.save(image);
-                return part;
+                break;
             case page:
                 Page page = getPage(targetID);
-                part.setProject(page.getImage().getProject());
+                part = createPart(page.getImage().getProject(), partName);
                 page.setPart(part);
-                part = partRepository.save(part);
                 pageRepository.save(page);
-                return part;
+                break;
             case region:
                 Region region = getRegion(targetID);
+                part = createPart(region.getPage().getImage().getProject(), partName);
                 part.setProject(region.getPage().getImage().getProject());
-                part = partRepository.save(part);
                 region.setPart(part);
                 regionRepository.save(region);
-                return part;
+                break;
             case symbol:
                 Symbol symbol = getSymbol(targetID);
-                part.setProject(symbol.getRegion().getPage().getImage().getProject());
-                part = partRepository.save(part);
+                part = createPart(symbol.getRegion().getPage().getImage().getProject(), partName);
                 symbol.setPart(part);
                 symbolRepository.save(symbol);
-                return part;
+                break;
             default:
                 throw new IM3WSException("Invalid assignable to part type: " + partAssignedToType);
         }
+        return part;
     }
 
     @PutMapping(path = {"clear/{partAssignedToType}/{targetID}"})
@@ -208,4 +229,27 @@ public class PartsController extends MuRETBaseController {
                 throw new IM3WSException("Invalid assignable to part type: " + partAssignedToType);
         }
     }
+
+    @PutMapping("rename/{partID}/{newName}")
+    public Part rename(@PathVariable Long partID, @PathVariable String newName) throws IM3WSException {
+        Optional<Part> part = partRepository.findById(partID);
+        if (!part.isPresent()) {
+            throw new IM3WSException("Cannot find a part with id " + partID);
+        }
+
+        part.get().setName(newName);
+        return partRepository.save(part.get());
+    }
+
+    @DeleteMapping(path = {"delete/{partID}"})
+    public long deleteSymbol(@PathVariable("partID") long partID) throws IM3WSException {
+        Optional<Part> part = partRepository.findById(partID);
+        if (!part.isPresent()) {
+            throw new IM3WSException("Cannot find a part with id " + partID);
+        }
+
+        partRepository.delete(part.get());
+        return partID;
+    }
+
 }

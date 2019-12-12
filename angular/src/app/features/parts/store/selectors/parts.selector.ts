@@ -27,3 +27,8 @@ export const selectSymbolPart = createSelector(
   partsState,
   (state: PartsState) => state.symbolPart
 );
+
+export const selectUsesOfParts = createSelector(
+  partsState,
+  (state: PartsState) => state.usesOfParts
+);

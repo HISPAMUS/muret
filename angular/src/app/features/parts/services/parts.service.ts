@@ -6,6 +6,8 @@ import {Part} from '../../../core/model/entities/part';
 import {Observable} from 'rxjs';
 import {Page} from '../../../core/model/entities/page';
 import {AgnosticSymbol} from '../../../core/model/entities/agnosticSymbol';
+import {Project} from '../../../core/model/entities/project';
+import {UsesOfParts} from '../../../core/model/restapi/uses-of-parts';
 
 
 @Injectable()
@@ -92,4 +94,19 @@ export class PartsService {
     return this.apiRestClientService.put$<Part>('parts/create/page/' + symbol.id + '/' + partName, null);
   }
 
+  createPart$(projectID: number, name: string): Observable<Part> {
+    return this.apiRestClientService.put$<Part>('parts/create/' + projectID + '/' + name, null);
+  }
+
+  renamePart$(part: Part, newName: string): Observable<Part> {
+    return this.apiRestClientService.put$<Part>('parts/rename/' + part.id + '/' + newName, null);
+  }
+
+  deletePart$(partID: number): Observable<number> {
+    return this.apiRestClientService.delete$<number>('parts/delete', partID);
+  }
+  getUsesOfParts$(projectID: number): Observable<UsesOfParts> {
+    const url = `parts/uses/${projectID}`;
+    return this.apiRestClientService.get$<UsesOfParts>(url);
+  }
 }

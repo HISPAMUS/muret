@@ -23,7 +23,3 @@ export const selectProjectStatistics = createSelector(
   (state: ProjectState) => state.statistics
 );
 
-export const selectUsesOfParts = createSelector(
-  projectState,
-  (state: ProjectState) => state.usesOfParts
-);
