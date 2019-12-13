@@ -1,9 +1,9 @@
-  import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {GetImageProjection} from '../../../document-analysis/store/actions/document-analysis.actions';
 import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
 import {Store} from '@ngrx/store';
-import {Observable, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {Region} from '../../../../core/model/entities/region';
 import {
   ClearNotation,
@@ -11,18 +11,17 @@ import {
   GetNotation,
   SendSemanticEncoding
 } from '../../store/actions/semantic-representation.actions';
-  import {selectNotation} from '../../store/selectors/semantic-representation.selector';
-  import {Notation} from '../../services/notation';
-  import {Shape} from '../../../../svg/model/shape';
-  import {selectAgnosticSymbols} from '../../../agnostic-representation/store/selectors/agnostic-representation.selector';
-  import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
-  import {Rectangle} from '../../../../svg/model/rectangle';
-  import {Part} from '../../../../core/model/entities/part';
-  import {selectProjectParts, selectRegionPart} from '../../../parts/store/selectors/parts.selector';
-  import {CreateRegionPart, GetImageProjectParts, GetRegionPart, UpdateRegionPart} from '../../../parts/store/actions/parts.actions';
-  import {GetRegion} from '../../../agnostic-representation/store/actions/agnostic-representation.actions';
+import {selectNotation} from '../../store/selectors/semantic-representation.selector';
+import {Notation} from '../../services/notation';
+import {Shape} from '../../../../svg/model/shape';
+import {selectAgnosticSymbols} from '../../../agnostic-representation/store/selectors/agnostic-representation.selector';
+import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
+import {Rectangle} from '../../../../svg/model/rectangle';
+import {Part} from '../../../../core/model/entities/part';
+import {CreateRegionPart, GetRegionPart, UpdateRegionPart} from '../../../parts/store/actions/parts.actions';
+import {GetRegion} from '../../../agnostic-representation/store/actions/agnostic-representation.actions';
 
-  @Component({
+@Component({
   selector: 'app-semantic-representation',
   templateUrl: './semantic-representation.component.html',
   styleUrls: ['./semantic-representation.component.css']
@@ -57,11 +56,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   defaultColDef: { resizable: boolean; editable: boolean };
   private string: string;
 
-  projectParts$: Observable<Part[]>;
-  // imagePart$: Observable<Part>;
-  // pagePart$: Observable<Part>;
-  regionPart$: Observable<Part>;
-    private drawSymbolsPending = true;
+  private drawSymbolsPending = true;
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>) {
     this.defaultColDef = {
@@ -76,7 +71,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
       if (params.get('id')) {
         this.imageID = +params.get('id'); // + converts the string to number
         this.store.dispatch(new GetImageProjection(+this.imageID));
-        this.store.dispatch(new GetImageProjectParts(+this.imageID));
+        /// this.store.dispatch(new GetImageProjectParts(+this.imageID));
       }
 
       if (params.get('region_id')) {
@@ -107,11 +102,6 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
           this.drawSelectedRegionSymbols(next);
         });
     });
-
-    this.projectParts$ = this.store.select(selectProjectParts);
-    // this.imagePart$ = this.store.select(selectImagePart);
-    // this.pagePart$ = this.store.select(selectPagePart);
-    this.regionPart$ = this.store.select(selectRegionPart);
   }
 
   ngOnDestroy(): void {
@@ -134,9 +124,6 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   setSelectedRegion($event: Region) {
     setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
       this.selectedRegion = $event;
-      console.log($event)
-      console.log(this.selectedRegion)
-      console.log('Done')
       this.errorMessage = null;
       this.notation = null;
       // this.semanticEncoding = '';
@@ -370,7 +357,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
     createRegionPart($event: string) {
       this.store.dispatch(new CreateRegionPart(this.selectedRegion, $event));
-      this.store.dispatch(new GetImageProjectParts(+this.imageID)); // to update the drop down
+      /// this.store.dispatch(new GetImageProjectParts(+this.imageID)); // to update the drop down
     }
 
     noErrorMessage() {

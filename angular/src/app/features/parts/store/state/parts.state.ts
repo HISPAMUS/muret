@@ -2,21 +2,13 @@ import {Part} from '../../../../core/model/entities/part';
 import {UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
 
 export interface PartsState {
-  projectParts: Part[],
-  imagePart: Part,
-  pagePart: Part,
-  regionPart: Part,
-  symbolPart: Part,
   usesOfParts: UsesOfParts;
+  partNamesUsedInImage: string[];
 }
 
 export const initialSemanticRepresentationState: PartsState = {
-  projectParts: null,
-  imagePart: null,
-  pagePart: null,
-  regionPart: null,
-  symbolPart: null,
-  usesOfParts: null
+  usesOfParts: null,
+  partNamesUsedInImage: null
 };
 
 export function getInitialState(): PartsState {

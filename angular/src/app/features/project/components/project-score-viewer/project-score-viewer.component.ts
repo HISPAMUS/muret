@@ -7,10 +7,7 @@ import {selectProject, selectProjectMEI} from '../../store/selectors/project.sel
 import {Observable, Subscription} from 'rxjs';
 import {NotationService} from '../../../semantic-representation/services/notation.service';
 import { saveAs } from 'file-saver';
-import {Part} from '../../../../core/model/entities/part';
 import {Project} from '../../../../core/model/entities/project';
-import {GetProjectParts} from '../../../parts/store/actions/parts.actions';
-import {selectProjectParts} from '../../../parts/store/selectors/parts.selector';
 
 @Component({
   selector: 'app-project-score-viewer',
@@ -23,7 +20,6 @@ export class ProjectScoreViewerComponent implements OnInit, OnDestroy {
   notationAsSVG: any;
   private mei: string;
   project$: Observable<Project>;
-  projectParts$: Observable<Part[]>;
 
   // don't use here REDUX for the FileUploader
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<ProjectState>,
@@ -34,11 +30,10 @@ export class ProjectScoreViewerComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.projectID = +this.route.snapshot.paramMap.get('id'); // + converts the string to number
       this.store.dispatch(new GetProject(this.projectID));
-      this.store.dispatch(new GetProjectParts(this.projectID));
+      /// this.store.dispatch(new GetProjectParts(this.projectID));
     });
 
     this.project$ = this.store.select(selectProject);
-    this.projectParts$ = this.store.select(selectProjectParts);
 
     this.meiSubscription = this.store.select(selectProjectMEI).subscribe(next => {
       this.notationAsSVG = this.notationService.renderScore(next);

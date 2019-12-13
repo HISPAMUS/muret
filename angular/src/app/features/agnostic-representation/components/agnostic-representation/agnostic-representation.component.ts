@@ -8,7 +8,7 @@ import {Region} from '../../../../core/model/entities/region';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
 import {
   selectFileName,
-  selectDocumentType, selectImageURL, selectImageHeight,
+  selectDocumentType,
 } from '../../../document-analysis/store/selectors/document-analysis.selector';
 import {Store} from '@ngrx/store';
 import {
@@ -116,7 +116,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    //this.store.dispatch(new InitRegion());
+    // this.store.dispatch(new InitRegion()); -- commented to reseting region when changing from semantic to agnostic
     // request store data
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.imageID = +params.get('id'); // + converts the string to number

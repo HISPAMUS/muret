@@ -7,7 +7,15 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Project} from '../../../../core/model/entities/project';
 import {Lightbox, LightboxConfig} from 'ngx-lightbox';
+import {Part} from '../../../../core/model/entities/part';
+import {Store} from '@ngrx/store';
+import {PartsState} from '../../../parts/store/state/parts.state';
+import {UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
+import {forEachComment} from 'tslint';
 
+/**
+ * When entering here the usesOfParts should be loaded by the project
+ */
 @Component({
   selector: 'app-image-thumbnail',
   templateUrl: './image-thumbnail.component.html',
@@ -17,16 +25,19 @@ import {Lightbox, LightboxConfig} from 'ngx-lightbox';
 export class ImageThumbnailComponent implements OnInit {
   @Input() project: Project;
   @Input() image: Image;
+  @Input() usesOfParts: UsesOfParts;
   @Input() projectPath: string;
-  loadingImage = 'assets/loading.svg';
+  // loadingImage = 'assets/loading.svg';
   loadedImage$: Observable<SafeResourceUrl>;
-
+  // partsUsedInImage$: Observable<string[]>;
 
   constructor(private router: Router,
               private imageFilesService: ImageFilesService,
               private lightbox: Lightbox,
               private lighboxConfig: LightboxConfig,
-              private sanitizer: DomSanitizer) {
+              private sanitizer: DomSanitizer,
+              private store: Store<PartsState>,
+  ) {
     lighboxConfig.fitImageInViewPort = true;
   }
 
@@ -35,12 +46,17 @@ export class ImageThumbnailComponent implements OnInit {
       map(imageBlob => this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(imageBlob)))
       );
 
+
     /*this.imageFilesService.getThumbnailImage$(this.projectPath, this.image.id).subscribe(
       imageBlob => this.imageThumbnail.nativeElement.src = window.URL.createObjectURL(imageBlob));*/
+
+    // this.store.dispatch(new GetPartNamesUsedByImage(this.image.id));
+    // this.store.dispatch(new GetUsesOfParts(this.projectID)); The use of parts should already be loaded at project component
+
+    // this.partsUsedInImage$ = this.store.select(selectPartsUsedInImage);
   }
 
   previewImage() {
-    console.log("clicked!")
     this.imageFilesService.getPreviewImageBlob$(this.projectPath, this.image.id).subscribe(imageBlob => {
       const albums = []; // used by Lightbox
 
@@ -66,5 +82,23 @@ export class ImageThumbnailComponent implements OnInit {
 
   openSemantic() {
     this.router.navigate(['semanticrepresentation', this.image.id]);
+  }
+
+  trackByPartNameFn(index, item: string) {
+    return index; // unique id corresponding to the item
+  }
+
+  partsUsed(): Array<string> {
+    const partsUsed: Array<string> = [];
+
+    this.usesOfParts.uses.forEach(usesOfPart => {
+      if (usesOfPart.images.indexOf(this.image.id) >= 0 ||
+        (usesOfPart.pages.find(page => page.imageId === this.image.id)) ||
+        (usesOfPart.regions.find(region => region.imageId === this.image.id)) ||
+        (usesOfPart.symbols.find(symbol => symbol.imageId === this.image.id))) {
+        partsUsed.push(usesOfPart.part.name);
+      }
+    });
+    return partsUsed;
   }
 }

@@ -16,7 +16,12 @@ export class PartsService {
   constructor(private apiRestClientService: ApiRestClientService) {
   }
 
-  getProjectParts$(projectID: number): Observable<Part[]> {
+  getPartNamesUsedByImage$(imageID: number): Observable<string[]> {
+    const url = 'parts/partNamesUsedByImage/' + imageID;
+    return this.apiRestClientService.get$<string[]>(url);
+  }
+
+  /*getProjectParts$(projectID: number): Observable<Part[]> {
     const url = 'parts/project/' + projectID;
     return this.apiRestClientService.get$<Part[]>(url);
   }
@@ -24,7 +29,7 @@ export class PartsService {
   getImageProjectParts$(imageID: number) {
     const url = 'parts/imageProjectParts/' + imageID;
     return this.apiRestClientService.get$<Part[]>(url);
-  }
+  }*/
 
   public getImagePart$(id: number): Observable<Part> {
     const url = 'parts/get/image/' + id;

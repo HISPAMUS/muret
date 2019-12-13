@@ -32,8 +32,8 @@ export class InstrumentsComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.projectID = +this.route.snapshot.paramMap.get('id'); // + converts the string to number
-      this.store.dispatch(new GetProject(this.projectID));
-      this.store.dispatch(new GetUsesOfParts(this.projectID));
+      // this.store.dispatch(new GetProject(this.projectID)); // The use of parts and project should already be loaded at project component
+      // this.store.dispatch(new GetUsesOfParts(this.projectID));
     });
   }
 
@@ -72,7 +72,6 @@ export class InstrumentsComponent implements OnInit {
     this.dialogsService.showInput('Rename part / instrument', 'Set new name for part', part.name).subscribe(newValue => {
       if (newValue) {
         this.store.dispatch(new RenamePart(part, newValue));
-        console.error('TODO - actualizar nuevo nomnbre part'); //TODO
       }
     });
   }
@@ -82,7 +81,6 @@ export class InstrumentsComponent implements OnInit {
       .subscribe((isConfirmed) => {
         if (isConfirmed) {
           this.store.dispatch(new DeletePart(part.id));
-          console.error('TODO - actualizar borrado'); //TODO
         }
       });
   }
@@ -90,7 +88,6 @@ export class InstrumentsComponent implements OnInit {
   addPart() {
     this.dialogsService.showInput('Add part / instrument', '', '').subscribe(newValue => {
       this.store.dispatch(new CreatePart(this.projectID, newValue));
-      console.error('TODO - actualizar nuevo nomnbre part'); //TODO
     });
   }
 }

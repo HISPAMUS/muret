@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,15 +52,10 @@ public class PartsController extends MuRETBaseController {
         return usesOfParts;
     }
 
-    @GetMapping(path = {"project/{projectID}"})
+    /*@GetMapping(path = {"project/{projectID}"})
     @Transactional
     public List<Part> getProjectParts(@PathVariable(name="projectID") Integer projectID) throws IM3WSException {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Getting parts of project with id {0}", projectID);
-        /*Optional<Project> project = projectRepository.findById(projectID);
-        if (!project.isPresent()) {
-            throw new IM3WSException("Cannot find a project with ID = " + projectID);
-        }*
-        List<Part> result = project.get().getParts();*/
         List<Part> result = partRepository.findByProjectId(projectID);
         return result;
     }
@@ -76,7 +70,7 @@ public class PartsController extends MuRETBaseController {
         }
         List<Part> result = partRepository.findByProjectId(image.get().getProject().getId());
         return result;
-    }
+    }*/
 
     @GetMapping(path = {"get/{partAssignedToType}/{targetID}"})
     @Transactional
@@ -251,5 +245,13 @@ public class PartsController extends MuRETBaseController {
         partRepository.delete(part.get());
         return partID;
     }
+
+    /*@GetMapping(path = {"partNamesUsedByImage/{imageID}"})
+    @Transactional
+    public List<String> getImageProjectParts(@PathVariable(name="imageID") Long imageID) throws IM3WSException {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Getting part names used by image with id {0}", imageID);
+        List<String> result = partRepository.getPartNamesUsedByImage(imageID);
+        return result;
+    }*/
 
 }

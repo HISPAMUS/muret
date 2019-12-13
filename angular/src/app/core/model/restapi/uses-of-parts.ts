@@ -1,5 +1,10 @@
 import {Part} from '../entities/part';
-import {KeyValue} from '@angular/common';
+
+export interface PartUse {
+  id: number;
+  partId: number;
+  imageId: number;
+}
 
 export interface PartUses {
   part: Part;
@@ -7,15 +12,15 @@ export interface PartUses {
   /**
    * key = image, value = page
    */
-  pages?: KeyValue<number, number> [];
+  pages?: PartUse [];
   /**
    * key = image, value = region
    */
-  regions?: KeyValue<number, number> [];
+  regions?: PartUse [];
   /**
    * key = image, value = symbol
    */
-  symbols?: KeyValue<number, number> [];
+  symbols?: PartUse [];
 }
 export interface UsesOfParts {
   uses: PartUses[];

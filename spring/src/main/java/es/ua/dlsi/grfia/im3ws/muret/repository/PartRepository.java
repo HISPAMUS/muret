@@ -1,6 +1,6 @@
 package es.ua.dlsi.grfia.im3ws.muret.repository;
 
-import es.ua.dlsi.grfia.im3ws.muret.controller.payload.IBigIntPair;
+import es.ua.dlsi.grfia.im3ws.muret.controller.payload.PartUse;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Part;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -32,13 +32,24 @@ public interface PartRepository extends CrudRepository<Part, Long> {
     @Query(value="SELECT id FROM image i where i.part_id = :partID", nativeQuery = true)
     List<BigInteger> getImages(Long partID);
 
-    @Query(value="SELECT p.image_id as x, p.id as y FROM page p where p.part_id = :partID", nativeQuery = true)
-    List<IBigIntPair> getPages(Long partID);
+    @Query(value="SELECT p.image_id as imageId, p.part_id as partId, p.id as id FROM page p where p.part_id = :partID", nativeQuery = true)
+    List<PartUse> getPages(Long partID);
 
-    @Query(value="SELECT p.image_id as x, r.id as y FROM region r, page p where r.part_id = :partID and p.id = r.page_id", nativeQuery = true)
-    List<IBigIntPair> getRegions(Long partID);
+    @Query(value="SELECT p.image_id as imageId, r.part_id as partId, r.id as id FROM region r, page p where r.part_id = :partID and p.id = r.page_id", nativeQuery = true)
+    List<PartUse> getRegions(Long partID);
 
-    @Query(value="SELECT p.image_id as x, s.id as y FROM symbol s, page p, region r  where s.part_id = :partID and p.id = r.page_id and s.region_id = r.id", nativeQuery = true)
-    List<IBigIntPair> getSymbols(Long partID);
+    @Query(value="SELECT p.image_id as imageId, s.part_id as partId, s.id as id FROM symbol s, page p, region r  where s.part_id = :partID and p.id = r.page_id and s.region_id = r.id", nativeQuery = true)
+    List<PartUse> getSymbols(Long partID);
 
+    // List<Part> findByImageId(Long imageID);
+
+    /*@Query(value="select part.name from part, image where part.id = image.part_id and image.id = :partID\n" +
+            "union\n" +
+            "select part.name from part, image, page where part.id = page.part_id and image.id = page.image_id and image.id = :partID\n" +
+            "union\n" +
+            "select part.name from part, region, image, page where part.id = region.part_id and image.id = page.image_id and page.id = region.page_id and image.id = :partID\n" +
+            "union\n" +
+            "select part.name from part, symbol, region, image, page where part.id = symbol.part_id and symbol.id = image.part_id and image.id = page.image_id and page.id = region.page_id and symbol.region_id = region.id and image.id = :partID",
+    nativeQuery = true)
+    List<String> getPartNamesUsedByImage(Long partID);*/
 }

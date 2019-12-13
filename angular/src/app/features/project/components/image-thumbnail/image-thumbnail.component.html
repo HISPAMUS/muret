@@ -19,11 +19,9 @@
     <a class="openLink" (click)="openAgnostic()">Agnostic</a>&nbsp;|&nbsp;
     <a class="openLink" (click)="openSemantic()">Semantic</a>
   </p>
-  <p>TO-DO Instruments</p>
-  <!-- Si la imagen tiene un instrumento lo mostramos (permitimos desasignarlo).
-  Si no tiene ningún instrumento ponemos botón para asignarlo.
-  Servicio que recorra las páginas, regiones... y nos haga un resument de los instrumentos. Que devuelva:
-  - lista de instrumentos usados
-  - detalle
-  Mostraremos algo así como Instruments inside image elements: tiple, bass (+show more) -->
+  <p>
+    <span *ngFor="let partName of partsUsed(); trackBy: trackByPartNameFn">
+      {{partName}} &nbsp;
+    </span>
+  </p>
 </div>

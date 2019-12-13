@@ -18,7 +18,7 @@
 
   <div class="row">
     <div *ngFor="let image of images$ | async; trackBy: trackByImageFn" class="col-6 col-lg-4 projectImageThumbnail" >
-      <app-image-thumbnail [projectPath]="project.path" [image]="image" [attr.data-id]="image.id"></app-image-thumbnail>
+      <app-image-thumbnail [project]="project" [projectPath]="project.path" [image]="image" [attr.data-id]="image.id" [usesOfParts]="usesOfParts$ | async"></app-image-thumbnail>
     </div>
     <div id="uploadImagesButton" class="projectImageThumbnail col-6 col-lg-4 d-flex justify-content-center">
       <div class="align-self-center"><a (click)="uploadImages()">Upload images...</a></div>

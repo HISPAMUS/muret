@@ -8,11 +8,11 @@ import {UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
 import {GetProjectStatisticsSuccess, ProjectActionTypes} from '../../../project/store/actions/project.actions';
 
 export enum PartsActionTypes {
-  GetProjectParts = '[Parts] Get project parts',
+  /*GetProjectParts = '[Parts] Get project parts',
   GetProjectPartsSuccess = '[Parts] Get project parts success',
 
   GetImageProjectParts = '[Parts] Get image project parts',
-  GetImageProjectPartsSuccess = '[Parts] Get image project parts success',
+  GetImageProjectPartsSuccess = '[Parts] Get image project parts success',*/
 
   GetImagePart = '[Parts] Get image part',
   GetImagePartSuccess = '[Parts] Get image part success',
@@ -49,10 +49,13 @@ export enum PartsActionTypes {
   DeletePartSuccess = '[Parts] Delete part success',
 
   GetUsesOfParts = '[Parts] Get uses of parts',
-  GetUsesOfPartsSuccess = '[Parts] Get uses of parts success'
+  GetUsesOfPartsSuccess = '[Parts] Get uses of parts success',
+
+  /*GetPartNamesUsedByImage = '[Parts] Get part names used by image',
+  GetPartNamesUsedByImageSuccess = '[Parts] Get part names used by image success'*/
 }
 
-export class GetProjectParts implements Action {
+/*export class GetProjectParts implements Action {
   public readonly type = PartsActionTypes.GetProjectParts;
   constructor(public projectID: number) {}
 }
@@ -70,7 +73,7 @@ export class GetImageProjectParts implements Action {
 export class GetImageProjectPartsSuccess implements Action {
   public readonly type = PartsActionTypes.GetImageProjectPartsSuccess;
   constructor(public parts: Part[]) {}
-}
+}*/
 
 export class GetImagePart implements Action {
   public readonly type = PartsActionTypes.GetImagePart;
@@ -230,9 +233,20 @@ export class GetUsesOfPartsSuccess implements Action {
   public readonly type = PartsActionTypes.GetUsesOfPartsSuccess;
   constructor(public usesOfParts: UsesOfParts) {}
 }
+
+/*export class GetPartNamesUsedByImage implements Action {
+  public readonly type = PartsActionTypes.GetPartNamesUsedByImage;
+  constructor(public imageID: number) {}
+}
+
+export class GetPartNamesUsedByImageSuccess implements Action {
+  public readonly type = PartsActionTypes.GetPartNamesUsedByImageSuccess;
+  constructor(public parts: string[]) {}
+}*/
+
 export type PartsActions =
-  GetProjectParts | GetProjectPartsSuccess |
-  GetImageProjectParts | GetImageProjectPartsSuccess |
+  /*GetProjectParts | GetProjectPartsSuccess |
+  GetImageProjectParts | GetImageProjectPartsSuccess |*/
   GetImagePart | GetImagePartSuccess | UpdateImagePart | UpdateImagePartSuccess |
   GetPagePart | GetPagePartSuccess | UpdatePagePart | UpdatePagePartSuccess |
   GetRegionPart | GetRegionPartSuccess | UpdateRegionPart | UpdateRegionPartSuccess |
@@ -245,3 +259,5 @@ export type PartsActions =
   RenamePart | RenamePartSuccess |
   DeletePart | DeletePartSuccess |
   GetUsesOfParts | GetUsesOfPartsSuccess;
+  // | GetPartNamesUsedByImage | GetPartNamesUsedByImageSuccess;
+

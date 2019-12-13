@@ -7,7 +7,7 @@ import {
   ExportMEI, ExportMEIPartsFacsimile, ExportMEIPartsFacsimileSuccess,
   ExportMEISuccess, ExportMensurstrich, ExportMensurstrichSuccess, ExportMusicXML, ExportMusicXMLSuccess,
   GetImages,
-  GetImagesSuccess, GetUsesOfParts, GetUsesOfPartsSuccess,
+  GetImagesSuccess,
   GetProject, GetProjectStatistics, GetProjectStatisticsSuccess,
   GetProjectSuccess,
   ProjectActionTypes
@@ -16,7 +16,6 @@ import {Project} from '../../../../core/model/entities/project';
 import {Image} from '../../../../core/model/entities/image';
 import {StringResponse} from '../../../../core/model/restapi/string-response';
 import {ProjectStatistics} from '../../../../core/model/restapi/project-statistics';
-import {PartUses, UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
 
 @Injectable()
 export class ProjectEffects {
@@ -89,6 +88,4 @@ export class ProjectEffects {
       return of(new GetProjectStatisticsSuccess(projectStatistics));
     })
   );
-
-
 }

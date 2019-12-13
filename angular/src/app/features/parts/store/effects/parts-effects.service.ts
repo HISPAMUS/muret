@@ -12,9 +12,9 @@ import {
   CreateRegionPartSuccess,
   CreateSymbolPart, CreateSymbolPartSuccess, DeletePart, DeletePartSuccess,
   GetImagePart,
-  GetImagePartSuccess, GetImageProjectParts, GetImageProjectPartsSuccess,
+  GetImagePartSuccess,
   GetPagePart,
-  GetPagePartSuccess, GetProjectParts, GetProjectPartsSuccess,
+  GetPagePartSuccess,
   GetRegionPart,
   GetRegionPartSuccess,
   GetSymbolPart,
@@ -27,7 +27,7 @@ import {
   UpdateRegionPart,
   UpdateRegionPartSuccess,
   UpdateSymbolPart,
-  UpdateSymbolPartSuccess
+  UpdateSymbolPartSuccess,
 } from '../actions/parts.actions';
 import {Part} from '../../../../core/model/entities/part';
 import {UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
@@ -39,7 +39,7 @@ export class PartsEffects {
     private actions$: Actions,
   ) {}
 
-  @Effect()
+  /*@Effect()
   getProjectParts$ = this.actions$.pipe(
     ofType<GetProjectParts>(PartsActionTypes.GetProjectParts),
     map((action: GetProjectParts) => action),
@@ -57,7 +57,10 @@ export class PartsEffects {
     switchMap((parts: Part[]) => {
       return of(new GetImageProjectPartsSuccess(parts));
     })
-  );
+  );*/
+
+
+
   @Effect()
   getImagePart$ = this.actions$.pipe(
     ofType<GetImagePart>(PartsActionTypes.GetImagePart),
@@ -216,4 +219,14 @@ export class PartsEffects {
       return of(new GetUsesOfPartsSuccess(usesOfParts));
     })
   );
+
+  /*@Effect()
+  getPartNamesUsedByImage$ = this.actions$.pipe(
+    ofType<GetPartNamesUsedByImage>(PartsActionTypes.GetPartNamesUsedByImage),
+    map((action: GetPartNamesUsedByImage) => action),
+    switchMap((action) => this.partsService.getPartNamesUsedByImage$(action.imageID)),
+    switchMap((parts: string[]) => {
+      return of(new GetPartNamesUsedByImageSuccess(parts));
+    })
+  );*/
 }

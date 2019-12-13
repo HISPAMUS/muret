@@ -8,5 +8,4 @@ export interface DocumentAnalysisImageProjection extends Image {
   height: number;
   manuscriptType: 'eHandwritten' | 'ePrinted';
   notationType: 'eMensural' | 'eModern';
-  projectParts: Part[];
 }
