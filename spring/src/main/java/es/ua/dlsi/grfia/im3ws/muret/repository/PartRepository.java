@@ -1,6 +1,6 @@
 package es.ua.dlsi.grfia.im3ws.muret.repository;
 
-import es.ua.dlsi.grfia.im3ws.muret.controller.payload.PartUse;
+import es.ua.dlsi.grfia.im3ws.muret.controller.payload.IPartUse;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Part;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -33,13 +33,13 @@ public interface PartRepository extends CrudRepository<Part, Long> {
     List<BigInteger> getImages(Long partID);
 
     @Query(value="SELECT p.image_id as imageId, p.part_id as partId, p.id as id FROM page p where p.part_id = :partID", nativeQuery = true)
-    List<PartUse> getPages(Long partID);
+    List<IPartUse> getPages(Long partID);
 
     @Query(value="SELECT p.image_id as imageId, r.part_id as partId, r.id as id FROM region r, page p where r.part_id = :partID and p.id = r.page_id", nativeQuery = true)
-    List<PartUse> getRegions(Long partID);
+    List<IPartUse> getRegions(Long partID);
 
     @Query(value="SELECT p.image_id as imageId, s.part_id as partId, s.id as id FROM symbol s, page p, region r  where s.part_id = :partID and p.id = r.page_id and s.region_id = r.id", nativeQuery = true)
-    List<PartUse> getSymbols(Long partID);
+    List<IPartUse> getSymbols(Long partID);
 
     // List<Part> findByImageId(Long imageID);
 

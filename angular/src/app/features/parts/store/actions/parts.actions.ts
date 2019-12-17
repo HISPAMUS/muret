@@ -4,7 +4,7 @@ import {Part} from '../../../../core/model/entities/part';
 import {Image} from '../../../../core/model/entities/image';
 import {Page} from '../../../../core/model/entities/page';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
-import {UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
+import {PartUse, UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
 import {GetProjectStatisticsSuccess, ProjectActionTypes} from '../../../project/store/actions/project.actions';
 
 export enum PartsActionTypes {
@@ -14,7 +14,7 @@ export enum PartsActionTypes {
   GetImageProjectParts = '[Parts] Get image project parts',
   GetImageProjectPartsSuccess = '[Parts] Get image project parts success',*/
 
-  GetImagePart = '[Parts] Get image part',
+  /*GetImagePart = '[Parts] Get image part',
   GetImagePartSuccess = '[Parts] Get image part success',
   GetPagePart = '[Parts] Get page part',
   GetPagePartSuccess = '[Parts] Get page part success',
@@ -39,7 +39,7 @@ export enum PartsActionTypes {
   UpdateRegionPart = '[Parts] Update region part',
   UpdateRegionPartSuccess = '[Parts] Update region part success',
   UpdateSymbolPart = '[Parts] Update symbol part',
-  UpdateSymbolPartSuccess = '[Parts] Update symbol part success',
+  UpdateSymbolPartSuccess = '[Parts] Update symbol part success',*/
 
   CreatePart = '[Parts] Create part',
   CreatePartSuccess = '[Parts] Create part success',
@@ -50,6 +50,24 @@ export enum PartsActionTypes {
 
   GetUsesOfParts = '[Parts] Get uses of parts',
   GetUsesOfPartsSuccess = '[Parts] Get uses of parts success',
+
+  LinkPartToImage = '[Parts] Link part to image',
+  LinkPartToImageSuccess = '[Parts] Link part to image success',
+
+  UnlinkPartToImage = '[Parts] Unlink part to image',
+  UnlinkPartToImageSuccess = '[Parts] Unlink part to image success',
+
+  LinkPartToPage = '[Parts] Link part to page',
+  LinkPartToPageSuccess = '[Parts] Link part to page success',
+
+  UnlinkPartToPage = '[Parts] Unlink part to page',
+  UnlinkPartToPageSuccess = '[Parts] Unlink part to page success',
+
+  LinkPartToRegion = '[Parts] Link part to region',
+  LinkPartToRegionSuccess = '[Parts] Link part to region success',
+
+  UnlinkPartToRegion = '[Parts] Unlink part to region',
+  UnlinkPartToRegionSuccess = '[Parts] Unlink part to region success',
 
   /*GetPartNamesUsedByImage = '[Parts] Get part names used by image',
   GetPartNamesUsedByImageSuccess = '[Parts] Get part names used by image success'*/
@@ -74,7 +92,7 @@ export class GetImageProjectPartsSuccess implements Action {
   public readonly type = PartsActionTypes.GetImageProjectPartsSuccess;
   constructor(public parts: Part[]) {}
 }*/
-
+/*
 export class GetImagePart implements Action {
   public readonly type = PartsActionTypes.GetImagePart;
   constructor(public image: Image) {}
@@ -194,7 +212,7 @@ export class CreateSymbolPartSuccess implements Action {
   public readonly type = PartsActionTypes.CreateSymbolPartSuccess;
   constructor(public part: Part) {}
 }
-
+*/
 export class RenamePart implements Action {
   public readonly type = PartsActionTypes.RenamePart;
   constructor(public part: Part, public newName: string) {}
@@ -224,6 +242,7 @@ export class CreatePartSuccess implements Action {
   public readonly type = PartsActionTypes.CreatePartSuccess;
   constructor(public part: Part) {}
 }
+
 export class GetUsesOfParts implements Action {
   public readonly type = PartsActionTypes.GetUsesOfParts;
   constructor(public partID: number) {}
@@ -232,6 +251,66 @@ export class GetUsesOfParts implements Action {
 export class GetUsesOfPartsSuccess implements Action {
   public readonly type = PartsActionTypes.GetUsesOfPartsSuccess;
   constructor(public usesOfParts: UsesOfParts) {}
+}
+
+export class LinkPartToImage implements Action {
+  public readonly type = PartsActionTypes.LinkPartToImage;
+  constructor(public partUse: PartUse) {}
+}
+
+export class LinkPartToImageSuccess implements Action {
+  public readonly type = PartsActionTypes.LinkPartToImageSuccess;
+  constructor(public partUse: PartUse) {}
+}
+
+export class UnlinkPartToImage implements Action {
+  public readonly type = PartsActionTypes.UnlinkPartToImage;
+  constructor(public partUse: PartUse) {}
+}
+
+export class UnlinkPartToImageSuccess implements Action {
+  public readonly type = PartsActionTypes.UnlinkPartToImageSuccess;
+  constructor(public partUse: PartUse) {}
+}
+
+export class LinkPartToPage implements Action {
+  public readonly type = PartsActionTypes.LinkPartToPage;
+  constructor(public partUse: PartUse) {}
+}
+
+export class LinkPartToPageSuccess implements Action {
+  public readonly type = PartsActionTypes.LinkPartToPageSuccess;
+  constructor(public partUse: PartUse) {}
+}
+
+export class UnlinkPartToPage implements Action {
+  public readonly type = PartsActionTypes.UnlinkPartToPage;
+  constructor(public partUse: PartUse) {}
+}
+
+export class UnlinkPartToPageSuccess implements Action {
+  public readonly type = PartsActionTypes.UnlinkPartToPageSuccess;
+  constructor(public partUse: PartUse) {}
+}
+
+export class LinkPartToRegion implements Action {
+  public readonly type = PartsActionTypes.LinkPartToRegion;
+  constructor(public partUse: PartUse) {}
+}
+
+export class LinkPartToRegionSuccess implements Action {
+  public readonly type = PartsActionTypes.LinkPartToRegionSuccess;
+  constructor(public partUse: PartUse) {}
+}
+
+export class UnlinkPartToRegion implements Action {
+  public readonly type = PartsActionTypes.UnlinkPartToRegion;
+  constructor(public partUse: PartUse) {}
+}
+
+export class UnlinkPartToRegionSuccess implements Action {
+  public readonly type = PartsActionTypes.UnlinkPartToRegionSuccess;
+  constructor(public partUse: PartUse) {}
 }
 
 /*export class GetPartNamesUsedByImage implements Action {
@@ -247,17 +326,23 @@ export class GetPartNamesUsedByImageSuccess implements Action {
 export type PartsActions =
   /*GetProjectParts | GetProjectPartsSuccess |
   GetImageProjectParts | GetImageProjectPartsSuccess |*/
-  GetImagePart | GetImagePartSuccess | UpdateImagePart | UpdateImagePartSuccess |
+ /* GetImagePart | GetImagePartSuccess | UpdateImagePart | UpdateImagePartSuccess |
   GetPagePart | GetPagePartSuccess | UpdatePagePart | UpdatePagePartSuccess |
   GetRegionPart | GetRegionPartSuccess | UpdateRegionPart | UpdateRegionPartSuccess |
   GetSymbolPart | GetSymbolPartSuccess | UpdateSymbolPart | UpdateSymbolPartSuccess |
   CreateImagePart | CreateImagePartSuccess |
   CreatePagePart | CreatePagePartSuccess |
   CreateRegionPart | CreateRegionPartSuccess |
-  CreateSymbolPart | CreateSymbolPartSuccess |
+  CreateSymbolPart | CreateSymbolPartSuccess |*/
   CreatePart | CreatePartSuccess |
   RenamePart | RenamePartSuccess |
   DeletePart | DeletePartSuccess |
-  GetUsesOfParts | GetUsesOfPartsSuccess;
+  GetUsesOfParts | GetUsesOfPartsSuccess |
+  LinkPartToImage | LinkPartToImageSuccess |
+  UnlinkPartToImage | UnlinkPartToImageSuccess |
+  LinkPartToPage | LinkPartToPageSuccess |
+  UnlinkPartToPage | UnlinkPartToPageSuccess |
+  LinkPartToRegion | LinkPartToRegionSuccess |
+  UnlinkPartToRegion | UnlinkPartToRegionSuccess;
   // | GetPartNamesUsedByImage | GetPartNamesUsedByImageSuccess;
 

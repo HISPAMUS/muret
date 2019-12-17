@@ -7,7 +7,7 @@ import {Observable} from 'rxjs';
 import {Page} from '../../../core/model/entities/page';
 import {AgnosticSymbol} from '../../../core/model/entities/agnosticSymbol';
 import {Project} from '../../../core/model/entities/project';
-import {UsesOfParts} from '../../../core/model/restapi/uses-of-parts';
+import {PartUse, UsesOfParts} from '../../../core/model/restapi/uses-of-parts';
 
 
 @Injectable()
@@ -31,7 +31,7 @@ export class PartsService {
     return this.apiRestClientService.get$<Part[]>(url);
   }*/
 
-  public getImagePart$(id: number): Observable<Part> {
+  /*public getImagePart$(id: number): Observable<Part> {
     const url = 'parts/get/image/' + id;
     return this.apiRestClientService.get$<Part>(url);
   }
@@ -97,7 +97,7 @@ export class PartsService {
 
   createSymbolPart$(symbol: AgnosticSymbol, partName: string): Observable<Part> {
     return this.apiRestClientService.put$<Part>('parts/create/page/' + symbol.id + '/' + partName, null);
-  }
+  }*/
 
   createPart$(projectID: number, name: string): Observable<Part> {
     return this.apiRestClientService.put$<Part>('parts/create/' + projectID + '/' + name, null);
@@ -114,4 +114,30 @@ export class PartsService {
     const url = `parts/uses/${projectID}`;
     return this.apiRestClientService.get$<UsesOfParts>(url);
   }
+
+  linkPartToImage$(partUse: PartUse): Observable<PartUse> {
+    return this.apiRestClientService.put$<PartUse>('parts/link/' + partUse.partId + '/image/' + partUse.imageId, null);
+  }
+
+  unlinkPartToImage$(partUse: PartUse): Observable<PartUse> {
+    return this.apiRestClientService.put$<PartUse>('parts/unlink/image/' + partUse.imageId, null);
+  }
+
+  linkPartToPage$(partUse: PartUse): Observable<PartUse> {
+    return this.apiRestClientService.put$<PartUse>('parts/link/' + partUse.partId + '/page/' + partUse.id, null);
+  }
+
+  unlinkPartToPage$(partUse: PartUse): Observable<PartUse> {
+    return this.apiRestClientService.put$<PartUse>('parts/unlink/page/' + partUse.id, null);
+  }
+
+  linkPartToRegion$(partUse: PartUse): Observable<PartUse> {
+    return this.apiRestClientService.put$<PartUse>('parts/link/' + partUse.partId + '/region/' + partUse.id, null);
+  }
+
+  unlinkPartToRegion$(partUse: PartUse): Observable<PartUse> {
+    return this.apiRestClientService.put$<PartUse>('parts/unlink/region/' + partUse.id, null);
+  }
+
+
 }

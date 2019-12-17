@@ -22,15 +22,15 @@ public class UsesOfParts {
         /**
          * Image, page
          */
-        List<PartUse> pages;
+        List<IPartUse> pages;
         /**
          * Image, region
          */
-        List<PartUse> regions;
+        List<IPartUse> regions;
         /**
          * Image, symbol
          */
-        List<PartUse> symbols;
+        List<IPartUse> symbols;
 
         public PartUses() {
         }
@@ -51,27 +51,27 @@ public class UsesOfParts {
             this.part = part;
         }
 
-        public List<PartUse> getPages() {
+        public List<IPartUse> getPages() {
             return pages;
         }
 
-        public void setPages(List<PartUse> pages) {
+        public void setPages(List<IPartUse> pages) {
             this.pages = pages;
         }
 
-        public List<PartUse> getRegions() {
+        public List<IPartUse> getRegions() {
             return regions;
         }
 
-        public void setRegions(List<PartUse> regions) {
+        public void setRegions(List<IPartUse> regions) {
             this.regions = regions;
         }
 
-        public List<PartUse> getSymbols() {
+        public List<IPartUse> getSymbols() {
             return symbols;
         }
 
-        public void setSymbols(List<PartUse> symbols) {
+        public void setSymbols(List<IPartUse> symbols) {
             this.symbols = symbols;
         }
     }
@@ -80,8 +80,8 @@ public class UsesOfParts {
         return uses;
     }
 
-    public void add(Part part, List<BigInteger> images, List<PartUse> pages,
-                    List<PartUse> regions, List<PartUse> symbols) {
+    public void add(Part part, List<BigInteger> images, List<IPartUse> pages,
+                    List<IPartUse> regions, List<IPartUse> symbols) {
 
         PartUses pu = new PartUses();
         pu.setPart(part);

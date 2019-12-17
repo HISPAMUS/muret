@@ -3,7 +3,7 @@ import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {GetImageProjection} from '../../../document-analysis/store/actions/document-analysis.actions';
 import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
 import {Store} from '@ngrx/store';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {Region} from '../../../../core/model/entities/region';
 import {
   ClearNotation,
@@ -18,8 +18,9 @@ import {selectAgnosticSymbols} from '../../../agnostic-representation/store/sele
 import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
 import {Rectangle} from '../../../../svg/model/rectangle';
 import {Part} from '../../../../core/model/entities/part';
-import {CreateRegionPart, GetRegionPart, UpdateRegionPart} from '../../../parts/store/actions/parts.actions';
 import {GetRegion} from '../../../agnostic-representation/store/actions/agnostic-representation.actions';
+import {selectUsesOfParts} from '../../../parts/store/selectors/parts.selector';
+import {PartUses} from '../../../../core/model/restapi/uses-of-parts';
 
 @Component({
   selector: 'app-semantic-representation',
@@ -57,6 +58,9 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   private string: string;
 
   private drawSymbolsPending = true;
+
+  // usesOfPartsSubscription: Subscription;
+  imageLinkedToPart: PartUses = null;
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>) {
     this.defaultColDef = {
@@ -102,11 +106,18 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
           this.drawSelectedRegionSymbols(next);
         });
     });
+
+    this.store.select(selectUsesOfParts).subscribe(usesOfParts => {
+      if (usesOfParts != null) {
+        this.imageLinkedToPart = usesOfParts.uses.find(partUses => partUses.images.indexOf(this.imageID) >= 0);
+      }
+    });
   }
 
   ngOnDestroy(): void {
     this.notationSubscription.unsubscribe();
     this.agnosticSymbolsSubscription.unsubscribe();
+    // this.usesOfPartsSubscription.unsubscribe();
   }
 
   openDocumentAnalysis() {
@@ -133,7 +144,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
       if (this.selectedRegion) {
         this.store.dispatch(new GetNotation(this.selectedRegion, false, 'verovio')); // TODO
-        this.store.dispatch(new GetRegionPart(this.selectedRegion));
+        // this.store.dispatch(new GetRegionPart(this.selectedRegion));
       } else {
         this.store.dispatch(new ClearNotation());
       }
@@ -347,7 +358,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     }
 
 
-    clearRegionPart() {
+    /*clearRegionPart() {
       this.store.dispatch(new UpdateRegionPart(this.selectedRegion, null));
     }
 
@@ -358,7 +369,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     createRegionPart($event: string) {
       this.store.dispatch(new CreateRegionPart(this.selectedRegion, $event));
       /// this.store.dispatch(new GetImageProjectParts(+this.imageID)); // to update the drop down
-    }
+    }*/
 
     noErrorMessage() {
       return this.errorMessage == null || !this.errorMessage;
@@ -373,4 +384,22 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
       return this.notation != null;
     }
 
+  hasPartAssignedToImage() {
+    return this.imageLinkedToPart && this.imageLinkedToPart != null;
   }
+
+  getPartAssignedToImage(): Part {
+      return this.imageLinkedToPart.part;
+  }
+
+  changePart() {
+
+  }
+
+  unlinkPart() {
+  }
+
+  linkPart() {
+
+  }
+}

@@ -246,6 +246,107 @@ public class PartsController extends MuRETBaseController {
         return partID;
     }
 
+    private Part findPart(Long partID) throws IM3WSException {
+        Optional<Part> part = partRepository.findById(partID);
+        if (!part.isPresent()) {
+            throw new IM3WSException("Cannot find a part with id " + partID);
+        }
+
+        return part.get();
+    }
+    @PutMapping("link/{partID}/image/{imageID}")
+    @Transactional
+    public PartUse linkPartToImage(@PathVariable Long partID, @PathVariable Long imageID) throws IM3WSException {
+        Part part = findPart(partID);
+
+        Optional<Image> image = imageRepository.findById(imageID);
+        if (!image.isPresent()) {
+            throw new IM3WSException("Cannot find an image with id " + imageID);
+        }
+
+        image.get().setPart(part);
+        imageRepository.save(image.get());
+
+        return new PartUse(partID, imageID, null);
+    }
+
+    @PutMapping("unlink/image/{imageID}")
+    @Transactional
+    public PartUse unlinkPartToImage(@PathVariable Long imageID) throws IM3WSException {
+        Optional<Image> image = imageRepository.findById(imageID);
+        if (!image.isPresent()) {
+            throw new IM3WSException("Cannot find an image with id " + imageID);
+        }
+
+        Long partID = image.get().getPart().getId();
+        image.get().setPart(null);
+        imageRepository.save(image.get());
+
+        return new PartUse(partID, imageID, null);
+    }
+
+    @PutMapping("link/{partID}/page/{pageID}")
+    @Transactional
+    public PartUse linkPartToPage(@PathVariable Long partID, @PathVariable Long pageID) throws IM3WSException {
+        Part part = findPart(partID);
+
+        Optional<Page> page = pageRepository.findById(pageID);
+        if (!page.isPresent()) {
+            throw new IM3WSException("Cannot find a page with id " + pageID);
+        }
+
+        page.get().setPart(part);
+        pageRepository.save(page.get());
+
+        return new PartUse(partID, page.get().getImage().getId(), pageID);
+    }
+
+    @PutMapping("unlink/page/{pageID}")
+    @Transactional
+    public PartUse unlinkPartToPage(@PathVariable Long pageID) throws IM3WSException {
+        Optional<Page> page = pageRepository.findById(pageID);
+        if (!page.isPresent()) {
+            throw new IM3WSException("Cannot find a page with id " + pageID);
+        }
+
+        Long partID = page.get().getPart().getId();
+        page.get().setPart(null);
+        pageRepository.save(page.get());
+
+        return new PartUse(partID, page.get().getImage().getId(), pageID);
+    }
+
+    @PutMapping("link/{partID}/region/{regionID}")
+    @Transactional
+    public PartUse linkPartToRegion(@PathVariable Long partID, @PathVariable Long regionID) throws IM3WSException {
+        Part part = findPart(partID);
+
+        Optional<Region> region = regionRepository.findById(regionID);
+        if (!region.isPresent()) {
+            throw new IM3WSException("Cannot find a region with id " + regionID);
+        }
+
+        region.get().setPart(part);
+        regionRepository.save(region.get());
+
+        return new PartUse(partID, region.get().getPage().getImage().getId(), regionID);
+    }
+
+    @PutMapping("unlink/region/{regionID}")
+    @Transactional
+    public PartUse unlinkPartToRegion(@PathVariable Long regionID) throws IM3WSException {
+        Optional<Region> region = regionRepository.findById(regionID);
+        if (!region.isPresent()) {
+            throw new IM3WSException("Cannot find a region with id " + regionID);
+        }
+
+        Long partID = region.get().getPart().getId();
+        region.get().setPart(null);
+        regionRepository.save(region.get());
+
+        return new PartUse(partID, region.get().getPage().getImage().getId(), regionID);
+    }
+
     /*@GetMapping(path = {"partNamesUsedByImage/{imageID}"})
     @Transactional
     public List<String> getImageProjectParts(@PathVariable(name="imageID") Long imageID) throws IM3WSException {

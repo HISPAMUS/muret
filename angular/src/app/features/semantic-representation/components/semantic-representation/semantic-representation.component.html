@@ -33,7 +33,7 @@
             </ng-container>
           </div>
     </section>
-    <section class="row">
+    <!--<section class="row">
       <div class="col-2">
         <ng-container *ngIf="(projectParts$ | async) as parts">
           <app-part-selection [label]="'Region part'" [parts]="parts"
@@ -48,7 +48,7 @@
           {{regionPart.name}}
         </ng-container>
       </div>
-    </section>
+    </section>-->
     <aside>
       <button class="btn btn-primary" (click)="convertAgnosticSemantic()">
         Convert from agnostic
@@ -69,6 +69,19 @@
       <p>Select a region</p>
     </div>
   </ng-template>
+
+  <section class="row">
+    <div class="col" *ngIf="hasPartAssignedToImage(); else noPartAssignedToImage">
+        <span>All staves in this parts are linked to: {{getPartAssignedToImage().name}}</span>
+        <button (click)="changePart()">Change</button>
+        <button (click)="unlinkPart()">Unlink part</button>
+    </div>
+    <ng-template #noPartAssignedToImage>
+      <div class="col">
+        <button (click)="linkPart()">Link part to image</button>
+      </div>
+    </ng-template>
+  </section>
 
   <section class="row">
     <div class="col-8">

@@ -298,7 +298,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
       this.store.dispatch(new CreateSymbolFromBoundingBox(this.symbolsClassifierModelID,
         this.selectedRegion.id, this.creatingBoundingBox, null, null));
     } else if (shape instanceof Polylines) {
-      console.log('shape: ' + shape.polylines.length);
+      // console.log('shape: ' + shape.polylines.length);
       this.creatingStrokes = shape.polylines.map(polyline => polyline.pointsValue);
       this.store.dispatch(new CreateSymbolFromStrokes( this.symbolsClassifierModelID,
         this.selectedRegion.id, this.creatingStrokes, null, null

@@ -7,11 +7,9 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Project} from '../../../../core/model/entities/project';
 import {Lightbox, LightboxConfig} from 'ngx-lightbox';
-import {Part} from '../../../../core/model/entities/part';
 import {Store} from '@ngrx/store';
 import {PartsState} from '../../../parts/store/state/parts.state';
 import {UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
-import {forEachComment} from 'tslint';
 
 /**
  * When entering here the usesOfParts should be loaded by the project
@@ -91,14 +89,16 @@ export class ImageThumbnailComponent implements OnInit {
   partsUsed(): Array<string> {
     const partsUsed: Array<string> = [];
 
-    this.usesOfParts.uses.forEach(usesOfPart => {
-      if (usesOfPart.images.indexOf(this.image.id) >= 0 ||
-        (usesOfPart.pages.find(page => page.imageId === this.image.id)) ||
-        (usesOfPart.regions.find(region => region.imageId === this.image.id)) ||
-        (usesOfPart.symbols.find(symbol => symbol.imageId === this.image.id))) {
-        partsUsed.push(usesOfPart.part.name);
-      }
-    });
+    if (this.usesOfParts != null) {
+      this.usesOfParts.uses.forEach(usesOfPart => {
+        if (usesOfPart.images.indexOf(this.image.id) >= 0 ||
+          (usesOfPart.pages.find(page => page.imageId === this.image.id)) ||
+          (usesOfPart.regions.find(region => region.imageId === this.image.id)) ||
+          (usesOfPart.symbols.find(symbol => symbol.imageId === this.image.id))) {
+          partsUsed.push(usesOfPart.part.name);
+        }
+      });
+    }
     return partsUsed;
   }
 }

@@ -4,33 +4,29 @@ import { of } from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 import {PartsService} from '../../services/parts.service';
 import {
-  CreateImagePart,
-  CreateImagePartSuccess,
-  CreatePagePart,
-  CreatePagePartSuccess, CreatePart, CreatePartSuccess,
-  CreateRegionPart,
-  CreateRegionPartSuccess,
-  CreateSymbolPart, CreateSymbolPartSuccess, DeletePart, DeletePartSuccess,
-  GetImagePart,
-  GetImagePartSuccess,
-  GetPagePart,
-  GetPagePartSuccess,
-  GetRegionPart,
-  GetRegionPartSuccess,
-  GetSymbolPart,
-  GetSymbolPartSuccess, GetUsesOfParts, GetUsesOfPartsSuccess,
-  PartsActionTypes, RenamePart, RenamePartSuccess,
-  UpdateImagePart,
-  UpdateImagePartSuccess,
-  UpdatePagePart,
-  UpdatePagePartSuccess,
-  UpdateRegionPart,
-  UpdateRegionPartSuccess,
-  UpdateSymbolPart,
-  UpdateSymbolPartSuccess,
+  CreatePart,
+  CreatePartSuccess,
+  DeletePart,
+  DeletePartSuccess,
+  GetUsesOfParts,
+  GetUsesOfPartsSuccess,
+  LinkPartToImage,
+  LinkPartToImageSuccess,
+  LinkPartToPage,
+  LinkPartToPageSuccess,
+  LinkPartToRegion,
+  LinkPartToRegionSuccess,
+  PartsActionTypes,
+  RenamePart,
+  RenamePartSuccess,
+  UnlinkPartToImage,
+  UnlinkPartToImageSuccess,
+  UnlinkPartToPage,
+  UnlinkPartToPageSuccess, UnlinkPartToRegion, UnlinkPartToRegionSuccess,
 } from '../actions/parts.actions';
 import {Part} from '../../../../core/model/entities/part';
-import {UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
+import {PartUse, UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
+import {Image} from '../../../../core/model/entities/image';
 
 @Injectable()
 export class PartsEffects {
@@ -60,7 +56,7 @@ export class PartsEffects {
   );*/
 
 
-
+/*
   @Effect()
   getImagePart$ = this.actions$.pipe(
     ofType<GetImagePart>(PartsActionTypes.GetImagePart),
@@ -179,7 +175,7 @@ export class PartsEffects {
     switchMap((part: Part) => {
       return of(new CreateSymbolPartSuccess(part));
     })
-  );
+  );*/
 
   @Effect()
   renamePart$ = this.actions$.pipe(
@@ -220,6 +216,66 @@ export class PartsEffects {
     })
   );
 
+
+  @Effect()
+  linkPartToImage$ = this.actions$.pipe(
+    ofType<LinkPartToImage>(PartsActionTypes.LinkPartToImage),
+    switchMap((action: LinkPartToImage) =>
+      this.partsService.linkPartToImage$(action.partUse)),
+    switchMap((partUse: PartUse) => {
+      return of(new LinkPartToImageSuccess(partUse));
+    })
+  );
+
+  @Effect()
+  unlinkPartToImage$ = this.actions$.pipe(
+    ofType<UnlinkPartToImage>(PartsActionTypes.UnlinkPartToImage),
+    switchMap((action: UnlinkPartToImage) =>
+      this.partsService.unlinkPartToImage$(action.partUse)),
+    switchMap((partUse: PartUse) => {
+      return of(new UnlinkPartToImageSuccess(partUse));
+    })
+  );
+
+  @Effect()
+  linkPartToPage$ = this.actions$.pipe(
+    ofType<LinkPartToPage>(PartsActionTypes.LinkPartToPage),
+    switchMap((action: LinkPartToPage) =>
+      this.partsService.linkPartToPage$(action.partUse)),
+    switchMap((partUse: PartUse) => {
+      return of(new LinkPartToPageSuccess(partUse));
+    })
+  );
+
+  @Effect()
+  unlinkPartToPage$ = this.actions$.pipe(
+    ofType<UnlinkPartToPage>(PartsActionTypes.UnlinkPartToPage),
+    switchMap((action: UnlinkPartToPage) =>
+      this.partsService.unlinkPartToPage$(action.partUse)),
+    switchMap((partUse: PartUse) => {
+      return of(new UnlinkPartToPageSuccess(partUse));
+    })
+  );
+
+  @Effect()
+  linkPartToRegion$ = this.actions$.pipe(
+    ofType<LinkPartToRegion>(PartsActionTypes.LinkPartToRegion),
+    switchMap((action: LinkPartToRegion) =>
+      this.partsService.linkPartToRegion$(action.partUse)),
+    switchMap((partUse: PartUse) => {
+      return of(new LinkPartToRegionSuccess(partUse));
+    })
+  );
+
+  @Effect()
+  unlinkPartToRegion$ = this.actions$.pipe(
+    ofType<UnlinkPartToRegion>(PartsActionTypes.UnlinkPartToRegion),
+    switchMap((action: UnlinkPartToRegion) =>
+      this.partsService.unlinkPartToRegion$(action.partUse)),
+    switchMap((partUse: PartUse) => {
+      return of(new UnlinkPartToRegionSuccess(partUse));
+    })
+  );
   /*@Effect()
   getPartNamesUsedByImage$ = this.actions$.pipe(
     ofType<GetPartNamesUsedByImage>(PartsActionTypes.GetPartNamesUsedByImage),
