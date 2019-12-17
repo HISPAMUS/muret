@@ -1,8 +1,11 @@
 package es.ua.dlsi.grfia.im3ws.muret.entity;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
+import java.security.Permission;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,7 +35,7 @@ public class User {
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "createdBy")
     private List<Project> projectsCreated;
 
-    @OneToMany(fetch=FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Permissions> permissions;
 
     public User() {
@@ -97,6 +100,8 @@ public class User {
     public void setPermissions(List<Permissions> permissions) {
         this.permissions = permissions;
     }
+
+    public void grantPermission(Permissions newPermission) { this.permissions.add(newPermission); }
 
     public void setUsername(String username) {
         this.username = username;
