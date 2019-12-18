@@ -1,0 +1,23 @@
+<div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4>{{title || 'Confirm'}}</h4>
+      </div>
+      <div class="modal-body">
+        <select [(ngModel)]="currentValue">
+          <option [label] ="name" [value]="i" *ngFor="let name of names; let i = index">{{name}}</option>
+          <option label="Other" value="-1">Other</option>
+        </select>
+        <br>
+        <div *ngIf="currentValue == -1">
+          <label for="specificname">Please specify the name of the instrument </label>
+          <br>
+          <input type="text" [(ngModel)]="inputValue" name="specificname">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger" (click)="cancel()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="confirm()">OK</button>
+      </div>
+    </div>
+</div>

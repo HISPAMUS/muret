@@ -5,7 +5,8 @@ import {Store} from '@ngrx/store';
 import {selectIsAuthenticated, selectUsername, selectRole} from '../../../auth/store/selectors/auth.selector';
 import {selectServerStatus } from 'src/app/core/store/selectors/user.selector';
 import { GetServerStatus } from 'src/app/core/store/actions/serverStatus.actions';
-import { DialogsService } from 'src/app/shared/services/dialogs.service';
+import { DialogsService} from 'src/app/shared/services/dialogs.service';
+import { ModalOptions } from 'src/app/shared/components/options-dialog/options-dialog.component';
 
 @Component({
   selector: 'app-layout',
@@ -73,6 +74,4 @@ export class LayoutComponent implements OnInit, OnDestroy {
   {
     this.serverStatusSubscription.unsubscribe();
   }
-
-
 }
