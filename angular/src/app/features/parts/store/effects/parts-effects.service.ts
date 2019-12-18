@@ -209,7 +209,7 @@ export class PartsEffects {
   @Effect()
   getUsesOfParts$ = this.actions$.pipe(
     ofType<GetUsesOfParts>(PartsActionTypes.GetUsesOfParts),
-    map((action: GetUsesOfParts) => action.partID),
+    map((action: GetUsesOfParts) => action.projectID),
     switchMap((partID) => this.partsService.getUsesOfParts$(partID)),
     switchMap((usesOfParts: UsesOfParts) => {
       return of(new GetUsesOfPartsSuccess(usesOfParts));

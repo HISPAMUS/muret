@@ -245,7 +245,7 @@ export class CreatePartSuccess implements Action {
 
 export class GetUsesOfParts implements Action {
   public readonly type = PartsActionTypes.GetUsesOfParts;
-  constructor(public partID: number) {}
+  constructor(public projectID: number) {}
 }
 
 export class GetUsesOfPartsSuccess implements Action {

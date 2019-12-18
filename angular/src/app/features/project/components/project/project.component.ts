@@ -7,8 +7,6 @@ import {Store} from '@ngrx/store';
 import {ProjectState} from '../../store/state/project.state';
 import {selectImages, selectProject, selectProjectStatistics} from '../../store/selectors/project.selector';
 import {
-  ExportMEIPartsFacsimile,
-  ExportMEIPartsFacsimileSuccess,
   GetImages,
   GetProject,
   GetProjectStatistics

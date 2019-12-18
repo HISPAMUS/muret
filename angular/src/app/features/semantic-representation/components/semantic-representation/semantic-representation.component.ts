@@ -22,9 +22,9 @@ import {
   GetRegion
 } from '../../../agnostic-representation/store/actions/agnostic-representation.actions';
 import {selectUsesOfParts} from '../../../parts/store/selectors/parts.selector';
-import {PartUse, PartUses} from '../../../../core/model/restapi/uses-of-parts';
+import {PartUse, PartUses, UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
-import {LinkPartToImage, UnlinkPartToImage} from '../../../parts/store/actions/parts.actions';
+import {GetUsesOfParts, LinkPartToImage, UnlinkPartToImage} from '../../../parts/store/actions/parts.actions';
 import {selectImageProjectID} from '../../../document-analysis/store/selectors/document-analysis.selector';
 
 @Component({
@@ -67,8 +67,8 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   private drawSymbolsPending = true;
 
   // usesOfPartsSubscription: Subscription;
-  imageLinkedToPart: PartUses = null;
   private useOfPartsSubscription: Subscription;
+  private usesOfParts: UsesOfParts;
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>,
               private dialogsService: DialogsService
@@ -117,16 +117,22 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
         });
     });
 
-    this.useOfPartsSubscription = this.store.select(selectUsesOfParts).subscribe(usesOfParts => {
-      if (usesOfParts != null) {
-        this.imageLinkedToPart = usesOfParts.uses.find(partUses => partUses.images.indexOf(this.imageID) >= 0);
+    this.useOfPartsSubscription = this.store.select(selectUsesOfParts).subscribe(uop => {
+      this.usesOfParts = uop;
+
+      // chained to reload uses of parts if necessary
+      if (this.projectID == null)  {
+        this.projectIDSubscription = this.store.select(selectImageProjectID).subscribe(next => {
+            if (next != null) {
+              this.projectID = next;
+              if (this.usesOfParts == null) { // we have not passed through the project screen - we load here the
+                this.store.dispatch(new GetUsesOfParts(next));
+              }
+            }
+          }
+        );
       }
     });
-
-    this.projectIDSubscription = this.store.select(selectImageProjectID).subscribe(next => {
-        this.projectID = next;
-      }
-    );
   }
 
   ngOnDestroy(): void {
@@ -317,7 +323,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
         result += (node.data.smens + '\n');
       }
     });
-    console.log(result);
+    // console.log(result);
     return result;
   }
 
@@ -402,17 +408,48 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     }
 
   hasPartAssignedToImage() {
-    return this.imageLinkedToPart && this.imageLinkedToPart != null;
+      const partUses = this.getUseOfPartsAssignedToImage();
+      return partUses && partUses != null;
+  }
+
+  hasPartAssignedToRegion() {
+    const partUses = this.getUseOfPartsAssignedToRegion();
+    return partUses && partUses != null;
   }
 
   getPartAssignedToImage(): Part {
-      return this.imageLinkedToPart.part;
+    const partUses = this.getUseOfPartsAssignedToImage();
+    return partUses.part;
   }
+
+  getPartAssignedToRegion(): Part {
+    const partUses = this.getUseOfPartsAssignedToRegion();
+    return partUses.part;
+  }
+
+
+  getUseOfPartsAssignedToImage(): PartUses {
+    if (this.usesOfParts != null && this.imageID != null) {
+      return this.usesOfParts.uses.find(partUses => partUses.images.indexOf(this.imageID) >= 0);
+    } else {
+      return null;
+    }
+  }
+
+  getUseOfPartsAssignedToRegion(): PartUses {
+    // console.log('Looking for region ' + this.selectedRegion.id + ' in UOP ' + this.usesOfParts);
+    if (this.usesOfParts != null && this.selectedRegion != null) {
+      return this.usesOfParts.uses.find(partUses => partUses.regions.filter(partUseRegion => partUseRegion.id === this.selectedRegion.id));
+    } else {
+      return null;
+    }
+  }
+
 
   /*changePart() {
   }*/
 
-  unlinkPart() {
+  unlinkPartToImage() {
     this.dialogsService.showConfirmarion('Part assigned to image', 'Do you want to unlink the part?')
       .subscribe((isConfirmed) => {
         if (isConfirmed) {
@@ -427,7 +464,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
       });
   }
 
-  linkPart() {
+  linkPartToImage() {
       // TODO diálogo
     this.dialogsService.showInput('Link part', 'Set part ID', '')
       .subscribe((text) => {
@@ -446,4 +483,11 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     this.router.navigate(['/project/instruments', this.projectID]);
   }
 
+  linkPartToRegion() {
+
+  }
+
+  unlinkPartToRegion() {
+
+  }
 }
