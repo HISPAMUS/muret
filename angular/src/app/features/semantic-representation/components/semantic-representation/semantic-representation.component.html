@@ -71,10 +71,13 @@
   </ng-template>
 
   <section class="row">
+    <div class="col-2">
+      <a (click)="editInstruments()">See all parts / instruments</a>
+    </div>
     <div class="col" *ngIf="hasPartAssignedToImage(); else noPartAssignedToImage">
         <span>All staves in this parts are linked to: {{getPartAssignedToImage().name}}</span>
-        <button (click)="changePart()">Change</button>
-        <button (click)="unlinkPart()">Unlink part</button>
+        &nbsp;
+        <button (click)="unlinkPart()">Unlink part / instrument</button>
     </div>
     <ng-template #noPartAssignedToImage>
       <div class="col">

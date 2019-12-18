@@ -35,6 +35,9 @@ public interface IDocumentAnalysisImageProjection {
 
     IPartProjection getPart();
 
+    @Value("#{target.getProject().id}")
+    int getProjectId();
+
     @Value("#{target.getProject().parts}")
     List<IPartProjection> getProjectParts();
 

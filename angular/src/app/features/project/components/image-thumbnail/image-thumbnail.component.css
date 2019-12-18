@@ -16,7 +16,11 @@ h5 {
   text-align: center;
 }
 
-.thumbnail > div
-{
+.thumbnail > div  {
   cursor: pointer;
+}
+
+.projectPartsUsed {
+  text-align: center;
+  font-size: 90%;
 }

@@ -32,15 +32,21 @@ export function partsReducers(state = initialSemanticRepresentationState, action
         };
     }
     case PartsActionTypes.LinkPartToImageSuccess: {
-      const newState = {...state};
-      const uses = newState.usesOfParts.uses.find(value => value.part.id === action.partUse.partId );
+      const newUsesOfParts = {...state.usesOfParts};
+      const uses = newUsesOfParts.uses.find(value => value.part.id === action.partUse.partId );
       uses.images.push(action.partUse.imageId);
+      const newState: PartsState = {
+        usesOfParts: newUsesOfParts
+      };
       return newState;
     }
     case PartsActionTypes.UnlinkPartToImageSuccess: {
-      const newState = {...state};
-      const uses = newState.usesOfParts.uses.find(value => value.part.id === action.partUse.partId );
+      const newUsesOfParts = {...state.usesOfParts};
+      const uses = newUsesOfParts.uses.find(value => value.part.id === action.partUse.partId );
       uses.images = uses.images.filter(value => value !== action.partUse.imageId);
+      const newState: PartsState = {
+        usesOfParts: newUsesOfParts
+      };
       return newState;
     }
     case PartsActionTypes.LinkPartToPageSuccess: {
