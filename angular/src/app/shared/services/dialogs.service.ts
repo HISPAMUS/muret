@@ -5,11 +5,15 @@ import {Observable, of} from 'rxjs';
 import {AlertComponent} from '../components/error-modal-message/alert.component';
 import {InputDialogComponent} from '../components/input-dialog/input-dialog.component';
 import { ConfirmDialogWarningComponent } from '../components/confirm-dialog-warning/confirm-dialog-warning.component';
+import { OptionsDialogComponent, ModalOptions } from '../components/options-dialog/options-dialog.component';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class DialogsService {
+
+  private optionsInDialog;
 
   constructor(private simpleModalService: SimpleModalService) { }
 
@@ -54,6 +58,26 @@ export class DialogsService {
       message,
       currentValue
     });
+  }
+
+  public showOptions(title: string, options: ModalOptions[]): Observable<ModalOptions>
+  {
+    let ids: string[] = []
+    let names: string[] = []
+
+    options.forEach((option: ModalOptions) => {
+      ids.push(option.id)
+      names.push(option.name)
+    })
+
+    return this.simpleModalService.addModal(OptionsDialogComponent, {
+      title, ids, names
+    });
+  }
+
+  public getOptions()
+  {
+    return this.optionsInDialog;
   }
 
 }

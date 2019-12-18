@@ -11,6 +11,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InputDialogComponent} from './components/input-dialog/input-dialog.component';
 import { SafePipe } from './pipes/safe.pipe';
 import { ConfirmDialogWarningComponent } from './components/confirm-dialog-warning/confirm-dialog-warning.component';
+import { OptionsDialogComponent } from './components/options-dialog/options-dialog.component';
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import { ConfirmDialogWarningComponent } from './components/confirm-dialog-warni
     InputDialogComponent,
     CrudToolbarComponent,
     SafePipe,
-    ConfirmDialogWarningComponent
+    ConfirmDialogWarningComponent,
+    OptionsDialogComponent
   ],
   exports: [
     StateComponent,
@@ -38,12 +40,14 @@ import { ConfirmDialogWarningComponent } from './components/confirm-dialog-warni
     InputDialogComponent,
     CrudToolbarComponent,
     ConfirmDialogWarningComponent,
+    OptionsDialogComponent,
     SafePipe
   ],
   entryComponents: [
     AlertComponent,
     ConfirmDialogComponent,
     ConfirmDialogWarningComponent,
+    OptionsDialogComponent,
     InputDialogComponent,
     CrudToolbarComponent
   ],
