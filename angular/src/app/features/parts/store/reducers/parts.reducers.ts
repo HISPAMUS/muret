@@ -33,48 +33,48 @@ export function partsReducers(state = initialSemanticRepresentationState, action
     }
     case PartsActionTypes.LinkPartToImageSuccess: {
       const newState = {...state};
-      const uses = newState.usesOfParts.uses.find(value => value.part.id === action.partID );
-      uses.images.push(action.imageID);
+      const uses = newState.usesOfParts.uses.find(value => value.part.id === action.partUse.partId );
+      uses.images.push(action.partUse.imageId);
       return newState;
     }
     case PartsActionTypes.UnlinkPartToImageSuccess: {
       const newState = {...state};
-      const uses = newState.usesOfParts.uses.find(value => value.part.id === action.partID );
-      uses.images = uses.images.filter(value => value !== action.imageID);
+      const uses = newState.usesOfParts.uses.find(value => value.part.id === action.partUse.partId );
+      uses.images = uses.images.filter(value => value !== action.partUse.imageId);
       return newState;
     }
     case PartsActionTypes.LinkPartToPageSuccess: {
       const newState = {...state};
-      const usesOfPart = newState.usesOfParts.uses.find(value => value.part.id === action.partID );
+      const usesOfPart = newState.usesOfParts.uses.find(value => value.part.id === action.partUse.partId );
       const partUse: PartUse = {
-        id: action.pageID,
-        partId: action.partID,
-        imageId: action.imageID
+        id: action.partUse.id,
+        partId: action.partUse.partId,
+        imageId: action.partUse.imageId
       };
       usesOfPart.pages.push(partUse);
       return newState;
     }
     case PartsActionTypes.UnlinkPartToPageSuccess: {
       const newState = {...state};
-      const usesOfPart = newState.usesOfParts.uses.find(value => value.part.id === action.partID );
-      usesOfPart.pages = usesOfPart.pages.filter(value => value.id !== action.pageID);
+      const usesOfPart = newState.usesOfParts.uses.find(value => value.part.id === action.partUse.partId );
+      usesOfPart.pages = usesOfPart.pages.filter(value => value.id !== action.partUse.id);
       return newState;
     }
     case PartsActionTypes.LinkPartToRegionSuccess: {
       const newState = {...state};
-      const usesOfPart = newState.usesOfParts.uses.find(value => value.part.id === action.partID );
+      const usesOfPart = newState.usesOfParts.uses.find(value => value.part.id === action.partUse.partId );
       const partUse: PartUse = {
-        id: action.regionID,
-        partId: action.partID,
-        imageId: action.imageID
+        id: action.partUse.id,
+        partId: action.partUse.partId,
+        imageId: action.partUse.imageId
     };
       usesOfPart.regions.push(partUse);
       return newState;
     }
     case PartsActionTypes.UnlinkPartToRegionSuccess: {
       const newState = {...state};
-      const usesOfPart = newState.usesOfParts.uses.find(value => value.part.id === action.partID );
-      usesOfPart.regions = usesOfPart.regions.filter(value => value.id !== action.regionID);
+      const usesOfPart = newState.usesOfParts.uses.find(value => value.part.id === action.partUse.partId );
+      usesOfPart.regions = usesOfPart.regions.filter(value => value.id !== action.partUse.id);
       return newState;
     }
     /*case PartsActionTypes.GetPartNamesUsedByImageSuccess: {
