@@ -4,7 +4,7 @@ import {Entity} from './entity';
 import {Part} from './part';
 
 export interface Image extends Entity {
-  project_id: number;
+  projectId: number;
   filename: string;
   pages: Page[];
   state: State;

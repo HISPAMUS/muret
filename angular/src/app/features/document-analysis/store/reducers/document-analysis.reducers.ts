@@ -19,6 +19,7 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
     case DocumentAnalysisActionTypes.GetImageProjectionSuccess: {
       return {
         ...state,
+        projectID: action.documentAnalysisImageProjection.projectId,
         imageWidth: action.documentAnalysisImageProjection.width,
         imageHeight: action.documentAnalysisImageProjection.height,
         filename: action.documentAnalysisImageProjection.filename,

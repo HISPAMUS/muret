@@ -3,12 +3,12 @@ import {UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
 
 export interface PartsState {
   usesOfParts: UsesOfParts;
-  partNamesUsedInImage: string[];
+  // partNamesUsedInImage: Set<string>;
 }
 
 export const initialSemanticRepresentationState: PartsState = {
-  usesOfParts: null,
-  partNamesUsedInImage: null
+  usesOfParts: null
+  // partNamesUsedInImage: null
 };
 
 export function getInitialState(): PartsState {
