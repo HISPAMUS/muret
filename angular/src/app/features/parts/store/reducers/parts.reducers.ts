@@ -41,7 +41,6 @@ export function partsReducers(state = initialSemanticRepresentationState, action
         part: newPart
       };
       newState.usesOfParts.uses = [...newState.usesOfParts.uses, newUseOfParts];
-      debugger;
       return newState;
     }
 
@@ -119,7 +118,6 @@ export function partsReducers(state = initialSemanticRepresentationState, action
     }
     case PartsActionTypes.UnlinkPartToRegionSuccess: {
       const newState = {...state};
-      debugger;
       const usesOfPart = newState.usesOfParts.uses.find(value => value.part.id === action.partUse.partId );
       usesOfPart.regions = usesOfPart.regions.filter(value => value.id !== action.partUse.id);
       return newState;

@@ -7,6 +7,32 @@
     </div>
   </nav>
 
+  <section class="row" id="semanticInstruments">
+    <div class="col-2">
+      <a (click)="editInstruments()">See all parts / instruments</a>
+    </div>
+    <div class="col" *ngIf="hasPartAssignedToImage(); else noPartAssignedToImage">
+      <button (click)="unlinkPartToImage()">Unlink part / instrument</button>
+      &nbsp;
+      <span>All staves in this parts are linked to: {{getPartAssignedToImage().name}}</span>
+    </div>
+    <ng-template #noPartAssignedToImage>
+      <div class="col">
+        <button (click)="linkPartToImage()">Link part to whole image</button>
+        <div *ngIf="selectedRegion">
+          <p *ngIf="hasPartAssignedToRegion(); else noPartAssignedToRegion">
+            <button (click)="unlinkPartToRegion()">Unlink part from selected region</button>
+            &nbsp;
+            Selected region linked to part: {{getPartAssignedToRegion().name}}
+          </p>
+          <ng-template #noPartAssignedToRegion>
+            <button (click)="linkPartToRegion()">Link part to selected region</button>
+          </ng-template>
+        </div>
+      </div>
+    </ng-template>
+  </section>
+
   <div *ngIf="selectedRegion as selectedRegion; else noRegionSelected">
     <section class="row">
       <div class="col">
@@ -69,31 +95,6 @@
       <p>Select a region</p>
     </div>
   </ng-template>
-
-  <section class="row">
-    <div class="col-2">
-      <a (click)="editInstruments()">See all parts / instruments</a>
-    </div>
-    <div class="col" *ngIf="hasPartAssignedToImage(); else noPartAssignedToImage">
-        <span>All staves in this parts are linked to: {{getPartAssignedToImage().name}}</span>
-        &nbsp;
-        <button (click)="unlinkPartToImage()">Unlink part / instrument</button>
-    </div>
-    <ng-template #noPartAssignedToImage>
-      <div class="col">
-        <button (click)="linkPartToImage()">Link part to whole image</button>
-        <div *ngIf="selectedRegion">
-          <p *ngIf="hasPartAssignedToRegion(); else noPartAssignedToRegion">
-            Selected region linked to part: {{getPartAssignedToRegion().name}}
-            <button (click)="unlinkPartToRegion()">Unlink part from selected region</button>
-          </p>
-          <ng-template #noPartAssignedToRegion>
-            <button (click)="linkPartToRegion()">Link part to selected region</button>
-          </ng-template>
-        </div>
-      </div>
-    </ng-template>
-  </section>
 
   <section class="row">
     <div class="col-8">
