@@ -2,14 +2,16 @@
   <div class="row">
     <div class="col">
       <br> <!--TODO maquetación -->
+      <h3>Export</h3>
       <button (click)="exportPartsAndFacsimile()">Export to MEI file with parts and facsimile</button>
-      <br>
+      &nbsp;&nbsp;
       <button (click)="exportFullMensurstrich()">Export mensurstrich</button>
-      <br>
+      &nbsp;&nbsp;
       <button (click)="exportMusicXML()">Export MusicXML (modern notation)</button>
     </div>
   </div>
 
+  <hr>
    <div class="row">
      <div class="col-12">
        <h3>MEI Visualization</h3>
@@ -19,19 +21,15 @@
          <button class="btn btn-outline-primary" id="dropdownForm1" ngbDropdownToggle>Select score to be rendered</button>
          <div ngbDropdownMenu aria-labelledby="dropdownForm1">
            <button (click)="renderFullScore()">Full score</button>
-           <ng-container *ngIf="(projectParts$ | async) as projectParts">
-            <button *ngFor="let part of projectParts" ngbDropdownItem (click)="render(part.id)">{{part.name}}</button>
+           <ng-container *ngIf="(usesOfParts$ | async) as usesOfParts">
+            <button *ngFor="let uses of usesOfParts.uses" ngbDropdownItem (click)="render(uses.part.id)">{{uses.part.name}}</button>
            </ng-container>
          </div>
        </div>
+       &nbsp;
+       <button (click)="saveFile()">Save render to file</button>
      </div>
    </div>
-
-  <div class="row">
-    <div class="col">
-      <button (click)="saveFile()">Save render to file</button>
-    </div>
-  </div>
 
   <hr>
 
