@@ -1,0 +1,14 @@
+0.1
+
+MuRET has been updated! Here we give you a list of the recent updates:
+
+MAJOR UPDATES
+
+    - MuRET developers have created me! I will inform you of all new updates and relevant information about MuRET
+    - Administrators are allowed to upload pretrained models to the MuRET API. It will be a reserved feature till it has been tested enough.
+    - MusicXML export is available
+
+MINOR UPDATES
+    
+    - Fixed administrator's view bug with session login
+    - Improvements on Document Analysis Usability

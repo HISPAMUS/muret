@@ -36,15 +36,18 @@ public class WatchDog {
 
     @Autowired
     public WatchDog(MURETConfiguration muretConfiguration, JavaMailSender sender, UserManagerImpl manager) {
-        logger.info("Server watchdog started!!");
-        m_serverStatus = false;
-        m_restClient = new ClassifierClient(muretConfiguration.getPythonclassifiers());
         m_SMTPClient = sender;
-        m_mailToWarn = muretConfiguration.getWarningmail();
-        m_mailWarner = muretConfiguration.getWarningsender();
-
         m_userManager = manager;
-        CheckUpdates(muretConfiguration.getFolder() + "/version/current_version.txt", muretConfiguration.getFolder() + "/version/patch_notes.txt");
+        m_restClient = new ClassifierClient(muretConfiguration.getPythonclassifiers());
+        if (muretConfiguration.isEnableWatchDog()) {
+            logger.info("Server watchdog started!!");
+            m_serverStatus = false;
+            m_mailToWarn = muretConfiguration.getWarningmail();
+            m_mailWarner = muretConfiguration.getWarningsender();
+            CheckUpdates(muretConfiguration.getFolder() + "/version/current_version.txt", muretConfiguration.getFolder() + "/version/patch_notes.txt");
+        } else {
+            logger.warn("Server watchdog disabled!!");
+        }
     }
 
     @Scheduled(fixedRate = 60*1000)

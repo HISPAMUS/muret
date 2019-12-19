@@ -22,12 +22,14 @@ public class MURETConfiguration {
     private int previewHeight;
     private boolean disableSecurity;
 
+    private boolean enableWatchDog;
+
     String pythonclassifiers;
 
     public MURETConfiguration() {
     }
 
-    public MURETConfiguration(String angularurldev, String angularurlprod, String folder, String pythonclassifiers, int thumbnailHeight, int previewHeight, boolean disableSecurity, String warningmail, String warningsender) {
+    public MURETConfiguration(String angularurldev, String angularurlprod, String folder, String pythonclassifiers, int thumbnailHeight, int previewHeight, boolean disableSecurity, String warningmail, String warningsender, boolean enableWatchDog) {
         this.folder = folder;
         this.angularurldev = angularurldev;
         this.angularurlprod = angularurlprod;
@@ -39,6 +41,7 @@ public class MURETConfiguration {
 
         this.warningmail = warningmail;
         this.warningsender = warningsender;
+        this.enableWatchDog = enableWatchDog;
     }
 
     public String getWarningmail() {
@@ -115,5 +118,13 @@ public class MURETConfiguration {
 
     public void setWarningsender(String warningsender) {
         this.warningsender = warningsender;
+    }
+
+    public boolean isEnableWatchDog() {
+        return enableWatchDog;
+    }
+
+    public void setEnableWatchDog(boolean enableWatchDog) {
+        this.enableWatchDog = enableWatchDog;
     }
 }
