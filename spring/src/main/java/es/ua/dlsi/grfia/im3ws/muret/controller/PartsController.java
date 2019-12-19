@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.math.BigInteger;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -100,7 +101,7 @@ public class PartsController extends MuRETBaseController {
         return part.get();
     }
 
-    @PutMapping(path = {"set/{partAssignedToType}/{targetID}/{partID}"})
+    /*@PutMapping(path = {"set/{partAssignedToType}/{targetID}/{partID}"})
     @Transactional
     public Part setPart(@PathVariable(name="partAssignedToType") PartAssignedToType partAssignedToType, @PathVariable(name="targetID") Long targetID, @PathVariable(name="partID") Long partID) throws IM3WSException {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Setting part name of type {0} with id {1} to part with ID {2}", new Object[] {partAssignedToType, targetID, partID});
@@ -130,7 +131,7 @@ public class PartsController extends MuRETBaseController {
             default:
                 throw new IM3WSException("Invalid assignable to part type: " + partAssignedToType);
         }
-    }
+    }*/
 
     private Part createPart(Project project, String partName) {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Creating part {0} for project {1}", new Object[] {project.getId(), partName});
@@ -157,10 +158,12 @@ public class PartsController extends MuRETBaseController {
 
     @PutMapping(path = {"create/{partAssignedToType}/{targetID}/{partName}"})
     @Transactional
-    public Part createPart(@PathVariable(name="partAssignedToType") PartAssignedToType partAssignedToType, @PathVariable(name="targetID") Long targetID, @PathVariable(name="partName") String partName) throws IM3WSException {
+    public PartUse createPart(@PathVariable(name="partAssignedToType") PartAssignedToType partAssignedToType, @PathVariable(name="targetID") Long targetID, @PathVariable(name="partName") String partName) throws IM3WSException {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Setting part name of type {0} with id {1} to part with ID {2}", new Object[] {partAssignedToType, targetID, partName});
 
         Part part = null;
+        Long imageID = null;
+        Long ID = null;
 
         switch (partAssignedToType) {
             case image:
@@ -168,12 +171,15 @@ public class PartsController extends MuRETBaseController {
                 part = createPart(image.getProject(), partName);
                 image.setPart(part);
                 imageRepository.save(image);
+                imageID = image.getId();
                 break;
             case page:
                 Page page = getPage(targetID);
                 part = createPart(page.getImage().getProject(), partName);
                 page.setPart(part);
                 pageRepository.save(page);
+                imageID = page.getImage().getId();
+                ID = page.getId();
                 break;
             case region:
                 Region region = getRegion(targetID);
@@ -181,20 +187,29 @@ public class PartsController extends MuRETBaseController {
                 part.setProject(region.getPage().getImage().getProject());
                 region.setPart(part);
                 regionRepository.save(region);
+                imageID = region.getPage().getImage().getId();
+                ID = region.getId();
                 break;
             case symbol:
                 Symbol symbol = getSymbol(targetID);
                 part = createPart(symbol.getRegion().getPage().getImage().getProject(), partName);
                 symbol.setPart(part);
                 symbolRepository.save(symbol);
+                imageID = symbol.getRegion().getPage().getImage().getId();
+                ID = symbol.getId();
                 break;
             default:
                 throw new IM3WSException("Invalid assignable to part type: " + partAssignedToType);
         }
-        return part;
+        PartUse partUse = new PartUse();
+        partUse.setPartId(BigInteger.valueOf(part.getId()));
+        partUse.setImageId(BigInteger.valueOf(imageID));
+        partUse.setId(BigInteger.valueOf(ID));
+        partUse.setPartName(partName);
+        return partUse;
     }
 
-    @PutMapping(path = {"clear/{partAssignedToType}/{targetID}"})
+    /*@PutMapping(path = {"clear/{partAssignedToType}/{targetID}"})
     @Transactional
     public IAssignableToPart clearPart(@PathVariable(name="partAssignedToType") PartAssignedToType partAssignedToType, @PathVariable(name="targetID") Long targetID) throws IM3WSException {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Clearing part of type {0} with id {1} to part", new Object[] {partAssignedToType, targetID});
@@ -222,7 +237,7 @@ public class PartsController extends MuRETBaseController {
             default:
                 throw new IM3WSException("Invalid assignable to part type: " + partAssignedToType);
         }
-    }
+    }*/
 
     @PutMapping("rename/{partID}/{newName}")
     public Part rename(@PathVariable Long partID, @PathVariable String newName) throws IM3WSException {
@@ -236,7 +251,7 @@ public class PartsController extends MuRETBaseController {
     }
 
     @DeleteMapping(path = {"delete/{partID}"})
-    public long deleteSymbol(@PathVariable("partID") long partID) throws IM3WSException {
+    public long deletePart(@PathVariable("partID") long partID) throws IM3WSException {
         Optional<Part> part = partRepository.findById(partID);
         if (!part.isPresent()) {
             throw new IM3WSException("Cannot find a part with id " + partID);

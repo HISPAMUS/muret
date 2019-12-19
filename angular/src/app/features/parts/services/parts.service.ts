@@ -1,12 +1,7 @@
 import { Injectable } from '@angular/core';
 import {ApiRestClientService} from '../../../core/services/api-rest-client.service';
-import {Region} from '../../../core/model/entities/region';
-import {Image} from '../../../core/model/entities/image';
 import {Part} from '../../../core/model/entities/part';
 import {Observable} from 'rxjs';
-import {Page} from '../../../core/model/entities/page';
-import {AgnosticSymbol} from '../../../core/model/entities/agnosticSymbol';
-import {Project} from '../../../core/model/entities/project';
 import {PartUse, UsesOfParts} from '../../../core/model/restapi/uses-of-parts';
 
 
@@ -16,10 +11,23 @@ export class PartsService {
   constructor(private apiRestClientService: ApiRestClientService) {
   }
 
-  getPartNamesUsedByImage$(imageID: number): Observable<string[]> {
+  /*getPartNamesUsedByImage$(imageID: number): Observable<string[]> {
     const url = 'parts/partNamesUsedByImage/' + imageID;
     return this.apiRestClientService.get$<string[]>(url);
+  }*/
+
+  createImagePart$(imageID: number, partName: string): Observable<PartUse> {
+    return this.apiRestClientService.put$<PartUse>('parts/create/image/' + imageID + '/' + partName, null);
   }
+
+  createPagePart$(pageID: number, partName: string): Observable<PartUse> {
+    return this.apiRestClientService.put$<PartUse>('parts/create/page/' + pageID + '/' + partName, null);
+  }
+
+  createRegionPart$(regionID: number, partName: string): Observable<PartUse> {
+    return this.apiRestClientService.put$<PartUse>('parts/create/region/' + regionID + '/' + partName, null);
+  }
+
 
   /*getProjectParts$(projectID: number): Observable<Part[]> {
     const url = 'parts/project/' + projectID;

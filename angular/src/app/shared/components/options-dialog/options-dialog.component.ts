@@ -1,17 +1,16 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { SimpleModalComponent} from 'ngx-simple-modal';
 
-export class ModalOptions
-{
-  id:string;
-  name:string;
+export class ModalOptions {
+  id: string;
+  name: string;
 }
 
-export interface OptionsModel
-{
+export interface OptionsModel {
   title: string;
-  ids?:string[];
-  names?:string[];
+  ids?: string[];
+  names?: string[];
+  newValueMessage: string;
 }
 
 @Component({
@@ -19,7 +18,7 @@ export interface OptionsModel
   templateUrl: './options-dialog.component.html',
   styleUrls: ['./options-dialog.component.css']
 })
-export class OptionsDialogComponent extends SimpleModalComponent<OptionsModel, ModalOptions> implements OptionsModel{
+export class OptionsDialogComponent extends SimpleModalComponent<OptionsModel, ModalOptions> implements OptionsModel {
 
   title: string;
   ids: string[];
@@ -27,23 +26,20 @@ export class OptionsDialogComponent extends SimpleModalComponent<OptionsModel, M
   currentValue: number;
   inputValue: string;
   response: ModalOptions;
+  newValueMessage: string;
 
-  constructor() 
-  {
+  constructor() {
     super();
-    this.currentValue = 0
+    this.currentValue = 0;
   }
 
   confirm() {
-    this.response = new ModalOptions()
+    this.response = new ModalOptions();
 
-    if(this.currentValue == -1)
-    {
+    if (+this.currentValue === -1) {
       this.response.id = null;
-      this.response.name = this.inputValue
-    }
-    else
-    {
+      this.response.name = this.inputValue;
+    } else {
       this.response.id = this.ids[this.currentValue];
       this.response.name = this.names[this.currentValue];
     }

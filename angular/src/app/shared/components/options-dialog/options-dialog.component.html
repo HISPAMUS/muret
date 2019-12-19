@@ -10,7 +10,7 @@
         </select>
         <br>
         <div *ngIf="currentValue == -1">
-          <label for="specificname">Please specify the name of the instrument </label>
+          <label for="specificname">{{newValueMessage}}</label>
           <br>
           <input type="text" [(ngModel)]="inputValue" name="specificname">
         </div>

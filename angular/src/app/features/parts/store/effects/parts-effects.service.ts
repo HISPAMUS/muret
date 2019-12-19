@@ -4,8 +4,9 @@ import { of } from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 import {PartsService} from '../../services/parts.service';
 import {
+  CreateImagePart, CreateImagePartSuccess, CreatePagePart, CreatePagePartSuccess,
   CreatePart,
-  CreatePartSuccess,
+  CreatePartSuccess, CreateRegionPart, CreateRegionPartSuccess,
   DeletePart,
   DeletePartSuccess,
   GetUsesOfParts,
@@ -34,6 +35,36 @@ export class PartsEffects {
     private partsService: PartsService,
     private actions$: Actions,
   ) {}
+
+  @Effect()
+  createImagePart$ = this.actions$.pipe(
+    ofType<CreateImagePart>(PartsActionTypes.CreateImagePart),
+    switchMap((action: CreateImagePart) =>
+      this.partsService.createImagePart$(action.imageId, action.partName)),
+    switchMap((partUse: PartUse) => {
+      return of(new CreateImagePartSuccess(partUse));
+    })
+  );
+
+  @Effect()
+  createPagePart$ = this.actions$.pipe(
+    ofType<CreatePagePart>(PartsActionTypes.CreatePagePart),
+    switchMap((action: CreatePagePart) =>
+      this.partsService.createPagePart$(action.pageId, action.partName)),
+    switchMap((partUse: PartUse) => {
+      return of(new CreatePagePartSuccess(partUse));
+    })
+  );
+
+  @Effect()
+  createRegionPart$ = this.actions$.pipe(
+    ofType<CreateRegionPart>(PartsActionTypes.CreateRegionPart),
+    switchMap((action: CreateRegionPart) =>
+      this.partsService.createRegionPart$(action.regionId, action.partName)),
+    switchMap((partUse: PartUse) => {
+      return of(new CreateRegionPartSuccess(partUse));
+    })
+  );
 
   /*@Effect()
   getProjectParts$ = this.actions$.pipe(
@@ -134,36 +165,6 @@ export class PartsEffects {
       this.partsService.updateSymbolPart$(action.symbol, action.part)),
     switchMap((part: Part) => {
       return of(new UpdateSymbolPartSuccess(part));
-    })
-  );
-
-  @Effect()
-  createImagePart$ = this.actions$.pipe(
-    ofType<CreateImagePart>(PartsActionTypes.CreateImagePart),
-    switchMap((action: CreateImagePart) =>
-      this.partsService.createImagePart$(action.image, action.partName)),
-    switchMap((part: Part) => {
-      return of(new CreateImagePartSuccess(part));
-    })
-  );
-
-  @Effect()
-  createPagePart$ = this.actions$.pipe(
-    ofType<CreatePagePart>(PartsActionTypes.CreatePagePart),
-    switchMap((action: CreatePagePart) =>
-      this.partsService.createPagePart$(action.page, action.partName)),
-    switchMap((part: Part) => {
-      return of(new CreatePagePartSuccess(part));
-    })
-  );
-
-  @Effect()
-  createRegionPart$ = this.actions$.pipe(
-    ofType<CreateRegionPart>(PartsActionTypes.CreateRegionPart),
-    switchMap((action: CreateRegionPart) =>
-      this.partsService.createRegionPart$(action.region, action.partName)),
-    switchMap((part: Part) => {
-      return of(new CreateRegionPartSuccess(part));
     })
   );
 

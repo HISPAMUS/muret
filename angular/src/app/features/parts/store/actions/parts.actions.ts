@@ -8,6 +8,13 @@ import {PartUse, UsesOfParts} from '../../../../core/model/restapi/uses-of-parts
 import {GetProjectStatisticsSuccess, ProjectActionTypes} from '../../../project/store/actions/project.actions';
 
 export enum PartsActionTypes {
+  CreateImagePart = '[Parts] Create image part',
+  CreateImagePartSuccess = '[Parts] Create image part success',
+  CreatePagePart = '[Parts] Create page part',
+  CreatePagePartSuccess = '[Parts] Create page part success',
+  CreateRegionPart = '[Parts] Create region part',
+  CreateRegionPartSuccess = '[Parts] Create region part success',
+
   /*GetProjectParts = '[Parts] Get project parts',
   GetProjectPartsSuccess = '[Parts] Get project parts success',
 
@@ -23,12 +30,6 @@ export enum PartsActionTypes {
   GetSymbolPart = '[Parts] Get symbol part',
   GetSymbolPartSuccess = '[Parts] Get symbol part success',
 
-  CreateImagePart = '[Parts] Create image part',
-  CreateImagePartSuccess = '[Parts] Create image part success',
-  CreatePagePart = '[Parts] Create page part',
-  CreatePagePartSuccess = '[Parts] Create page part success',
-  CreateRegionPart = '[Parts] Create region part',
-  CreateRegionPartSuccess = '[Parts] Create region part success',
   CreateSymbolPart = '[Parts] Create symbol part',
   CreateSymbolPartSuccess = '[Parts] Create symbol part success',
 
@@ -72,6 +73,37 @@ export enum PartsActionTypes {
   /*GetPartNamesUsedByImage = '[Parts] Get part names used by image',
   GetPartNamesUsedByImageSuccess = '[Parts] Get part names used by image success'*/
 }
+
+export class CreateImagePart implements Action {
+  public readonly type = PartsActionTypes.CreateImagePart;
+  constructor(public imageId: number, public partName: string) {}
+}
+
+export class CreateImagePartSuccess implements Action {
+  public readonly type = PartsActionTypes.CreateImagePartSuccess;
+  constructor(public partUse: PartUse) {}
+}
+
+export class CreatePagePart implements Action {
+  public readonly type = PartsActionTypes.CreatePagePart;
+  constructor(public pageId: number, public partName: string) {}
+}
+
+export class CreatePagePartSuccess implements Action {
+  public readonly type = PartsActionTypes.CreatePagePartSuccess;
+  constructor(public partUse: PartUse) {}
+}
+
+export class CreateRegionPart implements Action {
+  public readonly type = PartsActionTypes.CreateRegionPart;
+  constructor(public regionId: number, public partName: string) {}
+}
+
+export class CreateRegionPartSuccess implements Action {
+  public readonly type = PartsActionTypes.CreateRegionPartSuccess;
+  constructor(public partUse: PartUse) {}
+}
+
 
 /*export class GetProjectParts implements Action {
   public readonly type = PartsActionTypes.GetProjectParts;
@@ -170,36 +202,6 @@ export class UpdateSymbolPart implements Action {
 
 export class UpdateSymbolPartSuccess implements Action {
   public readonly type = PartsActionTypes.UpdateSymbolPartSuccess;
-  constructor(public part: Part) {}
-}
-
-export class CreateImagePart implements Action {
-  public readonly type = PartsActionTypes.CreateImagePart;
-  constructor(public image: Image, public partName: string) {}
-}
-
-export class CreateImagePartSuccess implements Action {
-  public readonly type = PartsActionTypes.CreateImagePartSuccess;
-  constructor(public part: Part) {}
-}
-
-export class CreatePagePart implements Action {
-  public readonly type = PartsActionTypes.CreatePagePart;
-  constructor(public page: Page, public partName: string) {}
-}
-
-export class CreatePagePartSuccess implements Action {
-  public readonly type = PartsActionTypes.CreatePagePartSuccess;
-  constructor(public part: Part) {}
-}
-
-export class CreateRegionPart implements Action {
-  public readonly type = PartsActionTypes.CreateRegionPart;
-  constructor(public region: Region, public partName: string) {}
-}
-
-export class CreateRegionPartSuccess implements Action {
-  public readonly type = PartsActionTypes.CreateRegionPartSuccess;
   constructor(public part: Part) {}
 }
 
@@ -324,6 +326,9 @@ export class GetPartNamesUsedByImageSuccess implements Action {
 }*/
 
 export type PartsActions =
+  CreateImagePart | CreateImagePartSuccess |
+  CreatePagePart | CreatePagePartSuccess |
+  CreateRegionPart | CreateRegionPartSuccess |
   /*GetProjectParts | GetProjectPartsSuccess |
   GetImageProjectParts | GetImageProjectPartsSuccess |*/
  /* GetImagePart | GetImagePartSuccess | UpdateImagePart | UpdateImagePartSuccess |

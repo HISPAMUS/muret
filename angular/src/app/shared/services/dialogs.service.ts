@@ -30,7 +30,8 @@ export class DialogsService {
       message
     });
   }
-  public showWarningConfirmation(title: string, message: string): Observable<boolean>{
+
+  public showWarningConfirmation(title: string, message: string): Observable<boolean> {
     return this.simpleModalService.addModal(ConfirmDialogWarningComponent, {
       title, message
     });
@@ -38,10 +39,10 @@ export class DialogsService {
 
   public showError(title: string, specificMessage: string, errmessage?: string) {
 
-    let message: string
+    let message: string;
 
     if (errmessage === '') {
-      message = 'There was an error during the request to the classification server'
+      message = 'There was an error during the request to the classification server';
     } else {
       message = errmessage;
     }
@@ -60,23 +61,21 @@ export class DialogsService {
     });
   }
 
-  public showOptions(title: string, options: ModalOptions[]): Observable<ModalOptions>
-  {
-    let ids: string[] = []
-    let names: string[] = []
+  public showOptions(title: string, options: ModalOptions[], newValueMessage: string): Observable<ModalOptions> {
+    const ids: string[] = [];
+    const names: string[] = [];
 
     options.forEach((option: ModalOptions) => {
-      ids.push(option.id)
-      names.push(option.name)
-    })
+      ids.push(option.id);
+      names.push(option.name);
+    });
 
     return this.simpleModalService.addModal(OptionsDialogComponent, {
-      title, ids, names
+      title, ids, names, newValueMessage
     });
   }
 
-  public getOptions()
-  {
+  public getOptions() {
     return this.optionsInDialog;
   }
 

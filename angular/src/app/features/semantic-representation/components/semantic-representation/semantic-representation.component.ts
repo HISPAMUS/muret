@@ -24,8 +24,15 @@ import {
 import {selectUsesOfParts} from '../../../parts/store/selectors/parts.selector';
 import {PartUse, PartUses, UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
-import {GetUsesOfParts, LinkPartToImage, UnlinkPartToImage} from '../../../parts/store/actions/parts.actions';
+import {
+  CreateImagePart, CreateRegionPart,
+  GetUsesOfParts,
+  LinkPartToImage,
+  LinkPartToRegion,
+  UnlinkPartToImage, UnlinkPartToRegion
+} from '../../../parts/store/actions/parts.actions';
 import {selectImageProjectID} from '../../../document-analysis/store/selectors/document-analysis.selector';
+import {ModalOptions} from '../../../../shared/components/options-dialog/options-dialog.component';
 
 @Component({
   selector: 'app-semantic-representation',
@@ -439,7 +446,8 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   getUseOfPartsAssignedToRegion(): PartUses {
     // console.log('Looking for region ' + this.selectedRegion.id + ' in UOP ' + this.usesOfParts);
     if (this.usesOfParts != null && this.selectedRegion != null) {
-      return this.usesOfParts.uses.find(partUses => partUses.regions.filter(partUseRegion => partUseRegion.id === this.selectedRegion.id));
+      return this.usesOfParts.uses.find(
+        partUses => partUses.regions.filter(partUseRegion => partUseRegion.id === this.selectedRegion.id).length > 0);
     } else {
       return null;
     }
@@ -464,19 +472,37 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
       });
   }
 
+  createPartOptions(): ModalOptions[] {
+    const modalOptions: ModalOptions[] = [];
+    this.usesOfParts.uses.forEach(partUses => {
+      modalOptions.push({
+        id: '' + partUses.part.id,
+        name: partUses.part.name
+      });
+    });
+
+    return modalOptions;
+  }
   linkPartToImage() {
-      // TODO diálogo
-    this.dialogsService.showInput('Link part', 'Set part ID', '')
-      .subscribe((text) => {
-        if (text) {
+    const modalOptions = this.createPartOptions();
+
+    this.dialogsService.showOptions('Link part to the whole image', modalOptions, 'New part/instrument name').
+    subscribe(next => {
+      if (next) {
+        if (next.id) {
           const partUse: PartUse = {
             id: null,
-            partId: +text,
+            partId: +next.id,
             imageId: this.imageID
           };
           this.store.dispatch(new LinkPartToImage(partUse));
+        } else {
+          // create a new part and assign to the image
+          this.store.dispatch(new CreateImagePart(this.imageID, next.name));
         }
-      });
+      }
+    });
+
   }
 
   editInstruments() {
@@ -484,10 +510,38 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   linkPartToRegion() {
+    const modalOptions = this.createPartOptions();
 
+    this.dialogsService.showOptions('Link part to the selected region', modalOptions, 'New part/instrument name').
+    subscribe(next => {
+      if (next) {
+        if (next.id) {
+          const partUse: PartUse = {
+            id: this.selectedRegion.id,
+            partId: +next.id,
+            imageId: this.imageID
+          };
+          this.store.dispatch(new LinkPartToRegion(partUse));
+        } else {
+          // create a new part and assign to the image
+          this.store.dispatch(new CreateRegionPart(this.selectedRegion.id, next.name));
+        }
+      }
+    });
   }
 
   unlinkPartToRegion() {
+    this.dialogsService.showConfirmarion('Part assigned to region', 'Do you want to unlink the part?')
+      .subscribe((isConfirmed) => {
+        if (isConfirmed) {
+          const partUse: PartUse = {
+            id: this.selectedRegion.id,
+            partId: null,
+            imageId: this.imageID
+          };
 
+          this.store.dispatch(new UnlinkPartToRegion(partUse));
+        }
+      });
   }
 }

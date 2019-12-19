@@ -3,11 +3,19 @@ package es.ua.dlsi.grfia.im3ws.muret.controller.payload;
 import java.math.BigInteger;
 
 public class PartUse implements IPartUse {
+    String partName;
     BigInteger partId;
     BigInteger imageId;
     BigInteger id;
 
     public PartUse() {
+    }
+
+    public PartUse(String partName, BigInteger partId, BigInteger imageId, BigInteger id) {
+        this.partName = partName;
+        this.partId = partId;
+        this.imageId = imageId;
+        this.id = id;
     }
 
     public PartUse(BigInteger partId, BigInteger imageId, BigInteger id) {
@@ -22,6 +30,14 @@ public class PartUse implements IPartUse {
         if (id != null) {
             this.id = BigInteger.valueOf(id);
         }
+    }
+
+    public String getPartName() {
+        return partName;
+    }
+
+    public void setPartName(String partName) {
+        this.partName = partName;
     }
 
     public void setPartId(BigInteger partId) {

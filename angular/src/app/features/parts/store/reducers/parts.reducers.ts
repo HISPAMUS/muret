@@ -1,10 +1,50 @@
 import {initialSemanticRepresentationState, PartsState} from '../state/parts.state';
 import {PartsActions, PartsActionTypes} from '../actions/parts.actions';
 import {PartUse, PartUses} from '../../../../core/model/restapi/uses-of-parts';
+import {Part} from '../../../../core/model/entities/part';
 
 export function partsReducers(state = initialSemanticRepresentationState, action: PartsActions):
   PartsState {
   switch (action.type) {
+    case PartsActionTypes.CreateImagePartSuccess: {
+      const newState = {...state};
+      const newPart: Part = {
+        id: action.partUse.id,
+        name: action.partUse.partName
+      };
+      const newUseOfParts: PartUses = {
+        images: [action.partUse.imageId],
+        pages: [],
+        symbols: [],
+        regions: [],
+        part: newPart
+      };
+      newState.usesOfParts.uses = [...newState.usesOfParts.uses, newUseOfParts];
+      return newState;
+    }
+    case PartsActionTypes.CreateRegionPartSuccess: {
+      const newState = {...state};
+      const newPart: Part = {
+        id: action.partUse.partId,
+        name: action.partUse.partName
+      };
+      const regionPartUse: PartUse = {
+        id: action.partUse.id,
+        imageId: action.partUse.imageId,
+        partId: action.partUse.partId,
+      };
+      const newUseOfParts: PartUses = {
+        images: [],
+        pages: [],
+        symbols: [],
+        regions: [regionPartUse],
+        part: newPart
+      };
+      newState.usesOfParts.uses = [...newState.usesOfParts.uses, newUseOfParts];
+      debugger;
+      return newState;
+    }
+
     case PartsActionTypes.CreatePartSuccess: {
       const newState = {...state};
       const newUseOfParts: PartUses = {
@@ -79,6 +119,7 @@ export function partsReducers(state = initialSemanticRepresentationState, action
     }
     case PartsActionTypes.UnlinkPartToRegionSuccess: {
       const newState = {...state};
+      debugger;
       const usesOfPart = newState.usesOfParts.uses.find(value => value.part.id === action.partUse.partId );
       usesOfPart.regions = usesOfPart.regions.filter(value => value.id !== action.partUse.id);
       return newState;
