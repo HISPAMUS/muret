@@ -25,7 +25,7 @@ export class ProjectScoreViewerComponent implements OnInit, OnDestroy {
   project$: Observable<Project>;
 
   // don't use here REDUX for the FileUploader
-  private usesOfParts$: Observable<UsesOfParts>;
+  usesOfParts$: Observable<UsesOfParts>;
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<ProjectState>,
               private notationService: NotationService) {

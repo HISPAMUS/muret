@@ -20,19 +20,19 @@ export class RegistermodelComponent implements OnInit {
 
   public uploader : FileUploader
   private url: string
-  private registerModel : NewClassifierModel = {}
-  private collections$ : Observable<Collection[]>
+  registerModel : NewClassifierModel = {}
+  collections$ : Observable<Collection[]>
   private collections : Collection[]
   private collectionSubs : Subscription
-  private projects : Project[]
-  private collectionSelected : boolean
+  projects : Project[]
+  collectionSelected : boolean
 
-  constructor(private apiRestService : ApiRestClientService, private store: Store<NewProjectState>, private dservice : DialogsService) 
+  constructor(private apiRestService : ApiRestClientService, private store: Store<NewProjectState>, private dservice : DialogsService)
   {
     this.collections$ = store.select(selectCollections);
   }
 
-  ngOnInit() 
+  ngOnInit()
   {
     this.store.dispatch(new GetCollections());
 
