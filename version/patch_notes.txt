@@ -1,12 +1,22 @@
-0.1
+0.2
 
-MuRET has been updated! Here we give you a list of the recent updates:
+MAJOR UPDATES
+
+    - Administrators are allowed to upload pretrained models to the MuRET API. It will be a reserved feature till it has been tested enough.
+    - MusicXML export is available
+    - Project statistics are shown in the project main screen
+    - New instrument/part screen and utilities to manage them for whole images and selected regions
+
+
+MINOR UPDATES
+
+    - Selected region is maintained when changing between semantic and agnostic
+
+0.1
 
 MAJOR UPDATES
 
     - MuRET developers have created me! I will inform you of all new updates and relevant information about MuRET
-    - Administrators are allowed to upload pretrained models to the MuRET API. It will be a reserved feature till it has been tested enough.
-    - MusicXML export is available
 
 MINOR UPDATES
     
