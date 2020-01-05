@@ -42,7 +42,8 @@ export class SemanticRepresentationEffects {
   sendSemanticEncoding$ = this.actions$.pipe(
     ofType<SendSemanticEncoding>(SemanticRepresentationActionTypes.SendSemanticEncoding),
     switchMap((action: SendSemanticEncoding) =>
-      this.semanticRepresentationService.sendSemanticEncoding$(action.region, action.semanticEncoding, action.mensustriche, action.renderer)),
+      this.semanticRepresentationService.sendSemanticEncoding$(action.region, action.semanticEncoding,
+        action.mensustriche, action.renderer)),
     switchMap((notation: Notation) => {
       return of(new SendSemanticEncodingSuccess(notation));
     })

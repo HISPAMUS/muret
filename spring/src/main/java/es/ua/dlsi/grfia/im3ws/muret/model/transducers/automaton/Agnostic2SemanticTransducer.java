@@ -28,6 +28,7 @@ public abstract class Agnostic2SemanticTransducer implements IAgnostic2SemanticT
     }
 
     public SemanticTransduction transduce(AgnosticEncoding agnosticEncoding) throws IM3Exception {
+        dpa.setSkipUnknownSymbols(true);
         SemanticTransduction transduction = dpa.probabilityOf(agnosticEncoding.getSymbols(), initialProbability -> new SemanticTransduction(initialProbability));
         return transduction;
     }

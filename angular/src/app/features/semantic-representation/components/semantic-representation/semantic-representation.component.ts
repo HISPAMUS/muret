@@ -107,14 +107,12 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
     this.notationSubscription = this.store.select(selectNotation).subscribe(next => {
       if (next) {
-        if (next.errorMessage != null) {
-          this.errorMessage = next.errorMessage;
-        } else {
-          this.errorMessage = null;
-          // this.semanticEncoding = next.semanticEncoding;
+        this.errorMessage = next.errorMessage;
+        // this.semanticEncoding = next.semanticEncoding;
+        if (next.semanticEncoding) {
           this.drawSemanticEncoding(next.semanticEncoding);
-          this.notation = next;
         }
+        this.notation = next;
       }
     });
 
@@ -400,10 +398,6 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
       this.store.dispatch(new CreateRegionPart(this.selectedRegion, $event));
       /// this.store.dispatch(new GetImageProjectParts(+this.imageID)); // to update the drop down
     }*/
-
-    noErrorMessage() {
-      return this.errorMessage == null || !this.errorMessage;
-    }
 
     hasErrorMessage() {
       return this.errorMessage != null && this.errorMessage;

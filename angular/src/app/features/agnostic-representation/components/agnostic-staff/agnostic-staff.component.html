@@ -4,13 +4,15 @@
         width="100%" [attr.height.px]="height"
   [attr.viewBox]="viewBox" preserveAspectRatio="xMidYMid meet" overflow="visible"
   >
-    <svg:symbol *ngFor="let path of svgAgnosticSymbolSet.paths; trackBy: trackByAgnosticSymbolTypeFn"
-            [attr.id]="path.agnosticTypeString" [attr.viewBox]="path.viewBox"
-            preserveAspectRatio="xMinYMid" overflow="visible"
-    >
-      <svg:path [attr.d]="path.svgPathD" [attr.transform]="path.symbolTransform">
-      </svg:path>
-    </svg:symbol>
+    <ng-container *ngIf="svgAgnosticSymbolSet">
+      <svg:symbol *ngFor="let path of svgAgnosticSymbolSet.paths; trackBy: trackByAgnosticSymbolTypeFn"
+              [attr.id]="path.agnosticTypeString" [attr.viewBox]="path.viewBox"
+              preserveAspectRatio="xMinYMid" overflow="visible"
+      >
+        <svg:path [attr.d]="path.svgPathD" [attr.transform]="path.symbolTransform">
+        </svg:path>
+      </svg:symbol>
+    </ng-container>
 
     <svg:symbol id="annotation" viewBox="0 0 612 612" preserveAspectRatio="xMinYMid" overflow="visible">
       <path d="M401.6,325.1H210.4c-10.6,0-19.1,8.6-19.1,19.1s8.6,19.1,19.1,19.1h191.2c10.6,0,19.1-8.6,19.1-19.1

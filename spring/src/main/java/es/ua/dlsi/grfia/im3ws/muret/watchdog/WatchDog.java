@@ -100,7 +100,7 @@ public class WatchDog {
             if(!patchVersion.equals(m_currentVersion))
             {
                 m_currentVersion = patchVersion;
-                String patchNotesText = "";
+                String patchNotesText = "MuRET has been updated! Here we give you a list of the recent updates:\n";
                 while(lineReader.hasNextLine())
                 {
                     patchNotesText += lineReader.nextLine() + "\n";
