@@ -30,28 +30,32 @@ export class ProjectService {
     return this.apiRestClientService.url + '/project/uploadProjectImage';
   }
 
-  exportMEIPartsFacsimile$(projectID: number) {
-    const url = `project/exportMEIPartsFacsimile/${projectID}`;
+  exportMEIPartsFacsimile$(projectID: number, selectedImages: Array<number>) {
+    const selectedImagesString = selectedImages.join(',');
+    const url = `project/exportMEIPartsFacsimile/${projectID}/${selectedImagesString}`;
     return this.apiRestClientService.get$<StringResponse>(url);
   }
 
-  exportMEI$(projectID: number, partID: number): Observable<StringResponse> {
+  exportMEI$(projectID: number, partID: number, selectedImages: Array<number>): Observable<StringResponse> {
+    const selectedImagesString = selectedImages.join(',');
     let url: string;
     if (partID) {
-      url = `project/exportPartMEI/${projectID}/${partID}`;
+      url = `project/exportPartMEI/${projectID}/${partID}/${selectedImagesString}`;
     } else {
-      url = `project/exportFullScoreMEI/${projectID}`;
+      url = `project/exportFullScoreMEI/${projectID}/${selectedImagesString}`;
     }
     return this.apiRestClientService.get$<StringResponse>(url);
   }
 
-  exportMensurstrich$(projectID: number): Observable<Blob> {
-    const url = `project/exportMensurstrich/${projectID}`;
+  exportMensurstrich$(projectID: number, selectedImages: Array<number>): Observable<Blob> {
+    const selectedImagesString = selectedImages.join(',');
+    const url = `project/exportMensurstrich/${projectID}/${selectedImagesString}`;
     return this.apiRestClientService.getBlob$(url);
   }
 
-  exportMusicXML$(projectID: number): Observable<Blob> {
-    const url = `project/exportMusicXML/${projectID}`;
+  exportMusicXML$(projectID: number, selectedImages: Array<number>): Observable<Blob> {
+    const selectedImagesString = selectedImages.join(',');
+    const url = `project/exportMusicXML/${projectID}/${selectedImagesString}`;
     return this.apiRestClientService.getBlob$(url);
   }
 }

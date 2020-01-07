@@ -26,7 +26,23 @@ export interface PartUses {
    */
   symbols?: PartUse [];
 }
+
 export interface UsesOfParts {
   uses: PartUses[];
+}
+
+export function findPartsUsed(usesOfParts: UsesOfParts, imageID: number): Array<string> {
+  const partsUsed: Array<string> = [];
+
+  usesOfParts.uses.forEach(usesOfPart => {
+    if (usesOfPart.images.indexOf(imageID) >= 0 ||
+      (usesOfPart.pages.find(page => page.imageId === imageID)) ||
+      (usesOfPart.regions.find(region => region.imageId === imageID)) ||
+      (usesOfPart.symbols.find(symbol => symbol.imageId === imageID))) {
+      partsUsed.push(usesOfPart.part.name);
+    }
+  });
+  return partsUsed;
+
 }
 

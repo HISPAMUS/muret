@@ -47,7 +47,7 @@ export class ProjectEffects {
   @Effect()
   exportMEIPartsFacsimile$ = this.actions$.pipe(
     ofType<ExportMEIPartsFacsimile>(ProjectActionTypes.ExportMEIPartsFacsimile),
-    switchMap((action: ExportMEIPartsFacsimile) => this.projectService.exportMEIPartsFacsimile$(action.projectID)),
+    switchMap((action: ExportMEIPartsFacsimile) => this.projectService.exportMEIPartsFacsimile$(action.projectID, action.selectedImages)),
     switchMap((mei: StringResponse) => {
       return of(new ExportMEIPartsFacsimileSuccess(mei.response));
     })
@@ -56,7 +56,7 @@ export class ProjectEffects {
   @Effect()
   exportMEI$ = this.actions$.pipe(
     ofType<ExportMEI>(ProjectActionTypes.ExportMEI),
-    switchMap((action: ExportMEI) => this.projectService.exportMEI$(action.projectID, action.partID)),
+    switchMap((action: ExportMEI) => this.projectService.exportMEI$(action.projectID, action.partID, action.selectedImages)),
     switchMap((mei: StringResponse) => {
       return of(new ExportMEISuccess(mei.response));
     })
@@ -65,7 +65,7 @@ export class ProjectEffects {
   @Effect()
   exportMensurstrich$ = this.actions$.pipe(
     ofType<ExportMensurstrich>(ProjectActionTypes.ExportMensurstrich),
-    switchMap((action: ExportMensurstrich) => this.projectService.exportMensurstrich$(action.projectID)),
+    switchMap((action: ExportMensurstrich) => this.projectService.exportMensurstrich$(action.projectID, action.selectedImages)),
     switchMap((payload: Blob) => {
       return of(new ExportMensurstrichSuccess(payload));
     })
@@ -73,7 +73,7 @@ export class ProjectEffects {
   @Effect()
   exportMusicXML$ = this.actions$.pipe(
     ofType<ExportMusicXML>(ProjectActionTypes.ExportMusicXML),
-    switchMap((action: ExportMusicXML) => this.projectService.exportMusicXML$(action.projectID)),
+    switchMap((action: ExportMusicXML) => this.projectService.exportMusicXML$(action.projectID, action.selectedImages)),
     switchMap((payload: Blob) => {
       return of(new ExportMusicXMLSuccess(payload));
     })

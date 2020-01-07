@@ -17,6 +17,7 @@ import { ProjectScoreViewerComponent } from './components/project-score-viewer/p
 import {SharedModule} from '../../shared/shared.module';
 import {NgbDropdownModule} from '@ng-bootstrap/ng-bootstrap';
 import { InstrumentsComponent } from './components/instruments/instruments.component';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [ProjectComponent, ImageThumbnailComponent, UploadImagesComponent, ProjectScoreViewerComponent, InstrumentsComponent],
@@ -30,6 +31,7 @@ import { InstrumentsComponent } from './components/instruments/instruments.compo
     EffectsModule.forFeature([ProjectEffects]),
     BreadcrumbModule,
     SharedModule,
+    FormsModule,
   ],
   providers: [
     ProjectService

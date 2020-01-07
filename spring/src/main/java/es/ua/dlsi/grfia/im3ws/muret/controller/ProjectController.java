@@ -31,14 +31,11 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -217,19 +214,19 @@ public class ProjectController {
         }
     }
 
-    @GetMapping(path = {"/exportFullScoreMEI/{projectID}"})
+    @GetMapping(path = {"/exportFullScoreMEI/{projectID}/{selectedImages}"})
     @Transactional
-    public StringResponse exportFullScoreMEI(@PathVariable("projectID") Integer projectID) throws IM3WSException {
-        return exportMEI(projectID, null);
+    public StringResponse exportFullScoreMEI(@PathVariable("projectID") Integer projectID, @PathVariable("selectedImages") String selectedImages) throws IM3WSException {
+        return exportMEI(projectID, null, selectedImages);
     }
 
-    @GetMapping(path = {"/exportPartMEI/{projectID}/{partID}"})
+    @GetMapping(path = {"/exportPartMEI/{projectID}/{partID}/{selectedImages}"})
     @Transactional
-    public StringResponse exportPartMEI(@PathVariable("projectID") Integer projectID, @PathVariable("partID") Long partID) throws IM3WSException {
-        return exportMEI(projectID, partID);
+    public StringResponse exportPartMEI(@PathVariable("projectID") Integer projectID, @PathVariable("partID") Long partID, @PathVariable("selectedImages") String selectedImages) throws IM3WSException {
+        return exportMEI(projectID, partID, selectedImages);
     }
 
-    private StringResponse exportMEI(Integer projectID, Long partID) throws IM3WSException {
+    private StringResponse exportMEI(Integer projectID, Long partID, String selectedImages) throws IM3WSException {
         Optional<Project> project = projectRepository.findById(projectID);
         if (!project.isPresent()) {
             throw new IM3WSException("Cannot find a project with id " + projectID);
@@ -245,24 +242,26 @@ public class ProjectController {
             part = opart.get();
         }
 
+        Set<Long> idsOfSelectedImages = findSelectedImages(selectedImages);
         try {
-            return new StringResponse(notationModel.exportMEI(project.get(), part, false));
+            return new StringResponse(notationModel.exportMEI(project.get(), part, false, idsOfSelectedImages));
         } catch (IM3Exception e) {
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Error exporting MEI", e);
             throw new IM3WSException(e);
         }
     }
 
-    @GetMapping(path = {"/exportMEIPartsFacsimile/{projectID}"})
+    @GetMapping(path = {"/exportMEIPartsFacsimile/{projectID}/{selectedImages}"})
     @Transactional
-    public StringResponse exportMEIPartsFacsimile(@PathVariable("projectID") Integer projectID) throws IM3WSException {
+    public StringResponse exportMEIPartsFacsimile(@PathVariable("projectID") Integer projectID, @PathVariable("selectedImages") String selectedImages) throws IM3WSException {
         Optional<Project> project = projectRepository.findById(projectID);
         if (!project.isPresent()) {
             throw new IM3WSException("Cannot find a project with id " + projectID);
         }
 
+        Set<Long> idsOfSelectedImages = findSelectedImages(selectedImages);
         try {
-            return new StringResponse(notationModel.exportMEI(project.get(), null, true));
+            return new StringResponse(notationModel.exportMEI(project.get(), null, true, idsOfSelectedImages));
         } catch (IM3Exception e) {
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Error exporting MEI parts facsimile", e);
             throw new IM3WSException(e);
@@ -270,10 +269,10 @@ public class ProjectController {
     }
 
 
-    @RequestMapping(value="/exportMensurstrich/{projectID}", method= RequestMethod.GET, produces="application/x-gzip")
+    @RequestMapping(value="/exportMensurstrich/{projectID}/{selectedImages}", method= RequestMethod.GET, produces="application/x-gzip")
     @ResponseBody
     @Transactional
-    public ResponseEntity<?> exportMensurstrich(@PathVariable Integer projectID) throws IM3WSException {
+    public ResponseEntity<?> exportMensurstrich(@PathVariable Integer projectID, @PathVariable("selectedImages") String selectedImages) throws IM3WSException {
         Optional<Project> project = projectRepository.findById(projectID);
         if (!project.isPresent()) {
             throw new IM3WSException("Cannot find a project with id " + projectID);
@@ -291,7 +290,9 @@ public class ProjectController {
             Path tmpDirectory = Files.createTempDirectory("mensurstrich_files_" + projectID);
             prefixes.add("content");
             files.add(tmpDirectory);
-            notationModel.generateMensurstrich(tmpDirectory, project.get());
+
+            Set<Long> idsOfSelectedImages = findSelectedImages(selectedImages);
+            notationModel.generateMensurstrich(tmpDirectory, project.get(), idsOfSelectedImages);
 
             fileCompressors.tgzFolders(tgz, files, prefixes);
 
@@ -308,10 +309,10 @@ public class ProjectController {
         }
     }
 
-    @RequestMapping(value="/exportMusicXML/{projectID}", method= RequestMethod.GET, produces="application/x-gzip")
+    @RequestMapping(value="/exportMusicXML/{projectID}/{selectedImages}", method= RequestMethod.GET, produces="application/x-gzip")
     @ResponseBody
     @Transactional
-    public ResponseEntity<?> exportMusicXML(@PathVariable Integer projectID) throws IM3WSException {
+    public ResponseEntity<?> exportMusicXML(@PathVariable Integer projectID, @PathVariable("selectedImages") String selectedImages) throws IM3WSException {
         Optional<Project> project = projectRepository.findById(projectID);
         if (!project.isPresent()) {
             throw new IM3WSException("Cannot find a project with id " + projectID);
@@ -329,7 +330,9 @@ public class ProjectController {
             Path tmpDirectory = Files.createTempDirectory("musicxml_files_" + projectID); //TODO eliminar código duplicado (exportMensurstrich)
             prefixes.add("content");
             files.add(tmpDirectory);
-            notationModel.generateMusicXML(tmpDirectory, project.get());
+
+            Set<Long> idsOfSelectedImages = findSelectedImages(selectedImages);
+            notationModel.generateMusicXML(tmpDirectory, project.get(), idsOfSelectedImages);
 
             fileCompressors.tgzFolders(tgz, files, prefixes);
 
@@ -344,5 +347,14 @@ public class ProjectController {
             throw new IM3WSException(e);
 
         }
+    }
+
+    private Set<Long> findSelectedImages(String selectedImages) {
+        String [] imageIDStr = selectedImages.split(",");
+        TreeSet<Long> result = new TreeSet<>();
+        for (String imageID: imageIDStr) {
+            result.add(Long.parseLong(imageID));
+        }
+        return result;
     }
 }

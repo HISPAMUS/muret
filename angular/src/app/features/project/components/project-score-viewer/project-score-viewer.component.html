@@ -1,8 +1,29 @@
 <div class="container">
   <div class="row">
+    <h2 class="col">Select images:</h2>
+  </div>
+  <div class="row">
+    <div class="col">
+      <button (click)="selectAllImages()">Select all</button>
+      &nbsp;
+      <button (click)="selectNoImage()">Select none</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-2" *ngFor="let selectedImage of selectedImages; trackBy: trackByImageFn">
+      <input type="checkbox" [(ngModel)]="selectedImage.checked">
+      {{selectedImage.image.filename}}
+          <ul>
+            <li *ngFor="let partName of partsUsedByImage(selectedImage.image); trackBy: trackByPartNameFn">
+              {{partName}}
+            </li>
+          </ul>
+    </div>
+  </div>
+  <div class="row">
     <div class="col">
       <br> <!--TODO maquetación -->
-      <h3>Export</h3>
+      <h3>Export of selected images</h3>
       <button (click)="exportPartsAndFacsimile()">Export to MEI file with parts and facsimile</button>
       &nbsp;&nbsp;
       <button (click)="exportFullMensurstrich()">Export mensurstrich</button>
@@ -14,14 +35,14 @@
   <hr>
    <div class="row">
      <div class="col-12">
-       <h3>MEI Visualization</h3>
+       <h3>MEI Visualization of selected images</h3>
        <p>Select score to be rendered</p>
 
        <div ngbDropdown class="d-inline-block">
          <button class="btn btn-outline-primary" id="dropdownForm1" ngbDropdownToggle>Select score to be rendered</button>
          <div ngbDropdownMenu aria-labelledby="dropdownForm1">
            <button (click)="renderFullScore()">Full score</button>
-           <ng-container *ngIf="(usesOfParts$ | async) as usesOfParts">
+           <ng-container *ngIf="usesOfParts">
             <button *ngFor="let uses of usesOfParts.uses" ngbDropdownItem (click)="render(uses.part.id)">{{uses.part.name}}</button>
            </ng-container>
          </div>

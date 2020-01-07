@@ -43,7 +43,7 @@ export class GetImagesSuccess implements Action {
 
 export class ExportMEI implements Action {
   public readonly type = ProjectActionTypes.ExportMEI;
-  constructor(public projectID: number, public partID: number) {}
+  constructor(public projectID: number, public partID: number, public selectedImages: Array<number>) {}
 }
 
 export class ExportMEISuccess implements Action {
@@ -53,7 +53,7 @@ export class ExportMEISuccess implements Action {
 
 export class ExportMEIPartsFacsimile implements Action {
   public readonly type = ProjectActionTypes.ExportMEIPartsFacsimile;
-  constructor(public projectID: number) {}
+  constructor(public projectID: number, public selectedImages: Array<number>) {}
 }
 
 export class ExportMEIPartsFacsimileSuccess implements Action {
@@ -63,7 +63,7 @@ export class ExportMEIPartsFacsimileSuccess implements Action {
 
 export class ExportMensurstrich implements Action {
   public readonly type = ProjectActionTypes.ExportMensurstrich;
-  constructor(public projectID: number) {}
+  constructor(public projectID: number, public selectedImages: Array<number>) {}
 }
 
 export class ExportMensurstrichSuccess implements Action {
@@ -73,7 +73,7 @@ export class ExportMensurstrichSuccess implements Action {
 
 export class ExportMusicXML implements Action {
   public readonly type = ProjectActionTypes.ExportMusicXML;
-  constructor(public projectID: number) {}
+  constructor(public projectID: number, public selectedImages: Array<number>) {}
 }
 
 export class ExportMusicXMLSuccess implements Action {
