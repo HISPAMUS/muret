@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -69,5 +71,12 @@ public class UserManagementController
     {
         m_userManager.revokePermissions(c_request.getUserName(), c_request.getCollectionID());
         return new StringResponse("Permissions revoked");
+    }
+
+    @GetMapping("/userPermissions")
+    @Transactional
+    public Map<String, List<String>> getAllUsersPermissions()
+    {
+        return m_userManager.getUsersPermissions();
     }
 }

@@ -12,3 +12,13 @@ export const selectErrorRegisterMessage = createSelector(
     selectAdminDBState,
     (state: AdminDashboardState) => state.errorMessage
 )
+
+export const selectRevokedFlag = createSelector(
+    selectAdminDBState,
+    (state: AdminDashboardState) => state.revokedPermissions
+)
+
+export const selectGrantedFlag = createSelector(
+    selectAdminDBState,
+    (state: AdminDashboardState) => state.grantedPermissions
+)

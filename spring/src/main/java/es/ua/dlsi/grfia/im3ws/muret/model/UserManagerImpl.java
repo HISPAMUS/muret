@@ -15,12 +15,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.jws.soap.SOAPBinding;
 import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.security.Permission;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Configurable
@@ -76,12 +75,12 @@ public class UserManagerImpl
     }
 
     @Transactional
-    public void grantPermissions(String c_userName, int c_collectionID, char c_permissionType)
+    public void grantPermissions(String c_userName, String c_collectionID, char c_permissionType)
     {
         User userToUpdate = null;
         Collection collectionUsed = null;
         Optional<User> userSelected = m_userRepository.findByUsername(c_userName);
-        Optional<Collection> collectionSelected = m_collectionRepository.findById(c_collectionID);
+        Optional<Collection> collectionSelected = m_collectionRepository.findByName(c_collectionID);
         if(userSelected.isPresent()) userToUpdate = userSelected.get(); else throw new UserManagerException(HttpStatus.NOT_FOUND, "User not found");
         if(collectionSelected.isPresent()) collectionUsed = collectionSelected.get(); else throw new UserManagerException(HttpStatus.NOT_FOUND, "Collection does not exist");
 
@@ -89,13 +88,16 @@ public class UserManagerImpl
     }
 
     @Transactional
-    public void revokePermissions(String c_userName, int c_collectionID)
+    public void revokePermissions(String c_userName, String c_collectionID)
     {
         User userToRevoke = null;
+        int collectionIDToRevoke;
         Optional<User> userSelected = m_userRepository.findByUsername(c_userName);
+        Optional<Collection> collectionSelected = m_collectionRepository.findByName(c_collectionID);
         if(userSelected.isPresent()) userToRevoke = userSelected.get(); else throw new UserManagerException(HttpStatus.NOT_FOUND, "User not found");
+        if(collectionSelected.isPresent()) collectionIDToRevoke = collectionSelected.get().getId(); else throw new UserManagerException(HttpStatus.NOT_FOUND, "User not found");
         for(Permissions permision : userToRevoke.getPermissions()) {
-            if (permision.getCollection().getId() == c_collectionID) {
+            if (permision.getCollection().getId() == collectionIDToRevoke) {
                 m_permissionsRepository.delete(permision);
                 break;
             }
@@ -111,5 +113,29 @@ public class UserManagerImpl
         usersFound.forEach(users::add);
 
         return users;
+    }
+
+    @Transactional
+    public Map<String, List<String>> getUsersPermissions()
+    {
+        Map<String, List<String>> permissionsMap = new HashMap<String, List<String>>();
+        Iterable<Collection> collections = m_collectionRepository.findAll();
+        Iterable<User> users = m_userRepository.findAll();
+        for(Collection collection : collections)
+        {
+            permissionsMap.put(collection.getName(), new ArrayList<>());
+        }
+        //TODO -- Super expensive for loop, need to check other options
+        for(User user : users)
+        {
+            for(String key : permissionsMap.keySet()) {
+                for (Permissions permission : user.getPermissions()) {
+                    if (permission.getCollection().getName().equals(key))
+                        permissionsMap.get(key).add(user.getUsername());
+                }
+            }
+        }
+
+        return permissionsMap;
     }
 }

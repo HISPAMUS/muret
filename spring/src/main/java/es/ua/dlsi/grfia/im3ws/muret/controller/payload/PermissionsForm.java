@@ -3,7 +3,7 @@ package es.ua.dlsi.grfia.im3ws.muret.controller.payload;
 public class PermissionsForm {
 
     private String userName;
-    private int collectionID;
+    private String collectionID;
     private char typeOfPermission;
 
     public String getUserName() {
@@ -14,11 +14,11 @@ public class PermissionsForm {
         this.userName = userName;
     }
 
-    public int getCollectionID() {
+    public String getCollectionID() {
         return collectionID;
     }
 
-    public void setCollectionID(int collectionID) {
+    public void setCollectionID(String collectionID) {
         this.collectionID = collectionID;
     }
 

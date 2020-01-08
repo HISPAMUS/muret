@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
-import { AdminDBActionTypes, RegisterStart, RegisterSuccess, RegisterFail } from '../actions/admindb.actions';
+import { AdminDBActionTypes, RegisterStart, RegisterSuccess, RegisterFail, RevokePermissions, RevokePermissionsSuccess } from '../actions/admindb.actions';
 import { map, switchMap, catchError } from 'rxjs/operators';
 import { NewUser } from '../../models/newusermodel';
 import { AdminDBService } from '../../services/admindb.service';
@@ -28,6 +28,19 @@ export class AdminDBEffets{
                     return of(new RegisterFail(error));
                 }
                 )
+            )
+        })
+    )
+
+    @Effect()
+    revokePermissions : Observable<any> = this.admindbActions.pipe(
+        ofType(AdminDBActionTypes.REVOKE_PERMISSIONS),
+        map((action: RevokePermissions) => action.payload),
+        switchMap(payload => {
+            return this.admindbService.revokePermissions$(payload).pipe(
+                map((payload: string) => {
+                    return new RevokePermissionsSuccess();
+                })
             )
         })
     )

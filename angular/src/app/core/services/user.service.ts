@@ -14,4 +14,8 @@ export class UserService {
   public getUserProjection$(userID: number): Observable<User> {
     return this.apiRestClientService.getExcerptProjectionOf$<User>(userID, 'users');
   }
+
+  public getUsersPermissions$():Observable<any>{
+    return this.apiRestClientService.get$<any>('users/userPermissions')
+  }
 }

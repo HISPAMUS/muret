@@ -2,9 +2,10 @@ package es.ua.dlsi.grfia.im3ws.muret.controller;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
-import es.ua.dlsi.grfia.im3ws.muret.controller.payload.PageCreation;
-import es.ua.dlsi.grfia.im3ws.muret.controller.payload.RegionCreation;
+import es.ua.dlsi.grfia.im3ws.controller.StringResponse;
+import es.ua.dlsi.grfia.im3ws.muret.controller.payload.*;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
+import es.ua.dlsi.grfia.im3ws.muret.model.ClassifierClient;
 import es.ua.dlsi.grfia.im3ws.muret.model.DocumentAnalysisModel;
 import es.ua.dlsi.grfia.im3ws.muret.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +27,15 @@ public class DocumentAnalysisController extends MuRETBaseController {
 
     private final DocumentAnalysisModel documentAnalysisModel;
 
+    private final ClassifierClient m_client;
+
+
     @Autowired
     public DocumentAnalysisController(MURETConfiguration muretConfiguration, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository, RegionTypeRepository regionTypeRepository, DocumentAnalysisModel documentAnalysisModel) {
         super(muretConfiguration, imageRepository, pageRepository, regionRepository, symbolRepository);
         this.regionTypeRepository = regionTypeRepository;
         this.documentAnalysisModel = documentAnalysisModel;
+        this.m_client = new ClassifierClient(muretConfiguration.getPythonclassifiers());
     }
 
     @PutMapping(path = {"pageBoundingBoxUpdate"})
@@ -100,6 +105,12 @@ public class DocumentAnalysisController extends MuRETBaseController {
     @DeleteMapping(path = {"deleteRegion/{regionID}"})
     public long deleteRegion(@PathVariable("regionID") long regionID) throws IM3WSException {
         return this.documentAnalysisModel.deleteRegion(regionID);
+    }
+
+    @PostMapping(path = "docAnalyze")
+    public AutoDocumentAnalysisModel analyzeDocument(@RequestBody DocAnalysisForm request) throws IM3WSException
+    {
+        return m_client.getDocumentAnalysis(request.getImageID());
     }
 
     /**

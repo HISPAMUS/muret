@@ -3,6 +3,7 @@ import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment'
 import { NGXLogger } from 'ngx-logger';
 import { NewUser } from '../models/newusermodel';
+import {PermissionsModel} from '../models/permissionsModel'
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -12,6 +13,7 @@ const httpOptions = {
 export class AdminDBService
 {
     registeruserURL = environment.apiEndpoint + '/users/register'
+    revokepermissionsURL = environment.apiEndpoint + '/users/revokePermissions'
 
     constructor(private httpClient: HttpClient, private logger: NGXLogger){}
 
@@ -19,5 +21,12 @@ export class AdminDBService
     {
         this.logger.debug('AdminDBService#post ' + this.registeruserURL)
         return this.httpClient.post(this.registeruserURL, registerdata, httpOptions)
+    }
+
+    revokePermissions$(permissionsForm: PermissionsModel)
+    {
+        this.logger.debug('AdminDBService#post' + this.revokepermissionsURL)
+        return this.httpClient.post(this.revokepermissionsURL, permissionsForm, httpOptions)
+
     }
 }

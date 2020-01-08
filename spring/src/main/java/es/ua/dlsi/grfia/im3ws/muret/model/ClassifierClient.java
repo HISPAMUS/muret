@@ -286,6 +286,11 @@ public class ClassifierClient {
         return response.getMessage();
     }
 
+    public AutoDocumentAnalysisModel getDocumentAnalysis(Integer imageID) throws IM3WSException
+    {
+        return this.restClient.post("image/" + imageID.toString() + "/docAnalysis", AutoDocumentAnalysisModel.class, null);
+    }
+
 
     public static void main(String [] args) throws IM3WSException, IM3Exception {
         // used to check it
