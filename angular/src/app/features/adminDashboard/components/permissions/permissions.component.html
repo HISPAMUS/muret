@@ -1,6 +1,6 @@
 <div *ngFor="let key of titles; let i = index">
     <h2>{{key}}</h2>
-    <button class="btn btn-primary">Add user</button>
+    <button class="btn btn-primary" (click)="grantPermissions(i, key)">Add user</button>
     
     <table class="table table-dark">
         <thead>

@@ -18,6 +18,13 @@ export function userReducers(state = initialUserState, action: UserActions): Use
       }
     }
 
+    case UserActionTypes.GetUsersSuccess : {
+      return {
+        ...state,
+        userList: action.payload
+      }
+    }
+
     default:
       return state;
   }

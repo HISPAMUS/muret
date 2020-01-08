@@ -7,7 +7,9 @@ export enum AdminDBActionTypes {
     REGISTER_SUCCESS = '[Admin] Register new user success',
     REGISTER_FAIL = '[Admin] Register new user fail',
     REVOKE_PERMISSIONS = '[Admin] Revoke user permissions',
-    REVOKE_PERMISSIONS_SUCCESS = '[Admin] Revoke user permissions successs'
+    REVOKE_PERMISSIONS_SUCCESS = '[Admin] Revoke user permissions successs',
+    GRANT_PERMISSIONS = '[Admin] Grant permissions on user',
+    GRANT_PERMISSIONS_SUCCESS = '[Admin] Grant permissions on user successfull'
 }
 
 export class RegisterStart implements Action 
@@ -38,9 +40,22 @@ export class RevokePermissionsSuccess implements Action
     readonly type = AdminDBActionTypes.REVOKE_PERMISSIONS_SUCCESS
 }
 
+export class GrantPermissions implements Action
+{
+    readonly type = AdminDBActionTypes.GRANT_PERMISSIONS
+    constructor(public payload: PermissionsModel){}
+}
+
+export class GrantPermissionsSuccess implements Action
+{
+    readonly type = AdminDBActionTypes.GRANT_PERMISSIONS_SUCCESS
+}
+
 export type AdminDBActions = 
     | RegisterStart
     | RegisterSuccess
     | RegisterFail
     | RevokePermissions
-    | RevokePermissionsSuccess; 
+    | RevokePermissionsSuccess
+    | GrantPermissions
+    | GrantPermissionsSuccess; 
