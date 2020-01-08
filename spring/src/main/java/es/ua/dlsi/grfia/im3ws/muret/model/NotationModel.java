@@ -210,79 +210,82 @@ public class NotationModel {
 
                                 //TODO Código duplicado en SemanticRepresentationModel - getNotation
                                 MensSemanticImporter mensSemanticImporter = new MensSemanticImporter(); //TODO Sólo va para mensural
-                                SemanticEncoding semantic = mensSemanticImporter.importString(project.getNotationType(), region.getSemanticEncoding());
-                                Semantic2IMCore semantic2IMCore = new Semantic2IMCore();
-                                //TODO compases y tonalidad anteriores
-                                List<Pair<SemanticSymbol, ITimedElementInStaff>> items = semantic2IMCore.convert(project.getNotationType(), null, null, semantic);
+                                String semanticEncoding = region.getSemanticEncoding();
+                                if (semanticEncoding != null && !semanticEncoding.trim().isEmpty()) {
+                                    SemanticEncoding semantic = mensSemanticImporter.importString(project.getNotationType(), region.getSemanticEncoding());
+                                    Semantic2IMCore semantic2IMCore = new Semantic2IMCore();
+                                    //TODO compases y tonalidad anteriores
+                                    List<Pair<SemanticSymbol, ITimedElementInStaff>> items = semantic2IMCore.convert(project.getNotationType(), null, null, semantic);
 
-                                Staff staff = staves.get(regionPart);
-                                if (staff == null) {
-                                    throw new IM3Exception("Cannot find the staff for the region " + region.getId());
-                                }
+                                    Staff staff = staves.get(regionPart);
+                                    if (staff == null) {
+                                        throw new IM3Exception("Cannot find the staff for the region " + region.getId());
+                                    }
 
-                                ScoreLayer layer = staff.getLayers().get(0);
-                                ScorePart scorePart = scorePartHashMap.get(regionPart);
-                                if (scorePart == null) {
-                                    throw new IM3Exception("Cannot find the score part for the region " + region.getId());
-                                }
-                                Time time = staff.getDuration();
-                                if (partsAndFacsimile || specificPart != null) {
-                                    if (newPage) {
-                                        newPage = false;
-                                        PageBeginning pageBeginning = new PageBeginning(time, true);
+                                    ScoreLayer layer = staff.getLayers().get(0);
+                                    ScorePart scorePart = scorePartHashMap.get(regionPart);
+                                    if (scorePart == null) {
+                                        throw new IM3Exception("Cannot find the score part for the region " + region.getId());
+                                    }
+                                    Time time = staff.getDuration();
+                                    if (partsAndFacsimile || specificPart != null) {
+                                        if (newPage) {
+                                            newPage = false;
+                                            PageBeginning pageBeginning = new PageBeginning(time, true);
+                                            if (partsAndFacsimile) {
+                                                pageBeginning.setFacsimileElementID(lastPageID);
+                                            }
+                                            scorePart.addPageBeginning(pageBeginning);
+                                        }
+                                        SystemBeginning systemBeginning = new SystemBeginning(time, true);
                                         if (partsAndFacsimile) {
-                                            pageBeginning.setFacsimileElementID(lastPageID);
+                                            systemBeginning.setFacsimileElementID(lastRegionID);
                                         }
-                                        scorePart.addPageBeginning(pageBeginning);
+                                        scorePart.addSystemBeginning(systemBeginning);
                                     }
-                                    SystemBeginning systemBeginning = new SystemBeginning(time, true);
-                                    if (partsAndFacsimile) {
-                                        systemBeginning.setFacsimileElementID(lastRegionID);
-                                    }
-                                    scorePart.addSystemBeginning(systemBeginning);
-                                }
 
-                                boolean firstNote = true;
-                                for (Pair<SemanticSymbol, ITimedElementInStaff> pair : items) {
-                                    SemanticSymbol semanticSymbol = pair.getX();
-                                    ITimedElementInStaff timedElementInStaff = pair.getY();
+                                    boolean firstNote = true;
+                                    for (Pair<SemanticSymbol, ITimedElementInStaff> pair : items) {
+                                        SemanticSymbol semanticSymbol = pair.getX();
+                                        ITimedElementInStaff timedElementInStaff = pair.getY();
 
-                                    if (semanticSymbol.getSymbol().getAgnosticIDs() != null && semanticSymbol.getSymbol().getAgnosticIDs().length > 0) {
-                                        //TODO We can only reference to one symbol - maybe, when the semantic symbol corresponds to several agnostic,
-                                        // we could export the merged bounding box of all agnostic symbols
-                                        // Now we just reference to the first one
+                                        if (semanticSymbol.getSymbol().getAgnosticIDs() != null && semanticSymbol.getSymbol().getAgnosticIDs().length > 0) {
+                                            //TODO We can only reference to one symbol - maybe, when the semantic symbol corresponds to several agnostic,
+                                            // we could export the merged bounding box of all agnostic symbols
+                                            // Now we just reference to the first one
 
-                                        Long agnosticID = semanticSymbol.getSymbol().getAgnosticIDs()[0];
-                                        String referencedSymbolID = generateID(agnosticID);
-                                        timedElementInStaff.setFacsimileElementID(referencedSymbolID);
-                                    }
-                                    if (timedElementInStaff instanceof Atom) { //TODO Mejor con una anotación (marcador)
-                                        Atom atom = (Atom) timedElementInStaff;
-                                        layer.add(atom);
+                                            Long agnosticID = semanticSymbol.getSymbol().getAgnosticIDs()[0];
+                                            String referencedSymbolID = generateID(agnosticID);
+                                            timedElementInStaff.setFacsimileElementID(referencedSymbolID);
+                                        }
+                                        if (timedElementInStaff instanceof Atom) { //TODO Mejor con una anotación (marcador)
+                                            Atom atom = (Atom) timedElementInStaff;
+                                            layer.add(atom);
 
-                                        if (atom instanceof SimpleNote) {
-                                            if (firstNote) {
-                                                firstNote = false;
-                                                SimpleNote simpleNote = (SimpleNote) atom;
-                                                String label = image.getFilename() + ", p" + npage + ", s" + nregion;
-                                                simpleNote.getAtomPitch().addLyric(new ScoreLyric(1, simpleNote.getAtomPitch(), label, Syllabic.single));
+                                            if (atom instanceof SimpleNote) {
+                                                if (firstNote) {
+                                                    firstNote = false;
+                                                    SimpleNote simpleNote = (SimpleNote) atom;
+                                                    String label = image.getFilename() + ", p" + npage + ", s" + nregion;
+                                                    simpleNote.getAtomPitch().addLyric(new ScoreLyric(1, simpleNote.getAtomPitch(), label, Syllabic.single));
+                                                }
                                             }
-                                        }
-                                    } else {
-                                        boolean insert = true;
-                                        if (timedElementInStaff instanceof Clef) {
-                                            if (lastClef == null || !lastClef.equals(timedElementInStaff)) {
-                                                lastClef = (Clef) timedElementInStaff;
-                                                lastClefs.put(regionPart, lastClef);
-                                            } else {
-                                                insert = false;
+                                        } else {
+                                            boolean insert = true;
+                                            if (timedElementInStaff instanceof Clef) {
+                                                if (lastClef == null || !lastClef.equals(timedElementInStaff)) {
+                                                    lastClef = (Clef) timedElementInStaff;
+                                                    lastClefs.put(regionPart, lastClef);
+                                                } else {
+                                                    insert = false;
+                                                }
+                                            } else if (timedElementInStaff instanceof Custos) {
+                                                insert = partsAndFacsimile || specificPart != null;
                                             }
-                                        } else if (timedElementInStaff instanceof Custos) {
-                                            insert = partsAndFacsimile || specificPart != null;
-                                        }
 
-                                        if (insert) {
-                                            staff.addElementWithoutLayer((IStaffElementWithoutLayer) timedElementInStaff);
+                                            if (insert) {
+                                                staff.addElementWithoutLayer((IStaffElementWithoutLayer) timedElementInStaff);
+                                            }
                                         }
                                     }
                                 }

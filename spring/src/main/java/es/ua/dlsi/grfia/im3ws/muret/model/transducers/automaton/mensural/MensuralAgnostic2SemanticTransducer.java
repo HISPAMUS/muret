@@ -80,6 +80,7 @@ public class MensuralAgnostic2SemanticTransducer extends Agnostic2SemanticTransd
         transitions.add(new Transition<>(notes, new Rest(), notes));
         transitions.add(new Transition<>(notes, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
         transitions.add(new Transition<>(notes, new Custos(), custos));
+        transitions.add(new Transition<>(notes, new MeterSign(), timesig));
         transitions.add(new Transition<>(barline, new MeterSign(), timesig));
         transitions.add(new Transition<>(barline, new Note(), notes));
         transitions.add(new Transition<>(barline, new Rest(), notes));
