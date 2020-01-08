@@ -21,3 +21,8 @@ export const selectUserPermissions = createSelector(
   (state: CoreState) => state.user.permissionsData
 )
 
+export const selectUserList = createSelector(
+  selectCoreState,
+  (state: CoreState) => state.user.userList
+)
+

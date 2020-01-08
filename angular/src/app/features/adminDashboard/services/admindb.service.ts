@@ -14,6 +14,8 @@ export class AdminDBService
 {
     registeruserURL = environment.apiEndpoint + '/users/register'
     revokepermissionsURL = environment.apiEndpoint + '/users/revokePermissions'
+    grantpermissionsURL = environment.apiEndpoint + '/users/grantPermissions'
+
 
     constructor(private httpClient: HttpClient, private logger: NGXLogger){}
 
@@ -28,5 +30,11 @@ export class AdminDBService
         this.logger.debug('AdminDBService#post' + this.revokepermissionsURL)
         return this.httpClient.post(this.revokepermissionsURL, permissionsForm, httpOptions)
 
+    }
+
+    grantPermissions$(permissionsForm: PermissionsModel)
+    {
+        this.logger.debug('AdminDBService#post' + this.grantpermissionsURL)
+        return this.httpClient.post(this.grantpermissionsURL, permissionsForm, httpOptions)
     }
 }

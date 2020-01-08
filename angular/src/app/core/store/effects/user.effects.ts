@@ -6,7 +6,7 @@ import {switchMap, map, withLatestFrom, catchError, tap} from 'rxjs/operators';
 
 import {
   GetUserSuccess,
-  GetUser, UserActionTypes, GetUserPermissions, GetUserPermissionsSuccess,
+  GetUser, UserActionTypes, GetUserPermissions, GetUserPermissionsSuccess, GetUsers, GetUsersSuccess,
 } from '../actions/user.actions';
 import {UserService} from '../../services/user.service';
 import {User} from '../../model/entities/user';
@@ -35,6 +35,15 @@ export class UserEffects {
     switchMap(()=> this.userService.getUsersPermissions$()),
     switchMap((response:any) => {
       return of(new GetUserPermissionsSuccess(response))
+    })
+  )
+
+  @Effect()
+  getAllUsers$ = this.actions$.pipe(
+    ofType<GetUsers>(UserActionTypes.GetUsers),
+    switchMap(()=> this.userService.getAllUsers()),
+    switchMap((response:string[]) => {
+      return of(new GetUsersSuccess(response))
     })
   )
 }

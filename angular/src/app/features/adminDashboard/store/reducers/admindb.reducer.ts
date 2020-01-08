@@ -31,6 +31,16 @@ export function adminDBReducers( state = initialAdimnDashboardState, action: Adm
                 ...state,
                 revokedPermissions: 1
             }
+        case AdminDBActionTypes.GRANT_PERMISSIONS:
+            return{
+                ...state,
+                grantedPermissions: 0
+            }
+        case AdminDBActionTypes.GRANT_PERMISSIONS_SUCCESS:
+            return{
+                ...state,
+                grantedPermissions: 1
+            }
         default:
             return {
                 ...state

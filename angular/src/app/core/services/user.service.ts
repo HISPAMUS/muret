@@ -18,4 +18,8 @@ export class UserService {
   public getUsersPermissions$():Observable<any>{
     return this.apiRestClientService.get$<any>('users/userPermissions')
   }
+
+  public getAllUsers():Observable<string[]>{
+    return this.apiRestClientService.get$<string[]>('users/allUsers')
+  }
 }
