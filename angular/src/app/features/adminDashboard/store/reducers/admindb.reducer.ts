@@ -21,6 +21,16 @@ export function adminDBReducers( state = initialAdimnDashboardState, action: Adm
                 userRegisterStatus: -1,
                 errorMessage: action.payload
             }
+        case AdminDBActionTypes.REVOKE_PERMISSIONS:
+            return{
+                ...state,
+                revokedPermissions: 0
+            }
+        case AdminDBActionTypes.REVOKE_PERMISSIONS_SUCCESS:
+            return{
+                ...state,
+                revokedPermissions: 1
+            }
         default:
             return {
                 ...state

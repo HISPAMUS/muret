@@ -14,10 +14,11 @@ import { EffectsModule } from '@ngrx/effects';
 import { admindbeffects } from './store/effects/admindb.effects';
 import { RegistermodelComponent } from './components/registermodel/registermodel.component';
 import { FileUploadModule } from 'ng2-file-upload';
+import { PermissionsComponent } from './components/permissions/permissions.component';
 
 
 @NgModule({
-  declarations: [AdminDashboardComponent, RegisterComponent, RegistermodelComponent],
+  declarations: [AdminDashboardComponent, RegisterComponent, RegistermodelComponent, PermissionsComponent],
   imports: [
     CommonModule,
     FontAwesomeModule,

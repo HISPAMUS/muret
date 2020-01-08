@@ -11,6 +11,13 @@ export function userReducers(state = initialUserState, action: UserActions): Use
       };
     }
 
+    case UserActionTypes.GetUserPermissionsSuccess: {
+      return{
+        ...state,
+        permissionsData: action.payload
+      }
+    }
+
     default:
       return state;
   }

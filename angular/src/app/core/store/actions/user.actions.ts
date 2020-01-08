@@ -3,7 +3,9 @@ import {User} from '../../model/entities/user';
 
 export enum UserActionTypes {
   GetUser = '[User] Get User',
-  GetUserSuccess = '[User] Get User Success'
+  GetUserSuccess = '[User] Get User Success',
+  GetUserPermissions = '[User] Get User Permissions',
+  GetUserPermissionsSuccess = '[User] Get User Permissions Success',
 }
 
 export class GetUser implements Action {
@@ -16,4 +18,15 @@ export class GetUserSuccess implements Action {
   constructor(public payload: User) {}
 }
 
-export type UserActions = GetUser | GetUserSuccess;
+export class GetUserPermissions implements Action{
+  public readonly type = UserActionTypes.GetUserPermissions;
+  constructor(){}
+}
+
+export class GetUserPermissionsSuccess implements Action
+{
+  public readonly type = UserActionTypes.GetUserPermissionsSuccess;
+  constructor(public payload: any) {}
+}
+
+export type UserActions = GetUser | GetUserSuccess | GetUserPermissions | GetUserPermissionsSuccess;
