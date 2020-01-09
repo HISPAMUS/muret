@@ -1,3 +1,16 @@
+0.3
+
+MAJOR UPDATES
+    - Selection of images to be exported to MEI / MusicXML / Verovio
+    - Administrator can now manage permissions
+    -
+
+MINOR UPDATES
+    - Agnostic to semantic transducer includes correctly the colored notes and mensuration changes
+    - The staffDef includes the modusmaior and modusminor in order to correctly render the score in Verovio
+    - Improvements in the document analysis usability
+
+--------------------------------------------------------------------------------------------------------------------------------------------
 0.2
 
 MAJOR UPDATES
@@ -12,6 +25,7 @@ MINOR UPDATES
 
     - Selected region is maintained when changing between semantic and agnostic
 
+--------------------------------------------------------------------------------------------------------------------------------------------
 0.1
 
 MAJOR UPDATES
