@@ -9,7 +9,7 @@ import { UserState } from 'src/app/core/store/state/user.state';
 import { DialogsService } from 'src/app/shared/services/dialogs.service';
 import { AdminDashboardState } from '../../store/state/admindb.state';
 import { RevokePermissions, GrantPermissions } from '../../store/actions/admindb.actions';
-import { selectRevokedFlag } from '../../store/selectors/admindb.selector';
+import { selectRevokedFlag, selectGrantedFlag } from '../../store/selectors/admindb.selector';
 import { ModalOptions } from 'src/app/shared/components/options-dialog/options-dialog.component';
 
 @Component({
@@ -63,7 +63,7 @@ export class PermissionsComponent implements OnInit, OnDestroy {
       }
     })
 
-    this.grantedFlag = this.adminStore.select(selectRevokedFlag).subscribe((value: number)=>{
+    this.grantedFlag = this.adminStore.select(selectGrantedFlag).subscribe((value: number)=>{
       if(value)
       {
         this.dialogs.showConfirmarion("Success", "Permissions granted").subscribe(()=>{

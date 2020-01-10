@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -78,5 +79,19 @@ public class UserManagementController
     public Map<String, List<String>> getAllUsersPermissions()
     {
         return m_userManager.getUsersPermissions();
+    }
+
+    @GetMapping("/allUsers")
+    public List<String> getAllUsers()
+    {
+        List<User> users = m_userManager.getUsers();
+        List<String> userNames = new ArrayList<String>();
+
+        for(User user : users)
+        {
+            userNames.add(user.getUsername());
+        }
+
+        return userNames;
     }
 }
