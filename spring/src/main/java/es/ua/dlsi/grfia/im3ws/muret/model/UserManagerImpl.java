@@ -1,6 +1,5 @@
 package es.ua.dlsi.grfia.im3ws.muret.model;
 
-import es.ua.dlsi.grfia.im3ws.muret.auth.services.UserPrinciple;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Collection;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Permissions;
 import es.ua.dlsi.grfia.im3ws.muret.entity.User;
@@ -9,16 +8,11 @@ import es.ua.dlsi.grfia.im3ws.muret.repository.PermissionsRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.UserRepository;
 import es.ua.dlsi.grfia.im3ws.muret.exceptions.UserManagerException;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.jws.soap.SOAPBinding;
-import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
-import java.security.Permission;
 import java.util.*;
 
 @Service
