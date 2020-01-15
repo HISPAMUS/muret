@@ -50,3 +50,8 @@ export const selectImageProjectID = createSelector(
   (state: DocumentAnalysisState) => state.projectID
 );
 
+export const selectDocumentAnalysisClassifierModels = createSelector(
+  documentAnalysisState,
+  (state: DocumentAnalysisState) => state.documentAnalysisClassifierModels
+)
+

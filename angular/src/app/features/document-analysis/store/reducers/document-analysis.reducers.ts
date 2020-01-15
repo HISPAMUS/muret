@@ -144,6 +144,15 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
       }
       return newState;
     }
+    case DocumentAnalysisActionTypes.GetDocumentAnModels : {
+      console.log("wiii")
+      return {...state,
+      documentAnalysisClassifierModels: null}
+    }
+    case DocumentAnalysisActionTypes.GetDocumentAnModelsSuccess: {
+      return {...state,
+      documentAnalysisClassifierModels: action.response}
+    }
     default: {
       return state;
     }

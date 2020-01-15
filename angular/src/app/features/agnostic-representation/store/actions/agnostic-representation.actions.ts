@@ -34,8 +34,7 @@ export enum AgnosticRepresentationActionTypes {
   GetSymbolClassifierModels = '[AgnosticRepresentation] Get Symbol Classifier Models',
   GetSymbolClassifierModelsSuccess = '[AgnosticRepresentation] Get Symbol Classifier Models success',
   GetAgnosticEnd2EndClassifierModels = '[AgnosticRepresentation] Get Agnostic end2end Classifier Models',
-  GetAgnosticEnd2EndClassifierModelsSuccess = '[AgnosticRepresentation] Get Agnostic end2end Classifier Models success',
-
+  GetAgnosticEnd2EndClassifierModelsSuccess = '[AgnosticRepresentation] Get Agnostic end2end Classifier Models success'
 }
 
 export class InitRegion implements Action {

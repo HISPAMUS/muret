@@ -21,7 +21,7 @@ export const initialAgnosticRepresentationState: AgnosticRepresentationState = {
   svgAgnosticSymbolsSet: null,
   classifiedSymbols: null,
   end2endClassifierModels: null,
-  symbolClassifierModels: null
+  symbolClassifierModels: null,
 };
 
 export function getInitialState(): AgnosticRepresentationState {

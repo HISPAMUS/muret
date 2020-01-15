@@ -23,7 +23,9 @@ import {
   GetImageURL,
   GetImageURLSuccess,
   GetRegionTypes,
-  GetRegionTypesSuccess
+  GetRegionTypesSuccess,
+  GetDocumentAnModels,
+  GetDocumentAnModelsSuccess
 } from '../actions/document-analysis.actions';
 import {DocumentAnalysisImageProjection} from '../../../../core/model/restapi/document-analysis-image-projection';
 import {RegionType} from '../../../../core/model/entities/region-type';
@@ -31,6 +33,8 @@ import {ImageFilesService} from '../../../../core/services/image-files.service';
 import {Region} from '../../../../core/model/entities/region';
 import {Page} from '../../../../core/model/entities/page';
 import {Part} from '../../../../core/model/entities/part';
+import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
+import { GetSymbolClassifierModelsSuccess } from 'src/app/features/agnostic-representation/store/actions/agnostic-representation.actions';
 
 @Injectable()
 export class DocumentAnalysisEffects {
@@ -145,5 +149,14 @@ export class DocumentAnalysisEffects {
       return of(new DeleteRegionSuccess(deletedRegionID));
     })
   );
+
+  @Effect()
+  getModel$ = this.actions$.pipe(
+    ofType<GetDocumentAnModels>(DocumentAnalysisActionTypes.GetDocumentAnModels),
+    switchMap((action: GetDocumentAnModels) => this.documentAnalysisService.getModels$(action.imageID)),
+    switchMap((classifierModels: ClassifierModel[]) => {
+      return of(new GetDocumentAnModelsSuccess(classifierModels));
+    })
+  )
 
 }

@@ -15,19 +15,22 @@ import {
   ChangeRegionBoundingBox,
   ChangeRegionType, Clear, CreatePage, CreateRegion, DeletePage, DeleteRegion, GetImagePart,
   GetImageProjection,
-  GetRegionTypes
+  GetRegionTypes,
+  GetDocumentAnModels
 } from '../../store/actions/document-analysis.actions';
 import {
   selectFileName, selectImagePart,
   selectPages,
   selectRegionTypes,
   selectImageWidth,
-  selectImageHeight
+  selectImageHeight,
+  selectDocumentAnalysisClassifierModels
 } from '../../store/selectors/document-analysis.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Part} from '../../../../core/model/entities/part';
+import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 
 @Component({
   selector: 'app-document-analysis',
@@ -40,6 +43,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   filename$: Observable<string>;
   regionTypes$: Observable<RegionType[]>;
   imagePart$: Observable<Part>;
+  documentAnalysisModels$: Observable<ClassifierModel[]>;
   pagesSubscription: Subscription;
   regionTypesSubscription: Subscription;
   imagewidthSubscription: Subscription;
@@ -99,6 +103,10 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
         this.store.dispatch(new ActivateLink({title: 'Document analysis', routerLink: 'documentanalysis/' + this.imageID}));
       });
     });
+
+    this.documentAnalysisModels$ = this.store.select(selectDocumentAnalysisClassifierModels);
+
+    this.store.dispatch(new GetDocumentAnModels(this.imageID));
 
     this.imagePart$ = this.store.select(selectImagePart);
     this.imagewidthSubscription = this.store.select(selectImageWidth).subscribe(value => {

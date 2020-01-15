@@ -5,6 +5,7 @@ import {Region} from '../../../../core/model/entities/region';
 import {Page} from '../../../../core/model/entities/page';
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {Part} from '../../../../core/model/entities/part';
+import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 
 export enum DocumentAnalysisActionTypes {
   GetImageProjection = '[DocumentAnalysis] Get image projection',
@@ -44,6 +45,9 @@ export enum DocumentAnalysisActionTypes {
 
   DeleteRegion = '[DocumentAnalysis] Delete region',
   DeleteRegionSuccess = '[DocumentAnalysis] Delete region success',
+
+  GetDocumentAnModels = '[DocumentAnalysis] Get Models',
+  GetDocumentAnModelsSuccess = '[DocumentAnalysis] Get Models Success'
 }
 
 export class GetImageProjection implements Action {
@@ -170,6 +174,16 @@ export class DeleteRegionSuccess implements Action {
   constructor(public deletedRegionID: number) {}
 }
 
+export class GetDocumentAnModels implements Action{
+  public readonly type = DocumentAnalysisActionTypes.GetDocumentAnModels;
+  constructor(public imageID: number){}
+}
+
+export class GetDocumentAnModelsSuccess implements Action{
+  public readonly type = DocumentAnalysisActionTypes.GetDocumentAnModelsSuccess;
+  constructor(public response: ClassifierModel[]){}
+}
+
 /*export class SelectPage implements Action {
   public readonly type = DocumentAnalysisActionTypes.SelectPage;
   constructor(public page: Page) {}
@@ -195,4 +209,5 @@ export type DocumentAnalysisActions =
   CreateRegion | CreateRegionSuccess |
   Clear | ClearSuccess |
   DeletePage | DeletePageSuccess |
-  DeleteRegion | DeleteRegionSuccess;
+  DeleteRegion | DeleteRegionSuccess |
+  GetDocumentAnModels | GetDocumentAnModelsSuccess;

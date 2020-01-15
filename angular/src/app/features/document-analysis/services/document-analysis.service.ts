@@ -7,6 +7,7 @@ import {Page} from '../../../core/model/entities/page';
 import {Region} from '../../../core/model/entities/region';
 import {BoundingBox} from '../../../core/model/entities/bounding-box';
 import {Part} from '../../../core/model/entities/part';
+import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 
 @Injectable() // non-singleton
 export class DocumentAnalysisService {
@@ -104,6 +105,11 @@ export class DocumentAnalysisService {
 
   deleteRegion(regionID: number) {
     return this.apiRestClientService.delete$<number>('documentanalysis/deleteRegion', regionID);
+  }
+
+  getModels$(imageID: number){
+    const url = `classifierModels/documentAnalysis/${imageID}`
+    return this.apiRestClientService.get$<ClassifierModel[]>(url);
   }
 
 }
