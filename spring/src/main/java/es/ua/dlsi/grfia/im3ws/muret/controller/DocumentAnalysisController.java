@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -28,7 +30,6 @@ public class DocumentAnalysisController extends MuRETBaseController {
     private final DocumentAnalysisModel documentAnalysisModel;
 
     private final ClassifierClient m_client;
-
 
     @Autowired
     public DocumentAnalysisController(MURETConfiguration muretConfiguration, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository, RegionTypeRepository regionTypeRepository, DocumentAnalysisModel documentAnalysisModel) {
@@ -107,10 +108,14 @@ public class DocumentAnalysisController extends MuRETBaseController {
         return this.documentAnalysisModel.deleteRegion(regionID);
     }
 
+    @Transactional
     @PostMapping(path = "docAnalyze")
     public AutoDocumentAnalysisModel analyzeDocument(@RequestBody DocAnalysisForm request) throws IM3WSException
     {
-        return m_client.getDocumentAnalysis(request.getImageID());
+        Image persistentImage = getImage(request.getImageID());
+        Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.getProject().getPath(),
+                MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());
+        return m_client.getDocumentAnalysis(request.getImageID(), imagePath);
     }
 
     /**

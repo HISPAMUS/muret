@@ -5,13 +5,11 @@ import java.util.List;
 public class AutoDocumentAnalysisModel
 {
     List<CoordinatesDocAnBounding> staff;
-    List<CoordinatesDocAnBounding> title;
 
     public AutoDocumentAnalysisModel(){}
-    public AutoDocumentAnalysisModel(List<CoordinatesDocAnBounding> staff, List<CoordinatesDocAnBounding> title)
+    public AutoDocumentAnalysisModel(List<CoordinatesDocAnBounding> staff)
     {
         this.staff = staff;
-        this.title = title;
     }
 
     public List<CoordinatesDocAnBounding> getStaff() {
@@ -20,13 +18,5 @@ public class AutoDocumentAnalysisModel
 
     public void setStaff(List<CoordinatesDocAnBounding> staff) {
         this.staff = staff;
-    }
-
-    public List<CoordinatesDocAnBounding> getTitle() {
-        return title;
-    }
-
-    public void setTitle(List<CoordinatesDocAnBounding> title) {
-        this.title = title;
     }
 }

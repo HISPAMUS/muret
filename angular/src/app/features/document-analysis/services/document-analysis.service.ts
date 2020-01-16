@@ -8,6 +8,8 @@ import {Region} from '../../../core/model/entities/region';
 import {BoundingBox} from '../../../core/model/entities/bounding-box';
 import {Part} from '../../../core/model/entities/part';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
+import { DocumentAnalysisForm } from '../model/documentAnalysisForm';
+import { DocumentAnalysisModel } from '../model/documentAnalysisModel';
 
 @Injectable() // non-singleton
 export class DocumentAnalysisService {
@@ -110,6 +112,11 @@ export class DocumentAnalysisService {
   getModels$(imageID: number){
     const url = `classifierModels/documentAnalysis/${imageID}`
     return this.apiRestClientService.get$<ClassifierModel[]>(url);
+  }
+
+  attemptAutomaticAnalysis$(form: DocumentAnalysisForm){
+    const url = 'documentanalysis/docAnalyze';
+    return this.apiRestClientService.post$<DocumentAnalysisModel>(url, form);
   }
 
 }

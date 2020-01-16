@@ -284,6 +284,7 @@ public class AgnosticRepresentationModel {
         persistentRegion.getSymbols().clear(); // first remove previous
 
         Image persistentImage = persistentRegion.getPage().getImage();
+
         long imageID = persistentImage.getId();
         Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.getProject().getPath(),
                 MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());

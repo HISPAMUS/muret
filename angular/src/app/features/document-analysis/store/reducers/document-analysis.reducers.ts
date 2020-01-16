@@ -145,7 +145,6 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
       return newState;
     }
     case DocumentAnalysisActionTypes.GetDocumentAnModels : {
-      console.log("wiii")
       return {...state,
       documentAnalysisClassifierModels: null}
     }
@@ -153,6 +152,18 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
       return {...state,
       documentAnalysisClassifierModels: action.response}
     }
+    case DocumentAnalysisActionTypes.StartAutomaticDocumentAnalysis:{
+      return { ...state,
+        documentAnalysisResult: null
+      }
+    }
+    case DocumentAnalysisActionTypes.AutomaticDocumentAnalysisSuccess:{
+      return {
+        ...state,
+        documentAnalysisResult: action.response
+      }
+    }
+
     default: {
       return state;
     }

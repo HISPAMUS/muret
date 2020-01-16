@@ -25,7 +25,9 @@ import {
   GetRegionTypes,
   GetRegionTypesSuccess,
   GetDocumentAnModels,
-  GetDocumentAnModelsSuccess
+  GetDocumentAnModelsSuccess,
+  StartAutomaticDocumentAnalysis,
+  AutomaticDocumentAnalysisSuccess
 } from '../actions/document-analysis.actions';
 import {DocumentAnalysisImageProjection} from '../../../../core/model/restapi/document-analysis-image-projection';
 import {RegionType} from '../../../../core/model/entities/region-type';
@@ -35,6 +37,7 @@ import {Page} from '../../../../core/model/entities/page';
 import {Part} from '../../../../core/model/entities/part';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 import { GetSymbolClassifierModelsSuccess } from 'src/app/features/agnostic-representation/store/actions/agnostic-representation.actions';
+import { DocumentAnalysisModel } from '../../model/documentAnalysisModel';
 
 @Injectable()
 export class DocumentAnalysisEffects {
@@ -156,6 +159,15 @@ export class DocumentAnalysisEffects {
     switchMap((action: GetDocumentAnModels) => this.documentAnalysisService.getModels$(action.imageID)),
     switchMap((classifierModels: ClassifierModel[]) => {
       return of(new GetDocumentAnModelsSuccess(classifierModels));
+    })
+  )
+
+  @Effect()
+  attemptAutomaticAnalysis$ = this.actions$.pipe(
+    ofType<StartAutomaticDocumentAnalysis>(DocumentAnalysisActionTypes.StartAutomaticDocumentAnalysis),
+    switchMap((action: StartAutomaticDocumentAnalysis) => this.documentAnalysisService.attemptAutomaticAnalysis$(action.form)),
+    switchMap((documentBoundigs: DocumentAnalysisModel) => {
+      return of(new AutomaticDocumentAnalysisSuccess(documentBoundigs))
     })
   )
 

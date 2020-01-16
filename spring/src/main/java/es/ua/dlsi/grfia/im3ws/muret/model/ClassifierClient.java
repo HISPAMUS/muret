@@ -286,9 +286,16 @@ public class ClassifierClient {
         return response.getMessage();
     }
 
-    public AutoDocumentAnalysisModel getDocumentAnalysis(Integer imageID) throws IM3WSException
+    public AutoDocumentAnalysisModel getDocumentAnalysis(Integer imageID, Path path) throws IM3WSException
     {
-        return this.restClient.post("image/" + imageID.toString() + "/docAnalysis", AutoDocumentAnalysisModel.class, null);
+        if (!checkImageExists(imageID)) {
+            this.uploadImage(imageID, path);
+        }
+
+        Map<String, Object> postContent = new HashMap<>();
+        postContent.put("model", "simple-lan");
+
+        return this.restClient.post("image/" + imageID.toString() + "/docAnalysis", AutoDocumentAnalysisModel.class, postContent);
     }
 
 

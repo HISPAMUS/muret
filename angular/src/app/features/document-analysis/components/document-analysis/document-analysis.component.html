@@ -15,7 +15,7 @@
     <select class="form-control" id="agnosticEnd2EndClassifierModel" required>
       <option *ngFor="let model of documentAnalysisModels$ | async" [value]="model.id">{{model.name}}</option>
     </select>
-    <button class="btn btn-primary">Analyze</button>
+    <button class="btn btn-primary" (click)="attemptDocumentAnalysis()">{{analysisStatus}}</button>
   </div>
   <!-- VIEW FILTER -->
   <div id="regionTypesFilter" class="row" [hidden]="!inIdleMode()">

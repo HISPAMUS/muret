@@ -9,6 +9,7 @@ import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {Region} from '../../../../core/model/entities/region';
 import {Store} from '@ngrx/store';
 import {DocumentAnalysisState} from '../../store/state/document-analysis.state';
+import {DocumentAnalysisForm} from '../../model/documentAnalysisForm'
 
 import {
   ChangePageBoundingBox,
@@ -16,7 +17,8 @@ import {
   ChangeRegionType, Clear, CreatePage, CreateRegion, DeletePage, DeleteRegion, GetImagePart,
   GetImageProjection,
   GetRegionTypes,
-  GetDocumentAnModels
+  GetDocumentAnModels,
+  StartAutomaticDocumentAnalysis
 } from '../../store/actions/document-analysis.actions';
 import {
   selectFileName, selectImagePart,
@@ -24,13 +26,15 @@ import {
   selectRegionTypes,
   selectImageWidth,
   selectImageHeight,
-  selectDocumentAnalysisClassifierModels
+  selectDocumentAnalysisClassifierModels,
+  selectDocumentAnalysisResults
 } from '../../store/selectors/document-analysis.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Part} from '../../../../core/model/entities/part';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
+import { DocumentAnalysisModel } from '../../model/documentAnalysisModel';
 
 @Component({
   selector: 'app-document-analysis',
@@ -48,6 +52,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   regionTypesSubscription: Subscription;
   imagewidthSubscription: Subscription;
   imageheightSubscription: Subscription;
+  documentAnalysisSubscription: Subscription;
   mode: 'eIdle' |'eSelecting' | 'eEditing' | 'eAdding';
   selectedRegionTypeID: number | 'page';
   zoomFactor = 1;
@@ -67,6 +72,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   imageWidth: number;
   imageHeight: number;
 
+  analysisStatus: string;
   // end tools
 
   // @ViewChild('imageComponent') imageComponent: ImageComponent;
@@ -92,6 +98,9 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   ngOnInit() {
+    
+    this.analysisStatus = "Analyze"
+    
     this.store.dispatch(new GetRegionTypes());
 
     // request store data
@@ -105,6 +114,18 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     });
 
     this.documentAnalysisModels$ = this.store.select(selectDocumentAnalysisClassifierModels);
+
+    this.documentAnalysisSubscription = this.store.select(selectDocumentAnalysisResults).subscribe((result: DocumentAnalysisModel)=>{
+      
+      if(result != null && result.staff!=null && result.staff.length>0)
+      {
+        this.store.dispatch(new Clear(this.imageID));
+        setTimeout(()=>{
+          this.addNewRegions(result);
+        }, 1000)
+      }
+    
+    })
 
     this.store.dispatch(new GetDocumentAnModels(this.imageID));
 
@@ -144,9 +165,18 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
 
   }
 
+  addNewRegions(newBoundings : DocumentAnalysisModel){
+    const staffsToAdd = newBoundings.staff;
+    console.log("This triggers the error, it is located in line 170 of document-analysis-component.ts")
+    //staffsToAdd.forEach(staff => {
+    //  this.store.dispatch(new CreateRegion(this.imageID, this.regionTypesEnum[1], {fromX: staff.x0, fromY: staff.xf, toX: staff.xf, toY: staff.yf}))
+    //});
+  }
+
   ngOnDestroy(): void {
     this.pagesSubscription.unsubscribe();
     this.regionTypesSubscription.unsubscribe();
+    this.documentAnalysisSubscription.unsubscribe();
   }
 
   zoomIn() {
@@ -351,6 +381,18 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
         this.store.dispatch(new DeleteRegion(+shape.data.id));
       }
     }
+  }
+
+  attemptDocumentAnalysis()
+  {
+    this.dialogsService.showConfirmarion('Make automatic classification?', 'This action will delete all labeled regions')
+      .subscribe((isConfirmed) => {
+        if (isConfirmed) {
+          this.analysisStatus = 'Analyzing...';
+          this.store.dispatch(new StartAutomaticDocumentAnalysis({imageID: this.imageID, modelToUse: "simple-lan"}))
+          this.mode = 'eEditing';
+        }
+      });
   }
 
 

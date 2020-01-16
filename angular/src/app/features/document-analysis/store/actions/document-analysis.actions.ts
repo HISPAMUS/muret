@@ -6,6 +6,8 @@ import {Page} from '../../../../core/model/entities/page';
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {Part} from '../../../../core/model/entities/part';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
+import { DocumentAnalysisForm } from '../../model/documentAnalysisForm'
+import { DocumentAnalysisModel } from '../../model/documentAnalysisModel';
 
 export enum DocumentAnalysisActionTypes {
   GetImageProjection = '[DocumentAnalysis] Get image projection',
@@ -47,7 +49,10 @@ export enum DocumentAnalysisActionTypes {
   DeleteRegionSuccess = '[DocumentAnalysis] Delete region success',
 
   GetDocumentAnModels = '[DocumentAnalysis] Get Models',
-  GetDocumentAnModelsSuccess = '[DocumentAnalysis] Get Models Success'
+  GetDocumentAnModelsSuccess = '[DocumentAnalysis] Get Models Success',
+
+  StartAutomaticDocumentAnalysis = '[DocumentAnalysis] Start automatic analysis',
+  AutomaticDocumentAnalysisSuccess = '[DocumentAnalysis] Automatic analysis success'
 }
 
 export class GetImageProjection implements Action {
@@ -184,6 +189,16 @@ export class GetDocumentAnModelsSuccess implements Action{
   constructor(public response: ClassifierModel[]){}
 }
 
+export class StartAutomaticDocumentAnalysis implements Action{
+  public readonly type = DocumentAnalysisActionTypes.StartAutomaticDocumentAnalysis;
+  constructor(public form: DocumentAnalysisForm){}
+}
+
+export class AutomaticDocumentAnalysisSuccess implements Action{
+  public readonly type = DocumentAnalysisActionTypes.AutomaticDocumentAnalysisSuccess;
+  constructor(public response: DocumentAnalysisModel){}
+}
+
 /*export class SelectPage implements Action {
   public readonly type = DocumentAnalysisActionTypes.SelectPage;
   constructor(public page: Page) {}
@@ -210,4 +225,5 @@ export type DocumentAnalysisActions =
   Clear | ClearSuccess |
   DeletePage | DeletePageSuccess |
   DeleteRegion | DeleteRegionSuccess |
-  GetDocumentAnModels | GetDocumentAnModelsSuccess;
+  GetDocumentAnModels | GetDocumentAnModelsSuccess |
+  StartAutomaticDocumentAnalysis | AutomaticDocumentAnalysisSuccess;
