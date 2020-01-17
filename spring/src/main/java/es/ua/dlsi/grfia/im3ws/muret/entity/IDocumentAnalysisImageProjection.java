@@ -21,24 +21,24 @@ public interface IDocumentAnalysisImageProjection {
     String getHeight();
     String getComments();
 
-    @Value("#{target.getProject().path}")
-    String getProjectPath();
+    @Value("#{target.document.path}")
+    String getDocumentPath();
 
 
-    @Value("#{target.getProject().manuscriptType}")
+    @Value("#{target.document.manuscriptType}")
     ManuscriptType getManuscriptType();
 
-    @Value("#{target.getProject().notationType}")
+    @Value("#{target.document.notationType}")
     NotationType getNotationType();
 
     List<IPageProjection> getPages();
 
     IPartProjection getPart();
 
-    @Value("#{target.getProject().id}")
-    int getProjectId();
+    @Value("#{target.document.id}")
+    int getDocumentId();
 
-    @Value("#{target.getProject().parts}")
-    List<IPartProjection> getProjectParts();
+    @Value("#{target.document.parts}")
+    List<IPartProjection> getDocumentParts();
 
 }

@@ -31,8 +31,8 @@ public class Action {
     @Column
     protected Date timestamp;
 
-    @Column (name="project_id")
-    Integer projectID;
+    @Column (name="document_id")
+    Integer documentID;
 
     @Column (name="image_id")
     Long imageID;
@@ -78,12 +78,12 @@ public class Action {
         this.timestamp = timestamp;
     }
 
-    public Integer getProjectID() {
-        return projectID;
+    public Integer getDocumentID() {
+        return documentID;
     }
 
-    public void setProjectID(Integer projectID) {
-        this.projectID = projectID;
+    public void setDocumentID(Integer documentID) {
+        this.documentID = documentID;
     }
 
     public Long getImageID() {

@@ -10,15 +10,15 @@ public class UploadModel
     private String eNotationType;
     private String eManuscriptType;
     private String eModelType;
-    private Integer eProject;
+    private Integer eDocument;
     private MultipartFile eModelFile;
 
-    public Integer geteProject() {
-        return eProject;
+    public Integer geteDocument() {
+        return eDocument;
     }
 
-    public void seteProject(Integer eProject) {
-        this.eProject = eProject;
+    public void seteDocument(Integer eDocument) {
+        this.eDocument = eDocument;
     }
 
     public String geteName() {

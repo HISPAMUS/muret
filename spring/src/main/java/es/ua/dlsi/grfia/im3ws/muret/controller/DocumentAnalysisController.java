@@ -2,7 +2,6 @@ package es.ua.dlsi.grfia.im3ws.muret.controller;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
-import es.ua.dlsi.grfia.im3ws.controller.StringResponse;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.*;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.model.ClassifierClient;
@@ -113,7 +112,7 @@ public class DocumentAnalysisController extends MuRETBaseController {
     public AutoDocumentAnalysisModel analyzeDocument(@RequestBody DocAnalysisForm request) throws IM3WSException
     {
         Image persistentImage = getImage(request.getImageID());
-        Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.getProject().getPath(),
+        Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.getDocument().getPath(),
                 MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());
         return m_client.getDocumentAnalysis(request.getImageID(), imagePath);
     }

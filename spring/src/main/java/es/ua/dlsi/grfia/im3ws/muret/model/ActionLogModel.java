@@ -39,14 +39,14 @@ public class ActionLogModel {
         return actionTypeRepository;
     }
 
-    public void log(ActionType actionType, Integer projectID, Long imageID, Long regionID, Long symbolID) {
+    public void log(ActionType actionType, Integer documentID, Long imageID, Long regionID, Long symbolID) {
         try {
             Action action = new Action();
             action.setActionType(actionType);
             action.setTimestamp(new Date());
             action.setUser(getUser());
 
-            action.setProjectID(projectID);
+            action.setDocumentID(documentID);
             action.setImageID(imageID);
             action.setRegionID(regionID);
             action.setSymbolID(symbolID);

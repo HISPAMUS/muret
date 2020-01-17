@@ -35,14 +35,14 @@ public class ActionLogAgnosticModel {
     public void log(ActionType actionType, Symbol symbol) {
         Region region = symbol.getRegion();
         Image image = region.getPage().getImage();
-        Project project = image.getProject();
-        actionLogModel.log(actionType, project.getId(), image.getId(), region.getId(), symbol.getId());
+        Document document = image.getDocument();
+        actionLogModel.log(actionType, document.getId(), image.getId(), region.getId(), symbol.getId());
     }
 
     public void log(ActionType actionType, Region region) {
         Image image = region.getPage().getImage();
-        Project project = image.getProject();
-        actionLogModel.log(actionType, project.getId(), image.getId(), region.getId(), null);
+        Document document = image.getDocument();
+        actionLogModel.log(actionType, document.getId(), image.getId(), region.getId(), null);
     }
 
     private ActionType getActionType(int id) throws IM3Exception {

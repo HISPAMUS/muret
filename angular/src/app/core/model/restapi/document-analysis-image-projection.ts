@@ -3,7 +3,7 @@ import {Part} from '../entities/part';
 
 // special projection
 export interface DocumentAnalysisImageProjection extends Image {
-  projectPath: string;
+  documentPath: string;
   width: number;
   height: number;
   manuscriptType: 'eHandwritten' | 'ePrinted';

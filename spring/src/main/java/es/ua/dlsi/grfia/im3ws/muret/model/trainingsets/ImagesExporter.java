@@ -3,8 +3,7 @@ package es.ua.dlsi.grfia.im3ws.muret.model.trainingsets;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Image;
-import es.ua.dlsi.grfia.im3ws.muret.model.ProjectModel;
-import es.ua.dlsi.im3.core.IM3Exception;
+import es.ua.dlsi.grfia.im3ws.muret.model.DocumentModel;
 import es.ua.dlsi.im3.core.io.ExportException;
 import es.ua.dlsi.im3.core.utils.FileCompressors;
 
@@ -26,61 +25,61 @@ import java.util.logging.Logger;
  */
 public class ImagesExporter extends AbstractTrainingSetExporter {
     boolean overlayBoundingBoxes;
-    ProjectModel projectModel;
+    DocumentModel documentModel;
 
-    public ImagesExporter(ProjectModel projectModel, int id, boolean overlayBoundingBoxes) {
-        super(id, "Images exporter" + (overlayBoundingBoxes ?" with bounding boxes":""), "It exports the original images " + (overlayBoundingBoxes ?" with bounding boxes":"") + " in the selected projects in a compressed file", false);
+    public ImagesExporter(DocumentModel documentModel, int id, boolean overlayBoundingBoxes) {
+        super(id, "Images exporter" + (overlayBoundingBoxes ?" with bounding boxes":""), "It exports the original images " + (overlayBoundingBoxes ?" with bounding boxes":"") + " in the selected documents in a compressed file", false);
         this.overlayBoundingBoxes = overlayBoundingBoxes;
-        this.projectModel = projectModel;
+        this.documentModel = documentModel;
     }
 
     @Override
-    public Path generate(Path muretFolder, Collection<Project> projectCollection) throws ExportException {
+    public Path generate(Path muretFolder, Collection<Document> documentCollection) throws ExportException {
         try {
             Path tgz = Files.createTempFile("images_export", ".tar.gz");
             FileCompressors fileCompressors = new FileCompressors();
 
-            ArrayList<Path> projectPaths = new ArrayList<>();
-            ArrayList<String> projectPrefixes = new ArrayList<>();
+            ArrayList<Path> documentPaths = new ArrayList<>();
+            ArrayList<String> documentPrefixes = new ArrayList<>();
             ArrayList<File> tmpDirectoriesToDelete = new ArrayList<>();
-            for (Project project: projectCollection) {
-                File muretProjectFolder = new File(muretFolder.toFile(), project.getPath());
-                File imagesProjectFolder = new File(muretProjectFolder, MURETConfiguration.MASTER_IMAGES);
+            for (Document document : documentCollection) {
+                File muretDocumentFolder = new File(muretFolder.toFile(), document.getPath());
+                File imagesDocumentFolder = new File(muretDocumentFolder, MURETConfiguration.MASTER_IMAGES);
 
                 if (overlayBoundingBoxes) {
-                    File tmpDirectory = generateOverlay(imagesProjectFolder, project);
+                    File tmpDirectory = generateOverlay(imagesDocumentFolder, document);
                     tmpDirectoriesToDelete.add(tmpDirectory);
-                    projectPaths.add(tmpDirectory.toPath());
+                    documentPaths.add(tmpDirectory.toPath());
                 } else {
-                    projectPaths.add(imagesProjectFolder.toPath());
+                    documentPaths.add(imagesDocumentFolder.toPath());
                 }
 
-                projectPrefixes.add(project.getPath());
+                documentPrefixes.add(document.getPath());
             }
 
-            fileCompressors.tgzFolders(tgz, projectPaths, projectPrefixes);
+            fileCompressors.tgzFolders(tgz, documentPaths, documentPrefixes);
             for (File tmpDirectory: tmpDirectoriesToDelete) {
                 //// tmpDirectory.delete();
                 System.err.println("TODO Borrarrrrr " + tmpDirectory.toString());
             }
             return tgz;
         } catch (Exception e) {
-            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot generate tgz with all image files in selected projects", e);
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot generate tgz with all image files in selected documents", e);
             throw new ExportException(e);
         }
     }
 
     /**
      * It creates a new image with the bounding boxes drawn over it
-     * @param imagesProjectFolder
-     * @param project
+     * @param imagesDocumentFolder
+     * @param document
      */
-    private File generateOverlay(File imagesProjectFolder, Project project) throws IOException {
-        Path tmpDirectory = Files.createTempDirectory(imagesProjectFolder.getName());
+    private File generateOverlay(File imagesDocumentFolder, Document document) throws IOException {
+        Path tmpDirectory = Files.createTempDirectory(imagesDocumentFolder.getName());
 
-        Path projectFolder = projectModel.getProjectFolder(project);
-        for (Image image: project.getImages()) {
-            Path imagePath = Paths.get(projectFolder.toFile().getPath(), MURETConfiguration.MASTER_IMAGES, image.getFilename());
+        Path documentFolder = documentModel.getDocumentFolder(document);
+        for (Image image: document.getImages()) {
+            Path imagePath = Paths.get(documentFolder.toFile().getPath(), MURETConfiguration.MASTER_IMAGES, image.getFilename());
             File imageFile = imagePath.toFile();
             if (!imageFile.exists()) {
                 throw new IOException("Image " + imageFile.toString() + " does not exist");

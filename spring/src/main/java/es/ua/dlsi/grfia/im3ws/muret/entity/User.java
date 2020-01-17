@@ -1,11 +1,6 @@
 package es.ua.dlsi.grfia.im3ws.muret.entity;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import org.hibernate.annotations.Fetch;
-
 import javax.persistence.*;
-import javax.transaction.Transactional;
-import java.security.Permission;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,7 +28,7 @@ public class User {
     private boolean administrator;
 
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "createdBy")
-    private List<Project> projectsCreated;
+    private List<Document> documentsCreated;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Permissions> permissions;
@@ -61,8 +56,8 @@ public class User {
         return username;
     }
 
-    public List<Project> getProjectsCreated() {
-        return projectsCreated;
+    public List<Document> getDocumentsCreated() {
+        return documentsCreated;
     }
 
     public List<Permissions> getPermissions() {
@@ -93,8 +88,8 @@ public class User {
         this.administrator = administrator;
     }
 
-    public void setProjectsCreated(List<Project> projectsCreated) {
-        this.projectsCreated = projectsCreated;
+    public void setDocumentsCreated(List<Document> documentsCreated) {
+        this.documentsCreated = documentsCreated;
     }
 
     public void setPermissions(List<Permissions> permissions) {

@@ -123,9 +123,9 @@ export class AgnosticRepresentationService {
     }
   }
 
-  /*getSymbolClassifierModel$(collectionID: number, projectID: number,
+  /*getSymbolClassifierModel$(collectionID: number, documentID: number,
                             notationType: string, manuscriptType: string): Observable<ClassifierModel[]> {
-    const url = `classifierModels/symbols/${collectionID}/${projectID}/${notationType}/${manuscriptType}`;
+    const url = `classifierModels/symbols/${collectionID}/${documentID}/${notationType}/${manuscriptType}`;
     return this.apiRestClientService.get$<ClassifierModel[]>(url);
   }*/
   getSymbolClassifierModel$(imageID: number): Observable<ClassifierModel[]> {
@@ -133,9 +133,9 @@ export class AgnosticRepresentationService {
     return this.apiRestClientService.get$<ClassifierModel[]>(url);
   }
 
-  /* getAgnosticEnd2EndClassifierModel$(collectionID: number, projectID: number,
+  /* getAgnosticEnd2EndClassifierModel$(collectionID: number, documentID: number,
                                      notationType: string, manuscriptType: string): Observable<ClassifierModel[]> {
-    const url = `classifierModels/agnosticEnd2End/${collectionID}/${projectID}/${notationType}/${manuscriptType}`;
+    const url = `classifierModels/agnosticEnd2End/${collectionID}/${documentID}/${notationType}/${manuscriptType}`;
     return this.apiRestClientService.get$<ClassifierModel[]>(url);
   } */
   getAgnosticEnd2EndClassifierModel$(imageID: number): Observable<ClassifierModel[]> {

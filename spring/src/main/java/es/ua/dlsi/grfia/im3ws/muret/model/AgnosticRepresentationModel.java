@@ -66,8 +66,8 @@ public class AgnosticRepresentationModel {
                 DLSymbolAndPositionClassifier classifier = new DLSymbolAndPositionClassifier(localClassifierPath);
                 BoundingBox boundingBox = new BoundingBoxXY(fromX, fromY, toX, toY);
 
-                File muretProjectsFolder = new File(image.getProject().getPath());
-                File imagesFolder = new File(muretProjectsFolder, MURETConfiguration.MASTER_IMAGES);
+                File muretDocumentsFolder = new File(image.getDocument().getPath());
+                File imagesFolder = new File(muretDocumentsFolder, MURETConfiguration.MASTER_IMAGES);
                 File imageFile = new File(imagesFolder, image.getFilename());
                 if (!imageFile.exists()) {
                     throw new IM3Exception("Image to classify '" + imageFile + "' does not exist");
@@ -168,7 +168,7 @@ public class AgnosticRepresentationModel {
         if (agnosticSymbol == null) { // if not provided, try to classify
             Image persistentImage = persistentRegion.getPage().getImage();
             long imageID = persistentImage.getId();
-            Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.getProject().getPath(),
+            Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.getDocument().getPath(),
                     MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());
 
             try {
@@ -265,7 +265,7 @@ public class AgnosticRepresentationModel {
         Image persistentImage = persistentRegion.getPage().getImage();
 
         long imageID = persistentImage.getId();
-        Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.getProject().getPath(),
+        Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.getDocument().getPath(),
                 MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());
 
         return classifierClient.classifySymbolInImage(imageID, imagePath, boundingBox);
@@ -286,7 +286,7 @@ public class AgnosticRepresentationModel {
         Image persistentImage = persistentRegion.getPage().getImage();
 
         long imageID = persistentImage.getId();
-        Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.getProject().getPath(),
+        Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.getDocument().getPath(),
                 MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());
 
         List<AgnosticSymbolTypeAndPosition> items = classifierClient.classifyEndToEnd(modelID, imageID, imagePath, persistentRegion.getBoundingBox());

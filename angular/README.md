@@ -23,7 +23,7 @@ Redux + auth: https://mherman.org/blog/authentication-in-angular-with-ngrx/
  
 # Angular
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.2.
+This document was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.2.
 
 ## Development server
 
@@ -35,7 +35,7 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Run `ng build` to build the document. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
 ## Running unit tests
 

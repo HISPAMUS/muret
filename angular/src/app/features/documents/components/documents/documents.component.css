@@ -1,0 +1,12 @@
+.documents {
+  margin-bottom: 20px;
+}
+
+.documents .card {
+  background-color: transparent;
+  text-align: center;
+}
+
+.documents a {
+  color: #7DE2DB;
+}

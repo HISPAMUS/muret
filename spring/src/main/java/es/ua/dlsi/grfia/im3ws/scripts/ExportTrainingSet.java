@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.im3ws.scripts;
 
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Project;
+import es.ua.dlsi.grfia.im3ws.muret.entity.Document;
 import es.ua.dlsi.grfia.im3ws.muret.model.ITrainingSetExporter;
 import es.ua.dlsi.grfia.im3ws.muret.model.trainingsets.AgnosticSymbolImagesTextFile;
 import es.ua.dlsi.grfia.im3ws.muret.model.trainingsets.JSONTagging;
@@ -38,7 +38,7 @@ import java.util.Optional;
 @Transactional
 public class ExportTrainingSet implements CommandLineRunner {
     @Autowired
-    ProjectRepository projectRepository;
+    DocumentRepository documentRepository;
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -69,10 +69,10 @@ public class ExportTrainingSet implements CommandLineRunner {
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
         /// options.addOption("folder", true, "MuRET images folder");
-        options.addOption("list", false, "List project IDS and exporters");
+        options.addOption("list", false, "List document IDS and exporters");
         options.addOption("help", false, "Print this help");
         options.addOption("output", true, "Output folder");
-        options.addOption("project", true, "Project IDS to include, there may be several of them ");
+        options.addOption("document", true, "Document IDS to include, there may be several of them ");
         options.addOption("exporter", true, "Exporter IDS to include, there may be several of them ");
 
         CommandLine line = parser.parse( options, args );
@@ -93,9 +93,9 @@ public class ExportTrainingSet implements CommandLineRunner {
         }
 
         if (line.hasOption("output")) {
-            if (!line.hasOption("project")) {
+            if (!line.hasOption("document")) {
                 printHelp(options);
-                throw new Exception("Missing -projects option");
+                throw new Exception("Missing -documents option");
             }
 
             if (!line.hasOption("exporter")) {
@@ -103,9 +103,9 @@ public class ExportTrainingSet implements CommandLineRunner {
                 throw new Exception("Missing -exporter option");
             }
 
-            String[] projectIDS = line.getOptionValues("project");
+            String[] documentIDS = line.getOptionValues("document");
             String[] exporterIDS = line.getOptionValues("exporter");
-            export(line.getOptionValue("output"), projectIDS, exporterIDS);
+            export(line.getOptionValue("output"), documentIDS, exporterIDS);
 
         }
         ///SpringApplication.run(ExportTrainingSet.class, args);
@@ -113,9 +113,9 @@ public class ExportTrainingSet implements CommandLineRunner {
     }
 
     private void list() {
-        System.out.println("\nProjects:");
-        projectRepository.findAll().forEach(project -> {
-            System.out.println(project.getId() + "\t" + project.getName());
+        System.out.println("\nDocuments:");
+        documentRepository.findAll().forEach(document -> {
+            System.out.println(document.getId() + "\t" + document.getName());
         });
 
 
@@ -132,7 +132,7 @@ public class ExportTrainingSet implements CommandLineRunner {
         formatter.printHelp( this.getClass().getName(), options );
     }
 
-    private void export(String output, String[] projectIDS, String[] exporterIDS) throws IM3Exception, IOException {
+    private void export(String output, String[] documentIDS, String[] exporterIDS) throws IM3Exception, IOException {
         new AuthenticateForScripts(authenticationManager).consoleAuthenticate();
 
 
@@ -141,20 +141,20 @@ public class ExportTrainingSet implements CommandLineRunner {
             folderOutput.mkdirs();
         }
 
-        List<Project> projects = new ArrayList<>();
-        for (String pid: projectIDS) {
-            Optional<Project> project = projectRepository.findById(Integer.parseInt(pid));
-            if (!project.isPresent()) {
-                throw new IM3Exception("Cannot find an project with ID=" + pid);
+        List<Document> documents = new ArrayList<>();
+        for (String pid: documentIDS) {
+            Optional<Document> document = documentRepository.findById(Integer.parseInt(pid));
+            if (!document.isPresent()) {
+                throw new IM3Exception("Cannot find an document with ID=" + pid);
             }
-            projects.add(project.get());
+            documents.add(document.get());
         }
 
         for (String exporterID: exporterIDS) {
             ITrainingSetExporter exporter = findExporter(Integer.parseInt(exporterID));
             System.out.println("------ Exporting with exporter: " + exporter.getName() + " ------");
             Path muretFolder = Paths.get(muretConfiguration.getFolder());
-            Path tgz = exporter.generate(muretFolder, projects);
+            Path tgz = exporter.generate(muretFolder, documents);
             Path newPath = Paths.get(output, FileUtils.leaveValidCaracters(exporter.getName()) + ".tar.gz");
             Files.move(tgz, newPath);
         }

@@ -2,7 +2,7 @@ package es.ua.dlsi.grfia.im3ws.scripts;
 
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
-import es.ua.dlsi.grfia.im3ws.muret.model.ProjectModel;
+import es.ua.dlsi.grfia.im3ws.muret.model.DocumentModel;
 import es.ua.dlsi.grfia.im3ws.muret.repository.*;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.utils.FileUtils;
@@ -33,7 +33,7 @@ delete from region;
 delete from page;
 delete from image;
 delete from permissions;
-delete from project;
+delete from document;
 */
 /**
  * It migrates MuRET XML files to the online version
@@ -43,7 +43,7 @@ delete from project;
 @EntityScan("es.ua.dlsi.grfia.im3ws.muret.entity")
 public class MigrateMuretXML implements CommandLineRunner {
     @Autowired
-    ProjectRepository projectRepository;
+    DocumentRepository documentRepository;
     @Autowired
     ImageRepository imageRepository;
     @Autowired
@@ -55,7 +55,7 @@ public class MigrateMuretXML implements CommandLineRunner {
     @Autowired
     RegionTypeRepository regionTypeRepository;
     @Autowired
-    ProjectModel projectModel;
+    DocumentModel documentModel;
 
     HashMap<String, es.ua.dlsi.grfia.im3ws.muret.entity.RegionType> regionTypeHashMap;
 
@@ -92,25 +92,26 @@ public class MigrateMuretXML implements CommandLineRunner {
             XMLReader muretXMLReader = new XMLReader(AgnosticVersion.v2);
 
             File xmlFile = new File(xmlFileName);
-            File xmlProjectPath = xmlFile.getParentFile();
-            es.ua.dlsi.im3.omr.model.entities.Project xmlProject = muretXMLReader.load(xmlFile);
+            File xmlDocumentPath = xmlFile.getParentFile();
+            // now Document is named Document
+            es.ua.dlsi.im3.omr.model.entities.Project xmlDocument = muretXMLReader.load(xmlFile);
 
-            Project project = new Project();
-            project.setName(FileUtils.getFileWithoutPathOrExtension(xmlFile));
-            project.setComposer(xmlProject.getComposer());
-            project.setComments(xmlProject.getComments());
-            project.setNotationType(xmlProject.getNotationType());
-            project.setManuscriptType(ManuscriptType.eHandwritten); // not all of them are handwritten
-            // use new obtained project object
-            project = projectModel.newProject(project);
+            Document document = new Document();
+            document.setName(FileUtils.getFileWithoutPathOrExtension(xmlFile));
+            document.setComposer(xmlDocument.getComposer());
+            document.setComments(xmlDocument.getComments());
+            document.setNotationType(xmlDocument.getNotationType());
+            document.setManuscriptType(ManuscriptType.eHandwritten); // not all of them are handwritten
+            // use new obtained document object
+            document = documentModel.newDocument(document);
 
-            System.out.println("\tProject created and inserted, working with images");
-            File xmlImagesPath = new File(xmlProjectPath, "images");
+            System.out.println("\tDocument created and inserted, working with images");
+            File xmlImagesPath = new File(xmlDocumentPath, "images");
 
-            File projectPath = new File(muretConfiguration.getFolder(), project.getPath());
+            File documentPath = new File(muretConfiguration.getFolder(), document.getPath());
 
-            for (es.ua.dlsi.im3.omr.model.entities.Image xmlImage : xmlProject.getImages()) {
-                es.ua.dlsi.grfia.im3ws.muret.entity.Image image = importImage(xmlImage, xmlImagesPath, project, projectPath);
+            for (es.ua.dlsi.im3.omr.model.entities.Image xmlImage : xmlDocument.getImages()) {
+                es.ua.dlsi.grfia.im3ws.muret.entity.Image image = importImage(xmlImage, xmlImagesPath, document, documentPath);
 
                 if (xmlImage.getPages() != null) {
                     for (es.ua.dlsi.im3.omr.model.entities.Page xmlPage : xmlImage.getPages()) {
@@ -199,10 +200,10 @@ public class MigrateMuretXML implements CommandLineRunner {
         return new BoundingBox((int)bb.getFromX(), (int)bb.getFromY(), (int)bb.getToX(), (int)bb.getToY());
     }
 
-    private es.ua.dlsi.grfia.im3ws.muret.entity.Image importImage(Image xmlImage, File xmlImagesPath, Project project, File projectPath) throws IOException, IM3Exception {
+    private es.ua.dlsi.grfia.im3ws.muret.entity.Image importImage(Image xmlImage, File xmlImagesPath, Document document, File documentPath) throws IOException, IM3Exception {
         System.out.println("\tImporting image "  + xmlImage.getImageRelativeFileName());
         es.ua.dlsi.grfia.im3ws.muret.entity.Image image = new es.ua.dlsi.grfia.im3ws.muret.entity.Image();
-        image.setProject(project);
+        image.setDocument(document);
         image.setFilename(xmlImage.getImageRelativeFileName());
         image.setComments(xmlImage.getComments());
 
@@ -212,18 +213,18 @@ public class MigrateMuretXML implements CommandLineRunner {
         if (!inputImage.exists()) {
             throw new IOException("Cannot find " + inputImage.getAbsolutePath());
         }
-        FileUtils.copy(inputImage, new File(new File(projectPath, MURETConfiguration.MASTER_IMAGES), xmlImage.getImageRelativeFileName()));
+        FileUtils.copy(inputImage, new File(new File(documentPath, MURETConfiguration.MASTER_IMAGES), xmlImage.getImageRelativeFileName()));
 
         BufferedImage fullImage = ImageIO.read(inputImage);
         image.setHeight(fullImage.getHeight());
         image.setWidth(fullImage.getWidth());
 
         // copy thumbnail file
-        File thumbnail = new File(new File(projectPath, MURETConfiguration.THUMBNAIL_IMAGES), xmlImage.getImageRelativeFileName());
+        File thumbnail = new File(new File(documentPath, MURETConfiguration.THUMBNAIL_IMAGES), xmlImage.getImageRelativeFileName());
         ImageUtils.getInstance().scaleToFitHeight(inputImage, thumbnail, muretConfiguration.getThumbnailHeight());
 
         // copy preview file
-        File preview = new File(new File(projectPath, MURETConfiguration.PREVIEW_IMAGES), xmlImage.getImageRelativeFileName());
+        File preview = new File(new File(documentPath, MURETConfiguration.PREVIEW_IMAGES), xmlImage.getImageRelativeFileName());
         ImageUtils.getInstance().scaleToFitHeight(inputImage, preview, muretConfiguration.getPreviewHeight());
 
         return imageRepository.save(image);

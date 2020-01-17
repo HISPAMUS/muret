@@ -1,0 +1,26 @@
+.thumbnail {
+  display: inline-block;
+  margin: 5px;
+}
+
+.thumbnail img {
+  height: 200px;
+  max-width: 400px;
+}
+
+h5 {
+  color: white;
+  text-align: center;
+}
+.links {
+  text-align: center;
+}
+
+.thumbnail > div  {
+  cursor: pointer;
+}
+
+.documentPartsUsed {
+  text-align: center;
+  font-size: 90%;
+}

@@ -3,7 +3,7 @@ package es.ua.dlsi.grfia.im3ws.muret.model;
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Notation;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Renderer;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Project;
+import es.ua.dlsi.grfia.im3ws.muret.entity.Document;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Region;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Symbol;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.SemanticTransduction;
@@ -22,12 +22,12 @@ import java.util.logging.Logger;
 
 public class SemanticRepresentationModel {
 
-    private final ProjectModel projectModel;
+    private final DocumentModel documentModel;
     private final RegionRepository regionRepository;
     private NotationModel notationModel;
 
-    public SemanticRepresentationModel(ProjectModel projectModel, RegionRepository regionRepository) {
-        this.projectModel = projectModel;
+    public SemanticRepresentationModel(DocumentModel documentModel, RegionRepository regionRepository) {
+        this.documentModel = documentModel;
         this.regionRepository = regionRepository;
         this.notationModel = new NotationModel();
     }
@@ -58,18 +58,18 @@ public class SemanticRepresentationModel {
      * @param staff
      * @return MEI
      */
-    public Notation computeAndSaveSemanticFromAgnostic(Project project, String partName, Region staff, boolean mensurstrich, Renderer renderer) throws FileNotFoundException, IM3Exception, IM3WSException {
+    public Notation computeAndSaveSemanticFromAgnostic(Document document, String partName, Region staff, boolean mensurstrich, Renderer renderer) throws FileNotFoundException, IM3Exception, IM3WSException {
         AgnosticEncoding agnosticEncoding = region2Agnostic(staff, false);
-        NotationType notationType = project.getNotationType();
+        NotationType notationType = document.getNotationType();
         SemanticTransduction semanticTransduction = new TranslationModel().computeSemanticFromAgnostic(agnosticEncoding, notationType);
 
         Notation result = null;
-        //projectModel.addSemanticEncoding(project, partName, staff.getId(), staff.getBoundingBox(), semantic.getSemanticEncoding());
+        //documentModel.addSemanticEncoding(document, partName, staff.getId(), staff.getBoundingBox(), semantic.getSemanticEncoding());
         KernSemanticExporter kernSemanticExporter = new KernSemanticExporter();
         try {
             String kernExport = kernSemanticExporter.export(semanticTransduction.getSemanticEncoding());
-            sendSemanticEncoding(project, partName, staff, mensurstrich, renderer, kernExport);
-            result = notationModel.getNotation(project, partName, staff, mensurstrich, renderer);
+            sendSemanticEncoding(document, partName, staff, mensurstrich, renderer, kernExport);
+            result = notationModel.getNotation(document, partName, staff, mensurstrich, renderer);
         } catch (Exception e) {
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot generate the score", e);
             result = new Notation("Cannot generate the score:" + e.getMessage());
@@ -79,19 +79,19 @@ public class SemanticRepresentationModel {
     }
 
     /**
-     * If not saved, create and save it in project folder
-     * @param project
+     * If not saved, create and save it in document folder
+     * @param document
      * @return
      */
-    private ProjectScoreSong getScoreSong(Project project) throws IM3WSException {
-        return projectModel.getProjectScoreSong(project);
+    private DocumentScoreSong getScoreSong(Document document) throws IM3WSException {
+        return documentModel.getDocumentScoreSong(document);
     }
 
-    public Notation sendSemanticEncoding(Project project, String partName, Region region, boolean mensustriche, Renderer renderer, String semanticEncoding) throws IM3WSException {
-        //projectModel.addSemanticEncoding(project, partName, region.getId(), region.getBoundingBox(), semanticEncoding);
+    public Notation sendSemanticEncoding(Document document, String partName, Region region, boolean mensustriche, Renderer renderer, String semanticEncoding) throws IM3WSException {
+        //documentModel.addSemanticEncoding(document, partName, region.getId(), region.getBoundingBox(), semanticEncoding);
         //TODO Ahora sólo lo guardo en la región
         region.setSemanticEncoding(semanticEncoding);
         regionRepository.save(region);
-        return notationModel.getNotation(project, partName, region, mensustriche, renderer);
+        return notationModel.getNotation(document, partName, region, mensustriche, renderer);
     }
 }

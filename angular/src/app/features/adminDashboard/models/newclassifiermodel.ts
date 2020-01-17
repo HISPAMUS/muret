@@ -5,5 +5,5 @@ export interface NewClassifierModel
     eManuscriptType?: string
     eCollection?: number
     eNotationType?: string
-    eProject?:string
+    eDocument?:string
 }

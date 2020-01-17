@@ -2,7 +2,6 @@ package es.ua.dlsi.grfia.im3ws.muret.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import es.ua.dlsi.grfia.im3ws.muret.auditing.AuditorAwareImpl;
 
 import javax.persistence.*;
 import java.util.LinkedList;
@@ -26,10 +25,10 @@ public class Image extends Auditable implements IAssignableToPart {
     @Column
     private Integer height;
 
-    @JsonBackReference (value="project")
+    @JsonBackReference (value="document")
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="project_id", nullable = false)
-    private Project project;
+    @JoinColumn(name="document_id", nullable = false)
+    private Document document;
 
     @JsonManagedReference (value="image")
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "image",
@@ -53,9 +52,9 @@ public class Image extends Auditable implements IAssignableToPart {
     public Image() {
     }
 
-    public Image(String path, String comments, Integer width, Integer height, Project project, State state, Part part) {
+    public Image(String path, String comments, Integer width, Integer height, Document document, State state, Part part) {
         this.filename = path;
-        this.project = project;
+        this.document = document;
         this.width = width;
         this.height = height;
         this.comments = comments;
@@ -86,12 +85,12 @@ public class Image extends Auditable implements IAssignableToPart {
         this.filename = filename;
     }
 
-    public Project getProject() {
-        return project;
+    public Document getDocument() {
+        return document;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setDocument(Document document) {
+        this.document = document;
     }
 
     public List<Page> getPages() {
@@ -123,7 +122,7 @@ public class Image extends Auditable implements IAssignableToPart {
         return "Image{" +
                 "id=" + id +
                 ", filename='" + filename + '\'' +
-                ", project=" + project +
+                ", document=" + document +
                 '}';
     }
 

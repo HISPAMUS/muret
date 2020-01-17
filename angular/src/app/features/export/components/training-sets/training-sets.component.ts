@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import saveAs from 'file-saver';
 import {TrainingSetExporter} from '../../../../core/model/restapi/training-set-exporter';
-import {Project} from '../../../../core/model/entities/project';
+import {Document} from '../../../../core/model/entities/document';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormUtils} from '../../../../shared/utils/form-utils';
 import {ExporterService} from '../../services/exporter.service';
@@ -29,7 +29,7 @@ export class TrainingSetsComponent implements OnInit, OnDestroy {
   private exportersSubscription: Subscription;
   private userSubscription: Subscription;
 
-  projects: Project[];
+  documents: Document[];
   exporters: TrainingSetExporter[];
   exporting: boolean;
 
@@ -39,7 +39,7 @@ export class TrainingSetsComponent implements OnInit, OnDestroy {
               ) {
     this.form = this.formBuilder.group({
       exportersFormArray: new FormArray([], Validators.required),
-      projectsFormArray: new FormArray([], FormUtils.minSelectedCheckboxes(1))
+      documentsFormArray: new FormArray([], FormUtils.minSelectedCheckboxes(1))
     });
   }
 
@@ -65,16 +65,16 @@ export class TrainingSetsComponent implements OnInit, OnDestroy {
     );
 
     this.userSubscription = this.store.select(selectLoggedInUser).subscribe(next => {
-      const projectsFormArray = (this.form.get('projectsFormArray') as FormArray);
-      if (next && projectsFormArray.controls.length === 0) {
+      const documentsFormArray = (this.form.get('documentsFormArray') as FormArray);
+      if (next && documentsFormArray.controls.length === 0) {
         if (next && next.permissions) {
-          this.projects = flatten([...next.permissions.map((permission) => permission.collection.projects)]);
-          const controls = this.projects.map(c => new FormControl(false));
+          this.documents = flatten([...next.permissions.map((permission) => permission.collection.documents)]);
+          const controls = this.documents.map(c => new FormControl(false));
           controls.forEach(c => {
-            projectsFormArray.push(c);
+            documentsFormArray.push(c);
           });
         }
-        // this.projects = flatten([...next.projectsCreated, ...next.permissions.map((permission) => permission.collection.projects)]);
+        // this.documents = flatten([...next.documentsCreated, ...next.permissions.map((permission) => permission.collection.documents)]);
       }
     });
   }
@@ -85,11 +85,11 @@ export class TrainingSetsComponent implements OnInit, OnDestroy {
   }
 
   submit() {
-    const selectedProjectIDS = Array<number>();
+    const selectedDocumentIDS = Array<number>();
     let index = 0;
-    (this.form.get('projectsFormArray') as FormArray).controls.forEach(cb => {
+    (this.form.get('documentsFormArray') as FormArray).controls.forEach(cb => {
       if (cb.value) {
-        selectedProjectIDS.push(this.projects[index].id);
+        selectedDocumentIDS.push(this.documents[index].id);
       }
       index++;
     });
@@ -97,7 +97,7 @@ export class TrainingSetsComponent implements OnInit, OnDestroy {
     // we better perform it using directly the service rather than using redux because we don't want to save the blob state
     this.currentCursor = 'wait';
     this.exporting = true;
-    this.exporterService.downloadTrainingSet$(this.selectedExporterId, selectedProjectIDS).subscribe(data => {
+    this.exporterService.downloadTrainingSet$(this.selectedExporterId, selectedDocumentIDS).subscribe(data => {
       const blob1 = new Blob([data], { type: 'application/x-gzip' });
       this.exporting = false;
       saveAs.saveAs(blob1, 'training_set.tgz'); // TODO file name

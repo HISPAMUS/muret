@@ -11,8 +11,8 @@ import {AuthModule} from './auth/auth.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {ExportModule} from './features/export/export.module';
 import {LoggerModule, NgxLoggerLevel} from 'ngx-logger';
-import {ProjectsModule} from './features/projects/projects.module';
-import {NewProjectModule} from './features/new-project/new-project.module';
+import {DocumentsModule} from './features/documents/documents.module';
+import {NewDocumentModule} from './features/new-document/new-document.module';
 import {DocumentAnalysisModule} from './features/document-analysis/document-analysis.module';
 import {AgnosticRepresentationModule} from './features/agnostic-representation/agnostic-representation.module';
 import {SemanticRepresentationModule} from './features/semantic-representation/semantic-representation.module';
@@ -70,8 +70,8 @@ import { AdminDashboardModule } from './features/adminDashboard/admin-dashboard.
     AboutModule,
     ExportModule,
     PartsModule,
-    ProjectsModule,
-    NewProjectModule,
+    DocumentsModule,
+    NewDocumentModule,
     DocumentAnalysisModule,
     AgnosticRepresentationModule,
     SemanticRepresentationModule,

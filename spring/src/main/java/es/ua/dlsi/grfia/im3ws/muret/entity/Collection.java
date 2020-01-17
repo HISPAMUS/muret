@@ -22,7 +22,7 @@ public class Collection {
 
     @JsonManagedReference (value="collection")
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "collection")
-    private List<Project> projects;
+    private List<Document> documents;
 
     @Lob
     @Column (name = "thumbnail_base64_encoding", columnDefinition = "LONGTEXT")
@@ -31,9 +31,9 @@ public class Collection {
     public Collection() {
     }
 
-    public Collection(String name, String thumbnailBase64Encoding, List<Project> projects) {
+    public Collection(String name, String thumbnailBase64Encoding, List<Document> documents) {
         this.name = name;
-        this.projects = projects;
+        this.documents = documents;
         this.thumbnailBase64Encoding = thumbnailBase64Encoding;
     }
 
@@ -62,12 +62,12 @@ public class Collection {
         this.thumbnailBase64Encoding = thumbnailBase64Encoding;
     }
 
-    public List<Project> getProjects() {
-        return projects;
+    public List<Document> getDocuments() {
+        return documents;
     }
 
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
+    public void setDocuments(List<Document> documents) {
+        this.documents = documents;
     }
 
     @Override

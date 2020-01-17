@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.im3ws.scripts;
 
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Project;
+import es.ua.dlsi.grfia.im3ws.muret.entity.Document;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Region;
 import es.ua.dlsi.grfia.im3ws.muret.model.SemanticRepresentationModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.Agnostic2SemanticTransducer;
@@ -52,9 +52,9 @@ public class VerifyAgnosticSemanticTransducer implements CommandLineRunner {
         new AuthenticateForScripts(authenticationManager).authenticate("davidrizo", "nose");
 
         for (Region region: regionRepository.findAll()) {
-            Project project = region.getPage().getImage().getProject();
-            if (!project.getCollection().getName().equals("Pruebas")) {
-                if (region.getPage().getImage().getProject().getNotationType() == NotationType.eModern) {
+            Document document = region.getPage().getImage().getDocument();
+            if (!document.getCollection().getName().equals("Pruebas")) {
+                if (region.getPage().getImage().getDocument().getNotationType() == NotationType.eModern) {
                     System.err.println("TO-DO Cannot work with modern yet");     //TODO moderno
                 } else {
                     checkRegion(region);
@@ -76,7 +76,7 @@ public class VerifyAgnosticSemanticTransducer implements CommandLineRunner {
                 e.printStackTrace();
                 throw new Exception(">>>>>>>>> Cannot convert region #" + region.getId() +
                         ", " + region.getPage().getImage().getFilename() +
-                        ", in project " + region.getPage().getImage().getProject().getName());
+                        ", in document " + region.getPage().getImage().getDocument().getName());
             }
         }
     }

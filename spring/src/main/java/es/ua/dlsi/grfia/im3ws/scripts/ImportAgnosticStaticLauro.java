@@ -88,8 +88,8 @@ public class ImportAgnosticStaticLauro implements CommandLineRunner {
             throw new Exception("Cannot find collection");
         }
 
-        for (Project project: collection.get().getProjects()) {
-            for (Image image: project.getImages()) {
+        for (Document document : collection.get().getDocuments()) {
+            for (Image image: document.getImages()) {
                 // we know each image contains just a page with regions
                 for (Page page: image.getPages()) {
                     if (!page.getRegions().isEmpty()) {

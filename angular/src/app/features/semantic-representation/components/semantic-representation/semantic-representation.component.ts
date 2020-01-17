@@ -32,7 +32,7 @@ import {
   LinkPartToRegion,
   UnlinkPartToImage, UnlinkPartToRegion
 } from '../../../parts/store/actions/parts.actions';
-import {selectImageProjectID} from '../../../document-analysis/store/selectors/document-analysis.selector';
+import {selectImageDocumentID} from '../../../document-analysis/store/selectors/document-analysis.selector';
 import {ModalOptions} from '../../../../shared/components/options-dialog/options-dialog.component';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 
@@ -45,7 +45,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
   translationModels$: Observable<ClassifierModel[]>;
   imageID: number;
-  projectID: number;
+  documentID: number;
   mynumber: number;
   notationSubscription: Subscription;
   selectedRegionZoomFactor = 1;
@@ -58,7 +58,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
   selectedRegionAgnosticShapes: Shape[];
   agnosticSymbolsSubscription: Subscription;
-  projectIDSubscription: Subscription;
+  documentIDSubscription: Subscription;
 
   agnosticIDs: number[];
   agnosticIDMap: Map<number, number>;
@@ -95,7 +95,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
       if (params.get('id')) {
         this.imageID = +params.get('id'); // + converts the string to number
         this.store.dispatch(new GetImageProjection(+this.imageID));
-        /// this.store.dispatch(new GetImageProjectParts(+this.imageID));
+        /// this.store.dispatch(new GetImageDocumentParts(+this.imageID));
       }
 
       if (params.get('region_id')) {
@@ -140,11 +140,11 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
       this.usesOfParts = uop;
 
       // chained to reload uses of parts if necessary
-      if (this.projectID == null)  {
-        this.projectIDSubscription = this.store.select(selectImageProjectID).subscribe(next => {
+      if (this.documentID == null)  {
+        this.documentIDSubscription = this.store.select(selectImageDocumentID).subscribe(next => {
             if (next != null) {
-              this.projectID = next;
-              if (this.usesOfParts == null) { // we have not passed through the project screen - we load here the
+              this.documentID = next;
+              if (this.usesOfParts == null) { // we have not passed through the document screen - we load here the
                 this.store.dispatch(new GetUsesOfParts(next));
               }
             }
@@ -157,7 +157,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.notationSubscription.unsubscribe();
     this.agnosticSymbolsSubscription.unsubscribe();
-    this.projectIDSubscription.unsubscribe();
+    this.documentIDSubscription.unsubscribe();
     this.useOfPartsSubscription.unsubscribe();
     // this.usesOfPartsSubscription.unsubscribe();
   }
@@ -410,7 +410,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
     createRegionPart($event: string) {
       this.store.dispatch(new CreateRegionPart(this.selectedRegion, $event));
-      /// this.store.dispatch(new GetImageProjectParts(+this.imageID)); // to update the drop down
+      /// this.store.dispatch(new GetImageDocumentParts(+this.imageID)); // to update the drop down
     }*/
 
     hasErrorMessage() {
@@ -514,7 +514,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   editInstruments() {
-    this.router.navigate(['/project/instruments', this.projectID]);
+    this.router.navigate(['/document/instruments', this.documentID]);
   }
 
   linkPartToRegion() {

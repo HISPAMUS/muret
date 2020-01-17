@@ -10,7 +10,7 @@ export interface DocumentType {
 }
 
 export interface DocumentAnalysisState {
-  projectID: number;
+  documentID: number;
   regionTypes: RegionType[];
   imageURL: string;
   filename: string;
@@ -26,7 +26,7 @@ export interface DocumentAnalysisState {
 }
 
 export const initialDocumentAnalysisState: DocumentAnalysisState = {
-  projectID: null,
+  documentID: null,
   regionTypes: null,
   imageURL: null,
   filename: null,

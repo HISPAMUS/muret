@@ -5,10 +5,10 @@ import { NewClassifierModel } from '../../models/newclassifiermodel'
 import { Observable, Subscription } from 'rxjs';
 import { Collection } from 'src/app/core/model/entities/collection';
 import { Store } from '@ngrx/store';
-import { NewProjectState } from 'src/app/features/new-project/store/state/new-project.state';
-import { selectCollections } from 'src/app/features/new-project/store/selectors/new-project.selector';
-import { GetCollections } from 'src/app/features/new-project/store/actions/new-project.actions';
-import { Project } from 'src/app/core/model/entities/project';
+import { NewDocumentState } from 'src/app/features/new-document/store/state/new-document.state';
+import { selectCollections } from 'src/app/features/new-document/store/selectors/new-document.selector';
+import { GetCollections } from 'src/app/features/new-document/store/actions/new-document.actions';
+import { Document } from 'src/app/core/model/entities/document';
 import { DialogsService } from 'src/app/shared/services/dialogs.service';
 
 @Component({
@@ -24,10 +24,10 @@ export class RegistermodelComponent implements OnInit {
   collections$ : Observable<Collection[]>
   private collections : Collection[]
   private collectionSubs : Subscription
-  projects : Project[]
+  documents : Document[]
   collectionSelected : boolean
 
-  constructor(private apiRestService : ApiRestClientService, private store: Store<NewProjectState>, private dservice : DialogsService)
+  constructor(private apiRestService : ApiRestClientService, private store: Store<NewDocumentState>, private dservice : DialogsService)
   {
     this.collections$ = store.select(selectCollections);
   }
@@ -48,7 +48,7 @@ export class RegistermodelComponent implements OnInit {
       form.append('eClassifierType', this.registerModel.eClassifierType)
       form.append('eNotationType', this.registerModel.eNotationType)
       form.append('eCollection', this.registerModel.eCollection)
-      form.append('eProject', this.registerModel.eProject)
+      form.append('eDocument', this.registerModel.eDocument)
       form.append('eManuscriptType', this.registerModel.eManuscriptType)
       item.alias = 'eModelFile'
     }
@@ -70,7 +70,7 @@ export class RegistermodelComponent implements OnInit {
     };
   }
 
-  getModelProjects()
+  getModelDocuments()
   {
     console.log(this.registerModel.eCollection)
     let collectionID = this.registerModel.eCollection
@@ -81,16 +81,16 @@ export class RegistermodelComponent implements OnInit {
       this.collections.forEach((collection : Collection) => {
         if(collection.id == collectionID)
         {
-          this.projects = collection.projects;
+          this.documents = collection.documents;
           this.collectionSelected = true
-          console.log(this.projects)
+          console.log(this.documents)
         }
       })
     }
     else
     {
-      this.registerModel.eProject = "-1"
-      this.projects = []
+      this.registerModel.eDocument = "-1"
+      this.documents = []
       this.collectionSelected = false
     }
   }

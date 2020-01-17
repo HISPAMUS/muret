@@ -25,18 +25,18 @@ const routes = [
   },
   {
     canActivate: [AuthGuard],
-    path: 'projects',
-    loadChildren: () => import('./features/projects/projects.module').then(m => m.ProjectsModule)
+    path: 'documents',
+    loadChildren: () => import('./features/documents/documents.module').then(m => m.DocumentsModule)
   },
   {
     canActivate: [AuthGuard],
-    path: 'project',
-    loadChildren: () => import('./features/project/project.module').then(m => m.ProjectModule)
+    path: 'document',
+    loadChildren: () => import('./features/document/document.module').then(m => m.DocumentModule)
   },
   {
     canActivate: [AuthGuard],
-    path: 'newproject',
-    loadChildren: () => import('./features/new-project/new-project.module').then(m => m.NewProjectModule)
+    path: 'newdocument',
+    loadChildren: () => import('./features/new-document/new-document.module').then(m => m.NewDocumentModule)
   },
   {
     canActivate: [AuthGuard],

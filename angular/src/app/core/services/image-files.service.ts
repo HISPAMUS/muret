@@ -25,16 +25,16 @@ export class ImageFilesService {
     const keys = Object.keys(ImageType).map((imageTypeKey) => this.imagesCache.set(imageTypeKey, new Map()));
   }
 
-  private getImageBlob$(projectPath: string, imageType: ImageType, imageID: number): Observable<Blob> {
+  private getImageBlob$(documentPath: string, imageType: ImageType, imageID: number): Observable<Blob> {
     let blob = this.imagesCache.get(imageType).get(imageID);
     if (blob) {
       return blob;
     } else {
       let url: string;
-      if (projectPath == null) {
+      if (documentPath == null) {
         url = `${endpoint}/${imageType}/${imageID}`;
       } else {
-        url = `${endpoint}/${projectPath}/${imageType}/${imageID}`;
+        url = `${endpoint}/${documentPath}/${imageType}/${imageID}`;
       }
 
       blob = this.apiRestClientService.getBlob$(url);
@@ -44,18 +44,18 @@ export class ImageFilesService {
   }
 
   /**
-   * @param projectPath May be null
+   * @param documentPath May be null
    */
-  public getMasterImageBlob$(projectPath: string, imageID: number): Observable<Blob> {
-    return this.getImageBlob$(projectPath, ImageType.master, imageID);
+  public getMasterImageBlob$(documentPath: string, imageID: number): Observable<Blob> {
+    return this.getImageBlob$(documentPath, ImageType.master, imageID);
   }
 
-  public getThumbnailImageBlob$(projectPath: string, imageID: number): Observable<Blob> {
-    return this.getImageBlob$(projectPath, ImageType.thumbnail, imageID);
+  public getThumbnailImageBlob$(documentPath: string, imageID: number): Observable<Blob> {
+    return this.getImageBlob$(documentPath, ImageType.thumbnail, imageID);
   }
 
-  public getPreviewImageBlob$(projectPath: string, imageID: number): Observable<Blob> {
-    return this.getImageBlob$(projectPath, ImageType.preview, imageID);
+  public getPreviewImageBlob$(documentPath: string, imageID: number): Observable<Blob> {
+    return this.getImageBlob$(documentPath, ImageType.preview, imageID);
   }
 }
 

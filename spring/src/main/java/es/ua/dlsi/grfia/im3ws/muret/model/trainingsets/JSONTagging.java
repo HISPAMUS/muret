@@ -5,14 +5,12 @@ import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticSymbolFont;
 import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticSymbolFontSingleton;
-import es.ua.dlsi.grfia.im3ws.muret.model.ProjectModel;
+import es.ua.dlsi.grfia.im3ws.muret.model.DocumentModel;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.io.ExportException;
 import es.ua.dlsi.im3.core.score.PositionInStaff;
 import es.ua.dlsi.im3.core.score.PositionsInStaff;
 import es.ua.dlsi.im3.core.utils.FileCompressors;
-import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticEncoding;
-import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +20,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,7 +37,7 @@ public class JSONTagging extends AbstractTrainingSetExporter {
 
     //TODO Como constructor
     @Autowired
-    ProjectModel projectModel;
+    DocumentModel documentModel;
 
 
 
@@ -49,7 +46,7 @@ public class JSONTagging extends AbstractTrainingSetExporter {
                 includeStrokes?
                         "JSON files with images, pages, regions, symbols, symbol dictionary and strokes"
                         :"JSON files with images, pages, regions, symbols and symbol dictionary",
-                "It generates a compressed file containing a folder for each project and a JSON for the symbol dictionary, and a JSON file for each image with its relative file name. " +
+                "It generates a compressed file containing a folder for each document and a JSON for the symbol dictionary, and a JSON file for each image with its relative file name. " +
                         "This JSON file encodes the bounding boxes of pages, regions, and symbols. For each region its region type is also exported. " +
                         "For each symbol both its agnostic encoding is appended and, if present, the strokes information",
                 false
@@ -59,21 +56,21 @@ public class JSONTagging extends AbstractTrainingSetExporter {
 
 
     @Override
-    public Path generate(Path muretFolder, Collection<Project> projectCollection) throws ExportException {
+    public Path generate(Path muretFolder, Collection<Document> documentCollection) throws ExportException {
         try {
             Path directory = Files.createTempDirectory("json_agnostic_symbol_images");
             File outputJSonDiccFile = new File(directory.toFile(), "dictionary.json");
-            for (Project project: projectCollection) {
-                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Exporting project " + project.getName());
+            for (Document document : documentCollection) {
+                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Exporting document " + document.getName());
 
-                generateDictionary(project, outputJSonDiccFile);
+                generateDictionary(document, outputJSonDiccFile);
 
-                File projectFolder = new File(directory.toFile(), project.getPath());
-                projectFolder.mkdirs();
+                File documentFolder = new File(directory.toFile(), document.getPath());
+                documentFolder.mkdirs();
 
-                for (Image image: project.getImages()) {
+                for (Image image: document.getImages()) {
                     Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Exporting JSON for image " + image.getFilename());
-                    File outputJSonFile = new File(projectFolder, image.getFilename() + ".json");
+                    File outputJSonFile = new File(documentFolder, image.getFilename() + ".json");
                     generate(image, outputJSonFile);
                 }
             }
@@ -90,8 +87,8 @@ public class JSONTagging extends AbstractTrainingSetExporter {
     }
 
     // see AgnosticRepresentationController.getAgnosticSymbolSVGSet
-    private void generateDictionary(Project project, File outputJSonDiccFile) throws IM3WSException, IM3Exception {
-        AgnosticSymbolFont agnosticSymbolFont = AgnosticSymbolFontSingleton.getInstance().getLayoutFont(project.getNotationType(), project.getManuscriptType());
+    private void generateDictionary(Document document, File outputJSonDiccFile) throws IM3WSException, IM3Exception {
+        AgnosticSymbolFont agnosticSymbolFont = AgnosticSymbolFontSingleton.getInstance().getLayoutFont(document.getNotationType(), document.getManuscriptType());
 
         try {
             SVGSet result = new SVGSet(agnosticSymbolFont.getLayoutFont().getSVGFont().getAscent(),

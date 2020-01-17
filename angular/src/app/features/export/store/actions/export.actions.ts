@@ -20,7 +20,7 @@ export class GetTrainingSetExportersSuccess implements Action {
 
 export class DownloadTrainingSet implements Action {
   public readonly type = ExportActionTypes.DownloadTrainingSet;
-  constructor(public exporterIndex: number, public projectIDS: number[]) {}
+  constructor(public exporterIndex: number, public documentIDS: number[]) {}
 }
 
 export class DownloadTrainingSetSuccess implements Action {

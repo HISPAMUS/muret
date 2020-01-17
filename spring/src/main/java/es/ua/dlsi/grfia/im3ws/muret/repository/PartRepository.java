@@ -14,7 +14,7 @@ import java.util.List;
  */
 @RepositoryRestResource
 public interface PartRepository extends CrudRepository<Part, Long> {
-    List<Part> findByProjectId(int projectId);
+    List<Part> findByDocumentId(int documentId);
 
     /*// JPQL
     @Query(value="SELECT u FROM Image u where u.part = :part")

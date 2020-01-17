@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="row titles">
+    <div class="col-7 offset-1 align-self-end">
+      <img src="assets/images/mydocuments.png" alt="My documents"/>
+    </div>
+    <div class="col-4 screenTitle">
+      <img class="img-fluid" src="assets/images/opendocument_small.png" alt="Open document"/>
+    </div>
+  </div>
+
+  <div *ngIf="collection$ | async as collection; else loading">
+    <div class="row documents">
+      <div class="col-10 offset-1">
+        <div class="row">
+          <div *ngFor="let document of collection.documents; trackBy: trackByDocumentFn" class="document col-4 col-lg-3">
+            <div class="card">
+              <img class="card-img-top img-thumbnail" *ngIf="document.thumbnailBase64Encoding" src="{{document.thumbnailBase64Encoding}}" alt="Document thumbnail">
+              <img class="card-img-top img-thumbnail" *ngIf="!document.thumbnailBase64Encoding" src="assets/images/empty_thumbnail.png" alt="Document thumbnail">
+              <app-state [state]="document.state"></app-state>
+              <div class="card-body">
+                <p>
+                  <a [routerLink]="['/document', document.id]">{{document.name}}</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #loading>
+    Loading collection data ...
+  </ng-template>
+</div>

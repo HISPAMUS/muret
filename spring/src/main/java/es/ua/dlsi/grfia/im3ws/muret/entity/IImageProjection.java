@@ -19,6 +19,6 @@ public interface IImageProjection {
 
     Part getPart();
 
-    @Value("#{target.getProject().parts}")
-    Part [] getProjectParts();
+    @Value("#{target.document.parts}")
+    Part [] getDocumentParts();
 }

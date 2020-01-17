@@ -1,0 +1,111 @@
+<div class="container">
+  <ng-container *ngIf="usesOfParts$ | async as usesOfParts; else loading">
+
+    <div class="row titles">
+      <div class="col-7 offset-1 align-self-end">
+        <h3>Instruments</h3>
+        <ng-container *ngIf="document$ | async as document">
+          <h4>{{document.name | uppercase}}</h4>
+        </ng-container>
+      </div>
+      <!--<div class="col-4 screenTitle">
+        <img class="img-fluid" src="assets/images/document.png" alt="Order images"/>
+        TODO Instruments logo
+      </div>-->
+    </div>
+
+    <div class="row">
+      <div *ngFor="let partUses of usesOfParts.uses; trackBy: trackByPartFn" class="col-12" >
+        <h5>{{partUses.part.name}}</h5>
+        <p>{{partUses.part.comments}}</p>
+        <div *ngIf="usesOfParts$ | async as usesOfParts">
+          <div *ngIf="partUses.images != null && partUses.images.length > 0">
+            Images:
+            <a *ngFor="let image of partUses.images; trackBy: trackByNumberFn" class="col-12" (click)="openImage(image)">
+              {{image}}
+            </a>
+          </div>
+
+          <div *ngIf="partUses.pages != null && partUses.pages.length > 0">
+            Pages:
+            <a *ngFor="let page of partUses.pages; trackBy: trackByNumberFn" class="col-12" (click)="openPage(page)">
+              {{page.id}} in image {{page.imageId}}
+            </a>
+          </div>
+
+          <div *ngIf="partUses.regions != null && partUses.regions.length > 0">
+            Regions:
+            <a *ngFor="let region of partUses.regions; trackBy: trackByNumberFn" class="col-12" (click)="openRegion(region)">
+              {{region.id}} in image {{region.imageId}}
+            </a>
+          </div>
+
+          <div *ngIf="partUses.symbols != null && partUses.symbols.length > 0">
+            Symbols:
+            <a *ngFor="let symbol of partUses.symbols; trackBy: trackByNumberFn" class="col-12" (click)="openSymbol(symbol)">>
+              {{symbol.id}}
+            </a>
+          </div>
+
+        </div>
+        <p>
+          <button (click)="renamePart(partUses.part)">Rename</button>&nbsp;
+          <button [disabled]="isDeleteDisabled(partUses)" title="Cannot be deleted if any element is associated to it" (click)="deletePart(partUses.part)">Delete</button></p>
+        <hr>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <button (click)="addPart()">Add instrument</button>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #loading>
+    <div class="row">
+      <div class="col">
+        <p>Loading document data ...</p>
+      </div>
+    </div>
+  </ng-template>
+</div>
+
+
+
+<!--<div class="row">
+  <div *ngIf="documentIsLoaded()" class="col-7 offset-1">
+    <h2>{{document?.name}}</h2>
+    <app-inline-setEditingMode [(ngModel)]="document.composer" type="text" [label]="'Enter value for composer'" (changed)="composerChanged($event)" [size]="128"> </app-inline-setEditingMode>
+    <p>{{documentStatistics?.images}} images, {{documentStatistics?.pages}} pages, {{documentStatistics?.regions}} regions, {{documentStatistics?.agnosticSymbols}} symbols </p>
+
+    <input type="radio" name="rbDocumentState" [(ngModel)]="documentState" value="none">
+    None
+    <input type="radio" name="rbDocumentState" [(ngModel)]="documentState" value="inprogress">
+    In progress
+    <input type="radio" name="rbDocumentState" [(ngModel)]="documentState" value="done">
+    Done
+    <input type="radio" name="rbDocumentState" [(ngModel)]="documentState" value="doublechecked">
+    Double checked
+
+    <app-inline-setEditingMode [(ngModel)]="document.comments" type="text" [label]="'Enter comments'" (changed)="commentsChanged($event)" [size]="128"> </app-inline-setEditingMode>
+  </div>
+
+  <div class="col-1">
+    <a (click)="uploadImages()">
+      Upload images
+    </a>
+  </div>
+  <div class="col-3">
+    <img src="assets/images/orderimages.png" alt="Order images"/>
+  </div>
+</div>
+
+<div class="row">
+  <div class="offset-1 col-10">
+    <div *ngIf="document; let document; else loading" dragula="DRAGULA_FACTS" #domImages>
+      <app-image-thumbnail *ngFor="let image of document.images" [image]="image" [attr.data-id]="image.id"></app-image-thumbnail>
+    </div>
+    <ng-template #loading>Loading document...</ng-template>
+  </div>
+</div>
+-->

@@ -12,8 +12,8 @@ export class TrainingSetExporterService {
     return this.apiRestClientService.getList$<TrainingSetExporter>('trainingsets/exporters');
   }
 
-  public download(exporterIndex: number, projectIds: number[]): Observable<Blob> {
-    const projectIdsString = projectIds.join(',');
-    return this.apiRestClientService.getBlob$('trainingsets/download/' + exporterIndex + '/' + projectIdsString);
+  public download(exporterIndex: number, documentIds: number[]): Observable<Blob> {
+    const documentIdsString = documentIds.join(',');
+    return this.apiRestClientService.getBlob$('trainingsets/download/' + exporterIndex + '/' + documentIdsString);
   }
 }

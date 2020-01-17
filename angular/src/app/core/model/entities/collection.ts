@@ -1,9 +1,9 @@
-import {Project} from './project';
+import {Document} from './document';
 import {Entity} from './entity';
 
 export interface Collection extends Entity {
   name?: string;
   comments?: string;
-  projects?: Project[];
+  documents?: Document[];
   thumbnailBase64Encoding?: string;
 }

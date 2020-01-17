@@ -20,29 +20,29 @@ import java.util.logging.Logger;
 @RequestMapping("parts")
 @RestController
 public class PartsController extends MuRETBaseController {
-    private final ProjectRepository projectRepository;
+    private final DocumentRepository documentRepository;
     private final PartRepository partRepository;
     PartsModel partsModel;
 
     @Autowired
-    public PartsController(MURETConfiguration muretConfiguration, ProjectRepository projectRepository, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository, PartRepository partRepository) {
+    public PartsController(MURETConfiguration muretConfiguration, DocumentRepository documentRepository, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository, PartRepository partRepository) {
         super(muretConfiguration, imageRepository, pageRepository, regionRepository, symbolRepository);
         partsModel = new PartsModel();
-        this.projectRepository = projectRepository;
+        this.documentRepository = documentRepository;
         this.partRepository = partRepository;
     }
 
-    @GetMapping(path = {"uses/{projectID}"})
+    @GetMapping(path = {"uses/{documentID}"})
     @Transactional
-    public UsesOfParts getUsesOfParts(@PathVariable(name="projectID") Integer projectID) throws IM3WSException {
+    public UsesOfParts getUsesOfParts(@PathVariable(name="documentID") Integer documentID) throws IM3WSException {
         UsesOfParts usesOfParts = new UsesOfParts();
 
-        Optional<Project> project = projectRepository.findById(projectID);
-        if (!project.isPresent()) {
-            throw new IM3WSException("Cannot find a project with id " + project);
+        Optional<Document> document = documentRepository.findById(documentID);
+        if (!document.isPresent()) {
+            throw new IM3WSException("Cannot find a document with id " + document);
         }
 
-        for (Part part: project.get().getParts()) {
+        for (Part part: document.get().getParts()) {
             Long partID = part.getId();
             usesOfParts.add(part,
                     partRepository.getImages(partID),
@@ -53,23 +53,23 @@ public class PartsController extends MuRETBaseController {
         return usesOfParts;
     }
 
-    /*@GetMapping(path = {"project/{projectID}"})
+    /*@GetMapping(path = {"document/{documentID}"})
     @Transactional
-    public List<Part> getProjectParts(@PathVariable(name="projectID") Integer projectID) throws IM3WSException {
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Getting parts of project with id {0}", projectID);
-        List<Part> result = partRepository.findByProjectId(projectID);
+    public List<Part> getDocumentParts(@PathVariable(name="documentID") Integer documentID) throws IM3WSException {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Getting parts of document with id {0}", documentID);
+        List<Part> result = partRepository.findByDocumentId(documentID);
         return result;
     }
 
-    @GetMapping(path = {"imageProjectParts/{imageID}"})
+    @GetMapping(path = {"imageDocumentParts/{imageID}"})
     @Transactional
-    public List<Part> getImageProjectParts(@PathVariable(name="imageID") Long imageID) throws IM3WSException {
+    public List<Part> getImageDocumentParts(@PathVariable(name="imageID") Long imageID) throws IM3WSException {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Getting parts of image with id {0}", imageID);
         Optional<Image> image = imageRepository.findById(imageID);
         if (!image.isPresent()) {
             throw new IM3WSException("Cannot find an image with ID = " + imageID);
         }
-        List<Part> result = partRepository.findByProjectId(image.get().getProject().getId());
+        List<Part> result = partRepository.findByDocumentId(image.get().getDocument().getId());
         return result;
     }*/
 
@@ -133,27 +133,27 @@ public class PartsController extends MuRETBaseController {
         }
     }*/
 
-    private Part createPart(Project project, String partName) {
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Creating part {0} for project {1}", new Object[] {project.getId(), partName});
+    private Part createPart(Document document, String partName) {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Creating part {0} for document {1}", new Object[] {document.getId(), partName});
         Part part = new Part();
         part.setName(partName);
-        part.setProject(project);
+        part.setDocument(document);
         part = partRepository.save(part);
 
         return part;
     }
 
-    @PutMapping(path = {"create/{projectID}/{partName}"})
+    @PutMapping(path = {"create/{documentID}/{partName}"})
     @Transactional
-    public Part createPart(@PathVariable(name="projectID") Integer projectID, @PathVariable(name="partName") String partName) throws IM3WSException {
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Creating part {0} for project {1}", new Object[] {projectID, partName});
+    public Part createPart(@PathVariable(name="documentID") Integer documentID, @PathVariable(name="partName") String partName) throws IM3WSException {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Creating part {0} for document {1}", new Object[] {documentID, partName});
 
-        Optional<Project> project = projectRepository.findById(projectID);
-        if (!project.isPresent()) {
-            throw new IM3WSException("Cannot find project with id " + projectID);
+        Optional<Document> document = documentRepository.findById(documentID);
+        if (!document.isPresent()) {
+            throw new IM3WSException("Cannot find document with id " + documentID);
         }
 
-        return createPart(project.get(), partName);
+        return createPart(document.get(), partName);
     }
 
     @PutMapping(path = {"create/{partAssignedToType}/{targetID}/{partName}"})
@@ -168,14 +168,14 @@ public class PartsController extends MuRETBaseController {
         switch (partAssignedToType) {
             case image:
                 Image image = getImage(targetID);
-                part = createPart(image.getProject(), partName);
+                part = createPart(image.getDocument(), partName);
                 image.setPart(part);
                 imageRepository.save(image);
                 imageID = image.getId();
                 break;
             case page:
                 Page page = getPage(targetID);
-                part = createPart(page.getImage().getProject(), partName);
+                part = createPart(page.getImage().getDocument(), partName);
                 page.setPart(part);
                 pageRepository.save(page);
                 imageID = page.getImage().getId();
@@ -183,8 +183,8 @@ public class PartsController extends MuRETBaseController {
                 break;
             case region:
                 Region region = getRegion(targetID);
-                part = createPart(region.getPage().getImage().getProject(), partName);
-                part.setProject(region.getPage().getImage().getProject());
+                part = createPart(region.getPage().getImage().getDocument(), partName);
+                part.setDocument(region.getPage().getImage().getDocument());
                 region.setPart(part);
                 regionRepository.save(region);
                 imageID = region.getPage().getImage().getId();
@@ -192,7 +192,7 @@ public class PartsController extends MuRETBaseController {
                 break;
             case symbol:
                 Symbol symbol = getSymbol(targetID);
-                part = createPart(symbol.getRegion().getPage().getImage().getProject(), partName);
+                part = createPart(symbol.getRegion().getPage().getImage().getDocument(), partName);
                 symbol.setPart(part);
                 symbolRepository.save(symbol);
                 imageID = symbol.getRegion().getPage().getImage().getId();
@@ -364,7 +364,7 @@ public class PartsController extends MuRETBaseController {
 
     /*@GetMapping(path = {"partNamesUsedByImage/{imageID}"})
     @Transactional
-    public List<String> getImageProjectParts(@PathVariable(name="imageID") Long imageID) throws IM3WSException {
+    public List<String> getImageDocumentParts(@PathVariable(name="imageID") Long imageID) throws IM3WSException {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Getting part names used by image with id {0}", imageID);
         List<String> result = partRepository.getPartNamesUsedByImage(imageID);
         return result;

@@ -8,13 +8,13 @@ import {TrainingSetExporter} from '../../../core/model/restapi/training-set-expo
 export class ExporterService {
   constructor(private userService: UserService, private trainingSetExporterService: TrainingSetExporterService) { }
 
-  /*private getAllProjectsOfUser(user: User): Project[] {
-    const result = [...user.projectsCreated , ...user.permissions.map((permission) => permission.project)];
+  /*private getAllDocumentsOfUser(user: User): Document[] {
+    const result = [...user.documentsCreated , ...user.permissions.map((permission) => permission.document)];
     return result;
   }*/
 
-  downloadTrainingSet$(exporterIndex: number, projectIDS: number[]): Observable<Blob> {
-    return this.trainingSetExporterService.download(exporterIndex, projectIDS);
+  downloadTrainingSet$(exporterIndex: number, documentIDS: number[]): Observable<Blob> {
+    return this.trainingSetExporterService.download(exporterIndex, documentIDS);
   }
 
   getTrainingSetExporters$(): Observable<TrainingSetExporter[]> {

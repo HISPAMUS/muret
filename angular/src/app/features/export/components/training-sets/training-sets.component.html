@@ -22,22 +22,22 @@
     </label>
 
     <div class="row">
-      <h3 class="offset-1 col-9">Projects to be exported</h3>
+      <h3 class="offset-1 col-9">Documents to be exported</h3>
     </div>
 
-    <label class="row" formArrayName="projectsFormArray" *ngFor="let cb of form['controls'].projectsFormArray['controls']; let i = index">
+    <label class="row" formArrayName="documentsFormArray" *ngFor="let cb of form['controls'].documentsFormArray['controls']; let i = index">
       <div class="offset-1 col-1 text-right">
         <input type="checkbox" [formControlName]="i">
       </div>
       <div class="col-9">
-        <h4>{{projects[i].name}}</h4>
-        <h5>{{projects[i].state?.state}}</h5>
-        <p>{{projects[i].comments}}</p>
+        <h4>{{documents[i].name}}</h4>
+        <h5>{{documents[i].state?.state}}</h5>
+        <p>{{documents[i].comments}}</p>
       </div>
     </label>
 
     <div class="row" *ngIf="!form.valid">
-      <p class="offset-1 col-9">At least one exporter and one project order must be selected</p>
+      <p class="offset-1 col-9">At least one exporter and one document order must be selected</p>
     </div>
 
     <div class="row">
@@ -54,16 +54,16 @@
   {{exporter.name}}
 </div>
 
-<h2>Projects</h2>
+<h2>Documents</h2>
 <div *ngIf="user$ | async as user">
-  <h3>Projects created - TODO fnIndex </h3>
-  <div *ngFor="let project of user.projectsCreated">
-    {{project.name}}
+  <h3>Documents created - TODO fnIndex </h3>
+  <div *ngFor="let document of user.documentsCreated">
+    {{document.name}}
   </div>
 
   <h3>Permissions </h3>
   <div *ngFor="let permission of user.permissions">
-    {{permission.project.name}}
+    {{permission.document.name}}
   </div>
 </div>-->
 

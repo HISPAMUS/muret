@@ -3,19 +3,11 @@ package es.ua.dlsi.grfia.im3ws.muret.model.trainingsets;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.im3.core.IM3Exception;
-import es.ua.dlsi.im3.core.IM3RuntimeException;
-import es.ua.dlsi.im3.core.adt.Pair;
 import es.ua.dlsi.im3.core.adt.graphics.BoundingBoxXY;
 import es.ua.dlsi.im3.core.utils.FileCompressors;
 import es.ua.dlsi.im3.core.utils.ImageUtils;
 import es.ua.dlsi.im3.core.io.ExportException;
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 
-import javax.persistence.EntityManagerFactory;
-import javax.transaction.Transactional;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -23,9 +15,7 @@ import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
 import java.util.Collection;
-import java.util.concurrent.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -68,14 +58,14 @@ public class AgnosticSymbolImagesTextFile extends AbstractTrainingSetExporter {
     }
 
     @Override
-    public Path generate(Path muretFolder, Collection<Project> projectCollection) throws ExportException {
+    public Path generate(Path muretFolder, Collection<Document> documentCollection) throws ExportException {
         try {
             Path directory = Files.createTempDirectory("text_images");
-            for (Project project: projectCollection) {
-                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Exporting project " + project.getName());
+            for (Document document : documentCollection) {
+                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Exporting document " + document.getName());
 
-                File projectTextFile = new File(directory.toFile(), project.getPath() + ".txt");
-                generateProjectTextFile(muretFolder, project, projectTextFile, fixedSize);
+                File documentTextFile = new File(directory.toFile(), document.getPath() + ".txt");
+                generateDocumentTextFile(muretFolder, document, documentTextFile, fixedSize);
             }
 
             File resultTGZ = File.createTempFile("boundingboxes_pages_regions_symbols", ".tar.gz");
@@ -98,7 +88,7 @@ public class AgnosticSymbolImagesTextFile extends AbstractTrainingSetExporter {
     }
 
 
-    public void generateProjectTextFile(Path muretFolder, Project project, File outputTextFile, boolean fixedSize) throws IOException, IM3Exception, InterruptedException {
+    public void generateDocumentTextFile(Path muretFolder, Document document, File outputTextFile, boolean fixedSize) throws IOException, IM3Exception, InterruptedException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(outputTextFile,true),8192*40);
 
         StringBuilder sb = new StringBuilder();
@@ -143,13 +133,13 @@ public class AgnosticSymbolImagesTextFile extends AbstractTrainingSetExporter {
         writer.write(sb.toString());
 
         int nimage = 1;
-        for (Image image: project.getImages()) {
-            System.out.println("\tExporting image " + nimage + " of " + project.getImages().size());
+        for (Image image: document.getImages()) {
+            System.out.println("\tExporting image " + nimage + " of " + document.getImages().size());
             nimage++;
             //Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Exporting image " + image.getFilename());
 
             int npage = 1;
-            Path imagePath = Paths.get(muretFolder.toFile().getPath(), project.getPath(),
+            Path imagePath = Paths.get(muretFolder.toFile().getPath(), document.getPath(),
                     MURETConfiguration.MASTER_IMAGES, image.getFilename());
             for (Page page : image.getPages()) {
                 System.out.println("> Page " + page);

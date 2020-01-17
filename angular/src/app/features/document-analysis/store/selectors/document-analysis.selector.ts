@@ -45,9 +45,9 @@ export const selectRegionTypes = createSelector(
   (state: DocumentAnalysisState) => state.regionTypes
 );
 
-export const selectImageProjectID = createSelector(
+export const selectImageDocumentID = createSelector(
   documentAnalysisState,
-  (state: DocumentAnalysisState) => state.projectID
+  (state: DocumentAnalysisState) => state.documentID
 );
 
 export const selectDocumentAnalysisClassifierModels = createSelector(

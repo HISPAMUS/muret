@@ -27,26 +27,26 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * It exports a set of json files, one for each project
+ * It exports a set of json files, one for each document
  */
 public class AgnosticSemanticTrainingSetExporter extends AbstractTrainingSetExporter {
-    private final ProjectModel projectModel;
+    private final DocumentModel documentModel;
 
-    public AgnosticSemanticTrainingSetExporter(int id, ProjectModel projectModel) {
-        super(id, "Agnostic-semantic", "Exports pairs agnostic-semantic in JSON files (one for each project)", false);
-        this.projectModel = projectModel;
+    public AgnosticSemanticTrainingSetExporter(int id, DocumentModel documentModel) {
+        super(id, "Agnostic-semantic", "Exports pairs agnostic-semantic in JSON files (one for each document)", false);
+        this.documentModel = documentModel;
     }
 
     @Override
-    public Path generate(Path muretFolder, Collection<Project> projectCollection) throws ExportException {
+    public Path generate(Path muretFolder, Collection<Document> documentCollection) throws ExportException {
         try {
             Path directory = Files.createTempDirectory("json_agnostic_semantic_pairs");
 
-            for (Project project : projectCollection) {
-                File jsonFile = new File(directory.toFile(), project.getPath() + ".json");
-                //ProjectScoreSong projectScoreSong = projectModel.getProjectScoreSong(project);
-                //export(projectScoreSong, jsonFile);
-                export(project, jsonFile);
+            for (Document document : documentCollection) {
+                File jsonFile = new File(directory.toFile(), document.getPath() + ".json");
+                //DocumentScoreSong documentScoreSong = documentModel.getDocumentScoreSong(document);
+                //export(documentScoreSong, jsonFile);
+                export(document, jsonFile);
             }
 
             File resultTGZ = File.createTempFile("json_agnostic_semantic_pairs", ".tar.gz");
@@ -62,50 +62,50 @@ public class AgnosticSemanticTrainingSetExporter extends AbstractTrainingSetExpo
 
     /**
      * @deprecated
-     * @param projectScoreSong
+     * @param documentScoreSong
      * @param outputJSonFile
      * @throws IOException
      * @throws IM3Exception
      */
-    private void export(ProjectScoreSong projectScoreSong, File outputJSonFile) throws IOException, IM3Exception {
-        JSONObject projectJSON = new JSONObject();
+    private void export(DocumentScoreSong documentScoreSong, File outputJSonFile) throws IOException, IM3Exception {
+        JSONObject documentJSON = new JSONObject();
         JSONArray jsonSystems = new JSONArray();
 
-        for (ProjectScoreSongPart projectScoreSongPart: projectScoreSong.getScoreParts()) {
+        for (DocumentScoreSongPart documentScoreSongPart: documentScoreSong.getScoreParts()) {
             //TODO esto va sólo para un pentagrama
-            if (projectScoreSongPart.getScorePart().getStaves().size() > 1) {
+            if (documentScoreSongPart.getScorePart().getStaves().size() > 1) {
                 throw new IM3Exception("Cannot work yet with multiple staff parts");
             }
-            if (!projectScoreSongPart.getScorePart().getStaves().isEmpty()) {
+            if (!documentScoreSongPart.getScorePart().getStaves().isEmpty()) {
                 JSONObject systemJSON = new JSONObject();
-                Staff scoreStaff = projectScoreSongPart.getScorePart().getStaves().get(0);
-                for (ProjectScoreSongSystem projectScoreSongSystem : projectScoreSongPart.getSystems()) {
+                Staff scoreStaff = documentScoreSongPart.getScorePart().getStaves().get(0);
+                for (DocumentScoreSongSystem documentScoreSongSystem : documentScoreSongPart.getSystems()) {
                     Encoder encoder = new Encoder(AgnosticVersion.v2, false);
-                    encoder.encode(scoreStaff, new Segment(projectScoreSongSystem.getFrom(), projectScoreSongSystem.getTo()));
+                    encoder.encode(scoreStaff, new Segment(documentScoreSongSystem.getFrom(), documentScoreSongSystem.getTo()));
                     AgnosticExporter agnosticExporter = new AgnosticExporter(AgnosticVersion.v2);
                     SemanticExporter semanticExporter = new SemanticExporter();
 
-                    systemJSON.put("region_id", projectScoreSongSystem.getSystemBeginning().getFacsimileElementID());
+                    systemJSON.put("region_id", documentScoreSongSystem.getSystemBeginning().getFacsimileElementID());
                     systemJSON.put("agnostic", agnosticExporter.export(encoder.getAgnosticEncoding()));
                     systemJSON.put("semantic", agnosticExporter.export(encoder.getAgnosticEncoding()));
                     jsonSystems.add(systemJSON);
                 }
             }
         }
-        projectJSON.put("systems", jsonSystems);
+        documentJSON.put("systems", jsonSystems);
 
 
         FileWriter file = new FileWriter(outputJSonFile);
-        String jsonString = projectJSON.toJSONString();
+        String jsonString = documentJSON.toJSONString();
         file.write(jsonString);
         file.close();
     }
 
-    private void export(Project project, File outputJSonFile) throws IOException, IM3Exception {
-        JSONObject projectJSON = new JSONObject();
+    private void export(Document document, File outputJSonFile) throws IOException, IM3Exception {
+        JSONObject documentJSON = new JSONObject();
         JSONArray jsonSystems = new JSONArray();
 
-        for (Image image: project.getImages()) {
+        for (Image image: document.getImages()) {
             for (Page page: image.getPages()) {
                 for (Region region: page.getRegions()) {
                     if (region.getSymbols() != null && !region.getSymbols().isEmpty() && region.getSemanticEncoding() != null) {
@@ -128,11 +128,11 @@ public class AgnosticSemanticTrainingSetExporter extends AbstractTrainingSetExpo
             }
         }
 
-        projectJSON.put("regions", jsonSystems);
+        documentJSON.put("regions", jsonSystems);
 
 
         FileWriter file = new FileWriter(outputJSonFile);
-        String jsonString = projectJSON.toJSONString();
+        String jsonString = documentJSON.toJSONString();
         file.write(jsonString);
         file.close();
     }

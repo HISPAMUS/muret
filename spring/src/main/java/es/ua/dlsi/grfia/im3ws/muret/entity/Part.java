@@ -21,19 +21,19 @@ public class Part extends Auditable {
     @Column
     private String comments;
 
-    @JsonBackReference (value="project")
+    @JsonBackReference (value="document")
     @ManyToOne(fetch=FetchType.LAZY)
-    //@JoinColumn(name="project_id", referencedColumnName="id")
-    @JoinColumn(name="project_id", nullable = false)
-    private Project project;
+    //@JoinColumn(name="document_id", referencedColumnName="id")
+    @JoinColumn(name="document_id", nullable = false)
+    private Document document;
 
     public Part() {
     }
 
-    public Part(String name, String comments, Project project) {
+    public Part(String name, String comments, Document document) {
         this.name = name;
         this.comments = comments;
-        this.project = project;
+        this.document = document;
     }
 
     public Long getId() {
@@ -60,12 +60,12 @@ public class Part extends Auditable {
         this.comments = comments;
     }
 
-    public Project getProject() {
-        return project;
+    public Document getDocument() {
+        return document;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setDocument(Document document) {
+        this.document = document;
     }
 
     @Override
@@ -74,11 +74,11 @@ public class Part extends Auditable {
         if (o == null || getClass() != o.getClass()) return false;
         Part that = (Part) o;
         return name.equals(that.name) &&
-                project.equals(that.project);
+                document.equals(that.document);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, project);
+        return Objects.hash(name, document);
     }
 }

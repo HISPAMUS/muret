@@ -30,20 +30,20 @@
             <br>
 
             <label for="collection">Collection</label>
-                <select class="custom-select" name="collection" id="collection" (change)="getModelProjects()" [(ngModel)]="registerModel.eCollection">
+                <select class="custom-select" name="collection" id="collection" (change)="getModelDocuments()" [(ngModel)]="registerModel.eCollection">
                     <option [value]="-1">None</option>
                     <option [label] ="collection.name" *ngFor="let collection of collections$ | async" [value]="collection.id">{{collection.name}}</option>
                 </select>
             <br>
 
-            <label for="project">Project</label>
-                <select class="custom-select" name="project" id="project" [disabled]="!collectionSelected" [(ngModel)]="registerModel.eProject">
+            <label for="document">Document</label>
+                <select class="custom-select" name="document" id="document" [disabled]="!collectionSelected" [(ngModel)]="registerModel.eDocument">
                     <option [value]="-1">None</option>
-                    <option [label] ="project.name" *ngFor="let project of projects" [value]="project.id">{{project.name}}</option>
+                    <option [label] ="document.name" *ngFor="let document of documents" [value]="document.id">{{document.name}}</option>
                 </select>
             <br>
             <br>
-            
+
             <div class="row">
              <div class="col-5">
               <input type="file" ng2FileSelect [uploader]="uploader"/>
@@ -53,7 +53,7 @@
              <br>
 
             <input type="submit" class="btn btn-primary">
-            
+
         </div>
     </form>
 </section>

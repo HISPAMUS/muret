@@ -4,10 +4,10 @@ package es.ua.dlsi.grfia.im3ws.muret.controller;
 import es.ua.dlsi.grfia.im3ws.BinaryOutputWrapper;
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Project;
+import es.ua.dlsi.grfia.im3ws.muret.entity.Document;
 import es.ua.dlsi.grfia.im3ws.muret.model.ITrainingSetExporter;
 import es.ua.dlsi.grfia.im3ws.muret.model.trainingsets.TrainingSetsFactory;
-import es.ua.dlsi.grfia.im3ws.muret.repository.ProjectRepository;
+import es.ua.dlsi.grfia.im3ws.muret.repository.DocumentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,15 +31,15 @@ import java.util.logging.Logger;
 @Transactional // this solves the error: "springboot "failed to lazily initialize a collection of role": could not initialize proxy - no Session
 public class TrainingSetsController {
     private final MURETConfiguration muretConfiguration;
-    private final ProjectRepository projectRepository;
+    private final DocumentRepository documentRepository;
     private final EntityManagerFactory entityManagerFactory;
     private final TrainingSetsFactory trainingSetsFactory;
 
 
     @Autowired
-    public TrainingSetsController(MURETConfiguration muretConfiguration, ProjectRepository projectRepository, EntityManagerFactory entityManagerFactory, TrainingSetsFactory trainingSetsFactory) {
+    public TrainingSetsController(MURETConfiguration muretConfiguration, DocumentRepository documentRepository, EntityManagerFactory entityManagerFactory, TrainingSetsFactory trainingSetsFactory) {
         this.muretConfiguration = muretConfiguration;
-        this.projectRepository = projectRepository;
+        this.documentRepository = documentRepository;
         this.entityManagerFactory = entityManagerFactory;
         this.trainingSetsFactory = trainingSetsFactory;
     }
@@ -52,28 +52,28 @@ public class TrainingSetsController {
 
     /**
      * GET http://<host>/muretapi/{exporterIndex}/1,2,3,4
-     * where 1,2,3,4 stand for project ids
+     * where 1,2,3,4 stand for document ids
      * @param exporterIndex
-     * @param projectIds
+     * @param documentIds
      * @return
      */
-    @RequestMapping(value="/download/{exporterIndex}/{projectIds}", method= RequestMethod.GET, produces="application/x-gzip")
+    @RequestMapping(value="/download/{exporterIndex}/{documentIds}", method= RequestMethod.GET, produces="application/x-gzip")
     @ResponseBody
-    public ResponseEntity<?> download(@PathVariable Integer exporterIndex, @PathVariable List<Integer> projectIds) throws IM3WSException {
+    public ResponseEntity<?> download(@PathVariable Integer exporterIndex, @PathVariable List<Integer> documentIds) throws IM3WSException {
         try {
             //ITrainingSetExporter exporter = TrainingSetsFactory.getInstance(entityManagerFactory).getTrainingSetExporter(exporterIndex);
             ITrainingSetExporter exporter = trainingSetsFactory.getTrainingSetExporter(exporterIndex);
-            ArrayList<Project> projectArrayList = new ArrayList<>();
-            for (Integer projectID: projectIds) {
-                Optional<Project> project = projectRepository.findById(projectID);
-                if (!project.isPresent()) {
-                    throw new IM3WSException("Cannot find project with id=" + projectID);
+            ArrayList<Document> documentArrayList = new ArrayList<>();
+            for (Integer documentID: documentIds) {
+                Optional<Document> document = documentRepository.findById(documentID);
+                if (!document.isPresent()) {
+                    throw new IM3WSException("Cannot find document with id=" + documentID);
                 }
-                projectArrayList.add(project.get());
+                documentArrayList.add(document.get());
             }
 
             Path muretFolder = Paths.get(muretConfiguration.getFolder());
-            Path tgz = exporter.generate(muretFolder, projectArrayList);
+            Path tgz = exporter.generate(muretFolder, documentArrayList);
 
             String filename = tgz.getFileName().toString();
             BinaryOutputWrapper output = new BinaryOutputWrapper("application/x-gzip");

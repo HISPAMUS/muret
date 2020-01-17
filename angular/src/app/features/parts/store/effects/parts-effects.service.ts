@@ -67,22 +67,22 @@ export class PartsEffects {
   );
 
   /*@Effect()
-  getProjectParts$ = this.actions$.pipe(
-    ofType<GetProjectParts>(PartsActionTypes.GetProjectParts),
-    map((action: GetProjectParts) => action),
-    switchMap((action) => this.partsService.getProjectParts$(action.projectID)),
+  getDocumentParts$ = this.actions$.pipe(
+    ofType<GetDocumentParts>(PartsActionTypes.GetDocumentParts),
+    map((action: GetDocumentParts) => action),
+    switchMap((action) => this.partsService.getDocumentParts$(action.documentID)),
     switchMap((parts: Part[]) => {
-      return of(new GetProjectPartsSuccess(parts));
+      return of(new GetDocumentPartsSuccess(parts));
     })
   );
 
   @Effect()
-  getImageProjectParts$ = this.actions$.pipe(
-    ofType<GetImageProjectParts>(PartsActionTypes.GetImageProjectParts),
-    map((action: GetImageProjectParts) => action),
-    switchMap((action) => this.partsService.getImageProjectParts$(action.imageID)),
+  getImageDocumentParts$ = this.actions$.pipe(
+    ofType<GetImageDocumentParts>(PartsActionTypes.GetImageDocumentParts),
+    map((action: GetImageDocumentParts) => action),
+    switchMap((action) => this.partsService.getImageDocumentParts$(action.imageID)),
     switchMap((parts: Part[]) => {
-      return of(new GetImageProjectPartsSuccess(parts));
+      return of(new GetImageDocumentPartsSuccess(parts));
     })
   );*/
 
@@ -191,7 +191,7 @@ export class PartsEffects {
   createPart$ = this.actions$.pipe(
     ofType<CreatePart>(PartsActionTypes.CreatePart),
     switchMap((action: CreatePart) =>
-      this.partsService.createPart$(action.projectID, action.name)),
+      this.partsService.createPart$(action.documentID, action.name)),
     switchMap((part: Part) => {
       return of(new CreatePartSuccess(part));
     })
@@ -210,7 +210,7 @@ export class PartsEffects {
   @Effect()
   getUsesOfParts$ = this.actions$.pipe(
     ofType<GetUsesOfParts>(PartsActionTypes.GetUsesOfParts),
-    map((action: GetUsesOfParts) => action.projectID),
+    map((action: GetUsesOfParts) => action.documentID),
     switchMap((partID) => this.partsService.getUsesOfParts$(partID)),
     switchMap((usesOfParts: UsesOfParts) => {
       return of(new GetUsesOfPartsSuccess(usesOfParts));

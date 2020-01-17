@@ -29,13 +29,13 @@ export class PartsService {
   }
 
 
-  /*getProjectParts$(projectID: number): Observable<Part[]> {
-    const url = 'parts/project/' + projectID;
+  /*getDocumentParts$(documentID: number): Observable<Part[]> {
+    const url = 'parts/document/' + documentID;
     return this.apiRestClientService.get$<Part[]>(url);
   }
 
-  getImageProjectParts$(imageID: number) {
-    const url = 'parts/imageProjectParts/' + imageID;
+  getImageDocumentParts$(imageID: number) {
+    const url = 'parts/imageDocumentParts/' + imageID;
     return this.apiRestClientService.get$<Part[]>(url);
   }*/
 
@@ -107,8 +107,8 @@ export class PartsService {
     return this.apiRestClientService.put$<Part>('parts/create/page/' + symbol.id + '/' + partName, null);
   }*/
 
-  createPart$(projectID: number, name: string): Observable<Part> {
-    return this.apiRestClientService.put$<Part>('parts/create/' + projectID + '/' + name, null);
+  createPart$(documentID: number, name: string): Observable<Part> {
+    return this.apiRestClientService.put$<Part>('parts/create/' + documentID + '/' + name, null);
   }
 
   renamePart$(part: Part, newName: string): Observable<Part> {
@@ -118,8 +118,8 @@ export class PartsService {
   deletePart$(partID: number): Observable<number> {
     return this.apiRestClientService.delete$<number>('parts/delete', partID);
   }
-  getUsesOfParts$(projectID: number): Observable<UsesOfParts> {
-    const url = `parts/uses/${projectID}`;
+  getUsesOfParts$(documentID: number): Observable<UsesOfParts> {
+    const url = `parts/uses/${documentID}`;
     return this.apiRestClientService.get$<UsesOfParts>(url);
   }
 

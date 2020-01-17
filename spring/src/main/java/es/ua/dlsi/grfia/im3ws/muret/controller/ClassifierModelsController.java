@@ -6,15 +6,14 @@ import es.ua.dlsi.grfia.im3ws.controller.StringResponse;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.ClassifierModel;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.ClassifierModelTypes;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.UploadModel;
+import es.ua.dlsi.grfia.im3ws.muret.entity.Document;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Image;
 import es.ua.dlsi.grfia.im3ws.muret.entity.ManuscriptType;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Project;
 import es.ua.dlsi.grfia.im3ws.muret.model.ClassifierClient;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
 import es.ua.dlsi.grfia.im3ws.service.FileStorageService;
 import es.ua.dlsi.im3.core.score.NotationType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -44,54 +43,54 @@ public class ClassifierModelsController {
         this.muretconfig = config;
     }
 
-    /*@GetMapping(path = {"symbols/{collectionID}/{projectID}/{notationType}/{manuscriptType}"})
+    /*@GetMapping(path = {"symbols/{collectionID}/{documentID}/{notationType}/{manuscriptType}"})
     public List<ClassifierModel> getSymbolClassifierModels(@PathVariable("collectionID") Long collectionID,
-                                                           @PathVariable("projectID") Long projectID,
+                                                           @PathVariable("documentID") Long documentID,
                                                            @PathVariable("notationType") String notationType,
                                                            @PathVariable("manuscriptType") String manuscriptType
     ) throws IM3WSException {
         try {
-            return this.classifierClient.getModels(ClassifierModelTypes.eAgnosticSymbols, collectionID, projectID, notationType, manuscriptType);
+            return this.classifierClient.getModels(ClassifierModelTypes.eAgnosticSymbols, collectionID, documentID, notationType, manuscriptType);
         } catch (IM3WSException e) {
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot get classifier models", e);
             throw e;
         }
     }
 
-    @GetMapping(path = {"agnosticEnd2End/{collectionID}/{projectID}/{notationType}/{manuscriptType}"})
+    @GetMapping(path = {"agnosticEnd2End/{collectionID}/{documentID}/{notationType}/{manuscriptType}"})
     public List<ClassifierModel>  getAgnosticEnd2EndClassifierModel(@PathVariable("collectionID") Long collectionID,
-                                            @PathVariable("projectID") Long projectID,
+                                            @PathVariable("documentID") Long documentID,
                                             @PathVariable("notationType") String notationType,
                                             @PathVariable("manuscriptType") String manuscriptType
     ) throws IM3WSException {
         try {
-            return this.classifierClient.getModels(ClassifierModelTypes.eAgnosticEnd2End, collectionID, projectID, notationType, manuscriptType);
+            return this.classifierClient.getModels(ClassifierModelTypes.eAgnosticEnd2End, collectionID, documentID, notationType, manuscriptType);
         } catch (IM3WSException e) {
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot get classifier models", e);
             throw new IM3WSException("There was an error retrieving Agnostic End to end models, it is possible that the folder referenced does not exist in the classification server");
         }
     }*/
 
-    private Project getProject(Long imageID) throws IM3WSException {
+    private Document getDocument(Long imageID) throws IM3WSException {
         Optional<Image> image = imageRepository.findById(imageID);
         if (!image.isPresent()) {
             throw new IM3WSException("Cannot find image with ID " + imageID);
         }
 
-        Project project = image.get().getProject();
-        return project;
+        Document document = image.get().getDocument();
+        return document;
     }
 
     @Transactional
     public List<ClassifierModel> requestModels(ClassifierModelTypes classifierType, Long imageID) throws IM3WSException
     {
         try {
-            Project project = getProject(imageID);
-            NotationType notationType = project.getNotationType();
-            ManuscriptType manuscriptType = project.getManuscriptType();
-            Integer projectID = project.getId();
-            Integer collectionID = project.getCollection().getId();
-            return this.classifierClient.getModels(classifierType, collectionID, projectID, notationType.name(), manuscriptType.name());
+            Document document = getDocument(imageID);
+            NotationType notationType = document.getNotationType();
+            ManuscriptType manuscriptType = document.getManuscriptType();
+            Integer documentID = document.getId();
+            Integer collectionID = document.getCollection().getId();
+            return this.classifierClient.getModels(classifierType, collectionID, documentID, notationType.name(), manuscriptType.name());
         } catch (IM3WSException e) {
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot get classifier models", e);
             throw new IM3WSException("There was an error retrieving Agnostic End to end models, it is possible that the folder referenced does not exist in the classification server");

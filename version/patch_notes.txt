@@ -17,7 +17,7 @@ MAJOR UPDATES
 
     - Administrators are allowed to upload pretrained models to the MuRET API. It will be a reserved feature till it has been tested enough.
     - MusicXML export is available
-    - Project statistics are shown in the project main screen
+    - Project statistics are shown in the document main screen
     - New instrument/part screen and utilities to manage them for whole images and selected regions
 
 

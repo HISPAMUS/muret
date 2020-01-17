@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.im3ws.muret.model.trainingsets;
 
 import es.ua.dlsi.grfia.im3ws.muret.model.ITrainingSetExporter;
-import es.ua.dlsi.grfia.im3ws.muret.model.ProjectModel;
+import es.ua.dlsi.grfia.im3ws.muret.model.DocumentModel;
 import es.ua.dlsi.im3.core.IM3Exception;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,13 +20,13 @@ public class TrainingSetsFactory {
     private List<ITrainingSetExporter> trainingSetExporters;
 
     @Autowired
-    public TrainingSetsFactory(ProjectModel projectModel) {
+    public TrainingSetsFactory(DocumentModel documentModel) {
         this.trainingSetExporters = Arrays.asList(
-                new ImagesExporter(projectModel, 0, false),
-                new ImagesExporter(projectModel, 1, true),
+                new ImagesExporter(documentModel, 0, false),
+                new ImagesExporter(documentModel, 1, true),
                 new JSONTagging(2,true),
                 new JSONTagging(3, false),
-                new AgnosticSemanticTrainingSetExporter(4, projectModel)
+                new AgnosticSemanticTrainingSetExporter(4, documentModel)
                 /*new AgnosticSymbolImagesTextFile(4, false, false), // just used in command line (see ExportTrainingSet)
                 new AgnosticSymbolImagesTextFile(5, false, true),
                 new AgnosticSymbolImagesTextFile(6, true, false),

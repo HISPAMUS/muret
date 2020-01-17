@@ -72,7 +72,7 @@
     </section>
     <!--<section class="row">
       <div class="col-2">
-        <ng-container *ngIf="(projectParts$ | async) as parts">
+        <ng-container *ngIf="(documentParts$ | async) as parts">
           <app-part-selection [label]="'Region part'" [parts]="parts"
                               (clearPart)="clearRegionPart()" (selectPart)="updateRegionPart($event)"
                               (createPart)="createRegionPart($event)"

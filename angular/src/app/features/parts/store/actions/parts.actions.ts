@@ -5,7 +5,7 @@ import {Image} from '../../../../core/model/entities/image';
 import {Page} from '../../../../core/model/entities/page';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
 import {PartUse, UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
-import {GetProjectStatisticsSuccess, ProjectActionTypes} from '../../../project/store/actions/project.actions';
+import {GetDocumentStatisticsSuccess, DocumentActionTypes} from '../../../document/store/actions/document.actions';
 
 export enum PartsActionTypes {
   CreateImagePart = '[Parts] Create image part',
@@ -15,11 +15,11 @@ export enum PartsActionTypes {
   CreateRegionPart = '[Parts] Create region part',
   CreateRegionPartSuccess = '[Parts] Create region part success',
 
-  /*GetProjectParts = '[Parts] Get project parts',
-  GetProjectPartsSuccess = '[Parts] Get project parts success',
+  /*GetDocumentParts = '[Parts] Get document parts',
+  GetDocumentPartsSuccess = '[Parts] Get document parts success',
 
-  GetImageProjectParts = '[Parts] Get image project parts',
-  GetImageProjectPartsSuccess = '[Parts] Get image project parts success',*/
+  GetImageDocumentParts = '[Parts] Get image document parts',
+  GetImageDocumentPartsSuccess = '[Parts] Get image document parts success',*/
 
   /*GetImagePart = '[Parts] Get image part',
   GetImagePartSuccess = '[Parts] Get image part success',
@@ -105,23 +105,23 @@ export class CreateRegionPartSuccess implements Action {
 }
 
 
-/*export class GetProjectParts implements Action {
-  public readonly type = PartsActionTypes.GetProjectParts;
-  constructor(public projectID: number) {}
+/*export class GetDocumentParts implements Action {
+  public readonly type = PartsActionTypes.GetDocumentParts;
+  constructor(public documentID: number) {}
 }
 
-export class GetProjectPartsSuccess implements Action {
-  public readonly type = PartsActionTypes.GetProjectPartsSuccess;
+export class GetDocumentPartsSuccess implements Action {
+  public readonly type = PartsActionTypes.GetDocumentPartsSuccess;
   constructor(public parts: Part[]) {}
 }
 
-export class GetImageProjectParts implements Action {
-  public readonly type = PartsActionTypes.GetImageProjectParts;
+export class GetImageDocumentParts implements Action {
+  public readonly type = PartsActionTypes.GetImageDocumentParts;
   constructor(public imageID: number) {}
 }
 
-export class GetImageProjectPartsSuccess implements Action {
-  public readonly type = PartsActionTypes.GetImageProjectPartsSuccess;
+export class GetImageDocumentPartsSuccess implements Action {
+  public readonly type = PartsActionTypes.GetImageDocumentPartsSuccess;
   constructor(public parts: Part[]) {}
 }*/
 /*
@@ -237,7 +237,7 @@ export class DeletePartSuccess implements Action {
 
 export class CreatePart implements Action {
   public readonly type = PartsActionTypes.CreatePart;
-  constructor(public projectID: number, public name: string) {}
+  constructor(public documentID: number, public name: string) {}
 }
 
 export class CreatePartSuccess implements Action {
@@ -247,7 +247,7 @@ export class CreatePartSuccess implements Action {
 
 export class GetUsesOfParts implements Action {
   public readonly type = PartsActionTypes.GetUsesOfParts;
-  constructor(public projectID: number) {}
+  constructor(public documentID: number) {}
 }
 
 export class GetUsesOfPartsSuccess implements Action {
@@ -329,8 +329,8 @@ export type PartsActions =
   CreateImagePart | CreateImagePartSuccess |
   CreatePagePart | CreatePagePartSuccess |
   CreateRegionPart | CreateRegionPartSuccess |
-  /*GetProjectParts | GetProjectPartsSuccess |
-  GetImageProjectParts | GetImageProjectPartsSuccess |*/
+  /*GetDocumentParts | GetDocumentPartsSuccess |
+  GetImageDocumentParts | GetImageDocumentPartsSuccess |*/
  /* GetImagePart | GetImagePartSuccess | UpdateImagePart | UpdateImagePartSuccess |
   GetPagePart | GetPagePartSuccess | UpdatePagePart | UpdatePagePartSuccess |
   GetRegionPart | GetRegionPartSuccess | UpdateRegionPart | UpdateRegionPartSuccess |

@@ -16,5 +16,5 @@ public interface ICollectionProjection {
 
     String getName();
     String getComments();
-    List<IProjectProjection> getProjects();
+    List<IDocumentProjection> getDocuments();
 }

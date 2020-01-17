@@ -74,7 +74,7 @@ public class ClassifierClient {
         data.put("eClassifierType", modelData.geteClassifierType());
         data.put("eNotationType", modelData.geteNotationType());
         data.put("eManuscriptType", modelData.geteManuscriptType());
-        data.put("eProject", modelData.geteProject());
+        data.put("eDocument", modelData.geteDocument());
         restClient.uploadFileWithPOST("registerModel", "eModelFile" ,filepath, data);
     }
 
@@ -272,10 +272,10 @@ public class ClassifierClient {
         }
     }
 
-    public List<ClassifierModel> getModels(ClassifierModelTypes classifierModelType, Integer collectionID, Integer projectID, String notationType, String manuscriptType) throws IM3WSException {
+    public List<ClassifierModel> getModels(ClassifierModelTypes classifierModelType, Integer collectionID, Integer documentID, String notationType, String manuscriptType) throws IM3WSException {
         Map<String, Object> postContent = new HashMap<>();
         postContent.put("collection", collectionID);
-        postContent.put("project", projectID);
+        postContent.put("document", documentID);
         postContent.put("manuscriptType", manuscriptType);
         postContent.put("notationType", notationType);
         postContent.put("classifierModelType", classifierModelType.toString());

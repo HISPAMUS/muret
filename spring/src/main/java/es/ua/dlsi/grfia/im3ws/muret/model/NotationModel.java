@@ -70,13 +70,13 @@ public class NotationModel {
         return mei;
     }
 
-    SemanticEncoding importSemanticEncoding(Project project, Region region) throws IM3Exception {
+    SemanticEncoding importSemanticEncoding(Document document, Region region) throws IM3Exception {
         if (region.getSemanticEncoding() == null) {
             throw new IM3Exception("Region has not a semantic encoding yet");
         }
 
         ISemanticImporter semanticImporter = new SKernMensSemanticImporter();
-        /*switch (project.getNotationType()) {
+        /*switch (document.getNotationType()) {
             case eMensural:
                 semanticImporter = new MensSemanticImporter();
                 break;
@@ -84,20 +84,20 @@ public class NotationModel {
                 semanticImporter = new KernSemanticImporter();
                 break;
             default:
-                throw new IM3Exception("Unsupported notation type: " + project.getNotationType());
+                throw new IM3Exception("Unsupported notation type: " + document.getNotationType());
         }*/
 
 
-        return semanticImporter.importString(project.getNotationType(), region.getSemanticEncoding());
+        return semanticImporter.importString(document.getNotationType(), region.getSemanticEncoding());
     }
 
-    public Notation getNotation(Project project, String partName, Region region, boolean mensustriche, Renderer renderer) {
+    public Notation getNotation(Document document, String partName, Region region, boolean mensustriche, Renderer renderer) {
 
-        //TODO Código algo duplicado en ProjectModel - exportMEI
+        //TODO Código algo duplicado en DocumentModel - exportMEI
         //TODO Ahora sólo lo guardo en la región
         try {
-            SemanticEncoding semanticEncoding = importSemanticEncoding(project, region);
-            String mei = getMEINotation(semanticEncoding, project.getNotationType());
+            SemanticEncoding semanticEncoding = importSemanticEncoding(document, region);
+            String mei = getMEINotation(semanticEncoding, document.getNotationType());
             return new Notation(NotationResponseType.mei, mei, region.getSemanticEncoding());
         } catch (Exception e) {
             return new Notation("Cannot import semantic encoding: " + e.getMessage());
@@ -120,9 +120,9 @@ public class NotationModel {
         return stringBuilder.toString();
     }
 
-    public Pair<ScoreSong, ScorePart> exportScoreSong(Project project, Part specificPart, boolean partsAndFacsimile, Set<Long> idsOfSelectedImages) throws IM3Exception {
+    public Pair<ScoreSong, ScorePart> exportScoreSong(Document document, Part specificPart, boolean partsAndFacsimile, Set<Long> idsOfSelectedImages) throws IM3Exception {
         ScoreSong song = new ScoreSong();
-        song.addTitle(project.getName());
+        song.addTitle(document.getName());
 
         Facsimile facsimile = new Facsimile();
         if (partsAndFacsimile) {
@@ -135,7 +135,7 @@ public class NotationModel {
 
         int cont = 1;
         ScorePart scoreSpecificPart = null;
-        for (Part part: project.getParts()) {
+        for (Part part: document.getParts()) {
             if (specificPart == null || part.getId() == specificPart.getId()) {
                 ScorePart scorePart = new ScorePart(song, cont); //TODO Ordenación de partes
                 song.addPart(scorePart);
@@ -147,7 +147,7 @@ public class NotationModel {
                 }
 
                 Pentagram pentagram = new Pentagram(song, new Integer(cont).toString(), cont);
-                pentagram.setNotationType(project.getNotationType());
+                pentagram.setNotationType(document.getNotationType());
                 ScoreLayer layer = scorePart.addScoreLayer();
                 pentagram.addLayer(layer);
                 pentagram.setName(part.getName());
@@ -158,7 +158,7 @@ public class NotationModel {
             }
         }
 
-        for (Image image: project.getImages()) {
+        for (Image image: document.getImages()) {
             if (idsOfSelectedImages.contains(image.getId())) {
                 Part imagePart = image.getPart();
                 int npage = 0;
@@ -172,7 +172,7 @@ public class NotationModel {
                         imageSurface.setBoundingBox(new BoundingBoxXY(0, 0, image.getWidth(), image.getHeight()));
 
                         Graphic graphic = new Graphic();
-                        graphic.setTarget(project.getPath() + "/" + image.getFilename());
+                        graphic.setTarget(document.getPath() + "/" + image.getFilename());
                         imageSurface.addGraphic(graphic);
 
                         facsimile.addSurface(imageSurface);
@@ -225,11 +225,11 @@ public class NotationModel {
                                 //TODO Código algo duplicado en SemanticRepresentationModel - getNotation
                                 String semanticEncoding = region.getSemanticEncoding();
                                 if (semanticEncoding != null && !semanticEncoding.trim().isEmpty()) {
-                                    //SemanticEncoding semantic = mensSemanticImporter.importString(project.getNotationType(), region.getSemanticEncoding());
-                                    SemanticEncoding semantic = importSemanticEncoding(project, region);
+                                    //SemanticEncoding semantic = mensSemanticImporter.importString(document.getNotationType(), region.getSemanticEncoding());
+                                    SemanticEncoding semantic = importSemanticEncoding(document, region);
                                     Semantic2IMCore semantic2IMCore = new Semantic2IMCore();
                                     //TODO compases y tonalidad anteriores
-                                    List<Pair<SemanticSymbol, ITimedElementInStaff>> items = semantic2IMCore.convert(project.getNotationType(), null, null, semantic);
+                                    List<Pair<SemanticSymbol, ITimedElementInStaff>> items = semantic2IMCore.convert(document.getNotationType(), null, null, semantic);
 
                                     Staff staff = staves.get(regionPart);
                                     if (staff == null) {
@@ -314,15 +314,15 @@ public class NotationModel {
 
     /**
      *
-     * @param project
+     * @param document
      * @param specificPart If null, the full score is rendered
      * @param idsOfSelectedImages
      * @return
      * @throws IM3Exception
      */
-    public String exportMEI(Project project, Part specificPart, boolean partsAndFacsimile, Set<Long> idsOfSelectedImages) throws IM3Exception {
+    public String exportMEI(Document document, Part specificPart, boolean partsAndFacsimile, Set<Long> idsOfSelectedImages) throws IM3Exception {
 
-        Pair<ScoreSong, ScorePart> pair = exportScoreSong(project, specificPart, partsAndFacsimile, idsOfSelectedImages);
+        Pair<ScoreSong, ScorePart> pair = exportScoreSong(document, specificPart, partsAndFacsimile, idsOfSelectedImages);
         ScoreSong song = pair.getX();
         ScorePart scoreSpecificPart = pair.getY();
 
@@ -348,15 +348,15 @@ public class NotationModel {
         );
     }
 
-    public void generateMensurstrich(Path tgz, Project project, Set<Long> idsOfSelectedImages) throws IM3Exception {
-        Pair<ScoreSong, ScorePart> pair = exportScoreSong(project, null, false, idsOfSelectedImages);
+    public void generateMensurstrich(Path tgz, Document document, Set<Long> idsOfSelectedImages) throws IM3Exception {
+        Pair<ScoreSong, ScorePart> pair = exportScoreSong(document, null, false, idsOfSelectedImages);
         ScoreSong mensural = pair.getX();
 
         HorizontalLayout horizontalLayout = new HorizontalLayout(mensural, new CoordinateComponent(50000), new CoordinateComponent(3000), LayoutFonts.bravura);
         horizontalLayout.layout(true);
 
         SVGExporter svgExporter = new SVGExporter();
-        File svgOutput = new File(tgz.toFile(), project.getPath() + "_mensural.svg"); //TODO ¿cuando no es mensural?
+        File svgOutput = new File(tgz.toFile(), document.getPath() + "_mensural.svg"); //TODO ¿cuando no es mensural?
         svgExporter.exportLayout(svgOutput, horizontalLayout);
 
         MensuralToModern mensuralToModern = new MensuralToModern(null);
@@ -368,20 +368,20 @@ public class NotationModel {
         horizontalLayoutMerged.layout(true);
 
         SVGExporter svgExporterMerged = new SVGExporter();
-        File svgOutputMerged = new File(tgz.toFile(), project.getPath() + "_mensural_modern_mensurstrich.svg"); //TODO ¿cuando no es mensural?
+        File svgOutputMerged = new File(tgz.toFile(), document.getPath() + "_mensural_modern_mensurstrich.svg"); //TODO ¿cuando no es mensural?
         svgExporterMerged.exportLayout(svgOutputMerged, horizontalLayoutMerged);
     }
 
-    public void generateMusicXML(Path tgz, Project project, Set<Long> idsOfSelectedImages) throws IM3Exception {
+    public void generateMusicXML(Path tgz, Document document, Set<Long> idsOfSelectedImages) throws IM3Exception {
         //TODO ¿Si no es mensural?
-        Pair<ScoreSong, ScorePart> pair = exportScoreSong(project, null, false, idsOfSelectedImages);
+        Pair<ScoreSong, ScorePart> pair = exportScoreSong(document, null, false, idsOfSelectedImages);
         ScoreSong mensural = pair.getX();
 
         MensuralToModern mensuralToModern = new MensuralToModern(null);
         ScoreSong modern = mensuralToModern.convertIntoNewSong(mensural, Intervals.UNISON_PERFECT);
 
         MusicXMLExporter musicXMLExporter = new MusicXMLExporter();
-        File musicXMLFile = new File(tgz.toFile(), project.getPath() + ".xml");
+        File musicXMLFile = new File(tgz.toFile(), document.getPath() + ".xml");
         musicXMLExporter.exportSong(musicXMLFile, modern);
     }
 }
