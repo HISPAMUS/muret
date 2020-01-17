@@ -29,6 +29,18 @@ export function semanticRepresentationReducers(state = initialSemanticRepresenta
       newState.notation = action.notation;
       return newState;
     }
+    case SemanticRepresentationActionTypes.GetTranslationModels : {
+      return {
+        ...state,
+        models: null
+      }
+    }
+    case SemanticRepresentationActionTypes.GetTranslationModelsSuccess: {
+      return {
+        ...state,
+        models: action.response
+      }
+    }
     default: {
       return state;
     }

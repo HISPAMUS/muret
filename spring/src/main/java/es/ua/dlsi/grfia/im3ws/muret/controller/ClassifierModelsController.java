@@ -117,6 +117,13 @@ public class ClassifierModelsController {
         return requestModels(ClassifierModelTypes.eDocumentAnalysis, imageID);
     }
 
+    @GetMapping(path={"translator/{imageID}"})
+    @Transactional
+    public List<ClassifierModel> getTranslationClassifierModels(@PathVariable("imageID") Long imageID) throws IM3WSException
+    {
+        return requestModels(ClassifierModelTypes.eAgnostic2SemanticTranslator, imageID);
+    }
+
     @PostMapping(path = {"uploadmodel"})
     @Transactional
     public StringResponse uploadModel(UploadModel c_uploadModel) throws IM3WSException

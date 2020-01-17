@@ -9,6 +9,13 @@
       <button (click)="openDocumentAnalysis()">Doc. analysis</button>
       <button (click)="openAgnosticRepresentation()">Agnostic</button>
     </div>
+    <div class="col-2 form-group">
+      Select translation model:
+      <select class="form-control" id="models" required>
+        <option *ngFor="let model of translationModels$ | async" [value]="model.id">{{model.name}}</option>
+      </select>
+      <button class="btn btn-primary">Translate</button>
+    </div>
   </nav>
 
   <section class="row" id="semanticInstruments">
