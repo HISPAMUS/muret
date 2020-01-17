@@ -7,3 +7,8 @@ export const selectNotation = createSelector(
   semanticRepresentationState,
   (stateSemantic: SemanticRepresentationState) => stateSemantic.notation
 );
+
+export const selectTranslationModels = createSelector(
+  semanticRepresentationState,
+  (stateSemantic: SemanticRepresentationState) => stateSemantic.models
+);

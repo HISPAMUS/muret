@@ -6,9 +6,10 @@ import {SemanticRepresentationService} from '../../services/semantic-representat
 import {
   ConvertAgnostic2Semantic,
   ConvertAgnostic2SemanticSuccess, GetNotation, GetNotationSuccess,
-  SemanticRepresentationActionTypes, SendSemanticEncoding, SendSemanticEncodingSuccess
+  SemanticRepresentationActionTypes, SendSemanticEncoding, SendSemanticEncodingSuccess, GetTranslationModels, GetTranslationModelsSuccess
 } from '../actions/semantic-representation.actions';
 import {Notation} from '../../services/notation';
+import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 
 @Injectable()
 export class SemanticRepresentationEffects {
@@ -48,5 +49,15 @@ export class SemanticRepresentationEffects {
       return of(new SendSemanticEncodingSuccess(notation));
     })
   );
+
+  @Effect()
+  getTranslationModels$ = this.actions$.pipe(
+    ofType<GetTranslationModels>(SemanticRepresentationActionTypes.GetTranslationModels),
+    switchMap((action: GetTranslationModels) => 
+      this.semanticRepresentationService.getTranslationModels(action.imageID)),
+      switchMap((translationModels: ClassifierModel[]) => {
+        return of(new GetTranslationModelsSuccess(translationModels))
+      })
+    )
 
 }

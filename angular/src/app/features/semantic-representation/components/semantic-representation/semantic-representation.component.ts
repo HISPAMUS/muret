@@ -3,15 +3,16 @@ import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {GetImageProjection} from '../../../document-analysis/store/actions/document-analysis.actions';
 import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
 import {Store} from '@ngrx/store';
-import {Subscription} from 'rxjs';
+import {Subscription, Observable} from 'rxjs';
 import {Region} from '../../../../core/model/entities/region';
 import {
   ClearNotation,
   ConvertAgnostic2Semantic,
   GetNotation,
-  SendSemanticEncoding
+  SendSemanticEncoding,
+  GetTranslationModels
 } from '../../store/actions/semantic-representation.actions';
-import {selectNotation} from '../../store/selectors/semantic-representation.selector';
+import {selectNotation, selectTranslationModels} from '../../store/selectors/semantic-representation.selector';
 import {Notation} from '../../services/notation';
 import {Shape} from '../../../../svg/model/shape';
 import {selectAgnosticSymbols} from '../../../agnostic-representation/store/selectors/agnostic-representation.selector';
@@ -33,6 +34,7 @@ import {
 } from '../../../parts/store/actions/parts.actions';
 import {selectImageProjectID} from '../../../document-analysis/store/selectors/document-analysis.selector';
 import {ModalOptions} from '../../../../shared/components/options-dialog/options-dialog.component';
+import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 
 @Component({
   selector: 'app-semantic-representation',
@@ -41,6 +43,7 @@ import {ModalOptions} from '../../../../shared/components/options-dialog/options
 })
 export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
+  translationModels$: Observable<ClassifierModel[]>;
   imageID: number;
   projectID: number;
   mynumber: number;
@@ -102,6 +105,17 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
       setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
         this.store.dispatch(new ActivateLink({title: 'Semantic', routerLink: 'semanticrepresentation/' + this.imageID}));
       });
+
+      this.translationModels$ = this.store.select(selectTranslationModels);
+
+      this.translationModels$.subscribe((value)=>{
+        console.log(value)
+      })
+
+      setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
+        this.store.dispatch(new GetTranslationModels(this.imageID));
+      });
+
 
     });
 

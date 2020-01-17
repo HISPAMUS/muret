@@ -1,6 +1,7 @@
 import {Action} from '@ngrx/store';
 import {Region} from '../../../../core/model/entities/region';
 import {Notation} from '../../services/notation';
+import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 
 export enum SemanticRepresentationActionTypes {
   ConvertAgnostic2Semantic = '[SemanticRepresentation] Convert agnostic to semantic',
@@ -9,7 +10,9 @@ export enum SemanticRepresentationActionTypes {
   GetNotationSuccess = '[SemanticRepresentation] Get notation success',
   ClearNotation = '[SemanticRepresentation] Clear notation',
   SendSemanticEncoding = '[SemanticRepresentation] Send semantic encoding',
-  SendSemanticEncodingSuccess = '[SemanticRepresentation] Send semantic encoding success'
+  SendSemanticEncodingSuccess = '[SemanticRepresentation] Send semantic encoding success',
+  GetTranslationModels = '[SemanticRepresentation] Get translation models',
+  GetTranslationModelsSuccess = '[SemanticRepresentation] Get translation models success'
 }
 
 export class ConvertAgnostic2Semantic implements Action {
@@ -47,6 +50,16 @@ export class SendSemanticEncodingSuccess implements Action {
   constructor(public notation: Notation) {}
 }
 
+export class GetTranslationModels implements Action {
+  public readonly type = SemanticRepresentationActionTypes.GetTranslationModels;
+  constructor(public imageID: number){}
+}
+
+export class GetTranslationModelsSuccess implements Action {
+  public readonly type = SemanticRepresentationActionTypes.GetTranslationModelsSuccess;
+  constructor(public response: ClassifierModel[]){}
+}
+
 export type SemanticRepresentationActions =
   ConvertAgnostic2Semantic | ConvertAgnostic2SemanticSuccess | GetNotation | GetNotationSuccess | ClearNotation |
-  SendSemanticEncoding | SendSemanticEncodingSuccess;
+  SendSemanticEncoding | SendSemanticEncodingSuccess | GetTranslationModels | GetTranslationModelsSuccess;

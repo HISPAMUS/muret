@@ -34,5 +34,11 @@ export class SemanticRepresentationService {
     const url = `semantic/semanticEncoding/${region.id}/${mensustriche}/${renderer}`;
     return this.apiRestClientService.put$(url, semanticEncoding);
   }
+  
+  getTranslationModels(imageID: number)
+  {
+    const url = `classifierModels/translator/${imageID}`;
+    return this.apiRestClientService.get$(url);
+  }
 
 }
