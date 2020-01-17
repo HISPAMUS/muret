@@ -98,9 +98,9 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   ngOnInit() {
-    
-    this.analysisStatus = "Analyze"
-    
+
+    this.analysisStatus = 'Analyze';
+
     this.store.dispatch(new GetRegionTypes());
 
     // request store data
@@ -116,7 +116,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     this.documentAnalysisModels$ = this.store.select(selectDocumentAnalysisClassifierModels);
 
     this.documentAnalysisSubscription = this.store.select(selectDocumentAnalysisResults).subscribe((result: DocumentAnalysisModel)=>{
-      
+
       if(result != null && result.staff!=null && result.staff.length>0)
       {
         this.store.dispatch(new Clear(this.imageID));
@@ -124,7 +124,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
           this.addNewRegions(result);
         }, 1000)
       }
-    
+
     })
 
     this.store.dispatch(new GetDocumentAnModels(this.imageID));

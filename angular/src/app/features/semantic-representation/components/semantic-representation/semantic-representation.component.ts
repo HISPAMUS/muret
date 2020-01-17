@@ -60,7 +60,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   agnosticIDs: number[];
   agnosticIDMap: Map<number, number>;
   columnDefs = [
-    {headerName: '**smens', field: 'smens' },
+    {headerName: '**smens/**skern', field: 'smens' },
     {headerName: 'Agnostic symbols', field: 'agnosticSymbols' }
   ];
   rowData = [
