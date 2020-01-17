@@ -5,6 +5,7 @@ import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Notation;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.NotationResponseType;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Renderer;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
+import es.ua.dlsi.grfia.im3ws.muret.model.semantic.grammar.SKernMensSemanticImporter;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.adt.Pair;
 import es.ua.dlsi.im3.core.adt.graphics.BoundingBoxXY;
@@ -20,10 +21,7 @@ import es.ua.dlsi.im3.core.score.layout.HorizontalLayout;
 import es.ua.dlsi.im3.core.score.layout.fonts.LayoutFonts;
 import es.ua.dlsi.im3.core.score.layout.svg.SVGExporter;
 import es.ua.dlsi.im3.core.score.staves.Pentagram;
-import es.ua.dlsi.im3.omr.encoding.semantic.MensSemanticImporter;
-import es.ua.dlsi.im3.omr.encoding.semantic.Semantic2IMCore;
-import es.ua.dlsi.im3.omr.encoding.semantic.SemanticEncoding;
-import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbol;
+import es.ua.dlsi.im3.omr.encoding.semantic.*;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -72,20 +70,36 @@ public class NotationModel {
         return mei;
     }
 
-    public Notation getNotation(Project project, String partName, Region region, boolean mensustriche, Renderer renderer) throws IM3WSException {
-
+    SemanticEncoding importSemanticEncoding(Project project, Region region) throws IM3Exception {
         if (region.getSemanticEncoding() == null) {
-            return new Notation("Region has not a semantic encoding yet");
+            throw new IM3Exception("Region has not a semantic encoding yet");
         }
 
-        //TODO Código duplicado en ProjectModel - exportMEI
+        ISemanticImporter semanticImporter = new SKernMensSemanticImporter();
+        /*switch (project.getNotationType()) {
+            case eMensural:
+                semanticImporter = new MensSemanticImporter();
+                break;
+            case eModern:
+                semanticImporter = new KernSemanticImporter();
+                break;
+            default:
+                throw new IM3Exception("Unsupported notation type: " + project.getNotationType());
+        }*/
+
+
+        return semanticImporter.importString(project.getNotationType(), region.getSemanticEncoding());
+    }
+
+    public Notation getNotation(Project project, String partName, Region region, boolean mensustriche, Renderer renderer) {
+
+        //TODO Código algo duplicado en ProjectModel - exportMEI
         //TODO Ahora sólo lo guardo en la región
-        MensSemanticImporter mensSemanticImporter = new MensSemanticImporter(); //TODO Sólo va para mensural
         try {
-            SemanticEncoding semantic = mensSemanticImporter.importString(project.getNotationType(), region.getSemanticEncoding());
-            String mei = getMEINotation(semantic, project.getNotationType());
+            SemanticEncoding semanticEncoding = importSemanticEncoding(project, region);
+            String mei = getMEINotation(semanticEncoding, project.getNotationType());
             return new Notation(NotationResponseType.mei, mei, region.getSemanticEncoding());
-        } catch (IM3Exception e) {
+        } catch (Exception e) {
             return new Notation("Cannot import semantic encoding: " + e.getMessage());
         }
     }
@@ -208,11 +222,11 @@ public class NotationModel {
                             if (specificPart == null || regionPart.getId() == specificPart.getId()) {
                                 Clef lastClef = lastClefs.get(regionPart);
 
-                                //TODO Código duplicado en SemanticRepresentationModel - getNotation
-                                MensSemanticImporter mensSemanticImporter = new MensSemanticImporter(); //TODO Sólo va para mensural
+                                //TODO Código algo duplicado en SemanticRepresentationModel - getNotation
                                 String semanticEncoding = region.getSemanticEncoding();
                                 if (semanticEncoding != null && !semanticEncoding.trim().isEmpty()) {
-                                    SemanticEncoding semantic = mensSemanticImporter.importString(project.getNotationType(), region.getSemanticEncoding());
+                                    //SemanticEncoding semantic = mensSemanticImporter.importString(project.getNotationType(), region.getSemanticEncoding());
+                                    SemanticEncoding semantic = importSemanticEncoding(project, region);
                                     Semantic2IMCore semantic2IMCore = new Semantic2IMCore();
                                     //TODO compases y tonalidad anteriores
                                     List<Pair<SemanticSymbol, ITimedElementInStaff>> items = semantic2IMCore.convert(project.getNotationType(), null, null, semantic);
