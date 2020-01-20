@@ -27,9 +27,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
   constructor(private store : Store<AdminDashboardState>, private userstore : Store<CoreState>, private dialogService: DialogsService)
   {
     this.usernamesubscription = userstore.select(selectUsername).subscribe((name)=>{this.username = name})
-    this.userregistersubscription = store.select(selectRegisterStatus).subscribe((status) => { 
+    this.userregistersubscription = store.select(selectRegisterStatus).subscribe((status) => {
       if(status == 1)
-        dialogService.showConfirmarion("Success", "User registered correctly")
+        dialogService.showConfirmation("Success", "User registered correctly")
     })
   }
 

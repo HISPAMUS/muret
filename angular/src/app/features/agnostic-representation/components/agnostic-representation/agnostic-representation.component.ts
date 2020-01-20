@@ -462,7 +462,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
 
   classifyEnd2End() {
-    this.dialogsService.showConfirmarion('Classify end to end?', 'This action will delete previous symbols and cannot be undone')
+    this.dialogsService.showConfirmation('Classify end to end?', 'This action will delete previous symbols and cannot be undone')
       .subscribe((isConfirmed) => {
         if (isConfirmed) {
           this.endToEndButtonLabel = 'Classifying...';

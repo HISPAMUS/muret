@@ -1,5 +1,6 @@
 package es.ua.dlsi.grfia.im3ws.muret.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -23,6 +24,15 @@ public class Collection {
     @JsonManagedReference (value="collection")
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "collection")
     private List<Document> documents;
+
+    @JsonManagedReference (value="parent")
+    @OneToMany(fetch=FetchType.LAZY, mappedBy = "parent")
+    private List<Collection> subcollections;
+
+    @JsonBackReference(value="parent")
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="parent_collection_id", nullable = true)
+    private Collection parent;
 
     @Lob
     @Column (name = "thumbnail_base64_encoding", columnDefinition = "LONGTEXT")
@@ -68,6 +78,30 @@ public class Collection {
 
     public void setDocuments(List<Document> documents) {
         this.documents = documents;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
+    public List<Collection> getSubcollections() {
+        return subcollections;
+    }
+
+    public void setSubcollections(List<Collection> subcollections) {
+        this.subcollections = subcollections;
+    }
+
+    public Collection getParent() {
+        return parent;
+    }
+
+    public void setParent(Collection parent) {
+        this.parent = parent;
     }
 
     @Override

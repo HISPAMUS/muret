@@ -466,7 +466,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   }*/
 
   unlinkPartToImage() {
-    this.dialogsService.showConfirmarion('Part assigned to image', 'Do you want to unlink the part?')
+    this.dialogsService.showConfirmation('Part assigned to image', 'Do you want to unlink the part?')
       .subscribe((isConfirmed) => {
         if (isConfirmed) {
           const partUse: PartUse = {
@@ -539,7 +539,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   unlinkPartToRegion() {
-    this.dialogsService.showConfirmarion('Part assigned to region', 'Do you want to unlink the part?')
+    this.dialogsService.showConfirmation('Part assigned to region', 'Do you want to unlink the part?')
       .subscribe((isConfirmed) => {
         if (isConfirmed) {
           const partUse: PartUse = {

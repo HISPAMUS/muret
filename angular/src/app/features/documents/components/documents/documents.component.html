@@ -9,8 +9,55 @@
   </div>
 
   <div *ngIf="collection$ | async as collection; else loading">
+    <div *ngIf="collection.parentId != null" class="row">
+      <div class="col-10 offset-1">
+        <p><a [routerLink]="['/documents', collection.parentId]">Parent collection</a></p>
+      </div>
+    </div>
+
     <div class="row documents">
       <div class="col-10 offset-1">
+        <div class="row">
+          <div class="col">
+            <h3>Subcollections</h3>
+          </div>
+        </div>
+        <div class="row">
+          <div *ngFor="let subcollection of collection.subcollections; trackBy: trackBySubcollectionFn" class="document col-4 col-lg-3">
+            <div class="card">
+              <div class="card-body">
+                <p>
+                  <a [routerLink]="['/documents', subcollection.id]">{{subcollection.name}}</a>
+                </p>
+                <p *ngIf="canBeDeleted(subcollection); else cannotDeleteSubcollection">
+                  <a class="card-link"(click)="deleteSubcollection(subcollection.id)">Delete</a>
+                </p>
+                <ng-template #cannotDeleteSubcollection>
+                  <p>#{{subcollection.subcollections.length}} subcollections</p>
+                  <p>#{{subcollection.documents.length}} documents</p>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <p>
+                <a (click)="addSubcollection()">Add subcollection</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row documents">
+      <div class="col-10 offset-1">
+        <div class="row">
+          <div class="col">
+            <h3>Documents</h3>
+          </div>
+        </div>
         <div class="row">
           <div *ngFor="let document of collection.documents; trackBy: trackByDocumentFn" class="document col-4 col-lg-3">
             <div class="card">

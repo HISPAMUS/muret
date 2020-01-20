@@ -17,4 +17,7 @@ public interface ICollectionProjection {
     String getName();
     String getComments();
     List<IDocumentProjection> getDocuments();
+    List<ICollectionProjection> getSubcollections();
+    @Value("#{target.parent == null ? null : target.parent.id}")
+    Integer getParentId();
 }

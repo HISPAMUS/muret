@@ -9,6 +9,17 @@ export function documentsReducers(state = initialDocumentsState, action: Documen
         collection: action.collection
       };
     }
+    case DocumentsActionTypes.CreateSubcollectionSuccess: {
+      const newState = {...state};
+      newState.collection.subcollections = [...newState.collection.subcollections, action.collection];
+      return newState;
+    }
+    case DocumentsActionTypes.DeleteSubcollectionSuccess: {
+      const newState = {...state};
+      newState.collection.subcollections =
+        newState.collection.subcollections.filter(subcollection => subcollection.id !== action.deletedSubcollectionID);
+      return newState;
+    }
     default: {
       return state;
     }

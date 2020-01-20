@@ -19,12 +19,12 @@ export class ResetpwdComponent implements OnInit {
   repeatpwd: string
   pwdresetmsg: Subscription
 
-  constructor(private modalService: DialogsService, private store: Store<AuthState>) 
-  { 
+  constructor(private modalService: DialogsService, private store: Store<AuthState>)
+  {
     console.log('Change!!!')
     this.pwdresetmsg = store.select(selectResetPWDStatus).subscribe((number)=>{
       if(number == 1)
-        this.modalService.showConfirmarion("Success", "Password reseted correctly")
+        this.modalService.showConfirmation("Success", "Password reseted correctly")
       else if(number == -1)
         this.modalService.showError("Error", "The user does not exist", "There was an error resetting the password")
     })
@@ -37,11 +37,11 @@ export class ResetpwdComponent implements OnInit {
   {
     if(this.resetpwd.newPWD != this.repeatpwd)
     {
-      this.modalService.showError("Fatal error", `This error happens because you have introduced worng the password in the New Password field and the Repeat Password field. 
+      this.modalService.showError("Fatal error", `This error happens because you have introduced worng the password in the New Password field and the Repeat Password field.
       Please be careful with it`, "The passwords submitted do not match")
       return;
     }
-    
+
     this.store.dispatch(new ResetPassword(this.resetpwd));
   }
 

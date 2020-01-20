@@ -336,7 +336,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
 
 
   clear() {
-    this.dialogsService.showConfirmarion('Clear document analysis?', 'This action cannot be undone')
+    this.dialogsService.showConfirmation('Clear document analysis?', 'This action cannot be undone')
       .subscribe((isConfirmed) => {
         if (isConfirmed) {
           this.store.dispatch(new Clear(this.imageID));
@@ -385,7 +385,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
 
   attemptDocumentAnalysis()
   {
-    this.dialogsService.showConfirmarion('Make automatic classification?', 'This action will delete all labeled regions')
+    this.dialogsService.showConfirmation('Make automatic classification?', 'This action will delete all labeled regions')
       .subscribe((isConfirmed) => {
         if (isConfirmed) {
           this.analysisStatus = 'Analyzing...';

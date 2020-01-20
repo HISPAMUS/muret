@@ -17,7 +17,7 @@ export class DialogsService {
 
   constructor(private simpleModalService: SimpleModalService) { }
 
-  public showConfirmarion(title: string, message: string): Observable<boolean> {
+  public showConfirmation(title: string, message: string): Observable<boolean> {
     return this.simpleModalService.addModal(ConfirmDialogComponent, {
       title,
       message

@@ -31,12 +31,12 @@ export class PermissionsComponent implements OnInit, OnDestroy {
   grantedFlag: Subscription
   userListSubs: Subscription
 
-  constructor(private store: Store<UserState>, private adminStore : Store<AdminDashboardState>, private dialogs: DialogsService) 
+  constructor(private store: Store<UserState>, private adminStore : Store<AdminDashboardState>, private dialogs: DialogsService)
   {
     this.userPermissions$ = this.store.select(selectUserPermissions)
   }
 
-  ngOnInit() 
+  ngOnInit()
   {
     this.store.dispatch(new GetUserPermissions())
     this.collectionsSubscription = this.userPermissions$.subscribe((element: any)=>{
@@ -53,22 +53,22 @@ export class PermissionsComponent implements OnInit, OnDestroy {
       }
     })
 
-    this.revokedFlag = this.adminStore.select(selectRevokedFlag).subscribe((value: number) => 
+    this.revokedFlag = this.adminStore.select(selectRevokedFlag).subscribe((value: number) =>
     {
       if(value)
       {
-        this.dialogs.showConfirmarion("Success", "Permissions revoked").subscribe(()=>{
-          window.location.reload() 
-        }) 
+        this.dialogs.showConfirmation("Success", "Permissions revoked").subscribe(()=>{
+          window.location.reload()
+        })
       }
     })
 
     this.grantedFlag = this.adminStore.select(selectGrantedFlag).subscribe((value: number)=>{
       if(value)
       {
-        this.dialogs.showConfirmarion("Success", "Permissions granted").subscribe(()=>{
-          window.location.reload() 
-        }) 
+        this.dialogs.showConfirmation("Success", "Permissions granted").subscribe(()=>{
+          window.location.reload()
+        })
       }
     })
 
@@ -98,9 +98,9 @@ export class PermissionsComponent implements OnInit, OnDestroy {
   }
 
   grantPermissions(id, collection)
-  { 
+  {
     let namesToGrant = []
-    let flag = 0 
+    let flag = 0
 
     console.log(this.userList)
     const modalOptions: ModalOptions[] = []
@@ -119,7 +119,7 @@ export class PermissionsComponent implements OnInit, OnDestroy {
       }
 
       flag = 0
-      index++    
+      index++
     }
 
     this.dialogs.showOptions("Grant permission", modalOptions, "Select user to grant permissions").subscribe((user)=>{

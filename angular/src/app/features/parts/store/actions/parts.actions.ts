@@ -1,11 +1,6 @@
 import {Action} from '@ngrx/store';
-import {Region} from '../../../../core/model/entities/region';
 import {Part} from '../../../../core/model/entities/part';
-import {Image} from '../../../../core/model/entities/image';
-import {Page} from '../../../../core/model/entities/page';
-import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
 import {PartUse, UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
-import {GetDocumentStatisticsSuccess, DocumentActionTypes} from '../../../document/store/actions/document.actions';
 
 export enum PartsActionTypes {
   CreateImagePart = '[Parts] Create image part',

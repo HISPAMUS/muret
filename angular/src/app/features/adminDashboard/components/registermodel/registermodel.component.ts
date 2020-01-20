@@ -55,7 +55,7 @@ export class RegistermodelComponent implements OnInit {
 
     this.uploader.onSuccessItem = (item) =>
     {
-      this.dservice.showConfirmarion("Success", "Your model was successfully uploaded to the server")
+      this.dservice.showConfirmation("Success", "Your model was successfully uploaded to the server")
     }
 
     this.uploader.onErrorItem = (item) =>{

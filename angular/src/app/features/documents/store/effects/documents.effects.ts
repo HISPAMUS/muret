@@ -2,7 +2,13 @@ import { Injectable } from '@angular/core';
 import { Effect, ofType, Actions } from '@ngrx/effects';
 import { of } from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
-import {GetCollection, GetCollectionSuccess, DocumentsActionTypes} from '../actions/documents.actions';
+import {
+  GetCollection,
+  GetCollectionSuccess,
+  DocumentsActionTypes,
+  CreateSubcollection,
+  CreateSubcollectionSuccess, DeleteSubcollection, DeleteSubcollectionSuccess
+} from '../actions/documents.actions';
 import {Collection} from '../../../../core/model/entities/collection';
 import {DocumentsService} from '../../services/documents.service';
 
@@ -22,4 +28,25 @@ export class DocumentsEffects {
       return of(new GetCollectionSuccess(collection));
     })
   );
+
+  @Effect()
+  createSubcollection$ = this.actions$.pipe(
+    ofType<CreateSubcollection>(DocumentsActionTypes.CreateSubcollection),
+    switchMap((action: CreateSubcollection) =>
+      this.documentsService.createSubcollection$(action.parentID, action.name)),
+    switchMap((collection: Collection) => {
+      return of(new CreateSubcollectionSuccess(collection));
+    })
+  );
+
+  @Effect()
+  deleteSubcollection$ = this.actions$.pipe(
+    ofType<DeleteSubcollection>(DocumentsActionTypes.DeleteSubcollection),
+    switchMap((action: DeleteSubcollection) =>
+      this.documentsService.deleteSubcollection$(action.id)),
+    switchMap((deletedCollectionID: number) => {
+      return of(new DeleteSubcollectionSuccess(deletedCollectionID));
+    })
+  );
+
 }
