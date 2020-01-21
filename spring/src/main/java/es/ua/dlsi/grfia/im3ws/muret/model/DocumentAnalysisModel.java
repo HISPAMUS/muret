@@ -435,41 +435,40 @@ public class DocumentAnalysisModel {
         imageBoundingBox.setToX(image.getWidth());
         imageBoundingBox.setToY(image.getHeight());
 
-        for (CoordinatesDocAnBounding coordinatesDocAnBounding: autoDocumentAnalysisModel.getStaff()) {
-            Region region = new Region();
-            BoundingBox boundingBox = new BoundingBox(coordinatesDocAnBounding.getX0(), coordinatesDocAnBounding.getY0(),
-                    coordinatesDocAnBounding.getXf(), coordinatesDocAnBounding.getYf());
-            region.setBoundingBox(boundingBox);
+        for (CoordinatesDocAnBounding coordinatesDocAnBounding: autoDocumentAnalysisModel.getRegions()) {
+            if (coordinatesDocAnBounding.getX0() != null) {
+                Region region = new Region();
+                BoundingBox boundingBox = new BoundingBox(coordinatesDocAnBounding.getX0(), coordinatesDocAnBounding.getY0(),
+                        coordinatesDocAnBounding.getXf(), coordinatesDocAnBounding.getYf());
+                region.setBoundingBox(boundingBox);
 
-            boundingBox.adjustToFitInto(imageBoundingBox); // sometimes, classify return wrong dimensions
+                boundingBox.adjustToFitInto(imageBoundingBox); // sometimes, classify return wrong dimensions
 
-            if (coordinatesDocAnBounding.getRegionType() != null && !coordinatesDocAnBounding.getRegionType().trim().isEmpty()) {
-                RegionType regionType = regionTypeRepository.findByName(coordinatesDocAnBounding.getRegionType().trim());
-                if (regionType == null) {
-                    throw new IM3WSException("Cannot find a region type name = '" + coordinatesDocAnBounding.getRegionType() + "'");
+                if (coordinatesDocAnBounding.getRegionType() != null && !coordinatesDocAnBounding.getRegionType().trim().isEmpty()) {
+                    RegionType regionType = regionTypeRepository.findByName(coordinatesDocAnBounding.getRegionType().trim());
+                    if (regionType == null) {
+                        throw new IM3WSException("Cannot find a region type name = '" + coordinatesDocAnBounding.getRegionType() + "'");
+                    }
+                    region.setRegionType(regionType);
+                } else {
+                    region.setRegionType(undefinedRegionType);
                 }
-                region.setRegionType(regionType);
-            } else {
-                region.setRegionType(undefinedRegionType);
-            }
 
-            // now locate page for the region
-            for (Page page: pages) {
-                if (page.getBoundingBox().containsCenterOf(boundingBox)) {
-                    region.setPage(page);
-                    page.addRegion(region);
-                    break;
+                // now locate page for the region
+                for (Page page : pages) {
+                    if (page.getBoundingBox().containsCenterOf(boundingBox)) {
+                        region.setPage(page);
+                        page.addRegion(region);
+                        break;
+                    }
                 }
-            }
 
-            if (region.getPage() == null) {
-                throw new IM3WSException("Cannot find a page that can contain region center of " + region);
-                //TODO
-                //region.setPage(pages.get(0));
-                //pages.get(0).addRegion(region);
-            }
+                if (region.getPage() == null) {
+                    throw new IM3WSException("Cannot find a page that can contain region center of " + region);
+                }
 
-            newRegions.add(region);
+                newRegions.add(region);
+            }
         }
 
         regionRepository.saveAll(newRegions);
