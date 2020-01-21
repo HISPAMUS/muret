@@ -46,9 +46,9 @@ import {faCompressArrowsAlt} from '@fortawesome/free-solid-svg-icons/faCompressA
 import {faCommentDots} from '@fortawesome/free-solid-svg-icons/faCommentDots';
 import {AgGridModule} from 'ag-grid-angular';
 import {PartsModule} from './features/parts/parts.module';
-import { AdminDashboardComponent } from './features/adminDashboard/components/admin-dashboard/admin-dashboard.component';
-import { RegisterComponent } from './features/adminDashboard/components/register/register.component';
-import { AdminDashboardModule } from './features/adminDashboard/admin-dashboard.module';
+import { AdminDashboardComponent } from './features/admin-dashboard/components/admin-dashboard/admin-dashboard.component';
+import { RegisterComponent } from './features/admin-dashboard/components/register/register.component';
+import { AdminDashboardModule } from './features/admin-dashboard/admin-dashboard.module';
 
 @NgModule({
   declarations: [

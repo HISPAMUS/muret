@@ -6,8 +6,7 @@ import {Page} from '../../../../core/model/entities/page';
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {Part} from '../../../../core/model/entities/part';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
-import { DocumentAnalysisForm } from '../../model/documentAnalysisForm'
-import { DocumentAnalysisModel } from '../../model/documentAnalysisModel';
+import { DocumentAnalysisForm } from '../../model/document-analysis-form'
 
 export enum DocumentAnalysisActionTypes {
   GetImageProjection = '[DocumentAnalysis] Get image projection',
@@ -36,6 +35,9 @@ export enum DocumentAnalysisActionTypes {
   CreatePage = '[DocumentAnalysis] Create page',
   CreatePageSuccess = '[DocumentAnalysis] Create page success',
 
+  CreatePages = '[DocumentAnalysis] Create pages',
+  CreatePagesSuccess = '[DocumentAnalysis] Create pages success',
+
   CreateRegion = '[DocumentAnalysis] Create region',
   CreateRegionSuccess = '[DocumentAnalysis] Create region success',
 
@@ -51,7 +53,7 @@ export enum DocumentAnalysisActionTypes {
   GetDocumentAnModels = '[DocumentAnalysis] Get Models',
   GetDocumentAnModelsSuccess = '[DocumentAnalysis] Get Models Success',
 
-  StartAutomaticDocumentAnalysis = '[DocumentAnalysis] Start automatic analysis',
+  AutomaticDocumentAnalysis = '[DocumentAnalysis] Start automatic analysis',
   AutomaticDocumentAnalysisSuccess = '[DocumentAnalysis] Automatic analysis success'
 }
 
@@ -134,7 +136,7 @@ export class Clear implements Action {
 
 export class ClearSuccess implements Action {
   public readonly type = DocumentAnalysisActionTypes.ClearSuccess;
-  constructor(public pages: Page[]) {}
+  constructor() {}
 }
 
 export class CreatePage implements Action {
@@ -147,6 +149,16 @@ export class CreatePageSuccess implements Action {
   constructor(public pages: Page[]) {} // it returns several pages because some regions may have changed its page
 }
 
+export class CreatePages implements Action {
+  public readonly type = DocumentAnalysisActionTypes.CreatePages;
+  constructor(public imageID: number, public numPages: number) {}
+}
+
+export class CreatePagesSuccess implements Action {
+  public readonly type = DocumentAnalysisActionTypes.CreatePagesSuccess;
+  constructor(public pages: Page[]) {} // new pages
+}
+
 export class CreateRegion implements Action {
   public readonly type = DocumentAnalysisActionTypes.CreateRegion;
   constructor(public imageID: number, public regionType: RegionType, public boundingBox: BoundingBox) {}
@@ -156,8 +168,6 @@ export class CreateRegionSuccess implements Action {
   public readonly type = DocumentAnalysisActionTypes.CreateRegionSuccess;
   constructor(public pages: Page[]) {} // it returns several pages because we don't a priori in which page the region has been created
 }
-
-
 
 export class DeletePage implements Action {
   public readonly type = DocumentAnalysisActionTypes.DeletePage;
@@ -179,24 +189,24 @@ export class DeleteRegionSuccess implements Action {
   constructor(public deletedRegionID: number) {}
 }
 
-export class GetDocumentAnModels implements Action{
+export class GetDocumentAnModels implements Action {
   public readonly type = DocumentAnalysisActionTypes.GetDocumentAnModels;
-  constructor(public imageID: number){}
+  constructor(public imageID: number) {}
 }
 
-export class GetDocumentAnModelsSuccess implements Action{
+export class GetDocumentAnModelsSuccess implements Action {
   public readonly type = DocumentAnalysisActionTypes.GetDocumentAnModelsSuccess;
-  constructor(public response: ClassifierModel[]){}
+  constructor(public response: ClassifierModel[]) {}
 }
 
-export class StartAutomaticDocumentAnalysis implements Action{
-  public readonly type = DocumentAnalysisActionTypes.StartAutomaticDocumentAnalysis;
-  constructor(public form: DocumentAnalysisForm){}
+export class AutomaticDocumentAnalysis implements Action {
+  public readonly type = DocumentAnalysisActionTypes.AutomaticDocumentAnalysis;
+  constructor(public form: DocumentAnalysisForm) {}
 }
 
-export class AutomaticDocumentAnalysisSuccess implements Action{
+export class AutomaticDocumentAnalysisSuccess implements Action {
   public readonly type = DocumentAnalysisActionTypes.AutomaticDocumentAnalysisSuccess;
-  constructor(public response: DocumentAnalysisModel){}
+  constructor(public pages: Page[]) {}
 }
 
 /*export class SelectPage implements Action {
@@ -221,9 +231,10 @@ export type DocumentAnalysisActions =
   ChangePageBoundingBox | ChangePageBoundingBoxSuccess |
   ChangeRegionBoundingBox | ChangeRegionBoundingBoxSuccess |
   CreatePage | CreatePageSuccess |
+  CreatePages | CreatePagesSuccess |
   CreateRegion | CreateRegionSuccess |
   Clear | ClearSuccess |
   DeletePage | DeletePageSuccess |
   DeleteRegion | DeleteRegionSuccess |
   GetDocumentAnModels | GetDocumentAnModelsSuccess |
-  StartAutomaticDocumentAnalysis | AutomaticDocumentAnalysisSuccess;
+  AutomaticDocumentAnalysis | AutomaticDocumentAnalysisSuccess;

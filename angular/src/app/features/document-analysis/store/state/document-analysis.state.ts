@@ -2,7 +2,6 @@ import {RegionType} from '../../../../core/model/entities/region-type';
 import {Page} from '../../../../core/model/entities/page';
 import {Part} from '../../../../core/model/entities/part';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
-import { DocumentAnalysisModel } from '../../model/documentAnalysisModel';
 
 export interface DocumentType {
   manuscriptType?: 'eHandwritten' | 'ePrinted';
@@ -19,7 +18,6 @@ export interface DocumentAnalysisState {
   imagePart: Part;
   pages: Page[];
   documentType: DocumentType;
-  documentAnalysisResult: DocumentAnalysisModel;
 //  selectedRegion: Region;
 //  selectedPage: Page;
   documentAnalysisClassifierModels: ClassifierModel[];
@@ -36,7 +34,6 @@ export const initialDocumentAnalysisState: DocumentAnalysisState = {
   pages: null,
   documentType: null,
   documentAnalysisClassifierModels: null,
-  documentAnalysisResult: null
   // selectedRegion: null,
   // selectedPage: null
 };

@@ -26,18 +26,15 @@ import {
   GetRegionTypesSuccess,
   GetDocumentAnModels,
   GetDocumentAnModelsSuccess,
-  StartAutomaticDocumentAnalysis,
-  AutomaticDocumentAnalysisSuccess
+  AutomaticDocumentAnalysis,
+  AutomaticDocumentAnalysisSuccess, CreatePages, CreatePagesSuccess
 } from '../actions/document-analysis.actions';
 import {DocumentAnalysisImageProjection} from '../../../../core/model/restapi/document-analysis-image-projection';
 import {RegionType} from '../../../../core/model/entities/region-type';
 import {ImageFilesService} from '../../../../core/services/image-files.service';
 import {Region} from '../../../../core/model/entities/region';
 import {Page} from '../../../../core/model/entities/page';
-import {Part} from '../../../../core/model/entities/part';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
-import { GetSymbolClassifierModelsSuccess } from 'src/app/features/agnostic-representation/store/actions/agnostic-representation.actions';
-import { DocumentAnalysisModel } from '../../model/documentAnalysisModel';
 
 @Injectable()
 export class DocumentAnalysisEffects {
@@ -79,7 +76,7 @@ export class DocumentAnalysisEffects {
   @Effect()
   changeRegionType$ = this.actions$.pipe(
     ofType<ChangeRegionType>(DocumentAnalysisActionTypes.ChangeRegionType),
-    switchMap((action: ChangeRegionType) => this.documentAnalysisService.updateRegionType(action.region, action.regionType)),
+    switchMap((action: ChangeRegionType) => this.documentAnalysisService.updateRegionType$(action.region, action.regionType)),
     switchMap((region: Region) => {
       return of(new ChangeRegionTypeSuccess(region));
     })
@@ -88,7 +85,7 @@ export class DocumentAnalysisEffects {
   @Effect()
   changeRegionBoundingBox$ = this.actions$.pipe(
     ofType<ChangeRegionBoundingBox>(DocumentAnalysisActionTypes.ChangeRegionBoundingBox),
-    switchMap((action: ChangeRegionBoundingBox) => this.documentAnalysisService.updateRegionBoundingBox(
+    switchMap((action: ChangeRegionBoundingBox) => this.documentAnalysisService.updateRegionBoundingBox$(
       action.region, action.boundingBox.fromX, action.boundingBox.fromY, action.boundingBox.toX, action.boundingBox.toY)),
     switchMap((region: Region) => {
       return of(new ChangeRegionBoundingBoxSuccess(region));
@@ -98,7 +95,7 @@ export class DocumentAnalysisEffects {
   @Effect()
   changePageBoundingBox$ = this.actions$.pipe(
     ofType<ChangePageBoundingBox>(DocumentAnalysisActionTypes.ChangePageBoundingBox),
-    switchMap((action: ChangePageBoundingBox) => this.documentAnalysisService.updatePageBoundingBox(
+    switchMap((action: ChangePageBoundingBox) => this.documentAnalysisService.updatePageBoundingBox$(
       action.page, action.boundingBox.fromX, action.boundingBox.fromY, action.boundingBox.toX, action.boundingBox.toY)),
     switchMap((page: Page) => {
       return of(new ChangePageBoundingBoxSuccess(page));
@@ -109,15 +106,15 @@ export class DocumentAnalysisEffects {
   clear$ = this.actions$.pipe(
     ofType<Clear>(DocumentAnalysisActionTypes.Clear),
     switchMap((action: Clear) => this.documentAnalysisService.clear(action.imageID)),
-    switchMap((pages: Page[]) => {
-      return of(new ClearSuccess(pages));
+    switchMap(() => {
+      return of(new ClearSuccess());
     })
   );
 
   @Effect()
   createPage$ = this.actions$.pipe(
     ofType<CreatePage>(DocumentAnalysisActionTypes.CreatePage),
-    switchMap((action: CreatePage) => this.documentAnalysisService.createPage(
+    switchMap((action: CreatePage) => this.documentAnalysisService.createPage$(
       action.imageID, action.boundingBox.fromX, action.boundingBox.fromY, action.boundingBox.toX, action.boundingBox.toY)),
     switchMap((pages: Page[]) => {
       return of(new CreatePageSuccess(pages));
@@ -125,9 +122,18 @@ export class DocumentAnalysisEffects {
   );
 
   @Effect()
+  createPages$ = this.actions$.pipe(
+    ofType<CreatePages>(DocumentAnalysisActionTypes.CreatePages),
+    switchMap((action: CreatePages) => this.documentAnalysisService.createPages$(
+      action.imageID, action.numPages)),
+    switchMap((pages: Page[]) => {
+      return of(new CreatePagesSuccess(pages));
+    })
+  );
+  @Effect()
   createRegion$ = this.actions$.pipe(
     ofType<CreateRegion>(DocumentAnalysisActionTypes.CreateRegion),
-    switchMap((action: CreateRegion) => this.documentAnalysisService.createRegion(
+    switchMap((action: CreateRegion) => this.documentAnalysisService.createRegion$(
       action.imageID, action.regionType,
       action.boundingBox.fromX, action.boundingBox.fromY, action.boundingBox.toX, action.boundingBox.toY)),
     switchMap((pages: Page[]) => {
@@ -138,7 +144,7 @@ export class DocumentAnalysisEffects {
   @Effect()
   deletePage$ = this.actions$.pipe(
     ofType<DeletePage>(DocumentAnalysisActionTypes.DeletePage),
-    switchMap((action: DeletePage) => this.documentAnalysisService.deletePage(action.pageID)),
+    switchMap((action: DeletePage) => this.documentAnalysisService.deletePage$(action.pageID)),
     switchMap((deletedPageID: number) => {
       return of(new DeletePageSuccess(deletedPageID));
     })
@@ -147,7 +153,7 @@ export class DocumentAnalysisEffects {
   @Effect()
   deleteRegion$ = this.actions$.pipe(
     ofType<DeleteRegion>(DocumentAnalysisActionTypes.DeleteRegion),
-    switchMap((action: DeleteRegion) => this.documentAnalysisService.deleteRegion(action.regionID)),
+    switchMap((action: DeleteRegion) => this.documentAnalysisService.deleteRegion$(action.regionID)),
     switchMap((deletedRegionID) => {
       return of(new DeleteRegionSuccess(deletedRegionID));
     })
@@ -160,15 +166,15 @@ export class DocumentAnalysisEffects {
     switchMap((classifierModels: ClassifierModel[]) => {
       return of(new GetDocumentAnModelsSuccess(classifierModels));
     })
-  )
+  );
 
   @Effect()
   attemptAutomaticAnalysis$ = this.actions$.pipe(
-    ofType<StartAutomaticDocumentAnalysis>(DocumentAnalysisActionTypes.StartAutomaticDocumentAnalysis),
-    switchMap((action: StartAutomaticDocumentAnalysis) => this.documentAnalysisService.attemptAutomaticAnalysis$(action.form)),
-    switchMap((documentBoundigs: DocumentAnalysisModel) => {
-      return of(new AutomaticDocumentAnalysisSuccess(documentBoundigs))
+    ofType<AutomaticDocumentAnalysis>(DocumentAnalysisActionTypes.AutomaticDocumentAnalysis),
+    switchMap((action: AutomaticDocumentAnalysis) => this.documentAnalysisService.attemptAutomaticAnalysis$(action.form)),
+    switchMap((page: Page[]) => {
+      return of(new AutomaticDocumentAnalysisSuccess(page));
     })
-  )
+  );
 
 }

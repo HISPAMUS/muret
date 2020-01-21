@@ -9,7 +9,6 @@ import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {Region} from '../../../../core/model/entities/region';
 import {Store} from '@ngrx/store';
 import {DocumentAnalysisState} from '../../store/state/document-analysis.state';
-import {DocumentAnalysisForm} from '../../model/documentAnalysisForm'
 
 import {
   ChangePageBoundingBox,
@@ -18,7 +17,7 @@ import {
   GetImageProjection,
   GetRegionTypes,
   GetDocumentAnModels,
-  StartAutomaticDocumentAnalysis
+  AutomaticDocumentAnalysis, CreatePages
 } from '../../store/actions/document-analysis.actions';
 import {
   selectFileName, selectImagePart,
@@ -26,15 +25,13 @@ import {
   selectRegionTypes,
   selectImageWidth,
   selectImageHeight,
-  selectDocumentAnalysisClassifierModels,
-  selectDocumentAnalysisResults
+  selectDocumentAnalysisClassifierModels
 } from '../../store/selectors/document-analysis.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Part} from '../../../../core/model/entities/part';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
-import { DocumentAnalysisModel } from '../../model/documentAnalysisModel';
 
 @Component({
   selector: 'app-document-analysis',
@@ -52,7 +49,6 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   regionTypesSubscription: Subscription;
   imagewidthSubscription: Subscription;
   imageheightSubscription: Subscription;
-  documentAnalysisSubscription: Subscription;
   mode: 'eIdle' |'eSelecting' | 'eEditing' | 'eAdding';
   selectedRegionTypeID: number | 'page';
   zoomFactor = 1;
@@ -76,6 +72,8 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   // end tools
 
   // @ViewChild('imageComponent') imageComponent: ImageComponent;
+  private pages: Page[];
+
   constructor(private store: Store<DocumentAnalysisState>,
               private route: ActivatedRoute,
               private router: Router,
@@ -115,24 +113,12 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
 
     this.documentAnalysisModels$ = this.store.select(selectDocumentAnalysisClassifierModels);
 
-    this.documentAnalysisSubscription = this.store.select(selectDocumentAnalysisResults).subscribe((result: DocumentAnalysisModel)=>{
-
-      if(result != null && result.staff!=null && result.staff.length>0)
-      {
-        this.store.dispatch(new Clear(this.imageID));
-        setTimeout(()=>{
-          this.addNewRegions(result);
-        }, 1000)
-      }
-
-    })
-
     this.store.dispatch(new GetDocumentAnModels(this.imageID));
 
     this.imagePart$ = this.store.select(selectImagePart);
     this.imagewidthSubscription = this.store.select(selectImageWidth).subscribe(value => {
       this.imageWidth = value;
-    })
+    });
 
     this.imageheightSubscription = this.store.select(selectImageHeight).subscribe(value => {
       this.imageHeight = value;
@@ -145,38 +131,14 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
       if (next) {
         this.drawPagesAndRegions(next);
       }
-      if (next && !next.length) {
-        this.dialogsService.showInput('Page creation', 'No pages found. How many pages you wish to create?',
-          '1').subscribe(value => {
-          const pagesToCreate = Number(value);
-          if (pagesToCreate === 2 || pagesToCreate === 1) {
-            const widthStep = this.imageWidth / pagesToCreate
-            for(let i = 0; i < pagesToCreate; i++)
-            {
-              setTimeout(() => {this.store.dispatch(new CreatePage(this.imageID, {fromX: widthStep * i,
-                                                                fromY: 0,
-                                                                toX: (widthStep * i) + widthStep,
-                                                                toY: this.imageHeight}));}, 100 * i);
-            }
-          }
-          });
-      }
+
+      this.pages = next;
     });
-
-  }
-
-  addNewRegions(newBoundings : DocumentAnalysisModel){
-    const staffsToAdd = newBoundings.staff;
-    console.log("This triggers the error, it is located in line 170 of document-analysis-component.ts")
-    //staffsToAdd.forEach(staff => {
-    //  this.store.dispatch(new CreateRegion(this.imageID, this.regionTypesEnum[1], {fromX: staff.x0, fromY: staff.xf, toX: staff.xf, toY: staff.yf}))
-    //});
   }
 
   ngOnDestroy(): void {
     this.pagesSubscription.unsubscribe();
     this.regionTypesSubscription.unsubscribe();
-    this.documentAnalysisSubscription.unsubscribe();
   }
 
   zoomIn() {
@@ -339,7 +301,13 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     this.dialogsService.showConfirmation('Clear document analysis?', 'This action cannot be undone')
       .subscribe((isConfirmed) => {
         if (isConfirmed) {
-          this.store.dispatch(new Clear(this.imageID));
+
+          this.dialogsService.showConfirmation('Are you sure to clear the document analysis?', 'This action cannot be undone')
+            .subscribe((isConfirmed2) => {
+              if (isConfirmed2) {
+                this.store.dispatch(new Clear(this.imageID));
+              }
+            });
         }
       });
   }
@@ -383,14 +351,23 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     }
   }
 
-  attemptDocumentAnalysis()
-  {
-    this.dialogsService.showConfirmation('Make automatic classification?', 'This action will delete all labeled regions')
+  attemptDocumentAnalysis() {
+    this.dialogsService.showConfirmation('Automatic classification: it will erase previous analysis', 'This action cannot be undone')
       .subscribe((isConfirmed) => {
         if (isConfirmed) {
-          this.analysisStatus = 'Analyzing...';
-          this.store.dispatch(new StartAutomaticDocumentAnalysis({imageID: this.imageID, modelToUse: "simple-lan"}))
-          this.mode = 'eEditing';
+          this.dialogsService.showInput('Automatic classification', 'How many vertical pages do you wish to create?',
+            '1').subscribe(value => {
+              if (value) {
+                const pagesToCreate = Number(value);
+                this.analysisStatus = 'Analyzing...';
+                this.store.dispatch(new AutomaticDocumentAnalysis({
+                  imageID: this.imageID,
+                  modelToUse: 'simple-lan',
+                  numPages: pagesToCreate
+                }));
+                this.mode = 'eEditing';
+              }
+          });
         }
       });
   }
@@ -416,8 +393,8 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
       // console.log(this.regionTypeCSelected)
       if (this.regionTypeCSelected === this.regionTypesEnum.length) {
         // console.log('Changing...')
-        this.regionTypeCSelected = -1
-        this.regionTypeINselected = -1
+        this.regionTypeCSelected = -1;
+        this.regionTypeINselected = -1;
         return;
       }
 
@@ -431,8 +408,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     }
   }
 
-  setRegionCreated(regionType: number)
-  {
+  setRegionCreated(regionType: number) {
     this.regionTypeINselected = regionType;
 
     if (regionType > 0) {
@@ -442,7 +418,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     this.regionTypeCSelected = regionType;
   }
 
-  beatufyRegionName(name: string): string {
+  beautifyRegionName(name: string): string {
     const result = name.replace(/_/g, ' ');
     return result.charAt(0).toUpperCase() + result.slice(1); // first char uppercase
   }
@@ -454,13 +430,14 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   createNewShape(newShape: Shape) {
     const rectangle = newShape as Rectangle;
 
-    let nextdraw
-    if(this.regionTypeCSelected > -1)
-     nextdraw = this.regionTypesEnum[this.regionTypeCSelected]
-    else
-     nextdraw = {name: 'page'}
+    let nextdraw;
+    if (this.regionTypeCSelected > -1) {
+      nextdraw = this.regionTypesEnum[this.regionTypeCSelected];
+    } else {
+      nextdraw = {name: 'page'};
+    }
 
-    const nextDrawShape = nextdraw
+    const nextDrawShape = nextdraw;
 
     if (nextDrawShape.name === 'page') {
       this.store.dispatch(new CreatePage(this.imageID, {fromX: rectangle.fromX,
@@ -477,18 +454,45 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   }
 }
 
-openRegionSelectionModal() {
-   this.modalService.open(this.regionTypesModal, {size: 'lg', ariaLabelledBy: 'Region types'}).result.then((result) => {
-    //  // accepted
-      this.regionTypeCSelected = result.id;
-  });
-}
+  openRegionSelectionModal() {
+     this.modalService.open(this.regionTypesModal, {size: 'lg', ariaLabelledBy: 'Region types'}).result.then((result) => {
+      //  // accepted
+        this.regionTypeCSelected = result.id;
+    });
+  }
 
   private applyRegionTypeFilter() {
     if (this.shapes) {
       this.shapes.forEach(shape => {
         shape.hidden = this.regionTypeFilterOut.has(shape.layer);
       });
+    }
+  }
+
+  createPages() {
+      this.dialogsService.showInput('Page creation', 'No pages found. How many vertical pages do you wish to create?',
+        '1').subscribe(value => {
+        const pagesToCreate = Number(value);
+        this.store.dispatch(new CreatePages(this.imageID, pagesToCreate));
+      });
+        /*if (pagesToCreate === 2 || pagesToCreate === 1) {
+          const widthStep = this.imageWidth / pagesToCreate
+          for (let i = 0; i < pagesToCreate; i++) {
+            setTimeout(() => {this.store.dispatch(new CreatePage(this.imageID, {fromX: widthStep * i,
+              fromY: 0,
+              toX: (widthStep * i) + widthStep,
+              toY: this.imageHeight}));
+            }, 100 * i);
+          }
+        }
+      });*/
+  }
+
+  onModeChange($event: 'eIdle' | 'eEditing' | 'eAdding' | 'eSelecting') {
+    if ($event === 'eAdding') {
+      if (!this.pages || !this.pages.length) {
+        this.createPages();
+      }
     }
   }
 }

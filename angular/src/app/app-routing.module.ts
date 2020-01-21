@@ -61,7 +61,7 @@ const routes = [
   {
     canActivate: [AuthGuard],
     path: 'admin',
-    loadChildren: () => import('./features/adminDashboard/admin-dashboard.module').then(m=> m.AdminDashboardModule)
+    loadChildren: () => import('./features/admin-dashboard/admin-dashboard.module').then(m=> m.AdminDashboardModule)
   }
 ];
 

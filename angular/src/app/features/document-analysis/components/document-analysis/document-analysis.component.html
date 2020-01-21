@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <nav class="row" id="docAnalysisToolBar">
     <div class="col-6">
-      <app-crud-toolbar (onClear)="clear()" (onDelete)="deleteSelected()" [(mode)]="mode" (onZoomFit)="zoomFit()" (onZoomIn)="zoomIn()" (onZoomOut)="zoomOut()">
+      <app-crud-toolbar (modeChange)="onModeChange($event)" (onClear)="clear()" (onDelete)="deleteSelected()" [(mode)]="mode" (onZoomFit)="zoomFit()" (onZoomIn)="zoomIn()" (onZoomOut)="zoomOut()">
       </app-crud-toolbar>
     </div>
     <div class="col-3" id="linksPhases">
@@ -25,7 +25,7 @@
         <input type="checkbox" [checked]="true" name="page" (change)="onLayerVisibilityChanged($event)"> Pages
       </label>
       <label *ngFor="let regionType of regionTypes$ | async; trackBy: trackByRegionTypeFn"ngbButtonLabel>
-        <input type="checkbox" [checked]="true" [name]="regionType.name" (change)="onLayerVisibilityChanged($event)"> {{beatufyRegionName(regionType.name)}}
+        <input type="checkbox" [checked]="true" [name]="regionType.name" (change)="onLayerVisibilityChanged($event)"> {{beautifyRegionName(regionType.name)}}
       </label>
     </aside>
   </div>
@@ -39,7 +39,7 @@
       </label>
       <br>
       <label *ngFor="let regionType of regionTypes$ | async; trackBy: trackByRegionTypeFn" class="btn-toolbar creationtools" [class.active]="regionType.id == regionTypeINselected"  [id]="regionType.id" ngbButtonLabel>
-        <input ngbButton type="radio" name="regionTypeRadioButton" [value]="regionType.id" (click)="setRegionCreated(regionType.id)"> {{beatufyRegionName(regionType.name)}}
+        <input ngbButton type="radio" name="regionTypeRadioButton" [value]="regionType.id" (click)="setRegionCreated(regionType.id)"> {{beautifyRegionName(regionType.name)}}
       </label>
     </div>
   </form>
@@ -53,7 +53,7 @@
       </label>
       <br>
       <label *ngFor="let regionType of regionTypes$ | async; trackBy: trackByRegionTypeFn" class="btn-toolbar creationtools" ngbButtonLabel>
-        <input ngbButton type="radio" name="regionTypeRadioButton" [value]="regionType.id" (click)="setRegionType(regionType)"> {{beatufyRegionName(regionType.name)}}
+        <input ngbButton type="radio" name="regionTypeRadioButton" [value]="regionType.id" (click)="setRegionType(regionType)"> {{beautifyRegionName(regionType.name)}}
       </label>
     </div>
   </form>
@@ -75,7 +75,7 @@
         <div class="form-group btn-group">
           <label *ngFor="let regionType of regionTypes$ | async; trackBy: trackByRegionTypeFn" class="btn-toolbar" ngbButtonLabel>
             <!--<input ngbButton type="radio" name="regionTypeRadioButton" [value]="regionType.id" (click)="setRegionType(regionType)"> {{regionType.name}}-->
-            <button name="regionTypeRadioButton" [value]="regionType.id" (click)="modal.close(regionType)"> {{beatufyRegionName(regionType.name)}}</button>
+            <button name="regionTypeRadioButton" [value]="regionType.id" (click)="modal.close(regionType)"> {{beautifyRegionName(regionType.name)}}</button>
           </label>
         </div>
       </form>

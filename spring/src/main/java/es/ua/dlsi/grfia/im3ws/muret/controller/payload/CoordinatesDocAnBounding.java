@@ -1,11 +1,24 @@
 package es.ua.dlsi.grfia.im3ws.muret.controller.payload;
 
-public class CoordinatesDocAnBounding
-{
+public class CoordinatesDocAnBounding {
+
+    /**
+     * From x
+     */
     Integer x0;
+    /**
+     * From y
+     */
     Integer y0;
+    /**
+     * To x
+     */
     Integer xf;
+    /**
+     * To y
+     */
     Integer yf;
+    String regionType;
 
     public Integer getX0() {
         return x0;
@@ -37,5 +50,13 @@ public class CoordinatesDocAnBounding
 
     public void setYf(Integer yf) {
         this.yf = yf;
+    }
+
+    public String getRegionType() {
+        return regionType;
+    }
+
+    public void setRegionType(String regionType) {
+        this.regionType = regionType;
     }
 }

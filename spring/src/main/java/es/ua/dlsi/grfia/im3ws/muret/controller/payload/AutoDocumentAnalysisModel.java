@@ -2,8 +2,7 @@ package es.ua.dlsi.grfia.im3ws.muret.controller.payload;
 
 import java.util.List;
 
-public class AutoDocumentAnalysisModel
-{
+public class AutoDocumentAnalysisModel {
     List<CoordinatesDocAnBounding> staff;
 
     public AutoDocumentAnalysisModel(){}

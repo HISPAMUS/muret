@@ -6,10 +6,8 @@ import {RegionType} from '../../../core/model/entities/region-type';
 import {Page} from '../../../core/model/entities/page';
 import {Region} from '../../../core/model/entities/region';
 import {BoundingBox} from '../../../core/model/entities/bounding-box';
-import {Part} from '../../../core/model/entities/part';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
-import { DocumentAnalysisForm } from '../model/documentAnalysisForm';
-import { DocumentAnalysisModel } from '../model/documentAnalysisModel';
+import { DocumentAnalysisForm } from '../model/document-analysis-form';
 
 @Injectable() // non-singleton
 export class DocumentAnalysisService {
@@ -24,7 +22,7 @@ export class DocumentAnalysisService {
     return this.apiRestClientService.getListExcerptProjection$<RegionType>('regionTypes');
   }
 
-  public updatePageBoundingBox(page: Page, fromX: number, fromY: number, toX: number, toY: number): Observable<Page> {
+  public updatePageBoundingBox$(page: Page, fromX: number, fromY: number, toX: number, toY: number): Observable<Page> {
     const boundingBox: BoundingBox = {
         id: page.id,
         fromX,
@@ -35,7 +33,7 @@ export class DocumentAnalysisService {
     return this.apiRestClientService.put$<Page>('documentanalysis/pageBoundingBoxUpdate', boundingBox);
   }
 
-  public updateRegionBoundingBox(region: Region, fromX: number, fromY: number, toX: number, toY: number): Observable<Region> {
+  public updateRegionBoundingBox$(region: Region, fromX: number, fromY: number, toX: number, toY: number): Observable<Region> {
     const boundingBox: BoundingBox = {
       id: region.id,
       fromX,
@@ -54,7 +52,7 @@ export class DocumentAnalysisService {
     return this.apiRestClientService.put$<Region>('documentanalysis/regionUpdate', newRegion);
   }
 
-  updateRegionType(region: Region, regionType: RegionType) {
+  updateRegionType$(region: Region, regionType: RegionType): Observable<Region> {
     const newRegion: Region = {
       id: region.id,
       part: region.part,
@@ -64,7 +62,7 @@ export class DocumentAnalysisService {
     return this.apiRestClientService.put$<Region>('documentanalysis/regionUpdate', newRegion);
   }
 
-  createPage(imageID: number, fromX: number, fromY: number, toX: number, toY: number): Observable<Page[]> {
+  createPage$(imageID: number, fromX: number, fromY: number, toX: number, toY: number): Observable<Page[]> {
     const boundingBox: BoundingBox = {
       fromX,
       fromY,
@@ -80,7 +78,16 @@ export class DocumentAnalysisService {
     return this.apiRestClientService.post$<Page[]>('documentanalysis/createPage', page);
   }
 
-  createRegion(imageID: number, regionType: RegionType, fromX: number, fromY: number, toX: number, toY: number): Observable<Page[]> {
+  createPages$(imageID: number, numPages: number): Observable<Page[]> {
+    const data = {
+      imageID,
+      numPages
+    };
+
+    return this.apiRestClientService.post$<Page[]>('documentanalysis/createPages', data);
+  }
+
+  createRegion$(imageID: number, regionType: RegionType, fromX: number, fromY: number, toX: number, toY: number): Observable<Page[]> {
     const boundingBox: BoundingBox = {
       fromX,
       fromY,
@@ -98,25 +105,25 @@ export class DocumentAnalysisService {
   }
 
   clear(imageID: number) {
-    return this.apiRestClientService.delete$<Page[]>('documentanalysis/clear', imageID);
+    return this.apiRestClientService.delete$('documentanalysis/clear', imageID);
   }
 
-  deletePage(pageID: number) {
+  deletePage$(pageID: number): Observable<number> {
     return this.apiRestClientService.delete$<number>('documentanalysis/deletePage', pageID);
   }
 
-  deleteRegion(regionID: number) {
+  deleteRegion$(regionID: number): Observable<number> {
     return this.apiRestClientService.delete$<number>('documentanalysis/deleteRegion', regionID);
   }
 
-  getModels$(imageID: number){
+  getModels$(imageID: number): Observable<ClassifierModel[]> {
     const url = `classifierModels/documentAnalysis/${imageID}`
     return this.apiRestClientService.get$<ClassifierModel[]>(url);
   }
 
-  attemptAutomaticAnalysis$(form: DocumentAnalysisForm){
+  attemptAutomaticAnalysis$(form: DocumentAnalysisForm): Observable<Page[]> {
     const url = 'documentanalysis/docAnalyze';
-    return this.apiRestClientService.post$<DocumentAnalysisModel>(url, form);
+    return this.apiRestClientService.post$<Page[]>(url, form);
   }
 
 }

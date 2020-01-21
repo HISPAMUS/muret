@@ -98,12 +98,13 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
     }
     case DocumentAnalysisActionTypes.ClearSuccess: {
       const newState = {...state};
-      newState.pages = action.pages;
+      newState.pages = [];
       return newState;
     }
+    case DocumentAnalysisActionTypes.CreatePagesSuccess:
     case DocumentAnalysisActionTypes.CreatePageSuccess: {
       const newState = {...state};
-      if (action.pages == null) { // if an error has ocurred
+      if (action.pages == null) { // if an error has occurred
         newState.pages = deepcopy<Page[]>(state.pages);
       } else {
         newState.pages = deepcopy<Page[]>(action.pages);
@@ -146,22 +147,17 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
     }
     case DocumentAnalysisActionTypes.GetDocumentAnModels : {
       return {...state,
-      documentAnalysisClassifierModels: null}
+      documentAnalysisClassifierModels: null};
     }
     case DocumentAnalysisActionTypes.GetDocumentAnModelsSuccess: {
       return {...state,
-      documentAnalysisClassifierModels: action.response}
+      documentAnalysisClassifierModels: action.response};
     }
-    case DocumentAnalysisActionTypes.StartAutomaticDocumentAnalysis:{
-      return { ...state,
-        documentAnalysisResult: null
-      }
-    }
-    case DocumentAnalysisActionTypes.AutomaticDocumentAnalysisSuccess:{
-      return {
-        ...state,
-        documentAnalysisResult: action.response
-      }
+
+    case DocumentAnalysisActionTypes.AutomaticDocumentAnalysisSuccess: {
+      const newState = {...state};
+      newState.pages = deepcopy<Page[]>(action.pages);
+      return newState;
     }
 
     default: {

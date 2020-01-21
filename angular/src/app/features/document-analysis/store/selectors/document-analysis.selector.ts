@@ -55,8 +55,3 @@ export const selectDocumentAnalysisClassifierModels = createSelector(
   (state: DocumentAnalysisState) => state.documentAnalysisClassifierModels
 )
 
-export const selectDocumentAnalysisResults = createSelector(
-  documentAnalysisState,
-  (state: DocumentAnalysisState) => state.documentAnalysisResult
-)
-

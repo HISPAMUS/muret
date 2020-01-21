@@ -2,6 +2,8 @@ package es.ua.dlsi.grfia.im3ws.muret.model;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
+import es.ua.dlsi.grfia.im3ws.muret.controller.payload.AutoDocumentAnalysisModel;
+import es.ua.dlsi.grfia.im3ws.muret.controller.payload.CoordinatesDocAnBounding;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,7 @@ public class DocumentAnalysisModel {
     private final PageRepository pageRepository;
     private final SymbolRepository symbolRepository;
     private final RegionTypeRepository regionTypeRepository;
-    RegionType unknownRegionType;
+    RegionType undefinedRegionType;
 
     @Autowired
     public DocumentAnalysisModel(MURETConfiguration muretConfiguration, ImageRepository imageRepository, RegionRepository regionRepository, PageRepository pageRepository, SymbolRepository symbolRepository, RegionTypeRepository regionTypeRepository) {
@@ -37,6 +39,10 @@ public class DocumentAnalysisModel {
         this.pageRepository = pageRepository;
         this.symbolRepository = symbolRepository;
         this.regionTypeRepository = regionTypeRepository;
+        this.undefinedRegionType = regionTypeRepository.findByName("undefined");
+        if (this.undefinedRegionType == null) {
+            throw new RuntimeException("Cannot find 'undefined' region type");
+        }
     }
 
     /**
@@ -223,6 +229,29 @@ public class DocumentAnalysisModel {
         }
     }
 
+    public List<Page> createPages(Image persistentImage, int numPages) throws IM3WSException {
+        ArrayList<Page> newPages = new ArrayList<>();
+        int width = persistentImage.getWidth() / numPages;
+        int height = persistentImage.getHeight();
+
+        int fromX = 0;
+        for (int i=0; i<numPages; i++) {
+            Page page = new Page(persistentImage, fromX, 0, fromX + width, height, null, null, null);
+            fromX += width;
+            Page savedPage = pageRepository.save(page);
+            newPages.add(savedPage);
+            persistentImage.getPages().add(savedPage);
+        }
+        imageRepository.save(persistentImage);
+        return newPages;
+    }
+
+    public List<Page> createPages(long imageID, int numPages) throws IM3WSException {
+        Image persistentImage = getImage(imageID);
+        return createPages(persistentImage, numPages);
+    }
+
+
     @Transactional
     /**
      * It moves the current regions to the new page if its center is contained inside the new page
@@ -238,7 +267,6 @@ public class DocumentAnalysisModel {
                 }
             }
         }
-
 
         Page persistentPage = new Page();
         persistentPage.setBoundingBox(boundingBox);
@@ -374,5 +402,78 @@ public class DocumentAnalysisModel {
         }
 
         return persistentRegion.get();
+    }
+
+    public void clear(Image image) throws IM3WSException {
+        if (image.getPages() != null) {
+            for (Page page: image.getPages()) {
+                if (page.getRegions() != null) {
+                    for (Region region: page.getRegions()) {
+                        if (region.getSemanticEncoding() != null && !region.getSemanticEncoding().trim().isEmpty()) {
+                            throw new IM3WSException("A region has a semantic encoding, delete it first");
+                        }
+                        if (region.getSymbols() != null && region.getSymbols().size() > 0) {
+                            throw new IM3WSException("A region has a an agnostic encoding, delete them first");
+                        }
+                    }
+                    page.getRegions().clear();
+                    pageRepository.save(page);
+                }
+            }
+            image.getPages().clear();
+            imageRepository.save(image);
+        }
+
+    }
+
+    public List<Page> createAutomaticDocumentAnalysis(Image image, int numPages, AutoDocumentAnalysisModel autoDocumentAnalysisModel) throws IM3WSException {
+        this.clear(image);
+        List<Page> pages = createPages(image, numPages);
+
+        List<Region> newRegions = new ArrayList<>();
+        BoundingBox imageBoundingBox = new BoundingBox();
+        imageBoundingBox.setToX(image.getWidth());
+        imageBoundingBox.setToY(image.getHeight());
+
+        for (CoordinatesDocAnBounding coordinatesDocAnBounding: autoDocumentAnalysisModel.getStaff()) {
+            Region region = new Region();
+            BoundingBox boundingBox = new BoundingBox(coordinatesDocAnBounding.getX0(), coordinatesDocAnBounding.getY0(),
+                    coordinatesDocAnBounding.getXf(), coordinatesDocAnBounding.getYf());
+            region.setBoundingBox(boundingBox);
+
+            boundingBox.adjustToFitInto(imageBoundingBox); // sometimes, classify return wrong dimensions
+
+            if (coordinatesDocAnBounding.getRegionType() != null && !coordinatesDocAnBounding.getRegionType().trim().isEmpty()) {
+                RegionType regionType = regionTypeRepository.findByName(coordinatesDocAnBounding.getRegionType().trim());
+                if (regionType == null) {
+                    throw new IM3WSException("Cannot find a region type name = '" + coordinatesDocAnBounding.getRegionType() + "'");
+                }
+                region.setRegionType(regionType);
+            } else {
+                region.setRegionType(undefinedRegionType);
+            }
+
+            // now locate page for the region
+            for (Page page: pages) {
+                if (page.getBoundingBox().containsCenterOf(boundingBox)) {
+                    region.setPage(page);
+                    page.addRegion(region);
+                    break;
+                }
+            }
+
+            if (region.getPage() == null) {
+                throw new IM3WSException("Cannot find a page that can contain region center of " + region);
+                //TODO
+                //region.setPage(pages.get(0));
+                //pages.get(0).addRegion(region);
+            }
+
+            newRegions.add(region);
+        }
+
+        regionRepository.saveAll(newRegions);
+
+        return pages;
     }
 }

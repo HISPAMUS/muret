@@ -8,7 +8,7 @@ export interface Region extends Entity {
   boundingBox?: BoundingBox;
   regionType?: RegionType;
   symbols?: AgnosticSymbol[];
-  part: Part;
+  part?: Part;
 }
 
 
