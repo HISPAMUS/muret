@@ -57,9 +57,19 @@ export class ErrorInterceptor implements HttpInterceptor {
           return throwError(response);
         } else {
           console.log(response)
-          this.errorHandlingService.showError('Server error', response.message);
+          this.serveError(response)
           return null;
         }
       }));
+  }
+
+  serveError(error: HttpErrorResponse)
+  {
+    switch(error.error.path)
+    {
+      case "/muretapi/auth/login":
+        this.errorHandlingService.showError('Authentication error', "The username or password are incorrect");
+        break
+    }
   }
 }

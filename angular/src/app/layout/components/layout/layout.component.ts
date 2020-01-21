@@ -51,7 +51,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
     this.adminStatusSubscription = this.userRoles$.subscribe((roles: any) => {
       
-      if(roles.length>0)
+      if(roles!= null && roles.length>0)
       {
         for(let object of roles)
         {

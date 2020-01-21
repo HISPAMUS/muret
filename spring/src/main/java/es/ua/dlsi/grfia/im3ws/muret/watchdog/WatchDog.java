@@ -76,8 +76,7 @@ public class WatchDog {
 
         message.setFrom(m_mailWarner);
 
-        message.setTo(m_mailToWarn);
-        message.setTo();
+        message.setTo("arios@dlsi.ua.es");
         message.setSubject("[WARNING] - HISPAMUS deep server is down");
 
         message.setText("This is an automated message to tell you that HISPAMUS deep server is no longer answering to Muret service\n" +
