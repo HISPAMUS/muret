@@ -31,12 +31,16 @@ export class SemanticRepresentationService {
    */
   sendSemanticEncoding$(region: Region,
                         semanticEncoding: string, mensustriche: boolean, renderer: 'verovio' | 'im3'): Observable<Notation> {
-    const url = `semantic/semanticEncoding/${region.id}/${mensustriche}/${renderer}`;
-    return this.apiRestClientService.put$(url, semanticEncoding);
+    if (semanticEncoding && semanticEncoding.trim().length > 0) {
+      const url = `semantic/semanticEncoding/${region.id}/${mensustriche}/${renderer}`;
+      return this.apiRestClientService.put$(url, semanticEncoding);
+    } else {
+      const url = `semantic/clearSemanticEncoding`;
+      return this.apiRestClientService.delete$(url, region.id);
+    }
   }
-  
-  getTranslationModels(imageID: number)
-  {
+
+  getTranslationModels(imageID: number) {
     const url = `classifierModels/translator/${imageID}`;
     return this.apiRestClientService.get$(url);
   }

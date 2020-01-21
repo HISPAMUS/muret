@@ -96,6 +96,7 @@ public class SemanticRepresentationController extends MuRETBaseController {
     public Notation sendSemanticEncoding(@PathVariable(name="staffID") Long staffID, @PathVariable(name="mensustriche") boolean mensustriche, @PathVariable(name="renderer") Renderer renderer, @RequestBody String semanticEncoding) throws IM3WSException {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Sending semantic encoding for region ID {0}", staffID);
         Region region = getRegion(staffID);
+
         Document document = region.getPage().getImage().getDocument();
 
         //TODO Ahora sólo lo guardo en la región
@@ -109,6 +110,17 @@ public class SemanticRepresentationController extends MuRETBaseController {
         String partName = "";
 
         Notation result = semanticRepresentationModel.sendSemanticEncoding(document, partName, region, mensustriche, renderer, semanticEncoding);
+        return result;
+    }
+
+    @DeleteMapping(path = {"clearSemanticEncoding/{staffID}"})
+    @Transactional
+    public Notation clearSemanticEncoding(@PathVariable(name="staffID") Long staffID) throws IM3WSException {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Clearing semantic encoding for region ID {0}", staffID);
+        Region region = getRegion(staffID);
+        region.setSemanticEncoding(null);
+        regionRepository.save(region);
+        Notation result = new Notation("Semantic encoding has been deleted");
         return result;
     }
 }

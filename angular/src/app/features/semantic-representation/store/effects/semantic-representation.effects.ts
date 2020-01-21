@@ -53,11 +53,10 @@ export class SemanticRepresentationEffects {
   @Effect()
   getTranslationModels$ = this.actions$.pipe(
     ofType<GetTranslationModels>(SemanticRepresentationActionTypes.GetTranslationModels),
-    switchMap((action: GetTranslationModels) => 
+    switchMap((action: GetTranslationModels) =>
       this.semanticRepresentationService.getTranslationModels(action.imageID)),
       switchMap((translationModels: ClassifierModel[]) => {
-        return of(new GetTranslationModelsSuccess(translationModels))
+        return of(new GetTranslationModelsSuccess(translationModels));
       })
-    )
-
+    );
 }

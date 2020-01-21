@@ -419,7 +419,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
 
     hasNotation() {
-      return this.notation != null;
+      return this.notation != null && this.notation.notationResponseType != null;
     }
 
   hasPartAssignedToImage() {
@@ -549,6 +549,15 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
           };
 
           this.store.dispatch(new UnlinkPartToRegion(partUse));
+        }
+      });
+  }
+
+  clearSemanticEncoding() {
+    this.dialogsService.showConfirmation('Clear semantic encoding?', 'This action cannot be undone')
+      .subscribe((isConfirmed) => {
+        if (isConfirmed) {
+          this.store.dispatch(new SendSemanticEncoding(this.selectedRegion, '', false, 'verovio'));
         }
       });
   }

@@ -65,7 +65,7 @@
 
     <section class="row">
       <div class="col">
-            <ng-container>
+            <ng-container *ngIf="hasNotation()">
               <app-notation [notation]="notation"></app-notation>
             </ng-container>
           </div>
@@ -89,6 +89,9 @@
     <aside>
       <button class="btn btn-primary" (click)="convertAgnosticSemantic()">
         Convert from agnostic
+      </button>
+      <button class="btn btn-secondary" (click)="clearSemanticEncoding()">
+        Clear semantic encoding
       </button>
       <button class="btn btn-primary" (click)="showManualEntry()"
               [attr.aria-expanded]="isManualEntrySelected()" aria-controls="manualEntryPanel">
