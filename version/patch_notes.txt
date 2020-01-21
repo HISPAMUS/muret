@@ -1,9 +1,19 @@
+0.4
+
+MAJOR UPDATES
+    - Now project are internally named "Documents"
+    - Subcollections can now be created and deleted (user cannot move documents to collections yet) - see issue #
+    - Add automatic document analysis dropdown (still very simple)
+
+MINOR UPDATES
+    - Improve error messages title
+
+--------------------------------------------------------------------------------------------------------------------------------------------
 0.3
 
 MAJOR UPDATES
     - Selection of images to be exported to MEI / MusicXML / Verovio
     - Administrator can now manage permissions
-    -
 
 MINOR UPDATES
     - Agnostic to semantic transducer includes correctly the colored notes and mensuration changes
