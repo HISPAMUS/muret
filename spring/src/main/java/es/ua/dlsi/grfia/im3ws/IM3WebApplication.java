@@ -22,9 +22,6 @@ public class IM3WebApplication {
     @Autowired
     UserRepository userRepository;
 
-    @Autowired
-    JavaMailSender mailSender;
-
     public static final void main(String[] args) {
         SpringApplication.run(IM3WebApplication.class, args);
     }
