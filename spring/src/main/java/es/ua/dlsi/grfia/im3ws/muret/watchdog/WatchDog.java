@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -31,12 +32,19 @@ public class WatchDog {
     private String m_mailWarner;
     private UserManagerImpl m_userManager;
 
-    private final JavaMailSender m_SMTPClient;
+    private final JavaMailSenderImpl m_SMTPClient;
     private String m_currentVersion;
 
     @Autowired
-    public WatchDog(MURETConfiguration muretConfiguration, JavaMailSender sender, UserManagerImpl manager) {
-        m_SMTPClient = sender;
+    public WatchDog(MURETConfiguration muretConfiguration, UserManagerImpl manager) {
+        m_SMTPClient = new JavaMailSenderImpl();
+        try {
+            m_SMTPClient.setHost("altea.dlsi.ua.es");
+            m_SMTPClient.setPort(25);
+        }
+        catch(Exception e) {
+            logger.error("Email starting failed");
+        }
         m_userManager = manager;
         m_restClient = new ClassifierClient(muretConfiguration.getPythonclassifiers());
         if (muretConfiguration.isEnableWatchDog()) {
@@ -74,7 +82,7 @@ public class WatchDog {
 
         SimpleMailMessage message = new SimpleMailMessage();
 
-        message.setFrom(m_mailWarner);
+        message.setFrom("muretNotifications@dlsi.ua.es");
 
         message.setTo("arios@dlsi.ua.es");
         message.setSubject("[WARNING] - HISPAMUS deep server is down");
