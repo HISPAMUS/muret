@@ -108,9 +108,9 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
       this.translationModels$ = this.store.select(selectTranslationModels);
 
-      this.translationModels$.subscribe((value)=>{
-        console.log(value)
-      })
+      this.translationModels$.subscribe((value) => {
+        console.log(value); // TODO Add translations
+      });
 
       setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
         this.store.dispatch(new GetTranslationModels(this.imageID));
@@ -441,7 +441,6 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     const partUses = this.getUseOfPartsAssignedToRegion();
     return partUses.part;
   }
-
 
   getUseOfPartsAssignedToImage(): PartUses {
     if (this.usesOfParts != null && this.imageID != null) {
