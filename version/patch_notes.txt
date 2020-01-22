@@ -2,11 +2,13 @@
 
 MAJOR UPDATES
     - Now project are internally named "Documents"
-    - Subcollections can now be created and deleted (user cannot move documents to collections yet) - see issue #
+    - Subcollections can now be created and deleted and documents moved to them
     - Add automatic document analysis dropdown (still very simple)
 
 MINOR UPDATES
     - Improve error messages title
+    - Correct MEI mensural notes perfection export (issue #108)
+    - Add "clear button" in semantic encoding
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 0.3
