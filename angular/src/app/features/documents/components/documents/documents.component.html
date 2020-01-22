@@ -8,7 +8,14 @@
     </div>
   </div>
 
-  <div *ngIf="collection$ | async as collection; else loading">
+  <div *ngIf="collection; else loading">
+    <div class="row">
+      <div class="col-10 offset-1">
+        <h2>{{collection.name}}</h2>
+      </div>
+    </div>
+
+
     <div *ngIf="collection.parentId != null" class="row">
       <div class="col-10 offset-1">
         <p><a [routerLink]="['/documents', collection.parentId]">Parent collection</a></p>
@@ -47,6 +54,14 @@
               </p>
             </div>
           </div>
+
+          <div class="card">
+            <div class="card-body">
+              <p>
+                <a (click)="moveToSubcollection()">Move selected documents to subcollection</a>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -66,7 +81,8 @@
               <app-state [state]="document.state"></app-state>
               <div class="card-body">
                 <p>
-                  <a [routerLink]="['/document', document.id]">{{document.name}}</a>
+                  <input type="checkbox" [id]="document.id" (change)="onDocumentSelectionChanged($event)">&nbsp;
+                    <a [routerLink]="['/document', document.id]">{{document.name}}</a>
                 </p>
               </div>
             </div>

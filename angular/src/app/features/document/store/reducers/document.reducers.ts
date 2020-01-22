@@ -1,6 +1,6 @@
 import {DocumentActions, DocumentActionTypes} from '../actions/document.actions';
-import {initialDocumentState, DocumentState} from '../state/document.state';
-import { saveAs } from 'file-saver';
+import {DocumentState, initialDocumentState} from '../state/document.state';
+import {saveAs} from 'file-saver';
 
 export function documentReducers(state = initialDocumentState, action: DocumentActions): DocumentState {
   switch (action.type) {

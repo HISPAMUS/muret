@@ -4,18 +4,27 @@ import { of } from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 import {DocumentService} from '../../services/document.service';
 import {
-  ExportMEI, ExportMEIPartsFacsimile, ExportMEIPartsFacsimileSuccess,
-  ExportMEISuccess, ExportMensurstrich, ExportMensurstrichSuccess, ExportMusicXML, ExportMusicXMLSuccess,
+  ExportMEI,
+  ExportMEIPartsFacsimile,
+  ExportMEIPartsFacsimileSuccess,
+  ExportMEISuccess,
+  ExportMensurstrich,
+  ExportMensurstrichSuccess,
+  ExportMusicXML,
+  ExportMusicXMLSuccess,
   GetImages,
   GetImagesSuccess,
-  GetDocument, GetDocumentStatistics, GetDocumentStatisticsSuccess,
+  GetDocument,
+  GetDocumentStatistics,
+  GetDocumentStatisticsSuccess,
   GetDocumentSuccess,
-  DocumentActionTypes
+  DocumentActionTypes,
 } from '../actions/document.actions';
 import {Document} from '../../../../core/model/entities/document';
 import {Image} from '../../../../core/model/entities/image';
 import {StringResponse} from '../../../../core/model/restapi/string-response';
 import {DocumentStatistics} from '../../../../core/model/restapi/document-statistics';
+import {Collection} from '../../../../core/model/entities/collection';
 
 @Injectable()
 export class DocumentEffects {

@@ -11,17 +11,19 @@ import {EffectsModule} from '@ngrx/effects';
 import {documentsReducers} from './store/reducers/documents.reducers';
 import {DocumentsEffects} from './store/effects/documents.effects';
 import {DocumentsService} from './services/documents.service';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [DocumentsComponent, CollectionsComponent],
-  imports: [
-    CommonModule,
-    DocumentsRoutingModule,
-    SharedModule,
-    BreadcrumbModule,
-    StoreModule.forFeature('documents', documentsReducers),
-    EffectsModule.forFeature([DocumentsEffects]),
-  ],
+    imports: [
+        CommonModule,
+        DocumentsRoutingModule,
+        SharedModule,
+        BreadcrumbModule,
+        StoreModule.forFeature('documents', documentsReducers),
+        EffectsModule.forFeature([DocumentsEffects]),
+        FormsModule,
+    ],
   providers: [DocumentsService]
 })
 export class DocumentsModule { }

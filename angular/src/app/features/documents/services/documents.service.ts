@@ -20,4 +20,23 @@ export class DocumentsService {
     return this.apiRestClientService.delete$<number>('collections/delete', id);
   }
 
+  moveDocumentsToSubcollection$(currentCollectionID: number, documentIDs: number[], subcollectionID: number): Observable<number> {
+    const params = {
+      currentCollectionID,
+      documentIDs,
+      subcollectionID
+    };
+
+    return this.apiRestClientService.put$<number>('collections/moveDocumentToSubcollection', params);
+  }
+
+  moveDocumentsToNewSubcollection$(currentCollectionID: number, documentIDs: number[], newCollectionName: string): Observable<number> {
+    const params = {
+      currentCollectionID,
+      documentIDs,
+      newCollectionName
+    };
+
+    return this.apiRestClientService.put$<number>('collections/moveDocumentToNewSubcollection', params);
+  }
 }

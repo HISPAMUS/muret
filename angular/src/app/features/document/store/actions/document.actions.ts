@@ -2,7 +2,7 @@ import { Action } from '@ngrx/store';
 import {Document} from '../../../../core/model/entities/document';
 import {Image} from '../../../../core/model/entities/image';
 import {DocumentStatistics} from '../../../../core/model/restapi/document-statistics';
-import {UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
+import {Collection} from '../../../../core/model/entities/collection';
 
 export enum DocumentActionTypes {
   GetDocument = '[Document] Get document',
@@ -90,6 +90,7 @@ export class GetDocumentStatisticsSuccess implements Action {
   public readonly type = DocumentActionTypes.GetDocumentStatisticsSuccess;
   constructor(public documentStatistics: DocumentStatistics) {}
 }
+
 
 export type DocumentActions =
   GetDocument | GetDocumentSuccess | GetImages | GetImagesSuccess | ExportMEI | ExportMEISuccess |

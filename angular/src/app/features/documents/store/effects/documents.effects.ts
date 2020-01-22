@@ -7,7 +7,11 @@ import {
   GetCollectionSuccess,
   DocumentsActionTypes,
   CreateSubcollection,
-  CreateSubcollectionSuccess, DeleteSubcollection, DeleteSubcollectionSuccess
+  CreateSubcollectionSuccess,
+  DeleteSubcollection,
+  DeleteSubcollectionSuccess,
+  MoveDocumentsToSubcollection,
+  MoveDocumentsToSubcollectionSuccess, MoveDocumentsToNewSubcollection, MoveDocumentsToNewSubcollectionSuccess
 } from '../actions/documents.actions';
 import {Collection} from '../../../../core/model/entities/collection';
 import {DocumentsService} from '../../services/documents.service';
@@ -48,5 +52,22 @@ export class DocumentsEffects {
       return of(new DeleteSubcollectionSuccess(deletedCollectionID));
     })
   );
-
+  @Effect()
+  moveDocumentsToSubcollection$ = this.actions$.pipe(
+    ofType<MoveDocumentsToSubcollection>(DocumentsActionTypes.MoveDocumentsToSubcollection),
+    switchMap((action: MoveDocumentsToSubcollection) =>
+      this.documentsService.moveDocumentsToSubcollection$(action.currentCollectionID, action.documentIDs, action.subcollectionID)),
+    switchMap((changedCollectionID: number) => {
+      return of(new MoveDocumentsToSubcollectionSuccess(changedCollectionID));
+    })
+  );
+  @Effect()
+  moveDocumentsToNewSubcollection$ = this.actions$.pipe(
+    ofType<MoveDocumentsToNewSubcollection>(DocumentsActionTypes.MoveDocumentsToNewSubcollection),
+    switchMap((action: MoveDocumentsToNewSubcollection) =>
+      this.documentsService.moveDocumentsToNewSubcollection$(action.currentCollectionID, action.documentIDs, action.subCollectionName)),
+    switchMap((changedCollectionID: number) => {
+      return of(new MoveDocumentsToNewSubcollectionSuccess(changedCollectionID));
+    })
+  );
 }

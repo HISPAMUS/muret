@@ -8,3 +8,7 @@ export const selectCollection = createSelector(
   (state: DocumentsState) => state.collection
 );
 
+export const selectChangedCollectionID = createSelector(
+  documentsState,
+  (state: DocumentsState) => state.changedCollectionID
+);

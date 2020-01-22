@@ -1,14 +1,20 @@
 import {Component, OnDestroy, OnInit, Self} from '@angular/core';
 import {Document} from '../../../../core/model/entities/document';
 import {Permissions} from '../../../../core/model/entities/permissions';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {Collection} from '../../../../core/model/entities/collection';
 import {ActivatedRoute, ParamMap} from '@angular/router';
-import {CreateSubcollection, DeleteSubcollection, GetCollection} from '../../store/actions/documents.actions';
-import {selectCollection} from '../../store/selectors/documents.selector';
+import {
+  CreateSubcollection,
+  DeleteSubcollection,
+  GetCollection,
+  MoveDocumentsToNewSubcollection, MoveDocumentsToSubcollection
+} from '../../store/actions/documents.actions';
+import {selectChangedCollectionID, selectCollection} from '../../store/selectors/documents.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
-import {ClassifyRegionEndToEnd} from '../../../agnostic-representation/store/actions/agnostic-representation.actions';
+import {ModalOptions} from '../../../../shared/components/options-dialog/options-dialog.component';
+
 
 @Component({
   selector: 'app-documents',
@@ -17,19 +23,31 @@ import {ClassifyRegionEndToEnd} from '../../../agnostic-representation/store/act
 })
 
 export class DocumentsComponent implements OnInit, OnDestroy {
-  collection$: Observable<Collection>;
   collectionID: number;
+  selectedDocumentsIds: Array<number>;
+  collection: Collection;
+  collectionSubscription: Subscription;
+  changedCollectionIDSubscription: Subscription;
 
   constructor(private route: ActivatedRoute, private store: Store<any>, private dialogsService: DialogsService) {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.collectionID = +this.route.snapshot.paramMap.get('id'); // + converts the string to number
       this.store.dispatch(new GetCollection(this.collectionID));
     });
-
-    this.collection$ = store.select(selectCollection);
   }
 
   ngOnInit(): void {
+    this.selectedDocumentsIds = new Array<number>();
+    this.collectionSubscription = this.store.select(selectCollection).subscribe(next => {
+      this.collection = next;
+    });
+    this.changedCollectionIDSubscription = this.store.select(selectChangedCollectionID).subscribe(next => {
+      if (next) {
+        // reload it
+        this.collectionID = next;
+        this.store.dispatch(new GetCollection(next));
+      }
+    });
   }
 
   trackBySubcollectionFn(index, item: Collection) {
@@ -46,6 +64,8 @@ export class DocumentsComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy(): void {
+    this.collectionSubscription.unsubscribe();
+    this.changedCollectionIDSubscription.unsubscribe();
   }
 
   addSubcollection() {
@@ -68,5 +88,47 @@ export class DocumentsComponent implements OnInit, OnDestroy {
 
   canBeDeleted(subcollection: Collection) {
     return subcollection.documents.length === 0 && subcollection.subcollections.length === 0;
+  }
+
+  moveToSubcollection() {
+    if (this.selectedDocumentsIds.length === 0) {
+      this.dialogsService.showWarningConfirmation('Collections', 'No document is selected to be moved');
+    } else {
+      const options: ModalOptions[] = [];
+      if (this.collection.parentId) {
+        const item: ModalOptions = {
+          id: '' + this.collection.parentId,
+          name: 'Parent collection'
+        };
+        options.push(item);
+      }
+      this.collection.subcollections.forEach(subcol => {
+        const item: ModalOptions = {
+          id: '' + subcol.id,
+          name: subcol.name,
+        };
+        options.push(item);
+      });
+
+      this.dialogsService.showOptions('Move documents to collection', options, 'New subcollection').subscribe(result => {
+        if (result) {
+          if (!result.id) {
+            this.store.dispatch(new MoveDocumentsToNewSubcollection(this.collection.id, this.selectedDocumentsIds, result.name));
+          } else {
+            this.store.dispatch(new MoveDocumentsToSubcollection(this.collection.id, this.selectedDocumentsIds, +result.id));
+          }
+        }
+      });
+    }
+  }
+
+  onDocumentSelectionChanged(e: Event) {
+    const checkbox = e.target as HTMLInputElement;
+    const id = +checkbox.id;
+    if (checkbox.checked) {
+      this.selectedDocumentsIds.push(id);
+    } else {
+      this.selectedDocumentsIds.push(id);
+    }
   }
 }

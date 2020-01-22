@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
 import {Collection} from '../../../../core/model/entities/collection';
+import {DocumentActionTypes, GetDocumentStatisticsSuccess} from '../../../document/store/actions/document.actions';
 
 export enum DocumentsActionTypes {
   GetCollection = '[Documents] Get collection',
@@ -8,6 +9,10 @@ export enum DocumentsActionTypes {
   CreateSubcollectionSuccess = '[Documents] Create subcollection success',
   DeleteSubcollection = '[Documents] Delete subcollection',
   DeleteSubcollectionSuccess = '[Documents] Delete subcollection success',
+  MoveDocumentsToSubcollection = '[Document] Move documents to subcollection',
+  MoveDocumentsToSubcollectionSuccess = '[Document] Move documents to subcollection success',
+  MoveDocumentsToNewSubcollection = '[Document] Move documents to new subcollection',
+  MoveDocumentsToNewSubcollectionSuccess = '[Document] Move documents to new subcollection success',
 }
 
 export class GetCollection implements Action {
@@ -40,7 +45,31 @@ export class DeleteSubcollectionSuccess implements Action {
   constructor(public deletedSubcollectionID: number) {}
 }
 
+
+export class MoveDocumentsToSubcollection implements Action {
+  public readonly type = DocumentsActionTypes.MoveDocumentsToSubcollection;
+  constructor(public currentCollectionID: number, public documentIDs: number[], public subcollectionID: number) {}
+}
+
+export class MoveDocumentsToSubcollectionSuccess implements Action {
+  public readonly type = DocumentsActionTypes.MoveDocumentsToSubcollectionSuccess;
+  constructor(public changedCollectionID: number) {}
+}
+
+export class MoveDocumentsToNewSubcollection implements Action {
+  public readonly type = DocumentsActionTypes.MoveDocumentsToNewSubcollection;
+  constructor(public currentCollectionID: number, public documentIDs: number[], public subCollectionName: string) {}
+}
+
+export class MoveDocumentsToNewSubcollectionSuccess implements Action {
+  public readonly type = DocumentsActionTypes.MoveDocumentsToNewSubcollectionSuccess;
+  constructor(public changedCollectionID: number) {}
+}
+
+
 export type DocumentsActions =
   GetCollection | GetCollectionSuccess |
   CreateSubcollection | CreateSubcollectionSuccess |
-  DeleteSubcollection | DeleteSubcollectionSuccess;
+  DeleteSubcollection | DeleteSubcollectionSuccess |
+  MoveDocumentsToSubcollection | MoveDocumentsToSubcollectionSuccess |
+  MoveDocumentsToNewSubcollection | MoveDocumentsToNewSubcollectionSuccess;

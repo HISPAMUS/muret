@@ -7,6 +7,7 @@ import {StringResponse} from '../../../core/model/restapi/string-response';
 import {DocumentAnalysisImageProjection} from '../../../core/model/restapi/document-analysis-image-projection';
 import {DocumentStatistics} from '../../../core/model/restapi/document-statistics';
 import {UsesOfParts} from '../../../core/model/restapi/uses-of-parts';
+import {Collection} from '../../../core/model/entities/collection';
 
 @Injectable() // non-singleton
 export class DocumentService {
@@ -58,4 +59,5 @@ export class DocumentService {
     const url = `document/exportMusicXML/${documentID}/${selectedImagesString}`;
     return this.apiRestClientService.getBlob$(url);
   }
+
 }
