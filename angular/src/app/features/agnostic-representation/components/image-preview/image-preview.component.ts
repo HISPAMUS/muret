@@ -10,6 +10,9 @@ import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {Rectangle} from '../../../../svg/model/rectangle';
 import {selectSelectedRegion} from '../../store/selectors/agnostic-representation.selector';
 
+const regionRectangleStrokeWidth = 5;
+const selectedRegionRectangleStrokeWidth = 25;
+
 @Component({
   selector: 'app-image-preview',
   templateUrl: './image-preview.component.html',
@@ -42,6 +45,7 @@ export class ImagePreviewComponent implements OnInit, OnDestroy {
     this.toggleImagePreview();
     this.selectedRegionSubscription = this.store.select(selectSelectedRegion).subscribe(next => {
       this.selectedRegion.emit(next);
+      this.highlightSelectedRegion(next);
     });
   }
 
@@ -98,7 +102,7 @@ export class ImagePreviewComponent implements OnInit, OnDestroy {
 
   private drawImagePreviewRegion(region: Region) {
     this.drawBox(this.imagePreviewShapes, region,
-      region.regionType.name, region.id, region.boundingBox, '#' + region.regionType.hexargb, 5 ).data = region;
+      region.regionType.name, region.id, region.boundingBox, '#' + region.regionType.hexargb, regionRectangleStrokeWidth ).data = region;
   }
 
   private drawBox(shapes: Shape[], modelObject: Region,
@@ -118,4 +122,15 @@ export class ImagePreviewComponent implements OnInit, OnDestroy {
     return rect;
   }
 
+  private highlightSelectedRegion(next: Region) {
+    if (this.imagePreviewShapes) {
+      this.imagePreviewShapes.forEach(shape => {
+        if (next && shape.data.id === next.id) {
+          shape.strokeWidth = selectedRegionRectangleStrokeWidth;
+        } else {
+          shape.strokeWidth = regionRectangleStrokeWidth;
+        }
+      });
+    }
+  }
 }
