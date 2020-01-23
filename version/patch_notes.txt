@@ -4,11 +4,13 @@ MAJOR UPDATES
     - Now project are internally named "Documents"
     - Subcollections can now be created and deleted and documents moved to them
     - Add automatic document analysis dropdown (still very simple)
+    - Highlight selected regions in agnostic and semantic
 
 MINOR UPDATES
     - Improve error messages title
     - Correct MEI mensural notes perfection export (issue #108)
     - Add "clear button" in semantic encoding
+    - Agnostic to semantic transducer corrections: two b vertically positioned flats are translated as just one, accidentals vertically stacked with notes are better translated now
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 0.3
