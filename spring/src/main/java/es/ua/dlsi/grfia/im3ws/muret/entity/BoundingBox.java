@@ -94,10 +94,19 @@ public class BoundingBox {
 
     }
 
+    public boolean contains(int x) {
+        return x >= this.fromX && x <= this.toX;
+    }
+
     public boolean containsCenterOf(BoundingBox boundingBox) {
         int centerX = (boundingBox.getFromX() + boundingBox.getToX()) / 2;
         int centerY = (boundingBox.getFromY() + boundingBox.getToY()) / 2;
         return contains(centerX, centerY);
+    }
+
+    public boolean containsCenterOfInX(BoundingBox boundingBox) {
+        int centerX = (boundingBox.getFromX() + boundingBox.getToX()) / 2;
+        return contains(centerX);
     }
 
     public void setHeight(int height) {
@@ -141,4 +150,5 @@ public class BoundingBox {
         this.toX = Math.min(this.toX, boundingBox.toX);
         this.toY = Math.min(this.toY, boundingBox.toY);
     }
+
 }

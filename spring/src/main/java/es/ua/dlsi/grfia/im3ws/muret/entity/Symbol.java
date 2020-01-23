@@ -3,6 +3,9 @@ package es.ua.dlsi.grfia.im3ws.muret.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
+import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbolType;
+import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Accidental;
+import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Note;
 
 import javax.persistence.*;
 import java.util.Comparator;
@@ -31,19 +34,29 @@ public class Symbol extends Auditable implements IAssignableToPart{
             Integer o1x = getMiddleX(o1); // sort using approximateX or bounding box
             Integer o2x = getMiddleX(o2);
             int diff = 0;
-            if (o1x != null && o2x != null) {
-                diff = o1x - o2x;
-            }
 
-            if (diff == 0 && o1.getBoundingBox() != null && o2.getBoundingBox() != null) {
-                diff = o1.getBoundingBox().getFromY() - o2.getBoundingBox().getFromY();
-            }
+            AgnosticSymbolType o1Type = o1.getAgnosticSymbol().getSymbol();
+            AgnosticSymbolType o2Type = o2.getAgnosticSymbol().getSymbol();
 
-            if (diff == 0) {
-                diff = o1.hashCode() - o2.hashCode();
-            }
+            //TODO parche
+            if (o1Type instanceof Note && o2Type instanceof Accidental && o1.getBoundingBox().containsCenterOfInX(o2.getBoundingBox())) {
+                diff = 1; // first accidental
+            } else if (o1Type instanceof Accidental && o2Type instanceof Note && o2.getBoundingBox().containsCenterOfInX(o1.getBoundingBox())) {
+                diff = -1; // first accidental
+            } else {
+                if (o1x != null && o2x != null) {
+                    diff = o1x - o2x;
+                }
 
-            return diff;
+                if (diff == 0 && o1.getBoundingBox() != null && o2.getBoundingBox() != null) {
+                    diff = o1.getBoundingBox().getFromY() - o2.getBoundingBox().getFromY();
+                }
+
+                if (diff == 0) {
+                    diff = o1.hashCode() - o2.hashCode();
+                }
+            }
+             return diff;
         }
     };
     @Id
