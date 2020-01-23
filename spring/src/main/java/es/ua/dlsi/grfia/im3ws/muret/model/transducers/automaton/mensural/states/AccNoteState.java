@@ -2,10 +2,18 @@ package es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.states
 
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.SemanticTransduction;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.TransducerState;
+import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.IM3RuntimeException;
 import es.ua.dlsi.im3.core.adt.dfa.State;
 import es.ua.dlsi.im3.core.score.Accidentals;
+import es.ua.dlsi.im3.core.score.DiatonicPitch;
+import es.ua.dlsi.im3.core.score.ScientificPitch;
+import es.ua.dlsi.im3.core.score.Staff;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
+import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticClef;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AccNoteState extends TransducerState {
     private Accidentals accidental;
@@ -17,7 +25,7 @@ public class AccNoteState extends TransducerState {
     }
 
     @Override
-    public void onEnter(AgnosticSymbol token, State previousState, SemanticTransduction transduction) {
+    public void onEnter(AgnosticSymbol token, State previousState, SemanticTransduction transduction) throws IM3Exception {
         agnosticID = token.getId();
 
         if (!(token.getSymbol() instanceof es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Accidental)) {
@@ -47,6 +55,7 @@ public class AccNoteState extends TransducerState {
                 transduction.setZeroProbability();
                 break;
         }
+
     }
 
     public Accidentals getAccidental() {

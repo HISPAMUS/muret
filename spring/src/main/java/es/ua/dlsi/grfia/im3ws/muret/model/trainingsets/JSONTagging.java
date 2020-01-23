@@ -124,11 +124,18 @@ public class JSONTagging extends AbstractTrainingSetExporter {
         jsonObject.put("bounding_box", jsonBB);
     }
 
+    private String constructCollectionPath(Image image) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        return stringBuilder.toString();
+    }
+
     private void generate(Image image, File outputJSonFile) throws IOException, ExportException {
         JSONObject jsonImage = new JSONObject();
 
         jsonImage.put("id", image.getId());
         jsonImage.put("filename", image.getFilename());
+        jsonImage.put("collection", constructCollectionPath(image));
 
         if (image.getPages() != null && !image.getPages().isEmpty()) {
             JSONArray jsonPages = new JSONArray();
