@@ -6,6 +6,7 @@ import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.controller.StringResponse;
 import es.ua.dlsi.grfia.im3ws.muret.auditing.AuditorAwareImpl;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.DocumentStatistics;
+import es.ua.dlsi.grfia.im3ws.muret.controller.payload.PreflightCkeckResult;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.StringBody;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.UploadFileResponse;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Document;
@@ -356,5 +357,18 @@ public class DocumentController {
             result.add(Long.parseLong(imageID));
         }
         return result;
+    }
+
+    @GetMapping(path = {"/preflightCheck/{documentID}/{selectedImages}"})
+    @Transactional
+    public List<PreflightCkeckResult> exportPartMEI(@PathVariable("documentID") Integer documentID, @PathVariable("selectedImages") String selectedImages) throws IM3WSException {
+        Optional<Document> document = documentRepository.findById(documentID);
+        if (!document.isPresent()) {
+            throw new IM3WSException("Cannot find a document with id " + documentID);
+        }
+
+        Set<Long> idsOfSelectedImages = findSelectedImages(selectedImages);
+
+        return notationModel.preflightCheck(document.get(), idsOfSelectedImages);
     }
 }

@@ -8,9 +8,9 @@ import {
   ExportMensurstrich,
   ExportMusicXML,
   GetImages,
-  GetDocument
+  GetDocument, PreflightCheck
 } from '../../store/actions/document.actions';
-import {selectImages, selectDocument, selectDocumentMEI} from '../../store/selectors/document.selector';
+import {selectImages, selectDocument, selectDocumentMEI, selectPreflightCheckResults} from '../../store/selectors/document.selector';
 import {Observable, Subscription} from 'rxjs';
 import {NotationService} from '../../../semantic-representation/services/notation.service';
 import { saveAs } from 'file-saver';
@@ -19,6 +19,7 @@ import {selectUsesOfParts} from '../../../parts/store/selectors/parts.selector';
 import {findPartsUsed, UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
 import {GetUsesOfParts} from '../../../parts/store/actions/parts.actions';
 import {Image} from '../../../../core/model/entities/image';
+import {PreflightCheckResult} from '../../../../core/model/restapi/preflight-check-result';
 
 interface SelectedImage {
   checked: boolean;
@@ -42,6 +43,7 @@ export class DocumentScoreViewerComponent implements OnInit, OnDestroy {
   public selectedImages: SelectedImage[];
   private usesOfPartsSubscription: Subscription;
   private imageSubscription: Subscription;
+  public preflightCheckResults$: Observable<PreflightCheckResult[]>;
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<DocumentState>,
               private notationService: NotationService) {
@@ -80,6 +82,8 @@ export class DocumentScoreViewerComponent implements OnInit, OnDestroy {
       this.notationAsSVG = this.notationService.renderScore(next);
       this.mei = next;
     });
+
+    this.preflightCheckResults$ = this.store.select(selectPreflightCheckResults);
   }
 
   ngOnDestroy(): void {
@@ -134,7 +138,11 @@ export class DocumentScoreViewerComponent implements OnInit, OnDestroy {
   }
 
   trackByPartNameFn(index, item: string) {
-    return index; // unique id corresponding to the item
+    return index;
+  }
+
+  trackByPreflightResultItemFn(index, item: PreflightCheckResult) {
+    return index;
   }
 
   partsUsedByImage(image: Image): Array<string> {
@@ -155,5 +163,9 @@ export class DocumentScoreViewerComponent implements OnInit, OnDestroy {
     this.selectedImages.forEach(selectedImage => {
       selectedImage.checked = false;
     });
+  }
+
+  preflightCheck() {
+    this.store.dispatch(new PreflightCheck(this.documentID, this.getIDOfSelectedImages()));
   }
 }

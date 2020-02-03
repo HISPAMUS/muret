@@ -18,13 +18,14 @@ import {
   GetDocumentStatistics,
   GetDocumentStatisticsSuccess,
   GetDocumentSuccess,
-  DocumentActionTypes,
+  DocumentActionTypes, PreflightCheck, PreflightCheckSuccess,
 } from '../actions/document.actions';
 import {Document} from '../../../../core/model/entities/document';
 import {Image} from '../../../../core/model/entities/image';
 import {StringResponse} from '../../../../core/model/restapi/string-response';
 import {DocumentStatistics} from '../../../../core/model/restapi/document-statistics';
 import {Collection} from '../../../../core/model/entities/collection';
+import {PreflightCheckResult} from '../../../../core/model/restapi/preflight-check-result';
 
 @Injectable()
 export class DocumentEffects {
@@ -95,6 +96,15 @@ export class DocumentEffects {
     switchMap((documentID) => this.documentService.getDocumentStatistics$(documentID)),
     switchMap((documentStatistics: DocumentStatistics) => {
       return of(new GetDocumentStatisticsSuccess(documentStatistics));
+    })
+  );
+
+  @Effect()
+  preflightCheck$ = this.actions$.pipe(
+    ofType<PreflightCheck>(DocumentActionTypes.PreflightCheck),
+    switchMap((action: PreflightCheck) => this.documentService.preflightCheck$(action.documentID, action.selectedImages)),
+    switchMap((preflightCheckResult: PreflightCheckResult[]) => {
+      return of(new PreflightCheckSuccess(preflightCheckResult));
     })
   );
 }

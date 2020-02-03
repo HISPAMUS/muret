@@ -4,10 +4,8 @@ import {Observable} from 'rxjs';
 import {Image} from '../../../core/model/entities/image';
 import {ApiRestClientService} from '../../../core/services/api-rest-client.service';
 import {StringResponse} from '../../../core/model/restapi/string-response';
-import {DocumentAnalysisImageProjection} from '../../../core/model/restapi/document-analysis-image-projection';
 import {DocumentStatistics} from '../../../core/model/restapi/document-statistics';
-import {UsesOfParts} from '../../../core/model/restapi/uses-of-parts';
-import {Collection} from '../../../core/model/entities/collection';
+import {PreflightCheckResult} from '../../../core/model/restapi/preflight-check-result';
 
 @Injectable() // non-singleton
 export class DocumentService {
@@ -60,4 +58,9 @@ export class DocumentService {
     return this.apiRestClientService.getBlob$(url);
   }
 
+  preflightCheck$(documentID: number, selectedImages: Array<number>): Observable<PreflightCheckResult[]> {
+    const selectedImagesString = selectedImages.join(',');
+    const url = `document/preflightCheck/${documentID}/${selectedImagesString}`;
+    return this.apiRestClientService.get$<PreflightCheckResult[]>(url);
+  }
 }

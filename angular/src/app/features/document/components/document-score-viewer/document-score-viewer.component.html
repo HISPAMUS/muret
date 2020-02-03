@@ -23,6 +23,20 @@
   <div class="row">
     <div class="col">
       <br> <!--TODO maquetación -->
+      <h3>Verifications on selected images</h3>
+      <button (click)="preflightCheck()">Check document for exporting</button>
+      <ul *ngIf="preflightCheckResults$ | async as preflightCheckResults">
+        <li *ngFor="let preflightCheckResult of preflightCheckResults; trackBy: trackByPreflightResultItemFn">
+          <p>{{preflightCheckResult.regionID}}</p> <!-- TODO Link a semantic -->
+          <p>{{preflightCheckResult.result}}</p>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <br> <!--TODO maquetación -->
       <h3>Export of selected images</h3>
       <button (click)="exportPartsAndFacsimile()">Export to MEI file with parts and facsimile</button>
       &nbsp;&nbsp;

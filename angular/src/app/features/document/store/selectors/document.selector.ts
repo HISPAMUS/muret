@@ -23,3 +23,7 @@ export const selectDocumentStatistics = createSelector(
   (state: DocumentState) => state.statistics
 );
 
+export const selectPreflightCheckResults = createSelector(
+  documentState,
+  (state: DocumentState) => state.preflightCheckResults
+);

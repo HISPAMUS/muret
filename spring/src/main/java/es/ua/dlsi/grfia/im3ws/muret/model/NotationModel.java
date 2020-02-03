@@ -3,6 +3,7 @@ package es.ua.dlsi.grfia.im3ws.muret.model;
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Notation;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.NotationResponseType;
+import es.ua.dlsi.grfia.im3ws.muret.controller.payload.PreflightCkeckResult;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Renderer;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.model.semantic.grammar.SKernMensSemanticImporter;
@@ -25,6 +26,7 @@ import es.ua.dlsi.im3.omr.encoding.semantic.*;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -383,5 +385,13 @@ public class NotationModel {
         MusicXMLExporter musicXMLExporter = new MusicXMLExporter();
         File musicXMLFile = new File(tgz.toFile(), document.getPath() + ".xml");
         musicXMLExporter.exportSong(musicXMLFile, modern);
+    }
+
+    public List<PreflightCkeckResult> preflightCheck(Document document, Set<Long> idsOfSelectedImages) {
+        ArrayList<PreflightCkeckResult> resultArrayList = new ArrayList<>();
+
+        resultArrayList.add(new PreflightCkeckResult(2, "Prueba 1"));
+        resultArrayList.add(new PreflightCkeckResult(23, "Prueba 2"));
+        return resultArrayList;
     }
 }

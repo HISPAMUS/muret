@@ -2,7 +2,7 @@ import { Action } from '@ngrx/store';
 import {Document} from '../../../../core/model/entities/document';
 import {Image} from '../../../../core/model/entities/image';
 import {DocumentStatistics} from '../../../../core/model/restapi/document-statistics';
-import {Collection} from '../../../../core/model/entities/collection';
+import {PreflightCheckResult} from '../../../../core/model/restapi/preflight-check-result';
 
 export enum DocumentActionTypes {
   GetDocument = '[Document] Get document',
@@ -19,6 +19,8 @@ export enum DocumentActionTypes {
   ExportMusicXMLSuccess = '[Document] Export MusicXML success',
   GetDocumentStatistics = '[Document] Get document statistics',
   GetDocumentStatisticsSuccess = '[Document] Get document statistics success',
+  PreflightCheck = '[Document] Preflight check',
+  PreflightCheckSuccess = '[Document] Preflight check success',
 }
 
 export class GetDocument implements Action {
@@ -91,10 +93,21 @@ export class GetDocumentStatisticsSuccess implements Action {
   constructor(public documentStatistics: DocumentStatistics) {}
 }
 
+export class PreflightCheck implements Action {
+  public readonly type = DocumentActionTypes.PreflightCheck;
+  constructor(public documentID: number, public selectedImages: Array<number>) {}
+}
+
+export class PreflightCheckSuccess implements Action {
+  public readonly type = DocumentActionTypes.PreflightCheckSuccess;
+  constructor(public preflightCheckResult: PreflightCheckResult[]) {}
+}
+
 
 export type DocumentActions =
   GetDocument | GetDocumentSuccess | GetImages | GetImagesSuccess | ExportMEI | ExportMEISuccess |
   ExportMEIPartsFacsimile | ExportMEIPartsFacsimileSuccess |
   ExportMensurstrich | ExportMensurstrichSuccess |
   ExportMusicXML | ExportMusicXMLSuccess |
-  GetDocumentStatistics | GetDocumentStatisticsSuccess;
+  GetDocumentStatistics | GetDocumentStatisticsSuccess |
+  PreflightCheck | PreflightCheckSuccess;

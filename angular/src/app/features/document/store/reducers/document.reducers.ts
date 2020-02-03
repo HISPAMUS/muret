@@ -49,6 +49,12 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
         statistics: action.documentStatistics
       };
     }
+    case DocumentActionTypes.PreflightCheckSuccess: {
+      return {
+        ...state,
+        preflightCheckResults: action.preflightCheckResult
+      };
+    }
     default: {
       return state;
     }
