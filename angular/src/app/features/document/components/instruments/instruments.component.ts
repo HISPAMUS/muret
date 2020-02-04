@@ -54,7 +54,7 @@ export class InstrumentsComponent implements OnInit {
   }
 
   openRegion(region: NumberPair) {
-    this.router.navigate(['semanticrepresentation/region', {id: region.x, region_id: region.y}]);
+    this.router.navigate(['semanticrepresentation', region.x, {region_id: region.y}]);
   }
 
   openSymbol(symbol: NumberPair) {

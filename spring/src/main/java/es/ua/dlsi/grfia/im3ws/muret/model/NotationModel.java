@@ -390,8 +390,8 @@ public class NotationModel {
     public List<PreflightCkeckResult> preflightCheck(Document document, Set<Long> idsOfSelectedImages) {
         ArrayList<PreflightCkeckResult> resultArrayList = new ArrayList<>();
 
-        resultArrayList.add(new PreflightCkeckResult(2, "Prueba 1"));
-        resultArrayList.add(new PreflightCkeckResult(23, "Prueba 2"));
+        resultArrayList.add(new PreflightCkeckResult(2728, 25074, "Prueba 1"));
+        resultArrayList.add(new PreflightCkeckResult(2728, 2964, "Prueba 2"));
         return resultArrayList;
     }
 }

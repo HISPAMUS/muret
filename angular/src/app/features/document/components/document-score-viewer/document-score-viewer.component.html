@@ -27,7 +27,7 @@
       <button (click)="preflightCheck()">Check document for exporting</button>
       <ul *ngIf="preflightCheckResults$ | async as preflightCheckResults">
         <li *ngFor="let preflightCheckResult of preflightCheckResults; trackBy: trackByPreflightResultItemFn">
-          <p>{{preflightCheckResult.regionID}}</p> <!-- TODO Link a semantic -->
+          <p><a (click)="openSemantic(preflightCheckResult.imageID, preflightCheckResult.regionID)">Region #{{preflightCheckResult.regionID}}</a></p> <!-- TODO Link a semantic -->
           <p>{{preflightCheckResult.result}}</p>
         </li>
       </ul>

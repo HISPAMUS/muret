@@ -4,10 +4,7 @@ import {SemanticRepresentationComponent} from './components/semantic-representat
 
 const routes: Routes = [
   {
-    path: ':id', component: SemanticRepresentationComponent,
-    children: [{
-        path: 'region/:region_id', component: SemanticRepresentationComponent
-    }]
+    path: ':id', component: SemanticRepresentationComponent
   }
 ];
 

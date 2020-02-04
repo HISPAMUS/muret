@@ -168,4 +168,8 @@ export class DocumentScoreViewerComponent implements OnInit, OnDestroy {
   preflightCheck() {
     this.store.dispatch(new PreflightCheck(this.documentID, this.getIDOfSelectedImages()));
   }
+
+  openSemantic(imageID: number, regionID: number) {
+    this.router.navigate(['semanticrepresentation', imageID, {region_id: regionID}]); // region_id is an optional parameter
+  }
 }
