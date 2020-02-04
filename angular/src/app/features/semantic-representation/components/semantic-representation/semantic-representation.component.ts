@@ -98,7 +98,6 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
         /// this.store.dispatch(new GetImageDocumentParts(+this.imageID));
       }
 
-      debugger;
       if (params.get('region_id')) {
         this.store.dispatch(new GetRegion(+params.get('region_id')));
       }
