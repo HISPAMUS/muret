@@ -4,14 +4,37 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author drizo
  */
 @Entity
 public class Page extends Auditable implements IAssignableToPart {
+    /**
+     * It orders pages given its middle horizontal point or its approximate x
+     */
+    private static Comparator<? super Page> verticalPositionComparator = new Comparator<Page>() {
+        @Override
+        public int compare(Page o1, Page o2) {
+            if (o1.getBoundingBox().getFromY() < o2.getBoundingBox().getFromY()) {
+                return -1;
+            } else if (o1.getBoundingBox().getFromY() > o2.getBoundingBox().getFromY()) {
+                return 1;
+            } else {
+                if (o1.getBoundingBox().getFromX() < o2.getBoundingBox().getFromX()) {
+                    return -1;
+                } else if (o1.getBoundingBox().getFromX() > o2.getBoundingBox().getFromX()) {
+                    return 1;
+                } else {
+                    return o1.hashCode() - o2.hashCode();
+                }
+            }
+        }
+    };
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -118,5 +141,31 @@ public class Page extends Auditable implements IAssignableToPart {
     @Override
     public void setPart(Part part) {
         this.part = part;
+    }
+
+    /**
+     * It returns the staves (region_type = "staff") sorted using cartesian plane
+     * @return
+     */
+    @Transient
+    public List<Region> getSortedStaves() {
+        List<Region> sortedRegions = getRegions().stream().filter(
+                region -> region.getRegionType().getName().equals("staff")).
+                sorted(Region.getVerticalPositionComparator()).collect(Collectors.toList());
+        return sortedRegions;
+    }
+
+    /**
+     * It returns the regions sorted using cartesian plane
+     * @return
+     */
+    @Transient
+    public List<Region> getSortedRegions() {
+        List<Region> sortedRegions = getRegions().stream().sorted(Region.getVerticalPositionComparator()).collect(Collectors.toList());
+        return sortedRegions;
+    }
+
+    public static Comparator<? super Page> getVerticalPositionComparator() {
+        return verticalPositionComparator;
     }
 }

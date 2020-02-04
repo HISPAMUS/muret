@@ -100,7 +100,7 @@ export class PreflightCheck implements Action {
 
 export class PreflightCheckSuccess implements Action {
   public readonly type = DocumentActionTypes.PreflightCheckSuccess;
-  constructor(public preflightCheckResult: PreflightCheckResult[]) {}
+  constructor(public preflightCheckResult: PreflightCheckResult) {}
 }
 
 

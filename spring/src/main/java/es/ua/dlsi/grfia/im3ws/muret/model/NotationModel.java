@@ -23,6 +23,10 @@ import es.ua.dlsi.im3.core.score.layout.fonts.LayoutFonts;
 import es.ua.dlsi.im3.core.score.layout.svg.SVGExporter;
 import es.ua.dlsi.im3.core.score.staves.Pentagram;
 import es.ua.dlsi.im3.omr.encoding.semantic.*;
+import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticAtom;
+import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticClef;
+import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticNote;
+import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticTimeSignature;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -160,11 +164,11 @@ public class NotationModel {
             }
         }
 
-        for (Image image: document.getImages()) {
+        for (Image image: document.getSortedImages()) {
             if (idsOfSelectedImages.contains(image.getId())) {
                 Part imagePart = image.getPart();
                 int npage = 0;
-                for (Page page: image.getPages()) {
+                for (Page page: image.getSortedPages()) {
                     npage++;
                     String lastPageID = "page_" + page.getId();
                     Surface imageSurface = null;
@@ -184,10 +188,8 @@ public class NotationModel {
                     boolean newPage = true;
                     Part pagePart = page.getPart() == null ? imagePart : page.getPart();
                     int nregion = 0;
-                    for (Region region : page.getRegions()) {
-                        if (region.getRegionType().getName().toLowerCase().indexOf("staff") >= 0) {
-                            nregion++;
-                        }
+                    for (Region region : page.getSortedStaves()) {
+                        nregion++;
                         String lastRegionID = "region_" + region.getId();
                         if (imageSurface != null) {
                             Zone zone = new Zone();
@@ -387,11 +389,74 @@ public class NotationModel {
         musicXMLExporter.exportSong(musicXMLFile, modern);
     }
 
-    public List<PreflightCkeckResult> preflightCheck(Document document, Set<Long> idsOfSelectedImages) {
-        ArrayList<PreflightCkeckResult> resultArrayList = new ArrayList<>();
+    class PreflightPartContext {
+        boolean hasClef = false;
+        boolean hasTimeSignature = false;
+    }
 
-        resultArrayList.add(new PreflightCkeckResult(2728, 25074, "Prueba 1"));
-        resultArrayList.add(new PreflightCkeckResult(2728, 2964, "Prueba 2"));
-        return resultArrayList;
+    public PreflightCkeckResult preflightCheck(Document document, Set<Long> idsOfSelectedImages) {
+        PreflightCkeckResult preflightCkeckResult = new PreflightCkeckResult();
+
+        HashMap<Part, PreflightPartContext> partContexts = new HashMap<>();
+        // TODO parts, context ...
+        for (Image image: document.getSortedImages()) {
+            PreflightCkeckResult.PreflightCkeckImageResult preflightCkeckImageResult = new PreflightCkeckResult.PreflightCkeckImageResult();
+            preflightCkeckResult.addPreflightImageResult(preflightCkeckImageResult);
+            preflightCkeckImageResult.setImageID(image.getId());
+            preflightCkeckImageResult.setImageName(image.getFilename());
+            if (idsOfSelectedImages.contains(image.getId())) {
+                Part imagePart = image.getPart();
+                for (Page page: image.getSortedPages()) {
+                    List<Region> sortedStaves = page.getSortedStaves();
+                    for (Region region: sortedStaves) {
+                        ArrayList<String> problems = new ArrayList<>();
+                        Part regionPart = region.getPart();
+                        if (imagePart != null && regionPart != null) {
+                            problems.add("The image has a part assigned with id #" + imagePart.getId() + " and name '" + imagePart.getName()
+                            + "' and the region a part with id #" + regionPart.getId() + " and name '" + regionPart.getName() + "'");
+                        } else if (regionPart == null) {
+                            regionPart = imagePart;
+                        }
+
+                        PreflightPartContext partContext = partContexts.get(regionPart);
+                        if (partContext == null) {
+                            partContext = new PreflightPartContext();
+                            partContexts.put(regionPart, partContext);
+                        }
+
+                        if (region.getSemanticEncoding() == null || region.getSemanticEncoding().trim().isEmpty()) {
+                            problems.add("The staff has not a semantic encoding");
+                        } else {
+                            try {
+                                SemanticEncoding sematicEncoding = importSemanticEncoding(document, region);
+                                boolean firstAtom = true;
+                                for (SemanticSymbol semanticSymbol : sematicEncoding.getSymbols()) {
+                                    SemanticSymbolType ss = semanticSymbol.getSymbol();
+                                    if (ss instanceof SemanticClef) {
+                                        partContext.hasClef = true;
+                                    } else if (ss instanceof SemanticTimeSignature) {
+                                        partContext.hasTimeSignature = true;
+                                    } else if (firstAtom && ss instanceof SemanticAtom) {
+                                        firstAtom = false;
+                                        if (!partContext.hasClef) {
+                                            problems.add("Missing clef");
+                                        }
+                                        if (!partContext.hasTimeSignature) {
+                                            problems.add("Missing time signature");
+                                        }
+                                    }
+                                }
+                            } catch (IM3Exception e) {
+                                problems.add("Cannot import the semantic encoding: " + e.getMessage());
+                            }
+                        }
+                        PreflightCkeckResult.PreflightCkeckRegionResult preflightCkeckRegionResult = new PreflightCkeckResult.PreflightCkeckRegionResult(region.getId(), problems);
+                        preflightCkeckImageResult.addRegionResult(preflightCkeckRegionResult);
+                    }
+                }
+            }
+        }
+
+        return preflightCkeckResult;
     }
 }

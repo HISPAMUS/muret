@@ -202,4 +202,14 @@ public class Document extends Auditable {
                 ", path='" + path + '\'' +
                 '}';
     }
+
+    @Transient
+    public List<Image> getSortedImages() {
+        if (imagesOrdering != null) {
+            // TODO Image ordering
+            throw new UnsupportedOperationException("TO-DO Images ordering");
+        } else {
+            return images;
+        }
+    }
 }

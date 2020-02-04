@@ -103,7 +103,7 @@ export class DocumentEffects {
   preflightCheck$ = this.actions$.pipe(
     ofType<PreflightCheck>(DocumentActionTypes.PreflightCheck),
     switchMap((action: PreflightCheck) => this.documentService.preflightCheck$(action.documentID, action.selectedImages)),
-    switchMap((preflightCheckResult: PreflightCheckResult[]) => {
+    switchMap((preflightCheckResult: PreflightCheckResult) => {
       return of(new PreflightCheckSuccess(preflightCheckResult));
     })
   );

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author drizo
@@ -148,5 +149,15 @@ public class Image extends Auditable implements IAssignableToPart {
     @Override
     public void setPart(Part part) {
         this.part = part;
+    }
+
+    /**
+     * It returns the pages sorted using cartesian plane
+     * @return
+     */
+    @Transient
+    public List<Page> getSortedPages() {
+        List<Page> sortedPages = getPages().stream().sorted(Page.getVerticalPositionComparator()).collect(Collectors.toList());
+        return sortedPages;
     }
 }

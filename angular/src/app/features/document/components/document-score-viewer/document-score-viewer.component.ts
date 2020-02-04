@@ -19,7 +19,11 @@ import {selectUsesOfParts} from '../../../parts/store/selectors/parts.selector';
 import {findPartsUsed, UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
 import {GetUsesOfParts} from '../../../parts/store/actions/parts.actions';
 import {Image} from '../../../../core/model/entities/image';
-import {PreflightCheckResult} from '../../../../core/model/restapi/preflight-check-result';
+import {
+  PreflightCheckResult,
+  PreflightCkeckImageResult,
+  PreflightCkeckRegionResult
+} from '../../../../core/model/restapi/preflight-check-result';
 
 interface SelectedImage {
   checked: boolean;
@@ -43,7 +47,7 @@ export class DocumentScoreViewerComponent implements OnInit, OnDestroy {
   public selectedImages: SelectedImage[];
   private usesOfPartsSubscription: Subscription;
   private imageSubscription: Subscription;
-  public preflightCheckResults$: Observable<PreflightCheckResult[]>;
+  public preflightCheckResults$: Observable<PreflightCheckResult>;
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<DocumentState>,
               private notationService: NotationService) {
@@ -141,7 +145,15 @@ export class DocumentScoreViewerComponent implements OnInit, OnDestroy {
     return index;
   }
 
-  trackByPreflightResultItemFn(index, item: PreflightCheckResult) {
+  trackByPreflightResultImageFn(index, item: PreflightCkeckImageResult) {
+    return item.imageID;
+  }
+
+  trackByPreflightResultRegionMessageFn(index, item: PreflightCkeckRegionResult) {
+    return item.regionID;
+  }
+
+  trackByPreflightResultMessageFn(index, item: string) {
     return index;
   }
 
@@ -169,7 +181,11 @@ export class DocumentScoreViewerComponent implements OnInit, OnDestroy {
     this.store.dispatch(new PreflightCheck(this.documentID, this.getIDOfSelectedImages()));
   }
 
-  openSemantic(imageID: number, regionID: number) {
+  openSemanticRegion(imageID: number, regionID: number) {
     this.router.navigate(['semanticrepresentation', imageID, {region_id: regionID}]); // region_id is an optional parameter
+  }
+
+  openSemanticImage(imageID: number) {
+    this.router.navigate(['semanticrepresentation', imageID]);
   }
 }

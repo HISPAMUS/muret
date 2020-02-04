@@ -361,7 +361,7 @@ public class DocumentController {
 
     @GetMapping(path = {"/preflightCheck/{documentID}/{selectedImages}"})
     @Transactional
-    public List<PreflightCkeckResult> exportPartMEI(@PathVariable("documentID") Integer documentID, @PathVariable("selectedImages") String selectedImages) throws IM3WSException {
+    public PreflightCkeckResult exportPartMEI(@PathVariable("documentID") Integer documentID, @PathVariable("selectedImages") String selectedImages) throws IM3WSException {
         Optional<Document> document = documentRepository.findById(documentID);
         if (!document.isPresent()) {
             throw new IM3WSException("Cannot find a document with id " + documentID);

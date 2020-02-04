@@ -1,5 +1,13 @@
-export interface PreflightCheckResult {
-  imageID: number;
+export interface PreflightCkeckRegionResult {
   regionID: number;
-  result: string;
+  messages: string[];
+}
+
+export interface PreflightCkeckImageResult {
+  imageID: number;
+  imageName: string;
+  regionResults: Array<PreflightCkeckRegionResult>;
+}
+export interface PreflightCheckResult {
+  preflightCkeckImageResults: Array<PreflightCkeckImageResult>;
 }

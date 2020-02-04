@@ -68,7 +68,7 @@ public class JSONTagging extends AbstractTrainingSetExporter {
                 File documentFolder = new File(directory.toFile(), document.getPath());
                 documentFolder.mkdirs();
 
-                for (Image image: document.getImages()) {
+                for (Image image: document.getSortedImages()) {
                     Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Exporting JSON for image " + image.getFilename());
                     File outputJSonFile = new File(documentFolder, image.getFilename() + ".json");
                     generate(image, outputJSonFile);
@@ -137,20 +137,22 @@ public class JSONTagging extends AbstractTrainingSetExporter {
         jsonImage.put("filename", image.getFilename());
         jsonImage.put("collection", constructCollectionPath(image));
 
-        if (image.getPages() != null && !image.getPages().isEmpty()) {
+        List<Page> pages = image.getSortedPages();
+        if (pages != null && !pages.isEmpty()) {
             JSONArray jsonPages = new JSONArray();
             jsonImage.put("pages", jsonPages);
 
-            for (Page page : image.getPages()) {
+            for (Page page : pages) {
                 JSONObject jsonPage = new JSONObject();
                 jsonPages.add(jsonPage);
                 jsonPage.put("id", page.getId());
                 putBoundingBox(jsonPage, page.getBoundingBox());
 
-                if (page.getRegions()!=null && !page.getRegions().isEmpty()) {
+                List<Region> regions = page.getSortedRegions();
+                if (regions!=null && !regions.isEmpty()) {
                     JSONArray jsonRegions = new JSONArray();
                     jsonPage.put("regions", jsonRegions);
-                    for (Region region : page.getRegions()) {
+                    for (Region region : regions) {
                         JSONObject jsonRegion = new JSONObject();
                         jsonRegions.add(jsonRegion);
                         jsonRegion.put("id", region.getId());
@@ -159,16 +161,17 @@ public class JSONTagging extends AbstractTrainingSetExporter {
                         }
                         putBoundingBox(jsonRegion, region.getBoundingBox());
 
-                        if (region.getSymbols() != null && !region.getSymbols().isEmpty()) {
+                        List<Symbol> symbols = region.getSortedSymbols();
+                        if (symbols != null && !symbols.isEmpty()) {
                             JSONArray jsonSymbols = new JSONArray();
                             jsonRegion.put("symbols", jsonSymbols);
 
 
-                            ArrayList<Symbol> symbols = new ArrayList<>();
+                            /*ArrayList<Symbol> symbols = new ArrayList<>();
                             symbols.addAll(region.getSymbols());
 
                             // sort first by x, then by y
-                            symbols.sort(Symbol.getHorizontalPositionComparator());
+                            symbols.sort(Symbol.getHorizontalPositionComparator());*/
 
                             for (Symbol symbol : symbols) {
                                 JSONObject jsonSymbol = new JSONObject();

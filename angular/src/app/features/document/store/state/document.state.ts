@@ -8,7 +8,7 @@ export interface DocumentState {
   images: Image[];
   mei: string;
   statistics: DocumentStatistics;
-  preflightCheckResults: PreflightCheckResult[];
+  preflightCheckResults: PreflightCheckResult;
 }
 
 export const initialDocumentState: DocumentState = {

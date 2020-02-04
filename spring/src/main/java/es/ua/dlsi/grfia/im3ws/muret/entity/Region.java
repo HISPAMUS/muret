@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import javax.persistence.*;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author drizo
@@ -14,7 +15,7 @@ import java.util.List;
 @Entity
 public class Region extends Auditable implements IAssignableToPart {
     /**
-     * It orders symbols given its middle horizontal point or its approximate x
+     * It orders regions given its middle horizontal point or its approximate x
      */
     private static Comparator<? super Region> verticalPositionComparator = new Comparator<Region>() {
         @Override
@@ -179,5 +180,11 @@ public class Region extends Auditable implements IAssignableToPart {
 
     public void removeSymbol(Symbol symbol) {
         this.symbols.remove(symbol);
+    }
+
+    @Transient
+    public List<Symbol> getSortedSymbols() {
+        List<Symbol> sortedRegions = getSymbols().stream().sorted(Symbol.getHorizontalPositionComparator()).collect(Collectors.toList());
+        return sortedRegions;
     }
 }

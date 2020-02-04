@@ -17,6 +17,7 @@ import es.ua.dlsi.im3.omr.encoding.semantic.*;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,8 +37,11 @@ public class SemanticRepresentationModel {
     public static AgnosticEncoding region2Agnostic(Region staff, boolean addSeparator) throws IM3Exception {
         AgnosticEncoding agnosticEncoding = new AgnosticEncoding();
 
-        ArrayList<Symbol> symbols = new ArrayList<>(staff.getSymbols());
-        symbols.sort(Symbol.getHorizontalPositionComparator());
+        /*ArrayList<Symbol> symbols = new ArrayList<>(staff.getSymbols());
+        symbols.sort(Symbol.getHorizontalPositionComparator());*/
+
+        List<Symbol> symbols = staff.getSortedSymbols();
+
         for (int i=0; i<symbols.size(); i++) {
             Symbol symbol = symbols.get(i);
             symbol.getAgnosticSymbol().setId(symbol.getId()); // associate the symbol ID to the agnostic symbol
