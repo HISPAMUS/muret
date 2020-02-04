@@ -46,7 +46,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   translationModels$: Observable<ClassifierModel[]>;
   imageID: number;
   documentID: number;
-  mynumber: number;
+  // mynumber: number;
   notationSubscription: Subscription;
   selectedRegionZoomFactor = 1;
   selectedRegion: Region;
@@ -90,7 +90,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.mynumber = 189;
+    // this.mynumber = 189;
     this.route.paramMap.subscribe((params: ParamMap) => {
       if (params.get('id')) {
         this.imageID = +params.get('id'); // + converts the string to number
