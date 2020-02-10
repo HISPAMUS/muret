@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Image} from '../../../../core/model/entities/image';
 import {Observable} from 'rxjs';
@@ -17,6 +17,8 @@ import {DocumentStatistics} from '../../../../core/model/restapi/document-statis
 import {GetUsesOfParts} from '../../../parts/store/actions/parts.actions';
 import {selectUsesOfParts} from '../../../parts/store/selectors/parts.selector';
 import {UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
+import { AgnosticRepresentationState } from 'src/app/features/agnostic-representation/store/state/agnostic-representation.state';
+import { ResetSelectedRegion } from 'src/app/features/agnostic-representation/store/actions/agnostic-representation.actions';
 
 @Component({
   selector: 'app-document',
@@ -30,7 +32,7 @@ export class DocumentComponent implements OnInit {
   usesOfParts$: Observable<UsesOfParts>;
   private documentID: number;
 
-  constructor(private route: ActivatedRoute, private store: Store<DocumentState>, private router: Router,
+  constructor(private route: ActivatedRoute, private store: Store<DocumentState>, private agnosticStore: Store<AgnosticRepresentationState>, private router: Router,
               private dialogsService: DialogsService) {
     this.document$ = this.store.select(selectDocument);
     this.images$ = this.store.select(selectImages);
@@ -49,6 +51,10 @@ export class DocumentComponent implements OnInit {
         this.store.dispatch(new ActivateLink({title: 'Document ', routerLink: 'document/' + this.documentID}));
       });
     });
+  }
+
+  ngOnDestroy(): void {
+   this.agnosticStore.dispatch(new ResetSelectedRegion());
   }
 
   trackByImageFn(index, item: Image) {

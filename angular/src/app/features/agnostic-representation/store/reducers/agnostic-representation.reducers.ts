@@ -104,6 +104,11 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
       newState.end2endClassifierModels = action.classifierModels;
       return newState;
     }
+    case AgnosticRepresentationActionTypes.ResetSelectedRegion: {
+      const newState = {...state};
+      newState.selectedRegion = null;
+      return newState;
+    }
     default: {
       return state;
     }

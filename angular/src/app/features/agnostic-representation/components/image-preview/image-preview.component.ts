@@ -43,6 +43,7 @@ export class ImagePreviewComponent implements OnInit, OnDestroy {
     });
 
     this.toggleImagePreview();
+    
     this.selectedRegionSubscription = this.store.select(selectSelectedRegion).subscribe(next => {
       this.selectedRegion.emit(next);
       this.highlightSelectedRegion(next);
