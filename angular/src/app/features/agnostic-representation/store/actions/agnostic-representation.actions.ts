@@ -34,7 +34,9 @@ export enum AgnosticRepresentationActionTypes {
   GetSymbolClassifierModels = '[AgnosticRepresentation] Get Symbol Classifier Models',
   GetSymbolClassifierModelsSuccess = '[AgnosticRepresentation] Get Symbol Classifier Models success',
   GetAgnosticEnd2EndClassifierModels = '[AgnosticRepresentation] Get Agnostic end2end Classifier Models',
-  GetAgnosticEnd2EndClassifierModelsSuccess = '[AgnosticRepresentation] Get Agnostic end2end Classifier Models success'
+  GetAgnosticEnd2EndClassifierModelsSuccess = '[AgnosticRepresentation] Get Agnostic end2end Classifier Models success',
+
+  ResetSelectedRegion = '[AgnosticRepresentation] Reset Agnostic selected region to null'
 }
 
 export class InitRegion implements Action {
@@ -179,6 +181,11 @@ export class GetAgnosticEnd2EndClassifierModelsSuccess implements Action {
   }
 }
 
+export class ResetSelectedRegion implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.ResetSelectedRegion;
+  constructor(){}
+}
+
 
 
 export type AgnosticRepresentationActions =
@@ -189,4 +196,5 @@ export type AgnosticRepresentationActions =
   ClassifyRegionEndToEnd | ClassifyRegionEndToEndSuccess |
   ClearRegionSymbols | ClearRegionSymbolsSuccess |
   GetSymbolClassifierModels | GetSymbolClassifierModelsSuccess |
-  GetAgnosticEnd2EndClassifierModels | GetAgnosticEnd2EndClassifierModelsSuccess;
+  GetAgnosticEnd2EndClassifierModels | GetAgnosticEnd2EndClassifierModelsSuccess
+  | ResetSelectedRegion;

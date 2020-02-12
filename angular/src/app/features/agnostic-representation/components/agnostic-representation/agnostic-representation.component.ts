@@ -376,7 +376,6 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   onSymbolShapeChanged(shape: Shape) {
     // currently we only support bounding box change
     if (shape instanceof Rectangle) {
-      console.log('Ey');
       this.store.dispatch(new ChangeSymbolBoundingBox(shape.data, {
         fromX: shape.fromX,
         fromY: shape.fromY,
@@ -528,7 +527,6 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
       this.selectedRegion = $event;
       console.log($event)
       console.log(this.selectedRegion)
-      console.log('Done')
     });
   }
 
