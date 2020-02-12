@@ -76,7 +76,7 @@ public class NotationModel {
         return mei;
     }
 
-    SemanticEncoding importSemanticEncoding(Document document, Region region) throws IM3Exception {
+    public SemanticEncoding importSemanticEncoding(Document document, Region region) throws IM3Exception {
         if (region.getSemanticEncoding() == null) {
             throw new IM3Exception("Region has not a semantic encoding yet");
         }
@@ -394,6 +394,12 @@ public class NotationModel {
         boolean hasTimeSignature = false;
     }
 
+    /**
+     * @deprecated Use the AlignmentPreviewController
+     * @param document
+     * @param idsOfSelectedImages
+     * @return
+     */
     public PreflightCkeckResult preflightCheck(Document document, Set<Long> idsOfSelectedImages) {
         PreflightCkeckResult preflightCkeckResult = new PreflightCkeckResult();
 

@@ -79,6 +79,8 @@ tandemInterpretation:
     nullInterpretation
     |
     custos
+    |
+    plainChant
     ;
 
 number: (DIGIT_0 | DIGIT_1 | DIGIT_2 | DIGIT_3 | DIGIT_4 | DIGIT_5 | DIGIT_6 | DIGIT_7 | DIGIT_8 | DIGIT_9)+;
@@ -229,5 +231,7 @@ staffPosition: lineSpace number;
 lineSpace: CHAR_L | CHAR_S; // l = line, s = space
 
 lyricsText: FIELD_TEXT;
+
+plainChant: TANDEM_BEGIN_PLAIN_CHANT | TANDEM_END_PLAIN_CHANT;
 
 

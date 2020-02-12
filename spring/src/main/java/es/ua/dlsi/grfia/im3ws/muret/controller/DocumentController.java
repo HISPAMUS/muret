@@ -28,6 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
@@ -273,13 +274,13 @@ public class DocumentController {
     @RequestMapping(value="/exportMensurstrich/{documentID}/{selectedImages}", method= RequestMethod.GET, produces="application/x-gzip")
     @ResponseBody
     @Transactional
-    public ResponseEntity<?> exportMensurstrich(@PathVariable Integer documentID, @PathVariable("selectedImages") String selectedImages) throws IM3WSException {
-        Optional<Document> document = documentRepository.findById(documentID);
-        if (!document.isPresent()) {
-            throw new IM3WSException("Cannot find a document with id " + documentID);
-        }
-
+    public ResponseEntity<?> exportMensurstrich(@PathVariable Integer documentID, @PathVariable("selectedImages") String selectedImages)  {
         try {
+            Optional<Document> document = documentRepository.findById(documentID);
+            if (!document.isPresent()) {
+                throw new IM3WSException("Cannot find a document with id " + documentID);
+            }
+
             FileCompressors fileCompressors = new FileCompressors();
             ArrayList<String> prefixes = new ArrayList<>();
             ArrayList<Path> files = new ArrayList<>();
@@ -305,7 +306,9 @@ public class DocumentController {
             return new ResponseEntity<>(output.getData(), output.getHeaders(), HttpStatus.OK);
         } catch (Exception e) {
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot export", e);
-            throw new IM3WSException(e);
+
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Cannot export: " + e.getMessage(), e);
 
         }
     }
@@ -359,6 +362,13 @@ public class DocumentController {
         return result;
     }
 
+    /**
+     * @deprecated Use the AlignmentPreviewController
+      * @param documentID
+     * @param selectedImages
+     * @return
+     * @throws IM3WSException
+     */
     @GetMapping(path = {"/preflightCheck/{documentID}/{selectedImages}"})
     @Transactional
     public PreflightCkeckResult exportPartMEI(@PathVariable("documentID") Integer documentID, @PathVariable("selectedImages") String selectedImages) throws IM3WSException {

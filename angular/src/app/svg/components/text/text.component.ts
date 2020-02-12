@@ -17,4 +17,9 @@ export class TextComponent extends ShapeComponent implements OnInit {
     super.ngOnInit(); // important
   }
 
+  onClick() {
+    if (this.appText.onClick) { // if present, invoke it
+      this.appText.onClick();
+    }
+  }
 }

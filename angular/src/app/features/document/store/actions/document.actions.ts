@@ -3,6 +3,8 @@ import {Document} from '../../../../core/model/entities/document';
 import {Image} from '../../../../core/model/entities/image';
 import {DocumentStatistics} from '../../../../core/model/restapi/document-statistics';
 import {PreflightCheckResult} from '../../../../core/model/restapi/preflight-check-result';
+import {AlignmentPreview} from '../../../../core/model/restapi/alignment-preview';
+import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 
 export enum DocumentActionTypes {
   GetDocument = '[Document] Get document',
@@ -19,8 +21,12 @@ export enum DocumentActionTypes {
   ExportMusicXMLSuccess = '[Document] Export MusicXML success',
   GetDocumentStatistics = '[Document] Get document statistics',
   GetDocumentStatisticsSuccess = '[Document] Get document statistics success',
-  PreflightCheck = '[Document] Preflight check',
+  PreflightCheck = '[Document] Preflight check', //TODO quitar
   PreflightCheckSuccess = '[Document] Preflight check success',
+  GetAlignmentPreview = '[Document] Get alignment preview',
+  GetAlignmentPreviewSuccess = '[Document] Get alignment preview success',
+  GetCroppedImage = '[Document] Get cropped image',
+  GetCroppedImageSuccess = '[Document] Get cropped image success',
 }
 
 export class GetDocument implements Action {
@@ -103,6 +109,26 @@ export class PreflightCheckSuccess implements Action {
   constructor(public preflightCheckResult: PreflightCheckResult) {}
 }
 
+export class GetAlignmentPreview implements Action {
+  public readonly type = DocumentActionTypes.GetAlignmentPreview;
+  constructor(public documentID: number) {}
+}
+
+export class GetAlignmentPreviewSuccess implements Action {
+  public readonly type = DocumentActionTypes.GetAlignmentPreviewSuccess;
+  constructor(public alignmentPreview: AlignmentPreview) {}
+}
+
+
+export class GetCroppedImage implements Action {
+  public readonly type = DocumentActionTypes.GetCroppedImage;
+  constructor(public imageID: number, public boundingBox: BoundingBox) {}
+}
+
+export class GetCroppedImageSuccess implements Action {
+  public readonly type = DocumentActionTypes.GetCroppedImageSuccess;
+  constructor(public url: string) {}
+}
 
 export type DocumentActions =
   GetDocument | GetDocumentSuccess | GetImages | GetImagesSuccess | ExportMEI | ExportMEISuccess |
@@ -110,4 +136,6 @@ export type DocumentActions =
   ExportMensurstrich | ExportMensurstrichSuccess |
   ExportMusicXML | ExportMusicXMLSuccess |
   GetDocumentStatistics | GetDocumentStatisticsSuccess |
-  PreflightCheck | PreflightCheckSuccess;
+  PreflightCheck | PreflightCheckSuccess |
+  GetAlignmentPreview | GetAlignmentPreviewSuccess |
+  GetCroppedImage | GetCroppedImageSuccess;

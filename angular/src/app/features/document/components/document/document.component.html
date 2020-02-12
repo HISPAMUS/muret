@@ -4,8 +4,9 @@
   <div class="row titles">
     <div class="col-7 offset-1 align-self-end">
       <h4>{{document.name | uppercase}}</h4>
+      <p><a (click)="viewAlignmentPreview()">Parts alignment preview</a></p>
       <p><a (click)="viewFullScore()">View full score and export</a></p>
-      <p><a (click)="editInstruments()">Instruments</a></p>
+      <p><a (click)="editInstruments()">Parts / Instruments</a></p>
       <p *ngIf="statistics$ | async as statistics">
         #{{statistics.images}} images, #{{statistics.pages}} pages, #{{statistics.regions}} regions (#{{statistics.staves}} staves), #{{statistics.agnosticSymbols}} agnostic symbols
       </p>

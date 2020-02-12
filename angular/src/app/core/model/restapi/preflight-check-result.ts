@@ -8,6 +8,10 @@ export interface PreflightCkeckImageResult {
   imageName: string;
   regionResults: Array<PreflightCkeckRegionResult>;
 }
+
+/**
+ * @deprecated
+ */
 export interface PreflightCheckResult {
   preflightCkeckImageResults: Array<PreflightCkeckImageResult>;
 }

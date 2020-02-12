@@ -6,6 +6,7 @@ import {ApiRestClientService} from '../../../core/services/api-rest-client.servi
 import {StringResponse} from '../../../core/model/restapi/string-response';
 import {DocumentStatistics} from '../../../core/model/restapi/document-statistics';
 import {PreflightCheckResult} from '../../../core/model/restapi/preflight-check-result';
+import {AlignmentPreview} from '../../../core/model/restapi/alignment-preview';
 
 @Injectable() // non-singleton
 export class DocumentService {
@@ -62,5 +63,10 @@ export class DocumentService {
     const selectedImagesString = selectedImages.join(',');
     const url = `document/preflightCheck/${documentID}/${selectedImagesString}`;
     return this.apiRestClientService.get$<PreflightCheckResult>(url);
+  }
+
+  getAlignmentPreview$(documentID: number): Observable<AlignmentPreview> {
+    const url = `alignment/preview/${documentID}`;
+    return this.apiRestClientService.get$<AlignmentPreview>(url);
   }
 }

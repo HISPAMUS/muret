@@ -1,0 +1,59 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col">
+      <h2>Alignment preview</h2>
+    </div>
+  </div>
+
+  <ng-container *ngIf="pianoRollBuilt; else loadingPreview ">
+    <div class="row">
+      <div class="col-12 overflow-auto">
+        <!-- part names -->
+        <div id="pianoRoll">
+          <div *ngFor="let part of alignmentPreview.parts; trackBy: trackByPartFn" class="previewPart">
+            <h5>Part {{part.name}}</h5>
+            <div [style.height.px]="STAVES_HEIGHT" class="alignmentPreviewCanvases">
+              <div *ngFor="let staff of part.staves; trackBy: trackByStaffFn" [style.width.px]="getWidth(staff.id)">
+                  <div ngbDropdown placement="bottom-left" class="d-inline-block">
+                    <button class="btn btn-outline-primary" id="dropdownBasic2" ngbDropdownToggle>Staff</button>
+                      <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
+                        <button ngbDropdownItem (click)="previewCroppedImage(staff.imageID, staff.boundingBox)">Staff preview</button>
+                        <button ngbDropdownItem (click)="previewImage(staff.imageID)" >Image preview</button>
+                        <button ngbDropdownItem (click)="openSemanticRegion(staff.imageID, staff.id)">Edit staff semantic encoding</button>
+                      </div>
+                    </div>
+
+                  <app-svg-canvas
+                    [shapes]="getShapes(staff.id)"
+                    [zoomFactor]="zoomFactor"
+                    [mode]="'eSelecting'"
+                    [(selectedShapeID)]="selectedShapeID"
+                    [viewPortHeight]="STAVES_HEIGHT"
+                    [viewPortWidth]="getWidth(staff.id)">
+                  </app-svg-canvas>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <h3>Warnings</h3>
+        <ul>
+          <li *ngFor="let problem of alignmentPreview.problems">
+            <a (click)="openProblemTarget(problem)">{{getProblemTitle(problem)}}</a>:
+            {{problem.problem}}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </ng-container>
+
+  <ng-template #loadingPreview>
+    <div class="jumbotron">
+      Loading preview, please, wait...
+    </div>
+  </ng-template>
+</div>

@@ -6,6 +6,7 @@ import {AlertComponent} from '../components/error-modal-message/alert.component'
 import {InputDialogComponent} from '../components/input-dialog/input-dialog.component';
 import { ConfirmDialogWarningComponent } from '../components/confirm-dialog-warning/confirm-dialog-warning.component';
 import { OptionsDialogComponent, ModalOptions } from '../components/options-dialog/options-dialog.component';
+import {LinksModalDialogComponent, onLinkClickType} from '../components/links-modal-dialog/links-modal-dialog.component';
 
 
 @Injectable({
@@ -79,4 +80,15 @@ export class DialogsService {
     return this.optionsInDialog;
   }
 
+  /**
+   * @param links key = url, value = text
+   */
+  public showLinks(title: string, message: string, links: Map<string, string>, onClickLinks: Map<string, onLinkClickType>) {
+    return this.simpleModalService.addModal(LinksModalDialogComponent, {
+      title,
+      message,
+      links,
+      onClickLinks
+    });
+  }
 }

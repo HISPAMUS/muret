@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
@@ -71,15 +71,14 @@ export class ApiRestClientService {
       map((data: any) => data._embedded[detailsEndpoint] as T[]));
   }
 
-  public getBlob$<Blob>(endpoint: string): Observable<Blob> {
-
+  public getBlob$(endpoint: string): Observable<Blob> {
     let url: string;
     url = `${this.url}/${endpoint}`;
     this.logger.debug('RestClientService#getBlob ' + url);
-
-    return this.httpClient.get(url, {responseType: 'blob'}).pipe(
-      catchError(this.errorHandlingService.handleError(endpoint, null))
-    );
+    return this.httpClient.get(url, {responseType: 'blob'});
+    // Errors are handled in ErrorInterceptor
+      // catchError(this.errorHandlingService.handleHttpError(endpoint, null))
+      // catchError((err: HttpErrorResponse) => this.errorHandlingService.handleHttpError('TO-DO', err, endpoint, null))
   }
 
   public get$<T>(endpoint: string): Observable<T> {
@@ -97,9 +96,11 @@ export class ApiRestClientService {
 
     this.logger.debug('RestClientService#post ' + url);
 
-    return this.httpClient.post<T>(url, body).pipe(
-      catchError(this.errorHandlingService.handleError(endpoint, null))
-    );
+    return this.httpClient.post<T>(url, body);
+    /*.Errors are handled in ErrorInterceptor pipe(
+      // catchError(this.errorHandlingService.handleHttpError(endpoint, null))
+      catchError(err => this.errorHandlingService.handleHttpError('TO-DO', endpoint, err, null))
+    );*/
   }
 
   public put$<T>(endpoint: string, body: any): Observable<T> {
@@ -109,22 +110,24 @@ export class ApiRestClientService {
 
     this.logger.debug('RestClientService#put ' + url);
 
-    return this.httpClient.put<T>(url, body).
-      pipe(
-        catchError(this.errorHandlingService.handleError(endpoint, null))
-      );
+    return this.httpClient.put<T>(url, body);
+/*.Errors are handled in ErrorInterceptor   pipe(
+   // catchError(this.errorHandlingService.handleHttpError(endpoint, null))
+  .catchError(err => this.errorHandlingService.handleHttpError('TO-DO', endpoint, err, null))
+  );*/
   }
 
-  public delete$<T>(endpoint: string, id: any): Observable<T> {
+public delete$<T>(endpoint: string, id: any): Observable<T> {
 
-    let url: string;
-    url = `${this.url}/${endpoint}/${id}`;
+let url: string;
+url = `${this.url}/${endpoint}/${id}`;
 
-    this.logger.debug('RestClientService#put ' + url);
+this.logger.debug('RestClientService#put ' + url);
 
-    return this.httpClient.delete<T>(url).
-    pipe(
-      catchError(this.errorHandlingService.handleError(endpoint, null))
-    );
-  }
+return this.httpClient.delete<T>(url);
+/*.Errors are handled in ErrorInterceptor pipe(
+  .catchError(err => this.errorHandlingService.handleHttpError('TO-DO', endpoint, err, null))
+  // catchError(this.errorHandlingService.handleHttpError('TO-DO', endpoint, err, null))
+);*/
+}
 }

@@ -66,4 +66,8 @@ export class DocumentComponent implements OnInit {
   editInstruments() {
     this.router.navigate(['/document/instruments', this.documentID]);
   }
+
+  viewAlignmentPreview() {
+    this.router.navigate(['/document/alignmentPreview', this.documentID]);
+  }
 }

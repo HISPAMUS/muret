@@ -54,6 +54,7 @@ export class ImageThumbnailComponent implements OnInit {
     // this.partsUsedInImage$ = this.store.select(selectPartsUsedInImage);
   }
 
+  //TODO algo de código repetido en AlignmentPreviewComponent
   previewImage() {
     this.imageFilesService.getPreviewImageBlob$(this.documentPath, this.image.id).subscribe(imageBlob => {
       const albums = []; // used by Lightbox
@@ -65,7 +66,6 @@ export class ImageThumbnailComponent implements OnInit {
 
       albums.push(album);
       this.lightbox.open(albums);
-      // TODO volver a dejar Lightbox cuando se actualice de versión 1.2.0
       // window.open(window.URL.createObjectURL(imageBlob), 'Preview ' + this.image.filename, 'widthPercentage=1280,heightPercentage=720');
     });
   }

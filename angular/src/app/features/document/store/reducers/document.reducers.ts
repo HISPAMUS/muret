@@ -55,6 +55,12 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
         preflightCheckResults: action.preflightCheckResult
       };
     }
+    case DocumentActionTypes.GetAlignmentPreviewSuccess: {
+      return {
+        ...state,
+        alignmentPreview: action.alignmentPreview
+      };
+    }
     default: {
       return state;
     }

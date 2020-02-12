@@ -27,3 +27,8 @@ export const selectPreflightCheckResults = createSelector(
   documentState,
   (state: DocumentState) => state.preflightCheckResults
 );
+
+export const selectAlignmentPreview = createSelector(
+  documentState,
+  (state: DocumentState) => state.alignmentPreview
+);

@@ -2,24 +2,28 @@ package es.ua.dlsi.grfia.im3ws.muret.controller;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
+import es.ua.dlsi.grfia.im3ws.muret.controller.payload.ImageToCrop;
+import es.ua.dlsi.grfia.im3ws.muret.controller.payload.RegionCreation;
+import es.ua.dlsi.grfia.im3ws.muret.entity.BoundingBox;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Image;
+import es.ua.dlsi.grfia.im3ws.muret.entity.Page;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.PageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.SymbolRepository;
+import es.ua.dlsi.im3.core.utils.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
 import javax.transaction.Transactional;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.util.List;
 
 @RequestMapping("imagefiles")
 @RestController
@@ -40,6 +44,16 @@ public class ImageFilesController extends MuRETBaseController {
      * @throws FileNotFoundException
      */
     private ResponseEntity<InputStreamResource> getImage(String documentPath, Long imageID, String imagesRelativePath) throws IM3WSException, FileNotFoundException {
+        File imageFile = getImageFile(documentPath, imageID, imagesRelativePath);
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.IMAGE_JPEG) //TODO Siempre devolver JPEG, si no los tenemos cambiarlos
+                .body(new InputStreamResource(new FileInputStream(imageFile)));
+
+    }
+
+    private File getImageFile(String documentPath, Long imageID, String imagesRelativePath) throws IM3WSException {
         Image image = getImage(imageID);
 
         if (documentPath == null) {
@@ -53,18 +67,20 @@ public class ImageFilesController extends MuRETBaseController {
         if (!imageFile.exists()) {
             throw new IM3WSException("Image '" + imageFile.getAbsolutePath() + "' for image with ID=" + imageID + " does not exist");
         }
-
-        return ResponseEntity
-                .ok()
-                .contentType(MediaType.IMAGE_JPEG) //TODO Siempre devolver JPEG, si no los tenemos cambiarlos
-                .body(new InputStreamResource(new FileInputStream(imageFile)));
-
+        return imageFile;
     }
 
     @GetMapping(value = "{documentPath}/master/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<InputStreamResource> getMasterImage(@PathVariable("documentPath") String documentPath, @PathVariable("imageID") Long imageID) throws IM3WSException, FileNotFoundException {
         return getImage(documentPath, imageID,  MURETConfiguration.MASTER_IMAGES);
     }
+
+    @GetMapping(value = "preview/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
+    @Transactional
+    public ResponseEntity<InputStreamResource> getPreviewImage(@PathVariable("imageID") Long imageID) throws IM3WSException, FileNotFoundException {
+        return getImage(null, imageID,  MURETConfiguration.PREVIEW_IMAGES);
+    }
+
     @GetMapping(value = "master/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
     @Transactional // because we'll get the document path
     public ResponseEntity<InputStreamResource> getMasterImage(@PathVariable("imageID") Long imageID) throws IM3WSException, FileNotFoundException {
@@ -80,4 +96,26 @@ public class ImageFilesController extends MuRETBaseController {
         return getImage(documentPath, imageID,  MURETConfiguration.PREVIEW_IMAGES);
     }
 
+    @GetMapping(value = "croppedImage/{imageID}/{fromX}/{fromY}/{toX}/{toY}", produces = MediaType.IMAGE_JPEG_VALUE)
+    @Transactional
+    public ResponseEntity<InputStreamResource> getCroppedMasterImageBlob$(@PathVariable("imageID") Long imageID,
+            @PathVariable("fromX") int fromX, @PathVariable("fromY") int fromY,
+            @PathVariable("toX") int toX, @PathVariable("toY") int toY)
+            throws IM3WSException, IOException {
+        File imageFile = getImageFile(null, imageID, MURETConfiguration.MASTER_IMAGES);
+
+        BufferedImage bufferedImage = ImageIO.read(imageFile);
+        BufferedImage croppedImage = ImageUtils.getInstance().crop(bufferedImage, fromX, fromY, toX, toY);
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ImageIO.write(croppedImage, "jpg", bos);
+        byte[] bytes = bos.toByteArray();
+
+        InputStreamResource inputStreamResource = new InputStreamResource(new ByteArrayInputStream(bytes));
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.IMAGE_JPEG) //TODO Siempre devolver JPEG, si no los tenemos cambiarlos
+                .body(inputStreamResource);
+    }
 }

@@ -18,19 +18,25 @@ import {
   GetDocumentStatistics,
   GetDocumentStatisticsSuccess,
   GetDocumentSuccess,
-  DocumentActionTypes, PreflightCheck, PreflightCheckSuccess,
+  DocumentActionTypes,
+  PreflightCheck,
+  PreflightCheckSuccess,
+  GetAlignmentPreview,
+  GetAlignmentPreviewSuccess,
 } from '../actions/document.actions';
 import {Document} from '../../../../core/model/entities/document';
 import {Image} from '../../../../core/model/entities/image';
 import {StringResponse} from '../../../../core/model/restapi/string-response';
 import {DocumentStatistics} from '../../../../core/model/restapi/document-statistics';
-import {Collection} from '../../../../core/model/entities/collection';
 import {PreflightCheckResult} from '../../../../core/model/restapi/preflight-check-result';
+import {AlignmentPreview} from '../../../../core/model/restapi/alignment-preview';
+import {ImageFilesService} from '../../../../core/services/image-files.service';
 
 @Injectable()
 export class DocumentEffects {
   constructor(
     private documentService: DocumentService,
+    private imageFilesService: ImageFilesService,
     private actions$: Actions,
   ) {}
 
@@ -99,12 +105,24 @@ export class DocumentEffects {
     })
   );
 
+  /**
+   * @deprecated Use getAlignmentPreview$
+   */
   @Effect()
   preflightCheck$ = this.actions$.pipe(
     ofType<PreflightCheck>(DocumentActionTypes.PreflightCheck),
     switchMap((action: PreflightCheck) => this.documentService.preflightCheck$(action.documentID, action.selectedImages)),
     switchMap((preflightCheckResult: PreflightCheckResult) => {
       return of(new PreflightCheckSuccess(preflightCheckResult));
+    })
+  );
+
+  @Effect()
+  getAlignmentPreview$ = this.actions$.pipe(
+    ofType<GetAlignmentPreview>(DocumentActionTypes.GetAlignmentPreview),
+    switchMap((action: GetAlignmentPreview) => this.documentService.getAlignmentPreview$(action.documentID)),
+    switchMap((alignmentPreview: AlignmentPreview) => {
+      return of(new GetAlignmentPreviewSuccess(alignmentPreview));
     })
   );
 }

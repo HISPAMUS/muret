@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import {NGXLogger} from 'ngx-logger';
 import {Observable} from 'rxjs';
-import { of } from 'rxjs';
-import {map, share, tap} from 'rxjs/operators';
 import {ApiRestClientService} from './api-rest-client.service';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
-import {ActivatedRoute} from '@angular/router';
+import {BoundingBox} from '../model/entities/bounding-box';
 
 enum ImageType {
   master = 'master',
@@ -57,5 +55,19 @@ export class ImageFilesService {
   public getPreviewImageBlob$(documentPath: string, imageID: number): Observable<Blob> {
     return this.getImageBlob$(documentPath, ImageType.preview, imageID);
   }
+
+  /**
+   * @param documentPath May be null
+   */
+  public getCroppedMasterImageBlob$(imageID: number, boundingBox: BoundingBox): Observable<Blob> {
+    const data = {
+      imageID,
+      boundingBox
+    };
+
+    const url = `${endpoint}/croppedImage/${imageID}/${boundingBox.fromX}/${boundingBox.fromY}/${boundingBox.toX}/${boundingBox.toY}`;
+    return this.apiRestClientService.getBlob$<Blob>(url);
+  }
+
 }
 

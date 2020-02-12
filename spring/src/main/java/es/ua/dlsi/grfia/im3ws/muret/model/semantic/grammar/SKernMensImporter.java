@@ -741,11 +741,18 @@ public class SKernMensImporter {
 
         @Override
         public void exitGraphicalToken(sKernMensParser.GraphicalTokenContext ctx) {
-            super.enterGraphicalToken(ctx);
-            humdrumMatrix.associateIDSToLastItem(associatedIDS);
+            super.exitGraphicalToken(ctx);
+            if (associatedIDS != null && !associatedIDS.isEmpty()) {
+                humdrumMatrix.associateIDSToLastItem(associatedIDS);
+            }
         }
 
+        @Override
+        public void exitPlainChant(sKernMensParser.PlainChantContext ctx) {
+            super.exitPlainChant(ctx);
 
+            humdrumMatrix.addItemToCurrentRow(ctx.getText());
+        }
     }
 
     private HumdrumMatrix importSKernMens(CharStream input, String inputDescription, boolean anyStart) throws ImportException {

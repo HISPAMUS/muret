@@ -177,6 +177,9 @@ export class DocumentScoreViewerComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * @deprecated Use AlignmentPreviewController
+   */
   preflightCheck() {
     this.store.dispatch(new PreflightCheck(this.documentID, this.getIDOfSelectedImages()));
   }

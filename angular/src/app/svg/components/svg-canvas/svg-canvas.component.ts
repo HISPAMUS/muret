@@ -36,12 +36,26 @@ import {Polylines} from '../../model/polylines';
  * It also implements the resizing of elements without CDK drag&drop
  */
 export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecked {
+  /**
+   * Optional
+   */
   @Input() backgroundImage: string;
   @Input() shapes: Shape[];
   @Input() zoomFactor: number;
 
+  /**
+   * Optional
+   */
   @Input() crop: BoundingBox;
   @Input() nextShapeToAdd: 'Rectangle' | 'Line' | 'Text' | 'Polylines';
+
+  /**
+   * These values are optional, they can be inferred from the background image (if present). If no image is present, it is compulsory
+   */
+  @Input() viewPortHeight = 0;
+  @Input() viewPortWidth = 0;
+
+  ////
 
   selectedShapeIDValue: string;
 
@@ -65,8 +79,6 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   // end of interaction
 
   viewBox: string;
-  viewPortHeight = 0;
-  viewPortWidth = 0;
   scaledImageWidth: any;
   scaledImageHeight: any;
 
@@ -92,7 +104,13 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   }
 
   ngOnInit() {
-    this.unsafeBackgroundImage = this.sanitizer.bypassSecurityTrustResourceUrl(this.backgroundImage);
+    if (this.backgroundImage) {
+      this.unsafeBackgroundImage = this.sanitizer.bypassSecurityTrustResourceUrl(this.backgroundImage);
+    } else if (this.viewPortHeight !== 0 && this.viewPortWidth !== 0) { // when not using image use the specified height and width
+      this.computeViewBox();
+      this.scaledImageHeight = this.viewPortHeight;
+      this.scaledImageWidth = this.viewPortWidth;
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
