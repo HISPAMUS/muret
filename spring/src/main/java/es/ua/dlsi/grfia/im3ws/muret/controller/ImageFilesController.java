@@ -24,6 +24,7 @@ import javax.transaction.Transactional;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.List;
+// !!! Important: no controller should throw any exception
 
 @RequestMapping("imagefiles")
 @RestController
@@ -71,51 +72,77 @@ public class ImageFilesController extends MuRETBaseController {
     }
 
     @GetMapping(value = "{documentPath}/master/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<InputStreamResource> getMasterImage(@PathVariable("documentPath") String documentPath, @PathVariable("imageID") Long imageID) throws IM3WSException, FileNotFoundException {
-        return getImage(documentPath, imageID,  MURETConfiguration.MASTER_IMAGES);
+    public ResponseEntity<InputStreamResource> getMasterImage(@PathVariable("documentPath") String documentPath, @PathVariable("imageID") Long imageID)  {
+        try {
+            return getImage(documentPath, imageID,  MURETConfiguration.MASTER_IMAGES);
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot get master image", e);
+        }
     }
 
     @GetMapping(value = "preview/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
     @Transactional
-    public ResponseEntity<InputStreamResource> getPreviewImage(@PathVariable("imageID") Long imageID) throws IM3WSException, FileNotFoundException {
-        return getImage(null, imageID,  MURETConfiguration.PREVIEW_IMAGES);
+    public ResponseEntity<InputStreamResource> getPreviewImage(@PathVariable("imageID") Long imageID)  {
+        try {
+            return getImage(null, imageID, MURETConfiguration.PREVIEW_IMAGES);
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot get preview image", e);
+        }
     }
 
     @GetMapping(value = "master/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
     @Transactional // because we'll get the document path
-    public ResponseEntity<InputStreamResource> getMasterImage(@PathVariable("imageID") Long imageID) throws IM3WSException, FileNotFoundException {
-        return getImage(null, imageID,  MURETConfiguration.MASTER_IMAGES);
+    public ResponseEntity<InputStreamResource> getMasterImage(@PathVariable("imageID") Long imageID)  {
+        try {
+            return getImage(null, imageID,  MURETConfiguration.MASTER_IMAGES);
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot get master image", e);
+        }
+
     }
 
     @GetMapping(value = "{documentPath}/thumbnail/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<InputStreamResource> getThumbnailImage(@PathVariable("documentPath") String documentPath, @PathVariable("imageID") Long imageID) throws IM3WSException, FileNotFoundException {
-        return getImage(documentPath, imageID,  MURETConfiguration.THUMBNAIL_IMAGES);
+    public ResponseEntity<InputStreamResource> getThumbnailImage(@PathVariable("documentPath") String documentPath, @PathVariable("imageID") Long imageID) {
+        try {
+            return getImage(documentPath, imageID,  MURETConfiguration.THUMBNAIL_IMAGES);
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot get thumnail image", e);
+        }
+
     }
     @GetMapping(value = "{documentPath}/preview/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<InputStreamResource> getPreviewImage(@PathVariable("documentPath") String documentPath, @PathVariable("imageID") Long imageID) throws IM3WSException, FileNotFoundException {
-        return getImage(documentPath, imageID,  MURETConfiguration.PREVIEW_IMAGES);
+    public ResponseEntity<InputStreamResource> getPreviewImage(@PathVariable("documentPath") String documentPath, @PathVariable("imageID") Long imageID) {
+        try {
+            return getImage(documentPath, imageID,  MURETConfiguration.PREVIEW_IMAGES);
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot get preview image", e);
+        }
     }
 
     @GetMapping(value = "croppedImage/{imageID}/{fromX}/{fromY}/{toX}/{toY}", produces = MediaType.IMAGE_JPEG_VALUE)
     @Transactional
     public ResponseEntity<InputStreamResource> getCroppedMasterImageBlob$(@PathVariable("imageID") Long imageID,
             @PathVariable("fromX") int fromX, @PathVariable("fromY") int fromY,
-            @PathVariable("toX") int toX, @PathVariable("toY") int toY)
-            throws IM3WSException, IOException {
-        File imageFile = getImageFile(null, imageID, MURETConfiguration.MASTER_IMAGES);
+            @PathVariable("toX") int toX, @PathVariable("toY") int toY) {
 
-        BufferedImage bufferedImage = ImageIO.read(imageFile);
-        BufferedImage croppedImage = ImageUtils.getInstance().crop(bufferedImage, fromX, fromY, toX, toY);
+        try {
+            File imageFile = getImageFile(null, imageID, MURETConfiguration.MASTER_IMAGES);
 
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ImageIO.write(croppedImage, "jpg", bos);
-        byte[] bytes = bos.toByteArray();
+            BufferedImage bufferedImage = ImageIO.read(imageFile);
+            BufferedImage croppedImage = ImageUtils.getInstance().crop(bufferedImage, fromX, fromY, toX, toY);
 
-        InputStreamResource inputStreamResource = new InputStreamResource(new ByteArrayInputStream(bytes));
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ImageIO.write(croppedImage, "jpg", bos);
+            byte[] bytes = bos.toByteArray();
 
-        return ResponseEntity
-                .ok()
-                .contentType(MediaType.IMAGE_JPEG) //TODO Siempre devolver JPEG, si no los tenemos cambiarlos
-                .body(inputStreamResource);
+            InputStreamResource inputStreamResource = new InputStreamResource(new ByteArrayInputStream(bytes));
+
+            return ResponseEntity
+                    .ok()
+                    .contentType(MediaType.IMAGE_JPEG) //TODO Siempre devolver JPEG, si no los tenemos cambiarlos
+                    .body(inputStreamResource);
+        } catch (Throwable t) {
+            throw ControllerUtils.createServerError(this, "Cannot get cropped master image", t);
+        }
     }
 }

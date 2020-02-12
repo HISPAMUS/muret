@@ -21,6 +21,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+// !!! Important: no controller should throw any exception
 
 /**
  * @author drizo
@@ -59,7 +60,7 @@ public class TrainingSetsController {
      */
     @RequestMapping(value="/download/{exporterIndex}/{documentIds}", method= RequestMethod.GET, produces="application/x-gzip")
     @ResponseBody
-    public ResponseEntity<?> download(@PathVariable Integer exporterIndex, @PathVariable List<Integer> documentIds) throws IM3WSException {
+    public ResponseEntity<?> download(@PathVariable Integer exporterIndex, @PathVariable List<Integer> documentIds)  {
         try {
             //ITrainingSetExporter exporter = TrainingSetsFactory.getInstance(entityManagerFactory).getTrainingSetExporter(exporterIndex);
             ITrainingSetExporter exporter = trainingSetsFactory.getTrainingSetExporter(exporterIndex);
@@ -84,8 +85,7 @@ public class TrainingSetsController {
 
             return new ResponseEntity<>(output.getData(), output.getHeaders(), HttpStatus.OK);
         } catch (Exception e) {
-            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot export", e);
-            throw new IM3WSException(e);
+            throw ControllerUtils.createServerError(this, "Cannot export and download training set", e);
         }
 
     }

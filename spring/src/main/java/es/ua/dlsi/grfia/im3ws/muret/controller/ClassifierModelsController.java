@@ -14,7 +14,9 @@ import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
 import es.ua.dlsi.grfia.im3ws.service.FileStorageService;
 import es.ua.dlsi.im3.core.score.NotationType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.nio.file.Path;
@@ -23,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+// !!! Important: no controller should throw any exception
 
 /**
  * @author drizo
@@ -82,7 +85,7 @@ public class ClassifierModelsController {
     }
 
     @Transactional
-    public List<ClassifierModel> requestModels(ClassifierModelTypes classifierType, Long imageID) throws IM3WSException
+    public List<ClassifierModel> requestModels(ClassifierModelTypes classifierType, Long imageID)
     {
         try {
             Document document = getDocument(imageID);
@@ -91,48 +94,50 @@ public class ClassifierModelsController {
             Integer documentID = document.getId();
             Integer collectionID = document.getCollection().getId();
             return this.classifierClient.getModels(classifierType, collectionID, documentID, notationType.name(), manuscriptType.name());
-        } catch (IM3WSException e) {
-            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot get classifier models", e);
-            throw new IM3WSException("There was an error retrieving Agnostic End to end models, it is possible that the folder referenced does not exist in the classification server");
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "There was an error retrieving Agnostic End to end models, it is possible that the folder referenced does not exist in the classification server: " + e.getMessage(), e);
         }
     }
 
     @GetMapping(path = {"symbols/{imageID}"})
     @Transactional
-    public List<ClassifierModel> getSymbolClassifierModels(@PathVariable("imageID") Long imageID) throws IM3WSException {
+    public List<ClassifierModel> getSymbolClassifierModels(@PathVariable("imageID") Long imageID) {
         return requestModels(ClassifierModelTypes.eAgnosticSymbols, imageID);
     }
 
     @GetMapping(path = {"agnosticEnd2End/{imageID}"})
     @Transactional
-    public List<ClassifierModel>  getAgnosticEnd2EndClassifierModel(@PathVariable("imageID") Long imageID) throws IM3WSException {
+    public List<ClassifierModel>  getAgnosticEnd2EndClassifierModel(@PathVariable("imageID") Long imageID) {
         return requestModels(ClassifierModelTypes.eAgnosticEnd2End, imageID);
     }
 
     @GetMapping(path={"documentAnalysis/{imageID}"})
     @Transactional
-    public List<ClassifierModel> getDocumentAnalysisClassifierModels(@PathVariable("imageID") Long imageID) throws IM3WSException
-    {
+    public List<ClassifierModel> getDocumentAnalysisClassifierModels(@PathVariable("imageID") Long imageID) {
         return requestModels(ClassifierModelTypes.eDocumentAnalysis, imageID);
     }
 
     @GetMapping(path={"translator/{imageID}"})
     @Transactional
-    public List<ClassifierModel> getTranslationClassifierModels(@PathVariable("imageID") Long imageID) throws IM3WSException
-    {
+    public List<ClassifierModel> getTranslationClassifierModels(@PathVariable("imageID") Long imageID) {
         return requestModels(ClassifierModelTypes.eAgnostic2SemanticTranslator, imageID);
     }
 
     @PostMapping(path = {"uploadmodel"})
     @Transactional
-    public StringResponse uploadModel(UploadModel c_uploadModel) throws IM3WSException
-    {
+    public StringResponse uploadModel(UploadModel c_uploadModel)  {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Uploading model {0}", c_uploadModel.geteModelFile());
         Path pathToFile = Paths.get(muretconfig.getFolder(), MURETConfiguration.MODELS_FOLDER);
         String fileName = fileStorageService.storeFile(pathToFile, c_uploadModel.geteModelFile());
         Path filePath = Paths.get(pathToFile.toString(), fileName);
-        classifierClient.uploadModelZip(c_uploadModel, filePath);
-        return new StringResponse("Received pal");
+        try {
+            classifierClient.uploadModelZip(c_uploadModel, filePath);
+            return new StringResponse("Received pal");
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot upload zipped model", e);
+
+        }
+
     }
 
 }

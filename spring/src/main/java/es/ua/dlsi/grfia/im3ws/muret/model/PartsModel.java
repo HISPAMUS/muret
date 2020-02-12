@@ -1,6 +1,7 @@
-package es.ua.dlsi.grfia.im3ws.muret.controller;
+package es.ua.dlsi.grfia.im3ws.muret.model;
 
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
+// !!! Important: no controller should launch any exception
 
 public class PartsModel {
     public Part findPart(Image image) {

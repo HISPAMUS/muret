@@ -7,7 +7,6 @@ import es.ua.dlsi.grfia.im3ws.muret.controller.payload.SymbolCreationFromBoundin
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.SymbolCreationFromStrokes;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.SymbolCreationResult;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
-import es.ua.dlsi.grfia.im3ws.muret.model.ActionLogAgnosticModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticRepresentationModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticSymbolFont;
 import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticSymbolFontSingleton;
@@ -15,23 +14,18 @@ import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.PageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.SymbolRepository;
-import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.score.NotationType;
-import es.ua.dlsi.im3.core.score.PositionInStaff;
-import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
-import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbolType;
-import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbolTypeFactory;
-import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+//!Important: no controller should throw any exception
 /**
  * @author drizo
  */
@@ -58,20 +52,19 @@ public class AgnosticRepresentationController extends MuRETBaseController {
      * @throws IM3WSException On SVG constructrion
      */
     @GetMapping(path = {"svgset"})
-    public SVGSet getAgnosticSymbolSVGSet(@RequestParam(name="notationType") NotationType notationType, @RequestParam(name="manuscriptType") ManuscriptType manuscriptType) throws IM3WSException {
+    public SVGSet getAgnosticSymbolSVGSet(@RequestParam(name="notationType") NotationType notationType, @RequestParam(name="manuscriptType") ManuscriptType manuscriptType) {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Getting AgnosticSymbolSVGSet");
-        Objects.requireNonNull(notationType, "notationType cannot be null");
-        Objects.requireNonNull(manuscriptType, "manuscriptType cannot be null");
-        AgnosticSymbolFont agnosticSymbolFont = AgnosticSymbolFontSingleton.getInstance().getLayoutFont(notationType, manuscriptType);
-
         try {
+            Objects.requireNonNull(notationType, "notationType cannot be null");
+            Objects.requireNonNull(manuscriptType, "manuscriptType cannot be null");
+            AgnosticSymbolFont agnosticSymbolFont = AgnosticSymbolFontSingleton.getInstance().getLayoutFont(notationType, manuscriptType);
             SVGSet result = new SVGSet(agnosticSymbolFont.getLayoutFont().getSVGFont().getAscent(),
                     agnosticSymbolFont.getLayoutFont().getSVGFont().getDescent(),
                     agnosticSymbolFont.getLayoutFont().getSVGFont().getUnitsPerEM(),
                     agnosticSymbolFont.getFullSVGSetPathd());
             return result;
-        } catch (IM3Exception e) {
-            throw new IM3WSException(e);
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot export", e);
         }
     }
 
@@ -80,8 +73,13 @@ public class AgnosticRepresentationController extends MuRETBaseController {
     public Symbol changeAgnosticSymbol(@PathVariable("symbolID") Long symbolID,
                                            @PathVariable("agnosticSymbolTypeString") String agnosticSymbolTypeString,
                                            @PathVariable("positionInStaffString") String positionInStaffString
-    ) throws IM3WSException, IM3Exception {
-        return this.agnosticRepresentationModel.changeAgnosticSymbol(symbolID, agnosticSymbolTypeString, positionInStaffString);
+    )  {
+        try {
+            return this.agnosticRepresentationModel.changeAgnosticSymbol(symbolID, agnosticSymbolTypeString, positionInStaffString);
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this,"Cannot update symbol bounding box", e);
+
+        }
     }
 
     /*@GetMapping(path = {"changeAgnosticPositionInStaff/{symbolID}/{difference}"})
@@ -99,16 +97,26 @@ public class AgnosticRepresentationController extends MuRETBaseController {
 
     @Transactional
     @PutMapping(path = {"symbolBoundingBoxUpdate"})
-    public Symbol symbolBoundingBoxUpdate(@RequestBody BoundingBox boundingBox) throws IM3WSException {
-        return this.agnosticRepresentationModel.symbolBoundingBoxUpdate(boundingBox);
+    public Symbol symbolBoundingBoxUpdate(@RequestBody BoundingBox boundingBox)  {
+        try {
+            return this.agnosticRepresentationModel.symbolBoundingBoxUpdate(boundingBox);
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot update symbol bounding box", e);
+
+        }
     }
 
     @PutMapping(path = {"symbolCommentsUpdate"})
-    public Symbol symbolCommentsUpdate(@RequestBody CommentsBody commentsBody) throws IM3WSException {
-        Symbol symbol = getSymbol(commentsBody.getId());
-        symbol.setComments(commentsBody.getComments());
-        symbolRepository.save(symbol);
-        return symbol;
+    public Symbol symbolCommentsUpdate(@RequestBody CommentsBody commentsBody) {
+        try {
+            Symbol symbol = getSymbol(commentsBody.getId());
+            symbol.setComments(commentsBody.getComments());
+            symbolRepository.save(symbol);
+            return symbol;
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot update comments", e);
+
+        }
     }
 
     /**
@@ -117,9 +125,14 @@ public class AgnosticRepresentationController extends MuRETBaseController {
      * @throws IM3WSException
      */
     @DeleteMapping(path = {"deleteSymbol/{symbolID}"})
-    public long deleteSymbol(@PathVariable("symbolID") long symbolID) throws IM3WSException {
+    public long deleteSymbol(@PathVariable("symbolID") long symbolID) {
 
-        return this.agnosticRepresentationModel.deleteSymbol(symbolID);
+        try {
+            return this.agnosticRepresentationModel.deleteSymbol(symbolID);
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this,"Cannot delete symbol", e);
+
+        }
     }
 
     /*@PostMapping(path = {"classifySymbolFromBoundingBox"})
@@ -137,10 +150,16 @@ public class AgnosticRepresentationController extends MuRETBaseController {
      * @throws IM3WSException
      */
     @PostMapping(path = {"createSymbolFromBoundingBox"})
-    public SymbolCreationResult createSymbolFromBoundingBox(@RequestBody SymbolCreationFromBoundingBox symbolCreationFromBoundingBox) throws IM3WSException, IM3Exception {
+    public SymbolCreationResult createSymbolFromBoundingBox(@RequestBody SymbolCreationFromBoundingBox symbolCreationFromBoundingBox) {
         //TODO - poner el modelo correcto desde el frontend
-        SymbolCreationResult result = this.agnosticRepresentationModel.createSymbol(symbolCreationFromBoundingBox.getModelID(), symbolCreationFromBoundingBox.getRegionID(), symbolCreationFromBoundingBox.getBoundingBox(),
-                symbolCreationFromBoundingBox.getAgnosticSymbolType(), symbolCreationFromBoundingBox.getPositionInStaff());
+        SymbolCreationResult result = null;
+        try {
+            result = this.agnosticRepresentationModel.createSymbol(symbolCreationFromBoundingBox.getModelID(), symbolCreationFromBoundingBox.getRegionID(), symbolCreationFromBoundingBox.getBoundingBox(),
+                    symbolCreationFromBoundingBox.getAgnosticSymbolType(), symbolCreationFromBoundingBox.getPositionInStaff());
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot create symbol using a bounding box", e);
+
+        }
         return result;
         //TODO ModelID
     }
@@ -151,30 +170,40 @@ public class AgnosticRepresentationController extends MuRETBaseController {
      * @throws IM3WSException
      */
     @PostMapping(path = {"createSymbolFromStrokes"})
-    public SymbolCreationResult createSymbolFromStrokes(@RequestBody SymbolCreationFromStrokes symbolCreationFromStrokes) throws IM3WSException, IM3Exception {
-        return this.agnosticRepresentationModel.createSymbol(symbolCreationFromStrokes.getModelID(), symbolCreationFromStrokes.getRegionID(), symbolCreationFromStrokes.getPoints(),
-                symbolCreationFromStrokes.getAgnosticSymbolType(), symbolCreationFromStrokes.getPositionInStaff());
+    public SymbolCreationResult createSymbolFromStrokes(@RequestBody SymbolCreationFromStrokes symbolCreationFromStrokes) {
+        try {
+            return this.agnosticRepresentationModel.createSymbol(symbolCreationFromStrokes.getModelID(), symbolCreationFromStrokes.getRegionID(), symbolCreationFromStrokes.getPoints(),
+                    symbolCreationFromStrokes.getAgnosticSymbolType(), symbolCreationFromStrokes.getPositionInStaff());
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot create symbol from strokes", e);
+
+        }
         //TODO ModelID
     }
 
     @GetMapping(path = {"classifyRegionEndToEnd/{modelID}/{regionID}"})
-    public List<Symbol> classifyRegionEndToEnd(@PathVariable(name="modelID") String modelID, @PathVariable(name="regionID") Long regionID) throws IM3WSException {
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Classifying region end to end");
-        Objects.requireNonNull(modelID, "modelID cannot be null");
-        Objects.requireNonNull(regionID, "regionID cannot be null");
-
+    public List<Symbol> classifyRegionEndToEnd(@PathVariable(name="modelID") String modelID, @PathVariable(name="regionID") Long regionID) {
         try {
+            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Classifying region end to end");
+            Objects.requireNonNull(modelID, "modelID cannot be null");
+            Objects.requireNonNull(regionID, "regionID cannot be null");
+
             return this.agnosticRepresentationModel.classifyRegionEndToEnd(modelID, regionID);
-        } catch (IM3Exception e) {
-            throw new IM3WSException(e);
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot classify end to end", e);
         }
     }
 
     @DeleteMapping(path = {"clearRegionSymbols/{regionID}"})
-    public boolean clearRegionSymbols$(@PathVariable(name="regionID") Long regionID) throws IM3WSException {
+    public boolean clearRegionSymbols$(@PathVariable(name="regionID") Long regionID) {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Clear region symbols");
         Objects.requireNonNull(regionID, "regionID cannot be null");
 
-        return this.agnosticRepresentationModel.clearRegionSymbols(regionID);
+        try {
+            return this.agnosticRepresentationModel.clearRegionSymbols(regionID);
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot clear region symbols", e);
+
+        }
     }
 }

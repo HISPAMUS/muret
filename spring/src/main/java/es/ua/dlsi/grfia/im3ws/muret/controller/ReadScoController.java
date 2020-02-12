@@ -18,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+// !!! Important: no controller should throw any exception
 
 //TODO De momento estoy poniendo esto aquí, que coge muchas cosas de MuRET de manera desordenada. Lo debemos cambiar
 /**
@@ -43,28 +44,32 @@ public class ReadScoController  {
      * @throws FileNotFoundException
      */
     @PostMapping(path = "agnostic2semantic", consumes = "application/json", produces = "application/json")
-    public StringResponse agnostic2MEI(@RequestBody AgnosticEncodingJSON agnosticEncodingJSON) throws IM3WSException, IM3Exception, FileNotFoundException {
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Converting semantic staff from agnostic {0}", agnosticEncodingJSON);
+    public StringResponse agnostic2MEI(@RequestBody AgnosticEncodingJSON agnosticEncodingJSON)  {
+        try {
+            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Converting semantic staff from agnostic {0}", agnosticEncodingJSON);
 
-        NotationType notationType = agnosticEncodingJSON.getNotationType();
-        List<AgnosticSymbolTypeAndPosition> symbols = agnosticEncodingJSON.getAgnosticSymbols();
+            NotationType notationType = agnosticEncodingJSON.getNotationType();
+            List<AgnosticSymbolTypeAndPosition> symbols = agnosticEncodingJSON.getAgnosticSymbols();
 
-        AgnosticEncoding agnosticEncoding = new AgnosticEncoding();
-        for (AgnosticSymbolTypeAndPosition item: symbols) {
-            System.out.println("Symbol");
-            System.out.println(item);
-            AgnosticSymbolType agnosticSymbolType = AgnosticSymbolTypeFactory.parseString(item.getShape());
-            PositionInStaff positionInStaff = PositionInStaff.parseString(item.getPosition());
-            AgnosticSymbol agnosticSymbol = new AgnosticSymbol(AgnosticVersion.v2, agnosticSymbolType, positionInStaff);
-            agnosticEncoding.add(agnosticSymbol);
+            AgnosticEncoding agnosticEncoding = new AgnosticEncoding();
+            for (AgnosticSymbolTypeAndPosition item: symbols) {
+                System.out.println("Symbol");
+                System.out.println(item);
+                AgnosticSymbolType agnosticSymbolType = AgnosticSymbolTypeFactory.parseString(item.getShape());
+                PositionInStaff positionInStaff = PositionInStaff.parseString(item.getPosition());
+                AgnosticSymbol agnosticSymbol = new AgnosticSymbol(AgnosticVersion.v2, agnosticSymbolType, positionInStaff);
+                agnosticEncoding.add(agnosticSymbol);
+            }
+
+            TranslationModel translationModel = new TranslationModel();
+            SemanticTransduction semanticTransduction = translationModel.computeSemanticFromAgnostic(agnosticEncoding, notationType);
+
+            NotationModel notationModel = new NotationModel();
+            String mei = notationModel.getMEINotation(semanticTransduction.getSemanticEncoding(), notationType);
+
+            return new StringResponse(mei);
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot convert agnostic to MEI", e);
         }
-
-        TranslationModel translationModel = new TranslationModel();
-        SemanticTransduction semanticTransduction = translationModel.computeSemanticFromAgnostic(agnosticEncoding, notationType);
-
-        NotationModel notationModel = new NotationModel();
-        String mei = notationModel.getMEINotation(semanticTransduction.getSemanticEncoding(), notationType);
-
-        return new StringResponse(mei);
     }
 }

@@ -9,6 +9,7 @@ import es.ua.dlsi.grfia.im3ws.muret.entity.Part;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Region;
 import es.ua.dlsi.grfia.im3ws.muret.model.NotationModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.DocumentModel;
+import es.ua.dlsi.grfia.im3ws.muret.model.PartsModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.SemanticRepresentationModel;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.PageRepository;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+// !!! Important: no controller should throw any exception
 
 /**
  * @author drizo
@@ -47,24 +49,28 @@ public class SemanticRepresentationController extends MuRETBaseController {
      */
     @GetMapping(path = {"agnostic2semantic/{staffID}/{mensurstrich}/{renderer}"})
     @Transactional
-    public Notation agnostic2semantic(@PathVariable(name="staffID") Long staffID, @PathVariable(name="mensurstrich") boolean mensurstrich, @PathVariable(name="renderer") Renderer renderer) throws IM3WSException {
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Converting semantic staff frin agnostic {0}", staffID);
+    public Notation agnostic2semantic(@PathVariable(name="staffID") Long staffID, @PathVariable(name="mensurstrich") boolean mensurstrich, @PathVariable(name="renderer") Renderer renderer)  {
+        try {
+            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Converting semantic staff frin agnostic {0}", staffID);
 
-        Region region = getRegion(staffID);
-        Document document = region.getPage().getImage().getDocument();
-        //TODO Ahora sólo lo guardo en la región
+            Region region = getRegion(staffID);
+            Document document = region.getPage().getImage().getDocument();
+            //TODO Ahora sólo lo guardo en la región
         /*Part part = partsModel.findPart(region);
         if (part == null) {
             throw new IM3WSException("The staff has not an associated part yet");
         }*/
-        Part part = null;
-        String partName = "";
-        try {
-            Notation result = semanticRepresentationModel.computeAndSaveSemanticFromAgnostic(document, partName, region, mensurstrich, renderer);
-            return result;
-        } catch (Exception e) {
-            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot convert to semantic", e);
-            return new Notation(e.getMessage());
+            Part part = null;
+            String partName = "";
+            try {
+                Notation result = semanticRepresentationModel.computeAndSaveSemanticFromAgnostic(document, partName, region, mensurstrich, renderer);
+                return result;
+            } catch (Exception e) {
+                Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot convert to semantic", e);
+                return new Notation(e.getMessage());
+            }
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot convert agnostic to semantic", e);
         }
     }
 
@@ -74,53 +80,65 @@ public class SemanticRepresentationController extends MuRETBaseController {
      */
     @GetMapping(path = {"notation/{staffID}/{mensustriche}/{renderer}"})
     @Transactional
-    public Notation getNotation(@PathVariable(name="staffID") Long staffID, @PathVariable(name="mensustriche") boolean mensustriche, @PathVariable(name="renderer") Renderer renderer) throws IM3WSException {
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Getting staff notation for region ID {0}", staffID);
+    public Notation getNotation(@PathVariable(name="staffID") Long staffID, @PathVariable(name="mensustriche") boolean mensustriche, @PathVariable(name="renderer") Renderer renderer)  {
+        try {
+            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Getting staff notation for region ID {0}", staffID);
 
-        Region region = getRegion(staffID);
-        Document document = region.getPage().getImage().getDocument();
-        //TODO Ahora sólo lo guardo en la región
+            Region region = getRegion(staffID);
+            Document document = region.getPage().getImage().getDocument();
+            //TODO Ahora sólo lo guardo en la región
         /*Part part = partsModel.findPart(region);
         if (part == null) {
             throw new IM3WSException("The staff has not an associated part yet");
         }*/
-        Part part = null;
-        String partName = "";
+            Part part = null;
+            String partName = "";
 
-        Notation result = notationModel.getNotation(document, partName, region, mensustriche, renderer);
-        return result;
+            Notation result = notationModel.getNotation(document, partName, region, mensustriche, renderer);
+            return result;
+        } catch (IM3WSException e) {
+            throw ControllerUtils.createServerError(this, "Cannot get notation", e);
+        }
     }
 
     @PutMapping(path = {"semanticEncoding/{staffID}/{mensustriche}/{renderer}"})
     @Transactional
-    public Notation sendSemanticEncoding(@PathVariable(name="staffID") Long staffID, @PathVariable(name="mensustriche") boolean mensustriche, @PathVariable(name="renderer") Renderer renderer, @RequestBody String semanticEncoding) throws IM3WSException {
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Sending semantic encoding for region ID {0}", staffID);
-        Region region = getRegion(staffID);
+    public Notation sendSemanticEncoding(@PathVariable(name="staffID") Long staffID, @PathVariable(name="mensustriche") boolean mensustriche, @PathVariable(name="renderer") Renderer renderer, @RequestBody String semanticEncoding)  {
+        try {
+            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Sending semantic encoding for region ID {0}", staffID);
+            Region region = getRegion(staffID);
 
-        Document document = region.getPage().getImage().getDocument();
+            Document document = region.getPage().getImage().getDocument();
 
-        //TODO Ahora sólo lo guardo en la región
+            //TODO Ahora sólo lo guardo en la región
         /*
         Part part = partsModel.findPart(region);
         if (part == null) {
             throw new IM3WSException("The staff has not an associated part yet");
         }*/
 
-        Part part = null;
-        String partName = "";
+            Part part = null;
+            String partName = "";
 
-        Notation result = semanticRepresentationModel.sendSemanticEncoding(document, partName, region, mensustriche, renderer, semanticEncoding);
-        return result;
+            Notation result = semanticRepresentationModel.sendSemanticEncoding(document, partName, region, mensustriche, renderer, semanticEncoding);
+            return result;
+        } catch (IM3WSException e) {
+            throw ControllerUtils.createServerError(this, "Cannot send semantic encoding", e);
+        }
     }
 
     @DeleteMapping(path = {"clearSemanticEncoding/{staffID}"})
     @Transactional
-    public Notation clearSemanticEncoding(@PathVariable(name="staffID") Long staffID) throws IM3WSException {
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Clearing semantic encoding for region ID {0}", staffID);
-        Region region = getRegion(staffID);
-        region.setSemanticEncoding(null);
-        regionRepository.save(region);
-        Notation result = new Notation("Semantic encoding has been deleted");
-        return result;
+    public Notation clearSemanticEncoding(@PathVariable(name="staffID") Long staffID)  {
+        try {
+            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Clearing semantic encoding for region ID {0}", staffID);
+            Region region = getRegion(staffID);
+            region.setSemanticEncoding(null);
+            regionRepository.save(region);
+            Notation result = new Notation("Semantic encoding has been deleted");
+            return result;
+        } catch (IM3WSException e) {
+            throw ControllerUtils.createServerError(this, "Cannot clear semantic encoding", e);
+        }
     }
 }
