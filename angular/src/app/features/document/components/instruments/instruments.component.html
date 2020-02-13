@@ -63,8 +63,11 @@
   </ng-container>
   <ng-template #loading>
     <div class="row">
-      <div class="col">
-        <p>Loading document data ...</p>
+      <div class="col-10 offset-1">
+        <div class="d-flex align-items-center">
+          <div class="spinner-grow" role="status" aria-hidden="true"></div>
+          <strong>Loading parts, please, wait... </strong>
+        </div>
       </div>
     </div>
   </ng-template>
