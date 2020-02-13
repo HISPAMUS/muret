@@ -53,8 +53,8 @@ export interface AlignmentPreviewDissonanceMap {
 
 
 export interface AlignmentPreviewProblem {
-  imageID: number;
-  regionID: number;
+  imageID?: number;
+  regionID?: number;
   problem: string;
 }
 

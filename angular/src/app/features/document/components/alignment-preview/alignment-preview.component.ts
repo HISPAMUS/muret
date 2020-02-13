@@ -245,8 +245,10 @@ export class AlignmentPreviewComponent implements OnInit, OnDestroy {
   getProblemTitle(problem: AlignmentPreviewProblem) {
     if (problem.regionID) {
       return 'Region with ID #' + problem.regionID;
-    } else {
+    } else if (problem.imageID) {
       return 'Image with ID #' + problem.imageID;
+    } else {
+      return '';
     }
   }
 

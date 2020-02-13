@@ -52,8 +52,13 @@
   </ng-container>
 
   <ng-template #loadingPreview>
-    <div class="jumbotron">
-      Loading preview, please, wait...
+    <div class="row">
+      <div class="col-10 offset-1">
+        <div class="d-flex align-items-center">
+          <div class="spinner-grow" role="status" aria-hidden="true"></div>
+          <strong>Loading preview, please, wait... </strong>
+        </div>
+      </div>
     </div>
   </ng-template>
 </div>
