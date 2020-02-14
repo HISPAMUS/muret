@@ -9,6 +9,13 @@ public class AlignmentPreview {
     AlignmentPreviewDissonanceMap dissonanceMap;
     List<AlignmentPreviewProblem> problems;
 
+    public AlignmentPreview() {
+        this.parts = new ArrayList<>();
+        this.images = new ArrayList<>();
+        this.dissonanceMap = new AlignmentPreviewDissonanceMap();
+        this.problems = new ArrayList<>();
+    }
+
     public List<AlignmentPreviewPart> getParts() {
         return parts;
     }
@@ -42,24 +49,15 @@ public class AlignmentPreview {
     }
 
     public void add(AlignmentPreviewPart alignmentPreviewPart) {
-        if (parts == null) {
-            parts = new ArrayList<>();
-        }
         parts.add(alignmentPreviewPart);
     }
 
     public void add(AlignmentPreviewImage alignmentPreviewImage) {
-        if (images == null) {
-            images = new ArrayList<>();
-        }
         images.add(alignmentPreviewImage);
     }
 
 
     public void add(AlignmentPreviewProblem alignmentPreviewProblem) {
-        if (problems == null) {
-            problems = new ArrayList<>();
-        }
         problems.add(alignmentPreviewProblem);
     }
 }

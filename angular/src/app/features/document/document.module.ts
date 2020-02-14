@@ -13,7 +13,7 @@ import {documentReducers} from './store/reducers/document.reducers';
 import {BreadcrumbModule} from '../../breadcrumb/breadcrumb.module';
 import { UploadImagesComponent } from './components/upload-images/upload-images.component';
 import {FileUploadModule} from 'ng2-file-upload';
-import { DocumentScoreViewerComponent } from './components/document-score-viewer/document-score-viewer.component';
+import { DocumentScoreViewerAndExporterComponent } from './components/document-score-viewer-and-exporter/document-score-viewer-and-exporter.component';
 import {SharedModule} from '../../shared/shared.module';
 import {NgbDropdownModule} from '@ng-bootstrap/ng-bootstrap';
 import { InstrumentsComponent } from './components/instruments/instruments.component';
@@ -21,9 +21,10 @@ import {FormsModule} from '@angular/forms';
 import { AlignmentPreviewComponent } from './components/alignment-preview/alignment-preview.component';
 import {SvgModule} from '../../svg/svg.module';
 import {DocumentAnalysisModule} from '../document-analysis/document-analysis.module';
+import { MEIScoreViewerComponent } from './components/meiscore-viewer/meiscore-viewer.component';
 
 @NgModule({
-  declarations: [DocumentComponent, ImageThumbnailComponent, UploadImagesComponent, DocumentScoreViewerComponent, InstrumentsComponent, AlignmentPreviewComponent],
+  declarations: [DocumentComponent, ImageThumbnailComponent, UploadImagesComponent, DocumentScoreViewerAndExporterComponent, InstrumentsComponent, AlignmentPreviewComponent, MEIScoreViewerComponent],
     imports: [
         CommonModule,
         DocumentRoutingModule,

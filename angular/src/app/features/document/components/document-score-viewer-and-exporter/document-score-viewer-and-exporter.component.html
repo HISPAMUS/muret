@@ -50,22 +50,41 @@
     <div class="col">
       <br> <!--TODO maquetación -->
       <h3>Export of selected images</h3>
-      <button (click)="exportPartsAndFacsimile()">Export to MEI file with parts and facsimile</button>
+      <button (click)="exportPartsAndFacsimile()">
+        <span *ngIf="isExportingPartsAndFacsimile()" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Export to MEI file with parts and facsimile
+      </button>
       &nbsp;&nbsp;
-      <button (click)="exportFullMensurstrich()">Export mensurstrich</button>
+      <button (click)="exportFullMensurstrich()">
+        <span *ngIf="isExportingMensurstrich()" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Export mensurstrich
+      </button>
       &nbsp;&nbsp;
-      <button (click)="exportMusicXML()">Export MusicXML (modern notation)</button>
-    </div>
+      <button (click)="exportMusicXML()">
+        <span *ngIf="isExportingMusicXML()" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Export MusicXML (modern notation)</button>
+      </div>
   </div>
 
   <hr>
    <div class="row">
      <div class="col-12">
-       <h3>MEI Visualization of selected images</h3>
-       <p>Select score to be rendered</p>
+       <h3>MEI/Verovio Visualization of selected images</h3>
 
-       <div ngbDropdown class="d-inline-block">
-         <button class="btn btn-outline-primary" id="dropdownForm1" ngbDropdownToggle>Select score to be rendered</button>
+       <button (click)="exportMEI()">
+         <span *ngIf="isExportingMEI()" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+         Export MEI
+       </button>
+      &nbsp;
+       <button (click)="visualizeMEI()">
+         <span *ngIf="isVisualizingMEI()" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+         Visualize MEI
+       </button>
+
+     </div>
+
+       <!--<div ngbDropdown class="d-inline-block">
+         <button class="btn btn-outline-primary" id="dropdownForm1" ngbDropdownToggle>Select part to be rendered</button>
          <div ngbDropdownMenu aria-labelledby="dropdownForm1">
            <button (click)="renderFullScore()">Full score</button>
            <ng-container *ngIf="usesOfParts">
@@ -73,17 +92,6 @@
            </ng-container>
          </div>
        </div>
-       &nbsp;
-       <button (click)="saveFile()">Save to MEI file</button>
-     </div>
+     </div>-->
    </div>
-
-  <hr>
-
-  <div id="scoreView" class="row">
-    <div class="col-12">
-      <div [innerHTML]="notationAsSVG | safe: 'html'">
-      </div>
-    </div>
-  </div>
 </div>

@@ -64,9 +64,10 @@ export class ErrorInterceptor implements HttpInterceptor {
           // see Angular issue: https://github.com/angular/angular/issues/19888
           if (response instanceof HttpErrorResponse && response.error instanceof Blob && response.error.type === 'application/json') {
             this.handleBlobError(response);
+            return throwError(response);
           } else {
             this.serveError(response);
-            return null;
+            return throwError(response);
           }
         }
       }));

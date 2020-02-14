@@ -25,7 +25,7 @@ import { ResetSelectedRegion } from 'src/app/features/agnostic-representation/st
   templateUrl: './document.component.html',
   styleUrls: ['./document.component.css'],
 })
-export class DocumentComponent implements OnInit {
+export class DocumentComponent implements OnInit, OnDestroy {
   document$: Observable<Document>;
   images$: Observable<Image[]>;
   statistics$: Observable<DocumentStatistics>;
@@ -65,8 +65,8 @@ export class DocumentComponent implements OnInit {
     this.router.navigate(['/document/uploadImages', this.documentID]);
   }
 
-  viewFullScore() {
-    this.router.navigate(['/document/scoreView', this.documentID]);
+  viewAndExport() {
+    this.router.navigate(['/document/documentScoreViewAndExport', this.documentID]);
   }
 
   editInstruments() {

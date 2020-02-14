@@ -13,22 +13,32 @@ export const selectImages = createSelector(
   (state: DocumentState) => state.images
 );
 
-export const selectDocumentMEI = createSelector(
+/*export const selectDocumentMEI = createSelector(
   documentState,
   (state: DocumentState) => state.mei
 );
-
+*/
 export const selectDocumentStatistics = createSelector(
   documentState,
   (state: DocumentState) => state.statistics
 );
 
-export const selectPreflightCheckResults = createSelector(
+/*export const selectPreflightCheckResults = createSelector(
   documentState,
   (state: DocumentState) => state.preflightCheckResults
 );
-
+*/
 export const selectAlignmentPreview = createSelector(
   documentState,
   (state: DocumentState) => state.alignmentPreview
+);
+
+export const selectExportedFile = createSelector(
+  documentState,
+  (state: DocumentState) => state.exportedFile
+);
+
+export const selectMEI = createSelector(
+  documentState,
+  (state: DocumentState) => state.mei
 );

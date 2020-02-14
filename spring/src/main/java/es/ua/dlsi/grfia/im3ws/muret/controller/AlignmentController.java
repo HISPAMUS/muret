@@ -67,58 +67,64 @@ public class AlignmentController extends MuRETBaseController {
         AlignmentPreview alignmentPreview = new AlignmentPreview();
         HashMap<Long, AlignmentPreviewPart> alignmentPreviewPartHashMap = new HashMap<>(); // key = part id
 
-        for (Part part: document.getParts()) {
-            AlignmentPreviewPart alignmentPreviewPart = new AlignmentPreviewPart();
-            alignmentPreview.add(alignmentPreviewPart);
-            alignmentPreviewPart.setId(part.getId());
-            alignmentPreviewPart.setName(part.getName());
+        if (document.getParts() == null) {
+            AlignmentPreviewProblem problem = new AlignmentPreviewProblem();
+            problem.setProblem("Current document has not any part created yet");
+            alignmentPreview.add(problem);
+        } else {
+            for (Part part : document.getParts()) {
+                AlignmentPreviewPart alignmentPreviewPart = new AlignmentPreviewPart();
+                alignmentPreview.add(alignmentPreviewPart);
+                alignmentPreviewPart.setId(part.getId());
+                alignmentPreviewPart.setName(part.getName());
 
-            alignmentPreviewPartHashMap.put(part.getId(), alignmentPreviewPart);
-        }
-
-        for (Image image: document.getSortedImages()) {
-            AlignmentPreviewImage alignmentPreviewImage = new AlignmentPreviewImage();
-            alignmentPreviewImage.setId(image.getId());
-            alignmentPreviewImage.setFilename(image.getFilename());
-            alignmentPreview.add(alignmentPreviewImage);
-
-            AlignmentPreviewPart imagePart = null;
-            if (image.getPart() != null) {
-                imagePart = alignmentPreviewPartHashMap.get(image.getPart().getId());
-                if (imagePart == null) {
-                    throw new IM3WSException("The part with id #" + image.getPart().getId() + " should be already inserted");
-                }
+                alignmentPreviewPartHashMap.put(part.getId(), alignmentPreviewPart);
             }
 
-            int nPage = 0;
-            for (Page page: image.getSortedPages()) {
-                nPage++; // first is #1
+            for (Image image : document.getSortedImages()) {
+                AlignmentPreviewImage alignmentPreviewImage = new AlignmentPreviewImage();
+                alignmentPreviewImage.setId(image.getId());
+                alignmentPreviewImage.setFilename(image.getFilename());
+                alignmentPreview.add(alignmentPreviewImage);
 
-                int nStaff = 0;
-                for (Region region: page.getSortedStaves()) {
-                    nStaff++; // first is #1
-                    AlignmentPreviewPart regionPart = imagePart;
-                    if (region.getPart() != null) {
-                        regionPart = alignmentPreviewPartHashMap.get(region.getPart().getId());
+                AlignmentPreviewPart imagePart = null;
+                if (image.getPart() != null) {
+                    imagePart = alignmentPreviewPartHashMap.get(image.getPart().getId());
+                    if (imagePart == null) {
+                        throw new IM3WSException("The part with id #" + image.getPart().getId() + " should be already inserted");
+                    }
+                }
+
+                int nPage = 0;
+                for (Page page : image.getSortedPages()) {
+                    nPage++; // first is #1
+
+                    int nStaff = 0;
+                    for (Region region : page.getSortedStaves()) {
+                        nStaff++; // first is #1
+                        AlignmentPreviewPart regionPart = imagePart;
+                        if (region.getPart() != null) {
+                            regionPart = alignmentPreviewPartHashMap.get(region.getPart().getId());
+                            if (regionPart == null) {
+                                throw new IM3WSException("The part with id #" + region.getPart().getId() + " should be already inserted");
+                            }
+                        }
                         if (regionPart == null) {
-                            throw new IM3WSException("The part with id #" + region.getPart().getId() + " should be already inserted");
+                            AlignmentPreviewProblem alignmentPreviewProblem = new AlignmentPreviewProblem();
+                            alignmentPreviewProblem.setImageID(image.getId());
+                            alignmentPreviewProblem.setRegionID(region.getId());
+                            alignmentPreviewProblem.setProblem("Neither the region or the image has a linked part");
+                            alignmentPreview.add(alignmentPreviewProblem);
+                        } else {
+                            AlignmentPreviewStaff alignmentPreviewStaff = new AlignmentPreviewStaff();
+                            regionPart.add(alignmentPreviewStaff);
+                            fillAlignmentPreviewStaff(alignmentPreview, alignmentPreviewStaff, document, region, image.getId(), nPage, nStaff);
                         }
                     }
-                    if (regionPart == null) {
-                        AlignmentPreviewProblem alignmentPreviewProblem = new AlignmentPreviewProblem();
-                        alignmentPreviewProblem.setImageID(image.getId());
-                        alignmentPreviewProblem.setRegionID(region.getId());
-                        alignmentPreviewProblem.setProblem("Neither the region or the image has a linked part");
-                        alignmentPreview.add(alignmentPreviewProblem);
-                    } else {
-                        AlignmentPreviewStaff alignmentPreviewStaff = new AlignmentPreviewStaff();
-                        regionPart.add(alignmentPreviewStaff);
-                        fillAlignmentPreviewStaff(alignmentPreview, alignmentPreviewStaff, document, region, image.getId(), nPage, nStaff);
-                    }
                 }
+
+
             }
-
-
         }
         return alignmentPreview;
     }

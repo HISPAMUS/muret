@@ -66,7 +66,7 @@ export class ImageFilesService {
     };
 
     const url = `${endpoint}/croppedImage/${imageID}/${boundingBox.fromX}/${boundingBox.fromY}/${boundingBox.toX}/${boundingBox.toY}`;
-    return this.apiRestClientService.getBlob$<Blob>(url);
+    return this.apiRestClientService.getBlob$(url);
   }
 
 }

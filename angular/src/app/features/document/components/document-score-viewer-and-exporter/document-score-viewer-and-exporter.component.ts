@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {DocumentState} from '../../store/state/document.state';
@@ -7,23 +7,20 @@ import {
   ExportMEIPartsFacsimile,
   ExportMensurstrich,
   ExportMusicXML,
+  GetDocument,
   GetImages,
-  GetDocument, PreflightCheck
+  PreflightCheck
 } from '../../store/actions/document.actions';
-import {selectImages, selectDocument, selectDocumentMEI, selectPreflightCheckResults} from '../../store/selectors/document.selector';
+import {selectDocument, selectExportedFile, selectImages} from '../../store/selectors/document.selector';
 import {Observable, Subscription} from 'rxjs';
-import {NotationService} from '../../../semantic-representation/services/notation.service';
-import { saveAs } from 'file-saver';
+import {saveAs} from 'file-saver';
 import {Document} from '../../../../core/model/entities/document';
 import {selectUsesOfParts} from '../../../parts/store/selectors/parts.selector';
 import {findPartsUsed, UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
 import {GetUsesOfParts} from '../../../parts/store/actions/parts.actions';
 import {Image} from '../../../../core/model/entities/image';
-import {
-  PreflightCheckResult,
-  PreflightCkeckImageResult,
-  PreflightCkeckRegionResult
-} from '../../../../core/model/restapi/preflight-check-result';
+import {DocumentExport, DocumentExportType} from '../../../../core/model/restapi/document-export';
+import {DialogsService} from '../../../../shared/services/dialogs.service';
 
 interface SelectedImage {
   checked: boolean;
@@ -32,25 +29,25 @@ interface SelectedImage {
 
 @Component({
   selector: 'app-document-score-viewer',
-  templateUrl: './document-score-viewer.component.html',
-  styleUrls: ['./document-score-viewer.component.css']
+  templateUrl: './document-score-viewer-and-exporter.component.html',
+  styleUrls: ['./document-score-viewer-and-exporter.component.css']
 })
 // don't use here REDUX for the FileUploader
-export class DocumentScoreViewerComponent implements OnInit, OnDestroy {
+export class DocumentScoreViewerAndExporterComponent implements OnInit, OnDestroy {
   private documentID: number;
-  private meiSubscription: Subscription;
-  notationAsSVG: any;
-  private mei: string;
+  // private meiSubscription: Subscription;
   document$: Observable<Document>;
 
   usesOfParts: UsesOfParts;
   public selectedImages: SelectedImage[];
   private usesOfPartsSubscription: Subscription;
   private imageSubscription: Subscription;
-  public preflightCheckResults$: Observable<PreflightCheckResult>;
+  private exportingSubscription: Subscription;
+  exportingState: Map<DocumentExportType, boolean> = new Map<DocumentExportType, boolean>();
+  private generatingMEIVisualization = false;
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<DocumentState>,
-              private notationService: NotationService) {
+              private dialogsService: DialogsService) {
   }
 
   ngOnInit() {
@@ -82,30 +79,58 @@ export class DocumentScoreViewerComponent implements OnInit, OnDestroy {
 
     this.document$ = this.store.select(selectDocument);
     this.store.dispatch(new GetUsesOfParts(this.documentID));
-    this.meiSubscription = this.store.select(selectDocumentMEI).subscribe(next => {
+    /*this.meiSubscription = this.store.select(selectDocumentMEI).subscribe(next => {
       this.notationAsSVG = this.notationService.renderScore(next);
       this.mei = next;
-    });
+    });*/
 
-    this.preflightCheckResults$ = this.store.select(selectPreflightCheckResults);
+    // this.preflightCheckResults$ = this.store.select(selectPreflightCheckResults); // remove
+
+    this.exportingSubscription = this.store.select(selectExportedFile).subscribe(next => {
+      if (next && this.exportingState.get(next.type)) {
+        if (!next.error) {
+          if (next.type === DocumentExportType.mei_score && this.generatingMEIVisualization) {
+            this.exportingState.set(next.type, false);
+            this.openMEIRenderingScreen();
+          } else {
+            this.exportingState.set(next.type, false);
+            this.saveExportedFile(next);
+          }
+        } else {
+          this.exportingState.set(next.type, false);
+        }
+      }
+    });
+  }
+
+  private onExportReceived(blob: Blob, exportFlagVariable: boolean, defaultFileName: string): boolean {
+      if (blob) {
+        if (blob.size > 0) { // when error, it returns blob size 0
+          saveAs(blob, defaultFileName);
+        } // else error
+      } else {
+
+      }
+      return false;
   }
 
   ngOnDestroy(): void {
-    this.meiSubscription.unsubscribe();
+    // this.meiSubscription.unsubscribe();
     this.usesOfPartsSubscription.unsubscribe();
     this.imageSubscription.unsubscribe();
+    this.exportingSubscription.unsubscribe();
   }
 
-  saveFile() {
+  /*saveFile() {
     const headers = new Headers();
     headers.append('Accept', 'text/plain');
-    this.saveToFileSystem(this.mei);
-  }
+    this.saveToFileSystem(this.mei_score);
+  }*/
 
-  private saveToFileSystem(mei: string) {
-    const blob = new Blob([mei], { type: 'text/plain' });
-    saveAs(blob, 'export_' + this.documentID + '.mei');
-  }
+  /* private saveToFileSystem(mei_score: string) {
+    const blob = new Blob([mei_score], { type: 'text/plain' });
+    saveAs(blob, 'export_' + this.documentID + '.mei_score');
+  } */
 
   getIDOfSelectedImages(): Array<number> {
     const result: Array<number> = new Array<number>();
@@ -117,23 +142,35 @@ export class DocumentScoreViewerComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  renderFullScore() {
+  exportMEI() {
+    this.generatingMEIVisualization = false;
+    this.exportingState.set(DocumentExportType.mei_score, true);
+    this.store.dispatch(new ExportMEI(this.documentID, null, this.getIDOfSelectedImages()));
+  }
+
+  visualizeMEI() {
+    this.generatingMEIVisualization = true;
+    this.exportingState.set(DocumentExportType.mei_score, true);
     this.store.dispatch(new ExportMEI(this.documentID, null, this.getIDOfSelectedImages()));
   }
 
   render(partID: number) {
+    this.exportingState.set(DocumentExportType.mei_score, true);
     this.store.dispatch(new ExportMEI(this.documentID, partID, this.getIDOfSelectedImages()));
   }
 
   exportPartsAndFacsimile() {
+    this.exportingState.set(DocumentExportType.mei_parts_facsimile, true);
     this.store.dispatch(new ExportMEIPartsFacsimile(this.documentID, this.getIDOfSelectedImages()));
   }
 
   exportFullMensurstrich() {
+    this.exportingState.set(DocumentExportType.mensurstrich_svg, true);
     this.store.dispatch(new ExportMensurstrich(this.documentID, this.getIDOfSelectedImages()));
   }
 
   exportMusicXML() {
+    this.exportingState.set(DocumentExportType.musicxml, true);
     this.store.dispatch(new ExportMusicXML(this.documentID, this.getIDOfSelectedImages()));
   }
 
@@ -145,7 +182,7 @@ export class DocumentScoreViewerComponent implements OnInit, OnDestroy {
     return index;
   }
 
-  trackByPreflightResultImageFn(index, item: PreflightCkeckImageResult) {
+  /*trackByPreflightResultImageFn(index, item: PreflightCkeckImageResult) {
     return item.imageID;
   }
 
@@ -155,7 +192,7 @@ export class DocumentScoreViewerComponent implements OnInit, OnDestroy {
 
   trackByPreflightResultMessageFn(index, item: string) {
     return index;
-  }
+  }*/
 
   partsUsedByImage(image: Image): Array<string> {
     if (this.usesOfParts != null) {
@@ -191,4 +228,39 @@ export class DocumentScoreViewerComponent implements OnInit, OnDestroy {
   openSemanticImage(imageID: number) {
     this.router.navigate(['semanticrepresentation', imageID]);
   }
+
+  private saveExportedFile(next: DocumentExport) {
+    this.dialogsService.showInput('Save file as',
+      'Please, input a file name', next.type + '_' + this.documentID + '.' + next.fileExtension).subscribe(filename => {
+       if (filename) {
+         saveAs(next.file, filename);
+       }
+    });
+  }
+
+  isExportingMensurstrich() {
+    return this.exportingState.get(DocumentExportType.mensurstrich_svg);
+  }
+
+  isExportingMusicXML() {
+    return this.exportingState.get(DocumentExportType.musicxml);
+  }
+
+  isExportingPartsAndFacsimile() {
+    return this.exportingState.get(DocumentExportType.mei_parts_facsimile);
+  }
+
+  isExportingMEI() {
+    return this.exportingState.get(DocumentExportType.mei_score) && !this.generatingMEIVisualization;
+  }
+
+  isVisualizingMEI() {
+    return this.exportingState.get(DocumentExportType.mei_score) && this.generatingMEIVisualization;
+  }
+
+  private openMEIRenderingScreen() {
+    // the MEI content and file are stored in the store
+    this.router.navigate(['/document/meiScoreView', this.documentID]);
+  }
+
 }
