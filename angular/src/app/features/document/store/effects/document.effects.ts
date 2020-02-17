@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Effect, ofType, Actions } from '@ngrx/effects';
-import { of } from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {catchError, switchMap} from 'rxjs/operators';
 import {DocumentService} from '../../services/document.service';
 import {
   ExportMEI,
@@ -19,18 +19,16 @@ import {
   GetDocumentStatisticsSuccess,
   GetDocumentSuccess,
   DocumentActionTypes,
-  PreflightCheck,
-  PreflightCheckSuccess,
   GetAlignmentPreview,
-  GetAlignmentPreviewSuccess,
+  GetAlignmentPreviewSuccess, DocumentServerError,
 } from '../actions/document.actions';
 import {Document} from '../../../../core/model/entities/document';
 import {Image} from '../../../../core/model/entities/image';
 import {StringResponse} from '../../../../core/model/restapi/string-response';
 import {DocumentStatistics} from '../../../../core/model/restapi/document-statistics';
-import {PreflightCheckResult} from '../../../../core/model/restapi/preflight-check-result';
 import {AlignmentPreview} from '../../../../core/model/restapi/alignment-preview';
 import {ImageFilesService} from '../../../../core/services/image-files.service';
+import {Action} from '@ngrx/store';
 
 @Injectable()
 export class DocumentEffects {
@@ -41,88 +39,78 @@ export class DocumentEffects {
   ) {}
 
   @Effect()
-  getDocument$ = this.actions$.pipe(
+  getDocument$: Observable<Action> = this.actions$.pipe(
     ofType<GetDocument>(DocumentActionTypes.GetDocument),
-    map((action: GetDocument) => action.documentID),
-    switchMap((documentID) => this.documentService.getDocument$(documentID)),
-    switchMap((document: Document) => {
-      return of(new GetDocumentSuccess(document));
-    })
-  );
+    switchMap((action: GetDocument) => this.documentService.getDocument$(action.documentID).pipe(
+      switchMap((document: Document) => of(new GetDocumentSuccess(document))),
+      catchError(err => of(new DocumentServerError(err)))
+    )));
 
   @Effect()
-  getImages$ = this.actions$.pipe(
+  getImages$: Observable<Action> = this.actions$.pipe(
     ofType<GetImages>(DocumentActionTypes.GetImages),
-    map((action: GetImages) => action.documentID),
-    switchMap((documentID) => this.documentService.getDocumentImages$(documentID)),
-    switchMap((images: Image[]) => {
-      return of(new GetImagesSuccess(images));
-    })
-  );
+    switchMap((action: GetImages) => this.documentService.getDocumentImages$(action.documentID).pipe(
+      switchMap((images: Image[]) => of(new GetImagesSuccess(images))),
+      catchError(err => of(new DocumentServerError(err)))
+    )));
 
   @Effect()
-  exportMEIPartsFacsimile$ = this.actions$.pipe(
+  exportMEIPartsFacsimile$: Observable<Action> = this.actions$.pipe(
     ofType<ExportMEIPartsFacsimile>(DocumentActionTypes.ExportMEIPartsFacsimile),
-    switchMap((action: ExportMEIPartsFacsimile) => this.documentService.exportMEIPartsFacsimile$(action.documentID, action.selectedImages)),
-    switchMap((mei: StringResponse) => {
-      return of(new ExportMEIPartsFacsimileSuccess(mei.response));
-    })
-  );
+    switchMap((action: ExportMEIPartsFacsimile) =>
+      this.documentService.exportMEIPartsFacsimile$(action.documentID, action.selectedImages).pipe(
+        switchMap((mei: StringResponse) => of(new ExportMEIPartsFacsimileSuccess(mei.response))),
+      catchError(err => of(new DocumentServerError(err)))
+    )));
 
   @Effect()
-  exportMEI$ = this.actions$.pipe(
+  exportMEI$: Observable<Action> = this.actions$.pipe(
     ofType<ExportMEI>(DocumentActionTypes.ExportMEI),
-    switchMap((action: ExportMEI) => this.documentService.exportMEI$(action.documentID, action.partID, action.selectedImages)),
-    switchMap((mei: StringResponse) => {
-      return of(new ExportMEISuccess(mei.response));
-    })
-  );
+    switchMap((action: ExportMEI) => this.documentService.exportMEI$(action.documentID, action.partID, action.selectedImages).pipe(
+      switchMap((mei: StringResponse) => of(new ExportMEISuccess(mei.response))),
+      catchError(err => of(new DocumentServerError(err)))
+    )));
 
   @Effect()
-  exportMensurstrich$ = this.actions$.pipe(
+  exportMensurstrich$: Observable<Action> = this.actions$.pipe(
     ofType<ExportMensurstrich>(DocumentActionTypes.ExportMensurstrich),
-    switchMap((action: ExportMensurstrich) => this.documentService.exportMensurstrich$(action.documentID, action.selectedImages)),
-    switchMap((payload: Blob) => {
-      return of(new ExportMensurstrichSuccess(payload));
-    })
-  );
+    switchMap((action: ExportMensurstrich) => this.documentService.exportMensurstrich$(action.documentID, action.selectedImages).pipe(
+      switchMap((payload: Blob) => of(new ExportMensurstrichSuccess(payload))),
+      catchError(err => of(new DocumentServerError(err)))
+    )));
+
   @Effect()
-  exportMusicXML$ = this.actions$.pipe(
+  exportMusicXML$: Observable<Action> = this.actions$.pipe(
     ofType<ExportMusicXML>(DocumentActionTypes.ExportMusicXML),
-    switchMap((action: ExportMusicXML) => this.documentService.exportMusicXML$(action.documentID, action.selectedImages)),
-    switchMap((payload: Blob) => {
-      return of(new ExportMusicXMLSuccess(payload));
-    })
-  );
+    switchMap((action: ExportMusicXML) => this.documentService.exportMusicXML$(action.documentID, action.selectedImages).pipe(
+      switchMap((payload: Blob) => of(new ExportMusicXMLSuccess(payload))),
+      catchError(err => of(new DocumentServerError(err)))
+    )));
 
   @Effect()
-  getDocumentStatistics$ = this.actions$.pipe(
+  getDocumentStatistics$: Observable<Action> = this.actions$.pipe(
     ofType<GetDocumentStatistics>(DocumentActionTypes.GetDocumentStatistics),
-    map((action: GetDocumentStatistics) => action.documentID),
-    switchMap((documentID) => this.documentService.getDocumentStatistics$(documentID)),
-    switchMap((documentStatistics: DocumentStatistics) => {
-      return of(new GetDocumentStatisticsSuccess(documentStatistics));
-    })
-  );
-
+    switchMap((action: GetDocumentStatistics) => this.documentService.getDocumentStatistics$(action.documentID).pipe(
+      switchMap((documentStatistics: DocumentStatistics) => of(new GetDocumentStatisticsSuccess(documentStatistics))),
+      catchError(err => of(new DocumentServerError(err)))
+    )));
   /**
    * @deprecated Use getAlignmentPreview$
    */
-  @Effect()
+ /* @Effect()
   preflightCheck$ = this.actions$.pipe(
     ofType<PreflightCheck>(DocumentActionTypes.PreflightCheck),
     switchMap((action: PreflightCheck) => this.documentService.preflightCheck$(action.documentID, action.selectedImages)),
     switchMap((preflightCheckResult: PreflightCheckResult) => {
       return of(new PreflightCheckSuccess(preflightCheckResult));
     })
-  );
+  );*/
 
   @Effect()
-  getAlignmentPreview$ = this.actions$.pipe(
+  getAlignmentPreview$: Observable<Action> = this.actions$.pipe(
     ofType<GetAlignmentPreview>(DocumentActionTypes.GetAlignmentPreview),
-    switchMap((action: GetAlignmentPreview) => this.documentService.getAlignmentPreview$(action.documentID)),
-    switchMap((alignmentPreview: AlignmentPreview) => {
-      return of(new GetAlignmentPreviewSuccess(alignmentPreview));
-    })
-  );
+    switchMap((action: GetAlignmentPreview) => this.documentService.getAlignmentPreview$(action.documentID).pipe(
+      switchMap((alignmentPreview: AlignmentPreview) => of(new GetAlignmentPreviewSuccess(alignmentPreview))),
+      catchError(err => of(new DocumentServerError(err)))
+    )));
 }

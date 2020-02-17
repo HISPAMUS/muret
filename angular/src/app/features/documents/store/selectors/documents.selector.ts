@@ -12,3 +12,8 @@ export const selectChangedCollectionID = createSelector(
   documentsState,
   (state: DocumentsState) => state.changedCollectionID
 );
+
+export const selectDocumentsServerError = createSelector(
+  documentsState,
+  (state: DocumentsState) => state.apiRestServerError
+);

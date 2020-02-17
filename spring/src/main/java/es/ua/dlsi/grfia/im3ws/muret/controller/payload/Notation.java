@@ -4,11 +4,6 @@ public class Notation {
     String semanticEncoding;
     String content;
     NotationResponseType notationResponseType;
-    String errorMessage;
-
-    public Notation(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
 
     public Notation(NotationResponseType notationResponseType, String code, String semanticEncoding) {
         this.notationResponseType = notationResponseType;
@@ -29,11 +24,5 @@ public class Notation {
         return semanticEncoding;
     }
 
-    public String getErrorMessage() {
-        return errorMessage;
-    }
 
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
 }

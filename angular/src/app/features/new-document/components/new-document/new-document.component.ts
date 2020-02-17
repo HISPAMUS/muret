@@ -5,7 +5,7 @@ import {NewDocumentState} from '../../store/state/new-document.state';
 import {Store} from '@ngrx/store';
 import {CreateDocument, CreateDocumentReset, GetCollections} from '../../store/actions/new-document.actions';
 import {Observable, Subscription} from 'rxjs';
-import {selectCollections, selectNewDocument} from '../../store/selectors/new-document.selector';
+import {selectNewDocumentCollections, selectNewDocument} from '../../store/selectors/new-document.selector';
 import {User} from '../../../../core/model/entities/user';
 import {selectAuthState} from '../../../../auth/store/selectors/auth.selector';
 import {Collection} from '../../../../core/model/entities/collection';
@@ -20,6 +20,7 @@ export class NewDocumentComponent implements OnInit, OnDestroy {
   createDocumentSuccessSubscription: Subscription;
   authSubscription: Subscription;
   collections$: Observable<Collection[]>;
+  private serverErrorSubscription: Subscription;
 
   newDocumentForm = this.fb.group({
     name: ['', Validators.required],
@@ -43,7 +44,7 @@ export class NewDocumentComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.store.dispatch(new CreateDocumentReset());
     this.store.dispatch(new GetCollections());
-    this.collections$ = this.store.select(selectCollections);
+    this.collections$ = this.store.select(selectNewDocumentCollections);
 
     this.createDocumentSuccessSubscription = this.store.select(selectNewDocument).subscribe(next => {
       if (next) {
@@ -79,5 +80,6 @@ export class NewDocumentComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.createDocumentSuccessSubscription.unsubscribe();
     this.authSubscription.unsubscribe();
+    this.serverErrorSubscription.unsubscribe();
   }
 }

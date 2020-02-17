@@ -1,8 +1,10 @@
 import {Action} from '@ngrx/store';
 import {Part} from '../../../../core/model/entities/part';
 import {PartUse, UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
+import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 
 export enum PartsActionTypes {
+  PartsServerError = '[Parts] ServerError',
   CreateImagePart = '[Parts] Create image part',
   CreateImagePartSuccess = '[Parts] Create image part success',
   CreatePagePart = '[Parts] Create page part',
@@ -67,6 +69,11 @@ export enum PartsActionTypes {
 
   /*GetPartNamesUsedByImage = '[Parts] Get part names used by image',
   GetPartNamesUsedByImageSuccess = '[Parts] Get part names used by image success'*/
+}
+
+export class PartsServerError implements Action {
+  public readonly type = PartsActionTypes.PartsServerError;
+  constructor(public serverError: APIRestServerError) {}
 }
 
 export class CreateImagePart implements Action {
@@ -321,6 +328,7 @@ export class GetPartNamesUsedByImageSuccess implements Action {
 }*/
 
 export type PartsActions =
+  PartsServerError |
   CreateImagePart | CreateImagePartSuccess |
   CreatePagePart | CreatePagePartSuccess |
   CreateRegionPart | CreateRegionPartSuccess |

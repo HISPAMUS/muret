@@ -1,9 +1,13 @@
 import {initialDocumentsState, DocumentsState} from '../state/documents.state';
 import {DocumentsActions, DocumentsActionTypes} from '../actions/documents.actions';
-import {DocumentActionTypes} from '../../../document/store/actions/document.actions';
 
 export function documentsReducers(state = initialDocumentsState, action: DocumentsActions): DocumentsState {
   switch (action.type) {
+    case DocumentsActionTypes.DocumentsServerError:
+      return {
+        ...state,
+        apiRestServerError: action.serverError
+      };
     case DocumentsActionTypes.GetCollectionSuccess: {
       return {
         ...state,

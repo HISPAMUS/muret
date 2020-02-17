@@ -25,7 +25,7 @@ import {
 import {
   selectAgnosticEnd2EndClassifierModels,
   selectAgnosticSymbolClassifierModels,
-  selectAgnosticSymbols, selectClassifiedSymbols,
+  selectAgnosticSymbols, selectAgnosticSymbolServerError, selectClassifiedSymbols,
   selectSelectedSymbol, selectSVGAgnosticSymbolSet
 } from '../../store/selectors/agnostic-representation.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
@@ -40,7 +40,7 @@ import {AgnosticTypeSVGPath} from '../../model/agnostic-type-svgpath';
 import {PositionInStaffService} from '../../services/position-in-staff.service';
 import {Line} from '../../../../svg/model/line';
 import {ClassifierModel} from '../../../../core/model/entities/classifier-model';
-import { debuglog } from 'util';
+import {ShowErrorService} from '../../../../core/services/show-error.service';
 
 @Component({
   selector: 'app-agnostic-representation',
@@ -79,10 +79,13 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   symbolsClassifierModels$: Observable<ClassifierModel[]>;
   end2EndModelID: string;
   symbolsClassifierModelID: string;
-  myNumber: number
+  // myNumber: number;
+  private serverErrorSubscription: Subscription;
+
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>,
-              private dialogsService: DialogsService, private positionInStaffService: PositionInStaffService) {
+              private dialogsService: DialogsService, private positionInStaffService: PositionInStaffService,
+              private showErrorService: ShowErrorService) {
 
     this.mode = 'eIdle';
     this.filename$ = store.select(selectFileName);
@@ -109,6 +112,12 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.symbolsClassifierModels$.subscribe((result: ClassifierModel[]) => {
       if (result != null) {
         this.symbolsClassifierModelID = result[result.length - 1].id;
+      }
+    });
+
+    this.serverErrorSubscription = this.store.select(selectAgnosticSymbolServerError).subscribe(next => {
+      if (next) {
+        this.showErrorService.warning(next);
       }
     });
 
@@ -149,6 +158,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.selectedSymbolSubscription.unsubscribe();
     this.documentTypeSubscription.unsubscribe();
     this.classifiedSymbolsSubscription.unsubscribe();
+    this.serverErrorSubscription.unsubscribe();
   }
 
   private findSelectedShape(): Shape {
@@ -478,8 +488,8 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
       .subscribe((isConfirmed) => {
         if (isConfirmed) {
           this.dialogsService.showWarningConfirmation('WARNING',
-            'Are you sure? This change cannot be undone and all progress will be lost').subscribe((isConfirmed) => {
-              if (isConfirmed) {
+            'Are you sure? This change cannot be undone and all progress will be lost').subscribe((isConfirmed2) => {
+              if (isConfirmed2) {
                 this.store.dispatch(new ClearRegionSymbols(this.selectedRegion.id));
               }
           });
@@ -525,13 +535,11 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   setSelectedRegion($event: Region) {
     setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
       this.selectedRegion = $event;
-      console.log($event)
-      console.log(this.selectedRegion)
     });
   }
 
-  setMyNumber($event: number)
+  /*setMyNumber($event: number)
   {
     console.log($event)
-  }
+  }*/
 }

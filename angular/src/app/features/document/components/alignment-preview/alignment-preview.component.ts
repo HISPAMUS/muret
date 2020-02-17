@@ -12,7 +12,7 @@ import {
   AlignmentPreviewPart,
   AlignmentPreviewPitch, AlignmentPreviewProblem, AlignmentPreviewStaff
 } from '../../../../core/model/restapi/alignment-preview';
-import {selectAlignmentPreview} from '../../store/selectors/document.selector';
+import {selectAlignmentPreview, selectDocumentAPIRestErrorSelector} from '../../store/selectors/document.selector';
 import {Shape} from '../../../../svg/model/shape';
 import {Text} from '../../../../svg/model/text';
 import {Rectangle} from '../../../../svg/model/rectangle';
@@ -21,6 +21,7 @@ import {ImageFilesService} from '../../../../core/services/image-files.service';
 import {Lightbox, LightboxConfig} from 'ngx-lightbox';
 import {DomSanitizer} from '@angular/platform-browser';
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
+import {ShowErrorService} from '../../../../core/services/show-error.service';
 
 @Component({
   selector: 'app-alignment-preview',
@@ -51,13 +52,14 @@ export class AlignmentPreviewComponent implements OnInit, OnDestroy {
   private TIME_SCALE = 10;
   private NOTE_BAR_HEIGHT = 3;
   private PITCH_MARGIN = 12; // margin to the top of the staff
+  private serverErrorSubscription: Subscription;
 
   constructor(private route: ActivatedRoute, private store: Store<DocumentState>, private router: Router,
               private dialogsService: DialogsService,
               private imageFilesService: ImageFilesService,
               private lightbox: Lightbox,
               private lighboxConfig: LightboxConfig,
-              private sanitizer: DomSanitizer
+              private sanitizer: DomSanitizer, private showErrorService: ShowErrorService
               ) {
   }
 
@@ -71,10 +73,17 @@ export class AlignmentPreviewComponent implements OnInit, OnDestroy {
       this.alignmentPreview = next;
       this.constructPianoRoll();
     });
+
+    this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
+      if (next) {
+        this.showErrorService.warning(next);
+      }
+    });
   }
 
   ngOnDestroy(): void {
     this.alignmentPreviewSubscription.unsubscribe();
+    this.serverErrorSubscription.unsubscribe();
   }
 
   private constructPianoRoll() {
@@ -100,7 +109,8 @@ export class AlignmentPreviewComponent implements OnInit, OnDestroy {
     return t;
   }
 
-  private addRectangle(staffShapes: Shape[], fromX: number, fromY: number, width: number, height: number, strokeColor: string, fillColor: string) {
+  private addRectangle(staffShapes: Shape[], fromX: number, fromY: number, width: number, height: number, strokeColor: string,
+                       fillColor: string) {
     const rect: Rectangle = new Rectangle();
     rect.fromX = fromX;
     rect.fromY = fromY;
@@ -124,8 +134,10 @@ export class AlignmentPreviewComponent implements OnInit, OnDestroy {
 
 
   private constructPianoRollForPart(part: AlignmentPreviewPart) {
-    let lastMeasureDuration: number; // it is reused along staves in the same part
-    let pendingMeasureTimeFromPreviousStaff = 0; // used for staves that don't complete the measure in order to correctly draw the measure lines
+    // it is reused along staves in the same part
+    let lastMeasureDuration: number;
+    // used for staves that don't complete the measure in order to correctly draw the measure lines
+    let pendingMeasureTimeFromPreviousStaff = 0;
 
     part.staves.forEach(staff => {
       const staffShapes: Shape[] = [];
@@ -149,12 +161,12 @@ export class AlignmentPreviewComponent implements OnInit, OnDestroy {
         }
 
         let lastMeasureDurationChangeTime = pendingMeasureTimeFromPreviousStaff;
-        //TODO colores
+        // TODO colores
         staff.items.forEach(item => {
           let endTime = item.time;
           switch (item.type) {
             case 'fermata':
-              //TODO
+              // TODO
               break;
             case 'keyChange':
               this.addText(staffShapes, item.description, item.time * this.TIME_SCALE, this.STAVES_HEIGHT - 20, 'green', 12);
@@ -168,22 +180,23 @@ export class AlignmentPreviewComponent implements OnInit, OnDestroy {
               lastMeasureDurationChangeTime = item.time;
               break;
             case 'barline':
-              this.addLine(staffShapes, item.time, 0, this.STAVES_HEIGHT, 'blue', 3); //TODO grosor
+              this.addLine(staffShapes, item.time, 0, this.STAVES_HEIGHT, 'blue', 3); // TODO grosor
               break;
             case 'rest':
               const restItem: AlignmentPreviewItemWithDuration = item as AlignmentPreviewItemWithDuration;
               endTime = restItem.time + restItem.duration;
-              //TODO dur ahora 20 arriba y abajo
-              //TODO color según figura - algo si tiene puntillos
+              // TODO dur ahora 20 arriba y abajo
+              // TODO color según figura - algo si tiene puntillos
               // 10 para la altura
-              this.addRectangle(staffShapes, restItem.time * this.TIME_SCALE, this.STAVES_HEIGHT / 3, restItem.duration * this.TIME_SCALE, this.STAVES_HEIGHT / 6, 'gray', 'lightgray');
+              this.addRectangle(staffShapes, restItem.time * this.TIME_SCALE, this.STAVES_HEIGHT / 3,
+                restItem.duration * this.TIME_SCALE, this.STAVES_HEIGHT / 6, 'gray', 'lightgray');
               break;
             case 'note':
               const noteItem: AlignmentPreviewPitch = item as AlignmentPreviewPitch;
               endTime = noteItem.time + noteItem.duration;
               const pitch = noteItem.midiPitch;
               const y = (maxPitch - pitch + this.PITCH_MARGIN) * this.PITCH_SCALE; // recall 0 is the top
-              //TODO color según figura - algo si tiene puntillos
+              // TODO color según figura - algo si tiene puntillos
               this.addRectangle(staffShapes, noteItem.time * this.TIME_SCALE, y, noteItem.duration * this.TIME_SCALE, this.NOTE_BAR_HEIGHT, 'yellow', 'red');
               break;
             default:
@@ -260,7 +273,7 @@ export class AlignmentPreviewComponent implements OnInit, OnDestroy {
     return item.id; // unique id corresponding to the item
   }
 
-  //TODO algo de código repetido en ImageThumbnailComponent
+  // TODO algo de código repetido en ImageThumbnailComponent
   previewImage(imageID: number) {
     this.imageFilesService.getPreviewImageBlob$(null, imageID).subscribe(imageBlob => {
       const albums = []; // used by Lightbox
@@ -278,7 +291,7 @@ export class AlignmentPreviewComponent implements OnInit, OnDestroy {
 
 
 
-  //TODO algo de código repetido en ImageThumbnailComponent
+  // TODO algo de código repetido en ImageThumbnailComponent
   previewCroppedImage(imageID: number, boundingBox: BoundingBox) {
     this.imageFilesService.getCroppedMasterImageBlob$(imageID, boundingBox).subscribe(imageBlob => {
       const albums = []; // used by Lightbox

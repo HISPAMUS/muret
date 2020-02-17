@@ -3,7 +3,7 @@ import {Observable, Subscription} from 'rxjs';
 import {CoreState} from '../../../core/store/state/core.state';
 import {Store} from '@ngrx/store';
 import {selectIsAuthenticated, selectUsername, selectRole} from '../../../auth/store/selectors/auth.selector';
-import {selectServerStatus } from 'src/app/core/store/selectors/user.selector';
+import {selectServerStatus } from 'src/app/core/store/selectors/core.selector';
 import { GetServerStatus } from 'src/app/core/store/actions/serverStatus.actions';
 import { DialogsService} from 'src/app/shared/services/dialogs.service';
 import { ModalOptions } from 'src/app/shared/components/options-dialog/options-dialog.component';
@@ -50,19 +50,19 @@ export class LayoutComponent implements OnInit, OnDestroy {
     })
 
     this.adminStatusSubscription = this.userRoles$.subscribe((roles: any) => {
-      
+
       if(roles!= null && roles.length>0)
       {
         for(let object of roles)
         {
           this.isAdmin = (object.authority == "ADMIN")
-        } 
+        }
       }
     })
-    
+
   }
 
-  ngOnInit() 
+  ngOnInit()
   {
     this.store.dispatch(new GetServerStatus())
     this.interval = setInterval(()=>{

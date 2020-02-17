@@ -8,7 +8,12 @@ export const selectNewDocument = createSelector(
   (state: NewDocumentState) => state.document
 );
 
-export const selectCollections = createSelector(
+export const selectNewDocumentCollections = createSelector(
   newDocumentState,
   (state: NewDocumentState) => state.collections
+);
+
+export const selectNewDocumentServerError = createSelector(
+  newDocumentState,
+  (state: NewDocumentState) => state.apiRestServerError
 );

@@ -46,9 +46,10 @@ import {faCompressArrowsAlt} from '@fortawesome/free-solid-svg-icons/faCompressA
 import {faCommentDots} from '@fortawesome/free-solid-svg-icons/faCommentDots';
 import {AgGridModule} from 'ag-grid-angular';
 import {PartsModule} from './features/parts/parts.module';
-import { AdminDashboardComponent } from './features/admin-dashboard/components/admin-dashboard/admin-dashboard.component';
-import { RegisterComponent } from './features/admin-dashboard/components/register/register.component';
 import { AdminDashboardModule } from './features/admin-dashboard/admin-dashboard.module';
+
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,8 @@ import { AdminDashboardModule } from './features/admin-dashboard/admin-dashboard
     ReactiveFormsModule,
     HttpClientModule,
     FontAwesomeModule,
+    BrowserAnimationsModule, // required animations module
+    ToastrModule.forRoot(), // ToastrModule added
     SharedModule,
     CoreModule,
     LayoutModule,

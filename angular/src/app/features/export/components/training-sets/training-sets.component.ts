@@ -10,9 +10,10 @@ import {Subscription} from 'rxjs';
 import {GetTrainingSetExporters} from '../../store/actions/export.actions';
 import {GetUser} from '../../../../core/store/actions/user.actions';
 import {selectAuthState} from '../../../../auth/store/selectors/auth.selector';
-import {selectLoggedInUser} from '../../../../core/store/selectors/user.selector';
-import {selectTrainingSetExporters} from '../../store/selectors/training-set-exporters.selector';
+import {selectLoggedInUser} from '../../../../core/store/selectors/core.selector';
+import {selectTrainingSetExporters, selectTrainingSetExportersServerError} from '../../store/selectors/training-set-exporters.selector';
 import {flatten} from '@angular/compiler';
+import {ShowErrorService} from '../../../../core/services/show-error.service';
 
 
 @Component({
@@ -32,10 +33,11 @@ export class TrainingSetsComponent implements OnInit, OnDestroy {
   documents: Document[];
   exporters: TrainingSetExporter[];
   exporting: boolean;
+  private serverErrorSubscription: Subscription;
 
   constructor(private store: Store<any>,
               private formBuilder: FormBuilder,
-              private exporterService: ExporterService
+              private exporterService: ExporterService, private showErrorService: ShowErrorService
               ) {
     this.form = this.formBuilder.group({
       exportersFormArray: new FormArray([], Validators.required),
@@ -77,6 +79,13 @@ export class TrainingSetsComponent implements OnInit, OnDestroy {
         // this.documents = flatten([...next.documentsCreated, ...next.permissions.map((permission) => permission.collection.documents)]);
       }
     });
+
+    this.serverErrorSubscription = this.store.select(selectTrainingSetExportersServerError).subscribe(next => {
+      if (next) {
+        this.showErrorService.warning(next);
+      }
+    });
+
   }
 
 
@@ -110,6 +119,7 @@ export class TrainingSetsComponent implements OnInit, OnDestroy {
     this.authSubscription.unsubscribe();
     this.userSubscription.unsubscribe();
     this.exportersSubscription.unsubscribe();
+    this.serverErrorSubscription.unsubscribe();
   }
 
   getButtonLabel() {

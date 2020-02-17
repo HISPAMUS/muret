@@ -1,10 +1,15 @@
-import deepcopy from 'ts-deepcopy';
 import {SemanticRepresentationActions, SemanticRepresentationActionTypes} from '../actions/semantic-representation.actions';
-import {SemanticRepresentationState, initialSemanticRepresentationState} from '../state/semantic-representation.state';
+import {initialSemanticRepresentationState, SemanticRepresentationState} from '../state/semantic-representation.state';
 
 export function semanticRepresentationReducers(state = initialSemanticRepresentationState, action: SemanticRepresentationActions):
   SemanticRepresentationState {
   switch (action.type) {
+    case SemanticRepresentationActionTypes.SemanticRepresentationServerError: {
+      return {
+        ...state,
+        apiRestServerError: action.serverError
+      };
+    }
     case SemanticRepresentationActionTypes.ConvertAgnostic2Semantic: {
       const newState = {...state};
       return newState;
@@ -32,14 +37,16 @@ export function semanticRepresentationReducers(state = initialSemanticRepresenta
     case SemanticRepresentationActionTypes.GetTranslationModels : {
       return {
         ...state,
-        models: null
-      }
+        models: null,
+        apiRestServerError: null
+      };
     }
     case SemanticRepresentationActionTypes.GetTranslationModelsSuccess: {
       return {
         ...state,
-        models: action.response
-      }
+        models: action.response,
+        apiRestServerError: null
+      };
     }
     default: {
       return state;

@@ -18,40 +18,38 @@ import { Collection } from 'src/app/core/model/entities/collection';
 })
 export class RegisterComponent implements OnInit, OnDestroy {
 
-  newuserModel : NewUser = {}
-  username : string
-  usernamesubscription : Subscription
-  userregistersubscription: Subscription
-  collectionSelected : Collection = null
+  newuserModel: NewUser = {};
+  username: string;
+  usernamesubscription: Subscription;
+  userregistersubscription: Subscription;
+  collectionSelected: Collection = null;
+  private serverErrorSubscription: Subscription;
 
-  constructor(private store : Store<AdminDashboardState>, private userstore : Store<CoreState>, private dialogService: DialogsService)
-  {
-    this.usernamesubscription = userstore.select(selectUsername).subscribe((name)=>{this.username = name})
+  constructor(private store: Store<AdminDashboardState>, private userstore: Store<CoreState>, private dialogService: DialogsService) {
+    this.usernamesubscription = userstore.select(selectUsername).subscribe((name) => {this.username = name; });
     this.userregistersubscription = store.select(selectRegisterStatus).subscribe((status) => {
-      if(status == 1)
-        dialogService.showConfirmation("Success", "User registered correctly")
-    })
+      if (status === 1) {
+        dialogService.showConfirmation('Success', 'User registered correctly');
+      }
+    });
   }
 
   ngOnInit() {
   }
 
-  ngOnDestroy()
-  {
-    this.usernamesubscription.unsubscribe()
+  ngOnDestroy() {
+    this.usernamesubscription.unsubscribe();
   }
 
-  startRegister()
-  {
-    this.newuserModel.adminCreator = this.username
-    this.store.dispatch(new RegisterStart(this.newuserModel))
+  startRegister() {
+    this.newuserModel.adminCreator = this.username;
+    this.store.dispatch(new RegisterStart(this.newuserModel));
   }
 
-  generateRandomPWD()
-  {
-    event.preventDefault()
-    let randompwd = Math.random().toString(36);
-    this.newuserModel.password = randompwd
+  generateRandomPWD() {
+    event.preventDefault();
+    const randompwd = Math.random().toString(36);
+    this.newuserModel.password = randompwd;
   }
 
 }

@@ -2,11 +2,12 @@ import { Action } from '@ngrx/store';
 import {Document} from '../../../../core/model/entities/document';
 import {Image} from '../../../../core/model/entities/image';
 import {DocumentStatistics} from '../../../../core/model/restapi/document-statistics';
-import {PreflightCheckResult} from '../../../../core/model/restapi/preflight-check-result';
 import {AlignmentPreview} from '../../../../core/model/restapi/alignment-preview';
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
+import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 
 export enum DocumentActionTypes {
+  DocumentServerError = '[Document] Server error',
   GetDocument = '[Document] Get document',
   GetDocumentSuccess = '[Document] Get document success',
   GetImages = '[Document] Get images',
@@ -21,13 +22,18 @@ export enum DocumentActionTypes {
   ExportMusicXMLSuccess = '[Document] Export MusicXML success',
   GetDocumentStatistics = '[Document] Get document statistics',
   GetDocumentStatisticsSuccess = '[Document] Get document statistics success',
-  PreflightCheck = '[Document] Preflight check', //TODO quitar
-  PreflightCheckSuccess = '[Document] Preflight check success',
   GetAlignmentPreview = '[Document] Get alignment preview',
   GetAlignmentPreviewSuccess = '[Document] Get alignment preview success',
   GetCroppedImage = '[Document] Get cropped image',
   GetCroppedImageSuccess = '[Document] Get cropped image success',
 }
+
+export class DocumentServerError implements Action {
+  public readonly type = DocumentActionTypes.DocumentServerError;
+  constructor(public error: APIRestServerError) {}
+}
+
+
 
 export class GetDocument implements Action {
   public readonly type = DocumentActionTypes.GetDocument;
@@ -99,7 +105,7 @@ export class GetDocumentStatisticsSuccess implements Action {
   constructor(public documentStatistics: DocumentStatistics) {}
 }
 
-export class PreflightCheck implements Action {
+/*export class PreflightCheck implements Action {
   public readonly type = DocumentActionTypes.PreflightCheck;
   constructor(public documentID: number, public selectedImages: Array<number>) {}
 }
@@ -107,7 +113,7 @@ export class PreflightCheck implements Action {
 export class PreflightCheckSuccess implements Action {
   public readonly type = DocumentActionTypes.PreflightCheckSuccess;
   constructor(public preflightCheckResult: PreflightCheckResult) {}
-}
+}*/
 
 export class GetAlignmentPreview implements Action {
   public readonly type = DocumentActionTypes.GetAlignmentPreview;
@@ -131,11 +137,12 @@ export class GetCroppedImageSuccess implements Action {
 }
 
 export type DocumentActions =
+  DocumentServerError |
   GetDocument | GetDocumentSuccess | GetImages | GetImagesSuccess | ExportMEI | ExportMEISuccess |
   ExportMEIPartsFacsimile | ExportMEIPartsFacsimileSuccess |
   ExportMensurstrich | ExportMensurstrichSuccess |
   ExportMusicXML | ExportMusicXMLSuccess |
   GetDocumentStatistics | GetDocumentStatisticsSuccess |
-  PreflightCheck | PreflightCheckSuccess |
+  // PreflightCheck | PreflightCheckSuccess |
   GetAlignmentPreview | GetAlignmentPreviewSuccess |
   GetCroppedImage | GetCroppedImageSuccess;

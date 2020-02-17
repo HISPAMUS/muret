@@ -1,8 +1,10 @@
 import { Action } from '@ngrx/store';
 import {Collection} from '../../../../core/model/entities/collection';
 import {DocumentActionTypes, GetDocumentStatisticsSuccess} from '../../../document/store/actions/document.actions';
+import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 
 export enum DocumentsActionTypes {
+  DocumentsServerError = '[Documents] Server error',
   GetCollection = '[Documents] Get collection',
   GetCollectionSuccess = '[Documents] Get collection success',
   CreateSubcollection = '[Documents] Create subcollection',
@@ -13,6 +15,11 @@ export enum DocumentsActionTypes {
   MoveDocumentsToSubcollectionSuccess = '[Document] Move documents to subcollection success',
   MoveDocumentsToNewSubcollection = '[Document] Move documents to new subcollection',
   MoveDocumentsToNewSubcollectionSuccess = '[Document] Move documents to new subcollection success',
+}
+
+export class DocumentsServerError implements Action {
+  public readonly type = DocumentsActionTypes.DocumentsServerError;
+  constructor(public serverError: APIRestServerError) {}
 }
 
 export class GetCollection implements Action {
@@ -68,6 +75,7 @@ export class MoveDocumentsToNewSubcollectionSuccess implements Action {
 
 
 export type DocumentsActions =
+  DocumentsServerError |
   GetCollection | GetCollectionSuccess |
   CreateSubcollection | CreateSubcollectionSuccess |
   DeleteSubcollection | DeleteSubcollectionSuccess |

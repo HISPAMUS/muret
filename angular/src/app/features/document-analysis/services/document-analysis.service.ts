@@ -104,7 +104,7 @@ export class DocumentAnalysisService {
     return this.apiRestClientService.post$<Page[]>('documentanalysis/createRegion', region);
   }
 
-  clear(imageID: number) {
+  clear(imageID: number): Observable<void> {
     return this.apiRestClientService.delete$('documentanalysis/clear', imageID);
   }
 

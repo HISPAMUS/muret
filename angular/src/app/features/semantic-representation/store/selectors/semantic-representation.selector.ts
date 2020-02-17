@@ -12,3 +12,8 @@ export const selectTranslationModels = createSelector(
   semanticRepresentationState,
   (stateSemantic: SemanticRepresentationState) => stateSemantic.models
 );
+
+export const selectSemanticRepresentationServerError = createSelector(
+  semanticRepresentationState,
+  (stateSemantic: SemanticRepresentationState) => stateSemantic.apiRestServerError
+);

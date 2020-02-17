@@ -55,5 +55,9 @@ export const selectDocumentAnalysisClassifierModels = createSelector(
   (state: DocumentAnalysisState) => state.documentAnalysisClassifierModels
 )
 
+export const selectDocumentAnalysisServerError = createSelector(
+  documentAnalysisState,
+  (state: DocumentAnalysisState) => state.apiRestServerError
+)
 
 

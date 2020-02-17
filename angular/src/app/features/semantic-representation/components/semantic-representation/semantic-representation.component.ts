@@ -12,7 +12,11 @@ import {
   SendSemanticEncoding,
   GetTranslationModels
 } from '../../store/actions/semantic-representation.actions';
-import {selectNotation, selectTranslationModels} from '../../store/selectors/semantic-representation.selector';
+import {
+  selectNotation,
+  selectSemanticRepresentationServerError,
+  selectTranslationModels
+} from '../../store/selectors/semantic-representation.selector';
 import {Notation} from '../../services/notation';
 import {Shape} from '../../../../svg/model/shape';
 import {selectAgnosticSymbols} from '../../../agnostic-representation/store/selectors/agnostic-representation.selector';
@@ -35,6 +39,8 @@ import {
 import {selectImageDocumentID} from '../../../document-analysis/store/selectors/document-analysis.selector';
 import {ModalOptions} from '../../../../shared/components/options-dialog/options-dialog.component';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
+import {selectDocumentsServerError} from '../../../documents/store/selectors/documents.selector';
+import {ShowErrorService} from '../../../../core/services/show-error.service';
 
 @Component({
   selector: 'app-semantic-representation',
@@ -51,7 +57,6 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   selectedRegionZoomFactor = 1;
   selectedRegion: Region;
   encodingPaneType: 'none' | 'manual' | 'mei';
-  errorMessage: string = null;
   // semanticEncoding = '';
   // private semanticEncodingTextAreaContent: string;
   notation: Notation;
@@ -79,9 +84,10 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   // usesOfPartsSubscription: Subscription;
   private useOfPartsSubscription: Subscription;
   private usesOfParts: UsesOfParts;
+  private serverErrorSubscription: Subscription;
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>,
-              private dialogsService: DialogsService
+              private dialogsService: DialogsService, private showErrorService: ShowErrorService
   ) {
     this.defaultColDef = {
       editable: true,
@@ -121,7 +127,6 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
     this.notationSubscription = this.store.select(selectNotation).subscribe(next => {
       if (next) {
-        this.errorMessage = next.errorMessage;
         // this.semanticEncoding = next.semanticEncoding;
         if (next.semanticEncoding) {
           this.drawSemanticEncoding(next.semanticEncoding);
@@ -152,6 +157,13 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
         );
       }
     });
+
+    this.serverErrorSubscription = this.store.select(selectSemanticRepresentationServerError).subscribe(next => {
+      if (next) {
+        this.showErrorService.warning(next);
+      }
+    });
+
   }
 
   ngOnDestroy(): void {
@@ -159,6 +171,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     this.agnosticSymbolsSubscription.unsubscribe();
     this.documentIDSubscription.unsubscribe();
     this.useOfPartsSubscription.unsubscribe();
+    this.serverErrorSubscription.unsubscribe();
     // this.usesOfPartsSubscription.unsubscribe();
   }
 
@@ -177,7 +190,6 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   setSelectedRegion($event: Region) {
     setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
       this.selectedRegion = $event;
-      this.errorMessage = null;
       this.notation = null;
       // this.semanticEncoding = '';
       if (this.gridApi) {
@@ -412,11 +424,6 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
       this.store.dispatch(new CreateRegionPart(this.selectedRegion, $event));
       /// this.store.dispatch(new GetImageDocumentParts(+this.imageID)); // to update the drop down
     }*/
-
-    hasErrorMessage() {
-      return this.errorMessage != null && this.errorMessage;
-    }
-
 
     hasNotation() {
       return this.notation != null && this.notation.notationResponseType != null;

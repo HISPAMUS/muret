@@ -2,8 +2,10 @@ import {Action} from '@ngrx/store';
 import {Document} from '../../../../core/model/entities/document';
 import {User} from '../../../../core/model/entities/user';
 import {Collection} from '../../../../core/model/entities/collection';
+import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 
 export enum NewDocumentActionTypes {
+  NewDocumentServerError = '[NewDocument] New document server error',
   CreateDocumentReset = '[NewDocument] Create document reset',
   CreateDocument = '[NewDocument] Create document',
   CreateDocumentSuccess = '[NewDocument] Create document success',
@@ -18,6 +20,11 @@ export class CreateDocument implements Action {
               public name: string, public composer: string,
               public notationType: string, public manuscriptType: string,
               public comments: any, public imgSrc: string, public collectionID: number) {}
+}
+
+export class NewDocumentServerError implements Action {
+  public readonly type = NewDocumentActionTypes.NewDocumentServerError;
+  constructor(public serverError: APIRestServerError) {}
 }
 
 export class CreateDocumentSuccess implements Action {
@@ -41,4 +48,5 @@ export class GetCollectionsSuccess implements Action {
 }
 
 export type NewDocumentActions =
+  NewDocumentServerError |
   CreateDocumentReset | CreateDocument | CreateDocumentSuccess | GetCollections | GetCollectionsSuccess;

@@ -4,6 +4,7 @@ import {AgnosticRepresentationState} from '../../store/state/agnostic-representa
 import {SVGSet} from '../../model/svgset';
 import {AgnosticTypeSVGPath} from '../../model/agnostic-type-svgpath';
 import {AgnosticSymbolAndPosition} from '../../model/agnostic-symbol-and-position';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-agnostic-toolbar',
@@ -26,6 +27,8 @@ export class AgnosticToolbarComponent implements OnInit, OnDestroy {
   classifierValue = true;
   symbolsFilter = 'frequent'; // default value
   buttonWidth: number;
+
+  private serverErrorSubscription: Subscription;
 
   constructor(public store: Store<AgnosticRepresentationState>) {
   }

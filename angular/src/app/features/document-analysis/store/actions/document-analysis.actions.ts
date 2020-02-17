@@ -7,8 +7,10 @@ import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {Part} from '../../../../core/model/entities/part';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 import { DocumentAnalysisForm } from '../../model/document-analysis-form'
+import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 
 export enum DocumentAnalysisActionTypes {
+  DocumentAnalysisServerError = '[DocumentAnalysis] Server error',
   GetImageProjection = '[DocumentAnalysis] Get image projection',
   GetImageProjectionSuccess = '[DocumentAnalysis] Get image projection success',
   GetImageURL = '[DocumentAnalysis] Get image URL',
@@ -55,6 +57,11 @@ export enum DocumentAnalysisActionTypes {
 
   AutomaticDocumentAnalysis = '[DocumentAnalysis] Start automatic analysis',
   AutomaticDocumentAnalysisSuccess = '[DocumentAnalysis] Automatic analysis success'
+}
+
+export class DocumentAnalysisServerError implements Action {
+  public readonly type = DocumentAnalysisActionTypes.DocumentAnalysisServerError;
+  constructor(public serverError: APIRestServerError) {}
 }
 
 export class GetImageProjection implements Action {
@@ -222,6 +229,7 @@ export class SelectRegion implements Action {
 
 
 export type DocumentAnalysisActions =
+  DocumentAnalysisServerError |
   GetImageProjection | GetImageProjectionSuccess |
   GetImagePart | GetImagePartSuccess |
   GetRegionTypes | GetRegionTypesSuccess |

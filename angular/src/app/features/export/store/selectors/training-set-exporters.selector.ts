@@ -8,4 +8,7 @@ export const selectTrainingSetExporters = createSelector(
   (state: ExportState) => state.trainingSetExporters.trainingSetExporters
 );
 
-
+export const selectTrainingSetExportersServerError = createSelector(
+  exportState,
+  (state: ExportState) => state.trainingSetExporters.apiRestServerError
+);

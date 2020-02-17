@@ -97,17 +97,13 @@ public class NotationModel {
         return semanticImporter.importString(document.getNotationType(), region.getSemanticEncoding());
     }
 
-    public Notation getNotation(Document document, String partName, Region region, boolean mensustriche, Renderer renderer) {
+    public Notation getNotation(Document document, String partName, Region region, boolean mensustriche, Renderer renderer) throws IM3Exception, IM3WSException {
 
         //TODO Código algo duplicado en DocumentModel - exportMEI
         //TODO Ahora sólo lo guardo en la región
-        try {
-            SemanticEncoding semanticEncoding = importSemanticEncoding(document, region);
-            String mei = getMEINotation(semanticEncoding, document.getNotationType());
-            return new Notation(NotationResponseType.mei, mei, region.getSemanticEncoding());
-        } catch (Exception e) {
-            return new Notation("Cannot import semantic encoding: " + e.getMessage());
-        }
+        SemanticEncoding semanticEncoding = importSemanticEncoding(document, region);
+        String mei = getMEINotation(semanticEncoding, document.getNotationType());
+        return new Notation(NotationResponseType.mei, mei, region.getSemanticEncoding());
     }
 
     private String generateID(Symbol symbol) {

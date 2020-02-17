@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import {AuthGuardService as AuthGuard} from './auth/services/auth-guard.service';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
-import {ErrorInterceptor, TokenInterceptor} from './auth/token-interceptor.service';
+import {BlobErrorHttpInterceptor, TokenInterceptor} from './auth/token-interceptor.service';
 
 const routes = [
   {
@@ -46,12 +46,14 @@ const routes = [
   {
     canActivate: [AuthGuard],
     path: 'agnosticrepresentation',
-    loadChildren: () => import('./features/agnostic-representation/agnostic-representation.module').then(m => m.AgnosticRepresentationModule)
+    loadChildren: () => import('./features/agnostic-representation/agnostic-representation.module').
+      then(m => m.AgnosticRepresentationModule)
   },
   {
     canActivate: [AuthGuard],
     path: 'semanticrepresentation',
-    loadChildren: () => import('./features/semantic-representation/semantic-representation.module').then(m => m.SemanticRepresentationModule)
+    loadChildren: () => import('./features/semantic-representation/semantic-representation.module').
+      then(m => m.SemanticRepresentationModule)
   },
   {
     canActivate: [AuthGuard],
@@ -61,7 +63,7 @@ const routes = [
   {
     canActivate: [AuthGuard],
     path: 'admin',
-    loadChildren: () => import('./features/admin-dashboard/admin-dashboard.module').then(m=> m.AdminDashboardModule)
+    loadChildren: () => import('./features/admin-dashboard/admin-dashboard.module').then( m => m.AdminDashboardModule)
   }
 ];
 
@@ -80,9 +82,14 @@ const routes = [
       useClass: TokenInterceptor,
       multi: true
     },
-    {
+    /*{
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,
+      multi: true
+    },*/
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: BlobErrorHttpInterceptor,
       multi: true
     }
   ]

@@ -3,6 +3,7 @@ import {Image} from '../../../../core/model/entities/image';
 import {DocumentStatistics} from '../../../../core/model/restapi/document-statistics';
 import {AlignmentPreview} from '../../../../core/model/restapi/alignment-preview';
 import {DocumentExport} from '../../../../core/model/restapi/document-export';
+import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 
 export interface DocumentState {
   document: Document;
@@ -11,6 +12,7 @@ export interface DocumentState {
   alignmentPreview: AlignmentPreview;
   exportedFile: DocumentExport;
   mei: string;
+  apiRestServerError: APIRestServerError;
 }
 
 export const initialDocumentState: DocumentState = {
@@ -19,7 +21,8 @@ export const initialDocumentState: DocumentState = {
   statistics: null,
   alignmentPreview: null,
   exportedFile: null,
-  mei: null
+  mei: null,
+  apiRestServerError: null
 };
 
 export function getInitialState(): DocumentState {

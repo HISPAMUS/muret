@@ -6,6 +6,12 @@ import {Part} from '../../../../core/model/entities/part';
 export function partsReducers(state = initialSemanticRepresentationState, action: PartsActions):
   PartsState {
   switch (action.type) {
+    case PartsActionTypes.PartsServerError: {
+      return {
+        ...state,
+        apiRestServerError: action.serverError
+      };
+    }
     case PartsActionTypes.CreateImagePartSuccess: {
       const newState = {...state};
       const newPart: Part = {
@@ -75,7 +81,8 @@ export function partsReducers(state = initialSemanticRepresentationState, action
       const uses = newUsesOfParts.uses.find(value => value.part.id === action.partUse.partId );
       uses.images.push(action.partUse.imageId);
       const newState: PartsState = {
-        usesOfParts: newUsesOfParts
+        usesOfParts: newUsesOfParts,
+        apiRestServerError: null
       };
       return newState;
     }
@@ -84,7 +91,8 @@ export function partsReducers(state = initialSemanticRepresentationState, action
       const uses = newUsesOfParts.uses.find(value => value.part.id === action.partUse.partId );
       uses.images = uses.images.filter(value => value !== action.partUse.imageId);
       const newState: PartsState = {
-        usesOfParts: newUsesOfParts
+        usesOfParts: newUsesOfParts,
+        apiRestServerError: null
       };
       return newState;
     }

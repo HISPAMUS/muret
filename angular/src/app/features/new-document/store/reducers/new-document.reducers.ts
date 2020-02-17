@@ -4,10 +4,17 @@ import {NewDocumentActions, NewDocumentActionTypes} from '../actions/new-documen
 export function newDocumentReducers(state = initialNewDocumentState, action: NewDocumentActions):
   NewDocumentState {
   switch (action.type) {
+    case NewDocumentActionTypes.NewDocumentServerError: {
+      return {
+        ...state,
+        apiRestServerError: action.serverError
+      };
+    }
     case NewDocumentActionTypes.CreateDocumentSuccess: {
       const result: NewDocumentState =  {
         document: action.document,
-        collections: state.collections
+        collections: state.collections,
+        apiRestServerError: null,
       };
       return result;
     }
@@ -17,7 +24,8 @@ export function newDocumentReducers(state = initialNewDocumentState, action: New
     case NewDocumentActionTypes.GetCollectionsSuccess: {
       const result: NewDocumentState =  {
         document: state.document,
-        collections: action.collections
+        collections: action.collections,
+        apiRestServerError: null,
       };
       return result;
     }

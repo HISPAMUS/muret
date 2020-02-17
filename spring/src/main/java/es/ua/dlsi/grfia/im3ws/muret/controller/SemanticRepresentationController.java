@@ -15,6 +15,7 @@ import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.PageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.SymbolRepository;
+import es.ua.dlsi.im3.core.IM3Exception;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,13 +63,8 @@ public class SemanticRepresentationController extends MuRETBaseController {
         }*/
             Part part = null;
             String partName = "";
-            try {
-                Notation result = semanticRepresentationModel.computeAndSaveSemanticFromAgnostic(document, partName, region, mensurstrich, renderer);
-                return result;
-            } catch (Exception e) {
-                Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot convert to semantic", e);
-                return new Notation(e.getMessage());
-            }
+            Notation result = semanticRepresentationModel.computeAndSaveSemanticFromAgnostic(document, partName, region, mensurstrich, renderer);
+            return result;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot convert agnostic to semantic", e);
         }
@@ -96,7 +92,7 @@ public class SemanticRepresentationController extends MuRETBaseController {
 
             Notation result = notationModel.getNotation(document, partName, region, mensustriche, renderer);
             return result;
-        } catch (IM3WSException e) {
+        } catch (IM3WSException | IM3Exception e) {
             throw ControllerUtils.createServerError(this, "Cannot get notation", e);
         }
     }
@@ -122,21 +118,19 @@ public class SemanticRepresentationController extends MuRETBaseController {
 
             Notation result = semanticRepresentationModel.sendSemanticEncoding(document, partName, region, mensustriche, renderer, semanticEncoding);
             return result;
-        } catch (IM3WSException e) {
+        } catch (IM3WSException | IM3Exception e) {
             throw ControllerUtils.createServerError(this, "Cannot send semantic encoding", e);
         }
     }
 
     @DeleteMapping(path = {"clearSemanticEncoding/{staffID}"})
     @Transactional
-    public Notation clearSemanticEncoding(@PathVariable(name="staffID") Long staffID)  {
+    public void clearSemanticEncoding(@PathVariable(name="staffID") Long staffID)  {
         try {
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Clearing semantic encoding for region ID {0}", staffID);
             Region region = getRegion(staffID);
             region.setSemanticEncoding(null);
             regionRepository.save(region);
-            Notation result = new Notation("Semantic encoding has been deleted");
-            return result;
         } catch (IM3WSException e) {
             throw ControllerUtils.createServerError(this, "Cannot clear semantic encoding", e);
         }

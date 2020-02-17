@@ -2,8 +2,10 @@ import {Action} from '@ngrx/store';
 import {Region} from '../../../../core/model/entities/region';
 import {Notation} from '../../services/notation';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
+import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 
 export enum SemanticRepresentationActionTypes {
+  SemanticRepresentationServerError = '[SemanticRepresentation] Server error',
   ConvertAgnostic2Semantic = '[SemanticRepresentation] Convert agnostic to semantic',
   ConvertAgnostic2SemanticSuccess = '[SemanticRepresentation] Convert agnostic to semantic success',
   GetNotation = '[SemanticRepresentation] Get notation',
@@ -13,6 +15,11 @@ export enum SemanticRepresentationActionTypes {
   SendSemanticEncodingSuccess = '[SemanticRepresentation] Send semantic encoding success',
   GetTranslationModels = '[SemanticRepresentation] Get translation models',
   GetTranslationModelsSuccess = '[SemanticRepresentation] Get translation models success'
+}
+
+export class SemanticRepresentationServerError implements Action {
+  public readonly type = SemanticRepresentationActionTypes.SemanticRepresentationServerError;
+  constructor(public serverError: APIRestServerError) {}
 }
 
 export class ConvertAgnostic2Semantic implements Action {
@@ -52,14 +59,15 @@ export class SendSemanticEncodingSuccess implements Action {
 
 export class GetTranslationModels implements Action {
   public readonly type = SemanticRepresentationActionTypes.GetTranslationModels;
-  constructor(public imageID: number){}
+  constructor(public imageID: number) {}
 }
 
 export class GetTranslationModelsSuccess implements Action {
   public readonly type = SemanticRepresentationActionTypes.GetTranslationModelsSuccess;
-  constructor(public response: ClassifierModel[]){}
+  constructor(public response: ClassifierModel[]) {}
 }
 
 export type SemanticRepresentationActions =
+  SemanticRepresentationServerError |
   ConvertAgnostic2Semantic | ConvertAgnostic2SemanticSuccess | GetNotation | GetNotationSuccess | ClearNotation |
   SendSemanticEncoding | SendSemanticEncodingSuccess | GetTranslationModels | GetTranslationModelsSuccess;

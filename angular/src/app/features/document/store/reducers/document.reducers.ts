@@ -4,6 +4,12 @@ import {DocumentExportType} from '../../../../core/model/restapi/document-export
 
 export function documentReducers(state = initialDocumentState, action: DocumentActions): DocumentState {
   switch (action.type) {
+    case DocumentActionTypes.DocumentServerError: {
+      return {
+        ...state,
+        apiRestServerError: action.error
+      };
+    }
     case DocumentActionTypes.GetDocumentSuccess: {
       return {
         ...state,
@@ -32,7 +38,6 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
           type: DocumentExportType.mei_parts_facsimile,
           file: action.mei != null ? new Blob([action.mei], {type: 'text/plain'}) : null,
           fileExtension: 'mei',
-          error: action.mei == null
         }
       };
     }
@@ -43,7 +48,6 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
           type: DocumentExportType.mei_score,
           file: action.mei != null ? new Blob([action.mei], {type: 'text/plain'}) : null,
           fileExtension: 'mei',
-          error: action.mei == null,
         },
         mei: action.mei
       };
@@ -55,7 +59,6 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
           type: DocumentExportType.musicxml,
           file: action.payload != null ? new Blob([action.payload], {type: 'application/x-gzip'}) : null,
           fileExtension: 'tgz',
-          error: action.payload === null,
         }
       };
     }
@@ -64,9 +67,8 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
         ...state,
         exportedFile: {
           type: DocumentExportType.mensurstrich_svg,
-          file: action.payload != null ? new Blob([action.payload], {type: 'application/x-gzip'}) : null,
+          file: action.payload = new Blob([action.payload], {type: 'application/x-gzip'}),
           fileExtension: 'tgz',
-          error: action.payload === null,
         }
       };
     }

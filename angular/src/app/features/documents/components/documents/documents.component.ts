@@ -11,9 +11,10 @@ import {
   GetCollection,
   MoveDocumentsToNewSubcollection, MoveDocumentsToSubcollection
 } from '../../store/actions/documents.actions';
-import {selectChangedCollectionID, selectCollection} from '../../store/selectors/documents.selector';
+import {selectChangedCollectionID, selectCollection, selectDocumentsServerError} from '../../store/selectors/documents.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {ModalOptions} from '../../../../shared/components/options-dialog/options-dialog.component';
+import {ShowErrorService} from '../../../../core/services/show-error.service';
 
 
 @Component({
@@ -28,8 +29,10 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   collection: Collection;
   collectionSubscription: Subscription;
   changedCollectionIDSubscription: Subscription;
+  private serverErrorSubscription: Subscription;
 
-  constructor(private route: ActivatedRoute, private store: Store<any>, private dialogsService: DialogsService) {
+  constructor(private route: ActivatedRoute, private store: Store<any>, private dialogsService: DialogsService,
+              private showErrorService: ShowErrorService) {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.collectionID = +this.route.snapshot.paramMap.get('id'); // + converts the string to number
       this.store.dispatch(new GetCollection(this.collectionID));
@@ -46,6 +49,11 @@ export class DocumentsComponent implements OnInit, OnDestroy {
         // reload it
         this.collectionID = next;
         this.store.dispatch(new GetCollection(next));
+      }
+    });
+    this.serverErrorSubscription = this.store.select(selectDocumentsServerError).subscribe(next => {
+      if (next) {
+        this.showErrorService.warning(next);
       }
     });
   }
@@ -66,6 +74,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.collectionSubscription.unsubscribe();
     this.changedCollectionIDSubscription.unsubscribe();
+    this.serverErrorSubscription.unsubscribe();
   }
 
   addSubcollection() {
@@ -87,7 +96,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   }
 
   canBeDeleted(subcollection: Collection) {
-    return subcollection.documents.length === 0 && subcollection.subcollections.length === 0;
+    return !subcollection.documents || subcollection.documents.length === 0 && subcollection.subcollections.length === 0;
   }
 
   moveToSubcollection() {

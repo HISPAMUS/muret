@@ -59,11 +59,11 @@ export class DocumentService {
     return this.apiRestClientService.getBlob$(url);
   }
 
-  preflightCheck$(documentID: number, selectedImages: Array<number>): Observable<PreflightCheckResult> {
+ /* preflightCheck$(documentID: number, selectedImages: Array<number>): Observable<PreflightCheckResult> {
     const selectedImagesString = selectedImages.join(',');
     const url = `document/preflightCheck/${documentID}/${selectedImagesString}`;
     return this.apiRestClientService.get$<PreflightCheckResult>(url);
-  }
+  }*/
 
   getAlignmentPreview$(documentID: number): Observable<AlignmentPreview> {
     const url = `alignment/preview/${documentID}`;

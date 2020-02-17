@@ -5,6 +5,11 @@ import deepcopy from 'ts-deepcopy';
 
 export function documentAnalysisReducers(state = initialDocumentAnalysisState, action: DocumentAnalysisActions): DocumentAnalysisState {
   switch (action.type) {
+    case DocumentAnalysisActionTypes.DocumentAnalysisServerError:
+      return {
+        ...state,
+        apiRestServerError: action.serverError
+      };
     case DocumentAnalysisActionTypes.GetRegionTypesSuccess: {
       return {
         ...state,

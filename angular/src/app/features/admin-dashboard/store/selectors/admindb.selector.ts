@@ -6,19 +6,24 @@ export const selectAdminDBState = createFeatureSelector<AdminDashboardState>('ad
 export const selectRegisterStatus = createSelector(
     selectAdminDBState,
     (state: AdminDashboardState) => state.userRegisterStatus
-)
+);
 
 export const selectErrorRegisterMessage = createSelector(
     selectAdminDBState,
     (state: AdminDashboardState) => state.errorMessage
-)
+);
 
 export const selectRevokedFlag = createSelector(
     selectAdminDBState,
     (state: AdminDashboardState) => state.revokedPermissions
-)
+);
 
 export const selectGrantedFlag = createSelector(
     selectAdminDBState,
     (state: AdminDashboardState) => state.grantedPermissions
-)
+);
+
+export const selectAdminDBServerError = createSelector(
+  selectAdminDBState,
+  (state: AdminDashboardState) => state.apiRestServerError
+);

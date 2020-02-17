@@ -25,13 +25,14 @@ import {
   selectRegionTypes,
   selectImageWidth,
   selectImageHeight,
-  selectDocumentAnalysisClassifierModels
+  selectDocumentAnalysisClassifierModels, selectDocumentAnalysisServerError
 } from '../../store/selectors/document-analysis.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Part} from '../../../../core/model/entities/part';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
+import {ShowErrorService} from '../../../../core/services/show-error.service';
 
 @Component({
   selector: 'app-document-analysis',
@@ -73,12 +74,13 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
 
   // @ViewChild('imageComponent') imageComponent: ImageComponent;
   private pages: Page[];
+  private serverErrorSubscription: Subscription;
 
   constructor(private store: Store<DocumentAnalysisState>,
               private route: ActivatedRoute,
               private router: Router,
               private dialogsService: DialogsService,
-              private modalService: NgbModal
+              private modalService: NgbModal, private showErrorService: ShowErrorService
               ) {
     this.regionTypes$ = store.select(selectRegionTypes);
 
@@ -123,6 +125,11 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     this.imageheightSubscription = this.store.select(selectImageHeight).subscribe(value => {
       this.imageHeight = value;
     });
+    this.serverErrorSubscription = this.store.select(selectDocumentAnalysisServerError).subscribe(next => {
+      if (next) {
+        this.showErrorService.warning(next);
+      }
+    });
 
   }
 
@@ -139,6 +146,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   ngOnDestroy(): void {
     this.pagesSubscription.unsubscribe();
     this.regionTypesSubscription.unsubscribe();
+    this.serverErrorSubscription.unsubscribe();
   }
 
   zoomIn() {

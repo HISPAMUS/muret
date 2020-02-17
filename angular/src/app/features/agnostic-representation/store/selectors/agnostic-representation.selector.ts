@@ -39,3 +39,9 @@ export const selectAgnosticSymbolClassifierModels = createSelector (
   agnosticRepresentationState,
   (state: AgnosticRepresentationState) => state.symbolClassifierModels
 );
+
+
+export const selectAgnosticSymbolServerError = createSelector (
+  agnosticRepresentationState,
+  (state: AgnosticRepresentationState) => state.apiRestServerError
+);

@@ -1,12 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Effect, ofType, Actions } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { switchMap} from 'rxjs/operators';
+import {catchError, switchMap} from 'rxjs/operators';
 import {SemanticRepresentationService} from '../../services/semantic-representation.service';
 import {
   ConvertAgnostic2Semantic,
-  ConvertAgnostic2SemanticSuccess, GetNotation, GetNotationSuccess,
-  SemanticRepresentationActionTypes, SendSemanticEncoding, SendSemanticEncodingSuccess, GetTranslationModels, GetTranslationModelsSuccess
+  ConvertAgnostic2SemanticSuccess,
+  GetNotation,
+  GetNotationSuccess,
+  SemanticRepresentationActionTypes,
+  SendSemanticEncoding,
+  SendSemanticEncodingSuccess,
+  GetTranslationModels,
+  GetTranslationModelsSuccess,
+  SemanticRepresentationServerError
 } from '../actions/semantic-representation.actions';
 import {Notation} from '../../services/notation';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
@@ -23,40 +30,36 @@ export class SemanticRepresentationEffects {
   convertAgnostic2Semantic$ = this.actions$.pipe(
     ofType<ConvertAgnostic2Semantic>(SemanticRepresentationActionTypes.ConvertAgnostic2Semantic),
     switchMap((action: ConvertAgnostic2Semantic) =>
-      this.semanticRepresentationService.agnostic2Semantic$(action.region, action.mensustriche, action.renderer)),
-    switchMap((notation: Notation) => {
-      return of(new ConvertAgnostic2SemanticSuccess(notation));
-    })
-  );
+      this.semanticRepresentationService.agnostic2Semantic$(action.region, action.mensustriche, action.renderer).pipe(
+    switchMap((notation: Notation) => of(new ConvertAgnostic2SemanticSuccess(notation))),
+        catchError(err => of(new SemanticRepresentationServerError(err)))
+      )));
 
   @Effect()
   getNotation$ = this.actions$.pipe(
     ofType<GetNotation>(SemanticRepresentationActionTypes.GetNotation),
     switchMap((action: GetNotation) =>
-      this.semanticRepresentationService.getNotation$(action.region, action.mensustriche, action.renderer)),
-    switchMap((notation: Notation) => {
-      return of(new GetNotationSuccess(notation));
-    })
-  );
+      this.semanticRepresentationService.getNotation$(action.region, action.mensustriche, action.renderer).pipe(
+    switchMap((notation: Notation) => of(new GetNotationSuccess(notation))),
+        catchError(err => of(new SemanticRepresentationServerError(err)))
+      )));
 
   @Effect()
   sendSemanticEncoding$ = this.actions$.pipe(
     ofType<SendSemanticEncoding>(SemanticRepresentationActionTypes.SendSemanticEncoding),
     switchMap((action: SendSemanticEncoding) =>
       this.semanticRepresentationService.sendSemanticEncoding$(action.region, action.semanticEncoding,
-        action.mensustriche, action.renderer)),
-    switchMap((notation: Notation) => {
-      return of(new SendSemanticEncodingSuccess(notation));
-    })
-  );
+        action.mensustriche, action.renderer).pipe(
+    switchMap((notation: Notation) => of(new SendSemanticEncodingSuccess(notation))),
+        catchError(err => of(new SemanticRepresentationServerError(err)))
+      )));
 
   @Effect()
   getTranslationModels$ = this.actions$.pipe(
     ofType<GetTranslationModels>(SemanticRepresentationActionTypes.GetTranslationModels),
     switchMap((action: GetTranslationModels) =>
-      this.semanticRepresentationService.getTranslationModels(action.imageID)),
-      switchMap((translationModels: ClassifierModel[]) => {
-        return of(new GetTranslationModelsSuccess(translationModels));
-      })
-    );
+      this.semanticRepresentationService.getTranslationModels(action.imageID).pipe(
+      switchMap((translationModels: ClassifierModel[]) => of(new GetTranslationModelsSuccess(translationModels))),
+        catchError(err => of(new SemanticRepresentationServerError(err)))
+      )));
 }

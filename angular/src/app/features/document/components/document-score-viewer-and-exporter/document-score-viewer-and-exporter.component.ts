@@ -7,11 +7,14 @@ import {
   ExportMEIPartsFacsimile,
   ExportMensurstrich,
   ExportMusicXML,
-  GetDocument,
-  GetImages,
-  PreflightCheck
+  GetDocument, GetImages,
 } from '../../store/actions/document.actions';
-import {selectDocument, selectExportedFile, selectImages} from '../../store/selectors/document.selector';
+import {
+  selectDocument,
+  selectDocumentAPIRestErrorSelector,
+  selectExportedFile,
+  selectImages
+} from '../../store/selectors/document.selector';
 import {Observable, Subscription} from 'rxjs';
 import {saveAs} from 'file-saver';
 import {Document} from '../../../../core/model/entities/document';
@@ -21,6 +24,7 @@ import {GetUsesOfParts} from '../../../parts/store/actions/parts.actions';
 import {Image} from '../../../../core/model/entities/image';
 import {DocumentExport, DocumentExportType} from '../../../../core/model/restapi/document-export';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
+import {ShowErrorService} from '../../../../core/services/show-error.service';
 
 interface SelectedImage {
   checked: boolean;
@@ -43,11 +47,13 @@ export class DocumentScoreViewerAndExporterComponent implements OnInit, OnDestro
   private usesOfPartsSubscription: Subscription;
   private imageSubscription: Subscription;
   private exportingSubscription: Subscription;
+  private serverErrorSubscription: Subscription;
   exportingState: Map<DocumentExportType, boolean> = new Map<DocumentExportType, boolean>();
   private generatingMEIVisualization = false;
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<DocumentState>,
-              private dialogsService: DialogsService) {
+              private dialogsService: DialogsService,
+              private showErrorService: ShowErrorService) {
   }
 
   ngOnInit() {
@@ -88,7 +94,6 @@ export class DocumentScoreViewerAndExporterComponent implements OnInit, OnDestro
 
     this.exportingSubscription = this.store.select(selectExportedFile).subscribe(next => {
       if (next && this.exportingState.get(next.type)) {
-        if (!next.error) {
           if (next.type === DocumentExportType.mei_score && this.generatingMEIVisualization) {
             this.exportingState.set(next.type, false);
             this.openMEIRenderingScreen();
@@ -97,21 +102,18 @@ export class DocumentScoreViewerAndExporterComponent implements OnInit, OnDestro
             this.saveExportedFile(next);
           }
         } else {
-          this.exportingState.set(next.type, false);
+          if (next) {
+            this.exportingState.set(next.type, false);
+          }
         }
+    });
+
+    this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
+      if (next) {
+        this.exportingState.clear();
+        this.showErrorService.warning(next);
       }
     });
-  }
-
-  private onExportReceived(blob: Blob, exportFlagVariable: boolean, defaultFileName: string): boolean {
-      if (blob) {
-        if (blob.size > 0) { // when error, it returns blob size 0
-          saveAs(blob, defaultFileName);
-        } // else error
-      } else {
-
-      }
-      return false;
   }
 
   ngOnDestroy(): void {
@@ -119,6 +121,7 @@ export class DocumentScoreViewerAndExporterComponent implements OnInit, OnDestro
     this.usesOfPartsSubscription.unsubscribe();
     this.imageSubscription.unsubscribe();
     this.exportingSubscription.unsubscribe();
+    this.serverErrorSubscription.unsubscribe();
   }
 
   /*saveFile() {
@@ -152,11 +155,6 @@ export class DocumentScoreViewerAndExporterComponent implements OnInit, OnDestro
     this.generatingMEIVisualization = true;
     this.exportingState.set(DocumentExportType.mei_score, true);
     this.store.dispatch(new ExportMEI(this.documentID, null, this.getIDOfSelectedImages()));
-  }
-
-  render(partID: number) {
-    this.exportingState.set(DocumentExportType.mei_score, true);
-    this.store.dispatch(new ExportMEI(this.documentID, partID, this.getIDOfSelectedImages()));
   }
 
   exportPartsAndFacsimile() {
@@ -217,9 +215,9 @@ export class DocumentScoreViewerAndExporterComponent implements OnInit, OnDestro
   /**
    * @deprecated Use AlignmentPreviewController
    */
-  preflightCheck() {
+  /*preflightCheck() {
     this.store.dispatch(new PreflightCheck(this.documentID, this.getIDOfSelectedImages()));
-  }
+  }*/
 
   openSemanticRegion(imageID: number, regionID: number) {
     this.router.navigate(['semanticrepresentation', imageID, {region_id: regionID}]); // region_id is an optional parameter
@@ -263,4 +261,7 @@ export class DocumentScoreViewerAndExporterComponent implements OnInit, OnDestro
     this.router.navigate(['/document/meiScoreView', this.documentID]);
   }
 
+  /*aaa() {
+    this.toastr.warning('Hello world!', 'Toastr fun!');
+  }*/
 }

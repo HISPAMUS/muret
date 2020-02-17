@@ -1,62 +1,46 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
-import { AdminDBActionTypes, RegisterStart, RegisterSuccess, RegisterFail, RevokePermissions, RevokePermissionsSuccess, GrantPermissions, GrantPermissionsSuccess } from '../actions/admindb.actions';
-import { map, switchMap, catchError } from 'rxjs/operators';
-import { NewUser } from '../../models/newusermodel';
+import {
+  AdminDBActionTypes, RegisterStart, RegisterSuccess, RegisterFail, RevokePermissions, RevokePermissionsSuccess, GrantPermissions,
+  GrantPermissionsSuccess, AdminDBServerError
+} from '../actions/admindb.actions';
+import { switchMap, catchError } from 'rxjs/operators';
 import { AdminDBService } from '../../services/admindb.service';
 import { UserRegisteredResponse } from '../../models/registeredusermodel';
+import {Action} from '@ngrx/store';
 
 @Injectable()
-export class AdminDBEffets{
+export class AdminDBEffects {
 
     constructor(
-        private admindbActions : Actions,
-        private admindbService : AdminDBService
-    ){}
+        private admindbActions: Actions,
+        private admindbService: AdminDBService
+    ) {}
 
     @Effect()
-    RegisterUser : Observable<any> = this.admindbActions.pipe(
+    registerUser$: Observable<Action> = this.admindbActions.pipe(
         ofType(AdminDBActionTypes.REGISTER_START),
-        map((action: RegisterStart) => action.payload),
-        switchMap(payload => {
-            return this.admindbService.attemptRegister$(payload).pipe(
-                map((payload: UserRegisteredResponse) => {
-                    return new RegisterSuccess();
-                }),
-                catchError((error: any) => {
-                    return of(new RegisterFail(error));
-                }
-                )
-            )
-        })
-    )
+        switchMap((action: RegisterStart) => this.admindbService.attemptRegister$(action.payload).pipe(
+          switchMap((payload: UserRegisteredResponse) => of(new RegisterSuccess())),
+          catchError((error: any) => of(new RegisterFail(error)))
+        )));
 
     @Effect()
-    revokePermissions : Observable<any> = this.admindbActions.pipe(
+    revokePermissions$: Observable<Action> = this.admindbActions.pipe(
         ofType(AdminDBActionTypes.REVOKE_PERMISSIONS),
-        map((action: RevokePermissions) => action.payload),
-        switchMap(payload => {
-            return this.admindbService.revokePermissions$(payload).pipe(
-                map((payload: string) => {
-                    return new RevokePermissionsSuccess();
-                })
-            )
-        })
-    )
+        switchMap((action: RevokePermissions) => this.admindbService.revokePermissions$(action.payload).pipe(
+          switchMap((payload: RevokePermissions) => of(new RevokePermissionsSuccess())),
+          catchError((error: any) => of(new AdminDBServerError(error)))
+        )));
 
     @Effect()
-    grantPermissions: Observable<any> = this.admindbActions.pipe(
+    grantPermissions$: Observable<Action> = this.admindbActions.pipe(
         ofType(AdminDBActionTypes.GRANT_PERMISSIONS),
-        map((action: GrantPermissions) => action.payload),
-        switchMap(payload => {
-            return this.admindbService.grantPermissions$(payload).pipe(
-                map((payload : string) => {
-                    return new GrantPermissionsSuccess();
-                })
-            )
-        })
-    )
+        switchMap((action: GrantPermissions) => this.admindbService.grantPermissions$(action.payload).pipe(
+          switchMap((payload: GrantPermissions) => of(new GrantPermissionsSuccess())),
+          catchError((error: any) => of(new AdminDBServerError(error)))
+        )));
 }
 
-export const admindbeffects : any[] = [AdminDBEffets]
+export const admindbeffects: any[] = [AdminDBEffects]

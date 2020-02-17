@@ -70,15 +70,9 @@ public class SemanticRepresentationModel {
         Notation result = null;
         //documentModel.addSemanticEncoding(document, partName, staff.getId(), staff.getBoundingBox(), semantic.getSemanticEncoding());
         KernSemanticExporter kernSemanticExporter = new KernSemanticExporter();
-        try {
-            String kernExport = kernSemanticExporter.export(semanticTransduction.getSemanticEncoding());
-            sendSemanticEncoding(document, partName, staff, mensurstrich, renderer, kernExport);
-            result = notationModel.getNotation(document, partName, staff, mensurstrich, renderer);
-        } catch (Exception e) {
-            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot generate the score", e);
-            result = new Notation("Cannot generate the score:" + e.getMessage());
-        }
-        result.setErrorMessage(semanticTransduction.getErrorMessage());
+        String kernExport = kernSemanticExporter.export(semanticTransduction.getSemanticEncoding());
+        sendSemanticEncoding(document, partName, staff, mensurstrich, renderer, kernExport);
+        result = notationModel.getNotation(document, partName, staff, mensurstrich, renderer);
         return result;
     }
 
@@ -91,7 +85,7 @@ public class SemanticRepresentationModel {
         return documentModel.getDocumentScoreSong(document);
     }
 
-    public Notation sendSemanticEncoding(Document document, String partName, Region region, boolean mensustriche, Renderer renderer, String semanticEncoding) throws IM3WSException {
+    public Notation sendSemanticEncoding(Document document, String partName, Region region, boolean mensustriche, Renderer renderer, String semanticEncoding) throws IM3WSException, IM3Exception {
         //documentModel.addSemanticEncoding(document, partName, region.getId(), region.getBoundingBox(), semanticEncoding);
         //TODO Ahora sólo lo guardo en la región
         region.setSemanticEncoding(semanticEncoding);

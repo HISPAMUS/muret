@@ -8,6 +8,10 @@ export const selectUsesOfParts = createSelector(
   (state: PartsState) => state.usesOfParts
 );
 
+export const selectPartsServerError = createSelector(
+  partsState,
+  (state: PartsState) => state.apiRestServerError
+);
 /*export const selectPartsUsedInImage = createSelector(
   partsState,
   (state: PartsState) => state.partNamesUsedInImage

@@ -6,5 +6,4 @@ export interface DocumentExport {
   file: string | Blob;
   fileExtension: string;
   type: DocumentExportType;
-  error: boolean;
 }

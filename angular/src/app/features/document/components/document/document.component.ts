@@ -1,11 +1,16 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Image} from '../../../../core/model/entities/image';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {Document} from '../../../../core/model/entities/document';
 import {Store} from '@ngrx/store';
 import {DocumentState} from '../../store/state/document.state';
-import {selectImages, selectDocument, selectDocumentStatistics} from '../../store/selectors/document.selector';
+import {
+  selectImages,
+  selectDocument,
+  selectDocumentStatistics,
+  selectDocumentAPIRestErrorSelector
+} from '../../store/selectors/document.selector';
 import {
   GetImages,
   GetDocument,
@@ -19,6 +24,7 @@ import {selectUsesOfParts} from '../../../parts/store/selectors/parts.selector';
 import {UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
 import { AgnosticRepresentationState } from 'src/app/features/agnostic-representation/store/state/agnostic-representation.state';
 import { ResetSelectedRegion } from 'src/app/features/agnostic-representation/store/actions/agnostic-representation.actions';
+import {ShowErrorService} from '../../../../core/services/show-error.service';
 
 @Component({
   selector: 'app-document',
@@ -31,9 +37,11 @@ export class DocumentComponent implements OnInit, OnDestroy {
   statistics$: Observable<DocumentStatistics>;
   usesOfParts$: Observable<UsesOfParts>;
   private documentID: number;
+  private serverErrorSubscription: Subscription;
 
-  constructor(private route: ActivatedRoute, private store: Store<DocumentState>, private agnosticStore: Store<AgnosticRepresentationState>, private router: Router,
-              private dialogsService: DialogsService) {
+  constructor(private route: ActivatedRoute, private store: Store<DocumentState>, private agnosticStore: Store<AgnosticRepresentationState>,
+              private router: Router,
+              private dialogsService: DialogsService, private showErrorService: ShowErrorService) {
     this.document$ = this.store.select(selectDocument);
     this.images$ = this.store.select(selectImages);
     this.statistics$ = this.store.select(selectDocumentStatistics);
@@ -51,10 +59,18 @@ export class DocumentComponent implements OnInit, OnDestroy {
         this.store.dispatch(new ActivateLink({title: 'Document ', routerLink: 'document/' + this.documentID}));
       });
     });
+
+    this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
+      if (next) {
+        this.showErrorService.warning(next);
+      }
+    });
+
   }
 
   ngOnDestroy(): void {
    this.agnosticStore.dispatch(new ResetSelectedRegion());
+   this.serverErrorSubscription.unsubscribe();
   }
 
   trackByImageFn(index, item: Image) {
