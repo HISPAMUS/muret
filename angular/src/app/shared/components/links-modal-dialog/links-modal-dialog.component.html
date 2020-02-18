@@ -1,0 +1,19 @@
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4>{{title}}</h4>
+    </div>
+    <div class="modal-body">
+      <p>{{message}}</p>
+      <p *ngFor="let link of links | keyvalue">
+        <a href="{{link.value}}">{{link.key}}</a>
+      </p>
+      <p *ngFor="let onClickLink of onClickLinks | keyvalue">
+        <a (click)="invoke(onClickLink.value)">{{onClickLink.key}}</a>
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" (click)="close()">Close</button>
+    </div>
+  </div>
+</div>
