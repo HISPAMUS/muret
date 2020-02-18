@@ -1,5 +1,3 @@
-import { ActionReducerMap } from '@ngrx/store';
-
 import {ExportActions, ExportActionTypes} from '../actions/export.actions';
 import {ExportState, initialExportState} from '../state/export.state';
 

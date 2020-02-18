@@ -97,7 +97,6 @@ export class TrainingSetsComponent implements OnInit, OnDestroy {
 
     this.exportedTrainingSetBlobSubscription$ = this.store.select(selectTrainingSetExportedBlob).subscribe(next => {
       if (next) {
-        this.exporting = false;
         this.saveBlobAsFile(next);
       }
     });
@@ -222,7 +221,7 @@ export class TrainingSetsComponent implements OnInit, OnDestroy {
   }
 
   isFormValid() {
-    return this.selectedExporterId && this.treeViewValues && this.treeViewValues.length > 0;
+    return (this.selectedExporterId || this.selectedExporterId === 0) && this.treeViewValues && this.treeViewValues.length > 0;
   }
 
   submit() {
@@ -232,8 +231,11 @@ export class TrainingSetsComponent implements OnInit, OnDestroy {
   }
 
   private saveBlobAsFile(blob: Blob) {
-    const blob1 = new Blob([blob], { type: 'application/x-gzip' });
-    saveAs.saveAs(blob1, 'training_set.tgz'); // TODO file name
+    if (this.exporting) {
+      this.exporting = false;
+      const blob1 = new Blob([blob], {type: 'application/x-gzip'});
+      saveAs.saveAs(blob1, 'training_set.tgz'); // TODO file name
+    }
 
   }
 }
