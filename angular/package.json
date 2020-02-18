@@ -48,6 +48,7 @@
     "ngx-logger": "^4.0.7",
     "ngx-simple-modal": "^1.4.4",
     "ngx-toastr": "^11.3.3",
+    "ngx-treeview": "^6.0.2",
     "node-gyp": "^6.0.0",
     "npm": "^6.13.7",
     "popper.js": "^1.16.0",

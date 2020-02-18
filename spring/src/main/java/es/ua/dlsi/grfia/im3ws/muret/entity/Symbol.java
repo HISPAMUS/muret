@@ -39,9 +39,9 @@ public class Symbol extends Auditable implements IAssignableToPart{
             AgnosticSymbolType o2Type = o2.getAgnosticSymbol().getSymbol();
 
             //TODO parche
-            if (o1Type instanceof Note && o2Type instanceof Accidental && o1.getBoundingBox().containsCenterOfInX(o2.getBoundingBox())) {
+            if (o1Type instanceof Note && o2Type instanceof Accidental && o1.getBoundingBox() != null && o2.getBoundingBox() != null && o1.getBoundingBox().containsCenterOfInX(o2.getBoundingBox())) {
                 diff = 1; // first accidental
-            } else if (o1Type instanceof Accidental && o2Type instanceof Note && o2.getBoundingBox().containsCenterOfInX(o1.getBoundingBox())) {
+            } else if (o1Type instanceof Accidental && o2Type instanceof Note && o1.getBoundingBox() != null && o2.getBoundingBox() != null && o2.getBoundingBox().containsCenterOfInX(o1.getBoundingBox())) {
                 diff = -1; // first accidental
             } else {
                 if (o1x != null && o2x != null) {

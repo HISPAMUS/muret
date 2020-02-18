@@ -35,7 +35,7 @@ public class TrainingSetsFactory {
 
     }
 
-    public final Collection<ITrainingSetExporter> getTrainingSetExporters() {
+    public final List<ITrainingSetExporter> getTrainingSetExporters() {
         return trainingSetExporters;
     }
 

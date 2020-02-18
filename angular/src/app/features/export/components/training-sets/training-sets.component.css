@@ -14,3 +14,9 @@
   margin: 10px;
   margin-bottom: 20px;
 }
+
+.tree-view-item fa-icon {
+  margin-left: .3rem;
+  margin-right: .3rem;
+}
+

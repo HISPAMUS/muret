@@ -8,6 +8,7 @@ import es.ua.dlsi.grfia.im3ws.muret.entity.Document;
 import es.ua.dlsi.grfia.im3ws.muret.model.ITrainingSetExporter;
 import es.ua.dlsi.grfia.im3ws.muret.model.trainingsets.TrainingSetsFactory;
 import es.ua.dlsi.grfia.im3ws.muret.repository.DocumentRepository;
+import es.ua.dlsi.grfia.im3ws.muret.repository.PermissionsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,9 @@ import javax.transaction.Transactional;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 // !!! Important: no controller should throw any exception
@@ -35,6 +38,7 @@ public class TrainingSetsController {
     private final DocumentRepository documentRepository;
     private final EntityManagerFactory entityManagerFactory;
     private final TrainingSetsFactory trainingSetsFactory;
+    //private final PermissionsRepository permissionsRepository;
 
 
     @Autowired
@@ -46,7 +50,7 @@ public class TrainingSetsController {
     }
 
     @GetMapping(path = {"/exporters"})
-    public Collection<ITrainingSetExporter> getTrainingSetExporters()  {
+    public List<ITrainingSetExporter> getTrainingSetExporters()  {
        // return TrainingSetsFactory.getInstance(entityManagerFactory).getTrainingSetExporters();
         return trainingSetsFactory.getTrainingSetExporters();
     }
@@ -89,4 +93,11 @@ public class TrainingSetsController {
         }
 
     }
+
+  /*  @GetMapping(path = {"/permissionsForCurrentUser"})
+    public List<Permissions> getPermissionsForCurrentUser()  {
+        List<Permissions> result = permissionsRepository.getPermissionsFor(AuditorAwareImpl.getCurrentUser());
+        return result;
+    }*/
+
 }

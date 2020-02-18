@@ -5,13 +5,13 @@ import {catchError, switchMap} from 'rxjs/operators';
 import {
   GetTrainingSetExporters,
   GetTrainingSetExportersSuccess,
-  ExportActionTypes, ExportServerError
+  ExportActionTypes, ExportServerError, DownloadTrainingSet, DownloadTrainingSetSuccess
 } from '../actions/export.actions';
 import {ExporterService} from '../../services/exporter.service';
 import {TrainingSetExporter} from '../../../../core/model/restapi/training-set-exporter';
 
 @Injectable()
-export class TrainingSetExportersEffects {
+export class ExportEffects {
   constructor(
     private exporterService: ExporterService,
     private actions$: Actions,
@@ -19,10 +19,19 @@ export class TrainingSetExportersEffects {
 
 
   @Effect()
-  getUsers$ = this.actions$.pipe(
+  getTrainingSetExporters$ = this.actions$.pipe(
     ofType<GetTrainingSetExporters>(ExportActionTypes.GetTrainingSetExporters),
     switchMap(() => this.exporterService.getTrainingSetExporters$().pipe(
       switchMap((trainingSetExporters: TrainingSetExporter[]) => of(new GetTrainingSetExportersSuccess(trainingSetExporters))),
+      catchError(err => of(new ExportServerError(err)))
+    )));
+
+  @Effect()
+  downloadTrainingSet$ = this.actions$.pipe(
+    ofType<DownloadTrainingSet>(ExportActionTypes.DownloadTrainingSet),
+    switchMap((action: DownloadTrainingSet) =>
+      this.exporterService.downloadTrainingSet$(action.exporterIndex, action.documentIDS).pipe(
+      switchMap((exportedBlob) => of(new DownloadTrainingSetSuccess(exportedBlob))),
       catchError(err => of(new ExportServerError(err)))
     )));
 

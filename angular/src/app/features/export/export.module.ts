@@ -3,15 +3,17 @@ import { CommonModule } from '@angular/common';
 
 import { ExportRoutingModule } from './export-routing.module';
 import {TrainingSetsComponent} from './components/training-sets/training-sets.component';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
-import {TrainingSetExportersEffects} from './store/effects/training-set-exporters.effects';
+import {ExportEffects} from './store/effects/export-effects.service';
 import {ExporterService} from './services/exporter.service';
 import {TrainingSetExporterService} from './services/training-set-exporter.service';
-import {exportReducers} from './store/reducers/export.reducers';
 import {BreadcrumbModule} from '../../breadcrumb/breadcrumb.module';
 import {NgbTooltipModule} from '@ng-bootstrap/ng-bootstrap';
+import {TreeviewModule} from 'ngx-treeview';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {exportReducers} from './store/reducers/export.reducers';
 
 @NgModule({
   declarations: [TrainingSetsComponent],
@@ -21,11 +23,14 @@ import {NgbTooltipModule} from '@ng-bootstrap/ng-bootstrap';
     ExportRoutingModule,
     BreadcrumbModule,
     StoreModule.forFeature('export', exportReducers),
-    EffectsModule.forFeature([TrainingSetExportersEffects]),
+    EffectsModule.forFeature([ExportEffects]),
     NgbTooltipModule,
+    TreeviewModule.forRoot(),
+    FontAwesomeModule,
+    FormsModule
   ],
   providers: [
-    ExporterService, TrainingSetExporterService
+    ExporterService
   ]
 })
 export class ExportModule { }

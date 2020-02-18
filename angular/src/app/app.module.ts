@@ -44,6 +44,8 @@ import {faEye} from '@fortawesome/free-solid-svg-icons/faEye';
 import {faExpandArrowsAlt} from '@fortawesome/free-solid-svg-icons/faExpandArrowsAlt';
 import {faCompressArrowsAlt} from '@fortawesome/free-solid-svg-icons/faCompressArrowsAlt';
 import {faCommentDots} from '@fortawesome/free-solid-svg-icons/faCommentDots';
+import {faCaretRight} from '@fortawesome/free-solid-svg-icons/faCaretRight';
+import {faCaretDown} from '@fortawesome/free-solid-svg-icons/faCaretDown';
 import {AgGridModule} from 'ag-grid-angular';
 import {PartsModule} from './features/parts/parts.module';
 import { AdminDashboardModule } from './features/admin-dashboard/admin-dashboard.module';
@@ -114,5 +116,7 @@ export class AppModule {
     library.addIcons(faCompressArrowsAlt);
     library.addIcons(faCompressArrowsAlt);
     library.addIcons(faCommentDots);
+    library.addIcons(faCaretRight); // used in treeView
+    library.addIcons(faCaretDown); // used in treeView
   }
 }

@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs';
 import {UserService} from '../../../core/services/user.service';
-import {TrainingSetExporterService} from './training-set-exporter.service';
 import {TrainingSetExporter} from '../../../core/model/restapi/training-set-exporter';
+import {ApiRestClientService} from '../../../core/services/api-rest-client.service';
 
 @Injectable() // non-singleton
 export class ExporterService {
-  constructor(private userService: UserService, private trainingSetExporterService: TrainingSetExporterService) { }
+  constructor(private userService: UserService, private apiRestClientService: ApiRestClientService) { }
 
   /*private getAllDocumentsOfUser(user: User): Document[] {
     const result = [...user.documentsCreated , ...user.permissions.map((permission) => permission.document)];
@@ -14,10 +14,11 @@ export class ExporterService {
   }*/
 
   downloadTrainingSet$(exporterIndex: number, documentIDS: number[]): Observable<Blob> {
-    return this.trainingSetExporterService.download(exporterIndex, documentIDS);
+    const documentIdsString = documentIDS.join(',');
+    return this.apiRestClientService.getBlob$('trainingsets/download/' + exporterIndex + '/' + documentIdsString);
   }
 
   getTrainingSetExporters$(): Observable<TrainingSetExporter[]> {
-    return this.trainingSetExporterService.getTrainingSetExporters();
+    return this.apiRestClientService.getList$<TrainingSetExporter>('trainingsets/exporters');
   }
 }

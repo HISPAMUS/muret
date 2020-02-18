@@ -1,23 +1,52 @@
+<!-- use this template from https://github.com/leovo2708/ngx-treeview/tree/master/src/demo/product
+to change the <i> for icons for <fa-icon -->
+<ng-template #treeItemTemplate let-item="item" let-onCollapseExpand="onCollapseExpand" let-onCheckedChange="onCheckedChange">
+  <div class="form-inline row-item tree-view-item">
+    <fa-icon
+      *ngIf="item.children"
+      (click)="onCollapseExpand()" aria-hidden="true"
+      class="icons" size="lg"
+      icon="{{getTreeViewIcon(item)}}"
+    >
+    </fa-icon>
+
+    <!--<i *ngIf="item.children" (click)="onCollapseExpand()" aria-hidden="true" class="fa" [class.fa-caret-right]="item.collapsed"
+       [class.fa-caret-down]="!item.collapsed"></i>-->
+
+    <div class="form-check">
+      <input type="checkbox" class="form-check-input" [disabled]="item.disabled"
+             [(ngModel)]="item.checked"
+             (ngModelChange)="onCheckedChange()"
+             [indeterminate]="item.indeterminate" />
+      <label class="form-check-label" (click)="item.checked = !item.checked; onCheckedChange()">
+        {{item.text}}
+      </label>
+    </div>
+  </div>
+</ng-template>
+
 <div class="container" id="trainingSets" [style.cursor]="currentCursor">
   <div class="row">
     <h2 class="offset-1 col-9">Export training datasets</h2>
   </div>
 
-  <form [formGroup]="form" (ngSubmit)="submit()">
+  <form>
     <div class="row">
       <h3 class="offset-1 col-9">Available exporters</h3>
     </div>
 
-    <label class="row" formArrayName="exportersFormArray" *ngFor="let rb of form['controls'].exportersFormArray['controls']; let i = index">
-      <div class="offset-1 col-1 text-right">
-        <input type="radio" checked name="exportersRadioButton" value="{{i}}" (change)="onExporterSelected(i)"
-               [disabled]="doesNotHavePermission(exporters[i])"
-        >
-      </div>
-      <div class="col-9">
-        <h4>{{exporters[i].name}}</h4>
-        <p>{{exporters[i].description}}</p>
-        <p *ngIf="exporters[i].adminPermissionRequired">Needs administrator permission</p>
+    <label class="row"
+           *ngFor="let tse of trainingSetExporters$ | async; let i = index">
+      <div class="offset-1 col-10 text-left">
+        <label>
+          <h4>
+          <input type="radio" name="exportersRadioButton" value="{{tse.id}}" (change)="onExporterSelected(tse.id)"
+                 [disabled]="doesNotHavePermission(tse)" >
+            {{tse.name}}
+          </h4>
+          <p>{{tse.description}}</p>
+          <p *ngIf="tse.adminPermissionRequired">Needs administrator permission</p>
+        </label>
       </div>
     </label>
 
@@ -25,7 +54,17 @@
       <h3 class="offset-1 col-9">Documents to be exported</h3>
     </div>
 
-    <label class="row" formArrayName="documentsFormArray" *ngFor="let cb of form['controls'].documentsFormArray['controls']; let i = index">
+    <div class="row">
+      <div class="col-10 offset-1">
+        <ngx-treeview
+          [itemTemplate]="treeItemTemplate"
+          [config]="treeViewConfig" [items]="treeviewItems" (filterChange)="onFilterChange($event)" (selectedChange)="treeViewValues = $event">
+        </ngx-treeview>
+      </div>
+    </div>
+
+
+    <!--<label class="row" formArrayName="documentsFormArray" *ngFor="let cb of form['controls'].documentsFormArray['controls']; let i = index">
       <div class="offset-1 col-1 text-right">
         <input type="checkbox" [formControlName]="i">
       </div>
@@ -34,15 +73,18 @@
         <h5>{{documents[i].state?.state}}</h5>
         <p>{{documents[i].comments}}</p>
       </div>
-    </label>
+    </label>-->
 
-    <div class="row" *ngIf="!form.valid">
+    <div class="row" *ngIf="!isFormValid()">
       <p class="offset-1 col-9">At least one exporter and one document order must be selected</p>
     </div>
 
     <div class="row">
       <div class="col offset-2">
-        <button [disabled]="!form.valid || exporting" class="btn btn-primary btn-lg">{{getButtonLabel()}}</button>
+        <button (click)="submit()" [disabled]="!isFormValid() || exporting" class="btn btn-primary btn-lg">
+          <span *ngIf="exporting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          {{getButtonLabel()}}
+        </button>
       </div>
     </div>
 
