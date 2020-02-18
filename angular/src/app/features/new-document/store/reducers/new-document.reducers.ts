@@ -19,7 +19,8 @@ export function newDocumentReducers(state = initialNewDocumentState, action: New
       return result;
     }
     case NewDocumentActionTypes.CreateDocumentReset: {
-      return {...initialNewDocumentState};
+      return {...initialNewDocumentState,
+        apiRestServerError: null};
     }
     case NewDocumentActionTypes.GetCollectionsSuccess: {
       const result: NewDocumentState =  {

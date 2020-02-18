@@ -15,33 +15,34 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
     }
     case AgnosticRepresentationActionTypes.GetRegion: {
       return {
+        apiRestServerError: null,
         ...state // reset values (when loading it)
       };
     }
     case AgnosticRepresentationActionTypes.GetRegionSuccess: {
-      const newState = {...state};
+      const newState = {...state, apiRestServerError: null};
       newState.selectedRegion = action.region;
       newState.agnosticSymbols = action.region.symbols;
       return newState;
     }
     case AgnosticRepresentationActionTypes.GetSVGSetSucccess: {
-      const newState = {...state};
+      const newState = {...state, apiRestServerError: null};
       newState.svgAgnosticSymbolsSet = action.svgSet;
       return newState;
     }
     case AgnosticRepresentationActionTypes.SelectSymbol: {
-      const newState = {...state};
+      const newState = {...state, apiRestServerError: null};
       newState.selectedSymbolID = action.agnosticSymbolID;
       newState.classifiedSymbols = null;
       return newState;
     }
     case AgnosticRepresentationActionTypes.DeselectSymbol: {
-      const newState = {...state};
+      const newState = {...state, apiRestServerError: null};
       newState.selectedSymbolID = null;
       return newState;
     }
     case AgnosticRepresentationActionTypes.ChangeSymbolSuccess: {
-      const newState = {...state};
+      const newState = {...state, apiRestServerError: null};
       if (action.agnosticSymbol != null) { // if no error
         const symbolsWithoutChangedOne: AgnosticSymbol[] =
           state.agnosticSymbols.filter(symbol => symbol.id !== action.agnosticSymbol.id);
@@ -51,7 +52,7 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
       return newState;
     }
    case AgnosticRepresentationActionTypes.CreateSymbolSuccess: {
-      const newState = {...state};
+      const newState = {...state, apiRestServerError: null};
       newState.selectedRegion.symbols = newState.agnosticSymbols; // same object
       if (action.symbolCreationResult) {
         if (newState.agnosticSymbols) {
@@ -75,7 +76,7 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
       return newState;
     }*/
     case AgnosticRepresentationActionTypes.DeleteSymbolSuccess: {
-      const newState = {...state};
+      const newState = {...state, apiRestServerError: null};
       newState.selectedSymbolID = null;
 
       if (action.deletedAgnosticSymbolID) { // if no error has occurred
@@ -86,31 +87,31 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
       return newState;
     }
     case AgnosticRepresentationActionTypes.ClassifyRegionEndToEndSuccess: {
-      const newState = {...state};
+      const newState = {...state, apiRestServerError: null};
       newState.classifiedSymbols = null;
       newState.agnosticSymbols = action.classifiedSymbols;
       newState.selectedSymbolID = null;
       return newState;
     }
     case AgnosticRepresentationActionTypes.ClearRegionSymbolsSuccess: {
-      const newState = {...state};
+      const newState = {...state, apiRestServerError: null};
       newState.classifiedSymbols = null;
       newState.agnosticSymbols = null;
       newState.selectedSymbolID = null;
       return newState;
     }
     case AgnosticRepresentationActionTypes.GetSymbolClassifierModelsSuccess: {
-      const newState = {...state};
+      const newState = {...state, apiRestServerError: null};
       newState.symbolClassifierModels = action.classifierModels;
       return newState;
     }
     case AgnosticRepresentationActionTypes.GetAgnosticEnd2EndClassifierModelsSuccess: {
-      const newState = {...state};
+      const newState = {...state, apiRestServerError: null};
       newState.end2endClassifierModels = action.classifierModels;
       return newState;
     }
     case AgnosticRepresentationActionTypes.ResetSelectedRegion: {
-      const newState = {...state};
+      const newState = {...state, apiRestServerError: null};
       newState.selectedRegion = null;
       return newState;
     }

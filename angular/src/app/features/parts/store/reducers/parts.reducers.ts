@@ -13,7 +13,8 @@ export function partsReducers(state = initialSemanticRepresentationState, action
       };
     }
     case PartsActionTypes.CreateImagePartSuccess: {
-      const newState = {...state};
+      const newState = {...state,
+        apiRestServerError: null};
       const newPart: Part = {
         id: action.partUse.id,
         name: action.partUse.partName
@@ -29,7 +30,8 @@ export function partsReducers(state = initialSemanticRepresentationState, action
       return newState;
     }
     case PartsActionTypes.CreateRegionPartSuccess: {
-      const newState = {...state};
+      const newState = {...state,
+        apiRestServerError: null};
       const newPart: Part = {
         id: action.partUse.partId,
         name: action.partUse.partName
@@ -51,7 +53,8 @@ export function partsReducers(state = initialSemanticRepresentationState, action
     }
 
     case PartsActionTypes.CreatePartSuccess: {
-      const newState = {...state};
+      const newState = {...state,
+        apiRestServerError: null};
       const newUseOfParts: PartUses = {
         part: action.part
       };
@@ -59,14 +62,16 @@ export function partsReducers(state = initialSemanticRepresentationState, action
       return newState;
     }
     case PartsActionTypes.RenamePartSuccess: {
-      const newState = {...state};
+      const newState = {...state,
+        apiRestServerError: null};
       if (action.part != null) { // if no error
         newState.usesOfParts.uses.find(usesOfPart => usesOfPart.part.id === action.part.id).part.name = action.part.name;
       }
       return newState;
     }
     case PartsActionTypes.DeletePartSuccess: {
-      const newState = {...state};
+      const newState = {...state,
+        apiRestServerError: null};
       newState.usesOfParts.uses = newState.usesOfParts.uses.filter(partsUses => partsUses.part.id !== action.deletedPartID);
       return newState;
     }
@@ -77,7 +82,8 @@ export function partsReducers(state = initialSemanticRepresentationState, action
         };
     }
     case PartsActionTypes.LinkPartToImageSuccess: {
-      const newUsesOfParts = {...state.usesOfParts};
+      const newUsesOfParts = {...state.usesOfParts,
+        apiRestServerError: null};
       const uses = newUsesOfParts.uses.find(value => value.part.id === action.partUse.partId );
       uses.images.push(action.partUse.imageId);
       const newState: PartsState = {
@@ -87,7 +93,8 @@ export function partsReducers(state = initialSemanticRepresentationState, action
       return newState;
     }
     case PartsActionTypes.UnlinkPartToImageSuccess: {
-      const newUsesOfParts = {...state.usesOfParts};
+      const newUsesOfParts = {...state.usesOfParts,
+        apiRestServerError: null};
       const uses = newUsesOfParts.uses.find(value => value.part.id === action.partUse.partId );
       uses.images = uses.images.filter(value => value !== action.partUse.imageId);
       const newState: PartsState = {
@@ -97,7 +104,8 @@ export function partsReducers(state = initialSemanticRepresentationState, action
       return newState;
     }
     case PartsActionTypes.LinkPartToPageSuccess: {
-      const newState = {...state};
+      const newState = {...state,
+        apiRestServerError: null};
       const usesOfPart = newState.usesOfParts.uses.find(value => value.part.id === action.partUse.partId );
       const partUse: PartUse = {
         id: action.partUse.id,
@@ -108,13 +116,15 @@ export function partsReducers(state = initialSemanticRepresentationState, action
       return newState;
     }
     case PartsActionTypes.UnlinkPartToPageSuccess: {
-      const newState = {...state};
+      const newState = {...state,
+        apiRestServerError: null};
       const usesOfPart = newState.usesOfParts.uses.find(value => value.part.id === action.partUse.partId );
       usesOfPart.pages = usesOfPart.pages.filter(value => value.id !== action.partUse.id);
       return newState;
     }
     case PartsActionTypes.LinkPartToRegionSuccess: {
-      const newState = {...state};
+      const newState = {...state,
+        apiRestServerError: null};
       const usesOfPart = newState.usesOfParts.uses.find(value => value.part.id === action.partUse.partId );
       const partUse: PartUse = {
         id: action.partUse.id,
@@ -125,7 +135,8 @@ export function partsReducers(state = initialSemanticRepresentationState, action
       return newState;
     }
     case PartsActionTypes.UnlinkPartToRegionSuccess: {
-      const newState = {...state};
+      const newState = {...state,
+        apiRestServerError: null};
       const usesOfPart = newState.usesOfParts.uses.find(value => value.part.id === action.partUse.partId );
       usesOfPart.regions = usesOfPart.regions.filter(value => value.id !== action.partUse.id);
       return newState;

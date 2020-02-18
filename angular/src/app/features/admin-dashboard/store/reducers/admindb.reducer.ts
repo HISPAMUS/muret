@@ -11,42 +11,50 @@ export function adminDBReducers( state = initialAdimnDashboardState, action: Adm
       case AdminDBActionTypes.REGISTER_START:
             return{
                 ...state,
-                userRegisterStatus: 0
-            }
+                userRegisterStatus: 0,
+              apiRestServerError: null
+            };
         case AdminDBActionTypes.REGISTER_SUCCESS:
             return{
                 ...state,
-                userRegisterStatus: 1
-            }
+                userRegisterStatus: 1,
+              apiRestServerError: null
+            };
         case AdminDBActionTypes.REGISTER_FAIL:
             return{
                 ...state,
                 userRegisterStatus: -1,
-                errorMessage: action.payload
-            }
+                errorMessage: action.payload,
+                apiRestServerError: null
+            };
         case AdminDBActionTypes.REVOKE_PERMISSIONS:
             return{
                 ...state,
-                revokedPermissions: 0
-            }
+                revokedPermissions: 0,
+              apiRestServerError: null
+            };
         case AdminDBActionTypes.REVOKE_PERMISSIONS_SUCCESS:
             return{
                 ...state,
-                revokedPermissions: 1
-            }
+                revokedPermissions: 1,
+              apiRestServerError: null
+            };
         case AdminDBActionTypes.GRANT_PERMISSIONS:
             return{
                 ...state,
-                grantedPermissions: 0
-            }
+                grantedPermissions: 0,
+              apiRestServerError: null
+            };
         case AdminDBActionTypes.GRANT_PERMISSIONS_SUCCESS:
             return{
                 ...state,
-                grantedPermissions: 1
-            }
+                grantedPermissions: 1,
+              apiRestServerError: null
+            };
         default:
             return {
-                ...state
-            }
+                ...state,
+              apiRestServerError: null
+            };
     }
 }

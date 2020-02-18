@@ -11,26 +11,41 @@ export function semanticRepresentationReducers(state = initialSemanticRepresenta
       };
     }
     case SemanticRepresentationActionTypes.ConvertAgnostic2Semantic: {
-      const newState = {...state};
+      const newState = {
+        apiRestServerError: null,
+        ...state
+      };
       return newState;
     }
     case SemanticRepresentationActionTypes.ConvertAgnostic2SemanticSuccess: {
-      const newState = {...state};
+      const newState = {
+        apiRestServerError: null,
+        ...state
+      };
       newState.notation = action.notation;
       return newState;
     }
     case SemanticRepresentationActionTypes.ClearNotation: {
-      const newState = {...state};
+      const newState = {
+        apiRestServerError: null,
+        ...state
+      };
       newState.notation = null;
       return newState;
     }
     case SemanticRepresentationActionTypes.GetNotationSuccess: {
-      const newState = {...state};
+      const newState = {
+        apiRestServerError: null,
+        ...state
+      };
       newState.notation = action.notation;
       return newState;
     }
     case SemanticRepresentationActionTypes.SendSemanticEncodingSuccess: {
-      const newState = {...state};
+      const newState = {
+        apiRestServerError: null,
+        ...state
+      };
       newState.notation = action.notation;
       return newState;
     }

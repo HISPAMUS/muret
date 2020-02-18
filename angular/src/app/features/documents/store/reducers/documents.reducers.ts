@@ -11,16 +11,19 @@ export function documentsReducers(state = initialDocumentsState, action: Documen
     case DocumentsActionTypes.GetCollectionSuccess: {
       return {
         ...state,
-        collection: action.collection
+        collection: action.collection,
+        apiRestServerError: null
       };
     }
     case DocumentsActionTypes.CreateSubcollectionSuccess: {
-      const newState = {...state};
+      const newState = {...state,
+        apiRestServerError: null};
       newState.collection.subcollections = [...newState.collection.subcollections, action.collection];
       return newState;
     }
     case DocumentsActionTypes.DeleteSubcollectionSuccess: {
-      const newState = {...state};
+      const newState = {...state,
+        apiRestServerError: null};
       newState.collection.subcollections =
         newState.collection.subcollections.filter(subcollection => subcollection.id !== action.deletedSubcollectionID);
       return newState;
@@ -29,7 +32,8 @@ export function documentsReducers(state = initialDocumentsState, action: Documen
     case DocumentsActionTypes.MoveDocumentsToNewSubcollectionSuccess: {
       return {
         ...state,
-        changedCollectionID: action.changedCollectionID
+        changedCollectionID: action.changedCollectionID,
+        apiRestServerError: null
       };
     }
     default: {

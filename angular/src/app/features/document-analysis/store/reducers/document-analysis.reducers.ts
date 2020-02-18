@@ -13,12 +13,14 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
     case DocumentAnalysisActionTypes.GetRegionTypesSuccess: {
       return {
         ...state,
-        regionTypes: action.regionTypes
+        regionTypes: action.regionTypes,
+        apiRestServerError: null
       };
     }
     case DocumentAnalysisActionTypes.GetImageProjection: { // reset before downloading new elements
       return {
-        ...initialDocumentAnalysisState
+        ...initialDocumentAnalysisState,
+        apiRestServerError: null
       };
     }
     case DocumentAnalysisActionTypes.GetImageProjectionSuccess: {
@@ -33,19 +35,22 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
         documentType: {
           manuscriptType: action.documentAnalysisImageProjection.manuscriptType,
           notationType: action.documentAnalysisImageProjection.notationType
-        }
+        },
+        apiRestServerError: null
       };
     }
     case DocumentAnalysisActionTypes.GetImagePartSuccess: {
       return {
         ...state,
-        imagePart: action.part
+        imagePart: action.part,
+        apiRestServerError: null
       };
     }
     case DocumentAnalysisActionTypes.GetImageURLSuccess: {
       return {
         ...state,
-        imageURL: action.url
+        imageURL: action.url,
+        apiRestServerError: null
       };
     }
     /*case DocumentAnalysisActionTypes.SelectPage: {
@@ -61,7 +66,8 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
       };
     }*/
     case DocumentAnalysisActionTypes.ChangePageBoundingBoxSuccess: {
-      const newState = {...state};
+      const newState = {...state,
+        apiRestServerError: null};
 
       newState.pages = deepcopy<Page[]>(state.pages);
 
@@ -72,7 +78,8 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
       return newState;
     }
     case DocumentAnalysisActionTypes.ChangeRegionTypeSuccess: {
-      const newState = {...state};
+      const newState = {...state,
+        apiRestServerError: null};
 
       newState.pages = deepcopy<Page[]>(state.pages);
 
@@ -87,7 +94,8 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
       return newState;
     }
     case DocumentAnalysisActionTypes.ChangeRegionBoundingBoxSuccess: {
-      const newState = {...state};
+      const newState = {...state,
+        apiRestServerError: null};
 
       newState.pages = deepcopy<Page[]>(state.pages);
 
@@ -102,7 +110,8 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
       return newState;
     }
     case DocumentAnalysisActionTypes.ClearSuccess: {
-      const newState = {...state};
+      const newState = {...state,
+        apiRestServerError: null};
       newState.pages = [];
       return newState;
     }
@@ -118,7 +127,8 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
       return newState;
     }
     case DocumentAnalysisActionTypes.CreateRegionSuccess: {
-      const newState = {...state};
+      const newState = {...state,
+        apiRestServerError: null};
       if (action.pages == null) { // if an error has ocurred
         newState.pages = deepcopy<Page[]>(state.pages);
       } else {
@@ -127,7 +137,8 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
       return newState;
     }
     case DocumentAnalysisActionTypes.DeletePageSuccess: {
-      const newState = {...state};
+      const newState = {...state,
+        apiRestServerError: null};
       newState.pages = deepcopy<Page[]>(state.pages);
 
       if (action.deletedPageID) { // if no error has ocurred
@@ -139,7 +150,8 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
       return newState;
     }
     case DocumentAnalysisActionTypes.DeleteRegionSuccess: {
-      const newState = {...state};
+      const newState = {...state,
+        apiRestServerError: null};
       newState.pages = deepcopy<Page[]>(state.pages);
 
       if (action.deletedRegionID) { // if no error has ocurred
@@ -152,15 +164,18 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
     }
     case DocumentAnalysisActionTypes.GetDocumentAnModels : {
       return {...state,
-      documentAnalysisClassifierModels: null};
+      documentAnalysisClassifierModels: null,
+        apiRestServerError: null};
     }
     case DocumentAnalysisActionTypes.GetDocumentAnModelsSuccess: {
       return {...state,
-      documentAnalysisClassifierModels: action.response};
+      documentAnalysisClassifierModels: action.response,
+        apiRestServerError: null};
     }
 
     case DocumentAnalysisActionTypes.AutomaticDocumentAnalysisSuccess: {
-      const newState = {...state};
+      const newState = {...state,
+        apiRestServerError: null};
       newState.pages = deepcopy<Page[]>(action.pages);
       return newState;
     }

@@ -13,13 +13,15 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
     case DocumentActionTypes.GetDocumentSuccess: {
       return {
         ...state,
-        document: action.document
+        document: action.document,
+        apiRestServerError: null
       };
     }
     case DocumentActionTypes.GetImagesSuccess: {
       return {
         ...state,
-        images: action.images
+        images: action.images,
+        apiRestServerError: null
       };
     }
     case DocumentActionTypes.ExportMusicXML:
@@ -28,7 +30,8 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
       return {
         ...state,
         exportedFile: null,
-        mei: null
+        mei: null,
+        apiRestServerError: null
       };
     }
     case DocumentActionTypes.ExportMEIPartsFacsimileSuccess: {
@@ -38,7 +41,8 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
           type: DocumentExportType.mei_parts_facsimile,
           file: action.mei != null ? new Blob([action.mei], {type: 'text/plain'}) : null,
           fileExtension: 'mei',
-        }
+        },
+        apiRestServerError: null
       };
     }
     case DocumentActionTypes.ExportMEISuccess: {
@@ -49,7 +53,8 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
           file: action.mei != null ? new Blob([action.mei], {type: 'text/plain'}) : null,
           fileExtension: 'mei',
         },
-        mei: action.mei
+        mei: action.mei,
+        apiRestServerError: null
       };
     }
     case DocumentActionTypes.ExportMusicXMLSuccess: {
@@ -59,7 +64,8 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
           type: DocumentExportType.musicxml,
           file: action.payload != null ? new Blob([action.payload], {type: 'application/x-gzip'}) : null,
           fileExtension: 'tgz',
-        }
+        },
+        apiRestServerError: null
       };
     }
     case DocumentActionTypes.ExportMensurstrichSuccess: {
@@ -69,13 +75,15 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
           type: DocumentExportType.mensurstrich_svg,
           file: action.payload = new Blob([action.payload], {type: 'application/x-gzip'}),
           fileExtension: 'tgz',
-        }
+        },
+        apiRestServerError: null
       };
     }
     case DocumentActionTypes.GetDocumentStatisticsSuccess: {
       return {
         ...state,
-        statistics: action.documentStatistics
+        statistics: action.documentStatistics,
+        apiRestServerError: null
       };
     }
     /*case DocumentActionTypes.PreflightCheckSuccess: {
@@ -87,7 +95,8 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
     case DocumentActionTypes.GetAlignmentPreviewSuccess: {
       return {
         ...state,
-        alignmentPreview: action.alignmentPreview
+        alignmentPreview: action.alignmentPreview,
+        apiRestServerError: null
       };
     }
     default: {

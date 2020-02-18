@@ -13,7 +13,8 @@ export function trainingSetExportersReducer(state = initialTrainingSetExportersS
     case ExportActionTypes.GetTrainingSetExportersSuccess: {
       return {
         ...state,
-        trainingSetExporters: action.payload
+        trainingSetExporters: action.payload,
+        apiRestServerError: null
       };
     }
     default:
