@@ -153,7 +153,7 @@ duration: mensuralDuration | modernDuration;
 
 pause: SEMICOLON; // fermata
 
-mensuralDuration: mensuralFigure mensuralDot coloured? mensuralPerfection?;
+mensuralDuration: mensuralFigure coloured? mensuralPerfection? mensuralDot;
 
 mensuralDot: (augmentationDot | separationDot)?;
 

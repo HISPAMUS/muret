@@ -18,7 +18,9 @@ import es.ua.dlsi.im3.core.score.facsimile.Zone;
 import es.ua.dlsi.im3.core.score.io.mei.MEISongExporter;
 import es.ua.dlsi.im3.core.score.io.musicxml.MusicXMLExporter;
 import es.ua.dlsi.im3.core.score.layout.CoordinateComponent;
+import es.ua.dlsi.im3.core.score.layout.FontFactory;
 import es.ua.dlsi.im3.core.score.layout.HorizontalLayout;
+import es.ua.dlsi.im3.core.score.layout.LayoutFont;
 import es.ua.dlsi.im3.core.score.layout.fonts.LayoutFonts;
 import es.ua.dlsi.im3.core.score.layout.svg.SVGExporter;
 import es.ua.dlsi.im3.core.score.staves.Pentagram;
@@ -352,7 +354,7 @@ public class NotationModel {
         Pair<ScoreSong, ScorePart> pair = exportScoreSong(document, null, false, idsOfSelectedImages);
         ScoreSong mensural = pair.getX();
 
-        HorizontalLayout horizontalLayout = new HorizontalLayout(mensural, new CoordinateComponent(50000), new CoordinateComponent(3000), LayoutFonts.bravura);
+        HorizontalLayout horizontalLayout = new HorizontalLayout(mensural, new CoordinateComponent(50000), new CoordinateComponent(3000), LayoutFonts.patriarca);
         horizontalLayout.layout(true);
 
         SVGExporter svgExporter = new SVGExporter();
@@ -364,7 +366,18 @@ public class NotationModel {
 
         mensuralToModern.merge(mensural, modern);
 
-        HorizontalLayout horizontalLayoutMerged = new HorizontalLayout(mensural, new CoordinateComponent(25000), new CoordinateComponent(2000), LayoutFonts.bravura);
+        HashMap<Staff, LayoutFont> layoutFonts = new HashMap<>();
+        for (Staff staff: mensural.getStaves()) {
+            if (staff.getNotationType() == NotationType.eMensural) {
+                layoutFonts.put(staff, FontFactory.getInstance().getPatriarcaFont());
+            } else if (staff.getNotationType() == NotationType.eModern ){
+                layoutFonts.put(staff, FontFactory.getInstance().getBravuraFont());
+            } else {
+                throw new IM3Exception("A staff has no notation type: " + staff);
+            }
+        }
+
+        HorizontalLayout horizontalLayoutMerged = new HorizontalLayout(mensural, new CoordinateComponent(25000), new CoordinateComponent(2000), layoutFonts);
         horizontalLayoutMerged.layout(true);
 
         SVGExporter svgExporterMerged = new SVGExporter();
