@@ -183,6 +183,7 @@ public class Region extends Auditable implements IAssignableToPart {
     }
 
     @Transient
+    @JsonIgnore
     public List<Symbol> getSortedSymbols() {
         List<Symbol> sortedRegions = getSymbols().stream().sorted(Symbol.getHorizontalPositionComparator()).collect(Collectors.toList());
         return sortedRegions;

@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.im3ws.muret.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -159,6 +160,7 @@ public class Page extends Auditable implements IAssignableToPart {
      * It returns the regions sorted using cartesian plane
      * @return
      */
+    @JsonIgnore
     @Transient
     public List<Region> getSortedRegions() {
         List<Region> sortedRegions = getRegions().stream().sorted(Region.getVerticalPositionComparator()).collect(Collectors.toList());

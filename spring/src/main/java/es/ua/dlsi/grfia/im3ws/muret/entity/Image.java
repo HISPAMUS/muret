@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.im3ws.muret.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -156,6 +157,7 @@ public class Image extends Auditable implements IAssignableToPart {
      * @return
      */
     @Transient
+    @JsonIgnore
     public List<Page> getSortedPages() {
         List<Page> sortedPages = getPages().stream().sorted(Page.getVerticalPositionComparator()).collect(Collectors.toList());
         return sortedPages;
