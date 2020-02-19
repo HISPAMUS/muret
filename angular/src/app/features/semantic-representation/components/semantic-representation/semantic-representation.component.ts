@@ -85,6 +85,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   private useOfPartsSubscription: Subscription;
   private usesOfParts: UsesOfParts;
   private serverErrorSubscription: Subscription;
+  private selectedRegionSymbols: AgnosticSymbol[];
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>,
               private dialogsService: DialogsService, private showErrorService: ShowErrorService
@@ -136,9 +137,8 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     });
 
     this.agnosticSymbolsSubscription = this.store.select(selectAgnosticSymbols).subscribe(next => {
-        setTimeout( () => { // avoid desync (first region, then symbols)
-          this.drawSelectedRegionSymbols(next);
-        });
+      // required to draw the required symbols when the selectedRegion is available
+      this.selectedRegionSymbols = next;
     });
 
     this.useOfPartsSubscription = this.store.select(selectUsesOfParts).subscribe(uop => {
@@ -190,6 +190,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   setSelectedRegion($event: Region) {
     setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
       this.selectedRegion = $event;
+
       this.notation = null;
       // this.semanticEncoding = '';
       if (this.gridApi) {
@@ -197,6 +198,8 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
       }
 
       if (this.selectedRegion) {
+        this.drawSelectedRegionSymbols(this.selectedRegionSymbols);
+
         this.store.dispatch(new GetNotation(this.selectedRegion, false, 'verovio')); // TODO
         // this.store.dispatch(new GetRegionPart(this.selectedRegion));
       } else {
