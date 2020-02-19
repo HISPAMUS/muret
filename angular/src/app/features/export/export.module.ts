@@ -8,7 +8,6 @@ import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
 import {ExportEffects} from './store/effects/export-effects.service';
 import {ExporterService} from './services/exporter.service';
-import {TrainingSetExporterService} from './services/training-set-exporter.service';
 import {BreadcrumbModule} from '../../breadcrumb/breadcrumb.module';
 import {NgbTooltipModule} from '@ng-bootstrap/ng-bootstrap';
 import {TreeviewModule} from 'ngx-treeview';

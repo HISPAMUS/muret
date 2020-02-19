@@ -4,7 +4,7 @@ import {Entity} from './entity';
 import {Part} from './part';
 
 export interface Page extends Entity {
-  boundingBox: BoundingBox;
-  regions: Region[];
-  part: Part;
+  boundingBox?: BoundingBox;
+  regions?: Region[];
+  part?: Part;
 }
