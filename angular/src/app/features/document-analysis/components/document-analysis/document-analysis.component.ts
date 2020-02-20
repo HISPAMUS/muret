@@ -53,6 +53,9 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   mode: 'eIdle' |'eSelecting' | 'eEditing' | 'eAdding';
   selectedRegionTypeID: number | 'page';
   zoomFactor = 1;
+
+  processing: boolean = false;
+
   @ViewChild('regionTypesModal', {static: true}) regionTypesModal: ElementRef;
 
   // tools
@@ -137,6 +140,8 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     this.pagesSubscription = this.store.select(selectPages).subscribe(next => {
       if (next) {
         this.drawPagesAndRegions(next);
+        this.processing = false;
+        this.analysisStatus = 'Analyze';
       }
 
       this.pages = next;
@@ -320,6 +325,11 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
       });
   }
 
+  clearAll()
+  {
+    console.log("Purging");
+  }
+
   onShapeCreated(shape: Shape) {
     this.createNewShape(shape);
 
@@ -368,6 +378,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
               if (value) {
                 const pagesToCreate = Number(value);
                 this.analysisStatus = 'Analyzing...';
+                this.processing = true;
                 this.store.dispatch(new AutomaticDocumentAnalysis({
                   imageID: this.imageID,
                   modelToUse: 'simple-lan',
@@ -503,6 +514,12 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
       }
     }
   }
+
+  isProcessing() : boolean
+  {
+    return this.processing;
+  }
+
 }
 
 

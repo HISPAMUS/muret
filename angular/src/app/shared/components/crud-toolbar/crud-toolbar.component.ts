@@ -17,6 +17,7 @@ export class CrudToolbarComponent implements OnInit {
   @Output() onZoomOut = new EventEmitter();
   @Output() onZoomFit = new EventEmitter();
   @Output() onAddComment = new EventEmitter();
+  @Output() onDeleteAll = new EventEmitter();
 
   constructor() {
     // ------- menus --------
@@ -71,6 +72,10 @@ export class CrudToolbarComponent implements OnInit {
       case 'eIdle':
         return 'Viewing';
     }
+  }
+
+  deleteAll(){
+    this.onDeleteAll.emit();
   }
 
   isAddingMode() {

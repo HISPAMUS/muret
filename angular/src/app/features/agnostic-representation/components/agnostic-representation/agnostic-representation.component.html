@@ -27,6 +27,7 @@
 
         <button type="button" class="btn btn-primary" title="End to end"  (click)="classifyEnd2End()">
           {{endToEndButtonLabel}}
+          <span *ngIf="isProcessing()" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
         </button>
       </ng-container>
     </div>

@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <nav class="row" id="docAnalysisToolBar">
     <div class="col-6">
-      <app-crud-toolbar (modeChange)="onModeChange($event)" (onClear)="clear()" (onDelete)="deleteSelected()" [(mode)]="mode" (onZoomFit)="zoomFit()" (onZoomIn)="zoomIn()" (onZoomOut)="zoomOut()">
+      <app-crud-toolbar (modeChange)="onModeChange($event)" (onClear)="clear()" (onDelete)="deleteSelected()" [(mode)]="mode" (onZoomFit)="zoomFit()" (onZoomIn)="zoomIn()" (onZoomOut)="zoomOut()" (onDeleteAll)="clearAll()">
       </app-crud-toolbar>
     </div>
     <div class="col-3" id="linksPhases">
@@ -15,7 +15,9 @@
     <select class="form-control" id="agnosticEnd2EndClassifierModel" required>
       <option *ngFor="let model of documentAnalysisModels$ | async" [value]="model.id">{{model.name}}</option>
     </select>
-    <button class="btn btn-primary" (click)="attemptDocumentAnalysis()">{{analysisStatus}}</button>
+    <button class="btn btn-primary" (click)="attemptDocumentAnalysis()">{{analysisStatus}}
+      <span *ngIf="isProcessing()" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    </button>
   </div>
   <!-- VIEW FILTER -->
   <div id="regionTypesFilter" class="row" [hidden]="!inIdleMode()">

@@ -56,6 +56,8 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   selectedRegionShapes: Shape[];
   selectedRegionZoomFactor = 1;
 
+  processing = false;
+
   mode: 'eIdle' | 'eAdding' | 'eEditing' | 'eSelecting';
   private selectedShapeIDValue: string;
   nextShapeToDraw: 'Rectangle' | 'Polylines';
@@ -141,6 +143,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
     this.agnosticSymbolsSubscription = this.store.select(selectAgnosticSymbols).subscribe(next => {
       this.endToEndButtonLabel = 'End-to-end'; // we may come here after classifying
+      this.processing = false;
       this.drawSelectedRegionSymbols(next);
     });
     this.selectedSymbolSubscription = this.store.select(selectSelectedSymbol).subscribe(next => {
@@ -477,6 +480,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
           this.endToEndButtonLabel = 'Classifying...';
           this.store.dispatch(new ClassifyRegionEndToEnd(this.end2EndModelID, this.selectedRegion.id));
           this.mode = 'eEditing';
+          this.processing = true;
         }
       });
 
@@ -536,6 +540,11 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
       this.selectedRegion = $event;
     });
+  }
+
+  isProcessing() : boolean
+  {
+    return this.processing;
   }
 
   /*setMyNumber($event: number)
