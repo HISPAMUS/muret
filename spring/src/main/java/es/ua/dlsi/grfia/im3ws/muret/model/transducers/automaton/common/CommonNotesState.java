@@ -3,6 +3,7 @@ package es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.common;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.SemanticTransduction;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.TransducerState;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.states.AccNoteState;
+import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.states.FermataState;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.IM3RuntimeException;
 import es.ua.dlsi.im3.core.adt.dfa.State;
@@ -105,8 +106,10 @@ public abstract class CommonNotesState extends TransducerState {
 
                 scientificPitch.getPitchClass().setAccidental(actualAccidental);
 
-                //TODO fermata ...
-                SemanticNote note = new SemanticNote(false, scientificPitch, visualAccidental, figuresColoration.getFigure(), 0, false, false, null, figuresColoration.getColored());
+                boolean fermata = false;
+                fermata = FermataState.isPendingFermata(transduction, true);
+
+                SemanticNote note = new SemanticNote(false, scientificPitch, visualAccidental, figuresColoration.getFigure(), 0, fermata, false, null, figuresColoration.getColored());
 
                 if (value != null && value.getStemDirection() != null && token.getPositionInStaff().equals(PositionsInStaff.LINE_3)) {
                     switch (value.getStemDirection()) {
@@ -121,7 +124,6 @@ public abstract class CommonNotesState extends TransducerState {
 
                 note.setAgnosticIDs(agnosticIDs);
                 transduction.add(note);
-
             } catch (IM3Exception e) {
                 throw new IM3RuntimeException(e);
             }
@@ -131,12 +133,12 @@ public abstract class CommonNotesState extends TransducerState {
 
             Figures figures = convert(value.getRestFigures());
 
-            //TODO fermata ...
-            SemanticRest rest = new SemanticRest(figures, 0, false, null);
+            boolean fermata = false;
+            fermata = FermataState.isPendingFermata(transduction, true);
+            SemanticRest rest = new SemanticRest(figures, 0, fermata, null);
             rest.setLinePosition(token.getPositionInStaff().getLine());
             rest.setAgnosticIDs(agnosticIDs);
             transduction.add(rest);
-
         } else if (token.getSymbol() instanceof Dot) {
             SemanticSymbol lastSymbol = transduction.getLastSymbol();
             lastSymbol.getSymbol().addAgnosticID(token.getId());

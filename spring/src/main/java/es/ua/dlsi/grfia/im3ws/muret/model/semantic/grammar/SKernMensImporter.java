@@ -40,6 +40,8 @@ public class SKernMensImporter {
         private HumdrumMatrix humdrumMatrix;
         private Figures lastFigure;
         private boolean lastColoured;
+        private boolean lastPause;
+
         private Perfection lastPerfection;
         private int octaveModif;
         private String noteName;
@@ -486,6 +488,7 @@ public class SKernMensImporter {
         @Override
         public void enterRest(sKernMensParser.RestContext ctx) {
             lastRestLinePosition = null;
+            lastPause = false;
         }
 
         @Override
@@ -493,6 +496,11 @@ public class SKernMensImporter {
             this.lastRestLinePosition = Integer.parseInt(ctx.getChild(1).getText());
         }
 
+        @Override
+        public void exitPause(sKernMensParser.PauseContext ctx) {
+            super.exitPause(ctx);
+            lastPause = true;
+        }
 
         @Override
         public void exitRest(sKernMensParser.RestContext ctx) {
@@ -509,6 +517,8 @@ public class SKernMensImporter {
             }
             humdrumMatrix.addItemToCurrentRow(ctx.getText(), rest);
         }
+
+
 
         private void handlePerfectionColoration(SingleFigureAtom simpleFigureAtom) throws IM3Exception {
             simpleFigureAtom.getAtomFigure().setColored(lastColoured);
@@ -580,6 +590,7 @@ public class SKernMensImporter {
         @Override
         public void enterNote(sKernMensParser.NoteContext ctx) {
             this.lastStemDirection = null;
+            this.lastPause = false;
         }
 
         @Override
@@ -702,10 +713,17 @@ public class SKernMensImporter {
                 ligatureComponent = new KernLigatureComponent(LigatureStartEnd.inside, ligatureType, note);
             }
 
+            AtomFigure atomFigure = null;
             if (ligatureComponent != null) {
+                atomFigure = ligatureComponent.getSimpleNote().getAtomFigure();
                 humdrumMatrix.addItemToCurrentRow(ctx.getText(), ligatureComponent);
             } else {
+                atomFigure = note.getAtomFigure();
                 humdrumMatrix.addItemToCurrentRow(ctx.getText(), note);
+            }
+            if (lastPause) {
+                atomFigure.setFermata(new Fermata());
+                lastPause = false;
             }
         }
 

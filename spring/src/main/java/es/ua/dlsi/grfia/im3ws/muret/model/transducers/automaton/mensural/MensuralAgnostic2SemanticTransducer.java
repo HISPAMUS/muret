@@ -11,7 +11,9 @@ import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbolType;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.*;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Clef;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Custos;
+import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Fermata;
 import es.ua.dlsi.im3.omr.language.GraphicalSymbolAlphabet;
+import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.states.FermataState;
 import org.apache.commons.math3.fraction.Fraction;
 
 import java.io.File;
@@ -36,6 +38,7 @@ public class MensuralAgnostic2SemanticTransducer extends Agnostic2SemanticTransd
         State notes = new NotesState(7);
         State custos = new CustosState(8);
         State barline = new BarLineState(9);
+        State fermata = new FermataState(10);
         states.add(start);
         states.add(clef);
         states.add(keysig);
@@ -44,6 +47,7 @@ public class MensuralAgnostic2SemanticTransducer extends Agnostic2SemanticTransd
         states.add(notes);
         states.add(barline);
         states.add(custos);
+        states.add(fermata);
 
         HashMap<State, Fraction> endStates = new HashMap<>();
         endStates.put(notes, Fraction.ONE_THIRD);
@@ -58,25 +62,34 @@ public class MensuralAgnostic2SemanticTransducer extends Agnostic2SemanticTransd
         transitions.add(new Transition<>(clef, new Rest(), notes)); // for second systems ...
         transitions.add(new Transition<>(clef, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
         transitions.add(new Transition<>(clef, new MeterSign(), timesig));
+        transitions.add(new Transition<>(clef, new Fermata(), fermata));
+
 
         transitions.add(new Transition<>(keysig, new Accidental(), keysig));
         transitions.add(new Transition<>(keysig, new MeterSign(), timesig));
+        transitions.add(new Transition<>(keysig, new Fermata(), fermata));
 
         transitions.add(new Transition<>(keysig, new Note(), notes)); //TODO no está esto bien del todo.. ver 2º 7 3º pentagrama RISM
         transitions.add(new Transition<>(keysig, new Rest(), notes)); //TODO no está esto bien del todo.. ver 2º 7 3º pentagrama RISM
         transitions.add(new Transition<>(keysig, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
 
         transitions.add(new Transition<>(timesig, new Accidental(), noteacc));
+        transitions.add(new Transition<>(fermata, new Accidental(), noteacc));
+        transitions.add(new Transition<>(fermata, new Note(), notes));
+
         transitions.add(new Transition<>(timesig, new Note(), notes));
         transitions.add(new Transition<>(timesig, new Rest(), notes));
         transitions.add(new Transition<>(timesig, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
+        transitions.add(new Transition<>(timesig, new Fermata(), fermata));
 
         transitions.add(new Transition<>(notes, new Accidental(), noteacc));
         transitions.add(new Transition<>(barline, new Accidental(), noteacc));
         transitions.add(new Transition<>(barline, new Clef(), clef));
+        transitions.add(new Transition<>(barline, new Fermata(), fermata));
 
         transitions.add(new Transition<>(notes, new Note(), notes));
         transitions.add(new Transition<>(notes, new Dot(), notes));
+        transitions.add(new Transition<>(notes, new Fermata(), fermata));
         transitions.add(new Transition<>(notes, new Rest(), notes));
         transitions.add(new Transition<>(notes, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
         transitions.add(new Transition<>(notes, new Custos(), custos));
@@ -86,6 +99,7 @@ public class MensuralAgnostic2SemanticTransducer extends Agnostic2SemanticTransd
         transitions.add(new Transition<>(barline, new Rest(), notes));
         transitions.add(new Transition<>(barline, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
         transitions.add(new Transition<>(noteacc, new Note(), notes));
+        transitions.add(new Transition<>(noteacc, new Fermata(), fermata));
         transitions.add(new Transition<>(notes, new VerticalLine(), barline));
         transitions.add(new Transition<>(barline, new VerticalLine(), barline));
 

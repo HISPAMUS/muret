@@ -6,6 +6,8 @@ import es.ua.dlsi.im3.core.adt.dfa.State;
 import es.ua.dlsi.im3.core.score.BarlineType;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
 import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticBarline;
+import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticNote;
+import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticRest;
 
 public class BarLineState extends TransducerState {
     public BarLineState(int number) {
@@ -23,6 +25,17 @@ public class BarLineState extends TransducerState {
             semanticBarline.addAgnosticID(token.getId());
             transduction.add(semanticBarline);
         }
+
+        if (FermataState.isPendingFermata(transduction, false)) {
+            if (transduction.getLastSymbol().getSymbol() instanceof SemanticNote) {
+                ((SemanticNote)transduction.getLastSymbol().getSymbol()).setFermata(true);
+                FermataState.isPendingFermata(transduction, true);
+            } else if (transduction.getLastSymbol().getSymbol() instanceof SemanticRest) {
+                ((SemanticRest)transduction.getLastSymbol().getSymbol()).setFermata(true);
+                FermataState.isPendingFermata(transduction, true);
+            }
+        }
+
         // TODO: 5/10/17 Tipo de barra?
         /*
         Time time = Time.TIME_ZERO;
