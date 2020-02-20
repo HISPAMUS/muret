@@ -327,7 +327,10 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
 
   clearAll()
   {
-    console.log("Purging");
+    this.dialogsService.showInput("Delete everything?", "Please write 'delete all' to start purging the regions", "").subscribe(message=>{
+      if(message == "delete all")
+        console.log("Purging");
+    });
   }
 
   onShapeCreated(shape: Shape) {
