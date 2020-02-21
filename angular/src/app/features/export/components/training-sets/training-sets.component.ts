@@ -6,7 +6,7 @@ import {Permissions} from '../../../../core/model/entities/permissions';
 import {ExporterService} from '../../services/exporter.service';
 import {Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
-import {DownloadTrainingSet, GetTrainingSetExporters} from '../../store/actions/export.actions';
+import {DownloadTrainingSet, GetTrainingSetExporters, ResetExportServerError} from '../../store/actions/export.actions';
 import {GetUser} from '../../../../core/store/actions/user.actions';
 import {selectAuthState} from '../../../../auth/store/selectors/auth.selector';
 import {selectLoggedInUser} from '../../../../core/store/selectors/core.selector';
@@ -105,6 +105,7 @@ export class TrainingSetsComponent implements OnInit, OnDestroy {
       this.exporting = false;
       if (next) {
         this.showErrorService.warning(next);
+        this.store.dispatch(new ResetExportServerError());
       }
     });
   }

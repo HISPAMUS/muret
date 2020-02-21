@@ -4,6 +4,12 @@ import {NewDocumentActions, NewDocumentActionTypes} from '../actions/new-documen
 export function newDocumentReducers(state = initialNewDocumentState, action: NewDocumentActions):
   NewDocumentState {
   switch (action.type) {
+    case NewDocumentActionTypes.ResetNewDocumentServerError: {
+      return {
+        ...state,
+        apiRestServerError: null
+      };
+    }
     case NewDocumentActionTypes.NewDocumentServerError: {
       return {
         ...state,

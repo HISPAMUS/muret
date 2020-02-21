@@ -10,6 +10,7 @@ import { DocumentAnalysisForm } from '../../model/document-analysis-form'
 import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 
 export enum DocumentAnalysisActionTypes {
+  ResetDocumentAnalysisServerError = '[DocumentAnalysis] Reset Server error',
   DocumentAnalysisServerError = '[DocumentAnalysis] Server error',
   GetImageProjection = '[DocumentAnalysis] Get image projection',
   GetImageProjectionSuccess = '[DocumentAnalysis] Get image projection success',
@@ -57,6 +58,11 @@ export enum DocumentAnalysisActionTypes {
 
   AutomaticDocumentAnalysis = '[DocumentAnalysis] Start automatic analysis',
   AutomaticDocumentAnalysisSuccess = '[DocumentAnalysis] Automatic analysis success'
+}
+
+export class ResetDocumentAnalysisServerError implements Action {
+  public readonly type = DocumentAnalysisActionTypes.ResetDocumentAnalysisServerError;
+  constructor() {}
 }
 
 export class DocumentAnalysisServerError implements Action {
@@ -229,7 +235,7 @@ export class SelectRegion implements Action {
 
 
 export type DocumentAnalysisActions =
-  DocumentAnalysisServerError |
+  ResetDocumentAnalysisServerError | DocumentAnalysisServerError |
   GetImageProjection | GetImageProjectionSuccess |
   GetImagePart | GetImagePartSuccess |
   GetRegionTypes | GetRegionTypesSuccess |

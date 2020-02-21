@@ -10,6 +10,7 @@ import {Document} from '../../../../core/model/entities/document';
 import {Permissions} from '../../../../core/model/entities/permissions';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
 import {selectDocumentsServerError} from '../../store/selectors/documents.selector';
+import {ResetDocumentsServerError} from '../../store/actions/documents.actions';
 
 @Component({
   selector: 'app-collections',
@@ -36,6 +37,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     this.serverErrorSubscription = this.store.select(selectDocumentsServerError).subscribe(next => {
       if (next) {
         this.showErrorService.warning(next);
+        this.store.dispatch(new ResetDocumentsServerError());
       }
     });
 

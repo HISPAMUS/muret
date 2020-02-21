@@ -3,12 +3,13 @@ import {FormBuilder, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {NewDocumentState} from '../../store/state/new-document.state';
 import {Store} from '@ngrx/store';
-import {CreateDocument, CreateDocumentReset, GetCollections} from '../../store/actions/new-document.actions';
+import {CreateDocument, CreateDocumentReset, GetCollections, ResetNewDocumentServerError} from '../../store/actions/new-document.actions';
 import {Observable, Subscription} from 'rxjs';
-import {selectNewDocumentCollections, selectNewDocument} from '../../store/selectors/new-document.selector';
+import {selectNewDocumentCollections, selectNewDocument, selectNewDocumentServerError} from '../../store/selectors/new-document.selector';
 import {User} from '../../../../core/model/entities/user';
 import {selectAuthState} from '../../../../auth/store/selectors/auth.selector';
 import {Collection} from '../../../../core/model/entities/collection';
+import {ShowErrorService} from '../../../../core/services/show-error.service';
 
 @Component({
   selector: 'app-new-document',
@@ -20,7 +21,6 @@ export class NewDocumentComponent implements OnInit, OnDestroy {
   createDocumentSuccessSubscription: Subscription;
   authSubscription: Subscription;
   collections$: Observable<Collection[]>;
-  private serverErrorSubscription: Subscription;
 
   newDocumentForm = this.fb.group({
     name: ['', Validators.required],
@@ -31,8 +31,10 @@ export class NewDocumentComponent implements OnInit, OnDestroy {
     collections: [Validators.required]
   });
   user: User;
+  private newDocumentServerError: Subscription;
 
-  constructor(private fb: FormBuilder, private store: Store<NewDocumentState>, private router: Router) {
+  constructor(private fb: FormBuilder, private store: Store<NewDocumentState>, private router: Router,
+              private showErrorService: ShowErrorService) {
     this.authSubscription = this.store.select(selectAuthState).subscribe(next => {
       this.user = {
         id: next.userID, // actually, we just need now the ID
@@ -51,6 +53,13 @@ export class NewDocumentComponent implements OnInit, OnDestroy {
         this.router.navigate(['/document', next.id]);
       }}
     );
+
+    this.newDocumentServerError = this.store.select(selectNewDocumentServerError).subscribe(next => {
+      if (next) {
+        this.showErrorService.warning(next);
+        this.store.dispatch(new ResetNewDocumentServerError());
+      }
+    });
   }
 
   onReset() {
@@ -80,6 +89,7 @@ export class NewDocumentComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.createDocumentSuccessSubscription.unsubscribe();
     this.authSubscription.unsubscribe();
-    this.serverErrorSubscription.unsubscribe();
+    this.newDocumentServerError.unsubscribe();
+
   }
 }

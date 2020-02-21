@@ -14,7 +14,7 @@ import {
 import {
   GetImages,
   GetDocument,
-  GetDocumentStatistics
+  GetDocumentStatistics, ResetDocumentServerError
 } from '../../store/actions/document.actions';
 import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
@@ -63,6 +63,7 @@ export class DocumentComponent implements OnInit, OnDestroy {
     this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
       if (next) {
         this.showErrorService.warning(next);
+        this.store.dispatch(new ResetDocumentServerError());
       }
     });
 

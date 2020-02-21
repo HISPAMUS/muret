@@ -3,7 +3,7 @@ import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {DocumentState} from '../../store/state/document.state';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
-import {GetAlignmentPreview} from '../../store/actions/document.actions';
+import {GetAlignmentPreview, ResetDocumentServerError} from '../../store/actions/document.actions';
 import {Subscription} from 'rxjs';
 import {
   AlignmenPreviewTimeSignature,
@@ -77,6 +77,7 @@ export class AlignmentPreviewComponent implements OnInit, OnDestroy {
     this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
       if (next) {
         this.showErrorService.warning(next);
+        this.store.dispatch(new ResetDocumentServerError());
       }
     });
   }

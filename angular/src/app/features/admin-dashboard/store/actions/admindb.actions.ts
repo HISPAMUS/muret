@@ -4,6 +4,7 @@ import { PermissionsModel } from '../../models/permissionsModel';
 import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 
 export enum AdminDBActionTypes {
+    RESET_ADMIN_SERVER_ERROR = '[Admin] Reset Admin server error',
     ADMIN_SERVER_ERROR = '[Admin] Admin server error',
     REGISTER_START = '[Admin] Register new user start',
     REGISTER_SUCCESS = '[Admin] Register new user success',
@@ -12,6 +13,11 @@ export enum AdminDBActionTypes {
     REVOKE_PERMISSIONS_SUCCESS = '[Admin] Revoke user permissions successs',
     GRANT_PERMISSIONS = '[Admin] Grant permissions on user',
     GRANT_PERMISSIONS_SUCCESS = '[Admin] Grant permissions on user successfull'
+}
+
+export class ResetAdminDBServerError implements Action {
+  readonly type = AdminDBActionTypes.RESET_ADMIN_SERVER_ERROR;
+  constructor() {}
 }
 
 export class AdminDBServerError implements Action {
@@ -52,7 +58,8 @@ export class GrantPermissionsSuccess implements Action {
 }
 
 export type AdminDBActions =
-    AdminDBServerError
+    ResetAdminDBServerError
+    | AdminDBServerError
     | RegisterStart
     | RegisterSuccess
     | RegisterFail

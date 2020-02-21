@@ -3,6 +3,11 @@ import {DocumentsActions, DocumentsActionTypes} from '../actions/documents.actio
 
 export function documentsReducers(state = initialDocumentsState, action: DocumentsActions): DocumentsState {
   switch (action.type) {
+    case DocumentsActionTypes.ResetDocumentsServerError:
+      return {
+        ...state,
+        apiRestServerError: null
+      };
     case DocumentsActionTypes.DocumentsServerError:
       return {
         ...state,

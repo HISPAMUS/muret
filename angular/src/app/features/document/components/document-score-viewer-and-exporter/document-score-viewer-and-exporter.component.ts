@@ -7,7 +7,7 @@ import {
   ExportMEIPartsFacsimile,
   ExportMensurstrich,
   ExportMusicXML,
-  GetDocument, GetImages,
+  GetDocument, GetImages, ResetDocumentServerError,
 } from '../../store/actions/document.actions';
 import {
   selectDocument,
@@ -112,6 +112,7 @@ export class DocumentScoreViewerAndExporterComponent implements OnInit, OnDestro
       if (next) {
         this.exportingState.clear();
         this.showErrorService.warning(next);
+        this.store.dispatch(new ResetDocumentServerError());
       }
     });
   }

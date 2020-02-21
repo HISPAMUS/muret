@@ -9,7 +9,7 @@ import {
   CreateSubcollection,
   DeleteSubcollection,
   GetCollection,
-  MoveDocumentsToNewSubcollection, MoveDocumentsToSubcollection
+  MoveDocumentsToNewSubcollection, MoveDocumentsToSubcollection, ResetDocumentsServerError
 } from '../../store/actions/documents.actions';
 import {selectChangedCollectionID, selectCollection, selectDocumentsServerError} from '../../store/selectors/documents.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
@@ -54,6 +54,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
     this.serverErrorSubscription = this.store.select(selectDocumentsServerError).subscribe(next => {
       if (next) {
         this.showErrorService.warning(next);
+        this.store.dispatch(new ResetDocumentsServerError());
       }
     });
   }

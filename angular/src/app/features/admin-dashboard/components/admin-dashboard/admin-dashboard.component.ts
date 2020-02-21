@@ -4,6 +4,7 @@ import {selectDocumentAPIRestErrorSelector} from '../../../document/store/select
 import {AdminDashboardState} from '../../store/state/admindb.state';
 import {Store} from '@ngrx/store';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
+import {ResetAdminDBServerError} from '../../store/actions/admindb.actions';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -20,6 +21,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
       if (next) {
         this.showErrorService.warning(next);
+        this.store.dispatch(new ResetAdminDBServerError());
       }
     });
 

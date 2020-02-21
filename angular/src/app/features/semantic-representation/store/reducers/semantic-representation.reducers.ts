@@ -4,6 +4,12 @@ import {initialSemanticRepresentationState, SemanticRepresentationState} from '.
 export function semanticRepresentationReducers(state = initialSemanticRepresentationState, action: SemanticRepresentationActions):
   SemanticRepresentationState {
   switch (action.type) {
+    case SemanticRepresentationActionTypes.ResetSemanticRepresentationServerError: {
+      return {
+        ...state,
+        apiRestServerError: null
+      };
+    }
     case SemanticRepresentationActionTypes.SemanticRepresentationServerError: {
       return {
         ...state,

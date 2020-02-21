@@ -1,30 +1,32 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {DocumentState} from '../../store/state/document.state';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
-import {selectDocument} from '../../store/selectors/document.selector';
-import {GetDocument} from '../../store/actions/document.actions';
-import {Observable} from 'rxjs';
+import {selectDocument, selectDocumentAPIRestErrorSelector} from '../../store/selectors/document.selector';
+import {GetDocument, ResetDocumentServerError} from '../../store/actions/document.actions';
+import {Observable, Subscription} from 'rxjs';
 import {Document} from '../../../../core/model/entities/document';
 import {PartUses, UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
 import {NumberPair} from '../../../../core/model/restapi/number-pair';
 import {Part} from '../../../../core/model/entities/part';
 import {CreatePart, DeletePart, GetUsesOfParts, RenamePart} from '../../../parts/store/actions/parts.actions';
 import {selectUsesOfParts} from '../../../parts/store/selectors/parts.selector';
+import {ShowErrorService} from '../../../../core/services/show-error.service';
 
 @Component({
   selector: 'app-instruments',
   templateUrl: './instruments.component.html',
   styleUrls: ['./instruments.component.css']
 })
-export class InstrumentsComponent implements OnInit {
+export class InstrumentsComponent implements OnInit, OnDestroy {
   document$: Observable<Document>;
   usesOfParts$: Observable<UsesOfParts>;
   private documentID: number;
+  private serverErrorSubscription: Subscription;
 
   constructor(private route: ActivatedRoute, private store: Store<DocumentState>, private router: Router,
-              private dialogsService: DialogsService) {
+              private dialogsService: DialogsService, private showErrorService: ShowErrorService) {
     this.document$ = this.store.select(selectDocument);
     this.usesOfParts$ = this.store.select(selectUsesOfParts);
   }
@@ -32,9 +34,20 @@ export class InstrumentsComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.documentID = +this.route.snapshot.paramMap.get('id'); // + converts the string to number
-      // this.store.dispatch(new GetDocument(this.documentID)); // The use of parts and document should already be loaded at document component
+      // this.store.dispatch(new GetDocument(this.documentID));
+      // The use of parts and document should already be loaded at document component
       // this.store.dispatch(new GetUsesOfParts(this.documentID));
     });
+    this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
+      if (next) {
+        this.showErrorService.warning(next);
+        this.store.dispatch(new ResetDocumentServerError());
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.serverErrorSubscription.unsubscribe();
   }
 
   trackByPartFn(index, item: PartUses) {

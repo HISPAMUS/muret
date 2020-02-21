@@ -10,7 +10,7 @@ import {
   ConvertAgnostic2Semantic,
   GetNotation,
   SendSemanticEncoding,
-  GetTranslationModels
+  GetTranslationModels, ResetSemanticRepresentationServerError
 } from '../../store/actions/semantic-representation.actions';
 import {
   selectNotation,
@@ -161,6 +161,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     this.serverErrorSubscription = this.store.select(selectSemanticRepresentationServerError).subscribe(next => {
       if (next) {
         this.showErrorService.warning(next);
+        this.store.dispatch(new ResetSemanticRepresentationServerError());
       }
     });
 

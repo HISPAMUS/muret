@@ -4,6 +4,7 @@ import {PartUse, UsesOfParts} from '../../../../core/model/restapi/uses-of-parts
 import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 
 export enum PartsActionTypes {
+  ResetPartsServerError = '[Parts] Reset ServerError',
   PartsServerError = '[Parts] ServerError',
   CreateImagePart = '[Parts] Create image part',
   CreateImagePartSuccess = '[Parts] Create image part success',
@@ -69,6 +70,11 @@ export enum PartsActionTypes {
 
   /*GetPartNamesUsedByImage = '[Parts] Get part names used by image',
   GetPartNamesUsedByImageSuccess = '[Parts] Get part names used by image success'*/
+}
+
+export class ResetPartsServerError implements Action {
+  public readonly type = PartsActionTypes.ResetPartsServerError;
+  constructor() {}
 }
 
 export class PartsServerError implements Action {
@@ -328,7 +334,7 @@ export class GetPartNamesUsedByImageSuccess implements Action {
 }*/
 
 export type PartsActions =
-  PartsServerError |
+  ResetPartsServerError | PartsServerError |
   CreateImagePart | CreateImagePartSuccess |
   CreatePagePart | CreatePagePartSuccess |
   CreateRegionPart | CreateRegionPartSuccess |

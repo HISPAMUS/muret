@@ -9,6 +9,7 @@ import {ClassifierModel} from '../../../../core/model/entities/classifier-model'
 import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 
 export enum AgnosticRepresentationActionTypes {
+  ResetAgnosticRepresentationServerError = '[AgnosticRepresentation] Reset Server error',
   AgnosticRepresentationServerError = '[AgnosticRepresentation] Server error',
   InitRegion = '[AgnosticRepresentation] Init region',
   GetRegion = '[AgnosticRepresentation] Get region',
@@ -40,6 +41,12 @@ export enum AgnosticRepresentationActionTypes {
 
   ResetSelectedRegion = '[AgnosticRepresentation] Reset Agnostic selected region to null'
 }
+
+export class ResetAgnosticRepresentationServerError implements Action {
+  public readonly type = AgnosticRepresentationActionTypes.ResetAgnosticRepresentationServerError;
+  constructor() {}
+}
+
 
 export class AgnosticRepresentationServerError implements Action {
   public readonly type = AgnosticRepresentationActionTypes.AgnosticRepresentationServerError;
@@ -190,13 +197,13 @@ export class GetAgnosticEnd2EndClassifierModelsSuccess implements Action {
 
 export class ResetSelectedRegion implements Action {
   public readonly type = AgnosticRepresentationActionTypes.ResetSelectedRegion;
-  constructor(){}
+  constructor() {}
 }
 
 
 
 export type AgnosticRepresentationActions =
-  AgnosticRepresentationServerError |
+  ResetAgnosticRepresentationServerError | AgnosticRepresentationServerError |
   InitRegion | GetRegion | GetRegionSuccess | GetSVGSet | GetSVGSetSucccess | SelectSymbol | DeselectSymbol |
   ChangeSymbol | ChangeSymbolComments | ChangeSymbolBoundingBox | ChangeSymbolSuccess |
   // ClassifySymbolFromBoundingBox | ClassifySymbolFromStrokes | ClassifySymbolSuccess |

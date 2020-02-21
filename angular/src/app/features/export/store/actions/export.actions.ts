@@ -3,11 +3,17 @@ import {TrainingSetExporter} from '../../../../core/model/restapi/training-set-e
 import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 
 export enum ExportActionTypes {
+  ResetExportServerError = '[Export] Reset Export server error',
   ExportServerError = '[Export] Export server error',
   GetTrainingSetExporters = '[Export] Get training set exporters',
   GetTrainingSetExportersSuccess = '[Export] Get training set exporters success',
   DownloadTrainingSet = '[Export] Download training set',
   DownloadTrainingSetSuccess = '[Export] Download training set success',
+}
+
+export class ResetExportServerError implements Action {
+  public readonly type = ExportActionTypes.ResetExportServerError;
+  constructor() {}
 }
 
 export class ExportServerError implements Action {
@@ -36,5 +42,5 @@ export class DownloadTrainingSetSuccess implements Action {
 }
 
 export type ExportActions =
-  ExportServerError |
+  ResetExportServerError | ExportServerError |
   GetTrainingSetExporters | GetTrainingSetExportersSuccess | DownloadTrainingSet | DownloadTrainingSetSuccess;

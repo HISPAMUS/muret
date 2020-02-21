@@ -6,6 +6,12 @@ import {Part} from '../../../../core/model/entities/part';
 export function partsReducers(state = initialSemanticRepresentationState, action: PartsActions):
   PartsState {
   switch (action.type) {
+    case PartsActionTypes.ResetPartsServerError: {
+      return {
+        ...state,
+        apiRestServerError: null
+      };
+    }
     case PartsActionTypes.PartsServerError: {
       return {
         ...state,

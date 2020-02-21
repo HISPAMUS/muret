@@ -5,6 +5,7 @@ import {Collection} from '../../../../core/model/entities/collection';
 import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 
 export enum NewDocumentActionTypes {
+  ResetNewDocumentServerError = '[NewDocument] Reset New document server error',
   NewDocumentServerError = '[NewDocument] New document server error',
   CreateDocumentReset = '[NewDocument] Create document reset',
   CreateDocument = '[NewDocument] Create document',
@@ -20,6 +21,11 @@ export class CreateDocument implements Action {
               public name: string, public composer: string,
               public notationType: string, public manuscriptType: string,
               public comments: any, public imgSrc: string, public collectionID: number) {}
+}
+
+export class ResetNewDocumentServerError implements Action {
+  public readonly type = NewDocumentActionTypes.ResetNewDocumentServerError;
+  constructor() {}
 }
 
 export class NewDocumentServerError implements Action {
@@ -48,5 +54,5 @@ export class GetCollectionsSuccess implements Action {
 }
 
 export type NewDocumentActions =
-  NewDocumentServerError |
+  ResetNewDocumentServerError | NewDocumentServerError |
   CreateDocumentReset | CreateDocument | CreateDocumentSuccess | GetCollections | GetCollectionsSuccess;

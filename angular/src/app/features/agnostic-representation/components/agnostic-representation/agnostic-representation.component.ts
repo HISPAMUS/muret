@@ -19,7 +19,7 @@ import {
   ChangeSymbolBoundingBox, ChangeSymbolComments, ClassifyRegionEndToEnd, ClearRegionSymbols,
   CreateSymbolFromBoundingBox, CreateSymbolFromStrokes,
   DeleteSymbol, DeselectSymbol, GetAgnosticEnd2EndClassifierModels,
-  GetSVGSet, GetSymbolClassifierModels, InitRegion,
+  GetSVGSet, GetSymbolClassifierModels, InitRegion, ResetAgnosticRepresentationServerError,
   SelectSymbol
 } from '../../store/actions/agnostic-representation.actions';
 import {
@@ -120,6 +120,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.serverErrorSubscription = this.store.select(selectAgnosticSymbolServerError).subscribe(next => {
       if (next) {
         this.showErrorService.warning(next);
+        this.store.dispatch(new ResetAgnosticRepresentationServerError());
       }
     });
 

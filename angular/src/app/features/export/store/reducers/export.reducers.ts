@@ -4,6 +4,12 @@ import {ExportState, initialExportState} from '../state/export.state';
 export function exportReducers(state = initialExportState, action: ExportActions):
   ExportState {
   switch (action.type) {
+    case ExportActionTypes.ResetExportServerError: {
+      return {
+        ...state,
+        apiRestServerError: null
+      };
+    }
     case ExportActionTypes.ExportServerError: {
       return {
         ...state,

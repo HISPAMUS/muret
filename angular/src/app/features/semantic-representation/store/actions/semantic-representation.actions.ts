@@ -5,6 +5,7 @@ import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 
 export enum SemanticRepresentationActionTypes {
+  ResetSemanticRepresentationServerError = '[SemanticRepresentation] Reset Server error',
   SemanticRepresentationServerError = '[SemanticRepresentation] Server error',
   ConvertAgnostic2Semantic = '[SemanticRepresentation] Convert agnostic to semantic',
   ConvertAgnostic2SemanticSuccess = '[SemanticRepresentation] Convert agnostic to semantic success',
@@ -15,6 +16,11 @@ export enum SemanticRepresentationActionTypes {
   SendSemanticEncodingSuccess = '[SemanticRepresentation] Send semantic encoding success',
   GetTranslationModels = '[SemanticRepresentation] Get translation models',
   GetTranslationModelsSuccess = '[SemanticRepresentation] Get translation models success'
+}
+
+export class ResetSemanticRepresentationServerError implements Action {
+  public readonly type = SemanticRepresentationActionTypes.ResetSemanticRepresentationServerError;
+  constructor() {}
 }
 
 export class SemanticRepresentationServerError implements Action {
@@ -68,6 +74,6 @@ export class GetTranslationModelsSuccess implements Action {
 }
 
 export type SemanticRepresentationActions =
-  SemanticRepresentationServerError |
+  ResetSemanticRepresentationServerError | SemanticRepresentationServerError |
   ConvertAgnostic2Semantic | ConvertAgnostic2SemanticSuccess | GetNotation | GetNotationSuccess | ClearNotation |
   SendSemanticEncoding | SendSemanticEncodingSuccess | GetTranslationModels | GetTranslationModelsSuccess;

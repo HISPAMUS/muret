@@ -17,7 +17,7 @@ import {
   GetImageProjection,
   GetRegionTypes,
   GetDocumentAnModels,
-  AutomaticDocumentAnalysis, CreatePages
+  AutomaticDocumentAnalysis, CreatePages, ResetDocumentAnalysisServerError
 } from '../../store/actions/document-analysis.actions';
 import {
   selectFileName, selectImagePart,
@@ -131,6 +131,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     this.serverErrorSubscription = this.store.select(selectDocumentAnalysisServerError).subscribe(next => {
       if (next) {
         this.showErrorService.warning(next);
+        this.store.dispatch(new ResetDocumentAnalysisServerError());
       }
     });
 

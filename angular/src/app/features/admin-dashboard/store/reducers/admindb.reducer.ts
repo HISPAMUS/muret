@@ -3,6 +3,11 @@ import { AdminDBActions, AdminDBActionTypes } from '../actions/admindb.actions';
 
 export function adminDBReducers( state = initialAdimnDashboardState, action: AdminDBActions ): AdminDashboardState  {
     switch (action.type) {
+      case AdminDBActionTypes.RESET_ADMIN_SERVER_ERROR:
+        return {
+          ...state,
+          apiRestServerError: null
+        };
       case AdminDBActionTypes.ADMIN_SERVER_ERROR:
         return {
           ...state,

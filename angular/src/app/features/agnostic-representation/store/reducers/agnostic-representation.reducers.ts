@@ -5,6 +5,11 @@ import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
 export function agnosticRepresentationReducers(state = initialAgnosticRepresentationState, action: AgnosticRepresentationActions):
   AgnosticRepresentationState {
   switch (action.type) {
+    case AgnosticRepresentationActionTypes.ResetAgnosticRepresentationServerError:
+      return {
+        ...state,
+        apiRestServerError: null
+      };
     case AgnosticRepresentationActionTypes.AgnosticRepresentationServerError:
       return {
         ...state,
