@@ -31,9 +31,9 @@ export class TrainingSetsComponent implements OnInit, OnDestroy {
   selectedExporterId: number;
   currentCursor = 'default';
   // private exportersSubscription: Subscription;
-  private trainingSetExporters$: Observable<TrainingSetExporter[]>;
-  private exportedTrainingSetBlobSubscription$: Subscription;
-  private userSubscription: Subscription;
+  trainingSetExporters$: Observable<TrainingSetExporter[]>;
+  exportedTrainingSetBlobSubscription$: Subscription;
+  userSubscription: Subscription;
 
   documents: Document[];
   exporting: boolean;
