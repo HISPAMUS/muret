@@ -95,7 +95,7 @@ CHAR_n: 'n';
 CHAR_p: 'p';
 CHAR_r: 'r';
 CHAR_s: 's';
-CHAR_t: 'r';
+CHAR_t: 't';
 CHAR_u: 'u';
 CHAR_v: 'v';
 CHAR_x: 'x';
