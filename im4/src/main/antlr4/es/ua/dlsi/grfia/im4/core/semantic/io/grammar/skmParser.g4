@@ -16,7 +16,7 @@ options { tokenVocab=skmLexer; } // use tokens from skmLexer.g4
 }
 
 // start rule - in this version of **skm we are forcing each column starts with a *part after the **smens or **kern
-start: header eol (eol record)+ eol? EOF;
+start: header (eol record)+ eol? EOF;
 
 // anystart: (header eol)? record (eol record)+ eol? EOF;
 

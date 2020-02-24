@@ -39,8 +39,8 @@ public class SemanticComposition {
                 throw new IM4RuntimeException("The previous item " + previousItem + " cannot be found in the insertedNodes hash map");
             }
         }
-        DAGItem<SemanticItem> newNode = new DAGItem<>(semanticItem);
-        this.dag.add(previousNode, newNode);
+        DAGNode newNode = this.dag.add(previousNode, new DAGItem<>(semanticItem));
+        this.insertedNodes.put(semanticItem, newNode);
     }
 
     public void addHeader(HeaderItem headerItem) {

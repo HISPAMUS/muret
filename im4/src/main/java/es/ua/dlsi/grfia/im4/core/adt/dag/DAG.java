@@ -12,16 +12,18 @@ public class DAG<SpineItemContentType> {
     public DAG() {
     }
 
-    public void add(DAGNode<SpineItemContentType> previous, DAGItem<SpineItemContentType> item) {
+    public DAGNode add(DAGNode<SpineItemContentType> previous, DAGItem<SpineItemContentType> item) {
         if (firstNode == null) {
             if (previous != null) {
                 throw new IM4RuntimeException("Cannot add a node to a previous node when the first node is null");
             }
             firstNode = new DAGNode<>(item);
+            return firstNode;
         } else {
             DAGNode<SpineItemContentType> node = new DAGNode<>(item);
             node.setPrevious(previous);
             previous.addNext(node);
+            return node;
         }
     }
 }

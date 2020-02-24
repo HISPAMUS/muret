@@ -284,7 +284,7 @@ public class SkmSyntaxDirectedTranslation {
 
             String barlineType;
             if (ctx.barLineType() != null) {
-                barlineType = ctx.getText();
+                barlineType = ctx.barLineType().getText();
             } else {
                 barlineType = "";
             }
@@ -450,10 +450,12 @@ public class SkmSyntaxDirectedTranslation {
             DiatonicPitch nn = DiatonicPitch.valueOf(noteName);
 
             Accidentals acc = null;
-            try {
-                acc = Accidentals.accidentalFromSkmEncoding(alterationContext.getText());
-            } catch (IM4Exception e) {
-                throw new GrammarParseRuntimeException(e);
+            if (alterationContext != null) {
+                try {
+                    acc = Accidentals.accidentalFromSkmEncoding(alterationContext.getText());
+                } catch (IM4Exception e) {
+                    throw new GrammarParseRuntimeException(e);
+                }
             }
             ScientificPitch scientificPitch = new ScientificPitch(new PitchClass(nn, acc), octave);
             return scientificPitch;
@@ -486,10 +488,12 @@ public class SkmSyntaxDirectedTranslation {
 
 
             AccidentalQualifier accidentalQualifier = null;
-            try {
-                accidentalQualifier = AccidentalQualifier.findQualifier(ctx.editorialAccidental().getText());
-            } catch (IM4Exception e) {
-                throw new GrammarParseRuntimeException(e);
+            if (ctx.editorialAccidental() != null) {
+                try {
+                    accidentalQualifier = AccidentalQualifier.findQualifier(ctx.editorialAccidental().getText());
+                } catch (IM4Exception e) {
+                    throw new GrammarParseRuntimeException(e);
+                }
             }
 
             //TODO Ties
@@ -646,7 +650,7 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void exitSpineTerminator(skmParser.SpineTerminatorContext ctx) {
             super.exitSpineTerminator(ctx);
-            throw new UnsupportedOperationException("TODO"); //TODO operaciones spine
+            // throw new UnsupportedOperationException("TODO"); //TODO operaciones spine
         }
 
         @Override
