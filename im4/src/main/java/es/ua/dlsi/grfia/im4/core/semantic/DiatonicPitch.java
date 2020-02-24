@@ -76,7 +76,7 @@ public enum DiatonicPitch {
 		}
 
 		for (DiatonicPitch acc : DiatonicPitch.values()) {
-			if (acc.name().equals(name)) {
+			if (acc.name().equalsIgnoreCase(name)) {
 				return acc;
 			}
 			
@@ -87,4 +87,8 @@ public enum DiatonicPitch {
     public static DiatonicPitch noteFromName(char c) throws IM4Exception {
         return noteFromName(Character.toString(c));
     }
+
+    public String getSkmEncoding() {
+		throw new UnsupportedOperationException("TODO");
+	}
 }

@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.im4.core.semantic;
 
 import es.ua.dlsi.grfia.im4.core.IM4RuntimeException;
 
+//TODO inmutable
 /**
 @author drizo
 @date 06/06/2011
@@ -70,7 +71,7 @@ public class PitchClass implements Comparable<PitchClass> {
 	/**
 	 * Used for convenience in GUI
 	 */
-	public PitchClass() {	    
+	public PitchClass() {
 	}
 	/**
 	 * @param noteName
@@ -85,6 +86,10 @@ public class PitchClass implements Comparable<PitchClass> {
 		this.noteName = noteName;
 		this.accidental = Accidentals.NATURAL;
 		computeSemitonesFromC();
+	}
+
+	public PitchClass clone() {
+		return new PitchClass(noteName, accidental);
 	}
 	/**
 	 * Used to avoid continuous computations

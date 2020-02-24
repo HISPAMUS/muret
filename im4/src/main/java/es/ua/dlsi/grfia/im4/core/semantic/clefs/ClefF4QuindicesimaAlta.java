@@ -19,7 +19,6 @@ package es.ua.dlsi.grfia.im4.core.semantic.clefs;
 
 import es.ua.dlsi.grfia.im4.core.semantic.Clef;
 import es.ua.dlsi.grfia.im4.core.semantic.DiatonicPitch;
-import es.ua.dlsi.grfia.im4.core.semantic.NotationType;
 import es.ua.dlsi.grfia.im4.core.semantic.PositionInStaff;
 
 import static es.ua.dlsi.grfia.im4.core.semantic.PositionsInStaff.*;
@@ -29,17 +28,20 @@ import static es.ua.dlsi.grfia.im4.core.semantic.PositionsInStaff.*;
  * @author drizo
  */
 public class ClefF4QuindicesimaAlta extends Clef {
-    
-    public ClefF4QuindicesimaAlta(NotationType notationType) {
-        super(notationType, DiatonicPitch.F, 4, 5, 2,
+    /**
+     * Package visibility to be used by the factory
+     */
+    static final String SKM = "**clefF4^^2";
+
+    public ClefF4QuindicesimaAlta() {
+        super(SKM, DiatonicPitch.F, 4, 5, 2,
                 new PositionInStaff[] {LINE_4, SPACE_2, SPACE_4, LINE_3, SPACE_1, SPACE_3, LINE_2},
                 new PositionInStaff[] {LINE_2, SPACE_3, SPACE_1, LINE_3, LINE_1, SPACE_2, SPACE_0}
         );
-	//super(DiatonicPitch.F, 4, 5, 3, 2);
     }
     @Override
     public Clef clone() {
-    		return new ClefF4QuindicesimaAlta(notationType);
+    		return new ClefF4QuindicesimaAlta();
     }
     
 }

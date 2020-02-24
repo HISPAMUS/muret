@@ -2,16 +2,11 @@ package es.ua.dlsi.grfia.im4.core.semantic;
 
 import es.ua.dlsi.grfia.im4.core.Time;
 
-public abstract class TimeSignature extends SemanticItem implements INotationTypeDependant {
-    protected NotationType notationType;
 
-    public TimeSignature(NotationType notationType) {
-        this.notationType = notationType;
-    }
+public abstract class TimeSignature extends SemanticItem {
 
-    @Override
-    public NotationType getNotationType() {
-        return notationType;
+    public TimeSignature(String skmEncoding) {
+        super(skmEncoding);
     }
 
     public abstract boolean isCompound();

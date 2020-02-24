@@ -3,8 +3,7 @@ package es.ua.dlsi.grfia.im4.core.semantic;
 
 import java.util.Objects;
 
-public abstract class Clef extends SemanticItem implements INotationTypeDependant {
-    protected final NotationType notationType;
+public abstract class Clef extends SemanticItem {
     private final PositionInStaff[] flatPositions;
     private final PositionInStaff[] sharpPositions;
     private final DiatonicPitch note;
@@ -30,10 +29,8 @@ public abstract class Clef extends SemanticItem implements INotationTypeDependan
      */
     private final int bottomLineOctave;
 
-    public Clef(NotationType notationType, DiatonicPitch note, int line, int noteOctave, PositionInStaff [] sharpPositions, PositionInStaff [] flatPositions
-    ) {
-        //20180207 this (note, line, noteOctave, sharpKeySignatureStartingOctave, flatKeySignatureStartingOctave, 0);
-        this (notationType, note, line, noteOctave, 0, sharpPositions, flatPositions);
+    public Clef(String skmEncoding, DiatonicPitch note, int line, int noteOctave, PositionInStaff [] sharpPositions, PositionInStaff [] flatPositions) {
+        this (skmEncoding, note, line, noteOctave, 0, sharpPositions, flatPositions);
     }
 
     /**
@@ -45,14 +42,13 @@ public abstract class Clef extends SemanticItem implements INotationTypeDependan
      * @param sharpPositions For key signatures
      * @param flatPositions For key signatures
      */
-    public Clef(NotationType notationType, DiatonicPitch note, int line, int noteOctave,
+    public Clef(String skmEncoding, DiatonicPitch note, int line, int noteOctave,
                 int octaveChange, PositionInStaff [] sharpPositions, PositionInStaff [] flatPositions
     ) {
-        Objects.requireNonNull(notationType, "notationType");
+        super(skmEncoding);
         Objects.requireNonNull(sharpPositions, "sharpPositions");
         Objects.requireNonNull(flatPositions, "flatPositions");
 
-        this.notationType = notationType;
         this.octaveChange = octaveChange;
         this.note = note;
         this.line = line;
@@ -77,18 +73,12 @@ public abstract class Clef extends SemanticItem implements INotationTypeDependan
         return line == clef.line &&
                 noteOctave == clef.noteOctave &&
                 octaveChange == clef.octaveChange &&
-                notationType == clef.notationType &&
                 note == clef.note;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(notationType, note, line, noteOctave, octaveChange);
-    }
-
-    @Override
-    public NotationType getNotationType() {
-        return notationType;
+        return Objects.hash(note, line, noteOctave, octaveChange);
     }
 
     public DiatonicPitch getNote() {

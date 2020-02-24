@@ -7,12 +7,12 @@ import es.ua.dlsi.grfia.im4.core.IM4Exception;
 @date 05/06/2011
  **/
 public enum Accidentals {
-	TRIPLE_FLAT (-3, "bbb"),
-	DOUBLE_FLAT (-2, "bb"),
-	FLAT (-1, "b"),
-	NATURAL (0, "n"), // explicit natural
-	SHARP (1, "#"),
-	DOUBLE_SHARP (2, "x");
+	TRIPLE_FLAT (-3, "bbb", "---"),
+	DOUBLE_FLAT (-2, "bb", "--"),
+	FLAT (-1, "b", "-"),
+	NATURAL (0, "n", ""), // explicit natural
+	SHARP (1, "#", "#"),
+	DOUBLE_SHARP (2, "x", "##");
 	
 	/**
 	 * Alteration that the accidental adds
@@ -24,15 +24,25 @@ public enum Accidentals {
 	private final String name;
 
 	/**
+	 * Skm encoding
+	 */
+	private final String skmEncoding;
+
+	/**
 	 * @return the alteration
 	 */
 	public final int getAlteration() {
 		return alteration;
 	}
 
-	Accidentals(int alter, String aname) {
+	Accidentals(int alter, String aname, String skmEncoding) {
 		this.alteration = alter;
 		this.name = aname;
+		this.skmEncoding = skmEncoding;
+	}
+
+	public String getSkmEncoding() {
+		return skmEncoding;
 	}
 
 	public static Accidentals alterToAccidentals(int value) throws IM4Exception {
@@ -84,5 +94,15 @@ public enum Accidentals {
 
 		}
 		throw new IM4Exception("Cannot find an accidental for " + name);
+	}
+
+	public static Accidentals accidentalFromSkmEncoding(String skmEncoding) throws IM4Exception {
+		for (Accidentals acc : Accidentals.values()) {
+			if (acc.skmEncoding.equals(skmEncoding)) {
+				return acc;
+			}
+
+		}
+		throw new IM4Exception("Cannot find an accidental for encoding " + skmEncoding);
 	}
 }

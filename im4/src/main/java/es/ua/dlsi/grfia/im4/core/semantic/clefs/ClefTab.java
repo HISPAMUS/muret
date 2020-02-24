@@ -18,27 +18,28 @@
 package es.ua.dlsi.grfia.im4.core.semantic.clefs;
 
 import es.ua.dlsi.grfia.im4.core.semantic.Clef;
-import es.ua.dlsi.grfia.im4.core.semantic.DiatonicPitch;
-import es.ua.dlsi.grfia.im4.core.semantic.NotationType;
 import es.ua.dlsi.grfia.im4.core.semantic.PositionInStaff;
 
-import static es.ua.dlsi.grfia.im4.core.semantic.PositionsInStaff.*;
 
 /**
  *
  * @author drizo
  */
 public class ClefTab extends Clef {
-    
-    public ClefTab(NotationType notationType) {
-        super(notationType, null, 1, 0,
+    /**
+     * Package visibility to be used by the factory
+     */
+    static final String SKM = "*clefTAB";
+
+    public ClefTab() {
+        super(SKM, null, 1, 0,
                 new PositionInStaff[] {},
                 new PositionInStaff[] {}
                 );
     }
     @Override
     public Clef clone() {
-    		return new ClefTab(notationType);
+    		return new ClefTab();
     }
     
 }

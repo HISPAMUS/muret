@@ -1,5 +1,4 @@
 package es.ua.dlsi.grfia.im4.core.semantic;
 
-public enum Coloration {
-    white, black
+public class Coloration {
 }

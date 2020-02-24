@@ -1,70 +1,43 @@
 package es.ua.dlsi.grfia.im4.core.semantic;
 
-public class PitchedDurationalSemanticItem extends DurationalSemanticItem {
-    boolean beamStart;
-    boolean beamEnd;
+import es.ua.dlsi.grfia.im4.core.IM4Exception;
 
-    boolean slurStart;
-    boolean slurEnd;
+public abstract class PitchedDurationalSemanticItem extends DurationalSemanticItem {
+    protected final Beaming beaming;
+    protected final Slurring slurring;
     /**
      * Optional articulation
      */
-    Articulation articulation;
+    protected final Articulation articulation;
 
     /**
      * Optional ornament
      */
-    Ornament ornament;
+    protected final Ornament ornament;
 
-    public PitchedDurationalSemanticItem(Figures figure, int dots) {
-        super(figure, dots);
+    public PitchedDurationalSemanticItem(Figures figure, int dots, Perfection perfection, Fermata fermata, Size size,
+                                         Beaming beaming, Slurring slurring, Articulation articulation, Ornament ornament) throws IM4Exception {
+        super(null, figure, dots, perfection, fermata, size);
+        this.beaming = beaming;
+        this.slurring = slurring;
+        this.articulation = articulation;
+        this.ornament = ornament;
+        this.setSkmEncodingJustInConstructor(buildSkmEncoding());
     }
 
-    public boolean isBeamStart() {
-        return beamStart;
+    public Beaming getBeaming() {
+        return beaming;
     }
 
-    public void setBeamStart(boolean beamStart) {
-        this.beamStart = beamStart;
-    }
-
-    public boolean isBeamEnd() {
-        return beamEnd;
-    }
-
-    public void setBeamEnd(boolean beamEnd) {
-        this.beamEnd = beamEnd;
-    }
-
-    public boolean isSlurStart() {
-        return slurStart;
-    }
-
-    public void setSlurStart(boolean slurStart) {
-        this.slurStart = slurStart;
-    }
-
-    public boolean isSlurEnd() {
-        return slurEnd;
-    }
-
-    public void setSlurEnd(boolean slurEnd) {
-        this.slurEnd = slurEnd;
+    public Slurring getSlurring() {
+        return slurring;
     }
 
     public Articulation getArticulation() {
         return articulation;
     }
 
-    public void setArticulation(Articulation articulation) {
-        this.articulation = articulation;
-    }
-
     public Ornament getOrnament() {
         return ornament;
-    }
-
-    public void setOrnament(Ornament ornament) {
-        this.ornament = ornament;
     }
 }

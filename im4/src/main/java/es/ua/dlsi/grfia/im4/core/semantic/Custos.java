@@ -5,6 +5,7 @@ public class Custos extends SemanticItem {
     final int octave;
 
     public Custos(DiatonicPitch diatonicPitch, int octave) {
+        super("*custos" + diatonicPitch.getSkmEncoding());
         this.diatonicPitch = diatonicPitch;
         this.octave = octave;
     }
@@ -15,5 +16,10 @@ public class Custos extends SemanticItem {
 
     public int getOctave() {
         return octave;
+    }
+
+    @Override
+    public Custos clone() {
+        return new Custos(diatonicPitch, octave);
     }
 }

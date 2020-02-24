@@ -4,9 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class DAGNode<SpineItemContentType> {
-    DAGItem<SpineItemContentType> item;
-    List<DAGNode<SpineItemContentType>> nextList;
-    DAGNode<SpineItemContentType> previous;
+    private final DAGItem<SpineItemContentType> item;
+    private final List<DAGNode<SpineItemContentType>> nextList;
+    private DAGNode<SpineItemContentType> previous;
 
     public DAGNode(DAGItem<SpineItemContentType> item) {
         this.item = item;
@@ -15,10 +15,6 @@ public class DAGNode<SpineItemContentType> {
 
     public DAGItem<SpineItemContentType> getItem() {
         return item;
-    }
-
-    public void setItem(DAGItem<SpineItemContentType> item) {
-        this.item = item;
     }
 
     public DAGNode<SpineItemContentType> getPrevious() {

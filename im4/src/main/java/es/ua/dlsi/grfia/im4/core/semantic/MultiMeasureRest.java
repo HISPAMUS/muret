@@ -5,10 +5,16 @@ public class MultiMeasureRest extends SemanticItem {
 
 
     public MultiMeasureRest(int numMeasures) {
+        super("r-" + numMeasures + "-");
         this.numMeasures = numMeasures;
     }
 
     public int getNumMeasures() {
         return numMeasures;
+    }
+
+    @Override
+    public MultiMeasureRest clone() {
+        return new MultiMeasureRest(numMeasures);
     }
 }
