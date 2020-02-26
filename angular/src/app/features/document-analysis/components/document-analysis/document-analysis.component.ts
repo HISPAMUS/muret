@@ -17,7 +17,7 @@ import {
   GetImageProjection,
   GetRegionTypes,
   GetDocumentAnModels,
-  AutomaticDocumentAnalysis, CreatePages, ResetDocumentAnalysisServerError
+  AutomaticDocumentAnalysis, CreatePages, ResetDocumentAnalysisServerError, ClearAllDoc
 } from '../../store/actions/document-analysis.actions';
 import {
   selectFileName, selectImagePart,
@@ -330,7 +330,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   {
     this.dialogsService.showInput("Delete everything?", "Please write 'delete all' to start purging the regions", "").subscribe(message=>{
       if(message == "delete all")
-        console.log("Purging");
+        this.store.dispatch(new ClearAllDoc(this.imageID));
     });
   }
 

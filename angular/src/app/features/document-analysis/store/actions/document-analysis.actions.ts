@@ -57,7 +57,11 @@ export enum DocumentAnalysisActionTypes {
   GetDocumentAnModelsSuccess = '[DocumentAnalysis] Get Models Success',
 
   AutomaticDocumentAnalysis = '[DocumentAnalysis] Start automatic analysis',
-  AutomaticDocumentAnalysisSuccess = '[DocumentAnalysis] Automatic analysis success'
+  AutomaticDocumentAnalysisSuccess = '[DocumentAnalysis] Automatic analysis success',
+
+  DocumentClearAll = '[DocumentAnalysis] Clear all the document',
+  DocumentClearAllSucess = '[DocumentAnalysis] Clear all the document successful',
+  ResetWipeOut = '[DocumentAnalysis] Reset wipeout flag'
 }
 
 export class ResetDocumentAnalysisServerError implements Action {
@@ -222,6 +226,18 @@ export class AutomaticDocumentAnalysisSuccess implements Action {
   constructor(public pages: Page[]) {}
 }
 
+export class ClearAllDoc implements Action
+{
+  public readonly type = DocumentAnalysisActionTypes.DocumentClearAll;
+  constructor(public imageID: number){}
+}
+
+export class ClearAllDocSuccess implements Action
+{
+  public readonly type = DocumentAnalysisActionTypes.DocumentClearAllSucess;
+  constructor(){}
+}
+
 /*export class SelectPage implements Action {
   public readonly type = DocumentAnalysisActionTypes.SelectPage;
   constructor(public page: Page) {}
@@ -251,4 +267,5 @@ export type DocumentAnalysisActions =
   DeletePage | DeletePageSuccess |
   DeleteRegion | DeleteRegionSuccess |
   GetDocumentAnModels | GetDocumentAnModelsSuccess |
-  AutomaticDocumentAnalysis | AutomaticDocumentAnalysisSuccess;
+  AutomaticDocumentAnalysis | AutomaticDocumentAnalysisSuccess|
+  ClearAllDoc | ClearAllDocSuccess;

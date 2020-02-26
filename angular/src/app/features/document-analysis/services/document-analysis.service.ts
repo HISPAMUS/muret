@@ -8,6 +8,7 @@ import {Region} from '../../../core/model/entities/region';
 import {BoundingBox} from '../../../core/model/entities/bounding-box';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 import { DocumentAnalysisForm } from '../model/document-analysis-form';
+import { StringResponse } from 'src/app/core/model/restapi/string-response';
 
 @Injectable() // non-singleton
 export class DocumentAnalysisService {
@@ -124,6 +125,11 @@ export class DocumentAnalysisService {
   attemptAutomaticAnalysis$(form: DocumentAnalysisForm): Observable<Page[]> {
     const url = 'documentanalysis/docAnalyze';
     return this.apiRestClientService.post$<Page[]>(url, form);
+  }
+
+  attemptDocumentWipeOut$(id: number): Observable<StringResponse> {
+    const url = 'documentanalysis/clearImage';
+    return this.apiRestClientService.delete$<StringResponse>(url, id);
   }
 
 }

@@ -27,7 +27,7 @@ import {
   GetDocumentAnModels,
   GetDocumentAnModelsSuccess,
   AutomaticDocumentAnalysis,
-  AutomaticDocumentAnalysisSuccess, CreatePages, CreatePagesSuccess, DocumentAnalysisServerError
+  AutomaticDocumentAnalysisSuccess, CreatePages, CreatePagesSuccess, DocumentAnalysisServerError, ClearAllDoc, ClearAllDocSuccess
 } from '../actions/document-analysis.actions';
 import {DocumentAnalysisImageProjection} from '../../../../core/model/restapi/document-analysis-image-projection';
 import {RegionType} from '../../../../core/model/entities/region-type';
@@ -35,6 +35,7 @@ import {ImageFilesService} from '../../../../core/services/image-files.service';
 import {Region} from '../../../../core/model/entities/region';
 import {Page} from '../../../../core/model/entities/page';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
+import { StringResponse } from 'src/app/core/model/restapi/string-response';
 
 @Injectable()
 export class DocumentAnalysisEffects {
@@ -170,6 +171,14 @@ export class DocumentAnalysisEffects {
     switchMap((action: AutomaticDocumentAnalysis) => this.documentAnalysisService.attemptAutomaticAnalysis$(action.form).pipe(
     switchMap((page: Page[]) => of(new AutomaticDocumentAnalysisSuccess(page))),
       catchError(err => of(new DocumentAnalysisServerError(err)))
+    )));
+  
+  @Effect()
+  attemptDocumentWipeout$ = this.actions$.pipe(
+    ofType<ClearAllDoc>(DocumentAnalysisActionTypes.DocumentClearAll),
+    switchMap((action:ClearAllDoc) => this.documentAnalysisService.attemptDocumentWipeOut$(action.imageID).pipe(
+      switchMap((response: StringResponse)=> of(new Clear(action.imageID))),
+      catchError(error=> of(new DocumentAnalysisServerError(error))) 
     )));
 
 

@@ -2,16 +2,20 @@ package es.ua.dlsi.grfia.im3ws.muret.controller;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
+import es.ua.dlsi.grfia.im3ws.controller.StringResponse;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.*;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
+import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticRepresentationModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.ClassifierClient;
 import es.ua.dlsi.grfia.im3ws.muret.model.DocumentAnalysisModel;
+import es.ua.dlsi.grfia.im3ws.muret.model.SemanticRepresentationModel;
 import es.ua.dlsi.grfia.im3ws.muret.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,16 +34,24 @@ import java.util.logging.Logger;
 public class DocumentAnalysisController extends MuRETBaseController {
 
     private final RegionTypeRepository regionTypeRepository;
+    private final ImageRepository imageRepository;
+    private final RegionRepository regionRepository;
+
+    private final AgnosticRepresentationModel agnosticModel;
 
     private final DocumentAnalysisModel documentAnalysisModel;
 
     private final ClassifierClient m_client;
 
     @Autowired
-    public DocumentAnalysisController(MURETConfiguration muretConfiguration, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository, RegionTypeRepository regionTypeRepository, DocumentAnalysisModel documentAnalysisModel) {
+    public DocumentAnalysisController(MURETConfiguration muretConfiguration, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository, RegionTypeRepository regionTypeRepository, DocumentAnalysisModel documentAnalysisModel, AgnosticRepresentationModel agnosticModel,
+                                      RegionRepository regionrepository) {
         super(muretConfiguration, imageRepository, pageRepository, regionRepository, symbolRepository);
         this.regionTypeRepository = regionTypeRepository;
         this.documentAnalysisModel = documentAnalysisModel;
+        this.imageRepository = imageRepository;
+        this.agnosticModel = agnosticModel;
+        this.regionRepository = regionrepository;
         this.m_client = new ClassifierClient(muretConfiguration.getPythonclassifiers());
     }
 
@@ -170,6 +182,36 @@ public class DocumentAnalysisController extends MuRETBaseController {
             return documentAnalysisModel.createAutomaticDocumentAnalysis(persistentImage, request.getNumPages(), autoDocumentAnalysisModel);
         } catch (IM3WSException e) {
             throw ControllerUtils.createServerError(this, "Cannot analyze document", e);
+        }
+    }
+
+    @Transactional
+    @DeleteMapping(path={"clearImage/{imageID}"})
+    public StringResponse clearAllImageSymbols(@PathVariable(name = "imageID") long imageID)
+    {
+        //First, we have to get the image pages, because the pages have the regions
+        try {
+            Optional<Image> imageAttempt = imageRepository.findById(imageID);
+            if (imageAttempt.isPresent()) {
+                Image imageToHandle = imageAttempt.get(); //Get the image
+                List<Page> pagestoClean = imageToHandle.getPages(); //Get all the pages as we have to clean them one by one
+                for (Page page : pagestoClean) {
+                    for (Region region : page.getRegions()) {
+                        //Erase agnostic symbols
+                        agnosticModel.clearRegionSymbols(region.getId());
+                        //Erase semantic symbols
+                        region.setSemanticEncoding(null);
+                        regionRepository.save(region);
+                    }
+                }
+            }
+            else throw new IM3WSException("The image does not exist");
+
+            return new StringResponse("Image wiped out");
+        }
+        catch (IM3WSException exception)
+        {
+            throw ControllerUtils.createServerError(this, "Cannot clean the image encodings", exception);
         }
     }
 

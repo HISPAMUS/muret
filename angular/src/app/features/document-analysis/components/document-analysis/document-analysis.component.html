@@ -1,10 +1,16 @@
 <div class="container-fluid">
   <nav class="row" id="docAnalysisToolBar">
     <div class="col-6">
-      <app-crud-toolbar (modeChange)="onModeChange($event)" (onClear)="clear()" (onDelete)="deleteSelected()" [(mode)]="mode" (onZoomFit)="zoomFit()" (onZoomIn)="zoomIn()" (onZoomOut)="zoomOut()" (onDeleteAll)="clearAll()">
+      <app-crud-toolbar (modeChange)="onModeChange($event)" (onClear)="clear()" (onDelete)="deleteSelected()" [(mode)]="mode" (onZoomFit)="zoomFit()" (onZoomIn)="zoomIn()" (onZoomOut)="zoomOut()">
       </app-crud-toolbar>
+      
     </div>
     <div class="col-3" id="linksPhases">
+      <label ngbButtonLabel>
+        <button (click)="clearAll()">
+          <fa-icon icon="bomb" class="icons" size="lg"></fa-icon>
+        </button>
+      </label>
       Go to:
       <button (click)="openAgnosticRepresentation()">Agnostic</button>
       <button (click)="openSemanticRepresentation()">Semantic</button>
