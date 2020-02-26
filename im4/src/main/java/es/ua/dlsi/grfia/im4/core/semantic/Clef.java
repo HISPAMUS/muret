@@ -97,11 +97,6 @@ public abstract class Clef extends SemanticItem {
         return noteOctave;
     }
 
-    @Override
-    public String toString() {
-        return "Clef{" + "note=" + note + ", line=" + line + ", noteOctave=" + noteOctave + '}';
-    }
-
     public int getOctaveChange() {
         return octaveChange;
     }

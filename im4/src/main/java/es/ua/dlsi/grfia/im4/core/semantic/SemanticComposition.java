@@ -2,9 +2,12 @@ package es.ua.dlsi.grfia.im4.core.semantic;
 
 import es.ua.dlsi.grfia.im4.core.IM4RuntimeException;
 import es.ua.dlsi.grfia.im4.core.adt.dag.DAG;
+import es.ua.dlsi.grfia.im4.core.adt.dag.DAG2DotExporter;
 import es.ua.dlsi.grfia.im4.core.adt.dag.DAGItem;
 import es.ua.dlsi.grfia.im4.core.adt.dag.DAGNode;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 
 /**
@@ -45,5 +48,10 @@ public class SemanticComposition {
 
     public void addHeader(HeaderItem headerItem) {
         add(startItem, headerItem);
+    }
+
+    public void printGraphDot(File file) throws FileNotFoundException {
+        DAG2DotExporter dag2DotExporter = new DAG2DotExporter();
+        dag2DotExporter.export(file, dag);
     }
 }

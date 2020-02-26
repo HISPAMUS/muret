@@ -15,6 +15,10 @@ options { tokenVocab=skmLexer; } // use tokens from skmLexer.g4
     }
 }
 
+//TODO - cuidado porque hay veces que puede aparecer esto
+//**kern	**kern	**dynam
+//*staff2	*staff1	*staff1/2 - véase sonata07-1.krn de humdrum-data
+
 // start rule - in this version of **skm we are forcing each column starts with a *part after the **smens or **kern
 start: header (eol record)+ eol? EOF;
 

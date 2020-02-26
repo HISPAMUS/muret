@@ -1,6 +1,13 @@
 package es.ua.dlsi.grfia.im4.core.adt.dag;
 
+import es.ua.dlsi.grfia.im4.core.IM4Exception;
 import es.ua.dlsi.grfia.im4.core.IM4RuntimeException;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.util.Map;
 
 /**
  * Directed acyclic graph
@@ -25,5 +32,10 @@ public class DAG<SpineItemContentType> {
             previous.addNext(node);
             return node;
         }
+    }
+
+
+    public DAGNode<SpineItemContentType> getFirstNode() {
+        return firstNode;
     }
 }

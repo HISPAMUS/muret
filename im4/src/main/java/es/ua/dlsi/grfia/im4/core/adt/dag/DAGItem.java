@@ -6,4 +6,13 @@ public class DAGItem<SpineItemContentType> {
     public DAGItem(SpineItemContentType content) {
         this.content = content;
     }
+
+    @Override
+    public String toString() {
+        if (content == null) {
+            return "";
+        } else {
+            return content.toString();
+        }
+    }
 }
