@@ -61,3 +61,13 @@
   background-color: #7DE2DB;
 }
 
+label:hover
+{
+  background-color: #7DE2DB;
+  cursor: pointer;
+}
+  label:hover *
+  {
+    color: #103339;
+  }
+
