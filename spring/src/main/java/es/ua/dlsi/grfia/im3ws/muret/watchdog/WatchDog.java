@@ -25,6 +25,7 @@ import java.util.Scanner;
 @Service
 public class WatchDog {
     private static final Logger logger = LoggerFactory.getLogger(WatchDog.class);
+    private final MURETConfiguration muretConfiguration;
     private boolean m_serverStatus;
     private boolean m_warnSent;
     private final ClassifierClient m_restClient;
@@ -47,6 +48,7 @@ public class WatchDog {
         }
         m_userManager = manager;
         m_restClient = new ClassifierClient(muretConfiguration.getPythonclassifiers());
+        this.muretConfiguration = muretConfiguration;
         if (muretConfiguration.isEnableWatchDog()) {
             logger.info("Server watchdog started!!");
             m_serverStatus = false;
@@ -60,15 +62,17 @@ public class WatchDog {
 
     @Scheduled(fixedRate = 60*1000)
     public void CheckServerStatus() {
-        m_serverStatus = m_restClient.PingClassifierServer();
+        if (muretConfiguration.isEnableWatchDog()) {
+            m_serverStatus = m_restClient.PingClassifierServer();
 
-        if (!m_serverStatus) {
-            if (!m_warnSent) {
-                SendServerDownNotification();
-                m_warnSent = true;
-            }
-        } else
-            m_warnSent = false;
+            if (!m_serverStatus) {
+                if (!m_warnSent) {
+                    SendServerDownNotification();
+                    m_warnSent = true;
+                }
+            } else
+                m_warnSent = false;
+        }
 
     }
 
