@@ -149,6 +149,7 @@ public class Page extends Auditable implements IAssignableToPart {
      * @return
      */
     @Transient
+    @JsonIgnore
     public List<Region> getSortedStaves() {
         List<Region> sortedRegions = getRegions().stream().filter(
                 region -> region.getRegionType().getName().equals("staff")).
