@@ -7,14 +7,15 @@ import es.ua.dlsi.grfia.im3ws.muret.repository.CollectionRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.SymbolRepository;
 import es.ua.dlsi.im3.core.IM3Exception;
+import es.ua.dlsi.im3.core.io.ImportException;
 import es.ua.dlsi.im3.core.score.*;
+import es.ua.dlsi.im3.core.score.io.mei.MEISongImporter;
 import es.ua.dlsi.im3.core.score.mensural.ligature.LigaturaCumOppositaPropietate;
 import es.ua.dlsi.im3.core.score.mensural.meters.Perfection;
 import es.ua.dlsi.im3.core.utils.FileUtils;
-import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
-import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbolType;
-import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbolTypeFactory;
-import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
+import es.ua.dlsi.im3.omr.encoding.Encoder;
+import es.ua.dlsi.im3.omr.encoding.agnostic.*;
+import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.AgnosticSystemBreak;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.NoteFigures;
 import es.ua.dlsi.im3.omr.encoding.enums.ClefNote;
 import es.ua.dlsi.im3.omr.encoding.enums.MeterSigns;
@@ -87,7 +88,7 @@ public class ImportFMT implements CommandLineRunner {
 
         HashMap<String, File> meiFileMap = new HashMap<>();
         for (File meiFile: meiFiles) {
-            meiFileMap.put(meiFile.getName(), meiFile);
+            meiFileMap.put(FileUtils.getFileWithoutPathOrExtension(meiFile.getName()), meiFile);
         }
         System.out.println("Using path: " + path);
 
@@ -100,16 +101,78 @@ public class ImportFMT implements CommandLineRunner {
         for (Document document : collection.get().getDocuments()) {
             for (Image image: document.getImages()) {
                 // now search for which images do we have the transcription
-                String expectedMEIFileName = image.getFilename() + ".mei";
+                String expectedMEIFileName = FileUtils.getFileWithoutPathOrExtension(image.getFilename());
                 File file = meiFileMap.get(expectedMEIFileName);
                 if (file == null) {
-                    System.err.println("No MEI for image " + image.getFilename());
+                   //System.err.println("No MEI for image " + image.getFilename());
                 } else {
                     System.out.println("Found MEI file for image " + image.getFilename());
+                    try {
+                        importFile(image, file);
+                    } catch (Exception e) {
+                        System.err.println("-----------");
+                        System.err.println("Cannot process " + expectedMEIFileName);
+                        e.printStackTrace();
+                        System.err.println("-----------");
+                        throw e;
+                    }
                 }
-
             }
         }
+    }
+
+    private void importFile(Image image, File meiFile) throws IM3Exception {
+        MEISongImporter importer = new MEISongImporter();
+        ScoreSong scoreSong = importer.importSong(meiFile);
+        if (scoreSong.getStaves().size() != 1) {
+            throw new ImportException("Expected 1 staff and found " + scoreSong.getStaves().size());
+        }
+
+        if (image.getPages().size() != 1) {
+            throw new ImportException("Expected 1 page and found " + image.getPages().size());
+        }
+
+        Staff staff = scoreSong.getStaves().get(0);
+        List<ITimedElementInStaff> symbols = staff.getCoreSymbolsOrdered();
+        TreeMap<Time, SystemBeginning> systemBeginnings = staff.getParts().get(0).getPageSystemBeginnings().getSystemBeginnings();
+        int nsystems = systemBeginnings.size();
+
+        List<Region> regions = image.getPages().get(0).getSortedStaves();
+        if (regions.size() != nsystems) {
+            throw new ImportException("MEI file has " + nsystems + " systems  and there are " + regions.size() + " regions");
+        }
+
+        // obtain the segments of each system
+        ArrayList<Segment> systems = new ArrayList<>();
+        Time prev = Time.TIME_ZERO;
+        for (Time systemBeginningTime: systemBeginnings.keySet()) {
+            if (!systemBeginningTime.isZero()) {
+                systems.add(new Segment(prev, systemBeginningTime));
+            }
+            prev = systemBeginningTime;
+        }
+        // last
+        systems.add(new Segment(prev, scoreSong.getSongDuration()));
+        if (systems.size() != nsystems) {
+            throw new ImportException("MEI file has " + nsystems + " systems  and there are " + systems.size() + " segments");
+        }
+
+
+        // now convert all staves
+        for (int i=0; i<systems.size(); i++) {
+            Encoder encoder = new Encoder(AgnosticVersion.v2, false);
+            encoder.encode(staff, systems.get(i));
+            System.out.println("Region ID #" + regions.get(i).getId());
+            System.out.println("#" + encoder.getAgnosticEncoding().getSymbolsWithoutSeparators().size() + " agnostic symbols");
+            System.out.println("#" + encoder.getSemanticEncoding().getSymbols().size() + " semantic symbols\n");
+        }
+
+
+
+
+
+
+        System.out.println(">>>>>>> " + meiFile.getName() + " successfully imported <<<<<");
     }
 
 }
