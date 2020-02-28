@@ -60,6 +60,9 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   // semanticEncoding = '';
   // private semanticEncodingTextAreaContent: string;
   notation: Notation;
+  waitingForSemantic: boolean;
+
+  semanticLabel: string;
 
   selectedRegionAgnosticShapes: Shape[];
   agnosticSymbolsSubscription: Subscription;
@@ -97,6 +100,10 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
+    this.semanticLabel = "Convert from agnostic";
+    this.waitingForSemantic = false;
+
     // this.mynumber = 189;
     this.route.paramMap.subscribe((params: ParamMap) => {
       if (params.get('id')) {
@@ -131,6 +138,8 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
         // this.semanticEncoding = next.semanticEncoding;
         if (next.semanticEncoding) {
           this.drawSemanticEncoding(next.semanticEncoding);
+          this.waitingForSemantic = false;
+          this.semanticLabel = "Convert from agnostic";
         }
         this.notation = next;
       }
@@ -186,6 +195,8 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
   convertAgnosticSemantic() {
     this.store.dispatch(new ConvertAgnostic2Semantic(this.selectedRegion, false, 'verovio'));
+    this.waitingForSemantic = true;
+    this.semanticLabel = "Translating...";
   }
 
   setSelectedRegion($event: Region) {
@@ -570,5 +581,10 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
           this.store.dispatch(new SendSemanticEncoding(this.selectedRegion, '', false, 'verovio'));
         }
       });
+  }
+
+  isProcessing()
+  {
+    return this.waitingForSemantic;
   }
 }
