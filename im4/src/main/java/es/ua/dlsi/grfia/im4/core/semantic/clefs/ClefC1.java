@@ -31,7 +31,7 @@ public class ClefC1 extends Clef {
     /**
      * Package visibility to be used by the factory
      */
-    static final String SKM = "**clefC1";
+    static final String SKM = "*clefC1";
 
     public ClefC1() {
         super(SKM, DiatonicPitch.C, 1, 4,
