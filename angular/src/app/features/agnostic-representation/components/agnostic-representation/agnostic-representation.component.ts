@@ -84,6 +84,8 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   // myNumber: number;
   private serverErrorSubscription: Subscription;
 
+  agnosticBoolean = true;
+
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>,
               private dialogsService: DialogsService, private positionInStaffService: PositionInStaffService,

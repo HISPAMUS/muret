@@ -57,6 +57,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
 
   ////
 
+  @Input() isAgnostic: boolean;
+
   selectedShapeIDValue: string;
 
   private modeValue: 'eIdle' | 'eAdding' | 'eEditing' | 'eSelecting';
@@ -100,7 +102,6 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
 
     this.modeValue = 'eIdle';
     this.updateCursor();
-    this.isOnDrawProcess = false;
   }
 
   ngOnInit() {
@@ -387,6 +388,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
     if (this.svgContent.nativeElement && this.proportion) {
       this.scaledImageWidth = Math.round(this.zoomFactor * this.svgContent.nativeElement.clientWidth);
       this.scaledImageHeight = Math.round(this.scaledImageWidth / this.proportion);
+      if(this.isAgnostic && this.scaledImageHeight > 250)
+        this.scaledImageHeight = 250;
     }
   }
 
