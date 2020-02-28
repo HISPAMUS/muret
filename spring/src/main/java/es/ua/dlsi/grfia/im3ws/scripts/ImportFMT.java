@@ -16,6 +16,7 @@ import es.ua.dlsi.im3.core.utils.FileUtils;
 import es.ua.dlsi.im3.omr.encoding.Encoder;
 import es.ua.dlsi.im3.omr.encoding.agnostic.*;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.AgnosticSystemBreak;
+import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Digit;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.NoteFigures;
 import es.ua.dlsi.im3.omr.encoding.enums.ClefNote;
 import es.ua.dlsi.im3.omr.encoding.enums.MeterSigns;
@@ -40,6 +41,8 @@ import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
 
+// use a different port when launching it simultaneously to the web server
+// --server.port=8181
 /**
  * Used to import the Fondo de Música Tradicional MEI files that have been obtained from Sibelius and Finale and have
  * been processed by adding system breaks as they appear in the manuscripts
@@ -76,11 +79,12 @@ public class ImportFMT implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
         new AuthenticateForScripts(authenticationManager).consoleAuthenticate("davidrizo");
 
         String path = GROUNDTRUTH_PATH;
-        if (args.length == 1) {
-            path = args[0];
+        if (args.length == 2) { // the first is --server.port=8181
+            path = args[1];
         }
 
         ArrayList<File> meiFiles = new ArrayList<>();
@@ -163,16 +167,47 @@ public class ImportFMT implements CommandLineRunner {
             Encoder encoder = new Encoder(AgnosticVersion.v2, false);
             encoder.encode(staff, systems.get(i));
             System.out.println("Region ID #" + regions.get(i).getId());
-            System.out.println("#" + encoder.getAgnosticEncoding().getSymbolsWithoutSeparators().size() + " agnostic symbols");
-            System.out.println("#" + encoder.getSemanticEncoding().getSymbols().size() + " semantic symbols\n");
+
+            if (encoder.getAgnosticEncoding().size() == 0) {
+                throw new ImportException("The agnostic encoding has generated 0 symbols");
+            }
+            importSemanticEncoding(encoder.getSemanticEncoding(), regions.get(i));
+
+            regions.get(i).getSymbols().clear();
+            regionRepository.save(regions.get(i));
+            importAgnosticEncoding(encoder.getAgnosticEncoding(), regions.get(i));
+
         }
 
 
-
-
-
-
         System.out.println(">>>>>>> " + meiFile.getName() + " successfully imported <<<<<");
+    }
+
+    private void importSemanticEncoding(SemanticEncoding semanticEncoding, Region region) throws IM3Exception {
+        String skern = semanticEncoding.generateKernSemanticString(NotationType.eModern);
+        region.setSemanticEncoding(skern);
+        System.out.println(skern);
+        System.out.println("------");
+    }
+
+    private void importAgnosticEncoding(AgnosticEncoding agnosticEncoding, Region region) throws IM3Exception {
+        List<AgnosticToken> symbols = agnosticEncoding.getSymbolsWithoutSeparators();
+        int symbolWidth = region.getBoundingBox().getWidth() / (symbols.size() + 1); // +1 for the margin
+        int nextX = region.getBoundingBox().getFromX() + symbolWidth / 2; // a small margin left
+
+        for (AgnosticToken agnosticToken: symbols) {
+
+
+            AgnosticSymbol agnosticSymbol = AgnosticSymbol.parseAgnosticString(AgnosticVersion.v2, agnosticToken.getAgnosticString());
+            Symbol symbol = new Symbol(region, agnosticSymbol, null, null, null, null, nextX);
+            symbolRepository.save(symbol);
+            /// region.getSymbols().add(symbol); - avoid adding twice
+
+            // patch to fix positions on fractional meters
+            if (!(agnosticToken.getSymbol() instanceof Digit && symbol.getPositionInStaff().equals("L4"))) {
+                nextX += symbolWidth;
+            } // else don't advance for meter numerator)
+        }
     }
 
 }
