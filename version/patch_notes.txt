@@ -1,3 +1,40 @@
+0.7
+    MAJOR UPDATES
+
+    MINOR UPDATES
+    - Add spinners to all operations
+    - Small selected regions are not scaled now to fit screen width
+    - The width of bounding box strokes in document analysis has been increased
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+0.6
+    MAJOR UPDATES
+    - The training set exporting screen allows the selection of collections, subcollections and documents
+    - Classifier model removal added
+    - The "preflight check" has been upgraded to a "alignment preview" screen that shows both warnings (regions without parts, without clefs...), and visually allows to locate possible incorrect durations
+    - Show all server errors in client using a "toast" popup
+    - Show a spiner / waiting icon for all long lasting operations
+    - Agnostic "breath" symbol added
+
+
+    MINOR UPDATES
+    - System is prepared in order to deal correctly with the order of images, pages, regions and symbols in screens such as the training set exporting
+    - The score view is no longer in the same screen as the export one
+    - Custos are now correctly rendered
+    - Key changes are drawn in semantic mode
+    - Avoid showing the previous semantic score when changing the selected region
+    - Semantic lines / indices are drawn correctly again
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+0.5
+    MAJOR UPDATES
+    - Add a "preflight check" in View Score and export screen to verify all elements to export are present
+    - User can remove classifier models
+
+
+    MINOR UPDATES
+
+--------------------------------------------------------------------------------------------------------------------------------------------
 0.4
 
 MAJOR UPDATES
