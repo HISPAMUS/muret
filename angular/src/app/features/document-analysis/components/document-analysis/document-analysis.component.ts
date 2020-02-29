@@ -230,7 +230,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     rect.height  = boundingBox.toY - boundingBox.fromY;
     rect.fillColor = 'transparent';
     rect.strokeColor = color;
-    rect.strokeWidth = 3;
+    rect.strokeWidth = 9;
     rect.layer = layer;
     rect.data = data;
     this.shapes.push(rect);
