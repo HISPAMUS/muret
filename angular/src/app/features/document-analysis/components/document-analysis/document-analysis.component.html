@@ -25,6 +25,11 @@
       <span *ngIf="isProcessing()" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
     </button>
   </div>
+  <div class="row">
+    <div class="col-12 centeredHeader">
+      <h3>{{filename$ | async}}</h3>
+    </div>
+  </div>
   <!-- VIEW FILTER -->
   <div id="regionTypesFilter" class="row" [hidden]="!inIdleMode()">
     <aside class="col btn-group-horizontal sidebar d-flex justify-content-center align-items-center">

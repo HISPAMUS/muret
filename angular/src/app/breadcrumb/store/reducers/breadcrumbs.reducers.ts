@@ -6,28 +6,38 @@ BreadcrumbsState {
   switch (action.type) {
     case BreadcrumbsActionTypes.ActivateLink: {
       const newState: BreadcrumbsState = {
-        links: []
+        links: [],
+        init: state.init
       };
+      
+      //Link is not in the path
+      const oldLinks = state.links;
+      sessionStorage.setItem("URL", oldLinks.toString());
 
-      let alreadyInPath = false;
       let i = 0;
-      while (!alreadyInPath && i < state.links.length) {
-        alreadyInPath = state.links[i].title === action.link.title;
-        if (!alreadyInPath) {
-          newState.links.push(state.links[i]);
-          i++;
-        } else {
-          newState.links.push(action.link);
+      let inserted = false;
+      while(i < oldLinks.length)
+      {
+        //If we are not in the position we desire
+        if(i != action.linkType)
+          newState.links.push(oldLinks[i]); //Push the referred link
+        else
+        {
+          newState.links[i] = action.link;
+          inserted = true;
+          break;
         }
+        i++; //Increase i in any case
       }
-      if (!alreadyInPath) {
+      if(!inserted) //If it has not been inserted, we push it to the end
         newState.links.push(action.link);
-      }
+
       return newState;
     }
     case BreadcrumbsActionTypes.ClearLinks: {
       const newState: BreadcrumbsState = {
-        links: []
+        links: [],
+        init: false
       };
       return newState;
     }

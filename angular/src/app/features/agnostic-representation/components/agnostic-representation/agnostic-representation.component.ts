@@ -41,6 +41,7 @@ import {PositionInStaffService} from '../../services/position-in-staff.service';
 import {Line} from '../../../../svg/model/line';
 import {ClassifierModel} from '../../../../core/model/entities/classifier-model';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
+import { LinkType } from 'src/app/breadcrumb/components/breadcrumb/breadcrumbType';
 
 @Component({
   selector: 'app-agnostic-representation',
@@ -53,6 +54,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   selectedSymbol: AgnosticSymbol;
   selectedRegion: Region;
   selectedSymbolSubscription: Subscription;
+  filenameSubscription: Subscription;
   selectedRegionShapes: Shape[];
   selectedRegionZoomFactor = 1;
 
@@ -93,6 +95,10 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
     this.mode = 'eIdle';
     this.filename$ = store.select(selectFileName);
+    this.filenameSubscription = this.filename$.subscribe(name => {
+      if(name != null)
+      this.store.dispatch(new ActivateLink(LinkType.File, {title: name + ' /Agnostic', routerLink: 'agnosticrepresentation/' + this.imageID}));
+    })
 
     this.documentTypeSubscription  = store.select(selectDocumentType).subscribe(next => {
       if (next) {
@@ -137,7 +143,6 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
       this.store.dispatch(new GetImageProjection(+this.imageID));
 
       setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
-        this.store.dispatch(new ActivateLink({title: 'Agnostic', routerLink: 'agnosticrepresentation/' + this.imageID}));
         this.store.dispatch(new GetAgnosticEnd2EndClassifierModels(this.imageID));
         this.store.dispatch(new GetSymbolClassifierModels(this.imageID));
       });
@@ -165,6 +170,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.documentTypeSubscription.unsubscribe();
     this.classifiedSymbolsSubscription.unsubscribe();
     this.serverErrorSubscription.unsubscribe();
+    this.filenameSubscription.unsubscribe();
   }
 
   private findSelectedShape(): Shape {

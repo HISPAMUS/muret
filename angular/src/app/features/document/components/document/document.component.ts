@@ -25,6 +25,7 @@ import {UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
 import { AgnosticRepresentationState } from 'src/app/features/agnostic-representation/store/state/agnostic-representation.state';
 import { ResetSelectedRegion } from 'src/app/features/agnostic-representation/store/actions/agnostic-representation.actions';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
+import { LinkType } from 'src/app/breadcrumb/components/breadcrumb/breadcrumbType';
 
 @Component({
   selector: 'app-document',
@@ -32,6 +33,7 @@ import {ShowErrorService} from '../../../../core/services/show-error.service';
   styleUrls: ['./document.component.css'],
 })
 export class DocumentComponent implements OnInit, OnDestroy {
+  documentSubscription : Subscription;
   document$: Observable<Document>;
   images$: Observable<Image[]>;
   statistics$: Observable<DocumentStatistics>;
@@ -42,7 +44,12 @@ export class DocumentComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute, private store: Store<DocumentState>, private agnosticStore: Store<AgnosticRepresentationState>,
               private router: Router,
               private dialogsService: DialogsService, private showErrorService: ShowErrorService) {
-    this.document$ = this.store.select(selectDocument);
+    this.document$ = this.store.select(selectDocument)
+    this.documentSubscription = this.document$.subscribe(doc => {
+      setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
+        this.store.dispatch(new ActivateLink(LinkType.Document, {title: doc.name, routerLink: 'document/' + this.documentID}));
+      });
+    })
     this.images$ = this.store.select(selectImages);
     this.statistics$ = this.store.select(selectDocumentStatistics);
     this.usesOfParts$ = this.store.select(selectUsesOfParts);
@@ -55,9 +62,7 @@ export class DocumentComponent implements OnInit, OnDestroy {
       this.store.dispatch(new GetUsesOfParts(this.documentID));
       this.store.dispatch(new GetImages(this.documentID));
       this.store.dispatch(new GetDocumentStatistics(this.documentID));
-      setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
-        this.store.dispatch(new ActivateLink({title: 'Document ', routerLink: 'document/' + this.documentID}));
-      });
+      
     });
 
     this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
@@ -72,6 +77,7 @@ export class DocumentComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
    this.agnosticStore.dispatch(new ResetSelectedRegion());
    this.serverErrorSubscription.unsubscribe();
+   this.documentSubscription.unsubscribe();
   }
 
   trackByImageFn(index, item: Image) {
