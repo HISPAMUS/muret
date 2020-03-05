@@ -1,11 +1,14 @@
 package es.ua.dlsi.grfia.im4.io.mei;
 
-import es.ua.dlsi.grfia.im4.IClef;
-import es.ua.dlsi.grfia.im4.Score;
+import es.ua.dlsi.grfia.im4.core.IClef;
+import es.ua.dlsi.grfia.im4.core.Score;
+import es.ua.dlsi.grfia.im4.io.IExporter;
 import es.ua.dlsi.grfia.im4.utils.xml.XMLElement;
 import es.ua.dlsi.grfia.im4.utils.xml.XMLTree;
 
-public class MEIExporter {
+import java.io.File;
+
+public class MEIExporter implements IExporter {
     private final MEIExporterVisitor meiExporterVisitor;
     private final XMLTree xmlTree;
 
@@ -15,11 +18,20 @@ public class MEIExporter {
     }
 
     public void export(Score score) {
+    }
+
+    @Override
+    public String exportScore(Score score) {
         // for
         IClef clef = null; // ....
         XMLElement xmlElement = null;
         MEIExporterContext meiExporterContext = null;
-        MEIExporterAttrOrElement meiExporterAttrOrElement = new MEIExporterAttrOrElement(meiExporterContext, true);
-        clef.export(meiExporterVisitor, meiExporterAttrOrElement);
+        clef.export(meiExporterVisitor, meiExporterContext);
+        return xmlTree.toString();
+    }
+
+    @Override
+    public void exportScore(Score score, File file) {
+        //TODO write to file
     }
 }

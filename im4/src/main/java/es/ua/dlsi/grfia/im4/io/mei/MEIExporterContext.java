@@ -8,12 +8,18 @@ import es.ua.dlsi.grfia.im4.utils.xml.XMLElement;
  */
 public class MEIExporterContext implements IExporterContext {
     private final XMLElement xmlElement;
+    private final boolean resultAddedAsAttribute;
 
-    public MEIExporterContext(XMLElement xmlElement) {
+    public MEIExporterContext(XMLElement xmlElement, boolean resultAddedAsAttribute) {
         this.xmlElement = xmlElement;
+        this.resultAddedAsAttribute = resultAddedAsAttribute;
     }
 
     public XMLElement getXmlElement() {
         return xmlElement;
+    }
+
+    public boolean isResultAddedAsAttribute() {
+        return resultAddedAsAttribute;
     }
 }

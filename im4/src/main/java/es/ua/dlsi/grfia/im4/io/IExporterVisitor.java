@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.im4.io;
 
-import es.ua.dlsi.grfia.im4.*;
+
+import es.ua.dlsi.grfia.im4.core.*;
 
 /**
  * Uses the visitor pattern

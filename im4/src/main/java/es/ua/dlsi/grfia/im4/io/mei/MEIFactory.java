@@ -1,6 +1,6 @@
 package es.ua.dlsi.grfia.im4.io.mei;
 
-import es.ua.dlsi.grfia.im4.ClefSigns;
+import es.ua.dlsi.grfia.im4.core.ClefSigns;
 import es.ua.dlsi.grfia.im4.io.IOAbstractFactory;
 
 public class MEIFactory implements IOAbstractFactory {

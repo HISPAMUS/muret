@@ -1,6 +1,6 @@
 package es.ua.dlsi.grfia.im4.io.mei;
 
-import es.ua.dlsi.grfia.im4.*;
+import es.ua.dlsi.grfia.im4.core.*;
 import es.ua.dlsi.grfia.im4.io.IExporterVisitor;
 import es.ua.dlsi.grfia.im4.utils.xml.XMLAttribute;
 import es.ua.dlsi.grfia.im4.utils.xml.XMLElement;
@@ -11,9 +11,7 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterContext> 
         String meiLine = Integer.toString(clef.getLine());
         String meiSign = MEIFactory.getInstance().generateClefSign(clef.getSign());
 
-        //TODO ¿staffDeff? - ¿cómo lo sabemos aquí - lo añadimos al contexto en lugar de XMLExporterContext un MEIExporterContext que implemente el patrón state o strategy?
-        boolean PONERENSTAFFDEFF = false;
-        if (PONERENSTAFFDEFF) {
+        if (context.isResultAddedAsAttribute()) {
             context.getXmlElement().addAttribute(new XMLAttribute("clef.line", meiLine));
             context.getXmlElement().addAttribute(new XMLAttribute("clef.line", meiLine));
         } else {
@@ -53,4 +51,6 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterContext> 
     public void export(StaffGroup staffGroup, MEIExporterContext context) {
 
     }
+
+
 }
