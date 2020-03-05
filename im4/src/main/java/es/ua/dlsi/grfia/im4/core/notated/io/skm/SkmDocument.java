@@ -2,10 +2,10 @@ package es.ua.dlsi.grfia.im4.core.notated.io.skm;
 
 import es.ua.dlsi.grfia.im4.core.IM4RuntimeException;
 import es.ua.dlsi.grfia.im4.core.notated.io.skm.tokens.SkmHeader;
-import es.ua.dlsi.grfia.im4.dag.DAG;
-import es.ua.dlsi.grfia.im4.dag.DAG2DotExporter;
-import es.ua.dlsi.grfia.im4.dag.DAGLabel;
-import es.ua.dlsi.grfia.im4.dag.DAGNode;
+import es.ua.dlsi.grfia.im4.utils.dag.DAG;
+import es.ua.dlsi.grfia.im4.utils.dag.DAG2DotExporter;
+import es.ua.dlsi.grfia.im4.utils.dag.DAGLabel;
+import es.ua.dlsi.grfia.im4.utils.dag.DAGNode;
 
 import java.io.File;
 import java.io.FileNotFoundException;

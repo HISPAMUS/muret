@@ -1,4 +1,4 @@
-package es.ua.dlsi.grfia.im4.dag;
+package es.ua.dlsi.grfia.im4.utils.dag;
 
 public class DAGLabel<SpineItemContentType> {
     SpineItemContentType content;
