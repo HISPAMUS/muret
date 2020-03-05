@@ -586,6 +586,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
       .subscribe((isConfirmed) => {
         if (isConfirmed) {
           this.store.dispatch(new SendSemanticEncoding(this.selectedRegion, '', false, 'verovio'));
+          this.notation = null;
         }
       });
   }
