@@ -13,8 +13,8 @@ const httpOptions = {
 export class AdminDBService
 {
     registeruserURL = environment.apiEndpoint + '/users/register'
-    revokepermissionsURL = environment.apiEndpoint + '/users/revokePermissions$'
-    grantpermissionsURL = environment.apiEndpoint + '/users/grantPermissions$'
+    revokepermissionsURL = environment.apiEndpoint + '/users/revokePermissions'
+    grantpermissionsURL = environment.apiEndpoint + '/users/grantPermissions'
 
 
     constructor(private httpClient: HttpClient, private logger: NGXLogger){}
