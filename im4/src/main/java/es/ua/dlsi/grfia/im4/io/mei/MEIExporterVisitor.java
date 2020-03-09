@@ -1,6 +1,8 @@
 package es.ua.dlsi.grfia.im4.io.mei;
 
-import es.ua.dlsi.grfia.im4.core.*;
+import es.ua.dlsi.grfia.im4.core.impl.*;
+import es.ua.dlsi.grfia.im4.core.IClef;
+import es.ua.dlsi.grfia.im4.core.IMeter;
 import es.ua.dlsi.grfia.im4.io.IExporterVisitor;
 import es.ua.dlsi.grfia.im4.utils.xml.XMLAttribute;
 import es.ua.dlsi.grfia.im4.utils.xml.XMLElement;
@@ -27,15 +29,6 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterContext> 
 
     }
 
-    @Override
-    public void export(Layer layer, MEIExporterContext context) {
-
-    }
-
-    @Override
-    public void export(Staff staff, MEIExporterContext context) {
-
-    }
 
     @Override
     public void export(Part part, MEIExporterContext context) {
@@ -44,11 +37,6 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterContext> 
 
     @Override
     public void export(Voice voice, MEIExporterContext context) {
-
-    }
-
-    @Override
-    public void export(StaffGroup staffGroup, MEIExporterContext context) {
 
     }
 

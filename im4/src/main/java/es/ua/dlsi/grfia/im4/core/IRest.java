@@ -1,4 +1,4 @@
 package es.ua.dlsi.grfia.im4.core;
 
-public interface IRest extends IDurational {
+public interface IRest extends IDurationalSingle {
 }

@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.im4.io;
 
 
-import es.ua.dlsi.grfia.im4.core.ClefSigns;
+import es.ua.dlsi.grfia.im4.core.impl.ClefSigns;
 
 public interface IOAbstractFactory {
     String generateClefSign(ClefSigns clefSign);

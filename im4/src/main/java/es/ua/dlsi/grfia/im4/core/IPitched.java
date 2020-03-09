@@ -1,4 +1,4 @@
 package es.ua.dlsi.grfia.im4.core;
 
-public interface IPitched extends IDurational {
+public interface IPitched {
 }

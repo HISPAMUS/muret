@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.im4.io.mei;
 
 import es.ua.dlsi.grfia.im4.core.IClef;
-import es.ua.dlsi.grfia.im4.core.Score;
+import es.ua.dlsi.grfia.im4.core.impl.Score;
 import es.ua.dlsi.grfia.im4.io.IExporter;
 import es.ua.dlsi.grfia.im4.utils.xml.XMLElement;
 import es.ua.dlsi.grfia.im4.utils.xml.XMLTree;
@@ -26,7 +26,7 @@ public class MEIExporter implements IExporter {
         IClef clef = null; // ....
         XMLElement xmlElement = null;
         MEIExporterContext meiExporterContext = null;
-        clef.export(meiExporterVisitor, meiExporterContext);
+        /// clef.export(meiExporterVisitor, meiExporterContext);
         return xmlTree.toString();
     }
 

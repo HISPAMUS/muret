@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.im4.io.skm;
 
 import es.ua.dlsi.grfia.im4.core.IClef;
-import es.ua.dlsi.grfia.im4.core.Score;
+import es.ua.dlsi.grfia.im4.core.impl.Score;
 import es.ua.dlsi.grfia.im4.io.IExporter;
 
 
@@ -22,7 +22,7 @@ public class SkmExporter implements IExporter {
         // for
         IClef clef = null; // ....
         SkmExporterContext skmExporterContext = null;
-        clef.export(meiExporterVisitor, skmExporterContext);
+        /// clef.export(meiExporterVisitor, skmExporterContext);
         return skmExporterContext.toString();
     }
 

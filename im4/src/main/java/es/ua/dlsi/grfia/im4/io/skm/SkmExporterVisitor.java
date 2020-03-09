@@ -1,6 +1,8 @@
 package es.ua.dlsi.grfia.im4.io.skm;
 
-import es.ua.dlsi.grfia.im4.core.*;
+import es.ua.dlsi.grfia.im4.core.impl.*;
+import es.ua.dlsi.grfia.im4.core.IClef;
+import es.ua.dlsi.grfia.im4.core.IMeter;
 import es.ua.dlsi.grfia.im4.io.IExporterVisitor;
 
 public class SkmExporterVisitor implements IExporterVisitor<SkmExporterContext> {
@@ -18,15 +20,6 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterContext> 
 
     }
 
-    @Override
-    public void export(Layer layer, SkmExporterContext context) {
-
-    }
-
-    @Override
-    public void export(Staff staff, SkmExporterContext context) {
-
-    }
 
     @Override
     public void export(Part part, SkmExporterContext context) {
@@ -38,8 +31,4 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterContext> 
 
     }
 
-    @Override
-    public void export(StaffGroup staffGroup, SkmExporterContext context) {
-
-    }
 }

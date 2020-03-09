@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.im4.io;
 
 
-import es.ua.dlsi.grfia.im4.core.Score;
+import es.ua.dlsi.grfia.im4.core.impl.Score;
 
 import java.io.File;
 
