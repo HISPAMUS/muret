@@ -6,5 +6,4 @@ package es.ua.dlsi.grfia.im4.core;
 public interface IStaff extends IStaves {
     int getNumber();
     IStaffSymbol [] getStaffSymbols();
-
 }

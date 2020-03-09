@@ -38,6 +38,12 @@ public class XMLElement {
     public String getValue() {
         return value;
     }
+
+    public XMLElement addAttribute(String name, String value) {
+        this.addAttribute(new XMLAttribute(name, value));
+        return this;
+    }
+
     public void addAttribute(XMLAttribute attribute) {
 
         if (this.attributes == null) {
@@ -45,6 +51,12 @@ public class XMLElement {
         }
         this.attributes.add(attribute.clone());
 
+    }
+
+    public XMLElement addChild(String elementName) {
+        XMLElement child = new XMLElement(elementName);
+        addChild(child);
+        return child;
     }
 
     public void addChild(XMLElement element) {

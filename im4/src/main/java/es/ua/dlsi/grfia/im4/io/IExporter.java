@@ -1,10 +1,10 @@
 package es.ua.dlsi.grfia.im4.io;
 
-import es.ua.dlsi.grfia.im4.core.impl.Score;
+import es.ua.dlsi.grfia.im4.core.IScore;
 
 import java.io.File;
 
 public interface IExporter {
-    String exportScore(Score score);
-    void exportScore(Score score, File file);
+    String exportScore(IScore score);
+    void exportScore(IScore score, File file);
 }

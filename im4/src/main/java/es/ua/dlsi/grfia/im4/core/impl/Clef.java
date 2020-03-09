@@ -13,7 +13,7 @@ public class Clef implements IClef {
      * @param line
      * @param sign
      */
-    Clef(int line, ClefSigns sign) {
+    public Clef(int line, ClefSigns sign) {
         this.line = line;
         this.sign = sign;
     }
@@ -39,9 +39,4 @@ public class Clef implements IClef {
     public int hashCode() {
         return Objects.hash(line, sign);
     }
-
-   /* @Override
-    public void export(IExporterVisitor exporterVisitor, IExporterContext context) {
-        exporterVisitor.export(this, context);
-    }*/
 }
