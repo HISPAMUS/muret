@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.im4.core.impl;
 
 import es.ua.dlsi.grfia.im4.core.IClef;
+import es.ua.dlsi.grfia.im4.core.IClefSign;
 
 import java.util.Objects;
 
@@ -13,7 +14,7 @@ public class Clef implements IClef {
      * @param line
      * @param sign
      */
-    public Clef(int line, ClefSigns sign) {
+    Clef(int line, ClefSigns sign) {
         this.line = line;
         this.sign = sign;
     }
@@ -22,7 +23,7 @@ public class Clef implements IClef {
         return line;
     }
 
-    public ClefSigns getSign() {
+    public IClefSign getSign() {
         return sign;
     }
 

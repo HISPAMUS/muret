@@ -65,7 +65,7 @@ public class SkmExporter implements IExporter {
     private String export(IClef symbol) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("*clef");
-        stringBuilder.append(symbol.getSign().name());
+        stringBuilder.append(symbol.getSign().toString()); //TODO
         stringBuilder.append(symbol.getLine());
         return stringBuilder.toString();
     }
