@@ -1,11 +1,11 @@
-package es.ua.dlsi.grfia.im4.io.skm.grammar;
+package es.ua.dlsi.grfia.im4.io.skm;
 
 import es.ua.dlsi.grfia.im4.core.IClef;
 import es.ua.dlsi.grfia.im4.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.im4.core.IMeter;
 import es.ua.dlsi.grfia.im4.io.builders.IIOAbstractBuilderFactory;
 import es.ua.dlsi.grfia.im4.io.builders.ISymbolBuilder;
-import es.ua.dlsi.grfia.im4.io.skm.grammar.builders.SkmClefBuilder;
+import es.ua.dlsi.grfia.im4.io.skm.builders.SkmClefBuilder;
 
 public class SkmBuilderFactory implements IIOAbstractBuilderFactory {
     ISymbolBuilder<IClef> clefISymbolBuilder;

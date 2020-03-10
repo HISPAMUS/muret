@@ -1,11 +1,18 @@
 package es.ua.dlsi.grfia.im4.core.impl;
 
-import es.ua.dlsi.grfia.im4.core.IMetadata;
-import es.ua.dlsi.grfia.im4.core.IPart;
-import es.ua.dlsi.grfia.im4.core.IScore;
-import es.ua.dlsi.grfia.im4.core.IStaves;
+import es.ua.dlsi.grfia.im4.core.*;
+
+import java.util.LinkedList;
 
 public class Score implements IScore {
+    private final LinkedList<IPart> parts;
+    private final LinkedList<IStaves> staves;
+
+    public Score() {
+        parts = new LinkedList<>();
+        staves = new LinkedList<>();
+    }
+
     @Override
     public IMetadata getMetadata() {
         return null;
@@ -13,11 +20,21 @@ public class Score implements IScore {
 
     @Override
     public IPart[] getParts() {
-        return new IPart[0];
+        return parts.toArray(new IPart[parts.size()]);
     }
 
     @Override
     public IStaves[] getStaves() {
-        return new IStaves[0];
+        return staves.toArray(new IStaves[staves.size()]);
+    }
+
+    @Override
+    public void addPart(IPart part) {
+        this.parts.add(part);
+    }
+
+    @Override
+    public void addStaves(IStaves staves) {
+        this.staves.add(staves);
     }
 }

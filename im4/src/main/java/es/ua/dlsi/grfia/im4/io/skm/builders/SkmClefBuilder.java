@@ -1,4 +1,4 @@
-package es.ua.dlsi.grfia.im4.io.skm.grammar.builders;
+package es.ua.dlsi.grfia.im4.io.skm.builders;
 
 import es.ua.dlsi.grfia.im4.core.ClefSignTypes;
 import es.ua.dlsi.grfia.im4.core.IClef;

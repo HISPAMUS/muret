@@ -8,8 +8,8 @@ import java.io.PrintStream;
 
 public class DAG2DotExporter<SpineItemContentType> {
     private void printNodes(PrintStream os, DAGNode<SpineItemContentType> dagNode) {
-        if (dagNode.getItem() != null) {
-            String escapedLabel = dagNode.getItem().toString().replaceAll("\"","\\\""); // change " for \"
+        if (dagNode.getLabel() != null) {
+            String escapedLabel = dagNode.getLabel().toString().replaceAll("\"","\\\""); // change " for \"
             os.println("s" + dagNode.getUniqueID() + "[label=\"" +escapedLabel + "\", shape=circle];");
         } else {
             os.println("s" + dagNode.getUniqueID() + ";");

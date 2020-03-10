@@ -7,6 +7,10 @@ public class DAGLabel<SpineItemContentType> {
         this.content = content;
     }
 
+    public SpineItemContentType getContent() {
+        return content;
+    }
+
     @Override
     public String toString() {
         if (content == null) {

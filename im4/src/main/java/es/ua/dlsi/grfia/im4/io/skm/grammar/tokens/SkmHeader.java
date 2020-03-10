@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.im4.io.skm.grammar.tokens;
 
 import es.ua.dlsi.grfia.im4.core.IM4RuntimeException;
-import es.ua.dlsi.grfia.im4.io.skm.SkmToken;
+import es.ua.dlsi.grfia.im4.io.skm.grammar.SkmToken;
 
 public class SkmHeader extends SkmToken {
     private final SkmHeaderTypes skmHeaderType;

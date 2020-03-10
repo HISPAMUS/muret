@@ -5,5 +5,6 @@ package es.ua.dlsi.grfia.im4.core;
  * (e.g. a divisi)
  */
 public interface IVoice extends IVoiced {
-    IVoiced[] getChildren();
+    IVoiced[] getItems();
+    void addItem(IVoiced voiced);
 }

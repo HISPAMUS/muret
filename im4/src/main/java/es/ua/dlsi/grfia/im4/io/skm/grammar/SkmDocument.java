@@ -1,7 +1,9 @@
-package es.ua.dlsi.grfia.im4.io.skm;
+package es.ua.dlsi.grfia.im4.io.skm.grammar;
 
-import es.ua.dlsi.grfia.im4.core.IM4RuntimeException;
+import es.ua.dlsi.grfia.im4.core.*;
+import es.ua.dlsi.grfia.im4.io.skm.grammar.tokens.SkmCoreSymbol;
 import es.ua.dlsi.grfia.im4.io.skm.grammar.tokens.SkmHeader;
+import es.ua.dlsi.grfia.im4.io.skm.grammar.tokens.SkmPart;
 import es.ua.dlsi.grfia.im4.utils.dag.DAG;
 import es.ua.dlsi.grfia.im4.utils.dag.DAG2DotExporter;
 import es.ua.dlsi.grfia.im4.utils.dag.DAGLabel;
@@ -54,5 +56,31 @@ public class SkmDocument {
     public void printGraphDot(File file) throws FileNotFoundException {
         DAG2DotExporter dag2DotExporter = new DAG2DotExporter();
         dag2DotExporter.export(file, dag);
+    }
+
+
+
+    public IScore buildScore(ICoreAbstractFactory abstractFactory) {
+        IScore score = abstractFactory.createScore();
+        build(abstractFactory, score, dag.getFirstNode());
+        return score;
+    }
+
+    private IVoice lastVoice; //TODO quitarlo
+
+    private void build(ICoreAbstractFactory abstractFactory, IScore score, DAGNode<SkmToken> node) {
+        //TODO ahora recorro sólo una voz y uso instanceof....
+        SkmToken skmToken = node.getLabel().getContent();
+        if (skmToken instanceof SkmPart) {
+            IPart part = abstractFactory.createPart(score);
+            IVoice voice = abstractFactory.createVoice(part);
+            lastVoice = voice;
+        } else if (skmToken instanceof SkmCoreSymbol) {
+            lastVoice.addItem(((SkmCoreSymbol) skmToken).getSymbol());
+        }
+
+        for (DAGNode<SkmToken> next: node.getNextList()) {
+            build(abstractFactory, score, next);
+        }
     }
 }

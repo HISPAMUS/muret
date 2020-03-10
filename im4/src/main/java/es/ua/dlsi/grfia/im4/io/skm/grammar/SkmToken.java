@@ -1,4 +1,4 @@
-package es.ua.dlsi.grfia.im4.io.skm;
+package es.ua.dlsi.grfia.im4.io.skm.grammar;
 
 public class SkmToken {
     private final String encoding;

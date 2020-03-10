@@ -6,15 +6,15 @@ import java.util.List;
 public class DAGNode<DAGLabelType> {
     private static long NEXT_ID = 1;
     private long uniqueID;
-    private final DAGLabel<DAGLabelType> item;
+    private final DAGLabel<DAGLabelType> label;
     private final List<DAGNode<DAGLabelType>> nextList;
     private DAGNode<DAGLabelType> previous;
 
-    public DAGNode(DAGLabel<DAGLabelType> item) {
+    public DAGNode(DAGLabel<DAGLabelType> label) {
         synchronized (DAGNode.class) {
             uniqueID = NEXT_ID++;
         }
-        this.item = item;
+        this.label = label;
         this.nextList = new LinkedList<DAGNode<DAGLabelType>>();
     }
 
@@ -22,8 +22,8 @@ public class DAGNode<DAGLabelType> {
         return uniqueID;
     }
 
-    public DAGLabel<DAGLabelType> getItem() {
-        return item;
+    public DAGLabel<DAGLabelType> getLabel() {
+        return label;
     }
 
     public DAGNode<DAGLabelType> getPrevious() {

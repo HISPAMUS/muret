@@ -2,11 +2,18 @@ package es.ua.dlsi.grfia.im4.io.skm;
 
 import es.ua.dlsi.grfia.im4.core.*;
 import es.ua.dlsi.grfia.im4.io.IExporter;
+import es.ua.dlsi.grfia.im4.io.skm.builders.SkmExporterVisitor;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class SkmExporter implements IExporter {
+    private final SkmExporterVisitor skmExporterVisitor;
+
+    public SkmExporter() {
+        skmExporterVisitor = new SkmExporterVisitor();
+    }
+
     private String exportMatrix(LinkedList<LinkedList<String>> matrix) {
         StringBuilder stringBuilder = new StringBuilder();
         for (LinkedList<String> record: matrix) {
@@ -52,21 +59,15 @@ public class SkmExporter implements IExporter {
     }
 
     private void exportSymbols(LinkedList<LinkedList<String>> matrix, List<IVoice> voices) {
+        //TODO varios spines...
+        LinkedList<String> record = addRecord(matrix);
         for (IVoice voice: voices) {
-            //......
-            LinkedList<String> record = addRecord(matrix);
-            IClef symbol = null; // TODO
-            String field = export(symbol);
-
+            for (IVoiced voiced: voice.getItems()) {
+                StringBuilder stringBuilder = new StringBuilder();
+                voiced.export(this.skmExporterVisitor, stringBuilder);
+                record.add(stringBuilder.toString());
+            }
         }
-    }
-
-    private String export(IClef symbol) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("*clef");
-        stringBuilder.append(symbol.getSignType().toString()); //TODO
-        stringBuilder.append(symbol.getLine());
-        return stringBuilder.toString();
     }
 
     private void exportParts(LinkedList<LinkedList<String>> matrix, IScore score) {

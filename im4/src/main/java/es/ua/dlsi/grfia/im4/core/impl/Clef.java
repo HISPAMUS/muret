@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.im4.core.impl;
 
 import es.ua.dlsi.grfia.im4.core.IClef;
 import es.ua.dlsi.grfia.im4.core.ClefSignTypes;
+import es.ua.dlsi.grfia.im4.core.IExportVisitor;
 
 import java.util.Objects;
 
@@ -39,5 +40,10 @@ public class Clef implements IClef {
     @Override
     public int hashCode() {
         return Objects.hash(line, signType);
+    }
+
+    @Override
+    public <InputOutputType> void export(IExportVisitor exportVisitor, InputOutputType inputOutput) {
+        exportVisitor.export(this, inputOutput);
     }
 }

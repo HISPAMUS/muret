@@ -5,7 +5,7 @@ import es.ua.dlsi.grfia.im4.core.IDurationalSingle;
 import es.ua.dlsi.grfia.im4.core.IFigure;
 import es.ua.dlsi.grfia.im4.core.ITime;
 
-public class DurationalSingle implements IDurationalSingle {
+public abstract class DurationalSingle implements IDurationalSingle {
     @Override
     public IFigure getFigure() {
         return null;

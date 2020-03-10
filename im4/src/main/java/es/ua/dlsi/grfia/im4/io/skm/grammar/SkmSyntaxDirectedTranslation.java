@@ -4,8 +4,8 @@ import es.ua.dlsi.grfia.im4.core.IClef;
 import es.ua.dlsi.grfia.im4.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.im4.core.IM4Exception;
 import es.ua.dlsi.grfia.im4.io.builders.ISymbolBuilder;
-import es.ua.dlsi.grfia.im4.io.skm.SkmToken;
-import es.ua.dlsi.grfia.im4.io.skm.grammar.builders.SkmClefBuilder;
+import es.ua.dlsi.grfia.im4.io.skm.SkmBuilderFactory;
+import es.ua.dlsi.grfia.im4.io.skm.builders.SkmClefBuilder;
 import es.ua.dlsi.grfia.im4.io.skm.grammar.tokens.SkmCoreSymbol;
 import es.ua.dlsi.grfia.im4.io.skm.grammar.tokens.SkmHeader;
 import es.ua.dlsi.grfia.im4.io.skm.grammar.tokens.SkmPart;
@@ -14,7 +14,6 @@ import es.ua.dlsi.grfia.im4.utils.antlr4.ANTLRUtils;
 import es.ua.dlsi.grfia.im4.utils.antlr4.ErrorListener;
 import es.ua.dlsi.grfia.im4.utils.antlr4.GrammarParseRuntimeException;
 import es.ua.dlsi.grfia.im4.utils.antlr4.ParseError;
-import es.ua.dlsi.grfia.im4.io.skm.SkmDocument;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -70,7 +69,7 @@ public class SkmSyntaxDirectedTranslation {
             this.skmDocument = new SkmDocument();
             this.row = 0;
             this.skmBuilderFactory = new SkmBuilderFactory(abstractFactory);
-            /// this.lastSpineInsertedItem = new ArrayList<>();
+            this.lastSpineInsertedItem = new ArrayList<>();
         }
 
         private void throwError(String message) throws GrammarParseRuntimeException {
@@ -113,7 +112,7 @@ public class SkmSyntaxDirectedTranslation {
         public void exitHeaderField(skmParser.HeaderFieldContext ctx) {
             super.exitHeaderField(ctx);
 
-            SkmHeader headerToken = SkmHeader.parse(ctx.getText());
+            SkmHeader headerToken = SkmHeader.parse(ctx.getText().substring(2)); // remove the first **
             skmDocument.addHeader(headerToken);
             lastSpineInsertedItem.add(headerToken);
         }
