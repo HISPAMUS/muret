@@ -32,10 +32,6 @@ public class MEIExporter implements IExporter {
     }
 
 
-    @Override
-    public void exportScore(IScore score, File file) {
-        //TODO write to file
-    }
 
     @Override
     public String exportScore(IScore score) {

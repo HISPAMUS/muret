@@ -1,27 +1,20 @@
 package es.ua.dlsi.grfia.im4.io.skm.grammar;
 
+import es.ua.dlsi.grfia.im4.core.IClef;
+import es.ua.dlsi.grfia.im4.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.im4.core.IM4Exception;
-import es.ua.dlsi.grfia.im4.io.skm.tokens.*;
-import es.ua.dlsi.grfia.im4.io.skm.tokens.subtokens.*;
-import es.ua.dlsi.grfia.im4.io.skm.tokens.subtokens.figures.SkmFigureFactory;
-import es.ua.dlsi.grfia.im4.io.skm.tokens.subtokens.perfection.SkmPerfectionFactory;
+import es.ua.dlsi.grfia.im4.io.builders.ISymbolBuilder;
+import es.ua.dlsi.grfia.im4.io.skm.SkmToken;
+import es.ua.dlsi.grfia.im4.io.skm.grammar.builders.SkmClefBuilder;
+import es.ua.dlsi.grfia.im4.io.skm.grammar.tokens.SkmCoreSymbol;
+import es.ua.dlsi.grfia.im4.io.skm.grammar.tokens.SkmHeader;
+import es.ua.dlsi.grfia.im4.io.skm.grammar.tokens.SkmPart;
+import es.ua.dlsi.grfia.im4.io.skm.grammar.tokens.SkmStaff;
 import es.ua.dlsi.grfia.im4.utils.antlr4.ANTLRUtils;
 import es.ua.dlsi.grfia.im4.utils.antlr4.ErrorListener;
 import es.ua.dlsi.grfia.im4.utils.antlr4.GrammarParseRuntimeException;
 import es.ua.dlsi.grfia.im4.utils.antlr4.ParseError;
 import es.ua.dlsi.grfia.im4.io.skm.SkmDocument;
-import es.ua.dlsi.grfia.im4.io.skm.SkmToken;
-import es.ua.dlsi.grfia.im4.io.skm.tokens.barlines.SkmBarLineFactory;
-import es.ua.dlsi.grfia.im4.io.skm.tokens.clefs.SkmClefFactory;
-import es.ua.dlsi.grfia.im4.io.skm.tokens.headers.SkmHeaderFactory;
-import es.ua.dlsi.grfia.im4.io.skm.tokens.keys.SkmKeyFactory;
-import es.ua.dlsi.grfia.im4.io.skm.tokens.meters.SkmMeterFactory;
-import es.ua.dlsi.grfia.im4.io.skm.tokens.subtokens.accidentals.SkmAccidentalFactory;
-import es.ua.dlsi.grfia.im4.io.skm.tokens.subtokens.accidentals.SkmAccidentalNatural;
-import es.ua.dlsi.grfia.im4.io.skm.tokens.subtokens.alterationqualifiers.SkmAlterationQualifierFactory;
-import es.ua.dlsi.grfia.im4.io.skm.tokens.subtokens.diatonicpitches.SkmDiatonicPitchFactory;
-import es.ua.dlsi.grfia.im4.io.skm.tokens.subtokens.stems.SkmStemFactory;
-import es.ua.dlsi.grfia.im4.io.skm.tokens.timesignatures.SkmTimeSignatureFactory;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -29,32 +22,34 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//TODO Documentar por qué usamos a veces enum y otras objetos - básicamente usaremos enums cuando los elementos sean
-// para siempre los mismos (p.ej. nombres de notas)
 /**
- * It translates from **skm to a semantic composition using a syntax driven translation technique
+ * It translates from **skm to a directed acyclic graph of symbols using a syntax driven translation technique
  * @author drizo
  */
 public class SkmSyntaxDirectedTranslation {
     private boolean debug;
+    private final ICoreAbstractFactory abstractFactory;
+
+    public SkmSyntaxDirectedTranslation(ICoreAbstractFactory abstractFactory) {
+        this.abstractFactory = abstractFactory;
+    }
 
     public static class Loader extends skmParserBaseListener {
         private boolean debug;
         private final Parser parser;
         private SkmDocument skmDocument;
+        private final SkmBuilderFactory skmBuilderFactory;
         private int spineIndex;
         private int row;
         /**
          * This array should maintain the spine count including spine splits, joins, etc...
          */
         private ArrayList<SkmToken> lastSpineInsertedItem;
-        private ArrayList<SkmPitchClass> keySignaturePitchClasses;
-
-
+        private ISymbolBuilder<IClef> clefBuilder;
+        /*private ArrayList<SkmPitchClass> keySignaturePitchClasses;
         private SkmFigure lastFigure;
         private SkmColoration lastColoured;
         private SkmPerfection lastPerfection;
@@ -67,14 +62,15 @@ public class SkmSyntaxDirectedTranslation {
         private SkmStemDirection lastStemDirection;
         private Integer lastRestLinePosition;
         private ArrayList<SkmNote> chordNotes;
-        private SkmDots lastSkmDots;
+        private SkmDots lastSkmDots;*/
 
-        public Loader(Parser parser, boolean debug) {
+        public Loader(Parser parser, boolean debug, ICoreAbstractFactory abstractFactory) {
             this.debug = debug;
             this.parser = parser;
             this.skmDocument = new SkmDocument();
             this.row = 0;
-            this.lastSpineInsertedItem = new ArrayList<>();
+            this.skmBuilderFactory = new SkmBuilderFactory(abstractFactory);
+            /// this.lastSpineInsertedItem = new ArrayList<>();
         }
 
         private void throwError(String message) throws GrammarParseRuntimeException {
@@ -117,13 +113,9 @@ public class SkmSyntaxDirectedTranslation {
         public void exitHeaderField(skmParser.HeaderFieldContext ctx) {
             super.exitHeaderField(ctx);
 
-            try {
-                SkmHeader headerToken = SkmHeaderFactory.getInstance().create(ctx.getText());
-                skmDocument.addHeader(headerToken);
-                lastSpineInsertedItem.add(headerToken);
-            } catch (IM4Exception e) {
-                throw new GrammarParseRuntimeException(e);
-            }
+            SkmHeader headerToken = SkmHeader.parse(ctx.getText());
+            skmDocument.addHeader(headerToken);
+            lastSpineInsertedItem.add(headerToken);
         }
 
 
@@ -165,6 +157,23 @@ public class SkmSyntaxDirectedTranslation {
             addItemToSpine(staffNumber);
         }
 
+        @Override
+        public void enterClef(skmParser.ClefContext ctx) {
+            super.enterClef(ctx);
+            clefBuilder = skmBuilderFactory.getClefBuilder();
+        }
+
+        @Override
+        public void exitClefNote(skmParser.ClefNoteContext ctx) {
+            super.exitClefNote(ctx);
+            clefBuilder.addProperty(SkmClefBuilder.PROP_NOTE, ctx.getText());
+        }
+
+        @Override
+        public void exitClefLine(skmParser.ClefLineContext ctx) {
+            super.exitClefLine(ctx);
+            clefBuilder.addProperty(SkmClefBuilder.PROP_LINE, ctx.getText());
+        }
 
         @Override
         public void exitClef(skmParser.ClefContext ctx) {
@@ -172,28 +181,29 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
                     "Clef {0}", ctx.getText());
 
-            SkmClef clef = null;
+            IClef clef = null;
             try {
-                clef = SkmClefFactory.getInstance().create(ctx.getText());
+                clef = clefBuilder.build();
             } catch (IM4Exception e) {
                 throw new GrammarParseRuntimeException(e);
             }
-            addItemToSpine(clef);
+            addItemToSpine(new SkmCoreSymbol(ctx.getText(), clef));
+            clefBuilder = null;
         }
 
         @Override
         public void enterKeySignature(skmParser.KeySignatureContext ctx) {
             super.enterKeySignature(ctx);
-            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Beginning a key",
+            /*Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Beginning a key",
                     ctx.getText());
-            keySignaturePitchClasses = new ArrayList<>();
+            keySignaturePitchClasses = new ArrayList<>();*/
         }
 
         @Override
         public void exitKeySignatureNote(skmParser.KeySignatureNoteContext ctx) {
             super.exitKeySignatureNote(ctx);
 
-            try {
+            /*try {
                 String accidentalText = null;
                 if (ctx.keyAccidental() != null) {
                     accidentalText = ctx.keyAccidental().getText();
@@ -202,43 +212,43 @@ public class SkmSyntaxDirectedTranslation {
                 this.keySignaturePitchClasses.add(skmPitchClass);
             } catch (IM4Exception e) {
                 throw new GrammarParseRuntimeException(e);
-            }
+            }*/
         }
 
         @Override
         public void exitKeySignature(skmParser.KeySignatureContext ctx) {
             super.exitKeySignature(ctx);
-            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Key signature {0}", ctx.getText());
+           /* Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Key signature {0}", ctx.getText());
 
             SkmPitchClass [] pitchClasses = new SkmPitchClass[this.keySignaturePitchClasses.size()];
             pitchClasses = this.keySignaturePitchClasses.toArray(pitchClasses);
             SkmKeySignature keySignature = new SkmKeySignature(pitchClasses);
             addItemToSpine(keySignature);
-            keySignaturePitchClasses = null;
+            keySignaturePitchClasses = null;*/
         }
 
         @Override
         public void exitKeyChange(skmParser.KeyChangeContext ctx) {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Key {0}", ctx.getText());
 
-            try {
+           /* try {
                 SkmKey key = SkmKeyFactory.getInstance().create(ctx.getText());
                 addItemToSpine(key);
             } catch (IM4Exception e) {
                 throw new GrammarParseRuntimeException(e);
-            }
+            }*/
         }
 
         @Override
         public void exitTimeSignature(skmParser.TimeSignatureContext ctx) {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Time signature {0}", ctx.getText());
 
-            try {
+           /* try {
                 SkmTimeSignature ts = SkmTimeSignatureFactory.getInstance().create(ctx.getText());
                 addItemToSpine(ts);
             } catch (IM4Exception e) {
                 throw new GrammarParseRuntimeException(e);
-            }
+            }*/
         }
 
 
@@ -246,21 +256,21 @@ public class SkmSyntaxDirectedTranslation {
         public void exitMeter(skmParser.MeterContext ctx) {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Meter {0}", ctx.getText());
 
-            try {
+           /* try {
                 SkmMeter meter = SkmMeterFactory.getInstance().create(ctx.getText());
                 addItemToSpine(meter);
             } catch (IM4Exception e) {
                 throw new GrammarParseRuntimeException(e);
-            }
+            }*/
         }
 
         @Override
         public void exitMetronome(skmParser.MetronomeContext ctx) {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Metronome {0}", ctx.getText());
             super.exitMetronome(ctx);
-            String numberStr = ctx.number().getText();
+           /* String numberStr = ctx.number().getText();
             SkmMetronomeMark mm = new SkmMetronomeMark(Integer.parseInt(numberStr));
-            addItemToSpine(mm);
+            addItemToSpine(mm);*/
         }
 
         @Override
@@ -274,7 +284,7 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "BarLine {0}", ctx.getText());
             super.exitBarline(ctx);
 
-            Integer number = null;
+           /* Integer number = null;
             if (ctx.number() != null) {
                 number = Integer.parseInt(ctx.getText());
             }
@@ -290,7 +300,7 @@ public class SkmSyntaxDirectedTranslation {
                 addItemToSpine(skmBarLine);
             } catch (IM4Exception e) {
                 throw new GrammarParseRuntimeException(e);
-            }
+            }*/
         }
 
 
@@ -305,19 +315,19 @@ public class SkmSyntaxDirectedTranslation {
         public void enterMensuralDuration(skmParser.MensuralDurationContext ctx) {
             super.enterMensuralDuration(ctx);
 
-            if (lastAgumentationDots > 0) {
+           /* if (lastAgumentationDots > 0) {
                 lastSkmDots = new SkmDots(lastAgumentationDots);
             }
 
             lastColoured = null;
             lastPerfection = null;
-            lastAgumentationDots = 0;
+            lastAgumentationDots = 0;*/
         }
 
         @Override
         public void exitMensuralDot(skmParser.MensuralDotContext ctx) {
             super.exitMensuralDot(ctx);
-            lastAgumentationDots = ctx.augmentationDot()==null?0:ctx.augmentationDot().getChildCount();
+            //lastAgumentationDots = ctx.augmentationDot()==null?0:ctx.augmentationDot().getChildCount();
         }
 
         @Override
@@ -325,11 +335,11 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Mensural figure {0}", ctx.getText());
             super.exitMensuralFigure(ctx);
 
-            try {
+            /*try {
                 lastFigure = SkmFigureFactory.getInstance().create(ctx.getText());
             } catch (IM4Exception e) {
                 throw new GrammarParseRuntimeException(e);
-            }
+            }*/
         }
 
 
@@ -337,7 +347,7 @@ public class SkmSyntaxDirectedTranslation {
         public void exitColoured(skmParser.ColouredContext ctx) {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Mensural coloration {0}", ctx.getText());
             super.exitColoured(ctx);
-            this.lastColoured = new SkmColoration();
+          //  this.lastColoured = new SkmColoration();
         }
 
         @Override
@@ -345,18 +355,18 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Mensural perfection {0}", ctx.getText());
             super.exitMensuralPerfection(ctx);
 
-            try {
+           /* try {
                 this.lastPerfection = SkmPerfectionFactory.getInstance().create(ctx.getText());
             } catch (IM4Exception e) {
                 throw new GrammarParseRuntimeException(e);
-            }
+            }*/
         }
 
         @Override
         public void exitModernDuration(skmParser.ModernDurationContext ctx) {
             super.exitModernDuration(ctx);
 
-            try {
+           /* try {
                 lastFigure = SkmFigureFactory.getInstance().create(ctx.number().getText());
             } catch (IM4Exception e) {
                 throw new GrammarParseRuntimeException(e);
@@ -367,24 +377,24 @@ public class SkmSyntaxDirectedTranslation {
             if (lastAgumentationDots > 0) {
                 lastSkmDots = new SkmDots(lastAgumentationDots);
             }
-            lastAgumentationDots = 0;
+            lastAgumentationDots = 0;*/
         }
 
         @Override
         public void enterRest(skmParser.RestContext ctx) {
-            lastRestLinePosition = null;
-            lastFermata = null;
+            /*lastRestLinePosition = null;
+            lastFermata = null;*/
         }
 
         @Override
         public void exitRestLinePosition(skmParser.RestLinePositionContext ctx) {
-            this.lastRestLinePosition = Integer.parseInt(ctx.getChild(1).getText());
+          //  this.lastRestLinePosition = Integer.parseInt(ctx.getChild(1).getText());
         }
 
         @Override
         public void exitFermata(skmParser.FermataContext ctx) {
             super.exitFermata(ctx);
-            lastFermata = new SkmFermata();
+            // lastFermata = new SkmFermata();
         }
 
         @Override
@@ -392,8 +402,8 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Mensural rest {0}", ctx.getText());
             super.exitRest(ctx);
 
-            SkmRest rest = new SkmRest(lastFigure, lastSkmDots, lastPerfection, lastRestLinePosition, lastFermata);
-            addItemToSpine(rest);
+           /* SkmRest rest = new SkmRest(lastFigure, lastSkmDots, lastPerfection, lastRestLinePosition, lastFermata);
+            addItemToSpine(rest);*/
         }
 
 
@@ -410,8 +420,8 @@ public class SkmSyntaxDirectedTranslation {
 
         private void handleNoteName(String code, int octaveModif) {
             checkAllNoteNameEqual(code);
-            this.octaveModif = octaveModif;
-            noteName = code.substring(0, 1).toLowerCase();
+           /* this.octaveModif = octaveModif;
+            noteName = code.substring(0, 1).toLowerCase();*/
         }
 
         @Override
@@ -431,18 +441,18 @@ public class SkmSyntaxDirectedTranslation {
 
         @Override
         public void enterNote(skmParser.NoteContext ctx) {
-            this.lastStemDirection = null;
-            this.lastFermata = null;
+          /*  this.lastStemDirection = null;
+            this.lastFermata = null;*/
         }
 
         @Override
         public void exitStem(skmParser.StemContext ctx) {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Stem {0}", ctx.getText());
-            try {
+            /*try {
                 lastStemDirection = SkmStemFactory.getInstance().create(ctx.getText());
             } catch (IM4Exception e) {
                 throw new GrammarParseRuntimeException(e);
-            }
+            }*/
         }
 
 
@@ -451,72 +461,72 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Note {0}", ctx.getText());
             super.exitNote(ctx);
 
-            SkmAccidental skmAccidental = null;
-            if (ctx.accidental() != null) {
-                try {
-                    skmAccidental = SkmAccidentalFactory.getInstance().create(ctx.accidental().getText());
-                } catch (IM4Exception e) {
-                    throw new GrammarParseRuntimeException(e);
-                }
-            } else {
-                skmAccidental = new SkmAccidentalNatural();
-            }
-
-            SkmAlterationQualifier alterationQualifier = null;
-            if (ctx.alterationQualifier() != null) {
-                try {
-                    alterationQualifier = SkmAlterationQualifierFactory.getInstance().create(ctx.alterationQualifier().getText());
-                } catch (IM4Exception e) {
-                    throw new GrammarParseRuntimeException(e);
-                }
-            }
-
-            SkmAlteration skmAlteration;
-            if (alterationQualifier == null) {
-                skmAlteration = new SkmAlteration(skmAccidental);
-            } else {
-                skmAlteration = new SkmAlteration(skmAccidental, alterationQualifier);
-            }
-
-            //TODO Ties ...
-            SkmDiatonicPitch skmDiatonicPitch = null;
-            try {
-                skmDiatonicPitch = SkmDiatonicPitchFactory.getInstance().create(noteName);
-            } catch (IM4Exception e) {
-                throw new GrammarParseRuntimeException(e);
-            }
-
-            SkmScientificPitch skmScientificPitch = new SkmScientificPitch(skmDiatonicPitch, skmAlteration, octaveModif);
-            SkmNote skmNote = new SkmNote(lastFigure, lastSkmDots, lastPerfection, lastColoured, skmScientificPitch);
-
-            lastFermata = null;
-
-            if (chordNotes == null) {
-                addItemToSpine(skmNote);
-
-                //TODO separation dot
-                /*if (lastHasSeparationDot) {
-                    addToCurrentSpinePart(new DivisionDot());
-                }*/
-            } else {
-                chordNotes.add(skmNote);
-
-                /*if (lastHasSeparationDot) {
-                    throw new GrammarParseRuntimeException("There cannot be a separation dot in a chord");
-                }*/
-            }
+//           SkmAccidental skmAccidental = null;
+//            if (ctx.accidental() != null) {
+//                try {
+//                    skmAccidental = SkmAccidentalFactory.getInstance().create(ctx.accidental().getText());
+//                } catch (IM4Exception e) {
+//                    throw new GrammarParseRuntimeException(e);
+//                }
+//            } else {
+//                skmAccidental = new SkmAccidentalNatural();
+//            }
+//
+//            SkmAlterationQualifier alterationQualifier = null;
+//            if (ctx.alterationQualifier() != null) {
+//                try {
+//                    alterationQualifier = SkmAlterationQualifierFactory.getInstance().create(ctx.alterationQualifier().getText());
+//                } catch (IM4Exception e) {
+//                    throw new GrammarParseRuntimeException(e);
+//                }
+//            }
+//
+//            SkmAlteration skmAlteration;
+//            if (alterationQualifier == null) {
+//                skmAlteration = new SkmAlteration(skmAccidental);
+//            } else {
+//                skmAlteration = new SkmAlteration(skmAccidental, alterationQualifier);
+//            }
+//
+//            //TODO Ties ...
+//            SkmDiatonicPitch skmDiatonicPitch = null;
+//            try {
+//                skmDiatonicPitch = SkmDiatonicPitchFactory.getInstance().create(noteName);
+//            } catch (IM4Exception e) {
+//                throw new GrammarParseRuntimeException(e);
+//            }
+//
+//            SkmScientificPitch skmScientificPitch = new SkmScientificPitch(skmDiatonicPitch, skmAlteration, octaveModif);
+//            SkmNote skmNote = new SkmNote(lastFigure, lastSkmDots, lastPerfection, lastColoured, skmScientificPitch);
+//
+//            lastFermata = null;
+//
+//            if (chordNotes == null) {
+//                addItemToSpine(skmNote);
+//
+//                //TODO separation dot
+//                /*if (lastHasSeparationDot) {
+//                    addToCurrentSpinePart(new DivisionDot());
+//                }*/
+//            } else {
+//                chordNotes.add(skmNote);
+//
+//                /*if (lastHasSeparationDot) {
+//                    throw new GrammarParseRuntimeException("There cannot be a separation dot in a chord");
+//                }*/
+//            }
         }
 
         @Override
         public void enterChord(skmParser.ChordContext ctx) {
             super.enterChord(ctx);
-            chordNotes = new ArrayList<>();
+            //chordNotes = new ArrayList<>();
         }
 
         @Override
         public void exitChord(skmParser.ChordContext ctx) {
             super.exitChord(ctx);
-
+/*
             // check all notes in chord are the same duration
             if (chordNotes.size() <= 1) {
                 // this situation should never happen because the grammar rule does not allow it
@@ -536,22 +546,22 @@ public class SkmSyntaxDirectedTranslation {
 
             //TODO cue size, fermata ...
             SkmChord chord = new SkmChord(lastFigure, lastSkmDots, pitches);
-            addItemToSpine(chord);
+            addItemToSpine(chord);*/
         }
 
         @Override
         public void exitCustos(skmParser.CustosContext ctx) {
             super.exitCustos(ctx);
-            SkmScientificPitch skmScientificPitch = null; //TODO
+           /* SkmScientificPitch skmScientificPitch = null; //TODO
             SkmCustos skmCustos = new SkmCustos(skmScientificPitch);
-            addItemToSpine(skmCustos);
+            addItemToSpine(skmCustos);*/
         }
 
 
         @Override
         public void exitLyricsText(skmParser.LyricsTextContext ctx) {
             super.exitLyricsText(ctx);
-            addItemToSpine(new SkmLyrics(ctx.getText()));
+            //addItemToSpine(new SkmLyrics(ctx.getText()));
         }
 
         @Override
@@ -629,7 +639,7 @@ public class SkmSyntaxDirectedTranslation {
 
             ParseTree tree = parser.start();
             ParseTreeWalker walker = new ParseTreeWalker();
-            Loader loader = new Loader(parser, debug);
+            Loader loader = new Loader(parser, debug, abstractFactory);
             walker.walk(loader, tree);
             if (errorListener.getNumberErrorsFound() != 0) {
                 throw new IM4Exception(errorListener.getNumberErrorsFound() + " errors found in "

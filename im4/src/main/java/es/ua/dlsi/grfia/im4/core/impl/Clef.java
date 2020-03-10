@@ -1,30 +1,30 @@
 package es.ua.dlsi.grfia.im4.core.impl;
 
 import es.ua.dlsi.grfia.im4.core.IClef;
-import es.ua.dlsi.grfia.im4.core.IClefSign;
+import es.ua.dlsi.grfia.im4.core.ClefSignTypes;
 
 import java.util.Objects;
 
 public class Clef implements IClef {
     private final int line;
-    private final ClefSigns sign;
+    private final ClefSignTypes signType;
 
     /**
      * Used by factory
      * @param line
-     * @param sign
+     * @param signType
      */
-    Clef(int line, ClefSigns sign) {
+    Clef(int line, ClefSignTypes signType) {
         this.line = line;
-        this.sign = sign;
+        this.signType = signType;
     }
 
     public int getLine() {
         return line;
     }
 
-    public IClefSign getSign() {
-        return sign;
+    public ClefSignTypes getSignType() {
+        return signType;
     }
 
     @Override
@@ -33,11 +33,11 @@ public class Clef implements IClef {
         if (o == null || getClass() != o.getClass()) return false;
         Clef clef = (Clef) o;
         return line == clef.line &&
-                sign == clef.sign;
+                signType == clef.signType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(line, sign);
+        return Objects.hash(line, signType);
     }
 }

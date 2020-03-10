@@ -16,7 +16,7 @@ public class SkmImporterTest {
         String [] testFileNames = {"base.skm"};
 
         for (String testFileName: testFileNames) {
-            SkmSyntaxDirectedTranslation skmSyntaxDirectedTranslation = new SkmSyntaxDirectedTranslation();
+            SkmSyntaxDirectedTranslation skmSyntaxDirectedTranslation = new SkmSyntaxDirectedTranslation(abstractFactory);
             File file = TestFileUtils.getFile("/testdata/io/skm/" + testFileName);
             SkmDocument imported = skmSyntaxDirectedTranslation.importSkm(file);
             //TODO comprobar contenido - ahora sólo comprueba que no falla

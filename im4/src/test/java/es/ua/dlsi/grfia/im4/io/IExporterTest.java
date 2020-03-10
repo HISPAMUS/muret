@@ -13,15 +13,14 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class IExporterTest {
-    private IScore creaateScore() {
-        ICoreAbstractFactory abstractFactory = new CoreFactoryImpl();
+    private IScore creaateScore(ICoreAbstractFactory abstractFactory) {
         abstractFactory.createClef(2, null); //TODO ---- hacer lo mismo con el importer
         return null;
     }
 
-    private void testExportImport(IScore score, IExporter exporter, IImporter importer) {
+    private void testExportImport(IScore score, IExporter exporter, IImporter importer, ICoreAbstractFactory abstractFactory) {
         String exported = exporter.exportScore(score);
-        Score imported = importer.importScore(exported);
+        Score imported = importer.importScore(exported, abstractFactory);
 
         //TODO evaluate equals - now we export it again and check they are equal
         String reexported = exporter.exportScore(imported);
@@ -30,8 +29,9 @@ public class IExporterTest {
 
     @Test
     public void exportScore() {
-        IScore score = creaateScore();
-        testExportImport(score, new MEIExporter(), new MEIImporter());
-        testExportImport(score, new SkmExporter(), new SkmImporter());
+        ICoreAbstractFactory abstractFactory = new CoreFactoryImpl();
+        IScore score = creaateScore(abstractFactory);
+        testExportImport(score, new MEIExporter(), new MEIImporter(), abstractFactory);
+        testExportImport(score, new SkmExporter(), new SkmImporter(), abstractFactory);
     }
 }

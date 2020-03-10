@@ -3,7 +3,6 @@ package es.ua.dlsi.grfia.im4.io.skm;
 import es.ua.dlsi.grfia.im4.core.*;
 import es.ua.dlsi.grfia.im4.io.IExporter;
 
-import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -65,7 +64,7 @@ public class SkmExporter implements IExporter {
     private String export(IClef symbol) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("*clef");
-        stringBuilder.append(symbol.getSign().toString()); //TODO
+        stringBuilder.append(symbol.getSignType().toString()); //TODO
         stringBuilder.append(symbol.getLine());
         return stringBuilder.toString();
     }
@@ -104,8 +103,4 @@ public class SkmExporter implements IExporter {
         record.add(field);
     }
 
-    @Override
-    public void exportScore(IScore score, File file) {
-
-    }
 }

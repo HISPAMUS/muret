@@ -1,7 +1,13 @@
 package es.ua.dlsi.grfia.im4.io.skm;
 
-public abstract class SkmToken extends SkmItem {
-    public SkmToken(String skmEncoding) {
-        super(skmEncoding);
+public class SkmToken {
+    private final String encoding;
+
+    public SkmToken(String encoding) {
+        this.encoding = encoding;
+    }
+
+    public String getEncoding() {
+        return encoding;
     }
 }

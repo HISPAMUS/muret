@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.im4.io.skm;
 
 import es.ua.dlsi.grfia.im4.core.IM4RuntimeException;
-import es.ua.dlsi.grfia.im4.io.skm.tokens.SkmHeader;
+import es.ua.dlsi.grfia.im4.io.skm.grammar.tokens.SkmHeader;
 import es.ua.dlsi.grfia.im4.utils.dag.DAG;
 import es.ua.dlsi.grfia.im4.utils.dag.DAG2DotExporter;
 import es.ua.dlsi.grfia.im4.utils.dag.DAGLabel;
@@ -26,12 +26,12 @@ public class SkmDocument {
      */
     private final HashMap<SkmToken, DAGNode<SkmToken>> insertedNodes;
 
-    private CompositionStartToken startToken;
+    private SkmToken startToken;
 
     public SkmDocument() {
         this.dag = new DAG<>();
         this.insertedNodes = new HashMap<>();
-        startToken = new CompositionStartToken();
+        startToken = new SkmToken("");
         add(null, startToken);
     }
 
