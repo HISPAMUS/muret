@@ -1,17 +1,15 @@
 package es.ua.dlsi.grfia.im4.io.skm;
 
 import es.ua.dlsi.grfia.im4.core.*;
-import es.ua.dlsi.grfia.im4.io.IExporter;
+import es.ua.dlsi.grfia.im4.io.AbstractExporter;
 import es.ua.dlsi.grfia.im4.io.skm.builders.SkmExporterVisitor;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class SkmExporter implements IExporter {
-    private final SkmExporterVisitor skmExporterVisitor;
-
+public class SkmExporter extends AbstractExporter<SkmExporterVisitor> {
     public SkmExporter() {
-        skmExporterVisitor = new SkmExporterVisitor();
+        super(new SkmExporterVisitor());
     }
 
     private String exportMatrix(LinkedList<LinkedList<String>> matrix) {
@@ -64,7 +62,7 @@ public class SkmExporter implements IExporter {
         for (IVoice voice: voices) {
             for (IVoiced voiced: voice.getItems()) {
                 StringBuilder stringBuilder = new StringBuilder();
-                voiced.export(this.skmExporterVisitor, stringBuilder);
+                voiced.export(this.exporterVisitor, stringBuilder);
                 record.add(stringBuilder.toString());
             }
         }

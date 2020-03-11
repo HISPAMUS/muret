@@ -2,7 +2,7 @@ package es.ua.dlsi.grfia.im4.io.skm.builders;
 
 import es.ua.dlsi.grfia.im4.core.*;
 
-public class SkmExporterVisitor implements IExportVisitor<StringBuilder> {
+public class SkmExporterVisitor implements IExporterVisitor<StringBuilder> {
 
     @Override
     public void export(IClef clef, StringBuilder stringBuilder) {

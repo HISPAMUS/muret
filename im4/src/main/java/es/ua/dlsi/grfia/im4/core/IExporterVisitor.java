@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.im4.core;
 
 
-public interface IExportVisitor<InputOutputType>  {
+public interface IExporterVisitor<InputOutputType>  {
     void export(IClef clef, InputOutputType inputOutput);
     void export(INote note, InputOutputType inputOutput);
     void export(IRest rest, InputOutputType inputOutput);

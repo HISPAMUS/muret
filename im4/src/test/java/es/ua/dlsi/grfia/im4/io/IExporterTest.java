@@ -19,9 +19,9 @@ public class IExporterTest {
         return score;
     }
 
-    private void testExportImport(IScore score, IExporter exporter, IImporter importer, ICoreAbstractFactory abstractFactory) throws IM4Exception {
+    private void testExportImport(IScore score, IExporter exporter, IImporter importer) throws IM4Exception {
         String exported = exporter.exportScore(score);
-        IScore imported = importer.importScore(exported, abstractFactory);
+        IScore imported = importer.importScore(exported);
 
         //TODO evaluate equals - now we export it again and check they are equal
         String reexported = exporter.exportScore(imported);
@@ -32,7 +32,7 @@ public class IExporterTest {
     public void exportScore() throws IM4Exception {
         ICoreAbstractFactory abstractFactory = new CoreFactoryImpl();
         IScore score = creaateScore(abstractFactory);
-        testExportImport(score, new SkmExporter(), new SkmImporter(), abstractFactory);
+        testExportImport(score, new SkmExporter(), new SkmImporter(abstractFactory));
         //testExportImport(score, new MEIExporter(), new MEIImporter(), abstractFactory);
     }
 }
