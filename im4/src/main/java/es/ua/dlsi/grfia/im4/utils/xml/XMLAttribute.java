@@ -36,4 +36,15 @@ public class XMLAttribute {
     public XMLAttribute clone() {
         return new XMLAttribute(name, value);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(name);
+        stringBuilder.append('=');
+        stringBuilder.append('"');
+        stringBuilder.append(value);
+        stringBuilder.append('"');
+        return stringBuilder.toString();
+    }
 }

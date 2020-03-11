@@ -22,4 +22,15 @@ public class XMLPreambleElement {
     public LinkedList<XMLAttribute> getAttributes() {
         return attributes;
     }
+
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder("<?");
+        stringBuilder.append(name);
+        for (XMLAttribute xmlAttribute: attributes) {
+            stringBuilder.append(' ');
+            stringBuilder.append(xmlAttribute.toString());
+        }
+        stringBuilder.append("?>");
+        return stringBuilder.toString();
+    }
 }

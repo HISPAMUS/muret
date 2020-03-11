@@ -26,8 +26,10 @@ public class XMLElement {
 
     private XMLElement(String name, String value, List<XMLAttribute> attributes, LinkedList<XMLElement> children) {
         this(name, value);
-        for (XMLAttribute xmlAttribute: attributes) {
-            addAttribute(xmlAttribute);
+        if (attributes != null) {
+            for (XMLAttribute xmlAttribute : attributes) {
+                addAttribute(xmlAttribute);
+            }
         }
     }
 
@@ -71,4 +73,44 @@ public class XMLElement {
     public XMLElement clone() {
         return new XMLElement(name, value, attributes, children);
     }
+
+    private void addTabs(int tabs, StringBuilder stringBuilder) {
+        for (int i=0; i<tabs; i++) {
+            stringBuilder.append('\t');
+        }
+    }
+
+    String export(int tabs) {
+        StringBuilder stringBuilder = new StringBuilder();
+        addTabs(tabs, stringBuilder);
+        stringBuilder.append('<');
+        stringBuilder.append(name);
+
+        if (attributes != null) {
+            for (XMLAttribute xmlAttribute : attributes) {
+                stringBuilder.append(' ');
+                stringBuilder.append(xmlAttribute.toString());
+            }
+        }
+
+        if (children == null || children.isEmpty()) {
+            stringBuilder.append('/');
+            stringBuilder.append('>');
+        } else {
+            stringBuilder.append('>');
+            stringBuilder.append('\n');
+
+            for (XMLElement child: children) {
+                stringBuilder.append(child.export(tabs+1));
+            }
+            addTabs(tabs, stringBuilder);
+            stringBuilder.append('<');
+            stringBuilder.append('/');
+            stringBuilder.append(name);
+            stringBuilder.append('>');
+        }
+        stringBuilder.append('\n');
+        return stringBuilder.toString();
+    }
+
 }

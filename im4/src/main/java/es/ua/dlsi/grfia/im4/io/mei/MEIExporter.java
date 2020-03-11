@@ -6,7 +6,6 @@ import es.ua.dlsi.grfia.im4.utils.xml.XMLElement;
 import es.ua.dlsi.grfia.im4.utils.xml.XMLPreambleElement;
 import es.ua.dlsi.grfia.im4.utils.xml.XMLTree;
 
-import java.io.File;
 import java.util.Optional;
 
 public class MEIExporter implements IExporter {
@@ -14,6 +13,8 @@ public class MEIExporter implements IExporter {
 
     public MEIExporter() {
         this.xmlTree = new XMLTree("mei");
+        this.xmlTree.getRoot().addAttribute("xmlns", "http://www.music-encoding.org/ns/mei");
+        this.xmlTree.getRoot().addAttribute("meiversion", "4.0.0");
         XMLPreambleElement xmlVersion = new XMLPreambleElement("xml");
         xmlVersion.addAttribute("version", "1.0");
         this.xmlTree.addPreamble(xmlVersion);
@@ -155,7 +156,7 @@ public class MEIExporter implements IExporter {
         XMLElement xmlTitleStmt = new XMLElement("titleStmt");
         xmlFileDesc.addChild(xmlTitleStmt);
 
-        XMLElement xmlTitle = new XMLElement("title",  metadata.getTitle().getTitle());
+        XMLElement xmlTitle = new XMLElement("title",  "Prueba"); // david metadata.getTitle().getTitle());
         xmlTitleStmt.addChild(xmlTitle);
     }
 

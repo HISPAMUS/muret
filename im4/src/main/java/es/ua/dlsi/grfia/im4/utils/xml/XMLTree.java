@@ -21,4 +21,14 @@ public class XMLTree {
     public XMLElement getRoot() {
         return root;
     }
+
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (XMLPreambleElement xmlPreambleElement: preamble) {
+            stringBuilder.append(xmlPreambleElement.toString());
+            stringBuilder.append('\n');
+        }
+        stringBuilder.append(root.export(0));
+        return stringBuilder.toString();
+    }
 }
