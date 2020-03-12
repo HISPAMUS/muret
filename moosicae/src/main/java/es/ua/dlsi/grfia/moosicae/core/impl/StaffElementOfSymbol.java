@@ -1,12 +1,12 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.core.ISymbol;
-import es.ua.dlsi.grfia.moosicae.core.ISymbolInStaff;
+import es.ua.dlsi.grfia.moosicae.core.IStaffElementOfSymbol;
 
-public class SymbolInStaff extends StaffSymbol implements ISymbolInStaff {
+public class StaffElementOfSymbol extends StaffElement implements IStaffElementOfSymbol {
     private ISymbol symbol;
 
-    SymbolInStaff(ISymbol symbol) {
+    StaffElementOfSymbol(ISymbol symbol) {
         this.symbol = symbol;
     }
 

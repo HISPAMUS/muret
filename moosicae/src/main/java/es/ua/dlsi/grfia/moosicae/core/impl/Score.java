@@ -6,11 +6,11 @@ import java.util.LinkedList;
 
 public class Score implements IScore {
     private final LinkedList<IPart> parts;
-    private final LinkedList<IStaffOurGroup> staffOurGroups;
+    private final LinkedList<ISystemElement> systemElements;
 
     public Score() {
         parts = new LinkedList<>();
-        staffOurGroups = new LinkedList<>();
+        systemElements = new LinkedList<>();
     }
 
     @Override
@@ -24,14 +24,14 @@ public class Score implements IScore {
     }
 
     @Override
-    public IStaffGroup[] getStaffOurGroups() {
-        return staffOurGroups.toArray(new IStaffGroup[staffOurGroups.size()]);
+    public ISystemElement[] getSystemElements() {
+        return systemElements.toArray(new ISystemElement[systemElements.size()]);
     }
 
     @Override
     public IStaff[] getAllStaves() {
         LinkedList<IStaff> staves = new LinkedList<>();
-        for (IStaffOurGroup child: staffOurGroups) {
+        for (ISystemElement child: systemElements) {
             for (IStaff staff: child.getStaves()) {
                 staves.add(staff);
             }
@@ -45,7 +45,7 @@ public class Score implements IScore {
     }
 
     @Override
-    public void add(IStaffOurGroup staffOrGroup) {
-        this.staffOurGroups.add(staffOrGroup);
+    public void add(ISystemElement systemElement) {
+        this.systemElements.add(systemElement);
     }
 }

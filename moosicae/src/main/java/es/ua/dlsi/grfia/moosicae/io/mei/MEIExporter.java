@@ -9,33 +9,33 @@ import es.ua.dlsi.grfia.moosicae.utils.xml.XMLTree;
 import java.util.Optional;
 
 public class MEIExporter implements IExporter {
-    private final XMLTree xmlTree;
-
     public MEIExporter() {
-        this.xmlTree = new XMLTree("mei");
-        this.xmlTree.getRoot().addAttribute("xmlns", "http://www.music-encoding.org/ns/mei");
-        this.xmlTree.getRoot().addAttribute("meiversion", "4.0.0");
-        XMLPreambleElement xmlVersion = new XMLPreambleElement("xml");
-        xmlVersion.addAttribute("version", "1.0");
-        this.xmlTree.addPreamble(xmlVersion);
 
-        XMLPreambleElement namespace = new XMLPreambleElement("xml-model");
-        namespace.addAttribute("href", "http://music-encoding.org/schema/4.0.0/mei-all.rng");
-        namespace.addAttribute("type", "application/xml");
-        namespace.addAttribute("schematypens", "http://relaxng.org/ns/structure/1.0");
-        this.xmlTree.addPreamble(namespace);
-
-        XMLPreambleElement schematron = new XMLPreambleElement("xml-model");
-        schematron.addAttribute("href", "http://music-encoding.org/schema/4.0.0/mei-all.rng");
-        schematron.addAttribute("type", "application/xml");
-        schematron.addAttribute("schematypens", "http://purl.oclc.org/dsdl/schematron");
-        this.xmlTree.addPreamble(schematron);
     }
 
 
 
     @Override
     public String exportScore(IScore score) {
+        XMLTree xmlTree = new XMLTree("mei");
+        xmlTree.getRoot().addAttribute("xmlns", "http://www.music-encoding.org/ns/mei");
+        xmlTree.getRoot().addAttribute("meiversion", "4.0.0");
+        XMLPreambleElement xmlVersion = new XMLPreambleElement("xml");
+        xmlVersion.addAttribute("version", "1.0");
+        xmlTree.addPreamble(xmlVersion);
+
+        XMLPreambleElement namespace = new XMLPreambleElement("xml-model");
+        namespace.addAttribute("href", "http://music-encoding.org/schema/4.0.0/mei-all.rng");
+        namespace.addAttribute("type", "application/xml");
+        namespace.addAttribute("schematypens", "http://relaxng.org/ns/structure/1.0");
+        xmlTree.addPreamble(namespace);
+
+        XMLPreambleElement schematron = new XMLPreambleElement("xml-model");
+        schematron.addAttribute("href", "http://music-encoding.org/schema/4.0.0/mei-all.rng");
+        schematron.addAttribute("type", "application/xml");
+        schematron.addAttribute("schematypens", "http://purl.oclc.org/dsdl/schematron");
+        xmlTree.addPreamble(schematron);
+
         exportHeader(score.getMetadata());
 
         XMLElement xmlScore = xmlTree.getRoot().addChild("music").addChild("body").addChild("score");
@@ -51,10 +51,17 @@ public class MEIExporter implements IExporter {
     }
 
     private <T> Optional<T> findFirst(IStaff staff, Class<T> type) {
-        for (IStaffSymbol staffSymbol: staff.getStaffSymbols()) {
-            if (staffSymbol instanceof ISymbolInStaff &&
+        for (IStaffElement staffSymbol: staff.getStaffSymbols()) {
+            /*if (staffSymbol instanceof ISymbolInStaff &&
                     type.isInstance(((ISymbolInStaff) staffSymbol).getSymbol())) {
                 return (Optional<T>) Optional.of((T) ((ISymbolInStaff) staffSymbol).getSymbol());
+            }*/
+
+            if (staffSymbol instanceof IStaffElementOfSymbol) {
+                ISymbol symbol = ((IStaffElementOfSymbol) staffSymbol).getSymbol();
+                if (type.isAssignableFrom(symbol.getClass())) {
+                    return (Optional<T>) Optional.of(symbol);
+                }
             }
         }
         return Optional.empty();
@@ -65,7 +72,7 @@ public class MEIExporter implements IExporter {
         //TODO anidado
         for (IStaff staff: score.getAllStaves()) {
             Optional<T> staffFirst = findFirst(staff, type);
-            if (staffFirst == null) {
+            if (!staffFirst.isPresent()) {
                 return Optional.empty();
             }
 
@@ -96,12 +103,12 @@ public class MEIExporter implements IExporter {
         }
 
         //TODO - gropus
-        export(xmlScoreDef, score.getStaffOurGroups());
+        export(xmlScoreDef, score.getSystemElements());
     }
 
-    private void export(XMLElement xmlScoreDef, IStaffOurGroup[] staffOurGroups) {
+    private void export(XMLElement xmlScoreDef, ISystemElement[] systemElements) {
         XMLElement xmlStaffGrp = xmlScoreDef.addChild("staffGrp"); // TODO anidado
-        for (IStaffOurGroup staffOurGroup : staffOurGroups) {
+        for (ISystemElement staffOurGroup : systemElements) {
             IStaff [] staves = staffOurGroup.getStaves();
             for (IStaff staff : staves) {
                 exportDef(xmlStaffGrp, staff);
@@ -112,8 +119,7 @@ public class MEIExporter implements IExporter {
     private void exportDef(XMLElement xmlStaffGrp, IStaff staff) {
         //TODO - cosas como compases especiales, transposiciones.... - habrá que indicar qué compases se han exportado ya (common...)
         //TODO Debemos guardar la equivalencia de nº de staff
-        XMLElement xmlStaffDef = new XMLElement("staffDef");
-        xmlStaffGrp.addChild(xmlStaffDef);
+        XMLElement xmlStaffDef = xmlStaffGrp.addChild("staffDef");
         xmlStaffDef.addAttribute("n", "1").
                 addAttribute("lines", "5");
 

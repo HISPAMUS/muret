@@ -1,4 +1,4 @@
 package es.ua.dlsi.grfia.moosicae.core;
 
-public interface IStaffSymbol {
+public interface IStaffElement {
 }

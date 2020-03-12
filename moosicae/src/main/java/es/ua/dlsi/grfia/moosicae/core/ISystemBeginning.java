@@ -1,4 +1,4 @@
 package es.ua.dlsi.grfia.moosicae.core;
 
-public interface ISystemBeginning extends IStaffSymbol {
+public interface ISystemBeginning extends IStaffLayoutElement {
 }

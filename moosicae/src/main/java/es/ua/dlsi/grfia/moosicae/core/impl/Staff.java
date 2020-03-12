@@ -5,7 +5,7 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import java.util.LinkedList;
 
 public class Staff implements IStaff {
-    private final LinkedList<IStaffSymbol> items;
+    private final LinkedList<IStaffElement> items;
 
     public Staff() {
         items = new LinkedList<>();
@@ -17,13 +17,20 @@ public class Staff implements IStaff {
     }
 
     @Override
-    public IStaffSymbol[] getStaffSymbols() {
-        return items.toArray(new IStaffSymbol[items.size()]);
+    public IStaffElement[] getStaffSymbols() {
+        return items.toArray(new IStaffElement[items.size()]);
     }
 
     @Override
-    public void addItem(IStaffSymbol symbol) {
-        this.items.add(symbol);
+    public void addLayoutElement(IStaffLayoutElement staffLayoutElement) {
+        this.items.add(staffLayoutElement);
+    }
+
+    @Override
+    public IStaffElementOfSymbol put(ISymbol symbol) {
+        IStaffElementOfSymbol wrapper = new StaffElementOfSymbol(symbol);
+        this.items.add(wrapper);
+        return wrapper;
     }
 
 

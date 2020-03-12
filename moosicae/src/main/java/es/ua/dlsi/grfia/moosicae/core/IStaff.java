@@ -3,8 +3,20 @@ package es.ua.dlsi.grfia.moosicae.core;
 /**
  * Designed using a composite pattern, this is the leaf class
  */
-public interface IStaff extends IStaffOurGroup {
+public interface IStaff extends ISystemElement {
     int getNumber();
-    IStaffSymbol [] getStaffSymbols();
-    void addItem(IStaffSymbol clef);
+    IStaffElement[] getStaffSymbols();
+
+    /**
+     * Add a page or system beginning
+     * @param staffLayoutElement
+     */
+    void addLayoutElement(IStaffLayoutElement staffLayoutElement);
+
+    /**
+     * Wrap a symbol inside a IStaffElementOfSymbol placeholder and add to the staff
+     * @param symbol
+     * @return
+     */
+    IStaffElementOfSymbol put(ISymbol symbol);
 }

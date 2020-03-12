@@ -18,14 +18,16 @@ public class ImportersExportersTest {
         score.add(part);
         IVoice voice = abstractFactory.createVoice(part);
         IClef clef = abstractFactory.createClef(2, ClefSignTypes.G);
+        IStaff staff = abstractFactory.createStaff(score);
+        staff.put(clef);
         voice.addItem(clef);
         return score;
     }
 
     private void testExportImport(IScore score, IExporter exporter, IImporter importer) throws IMException {
         String exported = exporter.exportScore(score);
-        System.out.println("---------- Exported ---------- ");
-        System.out.println(exported);
+
+
         IScore imported = importer.importScore(exported);
 
         //TODO evaluate equals - now we export it again and check they are equal

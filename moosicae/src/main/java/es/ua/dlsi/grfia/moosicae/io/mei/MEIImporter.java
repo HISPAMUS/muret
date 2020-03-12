@@ -56,21 +56,26 @@ public class MEIImporter extends AbstractImporter {
             //TODO quitar la inicialización a pelo
             IPart part = coreAbstractFactory.createPart(score);
             IVoice voice = coreAbstractFactory.createVoice(part);
-            IStaff staff = coreAbstractFactory.createStaff(score);
 
-
-            parse(nList.item(0), score, voice, staff); //TODO quitar voice y staff
+            parse(nList.item(0), score, voice); //TODO quitar voice y staff
             return score;
         } catch (SAXException | IOException e) {
             throw new IMException("Cannot parse string", e);
         }
     }
 
-    private void parse(Node node, IScore score, IVoice voice, IStaff staff) throws IMException {
+    private void parse(Node node, IScore score, IVoice voice) throws IMException {
         switch (node.getNodeName()) { // removing this switch makes it much more difficult
             case "staffDef":
-                processStaffDef(node, voice, staff);
+                processStaffDef(node, score, voice);
                 break;
+            default:
+                NodeList children = node.getChildNodes();
+                if (children != null) {
+                    for (int i=0; i< children.getLength(); i++) {
+                        parse(children.item(i), score, voice);
+                    }
+                }
         }
     }
 
@@ -88,7 +93,9 @@ public class MEIImporter extends AbstractImporter {
         }
     }
 
-    private void processStaffDef(Node node, IVoice voice, IStaff staff) throws IMException {
+    private void processStaffDef(Node node, IScore score, IVoice voice) throws IMException {
+        IStaff staff = coreAbstractFactory.createStaff(score);
+
         Optional<String> clefShape = getAttrValue(node, "clef.shape");
         if (clefShape.isPresent()) {
             IClefBuilder clefBuilder = builderFactory.getClefBuilder();
@@ -100,7 +107,7 @@ public class MEIImporter extends AbstractImporter {
 
             IClef clef = clefBuilder.build();
             voice.addItem(clef);
-            staff.addItem(clef);
+            staff.put(clef);
         }
     }
 }
