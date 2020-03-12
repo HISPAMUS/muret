@@ -48,4 +48,10 @@ public class Score implements IScore {
     public void add(ISystemElement systemElement) {
         this.systemElements.add(systemElement);
     }
+
+    @Override
+    public void moveVoice(IVoice voice, IPart fromPart, IPart toPart) {
+        fromPart.removeVoice(voice);
+        toPart.addVoice(voice);
+    }
 }

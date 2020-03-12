@@ -1,6 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.utils;
 
-import es.ua.dlsi.grfia.moosicae.IM4RuntimeException;
+import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import org.apache.commons.lang3.math.Fraction;
 
 /**
@@ -50,7 +50,7 @@ public class Time implements Comparable<Time> {
 	//TODO Test unitario
 	public Time add(Time time) {
 		if (time == null) {
-			throw new IM4RuntimeException("Parameter time is null");
+			throw new IMRuntimeException("Parameter time is null");
 		}
 		return new Time(exactTime.add(time.exactTime));
 	}
@@ -58,7 +58,7 @@ public class Time implements Comparable<Time> {
 	//TODO Test unitario
 	public Time substract(Time time) {
 		if (time == null) {
-			throw new IM4RuntimeException("Parameter time is null");
+			throw new IMRuntimeException("Parameter time is null");
 		}
 		return new Time(exactTime.subtract(time.exactTime));
 	}
@@ -100,7 +100,7 @@ public class Time implements Comparable<Time> {
 	@Override
 	public int compareTo(Time o) {
 		if (o == null) {
-			throw new IM4RuntimeException("Parameter time is null");
+			throw new IMRuntimeException("Parameter time is null");
 		}
 		return exactTime.compareTo(o.exactTime);
 	}

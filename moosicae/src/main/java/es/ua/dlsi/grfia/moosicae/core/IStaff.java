@@ -19,4 +19,6 @@ public interface IStaff extends ISystemElement {
      * @return
      */
     IStaffElementOfSymbol put(ISymbol symbol);
+
+    void remove(ISymbol symbol);
 }

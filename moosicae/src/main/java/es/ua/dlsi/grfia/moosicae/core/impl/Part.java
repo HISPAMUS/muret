@@ -32,4 +32,9 @@ public class Part implements IPart {
     public IVoice[] getVoices() {
         return voices.toArray(new IVoice[voices.size()]);
     }
+
+    @Override
+    public void removeVoice(IVoice voice) {
+        this.voices.remove(voice);
+    }
 }

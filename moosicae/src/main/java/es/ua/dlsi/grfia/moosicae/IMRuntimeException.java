@@ -4,25 +4,25 @@ package es.ua.dlsi.grfia.moosicae;
  *
  * @author drizo
  */
-public class IM4RuntimeException extends RuntimeException {
+public class IMRuntimeException extends RuntimeException {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5986252837490028393L;
 
-	public IM4RuntimeException() {
+	public IMRuntimeException() {
 	}
 
-	public IM4RuntimeException(String message, Throwable cause) {
+	public IMRuntimeException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public IM4RuntimeException(String message) {
+	public IMRuntimeException(String message) {
 		super(message);
 	}
 
-	public IM4RuntimeException(Throwable cause) {
+	public IMRuntimeException(Throwable cause) {
 		super(cause);
 	}
 

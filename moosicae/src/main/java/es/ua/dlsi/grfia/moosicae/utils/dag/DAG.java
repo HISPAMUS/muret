@@ -1,6 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.utils.dag;
 
-import es.ua.dlsi.grfia.moosicae.IM4RuntimeException;
+import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 
 /**
  * Directed acyclic graph
@@ -15,7 +15,7 @@ public class DAG<SpineItemContentType> {
     public DAGNode add(DAGNode<SpineItemContentType> previous, DAGLabel<SpineItemContentType> item) {
         if (firstNode == null) {
             if (previous != null) {
-                throw new IM4RuntimeException("Cannot add a node to a previous node when the first node is null");
+                throw new IMRuntimeException("Cannot add a node to a previous node when the first node is null");
             }
             firstNode = new DAGNode<>(item);
             return firstNode;

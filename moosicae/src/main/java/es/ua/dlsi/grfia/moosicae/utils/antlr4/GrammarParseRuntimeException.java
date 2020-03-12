@@ -1,12 +1,12 @@
 package es.ua.dlsi.grfia.moosicae.utils.antlr4;
 
-import es.ua.dlsi.grfia.moosicae.IM4RuntimeException;
+import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 
 /**
  *
  * @author drizo
  */
-public class GrammarParseRuntimeException extends IM4RuntimeException {
+public class GrammarParseRuntimeException extends IMRuntimeException {
 
     /**
 	 * 

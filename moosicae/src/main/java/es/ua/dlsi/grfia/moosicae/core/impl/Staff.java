@@ -33,6 +33,11 @@ public class Staff implements IStaff {
         return wrapper;
     }
 
+    @Override
+    public void remove(ISymbol symbol) {
+        this.items.remove(symbol);
+    }
+
 
     @Override
     public IStaff[] getStaves() {

@@ -1,10 +1,9 @@
 package es.ua.dlsi.grfia.moosicae.io.skm.grammar;
 
-import es.ua.dlsi.grfia.moosicae.IM4RuntimeException;
+import es.ua.dlsi.grfia.moosicae.IMException;
+import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmCoreSymbol;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmHeader;
-import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmPart;
 import es.ua.dlsi.grfia.moosicae.utils.dag.DAG;
 import es.ua.dlsi.grfia.moosicae.utils.dag.DAG2DotExporter;
 import es.ua.dlsi.grfia.moosicae.utils.dag.DAGLabel;
@@ -43,7 +42,7 @@ public class SkmDocument {
         if (previousToken != null) {
             previousNode = this.insertedNodes.get(previousToken);
             if (previousNode == null) {
-                throw new IM4RuntimeException("The previous item " + previousToken + " cannot be found in the insertedNodes hash map");
+                throw new IMRuntimeException("The previous item " + previousToken + " cannot be found in the insertedNodes hash map");
             }
         }
         DAGNode newNode = this.dag.add(previousNode, new DAGLabel<>(skmToken));
@@ -59,27 +58,7 @@ public class SkmDocument {
         dag2DotExporter.export(file, dag);
     }
 
-    public IScore buildScore(ICoreAbstractFactory abstractFactory) {
-        IScore score = abstractFactory.createScore();
-        build(abstractFactory, score, dag.getFirstNode());
-        return score;
-    }
-
-    private IVoice lastVoice; //TODO quitarlo
-
-    private void build(ICoreAbstractFactory abstractFactory, IScore score, DAGNode<SkmToken> node) {
-        //TODO ahora recorro sólo una voz y uso instanceof....
-        SkmToken skmToken = node.getLabel().getContent();
-        if (skmToken instanceof SkmPart) {
-            IPart part = abstractFactory.createPart(score);
-            IVoice voice = abstractFactory.createVoice(part);
-            lastVoice = voice;
-        } else if (skmToken instanceof SkmCoreSymbol) {
-            lastVoice.addItem(((SkmCoreSymbol) skmToken).getSymbol());
-        }
-
-        for (DAGNode<SkmToken> next: node.getNextList()) {
-            build(abstractFactory, score, next);
-        }
+    public IScore buildScore(ICoreAbstractFactory abstractFactory) throws IMException {
+        return new SkmDocument2IScore(abstractFactory).convert(dag.getFirstNode());
     }
 }

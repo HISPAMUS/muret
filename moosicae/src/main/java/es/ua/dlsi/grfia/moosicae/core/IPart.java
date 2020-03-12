@@ -9,4 +9,5 @@ public interface IPart {
     void addVoice(IVoice voice);
 
     IVoice[] getVoices();
+    void removeVoice(IVoice voice);
 }

@@ -16,7 +16,7 @@
  */
 package es.ua.dlsi.grfia.moosicae.utils;
 
-import es.ua.dlsi.grfia.moosicae.IM4RuntimeException;
+import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,7 +59,7 @@ public class TestFileUtils {
 					TMP_FOLDER = f.getParentFile();
 				} catch (IOException e) {
 					e.printStackTrace();
-					throw new IM4RuntimeException("Cannot create a temporary file for tests");
+					throw new IMRuntimeException("Cannot create a temporary file for tests");
 				}
 
 			}
@@ -76,7 +76,7 @@ public class TestFileUtils {
                     TMP_FOLDER = f.getParentFile();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    throw new IM4RuntimeException("Cannot create a temporary file for tests");
+                    throw new IMRuntimeException("Cannot create a temporary file for tests");
                 }
 
             }

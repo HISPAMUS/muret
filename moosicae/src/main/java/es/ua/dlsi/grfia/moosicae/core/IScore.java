@@ -7,4 +7,5 @@ public interface IScore {
     IStaff[] getAllStaves();
     void add(IPart part);
     void add(ISystemElement staves);
+    void moveVoice(IVoice voice, IPart fromPart, IPart toPart);
 }
