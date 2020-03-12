@@ -1,8 +1,9 @@
 package es.ua.dlsi.grfia.moosicae.core;
 
 /**
- * Designed using a composite pattern, this is a (restricted because it's not recursive) composite component
+ * Designed using a composite pattern, this is the composite component
  */
-public interface IStaffGroup extends IStaves {
-    IStaff[] getStaves();
+public interface IStaffGroup extends IStaffOurGroup {
+    IStaffOurGroup[] getChildren();
+    void add(IStaffOurGroup child);
 }

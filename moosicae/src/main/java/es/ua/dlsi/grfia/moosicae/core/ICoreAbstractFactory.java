@@ -9,4 +9,26 @@ public interface ICoreAbstractFactory {
     IPart createPart(IScore score);
     IVoice createVoice(IPart part);
     IScore createScore();
+
+    /**
+     * For nested staff
+     * @param staffGroup
+     * @return
+     */
+    IStaff createStaff(IStaffGroup staffGroup);
+
+    /**
+     * For ungrouped staves
+     * @param score
+     * @return
+     */
+    IStaff createStaff(IScore score);
+    IStaffGroup createStaffGroup(IScore score);
+
+    /**
+     * For nested groups
+     * @param staffGroup
+     * @return
+     */
+    IStaffGroup createStaffGroup(IStaffGroup staffGroup);
 }

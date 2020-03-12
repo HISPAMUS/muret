@@ -11,11 +11,11 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class IExporterTest {
+public class ImportersExportersTest {
     private IScore creaateScore(ICoreAbstractFactory abstractFactory) {
         IScore score = abstractFactory.createScore();
         IPart part = abstractFactory.createPart(score);
-        score.addPart(part);
+        score.add(part);
         IVoice voice = abstractFactory.createVoice(part);
         IClef clef = abstractFactory.createClef(2, ClefSignTypes.G);
         voice.addItem(clef);

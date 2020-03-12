@@ -62,18 +62,17 @@ public class MEIExporter implements IExporter {
 
     private <T> Optional<T> getCommonBeginning(IScore score, Class<T> type) {
         T last = null;
-        for (IStaves staves: score.getStaves()) {
-            for (IStaff staff: staves.getStaves()) {
-                Optional<T> staffFirst = findFirst(staff, type);
-                if (staffFirst == null) {
-                    return Optional.empty();
-                }
+        //TODO anidado
+        for (IStaff staff: score.getAllStaves()) {
+            Optional<T> staffFirst = findFirst(staff, type);
+            if (staffFirst == null) {
+                return Optional.empty();
+            }
 
-                if (last == null) {
-                    last = staffFirst.get();
-                } else if (!last.equals(staffFirst.get())) {
-                    return Optional.empty();
-                }
+            if (last == null) {
+                last = staffFirst.get();
+            } else if (!last.equals(staffFirst.get())) {
+                return Optional.empty();
             }
         }
         if (last == null) {
@@ -97,13 +96,14 @@ public class MEIExporter implements IExporter {
         }
 
         //TODO - gropus
-        export(xmlScoreDef, score.getStaves());
+        export(xmlScoreDef, score.getStaffOurGroups());
     }
 
-    private void export(XMLElement xmlScoreDef, IStaves[] scoreStaves) {
-        XMLElement xmlStaffGrp = xmlScoreDef.addChild("staffGrp");
-        for (IStaves staves : scoreStaves) {
-            for (IStaff staff : staves.getStaves()) {
+    private void export(XMLElement xmlScoreDef, IStaffOurGroup[] staffOurGroups) {
+        XMLElement xmlStaffGrp = xmlScoreDef.addChild("staffGrp"); // TODO anidado
+        for (IStaffOurGroup staffOurGroup : staffOurGroups) {
+            IStaff [] staves = staffOurGroup.getStaves();
+            for (IStaff staff : staves) {
                 exportDef(xmlStaffGrp, staff);
             }
         }
