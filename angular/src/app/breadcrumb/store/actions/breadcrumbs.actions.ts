@@ -1,5 +1,6 @@
 import {Action} from '@ngrx/store';
 import {BreadcrumbLink} from '../../model/breadcrumb-link';
+import { LinkType } from '../../components/breadcrumb/breadcrumbType';
 
 export enum BreadcrumbsActionTypes {
   ActivateLink = '[Breadcrumbs] Activate link',
@@ -8,7 +9,7 @@ export enum BreadcrumbsActionTypes {
 
 export class ActivateLink implements Action {
   public readonly type = BreadcrumbsActionTypes.ActivateLink;
-  constructor(public link: BreadcrumbLink) {}
+  constructor(public linkType: LinkType, public link: BreadcrumbLink) {}
 }
 
 export class ClearLinks implements Action {

@@ -11,6 +11,7 @@ import {Permissions} from '../../../../core/model/entities/permissions';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
 import {selectDocumentsServerError} from '../../store/selectors/documents.selector';
 import {ResetDocumentsServerError} from '../../store/actions/documents.actions';
+import { LinkType } from 'src/app/breadcrumb/components/breadcrumb/breadcrumbType';
 
 @Component({
   selector: 'app-collections',
@@ -26,7 +27,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   constructor(private store: Store<any>, private showErrorService: ShowErrorService) {
     this.user$ = this.store.select(selectLoggedInUser);
 
-    this.store.dispatch(new ActivateLink({title: 'Collections', routerLink: 'collections'}));
+    this.store.dispatch(new ActivateLink(LinkType.Collection, {title: 'Collections', routerLink: 'collections'}));
   }
 
   ngOnInit(): void {

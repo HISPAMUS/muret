@@ -15,6 +15,8 @@ import {selectChangedCollectionID, selectCollection, selectDocumentsServerError}
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {ModalOptions} from '../../../../shared/components/options-dialog/options-dialog.component';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
+import { ActivateLink } from 'src/app/breadcrumb/store/actions/breadcrumbs.actions';
+import { LinkType } from 'src/app/breadcrumb/components/breadcrumb/breadcrumbType';
 
 
 @Component({
@@ -43,6 +45,9 @@ export class DocumentsComponent implements OnInit, OnDestroy {
     this.selectedDocumentsIds = new Array<number>();
     this.collectionSubscription = this.store.select(selectCollection).subscribe(next => {
       this.collection = next;
+      setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
+        this.store.dispatch(new ActivateLink(LinkType.Collection ,{title: this.collection.name, routerLink: 'documents/' + this.collectionID}));
+      });
     });
     this.changedCollectionIDSubscription = this.store.select(selectChangedCollectionID).subscribe(next => {
       if (next) {

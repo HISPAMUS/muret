@@ -61,6 +61,11 @@
   background-color: #7DE2DB;
 }
 
+.centeredHeader
+{
+  text-align: center;
+}
+
 label:hover
 {
   background-color: #7DE2DB;

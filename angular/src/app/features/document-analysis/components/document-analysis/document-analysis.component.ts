@@ -33,6 +33,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Part} from '../../../../core/model/entities/part';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
+import { LinkType } from 'src/app/breadcrumb/components/breadcrumb/breadcrumbType';
 
 @Component({
   selector: 'app-document-analysis',
@@ -46,6 +47,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   regionTypes$: Observable<RegionType[]>;
   imagePart$: Observable<Part>;
   documentAnalysisModels$: Observable<ClassifierModel[]>;
+  filenameSubscription: Subscription;
   pagesSubscription: Subscription;
   regionTypesSubscription: Subscription;
   imagewidthSubscription: Subscription;
@@ -92,6 +94,13 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     });
 
     this.filename$ = store.select(selectFileName);
+    this.filenameSubscription = this.filename$.subscribe(name => 
+      {
+        if(name != null)
+        setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
+          this.store.dispatch(new ActivateLink(LinkType.File, {title: name + ' / Document analysis', routerLink: 'documentanalysis/' + this.imageID}));
+        });
+      })
     this.mode = 'eIdle';
     this.selectedRegionTypeID = 'page';
     this.regionTypeFilterOut = new Set<string>();
@@ -111,9 +120,6 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
       this.imageID = +params.get('id'); // + converts the string to number
       this.store.dispatch(new GetImageProjection(+this.imageID));
       this.store.dispatch(new GetImagePart(+this.imageID));
-      setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
-        this.store.dispatch(new ActivateLink({title: 'Document analysis', routerLink: 'documentanalysis/' + this.imageID}));
-      });
     });
 
     this.documentAnalysisModels$ = this.store.select(selectDocumentAnalysisClassifierModels);
@@ -153,6 +159,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     this.pagesSubscription.unsubscribe();
     this.regionTypesSubscription.unsubscribe();
     this.serverErrorSubscription.unsubscribe();
+    this.filenameSubscription.unsubscribe();
   }
 
   zoomIn() {

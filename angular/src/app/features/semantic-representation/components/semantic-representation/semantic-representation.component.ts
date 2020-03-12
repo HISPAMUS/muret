@@ -36,11 +36,13 @@ import {
   LinkPartToRegion,
   UnlinkPartToImage, UnlinkPartToRegion
 } from '../../../parts/store/actions/parts.actions';
-import {selectImageDocumentID} from '../../../document-analysis/store/selectors/document-analysis.selector';
+import {selectImageDocumentID, selectFileName} from '../../../document-analysis/store/selectors/document-analysis.selector';
 import {ModalOptions} from '../../../../shared/components/options-dialog/options-dialog.component';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 import {selectDocumentsServerError} from '../../../documents/store/selectors/documents.selector';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
+import { LinkType } from 'src/app/breadcrumb/components/breadcrumb/breadcrumbType';
+import { toBase64String } from '@angular/compiler/src/output/source_map';
 
 @Component({
   selector: 'app-semantic-representation',
@@ -69,6 +71,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   documentIDSubscription: Subscription;
 
   agnosticIDs: number[];
+  filenamesubscription : Subscription;
   agnosticIDMap: Map<number, number>;
   columnDefs = [
     {headerName: '**smens/**skern', field: 'smens' },
@@ -104,6 +107,13 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     this.semanticLabel = "Convert from agnostic";
     this.waitingForSemantic = false;
 
+    this.filenamesubscription = this.store.select(selectFileName).subscribe(name => {
+      if(name!=null)
+        setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
+          this.store.dispatch(new ActivateLink(LinkType.File ,{title: name + ' /Semantic', routerLink: 'semanticrepresentation/' + this.imageID}));
+        });
+    })
+
     // this.mynumber = 189;
     this.route.paramMap.subscribe((params: ParamMap) => {
       if (params.get('id')) {
@@ -115,10 +125,6 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
       if (params.get('region_id')) {
         this.store.dispatch(new GetRegion(+params.get('region_id')));
       }
-
-      setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
-        this.store.dispatch(new ActivateLink({title: 'Semantic', routerLink: 'semanticrepresentation/' + this.imageID}));
-      });
 
       this.translationModels$ = this.store.select(selectTranslationModels);
 
@@ -182,6 +188,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     this.documentIDSubscription.unsubscribe();
     this.useOfPartsSubscription.unsubscribe();
     this.serverErrorSubscription.unsubscribe();
+    this.filenamesubscription.unsubscribe();
     // this.usesOfPartsSubscription.unsubscribe();
   }
 
@@ -579,6 +586,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
       .subscribe((isConfirmed) => {
         if (isConfirmed) {
           this.store.dispatch(new SendSemanticEncoding(this.selectedRegion, '', false, 'verovio'));
+          this.notation = null;
         }
       });
   }

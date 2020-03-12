@@ -21,7 +21,6 @@ export class ResetpwdComponent implements OnInit {
 
   constructor(private modalService: DialogsService, private store: Store<AuthState>)
   {
-    console.log('Change!!!')
     this.pwdresetmsg = store.select(selectResetPWDStatus).subscribe((number)=>{
       if(number == 1)
         this.modalService.showConfirmation("Success", "Password reseted correctly")
