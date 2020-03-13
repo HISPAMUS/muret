@@ -54,9 +54,9 @@ public class UserManagerImpl
     }
 
     @Transactional
-    public void resetPassword(String c_userName, String c_newPassword) throws UserManagerException
+    public void resetPassword(String c_userEmail, String c_newPassword) throws UserManagerException
     {
-        Optional<User> userToUpdate = m_userRepository.findByUsername(c_userName);
+        Optional<User> userToUpdate = m_userRepository.findByUsername(c_userEmail);
 
         if(!userToUpdate.isPresent()) throw new UserManagerException(HttpStatus.NOT_FOUND, "User not found");
 
