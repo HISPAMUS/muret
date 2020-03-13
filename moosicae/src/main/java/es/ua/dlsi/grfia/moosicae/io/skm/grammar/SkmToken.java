@@ -10,4 +10,9 @@ public class SkmToken {
     public String getEncoding() {
         return encoding;
     }
+
+    @Override
+    public String toString() {
+        return encoding;
+    }
 }
