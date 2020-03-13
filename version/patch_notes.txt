@@ -1,3 +1,15 @@
+0.8
+    MAJOR UPDATES
+
+    MINOR UPDATES
+    - Chronium input errors fixed
+    - Users can restablish password with their email
+    - Administration permissions grant and revoke errors fixed
+    - Breadcrumbs show the real path of the document
+    - Document name is shown in Document Analysis
+    - Semantic music score is cleared when erased the codification for a music excerpt
+
+--------------------------------------------------------------------------------------------------------------------------------------------
 0.7
     MAJOR UPDATES
 
