@@ -405,9 +405,25 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
 
   onMouseDown($event) {
     if (!this.isTouchDevice()) {
-      $event.stopPropagation();
-      this.onDrawStart($event.target, $event.timeStamp, $event.offsetX, $event.offsetY);
+      this.handleMouse($event);
     }
+    else
+    {
+      if(this.isChrome() && navigator.appVersion.indexOf("Linux")!=-1)
+        this.handleMouse($event);
+    }
+  }
+
+  handleMouse(event:any)
+  {
+    event.stopPropagation();
+    this.onDrawStart(event.target, event.timeStamp, event.offsetX, event.offsetY);
+  }
+
+  isChrome()
+  {
+      const agent = window.navigator.userAgent.toLowerCase()
+      return (agent.indexOf('chrome') > -1 && !!(<any>window).chrome)
   }
 
   // https://stackoverflow.com/questions/17130940/retrieve-the-same-offsetx-on-touch-like-mouse-event/33756703
