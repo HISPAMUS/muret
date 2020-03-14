@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.moosicae.core.impl.CoreAbstractFactoryImpl;
 
 /**
  * It creates the core abstract factory
+ * @author David Rizo - drizo@dlsi.ua.es
  */
 public class CoreFactory {
     /**

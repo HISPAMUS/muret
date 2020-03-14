@@ -3,8 +3,7 @@ package es.ua.dlsi.grfia.moosicae.utils.antlr4;
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 
 /**
- *
- * @author drizo
+ * @author David Rizo - drizo@dlsi.ua.es
  */
 public class GrammarParseRuntimeException extends IMRuntimeException {
 

@@ -1,8 +1,7 @@
 package es.ua.dlsi.grfia.moosicae;
 
 /**
- *
- * @author drizo
+ * @author David Rizo - drizo@dlsi.ua.es
  */
 public class IMRuntimeException extends RuntimeException {
 

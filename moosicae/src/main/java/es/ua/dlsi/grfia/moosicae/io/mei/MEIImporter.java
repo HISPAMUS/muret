@@ -19,6 +19,7 @@ import java.util.Optional;
 
 /**
  * Use DOM for importing, maybe a little bit slower than STAX or SAX but we have more control
+ * @author David Rizo - drizo@dlsi.ua.es
  */
 public class MEIImporter extends AbstractImporter {
 

@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 /**
  * It converts the SkmDocument obtained when parsing to an IScore object
+ * @author David Rizo - drizo@dlsi.ua.es
  */
 public class SkmDocument2IScore {
     private final ICoreAbstractFactory abstractFactory;
@@ -38,8 +39,8 @@ public class SkmDocument2IScore {
         for (DAGNode<SkmToken> node: firstNode.getNextList()) {
             SkmToken skmToken = node.getLabel().getContent();
             if (skmToken instanceof SkmHeader) {
-                SkmHeaderTypes headerType = ((SkmHeader) skmToken).getSkmHeaderType();
-                if (headerType == SkmHeaderTypes.skern || headerType == SkmHeaderTypes.smens) {
+                ESkmHeaders headerType = ((SkmHeader) skmToken).getSkmHeaderType();
+                if (headerType == ESkmHeaders.skern || headerType == ESkmHeaders.smens) {
                     IVoice voice = abstractFactory.createVoice(defaultPart);
                     voiceParts.put(voice, defaultPart);
                     // now traverse the spine

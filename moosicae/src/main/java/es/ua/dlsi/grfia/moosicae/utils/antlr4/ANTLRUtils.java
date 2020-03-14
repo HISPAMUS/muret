@@ -1,7 +1,9 @@
 package es.ua.dlsi.grfia.moosicae.utils.antlr4;
 
 import org.antlr.v4.runtime.*;
-
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
 public class ANTLRUtils {
     private static StringBuilder printTabs(ParserRuleContext ctx) {
         StringBuilder stringBuilder = new StringBuilder();

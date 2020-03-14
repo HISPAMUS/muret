@@ -1,6 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.core;
 
-
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
 public interface IExporterVisitor<InputOutputType>  {
     void export(IClef clef, InputOutputType inputOutput);
     void export(INote note, InputOutputType inputOutput);

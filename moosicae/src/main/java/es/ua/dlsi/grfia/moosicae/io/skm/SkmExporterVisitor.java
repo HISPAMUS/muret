@@ -1,7 +1,9 @@
 package es.ua.dlsi.grfia.moosicae.io.skm;
 
 import es.ua.dlsi.grfia.moosicae.core.*;
-
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
 public class SkmExporterVisitor implements IExporterVisitor<StringBuilder> {
 
     @Override

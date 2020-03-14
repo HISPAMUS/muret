@@ -1,0 +1,154 @@
+package es.ua.dlsi.grfia.moosicae.core;
+
+import es.ua.dlsi.grfia.moosicae.IMException;
+import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
+import es.ua.dlsi.grfia.moosicae.utils.Time;
+import org.apache.commons.lang3.math.Fraction;
+
+// TODO: 22/9/17 Que tenga plica o no depende de la tipografía?
+// TODO: revisar lo de la plica - no lo quito porque ya lo tengo metido...
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
+public enum EFigures implements Comparable<EFigures> {
+    MAX_FIGURE(Integer.MAX_VALUE, 1, Integer.MAX_VALUE, ENotationType.eModern, EFigureVisualDecorations.none, 0), // used the same way Integer.MAX_VALUE
+    QUADRUPLE_WHOLE(16, 1, -1, ENotationType.eModern, EFigureVisualDecorations.none, 0),
+    DOUBLE_WHOLE(8, 1, 0, ENotationType.eModern, EFigureVisualDecorations.none, 0),
+    WHOLE(4, 1, 1, ENotationType.eModern, EFigureVisualDecorations.none, 0),
+    HALF(2, 1, 2, ENotationType.eModern, EFigureVisualDecorations.stem, 0),
+    QUARTER(1, 1, 4, ENotationType.eModern, EFigureVisualDecorations.stem, 0),
+    EIGHTH(1, 2, 8, ENotationType.eModern, EFigureVisualDecorations.stem, 1),
+    SIXTEENTH(1, 4, 16, ENotationType.eModern, EFigureVisualDecorations.stem, 2),
+    THIRTY_SECOND(1, 8, 32, ENotationType.eModern, EFigureVisualDecorations.stem, 3),
+    SIXTY_FOURTH(1, 16, 64, ENotationType.eModern, EFigureVisualDecorations.stem, 4),
+    HUNDRED_TWENTY_EIGHTH(1, 32, 128, ENotationType.eModern, EFigureVisualDecorations.stem, 5),
+    TWO_HUNDRED_FIFTY_SIX(1, 64, 256, ENotationType.eModern, EFigureVisualDecorations.stem, 6),
+    MAXIMA(32, 1, -2, ENotationType.eMensural, EFigureVisualDecorations.stem, 0),
+    LONGA(16, 1, -1, ENotationType.eMensural, EFigureVisualDecorations.stem, 0),
+    BREVE(8, 1, 0, ENotationType.eMensural, EFigureVisualDecorations.none, 0),
+    SEMIBREVE(4, 1, 1, ENotationType.eMensural, EFigureVisualDecorations.none, 0),
+    MINIM(2, 1, 2, ENotationType.eMensural, EFigureVisualDecorations.stemAndFlag, 0),
+    SEMIMINIM(1, 1, 4, ENotationType.eMensural, EFigureVisualDecorations.stemAndFlag, 0),
+    FUSA(1, 2, 8, ENotationType.eMensural, EFigureVisualDecorations.stemAndFlag, 1),
+    SEMIFUSA(1, 4, 16, ENotationType.eMensural, EFigureVisualDecorations.stemAndFlag, 2),
+    NO_DURATION(0, 1, 0, ENotationType.eModern, EFigureVisualDecorations.none, 0);
+
+    static EFigures[] SORTED_DESC_MENSURAL = new EFigures[]{
+            MAXIMA, LONGA, BREVE, SEMIBREVE, MINIM, SEMIMINIM, FUSA, SEMIFUSA
+    };
+
+    static EFigures[] SORTED_DESC_MODERN = new EFigures[]{
+            QUADRUPLE_WHOLE, DOUBLE_WHOLE, WHOLE, HALF, QUARTER, EIGHTH, SIXTEENTH, THIRTY_SECOND, SIXTY_FOURTH, HUNDRED_TWENTY_EIGHTH, TWO_HUNDRED_FIFTY_SIX
+    };
+
+    final Time duration;
+    /**
+     * Classical interpretation (the one used in denominators of meters)
+     */
+    final int meterUnit;
+    final ENotationType notationType;
+
+    final EFigureVisualDecorations decoration;
+    final int numFlags;
+    private final Time ratio;
+
+    EFigures(int quarters, int quarterSubdivisions, int meterUnit, ENotationType notationType, EFigureVisualDecorations decoration, int flags) {
+        duration = new Time(Fraction.getFraction(quarters, quarterSubdivisions));
+        this.meterUnit = meterUnit;
+        this.notationType = notationType;
+        this.decoration = decoration;
+        this.numFlags = flags;
+        this.ratio = new Time(Fraction.getFraction(quarters, quarterSubdivisions));
+    }
+
+    public Time getDuration() {
+        return duration;
+    }
+
+    public int getMeterUnit() {
+        return meterUnit;
+    }
+
+    public final ENotationType getENotationType() {
+        return notationType;
+    }
+
+    public boolean usesFlag() {
+        return (decoration == EFigureVisualDecorations.stemAndFlag || decoration == EFigureVisualDecorations.stem) && numFlags > 0;
+    }
+
+    public boolean usesStem() {
+        return decoration == EFigureVisualDecorations.stem || decoration == EFigureVisualDecorations.stemAndFlag;
+    }
+
+    public boolean usesCombinedStemAndFlag() {
+        return decoration == EFigureVisualDecorations.stemAndFlag;
+    }
+
+
+    public Time getRatio() {
+        return ratio;
+    }
+
+    /**
+     * Compute the duration of the figure using dots
+     *
+     * @param dots
+     * @return
+     */
+    public Time getDurationWithDots(int dots) {
+        Fraction sumDurations = duration.getExactTime();
+        Fraction lastDur = sumDurations;
+
+        for (int i = 0; i < dots; i++) {
+            lastDur = lastDur.multiplyBy(Fraction.ONE_HALF);
+            sumDurations = sumDurations.add(lastDur);
+        }
+
+        return new Time(sumDurations);
+    }
+
+    public static EFigures findDuration(Time duration, ENotationType notationType) throws IMException {
+        if (notationType == null) {
+            throw new IMException("Cannot search a duration if notationType is null");
+        }
+        for (EFigures fig : EFigures.values()) {
+            if (fig.notationType == notationType && fig.duration.equals(duration)) {
+                return fig;
+            }
+        }
+        throw new IMException("Cannot find a figure with duration " + duration + " and notation type " + notationType);
+    }
+
+    public static EFigures findMeterUnit(int meterUnit, ENotationType notationType) throws IMException {
+        for (EFigures fig : EFigures.values()) {
+            if (fig.notationType == notationType && meterUnit == fig.meterUnit) {
+                return fig;
+            }
+        }
+        throw new IMException("Cannot find a figure with meter unit " + meterUnit + " and notation type " + notationType);
+    }
+
+    public static EFigures findFigureWithFlags(int flags, ENotationType notationType) throws IMException {
+        for (EFigures fig : EFigures.values()) {
+            if (fig.notationType == notationType && flags == fig.numFlags) {
+                return fig;
+            }
+        }
+        throw new IMException("Cannot find a figure with flags " + flags + " and notation type " + notationType);
+    }
+
+    public int getNumFlags() {
+        return numFlags;
+    }
+
+    public static EFigures[] getEFiguresSortedDesc(ENotationType notationType) {
+        if (notationType == ENotationType.eMensural) {
+            return SORTED_DESC_MENSURAL;
+        } else if (notationType == ENotationType.eModern) {
+            return SORTED_DESC_MODERN;
+        } else {
+            throw new IMRuntimeException("Unknown notation type " + notationType);
+        }
+    }
+}

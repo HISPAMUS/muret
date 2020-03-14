@@ -7,8 +7,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * @author drizo
  * @param <T> Base class from which the derived will be instantiated
+ * @author David Rizo - drizo@dlsi.ua.es
  */
 public class Factory<T> {
     protected HashMap<String, Supplier<T>> defaultConstructor = new HashMap<>();

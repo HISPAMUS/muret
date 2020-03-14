@@ -27,7 +27,7 @@ import es.ua.dlsi.grfia.moosicae.io.skm.grammar.*;
 
 /**
  * It translates from **skm to a directed acyclic graph of symbols using a syntax driven translation technique
- * @author drizo
+ * @author David Rizo - drizo@dlsi.ua.es
  */
 public class SkmSyntaxDirectedTranslation {
     private final BuilderFactory builderFactory;

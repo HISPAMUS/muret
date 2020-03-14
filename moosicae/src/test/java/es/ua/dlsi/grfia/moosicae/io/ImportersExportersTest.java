@@ -17,7 +17,7 @@ public class ImportersExportersTest {
         IPart part = abstractFactory.createPart(score);
         score.add(part);
         IVoice voice = abstractFactory.createVoice(part);
-        IClef clef = abstractFactory.createClef(2, ClefSignTypes.G);
+        IClef clef = abstractFactory.createClef(2, EClefSigns.G);
         IStaff staff = abstractFactory.createStaff(score);
         staff.put(clef);
         voice.addItem(clef);

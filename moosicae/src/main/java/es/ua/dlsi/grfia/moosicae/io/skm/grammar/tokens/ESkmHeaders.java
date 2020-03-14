@@ -1,6 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens;
-
-public enum SkmHeaderTypes {
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
+public enum ESkmHeaders {
     skern ("**skern"),
     smens ("**smens"),
     dynamics ("**dyn"),
@@ -10,7 +12,7 @@ public enum SkmHeaderTypes {
 
     private final String encoding;
 
-    SkmHeaderTypes(String encoding) {
+    ESkmHeaders(String encoding) {
         this.encoding = encoding;
     }
 

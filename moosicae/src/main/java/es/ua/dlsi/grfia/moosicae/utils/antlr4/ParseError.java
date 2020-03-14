@@ -3,8 +3,7 @@ package es.ua.dlsi.grfia.moosicae.utils.antlr4;
 import org.antlr.v4.runtime.RecognitionException;
 
 /**
- *
- * @author drizo
+ * @author David Rizo - drizo@dlsi.ua.es
  */
 public class ParseError {
     Object offendingSymbol;

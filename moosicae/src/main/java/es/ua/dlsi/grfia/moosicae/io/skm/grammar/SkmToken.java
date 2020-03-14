@@ -1,5 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.io.skm.grammar;
-
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
 public class SkmToken {
     private final String encoding;
 

@@ -5,7 +5,9 @@ import es.ua.dlsi.grfia.moosicae.io.AbstractExporter;
 
 import java.util.LinkedList;
 import java.util.List;
-
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
 public class SkmExporter extends AbstractExporter<SkmExporterVisitor> {
     public SkmExporter() {
         super(new SkmExporterVisitor());

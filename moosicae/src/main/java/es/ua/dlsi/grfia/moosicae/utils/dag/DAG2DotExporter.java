@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
 public class DAG2DotExporter<SpineItemContentType> {
     private void printNodes(PrintStream os, DAGNode<SpineItemContentType> dagNode) {
         if (dagNode.getLabel() != null) {

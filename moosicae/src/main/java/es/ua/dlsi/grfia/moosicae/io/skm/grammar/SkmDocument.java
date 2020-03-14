@@ -16,7 +16,7 @@ import java.util.HashMap;
 /**
  * The main entry point: a musical piece, a musical composition.
  * The spines graph is started from the startToken
- * @author drizo
+ * @author David Rizo - drizo@dlsi.ua.es
  */
 public class SkmDocument {
     /**

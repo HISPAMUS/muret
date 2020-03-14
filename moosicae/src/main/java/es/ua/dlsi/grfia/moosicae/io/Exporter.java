@@ -5,7 +5,9 @@ import es.ua.dlsi.grfia.moosicae.core.IScore;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
 public class Exporter {
     private final IExporter exporter;
 

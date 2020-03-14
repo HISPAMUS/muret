@@ -5,7 +5,7 @@ import org.apache.commons.lang3.math.Fraction;
 
 /**
  * This is an inmutable object in order to be able to speed up the time computing as a double 
- * @author drizo
+ * @author David Rizo - drizo@dlsi.ua.es
  */
 public class Time implements Comparable<Time> {
 	public static final Time TIME_ZERO = new Time(Fraction.ZERO);

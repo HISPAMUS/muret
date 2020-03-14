@@ -1,4 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core;
-
-public interface IOctave {
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
+public interface IOctave extends ISymbolProperty {
+    int getNumber();
 }

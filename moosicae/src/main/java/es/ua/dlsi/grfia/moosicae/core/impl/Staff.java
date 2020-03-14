@@ -3,7 +3,9 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 import es.ua.dlsi.grfia.moosicae.core.*;
 
 import java.util.LinkedList;
-
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
 public class Staff implements IStaff {
     private final LinkedList<IStaffElement> items;
 

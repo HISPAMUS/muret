@@ -24,8 +24,7 @@ import java.net.URL;
 
 /**
  * It reads files for test correctly in Maven
- * 
- * @author drizo
+ * @author David Rizo - drizo@dlsi.ua.es
  */
 public class TestFileUtils {
 	static File TMP_FOLDER = null;

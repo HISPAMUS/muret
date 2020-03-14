@@ -6,7 +6,9 @@ import es.ua.dlsi.grfia.moosicae.core.IScore;
 import es.ua.dlsi.grfia.moosicae.io.AbstractImporter;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.SkmDocument;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.SkmSyntaxDirectedTranslation;
-
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
 public class SkmImporter extends AbstractImporter {
     /**
      * It uses the default core factory

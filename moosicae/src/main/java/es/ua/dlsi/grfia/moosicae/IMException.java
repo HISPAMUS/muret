@@ -4,9 +4,8 @@
 package es.ua.dlsi.grfia.moosicae;
 
 /**
- * @author david
- */
-public class IMException extends Exception {
+ * @author David Rizo - drizo@dlsi.ua.es
+ */public class IMException extends Exception {
 
 	/**
 	 *

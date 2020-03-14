@@ -1,4 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core;
-
-public interface IDots {
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
+public interface IDots extends ISymbolProperty {
+    int getCount();
 }

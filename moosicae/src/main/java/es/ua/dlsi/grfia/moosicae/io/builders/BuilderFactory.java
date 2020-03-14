@@ -1,7 +1,9 @@
 package es.ua.dlsi.grfia.moosicae.io.builders;
 
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
-
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
 public class BuilderFactory {
     private final IClefBuilder iClefBuilder;
 

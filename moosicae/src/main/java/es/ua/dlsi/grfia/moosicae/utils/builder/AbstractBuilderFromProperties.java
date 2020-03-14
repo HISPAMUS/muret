@@ -10,6 +10,7 @@ import java.util.Properties;
  * It contains a hierarchical structure of properties that can be used to help builders
  * to create objects from strings imported from files such as XML or **kern
  * @param <BuiltType> The target class type
+ * @author David Rizo - drizo@dlsi.ua.es
  */
 public abstract class AbstractBuilderFromProperties<BuiltType> {
     private final Properties properties;

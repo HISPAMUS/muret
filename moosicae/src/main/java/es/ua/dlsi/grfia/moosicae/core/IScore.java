@@ -1,5 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core;
-
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
 public interface IScore {
     IMetadata getMetadata();
     IPart[] getParts();

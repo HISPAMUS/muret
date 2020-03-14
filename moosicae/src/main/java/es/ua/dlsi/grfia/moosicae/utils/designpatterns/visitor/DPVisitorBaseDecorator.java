@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.utils.designpatterns.visitor;
 
 /**
  * Inherit is as concrete decorators
+ * @author David Rizo - drizo@dlsi.ua.es
  */
 public abstract class DPVisitorBaseDecorator<VisitorComponentType extends IDPVisitorComponent> {
     private final VisitorComponentType wrappee;

@@ -1,21 +1,27 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.core.IClef;
-import es.ua.dlsi.grfia.moosicae.core.ClefSignTypes;
+import es.ua.dlsi.grfia.moosicae.core.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
+import es.ua.dlsi.grfia.moosicae.core.IVoiced;
+import es.ua.dlsi.grfia.moosicae.utils.CoreUtils;
 
 import java.util.Objects;
-
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
 public class Clef implements IClef {
     private final int line;
-    private final ClefSignTypes signType;
+    private final EClefSigns signType;
 
     /**
      * Used by factory
      * @param line
      * @param signType
      */
-    Clef(int line, ClefSignTypes signType) {
+    Clef(int line, EClefSigns signType) {
+        CoreUtils.requireNotNullConstructorParam(this, signType, "signType");
+
         this.line = line;
         this.signType = signType;
     }
@@ -24,7 +30,7 @@ public class Clef implements IClef {
         return line;
     }
 
-    public ClefSignTypes getSignType() {
+    public EClefSigns getSignType() {
         return signType;
     }
 
@@ -43,7 +49,20 @@ public class Clef implements IClef {
     }
 
     @Override
+    public Clef clone() {
+        return new Clef(line, signType);
+    }
+
+    @Override
     public <InputOutputType> void export(IExporterVisitor exportVisitor, InputOutputType inputOutput) {
         exportVisitor.export(this, inputOutput);
+    }
+
+    @Override
+    public String toString() {
+        return "Clef{" +
+                "line=" + line +
+                ", signType=" + signType +
+                '}';
     }
 }

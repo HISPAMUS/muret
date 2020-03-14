@@ -2,24 +2,26 @@ package es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens;
 
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.SkmToken;
-
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
 public class SkmHeader extends SkmToken {
-    private final SkmHeaderTypes skmHeaderType;
+    private final ESkmHeaders skmHeaderType;
 
-    public SkmHeader(SkmHeaderTypes skmHeaderType) {
+    public SkmHeader(ESkmHeaders skmHeaderType) {
         super(skmHeaderType.getEncoding());
         this.skmHeaderType = skmHeaderType;
     }
 
     public static SkmHeader parse(String text) {
-        SkmHeaderTypes skmHeaderType = SkmHeaderTypes.valueOf(text);
+        ESkmHeaders skmHeaderType = ESkmHeaders.valueOf(text);
         if (skmHeaderType == null) {
             throw new IMRuntimeException("Cannot find a header with encoding '" + text + "'");
         }
-        return new SkmHeader(SkmHeaderTypes.valueOf(text));
+        return new SkmHeader(ESkmHeaders.valueOf(text));
     }
 
-    public SkmHeaderTypes getSkmHeaderType() {
+    public ESkmHeaders getSkmHeaderType() {
         return skmHeaderType;
     }
 }

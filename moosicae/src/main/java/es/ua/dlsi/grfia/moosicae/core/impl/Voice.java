@@ -5,7 +5,9 @@ import es.ua.dlsi.grfia.moosicae.core.IVoice;
 import es.ua.dlsi.grfia.moosicae.core.IVoiced;
 
 import java.util.LinkedList;
-
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
 public class Voice implements IVoice {
     private final LinkedList<IVoiced> items;
 
@@ -21,6 +23,11 @@ public class Voice implements IVoice {
     @Override
     public void addItem(IVoiced item) {
         this.items.add(item);
+    }
+
+    @Override
+    public IVoiced clone() {
+        return null;
     }
 
     @Override

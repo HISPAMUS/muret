@@ -1,7 +1,9 @@
 package es.ua.dlsi.grfia.moosicae.utils.xml;
 
 import java.util.Objects;
-
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
 public class XMLAttribute {
     private final String name;
     private final String value;

@@ -5,6 +5,7 @@ import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 /**
  * Directed acyclic graph
  * @param <SpineItemContentType> The type of the elements that will be stored in the items
+ * @author David Rizo - drizo@dlsi.ua.es
  */
 public class DAG<SpineItemContentType> {
     DAGNode<SpineItemContentType> firstNode;

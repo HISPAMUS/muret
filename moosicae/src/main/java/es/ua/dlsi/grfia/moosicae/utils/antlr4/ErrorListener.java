@@ -7,10 +7,9 @@ import org.antlr.v4.runtime.Recognizer;
 import java.util.ArrayList;
 
 /**
- *
- * @author drizo
+ * @author David Rizo - drizo@dlsi.ua.es
  */
- public class ErrorListener extends ConsoleErrorListener {
+public class ErrorListener extends ConsoleErrorListener {
 	ArrayList<ParseError> errors = new ArrayList<>();
 	
 	@Override

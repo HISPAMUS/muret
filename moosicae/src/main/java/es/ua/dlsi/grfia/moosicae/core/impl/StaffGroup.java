@@ -5,7 +5,9 @@ import es.ua.dlsi.grfia.moosicae.core.IStaffGroup;
 import es.ua.dlsi.grfia.moosicae.core.ISystemElement;
 
 import java.util.LinkedList;
-
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
 public class StaffGroup extends Staves implements IStaffGroup {
     private final LinkedList<ISystemElement> children;
 

@@ -1,5 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.utils.dag;
-
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
 public class DAGLabel<SpineItemContentType> {
     SpineItemContentType content;
 

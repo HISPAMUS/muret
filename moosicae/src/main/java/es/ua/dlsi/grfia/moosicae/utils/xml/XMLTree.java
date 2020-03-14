@@ -3,7 +3,8 @@ package es.ua.dlsi.grfia.moosicae.utils.xml;
 import java.util.LinkedList;
 
 /**
- * We don't use the Java DOM tree for simplifying the processing and avoid problems due to dependencies
+ * We don't use the Java DOM tree for exporting for simplifying the processing and avoid problems due to dependencies
+ * @author David Rizo - drizo@dlsi.ua.es
  */
 public class XMLTree {
     private final LinkedList<XMLPreambleElement> preamble;

@@ -5,8 +5,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import java.util.ArrayList;
 
 /**
- *
- * @author drizo
+ * @author David Rizo - drizo@dlsi.ua.es
  */
 public class GrammarParseException extends IMException {
     /**

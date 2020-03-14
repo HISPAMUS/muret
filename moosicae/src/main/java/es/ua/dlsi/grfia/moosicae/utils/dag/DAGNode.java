@@ -2,7 +2,9 @@ package es.ua.dlsi.grfia.moosicae.utils.dag;
 
 import java.util.LinkedList;
 import java.util.List;
-
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
 public class DAGNode<DAGLabelType> {
     private static long NEXT_ID = 1;
     private long uniqueID;

@@ -2,12 +2,15 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.core.IDots;
 import es.ua.dlsi.grfia.moosicae.core.IDurationalSingle;
-import es.ua.dlsi.grfia.moosicae.core.IFigure;
-import es.ua.dlsi.grfia.moosicae.core.ITime;
+import es.ua.dlsi.grfia.moosicae.core.EFigures;
+import es.ua.dlsi.grfia.moosicae.utils.Time;
 
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
 public abstract class DurationalSingle implements IDurationalSingle {
     @Override
-    public IFigure getFigure() {
+    public EFigures getFigure() {
         return null;
     }
 
@@ -17,7 +20,9 @@ public abstract class DurationalSingle implements IDurationalSingle {
     }
 
     @Override
-    public ITime getDuration() {
+    public Time getDuration() {
         return null;
     }
+
+    public abstract DurationalSingle clone();
 }

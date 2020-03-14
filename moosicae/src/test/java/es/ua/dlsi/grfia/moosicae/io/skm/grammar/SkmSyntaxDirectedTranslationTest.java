@@ -14,7 +14,7 @@ import java.io.FileNotFoundException;
  */
 public class SkmSyntaxDirectedTranslationTest {
     @Test
-    public void importSKernMens() throws IMException, FileNotFoundException {
+    public void importSKernMens() throws IMException {
         String [] testFileNames = {"base.skm"};
 
         BuilderFactory builderFactory = new BuilderFactory(new CoreFactory().create());

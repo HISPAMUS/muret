@@ -7,7 +7,9 @@ import es.ua.dlsi.grfia.moosicae.utils.xml.XMLPreambleElement;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLTree;
 
 import java.util.Optional;
-
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
 public class MEIExporter implements IExporter {
     public MEIExporter() {
 

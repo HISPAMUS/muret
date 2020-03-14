@@ -3,7 +3,9 @@ package es.ua.dlsi.grfia.moosicae.utils.xml;
 
 import java.util.LinkedList;
 import java.util.List;
-
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
 public class XMLElement {
     private final String name;
     private LinkedList<XMLAttribute> attributes;

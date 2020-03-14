@@ -1,11 +1,45 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.metadata.ITitle;
 
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ */
 public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     @Override
-    public IClef createClef(int line, ClefSignTypes clefSign) {
+    public IAlteration createAlteration(EAccidentals accidentals, EAlterationDisplayType alterationDisplayType) {
+        return new Alteration(accidentals, alterationDisplayType);
+    }
+
+    @Override
+    public IPitch createPitch(IOctave octave, IAlteration alteration, EDiatonicPitches diatonicPitch) {
+        return new Pitch(octave, alteration,  diatonicPitch);
+    }
+
+    @Override
+    public IOctave createOctave(int number) {
+        return new Octave(number);
+    }
+
+    @Override
+    public ICustos createCustos(IPitch pitch) {
+        return new Custos(pitch);
+    }
+
+    @Override
+    public ITitle createTitle(String title) {
+        return new Title(title);
+    }
+
+    @Override
+    public IClef createClef(int line, EClefSigns clefSign) {
         return new Clef(line, clefSign);
+    }
+
+    @Override
+    public IKeySignature createKeySignature(IPitchClass[] pitchClasses) {
+        return new KeySignature(pitchClasses);
     }
 
     @Override
