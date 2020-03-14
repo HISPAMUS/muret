@@ -10,17 +10,13 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class Part implements IPart {
-    private String name;
+    private final String name;
     private final LinkedList<IVoice> voices;
 
     public Part(String name) {
         CoreUtils.requireNotNullConstructorParam(this, name, "name");
         this.name = name;
         this.voices = new LinkedList<>();
-    }
-
-    public Part() {
-        this(null);
     }
 
     public Optional<String> getName() {

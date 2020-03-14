@@ -55,7 +55,7 @@ public class MEIImporter extends AbstractImporter {
             IScore score = coreAbstractFactory.createScore();
 
             //TODO quitar la inicialización a pelo
-            IPart part = coreAbstractFactory.createPart(score);
+            IPart part = coreAbstractFactory.createPart(score, "TODO");
             IVoice voice = coreAbstractFactory.createVoice(part);
 
             parse(nList.item(0), score, voice); //TODO quitar voice y staff

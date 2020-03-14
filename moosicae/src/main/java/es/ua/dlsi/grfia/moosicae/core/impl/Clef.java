@@ -3,8 +3,6 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 import es.ua.dlsi.grfia.moosicae.core.IClef;
 import es.ua.dlsi.grfia.moosicae.core.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
-import es.ua.dlsi.grfia.moosicae.core.IVoiced;
-import es.ua.dlsi.grfia.moosicae.utils.CoreUtils;
 
 import java.util.Objects;
 /**
@@ -20,8 +18,6 @@ public class Clef implements IClef {
      * @param signType
      */
     Clef(int line, EClefSigns signType) {
-        CoreUtils.requireNotNullConstructorParam(this, signType, "signType");
-
         this.line = line;
         this.signType = signType;
     }

@@ -4,7 +4,6 @@ import es.ua.dlsi.grfia.moosicae.core.ICustos;
 import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.IPitch;
 import es.ua.dlsi.grfia.moosicae.core.IVoiced;
-import es.ua.dlsi.grfia.moosicae.utils.CoreUtils;
 
 import java.util.Objects;
 
@@ -14,8 +13,7 @@ import java.util.Objects;
 public class Custos implements ICustos {
     private final IPitch pitch;
 
-    public Custos(IPitch pitch) {
-        CoreUtils.requireNotNullConstructorParam(this, pitch, "pitch");
+    Custos(IPitch pitch) {
         this.pitch = pitch;
     }
 

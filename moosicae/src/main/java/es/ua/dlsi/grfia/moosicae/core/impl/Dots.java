@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Dots implements IDots {
     private final int count;
 
-    public Dots(int count) {
+    Dots(int count) {
         this.count = count;
     }
 

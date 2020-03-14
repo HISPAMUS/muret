@@ -32,7 +32,7 @@ public class SkmDocument2IScore {
 
 
     public IScore convert(DAGNode<SkmToken> firstNode) throws IMException {
-        defaultPart = abstractFactory.createPart(score);
+        defaultPart = abstractFactory.createPart(score, "Default");
         defaultStaff = abstractFactory.createStaff(score);
 
         // first create voices, all associated to a default part that will be moved to other part when the **part token is found
@@ -98,7 +98,7 @@ public class SkmDocument2IScore {
         IPart part = partNumbers.get(skmPart.getNumber());
 
         if (part == null) {
-            part = abstractFactory.createPart(score);
+            part = abstractFactory.createPart(score, "Part #" + skmPart.getNumber());
             partNumbers.put(skmPart.getNumber(), part);
         }
 

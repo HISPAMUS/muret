@@ -3,14 +3,43 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.metadata.ITitle;
 
+import java.util.Optional;
+
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     @Override
-    public IAlteration createAlteration(EAccidentals accidentals, EAlterationDisplayType alterationDisplayType) {
+    public IAlteration createAlteration(EAccidentals accidentals, Optional<EAlterationDisplayType> alterationDisplayType) {
         return new Alteration(accidentals, alterationDisplayType);
     }
+
+    @Override
+    public IChord createChord(EFigures figures, Optional<IDots> dots, IPitch[] pitches) {
+        return new Chord(figures, dots, pitches);
+    }
+
+    @Override
+    public IClef createClef(int line, EClefSigns clefSign) {
+        return new Clef(line, clefSign);
+    }
+
+    @Override
+    public ICustos createCustos(IPitch pitch) {
+        return new Custos(pitch);
+    }
+
+
+    @Override
+    public IKeySignature createKeySignature(IPitchClass[] pitchClasses) {
+        return new KeySignature(pitchClasses);
+    }
+
+    @Override
+    public INote createNote(EFigures figures, Optional<IDots> dots, IPitch pitches) {
+        return new Note(figures, dots, pitches);
+    }
+
 
     @Override
     public IPitch createPitch(IOctave octave, IAlteration alteration, EDiatonicPitches diatonicPitch) {
@@ -22,25 +51,12 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
         return new Octave(number);
     }
 
-    @Override
-    public ICustos createCustos(IPitch pitch) {
-        return new Custos(pitch);
-    }
 
     @Override
     public ITitle createTitle(String title) {
         return new Title(title);
     }
 
-    @Override
-    public IClef createClef(int line, EClefSigns clefSign) {
-        return new Clef(line, clefSign);
-    }
-
-    @Override
-    public IKeySignature createKeySignature(IPitchClass[] pitchClasses) {
-        return new KeySignature(pitchClasses);
-    }
 
     @Override
     public IPart createPart(IScore score, String name) {
@@ -49,19 +65,6 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
         return part;
     }
 
-    @Override
-    public IPart createPart(IScore score) {
-        IPart part = new Part();
-        score.add(part);
-        return part;
-    }
-
-    @Override
-    public IVoice createVoice(IPart part) {
-        Voice voice = new Voice();
-        part.addVoice(voice);
-        return voice;
-    }
 
     @Override
     public IScore createScore() {
@@ -95,4 +98,12 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
         staffGroup.add(childStaffGroup);
         return childStaffGroup;
     }
+
+    @Override
+    public IVoice createVoice(IPart part) {
+        Voice voice = new Voice();
+        part.addVoice(voice);
+        return voice;
+    }
+
 }

@@ -3,7 +3,6 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 import es.ua.dlsi.grfia.moosicae.core.EAccidentals;
 import es.ua.dlsi.grfia.moosicae.core.EAlterationDisplayType;
 import es.ua.dlsi.grfia.moosicae.core.IAlteration;
-import es.ua.dlsi.grfia.moosicae.utils.CoreUtils;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -15,10 +14,9 @@ public class Alteration implements IAlteration {
     private final EAccidentals accidental;
     private final Optional<EAlterationDisplayType> alterationDisplayType;
 
-    public Alteration(EAccidentals accidental, EAlterationDisplayType alterationDisplayType) {
-        CoreUtils.requireNotNullConstructorParam(this, accidental, "accidental");
+    Alteration(EAccidentals accidental, Optional<EAlterationDisplayType> alterationDisplayType) {
         this.accidental = accidental;
-        this.alterationDisplayType = Optional.ofNullable(alterationDisplayType);
+        this.alterationDisplayType = alterationDisplayType;
     }
 
     @Override
@@ -33,7 +31,7 @@ public class Alteration implements IAlteration {
 
     @Override
     public Alteration clone() {
-        return null;
+        return new Alteration(accidental, alterationDisplayType);
     }
 
     @Override

@@ -19,7 +19,6 @@ public class KeySignature implements IKeySignature {
      * @param pitchClasses
      */
     KeySignature(IPitchClass[] pitchClasses) {
-        Objects.requireNonNull(pitchClasses, "Missing KeySignature constructor parameter: pitchClasses");
         this.pitchClasses = pitchClasses.clone();
     }
 
