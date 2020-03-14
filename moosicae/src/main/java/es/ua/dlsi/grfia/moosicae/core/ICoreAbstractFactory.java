@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core;
 
 
+import es.ua.dlsi.grfia.moosicae.core.mensural.*;
 import es.ua.dlsi.grfia.moosicae.core.metadata.ITitle;
 
 import java.util.Optional;
@@ -13,13 +14,27 @@ public interface ICoreAbstractFactory {
     IAlteration createAlteration(EAccidentals accidentals, Optional<EAlterationDisplayType> alterationDisplayType);
     IChord createChord(EFigures figures, Optional<IDots> dots, IPitch [] pitches);
     IClef createClef(int line, EClefSigns clefSign);
+    ICommonTime createCommonTime();
     ICustos createCustos(IPitch pitch);
+    ICutTime createCutTime();
     IKeySignature createKeySignature(IPitchClass [] pitchClasses);
+    IFractionalTimeSignature createFractionalTimeSignature(int numerator, int denominator);
+    IMensuration createMensuration(EMensuralPerfections modusMaior, EMensuralPerfections modusMinor, EMensuralPerfections tempus, EMensuralPerfections prolatio);
     INote createNote(EFigures figures, Optional<IDots> dots, IPitch pitches);
     IOctave createOctave(int number);
     IPart createPart(IScore score, String name);
     IPitch createPitch(IOctave octave, IAlteration alteration, EDiatonicPitches diatonicPitch);
+    IProportioChangeDupla createProportioChangeDupla();
+    IProportioChangeTripla createProportioChangeTripla();
+    IProportioSesquialtera createProportioSesquialtera();
+    IProportioTripla createProportioTripla();
     IScore createScore();
+    ITempusImperfectumCumProlationeImperfecta createTempusImperfectumCumProlationeImperfecta();
+    ITempusImperfectumCumProlationeImperfectaDiminutum createTempusImperfectumCumProlationeImperfectaDominitum();
+    ITempusImperfectumCumProlationePerfecta createTempusImperfectumCumProlationePerfecta();
+    ITempusPerfectumCumProlationeImperfecta createTempusPerfectumCumProlationeImperfecta();
+    ITempusPerfectumCumProlationePerfecta createTempusPerfectumCumProlationePerfecta();
+
     /**
      * For nested staff
      * @param staffGroup
