@@ -11,7 +11,7 @@ import org.apache.commons.lang3.math.Fraction;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public enum EFigures implements Comparable<EFigures> {
-    MAX_FIGURE(Integer.MAX_VALUE, 1, Integer.MAX_VALUE, ENotationType.eModern, EFigureVisualDecorations.none, 0), // used the same way Integer.MAX_VALUE
+    OCTUPLE_WHOLE(32, 1, -1, ENotationType.eModern, EFigureVisualDecorations.none, 0),
     QUADRUPLE_WHOLE(16, 1, -1, ENotationType.eModern, EFigureVisualDecorations.none, 0),
     DOUBLE_WHOLE(8, 1, 0, ENotationType.eModern, EFigureVisualDecorations.none, 0),
     WHOLE(4, 1, 1, ENotationType.eModern, EFigureVisualDecorations.none, 0),
@@ -30,8 +30,7 @@ public enum EFigures implements Comparable<EFigures> {
     MINIM(2, 1, 2, ENotationType.eMensural, EFigureVisualDecorations.stemAndFlag, 0),
     SEMIMINIM(1, 1, 4, ENotationType.eMensural, EFigureVisualDecorations.stemAndFlag, 0),
     FUSA(1, 2, 8, ENotationType.eMensural, EFigureVisualDecorations.stemAndFlag, 1),
-    SEMIFUSA(1, 4, 16, ENotationType.eMensural, EFigureVisualDecorations.stemAndFlag, 2),
-    NO_DURATION(0, 1, 0, ENotationType.eModern, EFigureVisualDecorations.none, 0);
+    SEMIFUSA(1, 4, 16, ENotationType.eMensural, EFigureVisualDecorations.stemAndFlag, 2);
 
     static EFigures[] SORTED_DESC_MENSURAL = new EFigures[]{
             MAXIMA, LONGA, BREVE, SEMIBREVE, MINIM, SEMIMINIM, FUSA, SEMIFUSA

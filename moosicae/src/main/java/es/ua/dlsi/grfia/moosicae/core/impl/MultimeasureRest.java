@@ -9,17 +9,10 @@ import es.ua.dlsi.grfia.moosicae.core.IVoiced;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class MultimeasureRest extends DurationalComposite implements IMultimeasureRest {
-    private final EFigures figure;
     private final int measureCount;
 
-    public MultimeasureRest(EFigures figure, int measureCount) {
-        this.figure = figure;
+    public MultimeasureRest(int measureCount) {
         this.measureCount = measureCount;
-    }
-
-    @Override
-    public EFigures getFigure() {
-        return figure;
     }
 
     @Override
@@ -29,7 +22,7 @@ public class MultimeasureRest extends DurationalComposite implements IMultimeasu
 
     @Override
     public MultimeasureRest clone() {
-        return new MultimeasureRest(figure, measureCount);
+        return new MultimeasureRest(measureCount);
     }
 
     @Override
@@ -44,22 +37,18 @@ public class MultimeasureRest extends DurationalComposite implements IMultimeasu
 
         MultimeasureRest that = (MultimeasureRest) o;
 
-        if (measureCount != that.measureCount) return false;
-        return figure == that.figure;
+        return measureCount == that.measureCount;
     }
 
     @Override
     public int hashCode() {
-        int result = figure.hashCode();
-        result = 31 * result + measureCount;
-        return result;
+        return measureCount;
     }
 
     @Override
     public String toString() {
         return "MultimeasureRest{" +
-                "figure=" + figure +
-                ", measureCount=" + measureCount +
+                "measureCount=" + measureCount +
                 "} " + super.toString();
     }
 }

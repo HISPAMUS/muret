@@ -91,8 +91,8 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IMultimeasureRest createMultimeasureRest(EFigures figure, int measureCount) {
-        return new MultimeasureRest(figure, measureCount);
+    public IMultimeasureRest createMultimeasureRest(int measureCount) {
+        return new MultimeasureRest(measureCount);
     }
 
     @Override
