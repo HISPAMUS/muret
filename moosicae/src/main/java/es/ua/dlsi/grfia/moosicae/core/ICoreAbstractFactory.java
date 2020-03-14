@@ -20,6 +20,7 @@ public interface ICoreAbstractFactory {
     IKeySignature createKeySignature(IPitchClass [] pitchClasses);
     IFractionalTimeSignature createFractionalTimeSignature(int numerator, int denominator);
     IMensuration createMensuration(EMensuralPerfections modusMaior, EMensuralPerfections modusMinor, EMensuralPerfections tempus, EMensuralPerfections prolatio);
+    IMultimeasureRest createMultimeasureRest(EFigures figure, int measureCount);
     INote createNote(EFigures figures, Optional<IDots> dots, IPitch pitches);
     IOctave createOctave(int number);
     IPart createPart(IScore score, String name);

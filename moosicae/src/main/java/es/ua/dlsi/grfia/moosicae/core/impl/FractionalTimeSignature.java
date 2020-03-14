@@ -9,7 +9,7 @@ import org.apache.commons.lang3.math.Fraction;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 14/03/2020
  */
-public class FractionalTimeSignature implements IFractionalTimeSignature {
+public class FractionalTimeSignature extends Meter implements IFractionalTimeSignature {
     private final int numerator;
     private final int denominator;
     private final Time barDuration;
@@ -37,7 +37,7 @@ public class FractionalTimeSignature implements IFractionalTimeSignature {
 
     @Override
     public <InputOutputType> void export(IExporterVisitor exportVisitor, InputOutputType inputOutput) {
-
+        exportVisitor.export(this, inputOutput);
     }
 
     @Override
