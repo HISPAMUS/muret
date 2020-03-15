@@ -1,10 +1,9 @@
 package es.ua.dlsi.grfia.moosicae.io.skm;
 
+import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
+import es.ua.dlsi.grfia.moosicae.IMetronomeMark;
 import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
-import es.ua.dlsi.grfia.moosicae.core.enums.EAlterationDisplayTypes;
-import es.ua.dlsi.grfia.moosicae.core.enums.EDiatonicPitches;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
 
 /**
@@ -217,10 +216,23 @@ public class SkmExporterVisitor implements IExporterVisitor<StringBuilder> {
                 break;
             case DOUBLE_WHOLE: // modern
                 encoding = "0";
+                break;
             default: // all the other modern notation
                 encoding = Integer.toString(figure.getMeterUnit());
         }
         inputOutput.append(encoding);
+    }
+
+    @Override
+    public void export(IMetronomeMark metronomeMark, StringBuilder inputOutput) throws IMException {
+        if (metronomeMark.getDots().isPresent()) {
+            throw new IMException("Unsupported dots in metronome"); //TODO
+        }
+        if (metronomeMark.getFigure().getFigure() != EFigures.QUARTER) {
+            throw new IMException("Unsupported figure in metronome: " + metronomeMark.getFigure().getFigure()); //TODO
+        }
+        inputOutput.append("MM");
+        inputOutput.append(metronomeMark.getValue());
     }
 
 }

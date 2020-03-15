@@ -1,5 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.io;
 
+import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IScore;
 
 import java.io.IOException;
@@ -15,11 +16,11 @@ public class Exporter {
         this.exporter = exporter;
     }
 
-    public String export(IScore score) {
+    public String export(IScore score) throws IMException {
         return this.exporter.exportScore(score);
     }
 
-    public void export(IScore score, Path path) throws IOException {
+    public void export(IScore score, Path path) throws IOException, IMException {
         String str = export(score);
         byte[] strToBytes = str.getBytes();
         Files.write(path, strToBytes);

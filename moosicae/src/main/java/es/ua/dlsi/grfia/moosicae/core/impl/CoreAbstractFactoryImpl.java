@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
+import es.ua.dlsi.grfia.moosicae.IMetronomeMark;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
@@ -90,6 +91,11 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
             result.setModusMinor(modusMinor);
         }
         return result;
+    }
+
+    @Override
+    public IMetronomeMark createMetronomeMark(IFigure figure, Optional<IDots> dots, int value) {
+        return new MetronomeMark(figure, dots, value);
     }
 
     @Override

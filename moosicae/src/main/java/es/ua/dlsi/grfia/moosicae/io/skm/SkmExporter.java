@@ -1,5 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.io.skm;
 
+import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.io.AbstractExporter;
 
@@ -33,7 +34,7 @@ public class SkmExporter extends AbstractExporter<SkmExporterVisitor> {
 
 
     @Override
-    public String exportScore(IScore score) {
+    public String exportScore(IScore score) throws IMException {
         LinkedList<LinkedList<String>> matrix = new LinkedList<>();
         List<IVoice> voices = generateVoices(score);
 
@@ -57,7 +58,7 @@ public class SkmExporter extends AbstractExporter<SkmExporterVisitor> {
         return result;
     }
 
-    private void exportSymbols(LinkedList<LinkedList<String>> matrix, List<IVoice> voices) {
+    private void exportSymbols(LinkedList<LinkedList<String>> matrix, List<IVoice> voices) throws IMException {
         //TODO varios spines...
         LinkedList<String> record = addRecord(matrix);
         for (IVoice voice: voices) {

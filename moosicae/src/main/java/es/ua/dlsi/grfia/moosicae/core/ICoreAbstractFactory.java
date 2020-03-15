@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core;
 
 
+import es.ua.dlsi.grfia.moosicae.IMetronomeMark;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
 import es.ua.dlsi.grfia.moosicae.core.mensural.*;
@@ -22,6 +23,7 @@ public interface ICoreAbstractFactory {
     IKeySignature createKeySignature(IPitchClass [] pitchClasses);
     IFractionalTimeSignature createFractionalTimeSignature(int numerator, int denominator);
     IMensuration createMensuration(EMensuralPerfections modusMaior, EMensuralPerfections modusMinor, EMensuralPerfections tempus, EMensuralPerfections prolatio);
+    IMetronomeMark createMetronomeMark(IFigure figure, Optional<IDots> dots, int value);
     IMultimeasureRest createMultimeasureRest(int measureCount);
     INote createNote(IFigure figures, Optional<IDots> dots, IPitch pitches);
     IOctave createOctave(int number);

@@ -1,5 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.core;
 
+import es.ua.dlsi.grfia.moosicae.IMException;
+import es.ua.dlsi.grfia.moosicae.IMetronomeMark;
+
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
@@ -24,4 +27,5 @@ public interface IExporterVisitor<InputOutputType>  {
     void export(IPitch pitch, InputOutputType inputOutput);
     void export(IDots dots, InputOutputType inputOutput);
     void export(IFigure figures, InputOutputType inputOutput);
+    void export(IMetronomeMark metronomeMark, InputOutputType inputOutput) throws IMException;
 }
