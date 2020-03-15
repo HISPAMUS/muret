@@ -57,6 +57,14 @@ public class SkmDocument2IScore {
             }
         }
 
+        // remove unused default part and staves
+        if (defaultPart.getVoices().length == 0) {
+            score.remove(defaultPart);
+        }
+        //TODO
+        /*if (defaultStaff.getStaffSymbols().length == 0) {
+            score.remove(defaultStaff);
+        }*/
         return score;
     }
 

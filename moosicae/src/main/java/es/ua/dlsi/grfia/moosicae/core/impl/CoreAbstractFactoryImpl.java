@@ -186,7 +186,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     @Override
     public IVoice createVoice(IPart part) {
         Voice voice = new Voice();
-        part.addVoice(voice);
+        part.add(voice);
         return voice;
     }
 

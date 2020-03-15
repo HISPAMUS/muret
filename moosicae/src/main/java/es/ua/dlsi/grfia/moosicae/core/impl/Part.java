@@ -22,7 +22,7 @@ public class Part implements IPart {
     }
 
     @Override
-    public void addVoice(IVoice voice) {
+    public void add(IVoice voice) {
         this.voices.add(voice);
     }
 
@@ -32,7 +32,7 @@ public class Part implements IPart {
     }
 
     @Override
-    public void removeVoice(IVoice voice) {
+    public void remove(IVoice voice) {
         this.voices.remove(voice);
     }
 }

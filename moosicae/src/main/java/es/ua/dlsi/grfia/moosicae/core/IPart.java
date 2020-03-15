@@ -8,8 +8,8 @@ import java.util.Optional;
 public interface IPart {
     Optional<String> getName();
 
-    void addVoice(IVoice voice);
+    void add(IVoice voice);
 
     IVoice[] getVoices();
-    void removeVoice(IVoice voice);
+    void remove(IVoice voice);
 }

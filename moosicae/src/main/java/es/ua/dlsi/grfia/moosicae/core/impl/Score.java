@@ -53,7 +53,13 @@ public class Score implements IScore {
 
     @Override
     public void moveVoice(IVoice voice, IPart fromPart, IPart toPart) {
-        fromPart.removeVoice(voice);
-        toPart.addVoice(voice);
+        fromPart.remove(voice);
+        toPart.add(voice);
     }
+
+    @Override
+    public void remove(IPart part) {
+        this.parts.remove(part);
+    }
+
 }

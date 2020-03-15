@@ -13,10 +13,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class ImportersExportersTest {
-    private IScore creaateScore(ICoreAbstractFactory abstractFactory) {
+    private IScore createScore(ICoreAbstractFactory abstractFactory) {
         IScore score = abstractFactory.createScore();
         IPart part = abstractFactory.createPart(score, "default");
-        score.add(part);
         IVoice voice = abstractFactory.createVoice(part);
         IClef clef = abstractFactory.createClef(2, abstractFactory.createClefSign(EClefSigns.G));
         IStaff staff = abstractFactory.createStaff(score);
@@ -27,7 +26,8 @@ public class ImportersExportersTest {
 
     private void testExportImport(IScore score, IExporter exporter, IImporter importer) throws IMException {
         String exported = exporter.exportScore(score);
-
+        System.out.println("EXPORTED: ");
+        System.out.println(exported);
 
         IScore imported = importer.importScore(exported);
 
@@ -39,7 +39,7 @@ public class ImportersExportersTest {
     @Test
     public void exportScore() throws IMException {
         ICoreAbstractFactory abstractFactory = new CoreAbstractFactoryImpl();
-        IScore score = creaateScore(abstractFactory);
+        IScore score = createScore(abstractFactory);
         testExportImport(score, new SkmExporter(), new SkmImporter(abstractFactory));
         testExportImport(score, new MEIExporter(), new MEIImporter(abstractFactory));
     }
