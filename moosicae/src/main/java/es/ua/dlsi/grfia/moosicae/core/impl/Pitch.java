@@ -1,9 +1,9 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.utils.CoreUtils;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -11,12 +11,10 @@ import java.util.Objects;
  */
 public class Pitch implements IPitch {
     private final IOctave octave;
-    private final IAlteration alteration;
-    private final EDiatonicPitches diatonicPitch;
+    private final Optional<IAlteration> alteration;
+    private final IDiatonicPitch diatonicPitch;
 
-    public Pitch(IOctave octave, IAlteration alteration, EDiatonicPitches diatonicPitch) {
-        CoreUtils.requireNotNullConstructorParam(this, octave, "octave");
-        CoreUtils.requireNotNullConstructorParam(this, diatonicPitch, "diatonicPitch");
+    public Pitch(IOctave octave, Optional<IAlteration> alteration, IDiatonicPitch diatonicPitch) {
         this.octave = octave;
         this.alteration = alteration;
         this.diatonicPitch = diatonicPitch;
@@ -28,12 +26,12 @@ public class Pitch implements IPitch {
     }
 
     @Override
-    public IAlteration getAlteration() {
+    public Optional<IAlteration> getAlteration() {
         return alteration;
     }
 
     @Override
-    public EDiatonicPitches getDiatonicPitch() {
+    public IDiatonicPitch getDiatonicPitch() {
         return diatonicPitch;
     }
 

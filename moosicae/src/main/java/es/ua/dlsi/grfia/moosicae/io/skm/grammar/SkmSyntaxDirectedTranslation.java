@@ -1,10 +1,11 @@
 package es.ua.dlsi.grfia.moosicae.io.skm.grammar;
 
 import es.ua.dlsi.grfia.moosicae.core.IClef;
-import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.io.builders.BuilderFactory;
-import es.ua.dlsi.grfia.moosicae.io.builders.IClefBuilder;
+import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
+import es.ua.dlsi.grfia.moosicae.core.enums.*;
+import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
+import es.ua.dlsi.grfia.moosicae.io.builders.*;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmCoreSymbol;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmHeader;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmPart;
@@ -23,25 +24,23 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import es.ua.dlsi.grfia.moosicae.io.skm.grammar.*;
-
 /**
  * It translates from **skm to a directed acyclic graph of symbols using a syntax driven translation technique
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class SkmSyntaxDirectedTranslation {
-    private final BuilderFactory builderFactory;
+    private final ICoreAbstractFactory coreAbstractFactory;
     private boolean debug;
 
-    public SkmSyntaxDirectedTranslation(BuilderFactory builderFactory) {
-        this.builderFactory = builderFactory;
+    public SkmSyntaxDirectedTranslation(ICoreAbstractFactory coreAbstractFactory) {
+        this.coreAbstractFactory = coreAbstractFactory;
     }
 
     public static class Loader extends skmParserBaseListener {
         private boolean debug;
         private final Parser parser;
         private SkmDocument skmDocument;
-        private final BuilderFactory builderFactory;
+        private final ICoreAbstractFactory coreAbstractFactory;
         private int spineIndex;
         private int row;
         /**
@@ -49,32 +48,30 @@ public class SkmSyntaxDirectedTranslation {
          */
         private ArrayList<SkmToken> lastSpineInsertedItem;
         private IClefBuilder clefBuilder;
-        /*private ArrayList<SkmPitchClass> keySignaturePitchClasses;
-        private SkmFigure lastFigure;
-        private SkmColoration lastColoured;
-        private SkmPerfection lastPerfection;
-        private int lastAgumentationDots;
-        private SkmFermata lastFermata;
+        private ICustosBuilder custosBuilder;
+        private IPitchClassBuilder pitchClassBuilder;
+        private IAccidentalSymbolBuilder accidentalSymbolBuilder;
+        private IDiatonicPitchBuilder diatonicPitchBuilder;
+        private IKeySignatureBuilder keySignatureBuilder;
+        private IPitchBuilder pitchBuilder;
+        private IAlterationDisplayTypeBuilder alterationDisplayTypeBuilder;
+        private IAlterationBuilder alterationBuilder;
 
-        private int octaveModif;
-        private String noteName;
-
-        private SkmStemDirection lastStemDirection;
-        private Integer lastRestLinePosition;
-        private ArrayList<SkmNote> chordNotes;
-        private SkmDots lastSkmDots;*/
-
-        public Loader(Parser parser, boolean debug, BuilderFactory builderFactory) {
+        public Loader(Parser parser, boolean debug, ICoreAbstractFactory coreAbstractFactory) {
             this.debug = debug;
             this.parser = parser;
             this.skmDocument = new SkmDocument();
             this.row = 0;
-            this.builderFactory = builderFactory;
+            this.coreAbstractFactory = coreAbstractFactory;
             this.lastSpineInsertedItem = new ArrayList<>();
         }
 
-        private void throwError(String message) throws GrammarParseRuntimeException {
-            throw new GrammarParseRuntimeException("[Row #" + this.row + ", spine #" + spineIndex + "] " + message);
+        private GrammarParseRuntimeException createException(IMException e) throws GrammarParseRuntimeException {
+            return new GrammarParseRuntimeException("[Row #" + this.row + ", spine #" + spineIndex + "] " + e);
+        }
+
+        private GrammarParseRuntimeException createException(String message) throws GrammarParseRuntimeException {
+            return new GrammarParseRuntimeException("[Row #" + this.row + ", spine #" + spineIndex + "] " + message);
         }
 
         private SkmToken getLastItemForCurrentSpine() {
@@ -142,6 +139,15 @@ public class SkmSyntaxDirectedTranslation {
         }
 
         @Override
+        public void enterHeaderField(skmParser.HeaderFieldContext ctx) {
+            super.enterHeaderField(ctx);
+            this.clefBuilder = null;
+            this.pitchClassBuilder = null;
+            this.custosBuilder = null;
+            throw new UnsupportedOperationException("TO_DO: poner aquí todo a null");
+        }
+
+        @Override
         public void exitField(skmParser.FieldContext ctx) {
             super.exitField(ctx);
             this.spineIndex ++;
@@ -157,22 +163,29 @@ public class SkmSyntaxDirectedTranslation {
             addItemToSpine(staffNumber);
         }
 
+
         @Override
         public void enterClef(skmParser.ClefContext ctx) {
             super.enterClef(ctx);
-            clefBuilder = builderFactory.getClefBuilder();
+            clefBuilder = new IClefBuilder(coreAbstractFactory);
         }
 
         @Override
-        public void exitClefNote(skmParser.ClefNoteContext ctx) {
-            super.exitClefNote(ctx);
-            clefBuilder.addProperty(IClefBuilder.PROP_SHAPE, ctx.getText());
+        public void exitClefSign(skmParser.ClefSignContext ctx) {
+            super.exitClefSign(ctx);
+            IClefSignBuilder clefSignBuilder = new IClefSignBuilder(coreAbstractFactory);
+            clefSignBuilder.setClefSign(EClefSigns.valueOf(ctx.getText()));
+            try {
+                clefBuilder.setClefSign(clefSignBuilder.build());
+            } catch (IMException e) {
+                throw createException(e);
+            }
         }
 
         @Override
         public void exitClefLine(skmParser.ClefLineContext ctx) {
             super.exitClefLine(ctx);
-            clefBuilder.addProperty(IClefBuilder.PROP_LINE, ctx.getText());
+            clefBuilder.setLine(Integer.parseInt(ctx.getText()));
         }
 
         @Override
@@ -185,84 +198,183 @@ public class SkmSyntaxDirectedTranslation {
             try {
                 clef = clefBuilder.build();
             } catch (IMException e) {
-                throw new GrammarParseRuntimeException(e);
+                throw createException(e);
             }
             addItemToSpine(new SkmCoreSymbol(ctx.getText(), clef));
-            clefBuilder = null;
+        }
+
+        @Override
+        public void enterAccidental(skmParser.AccidentalContext ctx) {
+            super.enterAccidental(ctx);
+            accidentalSymbolBuilder = new IAccidentalSymbolBuilder(coreAbstractFactory);
+        }
+
+        @Override
+        public void exitAccidental(skmParser.AccidentalContext ctx) {
+            super.exitAccidental(ctx);
+            EAccidentalSymbols accidentalSymbols;
+            switch (ctx.getText()) {
+                case "---":
+                    accidentalSymbols = EAccidentalSymbols.TRIPLE_FLAT;
+                    break;
+                case "--":
+                    accidentalSymbols = EAccidentalSymbols.DOUBLE_FLAT;
+                    break;
+                case "-":
+                    accidentalSymbols = EAccidentalSymbols.FLAT;
+                    break;
+                case "n":
+                    accidentalSymbols = EAccidentalSymbols.NATURAL;
+                    break;
+                case "#":
+                    accidentalSymbols = EAccidentalSymbols.SHARP;
+                    break;
+                case "##":
+                    accidentalSymbols = EAccidentalSymbols.DOUBLE_SHARP;
+                    break;
+                default:
+                    throw createException("Unkown accidental symbol: " + ctx.getText());
+            }
+            accidentalSymbolBuilder.setAccidentalSymbol(accidentalSymbols);
+        }
+
+        @Override
+        public void exitDiatonicPitch(skmParser.DiatonicPitchContext ctx) {
+            super.exitDiatonicPitch(ctx);
+            diatonicPitchBuilder = new IDiatonicPitchBuilder(coreAbstractFactory);
+            diatonicPitchBuilder.setDiatonicPitch(EDiatonicPitches.valueOf(ctx.getText()));
+        }
+
+        @Override
+        public void enterPitchClass(skmParser.PitchClassContext ctx) {
+            super.enterPitchClass(ctx);
+            pitchClassBuilder = new IPitchClassBuilder(coreAbstractFactory);
+        }
+
+        @Override
+        public void exitPitchClass(skmParser.PitchClassContext ctx) {
+            if (accidentalSymbolBuilder != null) {
+                try {
+                    pitchClassBuilder.setAccidentalSymbol(accidentalSymbolBuilder.build());
+                } catch (IMException e) {
+                    throw createException(e);
+                }
+            }
+
+            try {
+                pitchClassBuilder.setDiatonicPitch(diatonicPitchBuilder.build());
+            } catch (IMException e) {
+                throw createException(e);
+            }
         }
 
         @Override
         public void enterKeySignature(skmParser.KeySignatureContext ctx) {
             super.enterKeySignature(ctx);
-            /*Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Beginning a key",
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Beginning a key",
                     ctx.getText());
-            keySignaturePitchClasses = new ArrayList<>();*/
+            keySignatureBuilder = new IKeySignatureBuilder(coreAbstractFactory);
         }
 
         @Override
-        public void exitKeySignatureNote(skmParser.KeySignatureNoteContext ctx) {
-            super.exitKeySignatureNote(ctx);
-
-            /*try {
-                String accidentalText = null;
-                if (ctx.keyAccidental() != null) {
-                    accidentalText = ctx.keyAccidental().getText();
-                }
-                SkmPitchClass skmPitchClass = SkmPitchClassFactory.getInstance().create(ctx.lowerCasePitch().getText(), accidentalText);
-                this.keySignaturePitchClasses.add(skmPitchClass);
-            } catch (IM4Exception e) {
-                throw new GrammarParseRuntimeException(e);
-            }*/
+        public void exitKeySignaturePitchClass(skmParser.KeySignaturePitchClassContext ctx) {
+            super.exitKeySignaturePitchClass(ctx);
+            keySignatureBuilder.addPitchClass(pitchClassBuilder.build());
         }
 
         @Override
         public void exitKeySignature(skmParser.KeySignatureContext ctx) {
             super.exitKeySignature(ctx);
-           /* Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Key signature {0}", ctx.getText());
-
-            SkmPitchClass [] pitchClasses = new SkmPitchClass[this.keySignaturePitchClasses.size()];
-            pitchClasses = this.keySignaturePitchClasses.toArray(pitchClasses);
-            SkmKeySignature keySignature = new SkmKeySignature(pitchClasses);
-            addItemToSpine(keySignature);
-            keySignaturePitchClasses = null;*/
+            addItemToSpine(new SkmCoreSymbol(ctx.getText(), keySignatureBuilder.build()));
         }
 
         @Override
-        public void exitKeyChange(skmParser.KeyChangeContext ctx) {
-            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Key {0}", ctx.getText());
-
-           /* try {
-                SkmKey key = SkmKeyFactory.getInstance().create(ctx.getText());
-                addItemToSpine(key);
-            } catch (IM4Exception e) {
-                throw new GrammarParseRuntimeException(e);
-            }*/
+        public void exitKey(skmParser.KeyContext ctx) {
+            //TODO
         }
 
         @Override
-        public void exitTimeSignature(skmParser.TimeSignatureContext ctx) {
+        public void exitFractionalTimeSignature(skmParser.FractionalTimeSignatureContext ctx) {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Time signature {0}", ctx.getText());
-
-           /* try {
-                SkmTimeSignature ts = SkmTimeSignatureFactory.getInstance().create(ctx.getText());
-                addItemToSpine(ts);
-            } catch (IM4Exception e) {
-                throw new GrammarParseRuntimeException(e);
-            }*/
+            IFractionalTimeSignatureBuilder fractionalTimeSignatureBuilder = new IFractionalTimeSignatureBuilder(coreAbstractFactory);
+            fractionalTimeSignatureBuilder.setDenominator(Integer.parseInt(ctx.numerator().getText()));
+            fractionalTimeSignatureBuilder.setDenominator(Integer.parseInt(ctx.denominator().getText()));
+            try {
+                addItemToSpine(new SkmCoreSymbol(ctx.getText(), fractionalTimeSignatureBuilder.build()));
+            } catch (IMException e) {
+                throw createException(e);
+            }
         }
-
 
         @Override
-        public void exitMeter(skmParser.MeterContext ctx) {
-            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Meter {0}", ctx.getText());
-
-           /* try {
-                SkmMeter meter = SkmMeterFactory.getInstance().create(ctx.getText());
-                addItemToSpine(meter);
-            } catch (IM4Exception e) {
-                throw new GrammarParseRuntimeException(e);
-            }*/
+        public void exitModernMeterSymbolSign(skmParser.ModernMeterSymbolSignContext ctx) {
+            super.exitModernMeterSymbolSign(ctx);
+            IMeterSymbolBuilder meterSymbolBuilder = new IMeterSymbolBuilder(coreAbstractFactory);
+            EMeterSymbols eMeterSymbols;
+            switch (ctx.getText()) {
+                case "c":
+                    eMeterSymbols = EMeterSymbols.commonTime;
+                    break;
+                case "c|":
+                    eMeterSymbols = EMeterSymbols.cutTime;
+                    break;
+                default:
+                    throw createException("Unkown meter symbol: " + ctx.getText());
+            }
+            meterSymbolBuilder.setMeterSymbols(eMeterSymbols);
+            try {
+                addItemToSpine(new SkmCoreSymbol(ctx.getText(), meterSymbolBuilder.build()));
+            } catch (IMException e) {
+                throw createException(e);
+            }
         }
+
+        @Override
+        public void exitMensuration(skmParser.MensurationContext ctx) {
+            super.exitMensuration(ctx);
+            IMensurationBuilder mensurationBuilder = new IMensurationBuilder(coreAbstractFactory);
+            EMensurations mensuration;
+            switch (ctx.getText()) {
+                case "C":
+                    mensuration = EMensurations.tempusImperfectumCumProlationeImperfecta;
+                    break;
+                case "C.":
+                    mensuration = EMensurations.tempusImperfectumCumProlationePerfecta;
+                    break;
+                case "O":
+                    mensuration = EMensurations.tempusPerfectumCumProlationeImperfecta;
+                    break;
+                case "O.":
+                    mensuration = EMensurations.tempusPerfectumCumProlationePerfecta;
+                    break;
+                case "C|":
+                    mensuration = EMensurations.tempusImperfectumCumProlationeImperfectaDiminutum;
+                    break;
+                case "C3/2":
+                    mensuration = EMensurations.proportioSesquialtera;
+                    break;
+                case "C|3/2":
+                    mensuration = EMensurations.proportioTripla;
+                    break;
+                case "2":
+                    mensuration = EMensurations.proportioChangeDupla;
+                    break;
+                case "3":
+                    mensuration = EMensurations.proportioChangeTripla;
+                    break;
+                default:
+                    throw createException("Unkown mensuration: " + ctx.getText());
+
+            }
+            mensurationBuilder.setMensurations(mensuration);
+            try {
+                addItemToSpine(new SkmCoreSymbol(ctx.getText(), mensurationBuilder.build()));
+            } catch (IMException e) {
+                throw createException(e);
+            }
+        }
+
+
 
         @Override
         public void exitMetronome(skmParser.MetronomeContext ctx) {
@@ -550,11 +662,67 @@ public class SkmSyntaxDirectedTranslation {
         }
 
         @Override
+        public void exitAlterationDisplay(skmParser.AlterationDisplayContext ctx) {
+            super.exitAlterationDisplay(ctx);
+            alterationDisplayTypeBuilder = new IAlterationDisplayTypeBuilder(coreAbstractFactory);
+            alterationDisplayTypeBuilder.setAlterationDisplayType(EAlterationDisplayTypes.valueOf(ctx.getText()));
+        }
+
+        @Override
+        public void enterAlteration(skmParser.AlterationContext ctx) {
+            super.enterAlteration(ctx);
+            alterationBuilder = new IAlterationBuilder(coreAbstractFactory);
+            alterationDisplayTypeBuilder.setAlterationDisplayType(EAlterationDisplayTypes.valueOf(ctx.getText()));
+        }
+
+        @Override
+        public void exitAlteration(skmParser.AlterationContext ctx) {
+            super.enterAlteration(ctx);
+            try {
+                alterationBuilder.setAccidentalSymbol(accidentalSymbolBuilder.build());
+
+                if (alterationDisplayTypeBuilder != null) {
+                    alterationBuilder.setAlterationDisplayType(alterationDisplayTypeBuilder.build());
+                }
+            } catch (IMException e) {
+                throw createException(e);
+            }
+        }
+
+        @Override
+        public void enterPitch(skmParser.PitchContext ctx) {
+            super.enterPitch(ctx);
+            pitchBuilder = new IPitchBuilder(coreAbstractFactory);
+        }
+
+        @Override
+        public void exitPitch(skmParser.PitchContext ctx) {
+            super.exitPitch(ctx);
+            try {
+                pitchBuilder.setDiatonicPitch(diatonicPitchBuilder.build());
+                if (alterationBuilder != null) {
+                    pitchBuilder.setAlteration(alterationBuilder.build());
+                }
+            } catch (IMException e) {
+                throw createException(e);
+            }
+        }
+
+        @Override
+        public void enterCustos(skmParser.CustosContext ctx) {
+            super.enterCustos(ctx);
+            custosBuilder = new ICustosBuilder(coreAbstractFactory);
+        }
+
+        @Override
         public void exitCustos(skmParser.CustosContext ctx) {
             super.exitCustos(ctx);
-           /* SkmScientificPitch skmScientificPitch = null; //TODO
-            SkmCustos skmCustos = new SkmCustos(skmScientificPitch);
-            addItemToSpine(skmCustos);*/
+            try {
+                custosBuilder.setPitch(pitchBuilder.build());
+                addItemToSpine(new SkmCoreSymbol(ctx.getText(), custosBuilder.build()));
+            } catch (IMException e) {
+                throw createException(e);
+            }
         }
 
 
@@ -639,7 +807,7 @@ public class SkmSyntaxDirectedTranslation {
 
             ParseTree tree = parser.start();
             ParseTreeWalker walker = new ParseTreeWalker();
-            Loader loader = new Loader(parser, debug, builderFactory);
+            Loader loader = new Loader(parser, debug, coreAbstractFactory);
             walker.walk(loader, tree);
             if (errorListener.getNumberErrorsFound() != 0) {
                 throw new IMException(errorListener.getNumberErrorsFound() + " errors found in "

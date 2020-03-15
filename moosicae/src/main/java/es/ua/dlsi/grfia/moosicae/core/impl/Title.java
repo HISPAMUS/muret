@@ -1,7 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.core.metadata.ITitle;
-import es.ua.dlsi.grfia.moosicae.utils.CoreUtils;
 
 import java.util.Objects;
 
@@ -12,7 +11,6 @@ public class Title implements ITitle {
     private final String title;
 
     public Title(String title) {
-        CoreUtils.requireNotNullConstructorParam(this, title, "title");
         this.title = title;
     }
 

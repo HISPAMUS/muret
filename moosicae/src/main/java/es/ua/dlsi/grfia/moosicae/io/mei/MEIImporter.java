@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.io.mei;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.io.AbstractImporter;
 import es.ua.dlsi.grfia.moosicae.io.builders.IClefBuilder;
 import org.w3c.dom.Document;
@@ -99,11 +100,11 @@ public class MEIImporter extends AbstractImporter {
 
         Optional<String> clefShape = getAttrValue(node, "clef.shape");
         if (clefShape.isPresent()) {
-            IClefBuilder clefBuilder = builderFactory.getClefBuilder();
-            clefBuilder.addProperty(IClefBuilder.PROP_SHAPE, clefShape.get());
+            IClefBuilder clefBuilder = new IClefBuilder(coreAbstractFactory);
+            clefBuilder.setClefSign(coreAbstractFactory.createClefSign(EClefSigns.valueOf(clefShape.get())));
             Optional<String> clefLine = getAttrValue(node, "clef.line");
             if (clefLine.isPresent()) {
-                builderFactory.getClefBuilder().addProperty(IClefBuilder.PROP_LINE, clefLine.get());
+                clefBuilder.setLine(Integer.parseInt(clefLine.get()));
             }
 
             IClef clef = clefBuilder.build();

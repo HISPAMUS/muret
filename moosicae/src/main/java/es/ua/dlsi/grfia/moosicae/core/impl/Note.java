@@ -10,7 +10,7 @@ import java.util.Optional;
 public class Note extends DurationalSingle implements INote {
     private final IPitch pitch;
 
-    Note(EFigures figure, Optional<IDots> dots, IPitch pitch) {
+    Note(IFigure figure, Optional<IDots> dots, IPitch pitch) {
         super(figure, dots);
         this.pitch = pitch;
     }

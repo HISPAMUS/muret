@@ -3,6 +3,7 @@ package es.ua.dlsi.grfia.moosicae.io;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.impl.CoreAbstractFactoryImpl;
+import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.io.mei.MEIExporter;
 import es.ua.dlsi.grfia.moosicae.io.mei.MEIImporter;
 import es.ua.dlsi.grfia.moosicae.io.skm.SkmExporter;

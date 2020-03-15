@@ -22,7 +22,7 @@ public class SkmImporter extends AbstractImporter {
 
     @Override
     public IScore importScore(String input) throws IMException {
-        SkmSyntaxDirectedTranslation skmSyntaxDirectedTranslation = new SkmSyntaxDirectedTranslation(builderFactory);
+        SkmSyntaxDirectedTranslation skmSyntaxDirectedTranslation = new SkmSyntaxDirectedTranslation(coreAbstractFactory);
         SkmDocument skmDocument = skmSyntaxDirectedTranslation.importSkm(input);
         return skmDocument.buildScore(coreAbstractFactory);
     }

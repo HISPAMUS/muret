@@ -1,8 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
-import es.ua.dlsi.grfia.moosicae.core.EFigures;
 import es.ua.dlsi.grfia.moosicae.core.ICutTime;
 import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
+import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
 import es.ua.dlsi.grfia.moosicae.utils.Time;
 
 /**

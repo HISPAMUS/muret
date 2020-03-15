@@ -16,12 +16,12 @@ public interface IExporterVisitor<InputOutputType>  {
     void export(IKey key, InputOutputType inputOutputOutput);
     void export(IKeySignature keySignature, InputOutputType inputOutputOutput);
     void export(IVoice voice, InputOutputType inputOutput);
-    void export(EDiatonicPitches diatonicPitch, InputOutputType inputOutput);
-    void export(EAccidentals accidental, InputOutputType inputOutput);
-    void export(EAlterationDisplayType alterationDisplayType, InputOutputType inputOutput);
+    void export(IDiatonicPitch diatonicPitch, InputOutputType inputOutput);
+    void export(IAccidentalSymbol accidental, InputOutputType inputOutput);
+    void export(IAlterationDisplayType alterationDisplayType, InputOutputType inputOutput);
     void export(IAlteration alteration, InputOutputType inputOutput);
     void export(IPitchClass pitchClass, InputOutputType inputOutput);
     void export(IPitch pitch, InputOutputType inputOutput);
     void export(IDots dots, InputOutputType inputOutput);
-    void export(EFigures figures, InputOutputType inputOutput);
+    void export(IFigure figures, InputOutputType inputOutput);
 }

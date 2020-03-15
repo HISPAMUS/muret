@@ -2,6 +2,11 @@ package es.ua.dlsi.grfia.moosicae.io.skm;
 
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
+import es.ua.dlsi.grfia.moosicae.core.enums.EAlterationDisplayTypes;
+import es.ua.dlsi.grfia.moosicae.core.enums.EDiatonicPitches;
+import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
+
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
@@ -10,7 +15,7 @@ public class SkmExporterVisitor implements IExporterVisitor<StringBuilder> {
     @Override
     public void export(IClef clef, StringBuilder inputOutput) {
         inputOutput.append("*clef");
-        inputOutput.append(clef.getSignType().name());
+        inputOutput.append(clef.getSignType());
         inputOutput.append(clef.getLine());
     }
 
@@ -94,14 +99,35 @@ public class SkmExporterVisitor implements IExporterVisitor<StringBuilder> {
     }
 
     @Override
-    public void export(EDiatonicPitches diatonicPitch, StringBuilder inputOutput) {
-        inputOutput.append(diatonicPitch.name().toLowerCase());
+    public void export(IDiatonicPitch diatonicPitch, StringBuilder inputOutput) {
+        inputOutput.append(diatonicPitch.getDiatonicPitch().name().toLowerCase());
     }
 
     @Override
-    public void export(EAccidentals accidental, StringBuilder inputOutput) {
+    public void export(IAlterationDisplayType alterationDisplayType, StringBuilder inputOutput) {
         String encoding;
-        switch (accidental) {
+        switch (alterationDisplayType.getAlterationDisplayType()) {
+            case ficta:
+                encoding = "Y";
+                break;
+            case editorial:
+                encoding = "YY";
+                break;
+            case cautionary:
+                encoding = "yy";
+                break;
+            case hidden:
+                encoding = "yy";
+                break;
+            default:
+                throw new IMRuntimeException("Unknown alteration display type: " + alterationDisplayType);
+        }
+        inputOutput.append(encoding);    }
+
+    @Override
+    public void export(IAccidentalSymbol accidental, StringBuilder inputOutput) {
+        String encoding;
+        switch (accidental.getAccidentalSymbol()) {
             case DOUBLE_FLAT:
                 encoding = "--";
                 break;
@@ -123,31 +149,10 @@ public class SkmExporterVisitor implements IExporterVisitor<StringBuilder> {
         inputOutput.append(encoding);
     }
 
-    @Override
-    public void export(EAlterationDisplayType alterationDisplayType, StringBuilder inputOutput) {
-        String encoding;
-        switch (alterationDisplayType) {
-            case ficta:
-                encoding = "Y";
-                break;
-            case editorial:
-                encoding = "YY";
-                break;
-            case cautionary:
-                encoding = "yy";
-                break;
-            case hidden:
-                encoding = "yy";
-                break;
-            default:
-                throw new IMRuntimeException("Unknown alteration display type: " + alterationDisplayType);
-        }
-        inputOutput.append(encoding);
-    }
 
     @Override
     public void export(IAlteration alteration, StringBuilder inputOutput) {
-        export(alteration.getAccidental(), inputOutput);
+        export(alteration.getAccidentalSymbol(), inputOutput);
         if (alteration.getAlterationDisplayType().isPresent()) {
             export(alteration.getAlterationDisplayType().get(), inputOutput);
         }
@@ -164,7 +169,9 @@ public class SkmExporterVisitor implements IExporterVisitor<StringBuilder> {
     @Override
     public void export(IPitch pitch, StringBuilder inputOutput) {
         export(pitch.getDiatonicPitch(), inputOutput);
-        export(pitch.getAlteration(), inputOutput);
+        if (pitch.getAlteration().isPresent()) {
+            export(pitch.getAlteration().get(), inputOutput);
+        }
     }
 
     @Override
@@ -175,9 +182,9 @@ public class SkmExporterVisitor implements IExporterVisitor<StringBuilder> {
     }
 
     @Override
-    public void export(EFigures figures, StringBuilder inputOutput) {
+    public void export(IFigure figure, StringBuilder inputOutput) {
         String encoding;
-        switch (figures) {
+        switch (figure.getFigure()) {
             case MAXIMA:
                 encoding = "X";
                 break;
@@ -211,7 +218,7 @@ public class SkmExporterVisitor implements IExporterVisitor<StringBuilder> {
             case DOUBLE_WHOLE: // modern
                 encoding = "0";
             default: // all the other modern notation
-                encoding = Integer.toString(figures.getMeterUnit());
+                encoding = Integer.toString(figure.getMeterUnit());
         }
         inputOutput.append(encoding);
     }

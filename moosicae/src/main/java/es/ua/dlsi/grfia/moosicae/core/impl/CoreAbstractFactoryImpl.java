@@ -2,6 +2,8 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.enums.*;
+import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.Mensuration;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.mensurations.*;
 import es.ua.dlsi.grfia.moosicae.core.mensural.*;
@@ -14,17 +16,17 @@ import java.util.Optional;
  */
 public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     @Override
-    public IAlteration createAlteration(EAccidentals accidentals, Optional<EAlterationDisplayType> alterationDisplayType) {
-        return new Alteration(accidentals, alterationDisplayType);
+    public IAlteration createAlteration(IAccidentalSymbol accidentalSymbol, Optional<IAlterationDisplayType> alterationDisplayType) {
+        return new Alteration(accidentalSymbol, alterationDisplayType);
     }
 
     @Override
-    public IChord createChord(EFigures figures, Optional<IDots> dots, IPitch[] pitches) {
-        return new Chord(figures, dots, pitches);
+    public IChord createChord(IFigure figure, Optional<IDots> dots, IPitch[] pitches) {
+        return new Chord(figure, dots, pitches);
     }
 
     @Override
-    public IClef createClef(int line, EClefSigns clefSign) {
+    public IClef createClef(int line, IClefSign clefSign) {
         return new Clef(line, clefSign);
     }
 
@@ -96,34 +98,19 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public INote createNote(EFigures figures, Optional<IDots> dots, IPitch pitches) {
-        return new Note(figures, dots, pitches);
+    public INote createNote(IFigure figure, Optional<IDots> dots, IPitch pitches) {
+        return new Note(figure, dots, pitches);
     }
 
 
     @Override
-    public IPitch createPitch(IOctave octave, IAlteration alteration, EDiatonicPitches diatonicPitch) {
+    public IPitch createPitch(IOctave octave, Optional<IAlteration> alteration, IDiatonicPitch diatonicPitch) {
         return new Pitch(octave, alteration,  diatonicPitch);
     }
 
     @Override
-    public IProportioChangeDupla createProportioChangeDupla() {
-        return new ProportioChangeDupla();
-    }
-
-    @Override
-    public IProportioChangeTripla createProportioChangeTripla() {
-        return new ProportioChangeTripla();
-    }
-
-    @Override
-    public IProportioSesquialtera createProportioSesquialtera() {
-        return createProportioSesquialtera();
-    }
-
-    @Override
-    public IProportioTripla createProportioTripla() {
-        return createProportioTripla();
+    public IPitchClass createPitchClass(IDiatonicPitch diatonicPitch, Optional<IAccidentalSymbol> accidentalSymbol) {
+        return new PitchClass(diatonicPitch, accidentalSymbol);
     }
 
     @Override
@@ -152,29 +139,10 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public ITempusImperfectumCumProlationeImperfecta createTempusImperfectumCumProlationeImperfecta() {
-        return new TempusImperfectumCumProlationeImperfecta();
+    public IRest createRest(IFigure figure, Optional<IDots> dots) {
+        return new Rest(figure, dots);
     }
 
-    @Override
-    public ITempusImperfectumCumProlationeImperfectaDiminutum createTempusImperfectumCumProlationeImperfectaDominitum() {
-        return new TempusImperfectumCumProlationeImperfectaDiminutum();
-    }
-
-    @Override
-    public ITempusImperfectumCumProlationePerfecta createTempusImperfectumCumProlationePerfecta() {
-        return new TempusImperfectumCumProlationePerfecta();
-    }
-
-    @Override
-    public ITempusPerfectumCumProlationeImperfecta createTempusPerfectumCumProlationeImperfecta() {
-        return new TempusPerfectumCumProlationeImperfecta();
-    }
-
-    @Override
-    public ITempusPerfectumCumProlationePerfecta createTempusPerfectumCumProlationePerfecta() {
-        return new TempusPerfectumCumProlationePerfecta();
-    }
 
     @Override
     public IStaff createStaff(IStaffGroup staves) {
@@ -209,6 +177,74 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
         Voice voice = new Voice();
         part.addVoice(voice);
         return voice;
+    }
+
+    @Override
+    public IFigure createFigure(EFigures figure) {
+        return new Figure(figure);
+    }
+
+    @Override
+    public IAccidentalSymbol createAccidentalSymbol(EAccidentalSymbols accidentalSymbol) {
+        return new AccidentalSymbol(accidentalSymbol);
+    }
+
+    @Override
+    public IAlterationDisplayType createAlterationDisplayType(EAlterationDisplayTypes alterationDisplayType) {
+        return new AlterationDisplayType(alterationDisplayType);
+    }
+
+    @Override
+    public IClefSign createClefSign(EClefSigns clefSign) {
+        return new ClefSign(clefSign);
+    }
+
+    @Override
+    public IDiatonicPitch createDiatonicPitch(EDiatonicPitches diatonicPitch) {
+        return new DiatonicPitch(diatonicPitch);
+    }
+
+    @Override
+    public INotationType createNotationType(ENotationTypes notationType) {
+        return new NotationType(notationType);
+    }
+
+    @Override
+    public IMeterSymbol createMeterSymbol(EMeterSymbols meterSymbols) {
+        switch (meterSymbols) {
+            case commonTime:
+                return new CommonTime();
+            case cutTime:
+                return new CutTime();
+            default:
+                throw new IMRuntimeException("Unknown meter symbol: " + meterSymbols);
+        }
+    }
+
+    @Override
+    public IMensuration createMensuration(EMensurations mensuration) {
+        switch (mensuration) {
+            case proportioTripla:
+                return new ProportioTripla();
+            case proportioChangeDupla:
+                return new ProportioChangeDupla();
+            case proportioChangeTripla:
+                return new ProportioChangeTripla();
+            case proportioSesquialtera:
+                return new ProportioSesquialtera();
+            case tempusImperfectumCumProlationeImperfecta:
+                return new TempusImperfectumCumProlationeImperfecta();
+            case tempusImperfectumCumProlationeImperfectaDiminutum:
+                return new TempusImperfectumCumProlationeImperfectaDiminutum();
+            case tempusImperfectumCumProlationePerfecta:
+                return new TempusImperfectumCumProlationePerfecta();
+            case tempusPerfectumCumProlationeImperfecta:
+                return new TempusPerfectumCumProlationeImperfecta();
+            case tempusPerfectumCumProlationePerfecta:
+                return new TempusPerfectumCumProlationePerfecta();
+            default:
+                throw new IMRuntimeException("Unknown mensuration: " + mensuration);
+        }
     }
 
 }

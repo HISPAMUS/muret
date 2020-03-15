@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.core.IClef;
-import es.ua.dlsi.grfia.moosicae.core.EClefSigns;
+import es.ua.dlsi.grfia.moosicae.core.IClefSign;
 import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
 
 import java.util.Objects;
@@ -10,14 +10,14 @@ import java.util.Objects;
  */
 public class Clef implements IClef {
     private final int line;
-    private final EClefSigns signType;
+    private final IClefSign signType;
 
     /**
      * Used by factory
      * @param line
      * @param signType
      */
-    Clef(int line, EClefSigns signType) {
+    Clef(int line, IClefSign signType) {
         this.line = line;
         this.signType = signType;
     }
@@ -26,7 +26,7 @@ public class Clef implements IClef {
         return line;
     }
 
-    public EClefSigns getSignType() {
+    public IClefSign getSignType() {
         return signType;
     }
 

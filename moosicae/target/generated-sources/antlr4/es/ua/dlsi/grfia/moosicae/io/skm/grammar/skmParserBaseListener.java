@@ -198,6 +198,18 @@ public class skmParserBaseListener implements skmParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterPitchClass(skmParser.PitchClassContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPitchClass(skmParser.PitchClassContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterPart(skmParser.PartContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -246,13 +258,13 @@ public class skmParserBaseListener implements skmParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterClefNote(skmParser.ClefNoteContext ctx) { }
+	@Override public void enterClefSign(skmParser.ClefSignContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitClefNote(skmParser.ClefNoteContext ctx) { }
+	@Override public void exitClefSign(skmParser.ClefSignContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -282,37 +294,25 @@ public class skmParserBaseListener implements skmParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterKeySignatureNote(skmParser.KeySignatureNoteContext ctx) { }
+	@Override public void enterKeySignaturePitchClass(skmParser.KeySignaturePitchClassContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitKeySignatureNote(skmParser.KeySignatureNoteContext ctx) { }
+	@Override public void exitKeySignaturePitchClass(skmParser.KeySignaturePitchClassContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterKeyAccidental(skmParser.KeyAccidentalContext ctx) { }
+	@Override public void enterKey(skmParser.KeyContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitKeyAccidental(skmParser.KeyAccidentalContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterKeyChange(skmParser.KeyChangeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitKeyChange(skmParser.KeyChangeContext ctx) { }
+	@Override public void exitKey(skmParser.KeyContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -342,13 +342,13 @@ public class skmParserBaseListener implements skmParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTimeSignature(skmParser.TimeSignatureContext ctx) { }
+	@Override public void enterFractionalTimeSignature(skmParser.FractionalTimeSignatureContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTimeSignature(skmParser.TimeSignatureContext ctx) { }
+	@Override public void exitFractionalTimeSignature(skmParser.FractionalTimeSignatureContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -378,25 +378,37 @@ public class skmParserBaseListener implements skmParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMeter(skmParser.MeterContext ctx) { }
+	@Override public void enterMeterSymbol(skmParser.MeterSymbolContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMeter(skmParser.MeterContext ctx) { }
+	@Override public void exitMeterSymbol(skmParser.MeterSymbolContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMeterValue(skmParser.MeterValueContext ctx) { }
+	@Override public void enterModernMeterSymbolSign(skmParser.ModernMeterSymbolSignContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMeterValue(skmParser.MeterValueContext ctx) { }
+	@Override public void exitModernMeterSymbolSign(skmParser.ModernMeterSymbolSignContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMensuration(skmParser.MensurationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMensuration(skmParser.MensurationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -666,6 +678,30 @@ public class skmParserBaseListener implements skmParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterPitch(skmParser.PitchContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPitch(skmParser.PitchContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAlteration(skmParser.AlterationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAlteration(skmParser.AlterationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterNote(skmParser.NoteContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -702,13 +738,13 @@ public class skmParserBaseListener implements skmParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterNoteName(skmParser.NoteNameContext ctx) { }
+	@Override public void enterDiatonicPitch(skmParser.DiatonicPitchContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitNoteName(skmParser.NoteNameContext ctx) { }
+	@Override public void exitDiatonicPitch(skmParser.DiatonicPitchContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -750,13 +786,13 @@ public class skmParserBaseListener implements skmParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAlterationQualifier(skmParser.AlterationQualifierContext ctx) { }
+	@Override public void enterAlterationDisplay(skmParser.AlterationDisplayContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAlterationQualifier(skmParser.AlterationQualifierContext ctx) { }
+	@Override public void exitAlterationDisplay(skmParser.AlterationDisplayContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

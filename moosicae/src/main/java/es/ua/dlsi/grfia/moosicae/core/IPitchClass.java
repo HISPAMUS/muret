@@ -5,7 +5,7 @@ import java.util.Optional;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public interface IPitchClass {
-    EDiatonicPitches getDiatonicPitch();
-    Optional<EAccidentals> getAccidental();
+public interface IPitchClass extends ICoreObject {
+    IDiatonicPitch getDiatonicPitch();
+    Optional<IAccidentalSymbol> getAccidental();
 }

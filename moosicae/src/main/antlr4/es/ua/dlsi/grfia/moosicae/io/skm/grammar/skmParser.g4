@@ -73,11 +73,11 @@ tandemInterpretation:
     |
     keySignature
     |
-    timeSignature
+    fractionalTimeSignature
     |
-    meter
+    meterSymbol
     |
-    keyChange
+    key
     |
     metronome
     |
@@ -92,31 +92,31 @@ number: (DIGIT_0 | DIGIT_1 | DIGIT_2 | DIGIT_3 | DIGIT_4 | DIGIT_5 | DIGIT_6 | D
 lowerCasePitch: LOWERCASE_PITCH_CHARACTER;
 upperCasePitch: (CHAR_A | CHAR_B | CHAR_C | CHAR_D | CHAR_E | CHAR_F | CHAR_G);
 
+pitchClass: lowerCasePitch accidental;
+
 part: TANDEM_PART number;
 
 staff: TANDEM_STAFF number;
 
 clef: TANDEM_CLEF clefValue;
-clefValue: clefNote clefLine;
-clefNote: CHAR_C | CHAR_F | CHAR_G;
+clefValue: clefSign clefLine;
+clefSign: CHAR_C | CHAR_F | CHAR_G;
 clefLine: DIGIT_1 | DIGIT_2 | DIGIT_3 | DIGIT_4 | DIGIT_5;
 
-keySignature: TANDEM_KEY LEFT_BRACKET keySignatureNote* RIGHT_BRACKET;
-keySignatureNote: lowerCasePitch keyAccidental?;
+keySignature: TANDEM_KEY LEFT_BRACKET keySignaturePitchClass* RIGHT_BRACKET;
+keySignaturePitchClass: pitchClass;
 
-keyAccidental: (CHAR_n | OCTOTHORPE | MINUS);
-keyChange: ASTERISK (minorKey | majorKey) keyAccidental? COLON;
+key: ASTERISK (minorKey | majorKey) pitchClass? COLON;
 minorKey: lowerCasePitch;
 majorKey: upperCasePitch;
 
-timeSignature: TANDEM_TIMESIGNATURE numerator SLASH denominator;
-
+fractionalTimeSignature: TANDEM_TIMESIGNATURE numerator SLASH denominator;
 numerator: number;
-
 denominator: number;
 
-meter: TANDEM_MET LEFT_PARENTHESIS meterValue RIGHT_PARENTHESIS;
-meterValue: CHAR_C | CHAR_C PIPE | CHAR_C DOT | CHAR_O | CHAR_O DOT | CHAR_C DIGIT_3 SLASH DIGIT_2 | CHAR_C PIPE DIGIT_3 SLASH DIGIT_2 | DIGIT_3;
+meterSymbol: TANDEM_MET LEFT_PARENTHESIS (modernMeterSymbolSign | mensuration) RIGHT_PARENTHESIS;
+modernMeterSymbolSign: CHAR_c | CHAR_c PIPE;
+mensuration: CHAR_C | CHAR_C PIPE | CHAR_C DOT | CHAR_O | CHAR_O DOT | CHAR_C DIGIT_3 SLASH DIGIT_2 | CHAR_C PIPE DIGIT_3 SLASH DIGIT_2 | DIGIT_3;
 
 metronome: METRONOME number;
 
@@ -184,10 +184,12 @@ augmentationDot: DOT;
 
 separationDot: COLON;
 
-custos: TANDEM_CUSTOS noteName accidental?;
+custos: TANDEM_CUSTOS pitch;
+pitch: diatonicPitch alteration?;
+alteration: accidental alterationDisplay?;
 
 //note:  beforeNote duration noteName (alteration alterationVisualMode?)? afterNote;
-note:  beforeNote duration noteName (accidental alterationQualifier?)? afterNote;
+note:  beforeNote duration pitch afterNote;
 
 chord: note (SPACE note)+;
 
@@ -198,7 +200,7 @@ beforeNote:  //TODO Regla semantica (boolean) para que no se repitan
     )*
     ;
 
-noteName:
+diatonicPitch:
     bassNotes // BASS
     |
     trebleNotes
@@ -211,7 +213,7 @@ accidental: OCTOTHORPE | (OCTOTHORPE OCTOTHORPE) | MINUS | (MINUS MINUS) | CHAR_
 
 // x is show, xx is shows editorial
 //alterationVisualMode: CHAR_x CHAR_x?;
-alterationQualifier: (CHAR_y CHAR_y?) | (CHAR_Y CHAR_Y?);
+alterationDisplay: (CHAR_y CHAR_y?) | (CHAR_Y CHAR_Y?);
 
 afterNote:
 	     (slurEnd | stem| ligatureEnd | beam | fermata | barLineCrossedNoteEnd)*;

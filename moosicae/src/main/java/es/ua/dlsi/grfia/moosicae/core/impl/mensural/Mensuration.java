@@ -1,6 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.core.impl.mensural;
 
-import es.ua.dlsi.grfia.moosicae.core.EFigures;
+import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
 import es.ua.dlsi.grfia.moosicae.core.mensural.EMensuralPerfections;
 import es.ua.dlsi.grfia.moosicae.core.mensural.IMensuration;
 import es.ua.dlsi.grfia.moosicae.utils.Time;

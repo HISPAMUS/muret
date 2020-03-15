@@ -1,9 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
-import es.ua.dlsi.grfia.moosicae.core.EFigures;
 import es.ua.dlsi.grfia.moosicae.core.IMultimeasureRest;
-import es.ua.dlsi.grfia.moosicae.core.IVoiced;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es

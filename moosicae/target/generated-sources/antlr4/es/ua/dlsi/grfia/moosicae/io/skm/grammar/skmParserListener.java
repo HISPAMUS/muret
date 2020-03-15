@@ -160,6 +160,16 @@ public interface skmParserListener extends ParseTreeListener {
 	 */
 	void exitUpperCasePitch(skmParser.UpperCasePitchContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link skmParser#pitchClass}.
+	 * @param ctx the parse tree
+	 */
+	void enterPitchClass(skmParser.PitchClassContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link skmParser#pitchClass}.
+	 * @param ctx the parse tree
+	 */
+	void exitPitchClass(skmParser.PitchClassContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link skmParser#part}.
 	 * @param ctx the parse tree
 	 */
@@ -200,15 +210,15 @@ public interface skmParserListener extends ParseTreeListener {
 	 */
 	void exitClefValue(skmParser.ClefValueContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link skmParser#clefNote}.
+	 * Enter a parse tree produced by {@link skmParser#clefSign}.
 	 * @param ctx the parse tree
 	 */
-	void enterClefNote(skmParser.ClefNoteContext ctx);
+	void enterClefSign(skmParser.ClefSignContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link skmParser#clefNote}.
+	 * Exit a parse tree produced by {@link skmParser#clefSign}.
 	 * @param ctx the parse tree
 	 */
-	void exitClefNote(skmParser.ClefNoteContext ctx);
+	void exitClefSign(skmParser.ClefSignContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link skmParser#clefLine}.
 	 * @param ctx the parse tree
@@ -230,35 +240,25 @@ public interface skmParserListener extends ParseTreeListener {
 	 */
 	void exitKeySignature(skmParser.KeySignatureContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link skmParser#keySignatureNote}.
+	 * Enter a parse tree produced by {@link skmParser#keySignaturePitchClass}.
 	 * @param ctx the parse tree
 	 */
-	void enterKeySignatureNote(skmParser.KeySignatureNoteContext ctx);
+	void enterKeySignaturePitchClass(skmParser.KeySignaturePitchClassContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link skmParser#keySignatureNote}.
+	 * Exit a parse tree produced by {@link skmParser#keySignaturePitchClass}.
 	 * @param ctx the parse tree
 	 */
-	void exitKeySignatureNote(skmParser.KeySignatureNoteContext ctx);
+	void exitKeySignaturePitchClass(skmParser.KeySignaturePitchClassContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link skmParser#keyAccidental}.
+	 * Enter a parse tree produced by {@link skmParser#key}.
 	 * @param ctx the parse tree
 	 */
-	void enterKeyAccidental(skmParser.KeyAccidentalContext ctx);
+	void enterKey(skmParser.KeyContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link skmParser#keyAccidental}.
+	 * Exit a parse tree produced by {@link skmParser#key}.
 	 * @param ctx the parse tree
 	 */
-	void exitKeyAccidental(skmParser.KeyAccidentalContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link skmParser#keyChange}.
-	 * @param ctx the parse tree
-	 */
-	void enterKeyChange(skmParser.KeyChangeContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link skmParser#keyChange}.
-	 * @param ctx the parse tree
-	 */
-	void exitKeyChange(skmParser.KeyChangeContext ctx);
+	void exitKey(skmParser.KeyContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link skmParser#minorKey}.
 	 * @param ctx the parse tree
@@ -280,15 +280,15 @@ public interface skmParserListener extends ParseTreeListener {
 	 */
 	void exitMajorKey(skmParser.MajorKeyContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link skmParser#timeSignature}.
+	 * Enter a parse tree produced by {@link skmParser#fractionalTimeSignature}.
 	 * @param ctx the parse tree
 	 */
-	void enterTimeSignature(skmParser.TimeSignatureContext ctx);
+	void enterFractionalTimeSignature(skmParser.FractionalTimeSignatureContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link skmParser#timeSignature}.
+	 * Exit a parse tree produced by {@link skmParser#fractionalTimeSignature}.
 	 * @param ctx the parse tree
 	 */
-	void exitTimeSignature(skmParser.TimeSignatureContext ctx);
+	void exitFractionalTimeSignature(skmParser.FractionalTimeSignatureContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link skmParser#numerator}.
 	 * @param ctx the parse tree
@@ -310,25 +310,35 @@ public interface skmParserListener extends ParseTreeListener {
 	 */
 	void exitDenominator(skmParser.DenominatorContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link skmParser#meter}.
+	 * Enter a parse tree produced by {@link skmParser#meterSymbol}.
 	 * @param ctx the parse tree
 	 */
-	void enterMeter(skmParser.MeterContext ctx);
+	void enterMeterSymbol(skmParser.MeterSymbolContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link skmParser#meter}.
+	 * Exit a parse tree produced by {@link skmParser#meterSymbol}.
 	 * @param ctx the parse tree
 	 */
-	void exitMeter(skmParser.MeterContext ctx);
+	void exitMeterSymbol(skmParser.MeterSymbolContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link skmParser#meterValue}.
+	 * Enter a parse tree produced by {@link skmParser#modernMeterSymbolSign}.
 	 * @param ctx the parse tree
 	 */
-	void enterMeterValue(skmParser.MeterValueContext ctx);
+	void enterModernMeterSymbolSign(skmParser.ModernMeterSymbolSignContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link skmParser#meterValue}.
+	 * Exit a parse tree produced by {@link skmParser#modernMeterSymbolSign}.
 	 * @param ctx the parse tree
 	 */
-	void exitMeterValue(skmParser.MeterValueContext ctx);
+	void exitModernMeterSymbolSign(skmParser.ModernMeterSymbolSignContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link skmParser#mensuration}.
+	 * @param ctx the parse tree
+	 */
+	void enterMensuration(skmParser.MensurationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link skmParser#mensuration}.
+	 * @param ctx the parse tree
+	 */
+	void exitMensuration(skmParser.MensurationContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link skmParser#metronome}.
 	 * @param ctx the parse tree
@@ -550,6 +560,26 @@ public interface skmParserListener extends ParseTreeListener {
 	 */
 	void exitCustos(skmParser.CustosContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link skmParser#pitch}.
+	 * @param ctx the parse tree
+	 */
+	void enterPitch(skmParser.PitchContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link skmParser#pitch}.
+	 * @param ctx the parse tree
+	 */
+	void exitPitch(skmParser.PitchContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link skmParser#alteration}.
+	 * @param ctx the parse tree
+	 */
+	void enterAlteration(skmParser.AlterationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link skmParser#alteration}.
+	 * @param ctx the parse tree
+	 */
+	void exitAlteration(skmParser.AlterationContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link skmParser#note}.
 	 * @param ctx the parse tree
 	 */
@@ -580,15 +610,15 @@ public interface skmParserListener extends ParseTreeListener {
 	 */
 	void exitBeforeNote(skmParser.BeforeNoteContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link skmParser#noteName}.
+	 * Enter a parse tree produced by {@link skmParser#diatonicPitch}.
 	 * @param ctx the parse tree
 	 */
-	void enterNoteName(skmParser.NoteNameContext ctx);
+	void enterDiatonicPitch(skmParser.DiatonicPitchContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link skmParser#noteName}.
+	 * Exit a parse tree produced by {@link skmParser#diatonicPitch}.
 	 * @param ctx the parse tree
 	 */
-	void exitNoteName(skmParser.NoteNameContext ctx);
+	void exitDiatonicPitch(skmParser.DiatonicPitchContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link skmParser#trebleNotes}.
 	 * @param ctx the parse tree
@@ -620,15 +650,15 @@ public interface skmParserListener extends ParseTreeListener {
 	 */
 	void exitAccidental(skmParser.AccidentalContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link skmParser#alterationQualifier}.
+	 * Enter a parse tree produced by {@link skmParser#alterationDisplay}.
 	 * @param ctx the parse tree
 	 */
-	void enterAlterationQualifier(skmParser.AlterationQualifierContext ctx);
+	void enterAlterationDisplay(skmParser.AlterationDisplayContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link skmParser#alterationQualifier}.
+	 * Exit a parse tree produced by {@link skmParser#alterationDisplay}.
 	 * @param ctx the parse tree
 	 */
-	void exitAlterationQualifier(skmParser.AlterationQualifierContext ctx);
+	void exitAlterationDisplay(skmParser.AlterationDisplayContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link skmParser#afterNote}.
 	 * @param ctx the parse tree

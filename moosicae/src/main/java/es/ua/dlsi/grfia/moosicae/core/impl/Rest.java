@@ -1,8 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
-import es.ua.dlsi.grfia.moosicae.core.EFigures;
 import es.ua.dlsi.grfia.moosicae.core.IDots;
 import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
+import es.ua.dlsi.grfia.moosicae.core.IFigure;
 import es.ua.dlsi.grfia.moosicae.core.IRest;
 
 import java.util.Optional;
@@ -11,7 +11,7 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class Rest extends DurationalSingle implements IRest {
-    public Rest(EFigures figure, Optional<IDots> dots) {
+    public Rest(IFigure figure, Optional<IDots> dots) {
         super(figure, dots);
     }
 

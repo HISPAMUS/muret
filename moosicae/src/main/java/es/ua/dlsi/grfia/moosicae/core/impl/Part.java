@@ -2,7 +2,6 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.core.IPart;
 import es.ua.dlsi.grfia.moosicae.core.IVoice;
-import es.ua.dlsi.grfia.moosicae.utils.CoreUtils;
 
 import java.util.LinkedList;
 import java.util.Optional;
@@ -14,7 +13,6 @@ public class Part implements IPart {
     private final LinkedList<IVoice> voices;
 
     public Part(String name) {
-        CoreUtils.requireNotNullConstructorParam(this, name, "name");
         this.name = name;
         this.voices = new LinkedList<>();
     }

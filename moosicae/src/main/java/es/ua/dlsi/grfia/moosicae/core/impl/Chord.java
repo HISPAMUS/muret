@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -11,7 +12,7 @@ import java.util.Optional;
 public class Chord extends DurationalSingle implements IChord {
     private final IPitch[] pitches;
 
-    Chord(EFigures figure, Optional<IDots> dots, IPitch [] pitches) {
+    Chord(IFigure figure, Optional<IDots> dots, IPitch [] pitches) {
         super(figure, dots);
         this.pitches = pitches.clone();
     }

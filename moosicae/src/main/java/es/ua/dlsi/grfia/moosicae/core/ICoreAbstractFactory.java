@@ -1,6 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.core;
 
 
+import es.ua.dlsi.grfia.moosicae.core.enums.*;
+import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
 import es.ua.dlsi.grfia.moosicae.core.mensural.*;
 import es.ua.dlsi.grfia.moosicae.core.metadata.ITitle;
 
@@ -11,9 +13,9 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public interface ICoreAbstractFactory {
-    IAlteration createAlteration(EAccidentals accidentals, Optional<EAlterationDisplayType> alterationDisplayType);
-    IChord createChord(EFigures figures, Optional<IDots> dots, IPitch [] pitches);
-    IClef createClef(int line, EClefSigns clefSign);
+    IAlteration createAlteration(IAccidentalSymbol accidentals, Optional<IAlterationDisplayType> alterationDisplayType);
+    IChord createChord(IFigure figures, Optional<IDots> dots, IPitch [] pitches);
+    IClef createClef(int line, IClefSign clefSign);
     ICommonTime createCommonTime();
     ICustos createCustos(IPitch pitch);
     ICutTime createCutTime();
@@ -21,20 +23,14 @@ public interface ICoreAbstractFactory {
     IFractionalTimeSignature createFractionalTimeSignature(int numerator, int denominator);
     IMensuration createMensuration(EMensuralPerfections modusMaior, EMensuralPerfections modusMinor, EMensuralPerfections tempus, EMensuralPerfections prolatio);
     IMultimeasureRest createMultimeasureRest(int measureCount);
-    INote createNote(EFigures figures, Optional<IDots> dots, IPitch pitches);
+    INote createNote(IFigure figures, Optional<IDots> dots, IPitch pitches);
     IOctave createOctave(int number);
     IPart createPart(IScore score, String name);
-    IPitch createPitch(IOctave octave, IAlteration alteration, EDiatonicPitches diatonicPitch);
-    IProportioChangeDupla createProportioChangeDupla();
-    IProportioChangeTripla createProportioChangeTripla();
-    IProportioSesquialtera createProportioSesquialtera();
-    IProportioTripla createProportioTripla();
+    IPitch createPitch(IOctave octave, Optional<IAlteration> alteration, IDiatonicPitch diatonicPitch);
+    IPitchClass createPitchClass(IDiatonicPitch diatonicPitch, Optional<IAccidentalSymbol> accidentalSymbol);
+
     IScore createScore();
-    ITempusImperfectumCumProlationeImperfecta createTempusImperfectumCumProlationeImperfecta();
-    ITempusImperfectumCumProlationeImperfectaDiminutum createTempusImperfectumCumProlationeImperfectaDominitum();
-    ITempusImperfectumCumProlationePerfecta createTempusImperfectumCumProlationePerfecta();
-    ITempusPerfectumCumProlationeImperfecta createTempusPerfectumCumProlationeImperfecta();
-    ITempusPerfectumCumProlationePerfecta createTempusPerfectumCumProlationePerfecta();
+    IRest createRest(IFigure figure, Optional<IDots> dots);
 
     /**
      * For nested staff
@@ -60,5 +56,13 @@ public interface ICoreAbstractFactory {
     IVoice createVoice(IPart part);
 
 
-
+    /** Enum based **/
+    IFigure createFigure(EFigures figure);
+    IAccidentalSymbol createAccidentalSymbol(EAccidentalSymbols accidentalSymbol);
+    IAlterationDisplayType createAlterationDisplayType(EAlterationDisplayTypes alterationDisplayType);
+    IClefSign createClefSign(EClefSigns clefSign);
+    IDiatonicPitch createDiatonicPitch(EDiatonicPitches diatonicPitch);
+    INotationType createNotationType(ENotationTypes notationType);
+    IMeterSymbol createMeterSymbol(EMeterSymbols meterSymbol);
+    IMensuration createMensuration(EMensurations mensuration);
 }

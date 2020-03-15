@@ -7,6 +7,6 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public interface IDurationalSingle extends IDurational {
-    EFigures getFigure();
+    IFigure getFigure();
     Optional<IDots> getDots();
 }

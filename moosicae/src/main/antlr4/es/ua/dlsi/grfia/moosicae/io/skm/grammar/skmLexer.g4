@@ -72,6 +72,7 @@ TANDEM_END_PLAIN_CHANT: ASTERISK_FRAGMENT 'epc';
 AT: '@';
 CHAR_A: 'A';
 CHAR_B: 'B';
+CHAR_c: 'c';
 CHAR_C: 'C';
 CHAR_D: 'D';
 CHAR_E: 'E';

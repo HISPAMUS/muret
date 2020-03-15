@@ -1,10 +1,10 @@
 package es.ua.dlsi.grfia.moosicae.core.mensural;
 
-import es.ua.dlsi.grfia.moosicae.core.mensural.IMensuration;
-
 /**
- * @author David Rizo - drizo@dlsi.ua.es
- * @created 14/03/2020
+ * "Proporción menor"
+ * Meter in Music, 1600-1800: Performance, Perception, and Notation. George Houle: "Michael Praetorius explains 'Signis proportionatis in tactu inequali.
+ * The tactus inequalis is divided into majore C|3/2, called 'proportio tripla' and minore C3/2, called 'proportio sesquialtera'
+ * @author drizo
  */
 public interface IProportioSesquialtera extends IMensuration  {
 }
