@@ -1,6 +1,4 @@
-package es.ua.dlsi.grfia.moosicae;
-
-import es.ua.dlsi.grfia.moosicae.core.INonDurational;
+package es.ua.dlsi.grfia.moosicae.core;
 
 import java.util.Optional;
 
@@ -10,4 +8,5 @@ import java.util.Optional;
  */
 public interface IBarline extends INonDurational {
     Optional<Integer> getBarNumber();
+    Optional<IBarlineType> getBarlineType();
 }

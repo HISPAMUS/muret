@@ -43,6 +43,9 @@ public class SkmDocument2IScore {
                 if (headerType == ESkmHeaders.skern || headerType == ESkmHeaders.smens) {
                     IVoice voice = abstractFactory.createVoice(defaultPart);
                     voiceParts.put(voice, defaultPart);
+                    //TODO staves - cuando se encuentre con *staff1 o *staff1/2
+                    IStaff defaultStaff = abstractFactory.createStaff(score);
+                    voiceStaves.put(voice, defaultStaff);
                     // now traverse the spine
                     for (DAGNode<SkmToken> next: node.getNextList()) {
                         visit(voice, next);
@@ -57,14 +60,14 @@ public class SkmDocument2IScore {
         return score;
     }
 
-    private void visit(IVoice voice, DAGNode<SkmToken> node) {
+    private void visit(IVoice voice, DAGNode<SkmToken> node) throws IMException {
         process(voice, node.getLabel().getContent());
         for (DAGNode<SkmToken> next: node.getNextList()) {
             visit(voice, next);
         }
     }
 
-    private void process(IVoice voice, SkmToken skmToken) {
+    private void process(IVoice voice, SkmToken skmToken) throws IMException {
         if (skmToken instanceof SkmPart) {
             SkmPart skmPart = (SkmPart) skmToken;
             processPart(voice, skmPart);
@@ -77,8 +80,11 @@ public class SkmDocument2IScore {
         } // TODO spine operations
     }
 
-    private void processCoreSymbol(IVoice voice, SkmCoreSymbol skmCoreSymbol) {
+    private void processCoreSymbol(IVoice voice, SkmCoreSymbol skmCoreSymbol) throws IMException {
         IStaff voiceStaff = voiceStaves.get(voice);
+        if (voiceStaff == null) {
+            throw new IMException("There is no staff for voice " + voice);
+        }
         voice.addItem(skmCoreSymbol.getSymbol());
         voiceStaff.put(skmCoreSymbol.getSymbol());
     }

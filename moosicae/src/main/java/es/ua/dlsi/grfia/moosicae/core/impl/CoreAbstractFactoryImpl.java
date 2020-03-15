@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
-import es.ua.dlsi.grfia.moosicae.IMetronomeMark;
+import es.ua.dlsi.grfia.moosicae.core.IMetronomeMark;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
@@ -19,6 +19,11 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     @Override
     public IAlteration createAlteration(IAccidentalSymbol accidentalSymbol, Optional<IAlterationDisplayType> alterationDisplayType) {
         return new Alteration(accidentalSymbol, alterationDisplayType);
+    }
+
+    @Override
+    public IBarline createBarline(Optional<Integer> barNumber, Optional<IBarlineType> barlineType) {
+        return new Barline(barNumber, barlineType);
     }
 
     @Override
@@ -183,6 +188,11 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
         Voice voice = new Voice();
         part.addVoice(voice);
         return voice;
+    }
+
+    @Override
+    public IBarlineType createBarlineType(EBarlineTypes barlineType) {
+        return new BarlineType(barlineType);
     }
 
     @Override

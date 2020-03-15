@@ -56,6 +56,20 @@ public class SkmSyntaxDirectedTranslation {
         private IPitchBuilder pitchBuilder;
         private IAlterationDisplayTypeBuilder alterationDisplayTypeBuilder;
         private IAlterationBuilder alterationBuilder;
+        private IBarlineTypeBuilder barlineTypeBuilder;
+
+        private void resetBuilders() { // written here to have all object just above
+            clefBuilder = null;
+            custosBuilder = null;
+            pitchClassBuilder = null;
+            accidentalSymbolBuilder = null;
+            diatonicPitchBuilder = null;
+            keySignatureBuilder = null;
+            pitchBuilder = null;
+            alterationDisplayTypeBuilder = null;
+            alterationBuilder = null;
+            barlineTypeBuilder = null;
+        }
 
         public Loader(Parser parser, boolean debug, ICoreAbstractFactory coreAbstractFactory) {
             this.debug = debug;
@@ -141,16 +155,13 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void enterHeaderField(skmParser.HeaderFieldContext ctx) {
             super.enterHeaderField(ctx);
-            this.clefBuilder = null;
-            this.pitchClassBuilder = null;
-            this.custosBuilder = null;
-            throw new UnsupportedOperationException("TO_DO: poner aquí todo a null");
         }
 
         @Override
         public void exitField(skmParser.FieldContext ctx) {
             super.exitField(ctx);
             this.spineIndex ++;
+            resetBuilders();
         }
 
         @Override
@@ -242,7 +253,7 @@ public class SkmSyntaxDirectedTranslation {
         public void exitDiatonicPitch(skmParser.DiatonicPitchContext ctx) {
             super.exitDiatonicPitch(ctx);
             diatonicPitchBuilder = new IDiatonicPitchBuilder(coreAbstractFactory);
-            diatonicPitchBuilder.setDiatonicPitch(EDiatonicPitches.valueOf(ctx.getText()));
+            diatonicPitchBuilder.setDiatonicPitch(EDiatonicPitches.valueOf(ctx.getText().toUpperCase()));
         }
 
         @Override
@@ -250,6 +261,7 @@ public class SkmSyntaxDirectedTranslation {
             super.enterPitchClass(ctx);
             pitchClassBuilder = new IPitchClassBuilder(coreAbstractFactory);
         }
+
 
         @Override
         public void exitPitchClass(skmParser.PitchClassContext ctx) {
@@ -261,11 +273,8 @@ public class SkmSyntaxDirectedTranslation {
                 }
             }
 
-            try {
-                pitchClassBuilder.setDiatonicPitch(diatonicPitchBuilder.build());
-            } catch (IMException e) {
-                throw createException(e);
-            }
+            IPitchClassBuilder pitchClassBuilder = new IPitchClassBuilder(coreAbstractFactory);
+            pitchClassBuilder.setDiatonicPitch(coreAbstractFactory.createDiatonicPitch(EDiatonicPitches.valueOf(ctx.lowerCasePitch().getText().toUpperCase())));
         }
 
         @Override
@@ -297,7 +306,7 @@ public class SkmSyntaxDirectedTranslation {
         public void exitFractionalTimeSignature(skmParser.FractionalTimeSignatureContext ctx) {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Time signature {0}", ctx.getText());
             IFractionalTimeSignatureBuilder fractionalTimeSignatureBuilder = new IFractionalTimeSignatureBuilder(coreAbstractFactory);
-            fractionalTimeSignatureBuilder.setDenominator(Integer.parseInt(ctx.numerator().getText()));
+            fractionalTimeSignatureBuilder.setNumerator(Integer.parseInt(ctx.numerator().getText()));
             fractionalTimeSignatureBuilder.setDenominator(Integer.parseInt(ctx.denominator().getText()));
             try {
                 addItemToSpine(new SkmCoreSymbol(ctx.getText(), fractionalTimeSignatureBuilder.build()));
@@ -380,9 +389,16 @@ public class SkmSyntaxDirectedTranslation {
         public void exitMetronome(skmParser.MetronomeContext ctx) {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Metronome {0}", ctx.getText());
             super.exitMetronome(ctx);
-           /* String numberStr = ctx.number().getText();
-            SkmMetronomeMark mm = new SkmMetronomeMark(Integer.parseInt(numberStr));
-            addItemToSpine(mm);*/
+            IMetronomeMarkBuilder metronomeMarkBuilder = new IMetronomeMarkBuilder(coreAbstractFactory);
+            metronomeMarkBuilder.setFigure(coreAbstractFactory.createFigure(EFigures.QUARTER));
+            metronomeMarkBuilder.setValue(Integer.parseInt(ctx.number().getText()));
+            SkmCoreSymbol mm = null;
+            try {
+                mm = new SkmCoreSymbol(ctx.getText(), metronomeMarkBuilder.build());
+            } catch (IMException e) {
+                throw createException(e);
+            }
+            addItemToSpine(mm);
         }
 
         @Override
@@ -392,27 +408,59 @@ public class SkmSyntaxDirectedTranslation {
         }
 
         @Override
+        public void exitBarLineType(skmParser.BarLineTypeContext ctx) {
+            super.exitBarLineType(ctx);
+            barlineTypeBuilder = new IBarlineTypeBuilder(coreAbstractFactory);
+            EBarlineTypes barlineType;
+            switch (ctx.getText()) {
+                case "=":
+                    barlineType = EBarlineTypes.end;
+                    break;
+                case "||":
+                    barlineType = EBarlineTypes.doubleThin;
+                    break;
+                case "-":
+                    barlineType = EBarlineTypes.hidden;
+                    break;
+                case "|!:":
+                    barlineType = EBarlineTypes.leftRepeat;
+                    break;
+                case ":|!|:":
+                    barlineType = EBarlineTypes.leftRightRepeat;
+                    break;
+                case ":|!":
+                    barlineType = EBarlineTypes.rightRepeat;
+                    break;
+                default:
+                    throw createException("Unkopwn barline type: " + ctx.getText());
+            }
+            barlineTypeBuilder.setBarlineType(barlineType);
+        }
+
+        @Override
         public void exitBarline(skmParser.BarlineContext ctx) {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "BarLine {0}", ctx.getText());
             super.exitBarline(ctx);
 
-           /* Integer number = null;
+            IBarlineBuilder barlineBuilder = new IBarlineBuilder(coreAbstractFactory);
+
             if (ctx.number() != null) {
-                number = Integer.parseInt(ctx.getText());
+                barlineBuilder.setBarNumber(Integer.parseInt(ctx.number().getText()));
             }
 
-            String barlineType;
-            if (ctx.barLineType() != null) {
-                barlineType = ctx.barLineType().getText();
-            } else {
-                barlineType = "";
+            if (barlineTypeBuilder != null) {
+                try {
+                    barlineBuilder.setBarlineType(barlineTypeBuilder.build());
+                } catch (IMException e) {
+                    throw createException(e);
+                }
             }
             try {
-                SkmBarLine skmBarLine = SkmBarLineFactory.getInstance().create(barlineType, number);
+                SkmCoreSymbol skmBarLine = new SkmCoreSymbol(ctx.getText(), barlineBuilder.build());
                 addItemToSpine(skmBarLine);
-            } catch (IM4Exception e) {
-                throw new GrammarParseRuntimeException(e);
-            }*/
+            } catch (IMException e) {
+                throw createException(e);
+            }
         }
 
 
@@ -672,7 +720,6 @@ public class SkmSyntaxDirectedTranslation {
         public void enterAlteration(skmParser.AlterationContext ctx) {
             super.enterAlteration(ctx);
             alterationBuilder = new IAlterationBuilder(coreAbstractFactory);
-            alterationDisplayTypeBuilder.setAlterationDisplayType(EAlterationDisplayTypes.valueOf(ctx.getText()));
         }
 
         @Override

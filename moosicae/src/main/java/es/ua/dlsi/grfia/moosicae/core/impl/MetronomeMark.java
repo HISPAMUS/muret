@@ -1,8 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.IMetronomeMark;
-import es.ua.dlsi.grfia.moosicae.core.ICoreObject;
+import es.ua.dlsi.grfia.moosicae.core.IMetronomeMark;
 import es.ua.dlsi.grfia.moosicae.core.IDots;
 import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.IFigure;

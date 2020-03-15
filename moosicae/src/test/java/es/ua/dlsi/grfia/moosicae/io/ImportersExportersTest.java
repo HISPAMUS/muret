@@ -15,10 +15,10 @@ import static org.junit.Assert.*;
 public class ImportersExportersTest {
     private IScore creaateScore(ICoreAbstractFactory abstractFactory) {
         IScore score = abstractFactory.createScore();
-        IPart part = abstractFactory.createPart(score);
+        IPart part = abstractFactory.createPart(score, "default");
         score.add(part);
         IVoice voice = abstractFactory.createVoice(part);
-        IClef clef = abstractFactory.createClef(2, EClefSigns.G);
+        IClef clef = abstractFactory.createClef(2, abstractFactory.createClefSign(EClefSigns.G));
         IStaff staff = abstractFactory.createStaff(score);
         staff.put(clef);
         voice.addItem(clef);

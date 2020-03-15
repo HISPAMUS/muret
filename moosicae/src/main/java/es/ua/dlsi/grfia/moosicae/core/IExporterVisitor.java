@@ -1,13 +1,13 @@
 package es.ua.dlsi.grfia.moosicae.core;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.IMetronomeMark;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public interface IExporterVisitor<InputOutputType>  {
     void export(IClef clef, InputOutputType inputOutput);
+    void export(IClefSign clefSign, InputOutputType inputOutput);
     void export(INote note, InputOutputType inputOutput);
     void export(IRest rest, InputOutputType inputOutput);
     void export(IMultimeasureRest mrest, InputOutputType inputOutput);
@@ -28,4 +28,7 @@ public interface IExporterVisitor<InputOutputType>  {
     void export(IDots dots, InputOutputType inputOutput);
     void export(IFigure figures, InputOutputType inputOutput);
     void export(IMetronomeMark metronomeMark, InputOutputType inputOutput) throws IMException;
+
+    void export(IBarline barline, InputOutputType inputOutput) throws IMException;
+    void export(IBarlineType barlineType, StringBuilder inputOutput) throws IMException;
 }

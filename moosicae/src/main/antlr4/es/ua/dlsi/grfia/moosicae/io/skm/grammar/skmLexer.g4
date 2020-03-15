@@ -72,7 +72,6 @@ TANDEM_END_PLAIN_CHANT: ASTERISK_FRAGMENT 'epc';
 AT: '@';
 CHAR_A: 'A';
 CHAR_B: 'B';
-CHAR_c: 'c';
 CHAR_C: 'C';
 CHAR_D: 'D';
 CHAR_E: 'E';
@@ -91,6 +90,13 @@ CHAR_X: 'X';
 CHAR_Y: 'Y';
 CHAR_T: 'T';
 CHAR_U: 'U';
+CHAR_a: 'a';
+CHAR_b: 'b';
+CHAR_c: 'c';
+CHAR_d: 'd';
+CHAR_e: 'e';
+CHAR_f: 'f';
+CHAR_g: 'g';
 CHAR_i: 'i';
 CHAR_m: 'm';
 CHAR_n: 'n';
@@ -103,7 +109,7 @@ CHAR_v: 'v';
 CHAR_x: 'x';
 CHAR_y: 'y';
 
-LOWERCASE_PITCH_CHARACTER: 'a' .. 'g';
+
 
 DIGIT_0: '0';
 DIGIT_1: '1';

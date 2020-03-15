@@ -2,7 +2,7 @@ package es.ua.dlsi.grfia.moosicae.io.skm;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
-import es.ua.dlsi.grfia.moosicae.IMetronomeMark;
+import es.ua.dlsi.grfia.moosicae.core.IMetronomeMark;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
 
@@ -14,8 +14,13 @@ public class SkmExporterVisitor implements IExporterVisitor<StringBuilder> {
     @Override
     public void export(IClef clef, StringBuilder inputOutput) {
         inputOutput.append("*clef");
-        inputOutput.append(clef.getSignType());
+        export(clef.getSignType(), inputOutput);
         inputOutput.append(clef.getLine());
+    }
+
+    @Override
+    public void export(IClefSign clefSign, StringBuilder inputOutput) {
+        inputOutput.append(clefSign.getClefSign().name().toUpperCase());
     }
 
     @Override
@@ -233,6 +238,45 @@ public class SkmExporterVisitor implements IExporterVisitor<StringBuilder> {
         }
         inputOutput.append("MM");
         inputOutput.append(metronomeMark.getValue());
+    }
+
+    @Override
+    public void export(IBarline barline, StringBuilder inputOutput) throws IMException {
+        inputOutput.append('=');
+        if (barline.getBarNumber().isPresent()) {
+            inputOutput.append(barline.getBarNumber().get());
+        }
+        if (barline.getBarlineType().isPresent()) {
+            export(barline.getBarlineType().get(), inputOutput);
+        }
+    }
+
+    @Override
+    public void export(IBarlineType barlineType, StringBuilder inputOutput) throws IMException {
+        String encoding;
+        switch (barlineType.getBarlineType()) {
+            case end:
+                encoding = "=";
+                break;
+            case doubleThin:
+                encoding = "||";
+                break;
+            case hidden:
+                encoding = "-";
+                break;
+            case leftRepeat:
+                encoding = "|!:";
+                break;
+            case leftRightRepeat:
+                encoding = ":|!|:";
+                break;
+            case rightRepeat:
+                encoding = ":|!";
+                break;
+            default:
+                throw new IMException("Unkown barline type: " + barlineType.getBarlineType());
+        }
+        inputOutput.append(encoding);
     }
 
 }

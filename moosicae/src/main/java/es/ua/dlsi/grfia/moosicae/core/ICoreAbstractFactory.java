@@ -1,7 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.core;
 
 
-import es.ua.dlsi.grfia.moosicae.IMetronomeMark;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
 import es.ua.dlsi.grfia.moosicae.core.mensural.*;
@@ -15,6 +14,7 @@ import java.util.Optional;
  */
 public interface ICoreAbstractFactory {
     IAlteration createAlteration(IAccidentalSymbol accidentals, Optional<IAlterationDisplayType> alterationDisplayType);
+    IBarline createBarline(Optional<Integer> barNumber, Optional<IBarlineType> barlineType);
     IChord createChord(IFigure figures, Optional<IDots> dots, IPitch [] pitches);
     IClef createClef(int line, IClefSign clefSign);
     ICommonTime createCommonTime();
@@ -59,6 +59,7 @@ public interface ICoreAbstractFactory {
 
 
     /** Enum based **/
+    IBarlineType createBarlineType(EBarlineTypes barlineType);
     IFigure createFigure(EFigures figure);
     IAccidentalSymbol createAccidentalSymbol(EAccidentalSymbols accidentalSymbol);
     IAlterationDisplayType createAlterationDisplayType(EAlterationDisplayTypes alterationDisplayType);

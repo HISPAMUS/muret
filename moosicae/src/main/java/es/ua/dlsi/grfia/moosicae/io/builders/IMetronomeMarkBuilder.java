@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.io.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.IMetronomeMark;
+import es.ua.dlsi.grfia.moosicae.core.IMetronomeMark;
 import es.ua.dlsi.grfia.moosicae.core.*;
 
 import java.util.Optional;
