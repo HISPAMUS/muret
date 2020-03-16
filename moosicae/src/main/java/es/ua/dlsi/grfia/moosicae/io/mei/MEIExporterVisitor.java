@@ -149,7 +149,8 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorPa
     }
 
     @Override
-    public void export(IBarlineType barlineType, StringBuilder inputOutput) throws IMException {
+    public void export(IBarlineType barlineType, MEIExporterVisitorParam inputOutput) throws IMException {
         throw new UnsupportedOperationException("TO-DO"); //TODO
     }
+
 }

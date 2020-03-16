@@ -1,5 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
+import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 
 /**
@@ -22,7 +23,7 @@ public class Key implements IKey {
     }
 
     @Override
-    public <InputOutputType> void export(IExporterVisitor exportVisitor, InputOutputType inputOutput) {
+    public <InputOutputType> void export(IExporterVisitor exportVisitor, InputOutputType inputOutput) throws IMException {
         exportVisitor.export(this, inputOutput);
     }
 

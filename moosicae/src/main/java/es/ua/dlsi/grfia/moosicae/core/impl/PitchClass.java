@@ -33,4 +33,30 @@ public class PitchClass implements IPitchClass {
     public PitchClass clone() {
         return new PitchClass(diatonicPitch, accidental);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PitchClass)) return false;
+
+        PitchClass that = (PitchClass) o;
+
+        if (!diatonicPitch.equals(that.diatonicPitch)) return false;
+        return accidental.equals(that.accidental);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = diatonicPitch.hashCode();
+        result = 31 * result + accidental.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "PitchClass{" +
+                "diatonicPitch=" + diatonicPitch +
+                ", accidental=" + accidental +
+                '}';
+    }
 }

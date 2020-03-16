@@ -1,5 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
+import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.IMetronomeMark;
 import es.ua.dlsi.grfia.moosicae.core.*;
@@ -10,6 +11,7 @@ import es.ua.dlsi.grfia.moosicae.core.impl.mensural.mensurations.*;
 import es.ua.dlsi.grfia.moosicae.core.mensural.*;
 import es.ua.dlsi.grfia.moosicae.core.metadata.ITitle;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -49,6 +51,44 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     @Override
     public ICutTime createCutTime() {
         return new CutTime();
+    }
+
+    private <T extends IKeyEnum> Optional<T> findKeyEnum(T[] values, IPitchClass pitchClass) {
+        EDiatonicPitches diatonicPitch = pitchClass.getDiatonicPitch().getDiatonicPitch();
+        Optional<EAccidentalSymbols> accidentalSymbol;
+        if (pitchClass.getAccidental().isPresent()) {
+            accidentalSymbol = Optional.of(pitchClass.getAccidental().get().getAccidentalSymbol());
+        } else {
+            accidentalSymbol = Optional.empty();
+        }
+
+        for (T value: values) {
+            if (Objects.equals(value.getDiatonicPitch(), diatonicPitch)
+                && Objects.equals(value.getAccidentalSymbol(), accidentalSymbol)) {
+                return Optional.of(value);
+            }
+        }
+        return Optional.empty();
+    }
+    @Override
+    public IKey createKey(IPitchClass pitchClass, IMode mode) throws IMException {
+        // find the pitch class among the enums
+        Optional<ECommonAlterationKeys> commonAlterationKey = findKeyEnum(ECommonAlterationKeys.values(), pitchClass);
+        if (commonAlterationKey.isPresent()) {
+            return createKey(commonAlterationKey.get());
+        }
+
+        Optional<ECommonAlterationKeys> mixedAlterationKey = findKeyEnum(ECommonAlterationKeys.values(), pitchClass);
+        if (mixedAlterationKey.isPresent()) {
+            return createKey(mixedAlterationKey.get());
+        }
+
+        throw new IMException("Cannot find a key for pitch class " + pitchClass + " and mode " + mode);
+    }
+
+    @Override
+    public IKey createKey(IPitchClass pitchClass, IMode mode, IKeySignature keySignature) {
+        return new Key(pitchClass, mode, keySignature);
     }
 
 

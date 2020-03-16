@@ -12,6 +12,8 @@ import es.ua.dlsi.grfia.moosicae.utils.dag.DAGNode;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * The main entry point: a musical piece, a musical composition.
@@ -34,22 +36,34 @@ public class SkmDocument {
         this.dag = new DAG<>();
         this.insertedNodes = new HashMap<>();
         startToken = new SkmToken("");
-        add(null, startToken);
+        try {
+            add(null, startToken);
+        } catch (IMException e) {
+            throw new IMRuntimeException("This situation should be impossible", e);
+        }
     }
 
-    public void add(SkmToken previousToken, SkmToken skmToken) {
+    private DAGNode<SkmToken> findExistingNode(SkmToken token) {
+        DAGNode<SkmToken> result = this.insertedNodes.get(token);
+        if (result == null) {
+            throw new IMRuntimeException("The previous item " + token + " cannot be found in the insertedNodes hash map");
+        }
+        return result;
+    }
+
+    public void add(SkmToken previousToken, SkmToken skmToken) throws IMException {
         DAGNode<SkmToken> previousNode = null;
         if (previousToken != null) {
-            previousNode = this.insertedNodes.get(previousToken);
-            if (previousNode == null) {
-                throw new IMRuntimeException("The previous item " + previousToken + " cannot be found in the insertedNodes hash map");
-            }
+            previousNode = findExistingNode(previousToken);
+        }
+        if (previousNode != null && previousNode.getLabel() != null && previousNode.getLabel().getContent() == skmToken) { // same object
+            throw new IMException("The skmToken " + skmToken + " was already inserted, and the DAG does not allow loops");
         }
         DAGNode newNode = this.dag.add(previousNode, new DAGLabel<>(skmToken));
         this.insertedNodes.put(skmToken, newNode);
     }
 
-    public void addHeader(SkmHeader headerToken) {
+    public void addHeader(SkmHeader headerToken) throws IMException {
         add(startToken, headerToken);
     }
 
@@ -60,5 +74,23 @@ public class SkmDocument {
 
     public IScore buildScore(ICoreAbstractFactory abstractFactory) throws IMException {
         return new SkmDocument2IScore(abstractFactory).convert(dag.getFirstNode());
+    }
+
+    public List<SkmToken> getHeaderTokens() {
+        List<SkmToken> result = new LinkedList<>();
+
+        for (DAGNode<SkmToken> node: this.dag.getFirstNode().getNextList()) {
+            result.add(node.getLabel().getContent());
+        }
+        return result;
+    }
+
+    public List<SkmToken> getNextList(SkmToken token) {
+        DAGNode<SkmToken> node = findExistingNode(token);
+        List<SkmToken> result = new LinkedList<>();
+        for (DAGNode<SkmToken> next: node.getNextList()) {
+            result.add(next.getLabel().getContent());
+        }
+        return result;
     }
 }

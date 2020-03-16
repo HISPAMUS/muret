@@ -8,7 +8,7 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 16/03/2020
  */
-public enum ECommonAlterationKeys {
+public enum ECommonAlterationKeys implements IKeyEnum {
     CM (EDiatonicPitches.C, null, EModes.major, 0, null),
     Am (EDiatonicPitches.A, null, EModes.minor, 0, null),
     GM (EDiatonicPitches.G, null, EModes.major, 1, EAccidentalSymbols.SHARP),

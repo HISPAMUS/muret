@@ -1,49 +1,61 @@
 package es.ua.dlsi.grfia.moosicae.io.skm;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
+import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.io.AbstractExporter;
+import es.ua.dlsi.grfia.moosicae.io.skm.grammar.SkmDocument;
+import es.ua.dlsi.grfia.moosicae.io.skm.grammar.SkmToken;
+import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.ESkmHeaders;
+import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmHeader;
+import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmPart;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class SkmExporter extends AbstractExporter<SkmExporterVisitor> {
+    /**
+     * Actually, a spine for each voice
+     */
+    HashMap<IVoice, SkmToken> lastVoiceTokens;
+
     public SkmExporter() {
         super(new SkmExporterVisitor());
+        lastVoiceTokens = new HashMap<>();
     }
-
-    private String exportMatrix(LinkedList<LinkedList<String>> matrix) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (LinkedList<String> record: matrix) {
-            boolean first = true;
-            for (String field: record) {
-                if (first) {
-                    first = false;
-                } else {
-                    stringBuilder.append('\t');
-                }
-                stringBuilder.append(field);
-            }
-            stringBuilder.append('\n');
-        }
-
-        return stringBuilder.toString();
-    }
-
 
     @Override
     public String exportScore(IScore score) throws IMException {
-        LinkedList<LinkedList<String>> matrix = new LinkedList<>();
+        SkmDocument skmDocument = new SkmDocument();
         List<IVoice> voices = generateVoices(score);
 
-        exportHeaders(matrix, voices);
-        exportParts(matrix, score);
+        exportParts(skmDocument, score);
         //TODO staves, text, dynamics....
-        exportSymbols(matrix, voices);
+        exportSymbols(skmDocument, voices);
 
-        return exportMatrix(matrix);
+        return exportSkmDocument(skmDocument);
+    }
+
+    private String exportSkmDocument(SkmDocument skmDocument) {
+        StringBuilder stringBuilder = new StringBuilder();
+        //TODO - null tokens para múltiples spines - ahora uso el grafo ¿debería usar un visitor?
+        //TODO varios spines - ahora sólo uso uno
+        List<SkmToken> headers = skmDocument.getHeaderTokens();
+        for (SkmToken header: headers) {
+            export(skmDocument, header, stringBuilder);
+        }
+        return stringBuilder.toString();
+    }
+
+    private void export(SkmDocument skmDocument, SkmToken token, StringBuilder stringBuilder) {
+        stringBuilder.append(token.getEncoding());
+        stringBuilder.append('\n');
+        for (SkmToken nextToken: skmDocument.getNextList(token)) {
+            export(skmDocument, nextToken, stringBuilder);
+        }
     }
 
     private List<IVoice> generateVoices(IScore score) {
@@ -58,27 +70,33 @@ public class SkmExporter extends AbstractExporter<SkmExporterVisitor> {
         return result;
     }
 
-    private void exportSymbols(LinkedList<LinkedList<String>> matrix, List<IVoice> voices) throws IMException {
+    private void exportSymbols(SkmDocument skmDocument, List<IVoice> voices) throws IMException {
         for (IVoice voice: voices) {
+            SkmToken lastToken = lastVoiceTokens.get(voice);
+            if (voice == null) {
+                throw new IMRuntimeException("Cannot find last token for voice " + voice);
+            }
             for (IVoiced voiced: voice.getItems()) {
-                StringBuilder stringBuilder = new StringBuilder();
-                voiced.export(this.exporterVisitor, stringBuilder);
-
+                SkmExporterVisitorTokenParam skmExporterVisitorTokenParam = new SkmExporterVisitorTokenParam(skmDocument, lastToken);
+                voiced.export(this.exporterVisitor, skmExporterVisitorTokenParam);
                 //TODO varios spines...
-                LinkedList<String> record = addRecord(matrix);
-                record.add(stringBuilder.toString());
+                lastToken = skmExporterVisitorTokenParam.getLastToken();
             }
         }
     }
 
-    private void exportParts(LinkedList<LinkedList<String>> matrix, IScore score) {
+    private void exportParts(SkmDocument skmDocument, IScore score) throws IMException {
+        //TODO text, ....
         for (int ipart = score.getParts().length-1; ipart>=0; ipart--) {
             IPart part = score.getParts()[ipart];
-            LinkedList<String> record = addRecord(matrix);
             for (int ivoice = part.getVoices().length -1; ivoice >= 0; ivoice--) {
                 IVoice voice = part.getVoices()[ivoice];
-                //TODO tipo
-                addField(record, exportPartNumber(ipart+1));
+                SkmHeader skmHeader = new SkmHeader(ESkmHeaders.skern);  //TODO tipo
+                skmDocument.addHeader(skmHeader);
+
+                SkmPart skmPart = new SkmPart(ipart+1);
+                skmDocument.add(skmHeader, skmPart);
+                lastVoiceTokens.put(voice, skmPart);
             }
         }
     }
@@ -86,23 +104,4 @@ public class SkmExporter extends AbstractExporter<SkmExporterVisitor> {
     private String exportPartNumber(int n) {
         return "*part" + n;
     }
-
-    private void exportHeaders(LinkedList<LinkedList<String>> matrix, List<IVoice> voices) {
-        //TODO tipo
-        LinkedList<String> record = addRecord(matrix);
-        for (IVoice voice: voices) {
-            addField(record, "**skern");
-        }
-    }
-
-    private LinkedList<String> addRecord(LinkedList<LinkedList<String>> matrix) {
-        LinkedList<String> record = new LinkedList<>();
-        matrix.add(record);
-        return record;
-    }
-
-    private void addField(LinkedList<String> record, String field) {
-        record.add(field);
-    }
-
 }

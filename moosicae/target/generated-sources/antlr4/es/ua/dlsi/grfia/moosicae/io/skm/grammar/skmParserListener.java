@@ -250,6 +250,16 @@ public interface skmParserListener extends ParseTreeListener {
 	 */
 	void exitKeySignaturePitchClass(skmParser.KeySignaturePitchClassContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link skmParser#keyMode}.
+	 * @param ctx the parse tree
+	 */
+	void enterKeyMode(skmParser.KeyModeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link skmParser#keyMode}.
+	 * @param ctx the parse tree
+	 */
+	void exitKeyMode(skmParser.KeyModeContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link skmParser#key}.
 	 * @param ctx the parse tree
 	 */

@@ -1,5 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
+import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IClef;
 import es.ua.dlsi.grfia.moosicae.core.IClefSign;
 import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
@@ -50,7 +51,7 @@ public class Clef implements IClef {
     }
 
     @Override
-    public <InputOutputType> void export(IExporterVisitor exportVisitor, InputOutputType inputOutput) {
+    public <InputOutputType> void export(IExporterVisitor exportVisitor, InputOutputType inputOutput) throws IMException {
         exportVisitor.export(this, inputOutput);
     }
 

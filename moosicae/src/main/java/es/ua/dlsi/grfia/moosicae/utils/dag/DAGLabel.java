@@ -2,14 +2,14 @@ package es.ua.dlsi.grfia.moosicae.utils.dag;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class DAGLabel<SpineItemContentType> {
-    SpineItemContentType content;
+public class DAGLabel<ContentType> {
+    ContentType content;
 
-    public DAGLabel(SpineItemContentType content) {
+    public DAGLabel(ContentType content) {
         this.content = content;
     }
 
-    public SpineItemContentType getContent() {
+    public ContentType getContent() {
         return content;
     }
 

@@ -1,8 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.io.skm.grammar;
 
-import es.ua.dlsi.grfia.moosicae.core.IClef;
+import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
 import es.ua.dlsi.grfia.moosicae.io.builders.*;
@@ -57,6 +56,7 @@ public class SkmSyntaxDirectedTranslation {
         private IAlterationDisplayTypeBuilder alterationDisplayTypeBuilder;
         private IAlterationBuilder alterationBuilder;
         private IBarlineTypeBuilder barlineTypeBuilder;
+        private IModeBuilder modeBuilder;
 
         private void resetBuilders() { // written here to have all object just above
             clefBuilder = null;
@@ -69,6 +69,7 @@ public class SkmSyntaxDirectedTranslation {
             alterationDisplayTypeBuilder = null;
             alterationBuilder = null;
             barlineTypeBuilder = null;
+            modeBuilder = null;
         }
 
         public Loader(Parser parser, boolean debug, ICoreAbstractFactory coreAbstractFactory) {
@@ -96,7 +97,7 @@ public class SkmSyntaxDirectedTranslation {
             return this.lastSpineInsertedItem.get(this.spineIndex);
         }
 
-        private void addItemToSpine(SkmToken skmItem) {
+        private void addItemToSpine(SkmToken skmItem) throws IMException {
             SkmToken previous = getLastItemForCurrentSpine();
             this.skmDocument.add(previous, skmItem);
             lastSpineInsertedItem.set(this.spineIndex, skmItem);
@@ -125,7 +126,11 @@ public class SkmSyntaxDirectedTranslation {
             super.exitHeaderField(ctx);
 
             SkmHeader headerToken = SkmHeader.parse(ctx.getText().substring(2)); // remove the first **
-            skmDocument.addHeader(headerToken);
+            try {
+                skmDocument.addHeader(headerToken);
+            } catch (IMException e) {
+                throw createException(e);
+            }
             lastSpineInsertedItem.add(headerToken);
         }
 
@@ -136,7 +141,11 @@ public class SkmSyntaxDirectedTranslation {
 
             int number = Integer.parseInt(ctx.number().getText());
             SkmPart partNumber = new SkmPart(number);
-            addItemToSpine(partNumber);
+            try {
+                addItemToSpine(partNumber);
+            } catch (IMException e) {
+                throw createException(e);
+            }
         }
 
 
@@ -171,7 +180,11 @@ public class SkmSyntaxDirectedTranslation {
 
             int number = Integer.parseInt(ctx.number().getText());
             SkmStaff staffNumber = new SkmStaff(number);
-            addItemToSpine(staffNumber);
+            try {
+                addItemToSpine(staffNumber);
+            } catch (IMException e) {
+                throw createException(e);
+            }
         }
 
 
@@ -208,10 +221,10 @@ public class SkmSyntaxDirectedTranslation {
             IClef clef = null;
             try {
                 clef = clefBuilder.build();
+                addItemToSpine(new SkmCoreSymbol(ctx.getText(), clef));
             } catch (IMException e) {
                 throw createException(e);
             }
-            addItemToSpine(new SkmCoreSymbol(ctx.getText(), clef));
         }
 
         @Override
@@ -297,12 +310,63 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void exitKeySignature(skmParser.KeySignatureContext ctx) {
             super.exitKeySignature(ctx);
-            addItemToSpine(new SkmCoreSymbol(ctx.getText(), keySignatureBuilder.build()));
+            try {
+                addItemToSpine(new SkmCoreSymbol(ctx.getText(), keySignatureBuilder.build()));
+            } catch (IMException e) {
+                throw createException(e);
+            }
+        }
+
+        @Override
+        public void enterKeyMode(skmParser.KeyModeContext ctx) {
+            super.exitKeyMode(ctx);
+            modeBuilder = new IModeBuilder(coreAbstractFactory);
+        }
+
+        @Override
+        public void exitMajorKey(skmParser.MajorKeyContext ctx) {
+            super.exitMajorKey(ctx);
+            modeBuilder.setMode(EModes.major);
+            pitchClassBuilder = new IPitchClassBuilder(coreAbstractFactory);
+            diatonicPitchBuilder = new IDiatonicPitchBuilder(coreAbstractFactory);
+            diatonicPitchBuilder.setDiatonicPitch(EDiatonicPitches.valueOf(ctx.upperCasePitch().getText().toUpperCase()));
+            try {
+                pitchClassBuilder.setDiatonicPitch(diatonicPitchBuilder.build());
+                if (accidentalSymbolBuilder != null) {
+                    pitchClassBuilder.setAccidentalSymbol(accidentalSymbolBuilder.build());
+                }
+            } catch (IMException e) {
+                throw createException(e);
+            }
+        }
+
+        @Override
+        public void exitMinorKey(skmParser.MinorKeyContext ctx) {
+            super.exitMinorKey(ctx);
+            modeBuilder.setMode(EModes.minor);
+            pitchClassBuilder = new IPitchClassBuilder(coreAbstractFactory);
+            diatonicPitchBuilder = new IDiatonicPitchBuilder(coreAbstractFactory);
+            diatonicPitchBuilder.setDiatonicPitch(EDiatonicPitches.valueOf(ctx.lowerCasePitch().getText().toUpperCase()));
+            try {
+                pitchClassBuilder.setDiatonicPitch(diatonicPitchBuilder.build());
+                if (accidentalSymbolBuilder != null) {
+                    pitchClassBuilder.setAccidentalSymbol(accidentalSymbolBuilder.build());
+                }
+            } catch (IMException e) {
+                throw createException(e);
+            }
         }
 
         @Override
         public void exitKey(skmParser.KeyContext ctx) {
-            //TODO
+            try {
+                IPitchClass pitchClass = pitchClassBuilder.build();
+                IMode mode = modeBuilder.build();
+                IKey key = coreAbstractFactory.createKey(pitchClass, mode);
+                addItemToSpine(new SkmCoreSymbol(ctx.getText(), key));
+            } catch (IMException e) {
+                throw createException(e);
+            }
         }
 
         @Override
@@ -398,10 +462,10 @@ public class SkmSyntaxDirectedTranslation {
             SkmCoreSymbol mm = null;
             try {
                 mm = new SkmCoreSymbol(ctx.getText(), metronomeMarkBuilder.build());
+                addItemToSpine(mm);
             } catch (IMException e) {
                 throw createException(e);
             }
-            addItemToSpine(mm);
         }
 
         @Override

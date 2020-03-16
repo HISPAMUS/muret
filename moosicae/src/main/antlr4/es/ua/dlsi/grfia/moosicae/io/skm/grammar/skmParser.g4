@@ -106,9 +106,10 @@ clefLine: DIGIT_1 | DIGIT_2 | DIGIT_3 | DIGIT_4 | DIGIT_5;
 keySignature: TANDEM_KEY LEFT_BRACKET keySignaturePitchClass* RIGHT_BRACKET;
 keySignaturePitchClass: pitchClass;
 
-key: ASTERISK (minorKey | majorKey) pitchClass? COLON;
-minorKey: lowerCasePitch;
-majorKey: upperCasePitch;
+keyMode: (minorKey | majorKey);
+key: ASTERISK keyMode COLON;
+minorKey: lowerCasePitch accidental?;
+majorKey: upperCasePitch accidental?;
 
 fractionalTimeSignature: TANDEM_TIMESIGNATURE numerator SLASH denominator;
 numerator: number;

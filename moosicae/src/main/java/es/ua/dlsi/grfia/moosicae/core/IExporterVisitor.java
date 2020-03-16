@@ -6,30 +6,30 @@ import es.ua.dlsi.grfia.moosicae.IMException;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public interface IExporterVisitor<InputOutputType>  {
-    void export(IClef clef, InputOutputType inputOutput);
-    void export(IClefSign clefSign, InputOutputType inputOutput);
-    void export(INote note, InputOutputType inputOutput);
-    void export(IRest rest, InputOutputType inputOutput);
-    void export(IMultimeasureRest mrest, InputOutputType inputOutput);
-    void export(IFractionalTimeSignature meter, InputOutputType inputOutput);
-    void export(ICutTime meter, InputOutputType inputOutputOutput);
-    void export(ICommonTime meter, InputOutputType inputOutputOutput);
-    void export(IChord chord, InputOutputType inputOutputOutput);
-    void export(ICustos custos, InputOutputType inputOutputOutput);
-    void export(IKey key, InputOutputType inputOutputOutput);
-    void export(ICommonAlterationKey commonAlterationKey, InputOutputType inputOutputOutput);
-    void export(IKeySignature keySignature, InputOutputType inputOutputOutput);
-    void export(IVoice voice, InputOutputType inputOutput);
-    void export(IDiatonicPitch diatonicPitch, InputOutputType inputOutput);
-    void export(IAccidentalSymbol accidental, InputOutputType inputOutput);
-    void export(IAlterationDisplayType alterationDisplayType, InputOutputType inputOutput);
-    void export(IAlteration alteration, InputOutputType inputOutput);
-    void export(IPitchClass pitchClass, InputOutputType inputOutput);
-    void export(IPitch pitch, InputOutputType inputOutput);
-    void export(IDots dots, InputOutputType inputOutput);
-    void export(IFigure figures, InputOutputType inputOutput);
+    void export(IClef clef, InputOutputType inputOutput) throws IMException;
+    void export(IClefSign clefSign, InputOutputType inputOutput) throws IMException;
+    void export(INote note, InputOutputType inputOutput) throws IMException;
+    void export(IRest rest, InputOutputType inputOutput) throws IMException;
+    void export(IMultimeasureRest mrest, InputOutputType inputOutput) throws IMException;
+    void export(IFractionalTimeSignature meter, InputOutputType inputOutput) throws IMException;
+    void export(ICutTime meter, InputOutputType inputOutputOutput) throws IMException;
+    void export(ICommonTime meter, InputOutputType inputOutputOutput) throws IMException;
+    void export(IChord chord, InputOutputType inputOutputOutput) throws IMException;
+    void export(ICustos custos, InputOutputType inputOutputOutput) throws IMException;
+    void export(IKey key, InputOutputType inputOutputOutput) throws IMException;
+    void export(ICommonAlterationKey commonAlterationKey, InputOutputType inputOutputOutput) throws IMException;
+    void export(IKeySignature keySignature, InputOutputType inputOutputOutput) throws IMException;
+    void export(IVoice voice, InputOutputType inputOutput) throws IMException;
+    void export(IDiatonicPitch diatonicPitch, InputOutputType inputOutput) throws IMException;
+    void export(IAccidentalSymbol accidental, InputOutputType inputOutput) throws IMException;
+    void export(IAlterationDisplayType alterationDisplayType, InputOutputType inputOutput) throws IMException;
+    void export(IAlteration alteration, InputOutputType inputOutput) throws IMException;
+    void export(IPitchClass pitchClass, InputOutputType inputOutput) throws IMException;
+    void export(IPitch pitch, InputOutputType inputOutput) throws IMException;
+    void export(IDots dots, InputOutputType inputOutput) throws IMException;
+    void export(IFigure figures, InputOutputType inputOutput) throws IMException;
     void export(IMetronomeMark metronomeMark, InputOutputType inputOutput) throws IMException;
 
     void export(IBarline barline, InputOutputType inputOutput) throws IMException;
-    void export(IBarlineType barlineType, StringBuilder inputOutput) throws IMException;
+    void export(IBarlineType barlineType, InputOutputType inputOutput) throws IMException;
 }

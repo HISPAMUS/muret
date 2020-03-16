@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core;
 
 
+import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
 import es.ua.dlsi.grfia.moosicae.core.mensural.*;
@@ -20,6 +21,8 @@ public interface ICoreAbstractFactory {
     ICommonTime createCommonTime();
     ICustos createCustos(IPitch pitch);
     ICutTime createCutTime();
+    IKey createKey(IPitchClass pitchClass, IMode mode) throws IMException;
+    IKey createKey(IPitchClass pitchClass, IMode mode, IKeySignature keySignature);
     IKeySignature createKeySignature(IPitchClass [] pitchClasses);
     IFractionalTimeSignature createFractionalTimeSignature(int numerator, int denominator);
     IMensuration createMensuration(EMensuralPerfections modusMaior, EMensuralPerfections modusMinor, EMensuralPerfections tempus, EMensuralPerfections prolatio);
