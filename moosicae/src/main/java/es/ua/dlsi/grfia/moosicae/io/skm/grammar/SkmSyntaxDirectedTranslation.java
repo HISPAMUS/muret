@@ -273,7 +273,6 @@ public class SkmSyntaxDirectedTranslation {
                 }
             }
 
-            IPitchClassBuilder pitchClassBuilder = new IPitchClassBuilder(coreAbstractFactory);
             pitchClassBuilder.setDiatonicPitch(coreAbstractFactory.createDiatonicPitch(EDiatonicPitches.valueOf(ctx.lowerCasePitch().getText().toUpperCase())));
         }
 
@@ -288,7 +287,11 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void exitKeySignaturePitchClass(skmParser.KeySignaturePitchClassContext ctx) {
             super.exitKeySignaturePitchClass(ctx);
-            keySignatureBuilder.addPitchClass(pitchClassBuilder.build());
+            try {
+                keySignatureBuilder.addPitchClass(pitchClassBuilder.build());
+            } catch (IMException e) {
+                throw createException(e);
+            }
         }
 
         @Override

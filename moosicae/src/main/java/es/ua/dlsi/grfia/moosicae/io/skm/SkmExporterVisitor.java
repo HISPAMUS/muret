@@ -49,7 +49,7 @@ public class SkmExporterVisitor implements IExporterVisitor<StringBuilder> {
 
     @Override
     public void export(IFractionalTimeSignature meter, StringBuilder inputOutput) {
-        inputOutput.append("M");
+        inputOutput.append("*M");
         inputOutput.append(meter.getNumerator());
         inputOutput.append('/');
         inputOutput.append(meter.getDenominator());
@@ -57,12 +57,12 @@ public class SkmExporterVisitor implements IExporterVisitor<StringBuilder> {
 
     @Override
     public void export(ICutTime meter, StringBuilder inputOutput) {
-        inputOutput.append("met(c|)");
+        inputOutput.append("*met(c|)");
     }
 
     @Override
     public void export(ICommonTime meter, StringBuilder inputOutput) {
-        inputOutput.append("met(c)");
+        inputOutput.append("*met(c)");
     }
 
     @Override
@@ -90,7 +90,7 @@ public class SkmExporterVisitor implements IExporterVisitor<StringBuilder> {
 
     @Override
     public void export(IKeySignature keySignature, StringBuilder inputOutput) {
-        inputOutput.append("k[");
+        inputOutput.append("*k[");
         for (IPitchClass pitchClass: keySignature.getPitchClasses()) {
             export(pitchClass, inputOutput);
         }
@@ -164,7 +164,7 @@ public class SkmExporterVisitor implements IExporterVisitor<StringBuilder> {
 
     @Override
     public void export(IPitchClass pitchClass, StringBuilder inputOutput) {
-        export(pitchClass, inputOutput);
+        export(pitchClass.getDiatonicPitch(), inputOutput);
         if (pitchClass.getAccidental().isPresent()) {
             export(pitchClass.getAccidental().get(), inputOutput);
         }

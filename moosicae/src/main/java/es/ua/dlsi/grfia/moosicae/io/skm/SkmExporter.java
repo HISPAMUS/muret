@@ -59,12 +59,13 @@ public class SkmExporter extends AbstractExporter<SkmExporterVisitor> {
     }
 
     private void exportSymbols(LinkedList<LinkedList<String>> matrix, List<IVoice> voices) throws IMException {
-        //TODO varios spines...
-        LinkedList<String> record = addRecord(matrix);
         for (IVoice voice: voices) {
             for (IVoiced voiced: voice.getItems()) {
                 StringBuilder stringBuilder = new StringBuilder();
                 voiced.export(this.exporterVisitor, stringBuilder);
+
+                //TODO varios spines...
+                LinkedList<String> record = addRecord(matrix);
                 record.add(stringBuilder.toString());
             }
         }

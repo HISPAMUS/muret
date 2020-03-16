@@ -34,7 +34,7 @@ public class KeySignature implements IKeySignature {
 
     @Override
     public IPitchClass[] getPitchClasses() {
-        return new IPitchClass[0];
+        return pitchClasses;
     }
 
     @Override

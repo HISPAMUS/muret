@@ -1,5 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.io.builders;
 
+import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 
 import java.util.Optional;
@@ -24,7 +25,8 @@ public class IPitchClassBuilder extends CoreObjectBuilder<IPitchClass> {
     }
 
     @Override
-    public IPitchClass build() {
+    public IPitchClass build() throws IMException {
+        assertRequired("diatonicPitch", diatonicPitch);
         return coreObjectFactory.createPitchClass(diatonicPitch, Optional.ofNullable(accidentalSymbol));
     }
 }
