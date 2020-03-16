@@ -23,6 +23,7 @@ public interface ICoreAbstractFactory {
     ICutTime createCutTime();
     IKey createKey(IPitchClass pitchClass, IMode mode) throws IMException;
     IKey createKey(IPitchClass pitchClass, IMode mode, IKeySignature keySignature);
+    ICommonAlterationKey createKey(int nAccidentals, IAccidentalSymbol accidentalSymbol, IMode mode) throws IMException;
     IKeySignature createKeySignature(IPitchClass [] pitchClasses);
     IFractionalTimeSignature createFractionalTimeSignature(int numerator, int denominator);
     IMensuration createMensuration(EMensuralPerfections modusMaior, EMensuralPerfections modusMinor, EMensuralPerfections tempus, EMensuralPerfections prolatio);

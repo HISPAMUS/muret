@@ -42,14 +42,14 @@ public enum ECommonAlterationKeys implements IKeyEnum {
 
 
     private final EDiatonicPitches diatonicPitch;
-    private final Optional<EAccidentalSymbols> accidentalSymbol;
+    private final Optional<EAccidentalSymbols> pitchAccidentalSymbol;
     private final EModes mode;
     private final int keySignatureAccidentalCount;
     private final Optional<EAccidentalSymbols> keySignatureAccidental;
 
-    private ECommonAlterationKeys(EDiatonicPitches diatonicPitch, EAccidentalSymbols accidentalSymbol, EModes mode, int keySignatureAccidentals, EAccidentalSymbols keySignatureAccidental) {
+    private ECommonAlterationKeys(EDiatonicPitches diatonicPitch, EAccidentalSymbols pitchAccidentalSymbol, EModes mode, int keySignatureAccidentals, EAccidentalSymbols keySignatureAccidental) {
         this.diatonicPitch = diatonicPitch;
-        this.accidentalSymbol = Optional.ofNullable(accidentalSymbol);
+        this.pitchAccidentalSymbol = Optional.ofNullable(pitchAccidentalSymbol);
         this.mode = mode;
         this.keySignatureAccidentalCount = keySignatureAccidentals;
         this.keySignatureAccidental = Optional.ofNullable(keySignatureAccidental);
@@ -59,8 +59,8 @@ public enum ECommonAlterationKeys implements IKeyEnum {
         return diatonicPitch;
     }
 
-    public Optional<EAccidentalSymbols> getAccidentalSymbol() {
-        return accidentalSymbol;
+    public Optional<EAccidentalSymbols> getPitchAccidentalSymbol() {
+        return pitchAccidentalSymbol;
     }
 
     public EModes getMode() {

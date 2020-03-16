@@ -8,6 +8,6 @@ import java.util.Optional;
  */
 public interface IKeyEnum {
     EDiatonicPitches getDiatonicPitch();
-    Optional<EAccidentalSymbols> getAccidentalSymbol();
+    Optional<EAccidentalSymbols> getPitchAccidentalSymbol();
 
 }

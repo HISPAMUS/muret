@@ -1,5 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.io.mei;
 
+import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporter;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
@@ -11,14 +12,13 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class MEIExporter implements IExporter {
+    MEIExporterVisitor meiExporterVisitor;
     public MEIExporter() {
-
+        meiExporterVisitor = new MEIExporterVisitor();
     }
 
-
-
     @Override
-    public String exportScore(IScore score) {
+    public String exportScore(IScore score) throws IMException {
         XMLTree xmlTree = new XMLTree("mei");
         xmlTree.getRoot().addAttribute("xmlns", "http://www.music-encoding.org/ns/mei");
         xmlTree.getRoot().addAttribute("meiversion", "4.0.0");
@@ -92,23 +92,24 @@ public class MEIExporter implements IExporter {
     }
 
 
-    private void exportScoreDef(XMLElement xmlScore, IScore score) {
+    private void exportScoreDef(XMLElement xmlScore, IScore score) throws IMException {
         XMLElement xmlScoreDef = xmlScore.addChild("scoreDef");
         Optional<IMeter> commonBeginningMeter = getCommonBeginning(score, IMeter.class);
+        MEIExporterVisitorParam param = new MEIExporterVisitorParam(MEIExporterVisitorParam.ExportMode.attribute, xmlScoreDef);
         if (commonBeginningMeter.isPresent()) {
-            export(xmlScoreDef, commonBeginningMeter.get(), true);
+            commonBeginningMeter.get().export(meiExporterVisitor, param);
         }
 
         Optional<IKey> commonBeginningKey = getCommonBeginning(score, IKey.class);
         if (commonBeginningKey.isPresent()) {
-            export(xmlScoreDef, commonBeginningKey.get(), true);
+            commonBeginningKey.get().export(meiExporterVisitor, param);
         }
 
         //TODO - gropus
         export(xmlScoreDef, score.getSystemElements());
     }
 
-    private void export(XMLElement xmlScoreDef, ISystemElement[] systemElements) {
+    private void export(XMLElement xmlScoreDef, ISystemElement[] systemElements) throws IMException {
         XMLElement xmlStaffGrp = xmlScoreDef.addChild("staffGrp"); // TODO anidado
         for (ISystemElement staffOurGroup : systemElements) {
             IStaff [] staves = staffOurGroup.getStaves();
@@ -118,7 +119,7 @@ public class MEIExporter implements IExporter {
         }
     }
 
-    private void exportDef(XMLElement xmlStaffGrp, IStaff staff) {
+    private void exportDef(XMLElement xmlStaffGrp, IStaff staff) throws IMException {
         //TODO - cosas como compases especiales, transposiciones.... - habrá que indicar qué compases se han exportado ya (common...)
         //TODO Debemos guardar la equivalencia de nº de staff
         XMLElement xmlStaffDef = xmlStaffGrp.addChild("staffDef");
@@ -127,35 +128,10 @@ public class MEIExporter implements IExporter {
 
         Optional<IClef> firstClef = findFirst(staff, IClef.class);
         if (firstClef.isPresent()) {
-            export(xmlStaffDef, firstClef.get(), true);
+            MEIExporterVisitorParam param = new MEIExporterVisitorParam(MEIExporterVisitorParam.ExportMode.attribute, xmlStaffDef);
+            firstClef.get().export(meiExporterVisitor, param);
         }
     }
-
-    private void export(XMLElement xmlScoreDef, IClef clef, boolean exportAsAttributes) {
-        //TODO
-        if (exportAsAttributes) {
-            xmlScoreDef.addAttribute("clef.line", Integer.toString(clef.getLine()));
-            xmlScoreDef.addAttribute("clef.shape", "G"); //TODO - Ahora está ClefSigns, debería ser Interface?
-        }
-    }
-
-
-    private void export(XMLElement xmlScoreDef, IMeter meter, boolean exportAsAttributes) {
-        //TODO
-        if (exportAsAttributes) {
-            xmlScoreDef.addAttribute("meter.count", "6");
-            xmlScoreDef.addAttribute("meter.unit", "8");
-        }
-    }
-
-
-    private void export(XMLElement xmlScoreDef, IKey key, boolean exportAsAttributes) {
-        //TODO
-        if (exportAsAttributes) {
-            xmlScoreDef.addAttribute("key.sig", "1f");
-        }
-    }
-
 
     private void exportHeader(IMetadata metadata) {
         XMLElement xmlMeiHead = new XMLElement("meiHead");

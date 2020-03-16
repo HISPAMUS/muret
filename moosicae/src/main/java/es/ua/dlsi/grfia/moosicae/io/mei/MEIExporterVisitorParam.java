@@ -8,16 +8,22 @@ import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
  * @created 16/03/2020
  */
 public class MEIExporterVisitorParam {
-    private boolean exportAsAttributes;
-    private XMLElement xmlElement;
+    enum ExportMode {
+        string, attribute, element
+    };
 
-    public MEIExporterVisitorParam(boolean exportAsAttributes, XMLElement xmlElement) {
-        this.exportAsAttributes = exportAsAttributes;
+    private ExportMode exportMode;
+    private XMLElement xmlElement;
+    private final StringBuilder stringBuilder;
+
+    public MEIExporterVisitorParam(ExportMode exportMode, XMLElement xmlElement) {
+        this.exportMode = exportMode;
         this.xmlElement = xmlElement;
+        this.stringBuilder = new StringBuilder();
     }
 
-    public boolean isExportAsAttributes() {
-        return exportAsAttributes;
+    public ExportMode getExportMode() {
+        return exportMode;
     }
 
     public void addAttribute(String name, String value) {
@@ -30,5 +36,19 @@ public class MEIExporterVisitorParam {
 
     public void addChild(String childElementName) {
         xmlElement.addChild(childElementName);
+    }
+
+    public void append(String string) {
+        this.stringBuilder.append(string);
+    }
+    public void append(char c) {
+        this.stringBuilder.append(c);
+    }
+    public void append(int integer) {
+        this.stringBuilder.append(integer);
+    }
+
+    public String getStringBuilderValue() {
+        return stringBuilder.toString();
     }
 }

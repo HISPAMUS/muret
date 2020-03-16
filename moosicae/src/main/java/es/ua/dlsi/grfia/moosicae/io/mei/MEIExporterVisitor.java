@@ -10,7 +10,7 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorParam> {
     @Override
     public void export(IClef clef, MEIExporterVisitorParam inputOutput) {
-        if (inputOutput.isExportAsAttributes()) {
+        if (inputOutput.getExportMode() == MEIExporterVisitorParam.ExportMode.attribute) {
             inputOutput.addAttribute("clef.line", Integer.toString(clef.getLine()));
             export(clef.getSignType(), inputOutput);
         } else {
@@ -20,7 +20,7 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorPa
 
     @Override
     public void export(IClefSign clefSign, MEIExporterVisitorParam inputOutput) {
-        if (inputOutput.isExportAsAttributes()) {
+        if (inputOutput.getExportMode() == MEIExporterVisitorParam.ExportMode.attribute) {
             inputOutput.addAttribute("clef.shape", clefSign.getClefSign().name().toUpperCase());
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
@@ -50,7 +50,7 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorPa
 
     @Override
     public void export(ICutTime meter, MEIExporterVisitorParam inputOutput) {
-        if (inputOutput.isExportAsAttributes()) {
+        if (inputOutput.getExportMode() == MEIExporterVisitorParam.ExportMode.attribute) {
             inputOutput.addAttribute("meter.sym", "cut");
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
@@ -60,12 +60,12 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorPa
 
     @Override
     public void export(ICommonTime meter, MEIExporterVisitorParam inputOutput) {
-        if (inputOutput.isExportAsAttributes()) {
+        if (inputOutput.getExportMode() == MEIExporterVisitorParam.ExportMode.attribute) {
             inputOutput.addAttribute("meter.sym", "common");
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }
-        
+
     }
 
     @Override
@@ -83,9 +83,29 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorPa
         throw new UnsupportedOperationException("TO-DO"); //TODO
     }
 
+
     @Override
-    public void export(ICommonAlterationKey commonAlterationKey, MEIExporterVisitorParam inputOutputOutput) {
-        throw new UnsupportedOperationException("TO-DO"); //TODO
+    public void export(ICommonAlterationKey commonAlterationKey, MEIExporterVisitorParam inputOutput) throws IMException {
+        if (inputOutput.getExportMode() == MEIExporterVisitorParam.ExportMode.attribute) {
+            StringBuilder keySig = new StringBuilder();
+            keySig.append(commonAlterationKey.getAccidentalCount());
+            if (commonAlterationKey.getAccidentalSymbol().isPresent()) {
+                MEIExporterVisitorParam accidentalParam = new MEIExporterVisitorParam(MEIExporterVisitorParam.ExportMode.string, null);
+                export(commonAlterationKey.getAccidentalSymbol().get(), accidentalParam);
+                keySig.append(accidentalParam.getStringBuilderValue());
+            }
+
+            inputOutput.addAttribute("key.sig", keySig.toString());
+            export(commonAlterationKey.getMode(), inputOutput);
+        } else {
+            throw new UnsupportedOperationException("TO-DO"); //TODO
+        }
+    }
+
+    @Override
+    public void export(IMode mode, MEIExporterVisitorParam inputOutput) {
+        inputOutput.addAttribute("key.mode", mode.getMode().name().toLowerCase());
+
     }
 
     @Override
@@ -104,8 +124,33 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorPa
     }
 
     @Override
-    public void export(IAccidentalSymbol accidental, MEIExporterVisitorParam inputOutput) {
-        throw new UnsupportedOperationException("TO-DO"); //TODO
+    public void export(IAccidentalSymbol accidental, MEIExporterVisitorParam inputOutput) throws IMException {
+        if (inputOutput.getExportMode() == MEIExporterVisitorParam.ExportMode.string) {
+            switch (accidental.getAccidentalSymbol()) {
+                case TRIPLE_FLAT:
+                    inputOutput.append("fff");
+                    break;
+                case DOUBLE_FLAT:
+                    inputOutput.append("ff");
+                    break;
+                case FLAT:
+                    inputOutput.append("f");
+                    break;
+                case NATURAL:
+                    inputOutput.append("n");
+                    break;
+                case SHARP:
+                    inputOutput.append("s");
+                    break;
+                case DOUBLE_SHARP:
+                    inputOutput.append("x");
+                    break;
+                default:
+                    throw new IMException("Unkown accidental symbol: " + accidental.getAccidentalSymbol());
+            }
+        } else {
+            throw new UnsupportedOperationException("TO-DO"); //TODO
+        }
     }
 
     @Override

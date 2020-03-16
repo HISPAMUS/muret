@@ -50,6 +50,6 @@ public class ImportersExportersTest {
         ICoreAbstractFactory abstractFactory = new CoreAbstractFactoryImpl();
         IScore score = createScore(abstractFactory);
         testExportImport(score, new SkmExporter(), new SkmImporter(abstractFactory));
-       // testExportImport(score, new MEIExporter(), new MEIImporter(abstractFactory));
+        testExportImport(score, new MEIExporter(), new MEIImporter(abstractFactory));
     }
 }

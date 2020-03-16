@@ -2,9 +2,12 @@ package es.ua.dlsi.grfia.moosicae.io.mei;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
+import es.ua.dlsi.grfia.moosicae.core.enums.EMeterSymbols;
+import es.ua.dlsi.grfia.moosicae.core.enums.EModes;
 import es.ua.dlsi.grfia.moosicae.io.AbstractImporter;
-import es.ua.dlsi.grfia.moosicae.io.builders.IClefBuilder;
+import es.ua.dlsi.grfia.moosicae.io.builders.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -23,6 +26,9 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class MEIImporter extends AbstractImporter {
+
+    private IMeterSymbolBuilder meterSymbolBuilder;
+    private IKeyFromAccidentalCountBuilder keyFromAccidentalCountBuilder;
 
     /**
      * It uses the default core factory
@@ -68,16 +74,29 @@ public class MEIImporter extends AbstractImporter {
 
     private void parse(Node node, IScore score, IVoice voice) throws IMException {
         switch (node.getNodeName()) { // removing this switch makes it much more difficult
+            case "scoreDef":
+                processScoreDef(node, score);
+                break;
             case "staffDef":
                 processStaffDef(node, score, voice);
                 break;
-            default:
-                NodeList children = node.getChildNodes();
-                if (children != null) {
-                    for (int i=0; i< children.getLength(); i++) {
-                        parse(children.item(i), score, voice);
-                    }
-                }
+        }
+        NodeList children = node.getChildNodes();
+        if (children != null) {
+            for (int i=0; i< children.getLength(); i++) {
+                parse(children.item(i), score, voice);
+            }
+        }
+    }
+
+    private void processScoreDef(Node node, IScore score) throws IMException {
+        Optional<String> keySig = getAttrValue(node, "key.sig");
+        if (keySig.isPresent()) {
+            processScoreDefKeySig(node, keySig);
+        }
+        Optional<String> meterSym = getAttrValue(node, "meter.sym");
+        if (meterSym.isPresent()) {
+            processScoreDefMeterSym(node, meterSym);
         }
     }
 
@@ -100,16 +119,86 @@ public class MEIImporter extends AbstractImporter {
 
         Optional<String> clefShape = getAttrValue(node, "clef.shape");
         if (clefShape.isPresent()) {
-            IClefBuilder clefBuilder = new IClefBuilder(coreAbstractFactory);
-            clefBuilder.setClefSign(coreAbstractFactory.createClefSign(EClefSigns.valueOf(clefShape.get())));
-            Optional<String> clefLine = getAttrValue(node, "clef.line");
-            if (clefLine.isPresent()) {
-                clefBuilder.setLine(Integer.parseInt(clefLine.get()));
-            }
+            processStaffDefClef(node, voice, staff, clefShape);
+        }
 
-            IClef clef = clefBuilder.build();
-            voice.addItem(clef);
-            staff.put(clef);
+        if (keyFromAccidentalCountBuilder != null) {
+            IKey key = keyFromAccidentalCountBuilder.build();
+            staff.put(key);
+            voice.addItem(key);
+        }
+        if (meterSymbolBuilder != null) {
+            IMeterSymbol meterSymbol = meterSymbolBuilder.build();
+            staff.put(meterSymbol);
+            voice.addItem(meterSymbol);
+        }
+
+    }
+
+    private void processScoreDefMeterSym(Node node, Optional<String> meterSym) throws IMException {
+        meterSymbolBuilder = new IMeterSymbolBuilder(coreAbstractFactory);
+        switch (meterSym.get()) {
+            case "common":
+                meterSymbolBuilder.setMeterSymbols(EMeterSymbols.commonTime);
+                break;
+            case "cut":
+                meterSymbolBuilder.setMeterSymbols(EMeterSymbols.cutTime);
+                break;
+            default:
+                throw new IMException("Unsupported meter symbol '" + meterSym.get() + "'");
+        }
+    }
+
+    private void processScoreDefKeySig(Node node, Optional<String> keySig) throws IMException {
+        //TODO quizás habrá que hacer que IKeyFromAccidentalCountBuilder herede de un IKeyBuilder para poder generalizar las formas de crear keys
+        keyFromAccidentalCountBuilder = new IKeyFromAccidentalCountBuilder(coreAbstractFactory);
+
+        if (keySig.get().length() != 2) {
+            throw new IMException("Expected 2 characters for keySig value: '" + keySig.get() + "'");
+        }
+        int nAccidentals = Integer.parseInt(keySig.get().substring(0, 1));
+        keyFromAccidentalCountBuilder.setAccidentalCount(nAccidentals);
+
+        char accidental = keySig.get().charAt(1);
+        IAccidentalSymbol accidentalSymbol;
+        if (accidental == 'f') {
+            accidentalSymbol = coreAbstractFactory.createAccidentalSymbol(EAccidentalSymbols.FLAT);
+        } else if (accidental == 's') {
+            accidentalSymbol = coreAbstractFactory.createAccidentalSymbol(EAccidentalSymbols.SHARP);
+        } else {
+            throw new IMException("Unkown accidental: '" + accidental + "'");
+        }
+        keyFromAccidentalCountBuilder.setAccidentalSymbol(accidentalSymbol);
+
+        Optional<String> modeString = getAttrValue(node, "key.mode");
+        if (modeString.isPresent()) {
+            IModeBuilder modeBuilder = new IModeBuilder(coreAbstractFactory);
+            modeBuilder.setMode(EModes.valueOf(modeString.get().toLowerCase()));
+            IMode mode = modeBuilder.build();
+
+            keyFromAccidentalCountBuilder.setMode(mode);
+        } else {
+            throw new UnsupportedOperationException("TODO-crear keysignature");
+        }
+    }
+
+    private void processStaffDefClef(Node node, IVoice voice, IStaff staff, Optional<String> clefShape) throws IMException {
+        IClefBuilder clefBuilder = new IClefBuilder(coreAbstractFactory);
+        clefBuilder.setClefSign(coreAbstractFactory.createClefSign(EClefSigns.valueOf(clefShape.get())));
+        Optional<String> clefLine = getAttrValue(node, "clef.line");
+        if (clefLine.isPresent()) {
+            clefBuilder.setLine(Integer.parseInt(clefLine.get()));
+        }
+
+        IClef clef = clefBuilder.build();
+        voice.addItem(clef);
+        staff.put(clef);
+
+        if (meterSymbolBuilder != null) {
+            IMeterSymbol meterSymbol = meterSymbolBuilder.build();
+            voice.addItem(meterSymbol);
+            staff.put(meterSymbol);
+            meterSymbolBuilder = null;
         }
     }
 }

@@ -64,7 +64,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
 
         for (T value: values) {
             if (Objects.equals(value.getDiatonicPitch(), diatonicPitch)
-                && Objects.equals(value.getAccidentalSymbol(), accidentalSymbol)) {
+                && Objects.equals(value.getPitchAccidentalSymbol(), accidentalSymbol)) {
                 return Optional.of(value);
             }
         }
@@ -89,6 +89,21 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     @Override
     public IKey createKey(IPitchClass pitchClass, IMode mode, IKeySignature keySignature) {
         return new Key(pitchClass, mode, keySignature);
+    }
+
+    @Override
+    public ICommonAlterationKey createKey(int nAccidentals, IAccidentalSymbol accidentalSymbol, IMode mode) throws IMException {
+        EModes modeValue = mode.getMode();
+        EAccidentalSymbols accidentalSymbolValue = accidentalSymbol.getAccidentalSymbol();
+        for (ECommonAlterationKeys key: ECommonAlterationKeys.values()) {
+            if (key.getMode().equals(modeValue)
+                    && key.getKeySignatureAccidentalCount() == nAccidentals
+                    && key.getKeySignatureAccidental().isPresent()
+                    && key.getKeySignatureAccidental().get().equals(accidentalSymbolValue)) {
+                return createKey(key);
+            }
+        }
+        throw new IMException("Cannot find a key with " + nAccidentals + " " + accidentalSymbol.getAccidentalSymbol().name() + "s and mode " + mode.getMode());
     }
 
 
@@ -325,7 +340,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
 
     @Override
     public ICommonAlterationKey createKey(ECommonAlterationKeys commonKeys) {
-        IPitchClass pitchClass = createPitchClass(commonKeys.getDiatonicPitch(), commonKeys.getAccidentalSymbol());
+        IPitchClass pitchClass = createPitchClass(commonKeys.getDiatonicPitch(), commonKeys.getPitchAccidentalSymbol());
         IMode mode = createMode(commonKeys.getMode());
 
         IAccidentalSymbol keySignatureAccidentalSymbol = null;

@@ -7,9 +7,9 @@ import es.ua.dlsi.grfia.moosicae.core.*;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class IKeyBuilder extends CoreObjectBuilder<IKey> {
-    IPitchClass pitchClass;
-    IMode mode;
-    IKeySignature keySignature;
+    private IPitchClass pitchClass;
+    private IMode mode;
+    private IKeySignature keySignature;
 
     public IKeyBuilder(ICoreAbstractFactory coreObjectFactory) {
         super(coreObjectFactory);
