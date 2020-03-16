@@ -89,6 +89,11 @@ public class SkmExporterVisitor implements IExporterVisitor<StringBuilder> {
     }
 
     @Override
+    public void export(ICommonAlterationKey commonAlterationKey, StringBuilder inputOutputOutput) {
+        throw new UnsupportedOperationException("Unimplemented key"); //TODO
+    }
+
+    @Override
     public void export(IKeySignature keySignature, StringBuilder inputOutput) {
         inputOutput.append("*k[");
         for (IPitchClass pitchClass: keySignature.getPitchClasses()) {

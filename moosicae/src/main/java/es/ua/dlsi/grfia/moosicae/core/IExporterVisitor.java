@@ -17,6 +17,7 @@ public interface IExporterVisitor<InputOutputType>  {
     void export(IChord chord, InputOutputType inputOutputOutput);
     void export(ICustos custos, InputOutputType inputOutputOutput);
     void export(IKey key, InputOutputType inputOutputOutput);
+    void export(ICommonAlterationKey commonAlterationKey, InputOutputType inputOutputOutput);
     void export(IKeySignature keySignature, InputOutputType inputOutputOutput);
     void export(IVoice voice, InputOutputType inputOutput);
     void export(IDiatonicPitch diatonicPitch, InputOutputType inputOutput);

@@ -263,4 +263,90 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
         }
     }
 
+    @Override
+    public IMode createMode(EModes mode) {
+        return new Mode(mode);
+    }
+
+    private final EDiatonicPitches [] SHARP_CIRCLE_FIFTHS = {
+            EDiatonicPitches.F, EDiatonicPitches.C, EDiatonicPitches.G, EDiatonicPitches.D, EDiatonicPitches.A,
+            EDiatonicPitches.E, EDiatonicPitches.B
+    };
+
+    private IPitchClass createPitchClass(EDiatonicPitches eDiatonicPitch, Optional<EAccidentalSymbols> eAccidentalSymbol) {
+        IDiatonicPitch diatonicPitch = createDiatonicPitch(eDiatonicPitch);
+        IAccidentalSymbol accidentalSymbol = null;
+        if (eAccidentalSymbol.isPresent()) {
+            accidentalSymbol = createAccidentalSymbol(eAccidentalSymbol.get());
+        }
+        IPitchClass pitchClass = createPitchClass(diatonicPitch, Optional.ofNullable(accidentalSymbol));
+        return pitchClass;
+    }
+
+    @Override
+    public ICommonAlterationKey createKey(ECommonAlterationKeys commonKeys) {
+        IPitchClass pitchClass = createPitchClass(commonKeys.getDiatonicPitch(), commonKeys.getAccidentalSymbol());
+        IMode mode = createMode(commonKeys.getMode());
+
+        IAccidentalSymbol keySignatureAccidentalSymbol = null;
+        if (commonKeys.getKeySignatureAccidental().isPresent()) {
+            keySignatureAccidentalSymbol = createAccidentalSymbol(commonKeys.getKeySignatureAccidental().get());
+        }
+
+        IPitchClass [] pitchClasses = new IPitchClass[commonKeys.getKeySignatureAccidentalCount()];
+        for (int i=0; i<commonKeys.getKeySignatureAccidentalCount(); i++) {
+            IPitchClass pitchClassAccidental;
+            if (commonKeys.getKeySignatureAccidental().get() == EAccidentalSymbols.FLAT) {
+                pitchClassAccidental = createPitchClass(SHARP_CIRCLE_FIFTHS[6-i], Optional.of(EAccidentalSymbols.FLAT));
+            } else if (commonKeys.getKeySignatureAccidental().get() == EAccidentalSymbols.SHARP) {
+                pitchClassAccidental = createPitchClass(SHARP_CIRCLE_FIFTHS[i], Optional.of(EAccidentalSymbols.SHARP));
+            } else {
+                throw new IMRuntimeException("Invalid accidental in a common key " + commonKeys.getKeySignatureAccidental().get());
+            }
+            pitchClasses[i] = pitchClassAccidental;
+        }
+
+        return new CommonAlterationKey(pitchClass,
+                mode,
+                createKeySignature(pitchClasses),
+                commonKeys.getKeySignatureAccidentalCount(),
+                Optional.ofNullable(keySignatureAccidentalSymbol)
+                );
+    }
+
+    @Override
+    public IMixedAlterationsKey createKey(EMixedAlterationKeys mixedAlterationKeys) {
+        IPitchClass pitchClass = createPitchClass(mixedAlterationKeys.getDiatonicPitch(), mixedAlterationKeys.getAccidentalSymbol());
+        IMode mode = createMode(mixedAlterationKeys.getMode());
+
+        IPitchClass [] pitchClasses = new IPitchClass[7];
+        for (int i=0; i<mixedAlterationKeys.getFirstAlterationCount(); i++) {
+            IPitchClass pitchClassAccidental;
+            if (mixedAlterationKeys.getKeySignatureFirstAccidental() == EAccidentalSymbols.DOUBLE_FLAT) {
+                pitchClassAccidental = createPitchClass(SHARP_CIRCLE_FIFTHS[6-i], Optional.of(EAccidentalSymbols.DOUBLE_FLAT));
+            } else if (mixedAlterationKeys.getKeySignatureFirstAccidental() == EAccidentalSymbols.DOUBLE_SHARP) {
+                pitchClassAccidental = createPitchClass(SHARP_CIRCLE_FIFTHS[i], Optional.of(EAccidentalSymbols.DOUBLE_SHARP));
+            } else {
+                throw new IMRuntimeException("Invalid accidental in a mixed alterations key " + mixedAlterationKeys.getKeySignatureFirstAccidental());
+            }
+            pitchClasses[i] = pitchClassAccidental;
+        }
+
+        for (int i = mixedAlterationKeys.getFirstAlterationCount(); i < 7; i++) {
+            IPitchClass pitchClassAccidental;
+            if (mixedAlterationKeys.getKeySignatureSecondAccidental().get() == EAccidentalSymbols.FLAT) {
+                pitchClassAccidental = createPitchClass(SHARP_CIRCLE_FIFTHS[6-i], Optional.of(EAccidentalSymbols.FLAT));
+            } else if (mixedAlterationKeys.getKeySignatureSecondAccidental().get() == EAccidentalSymbols.SHARP) {
+                pitchClassAccidental = createPitchClass(SHARP_CIRCLE_FIFTHS[i], Optional.of(EAccidentalSymbols.SHARP));
+            } else {
+                throw new IMRuntimeException("Invalid accidental in a mixed alterations key " + mixedAlterationKeys.getKeySignatureSecondAccidental().get());
+            }
+            pitchClasses[i] = pitchClassAccidental;
+        }
+
+        return new MixedAlterationsKey(pitchClass,
+                mode,
+                createKeySignature(pitchClasses));
+    }
+
 }

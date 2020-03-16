@@ -68,4 +68,7 @@ public interface ICoreAbstractFactory {
     INotationType createNotationType(ENotationTypes notationType);
     IMeterSymbol createMeterSymbol(EMeterSymbols meterSymbol);
     IMensuration createMensuration(EMensurations mensuration);
+    IMode createMode(EModes mode);
+    ICommonAlterationKey createKey(ECommonAlterationKeys commonAlterationKeys);
+    IMixedAlterationsKey createKey(EMixedAlterationKeys mixedAlterationKeys);
 }
