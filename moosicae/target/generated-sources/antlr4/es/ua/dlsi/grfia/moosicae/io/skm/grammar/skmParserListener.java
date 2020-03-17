@@ -620,15 +620,15 @@ public interface skmParserListener extends ParseTreeListener {
 	 */
 	void exitBeforeNote(skmParser.BeforeNoteContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link skmParser#diatonicPitch}.
+	 * Enter a parse tree produced by {@link skmParser#diatonicPitchAndOctave}.
 	 * @param ctx the parse tree
 	 */
-	void enterDiatonicPitch(skmParser.DiatonicPitchContext ctx);
+	void enterDiatonicPitchAndOctave(skmParser.DiatonicPitchAndOctaveContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link skmParser#diatonicPitch}.
+	 * Exit a parse tree produced by {@link skmParser#diatonicPitchAndOctave}.
 	 * @param ctx the parse tree
 	 */
-	void exitDiatonicPitch(skmParser.DiatonicPitchContext ctx);
+	void exitDiatonicPitchAndOctave(skmParser.DiatonicPitchAndOctaveContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link skmParser#trebleNotes}.
 	 * @param ctx the parse tree

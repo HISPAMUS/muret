@@ -8,14 +8,17 @@ import es.ua.dlsi.grfia.moosicae.io.mei.MEIExporter;
 import es.ua.dlsi.grfia.moosicae.io.mei.MEIImporter;
 import es.ua.dlsi.grfia.moosicae.io.skm.SkmExporter;
 import es.ua.dlsi.grfia.moosicae.io.skm.SkmImporter;
+import es.ua.dlsi.grfia.moosicae.core.builders.*;
 import org.junit.Test;
 
+
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
 //TODO hacer un test de añadir una key signature sin key (sin modo)
 public class ImportersExportersTest {
-    private IScore createScore(ICoreAbstractFactory abstractFactory) {
+    private IScore createScore(ICoreAbstractFactory abstractFactory) throws IMException {
         IScore score = abstractFactory.createScore();
         IPart part = abstractFactory.createPart(score, "default");
         IVoice voice = abstractFactory.createVoice(part);
@@ -26,6 +29,8 @@ public class ImportersExportersTest {
         score.add(voice, staff, key);
         IMeterSymbol meterSymbol = abstractFactory.createMeterSymbol(EMeterSymbols.commonTime);
         score.add(voice, staff, meterSymbol);
+        INote note1 = new INoteBuilder(abstractFactory).build(EDiatonicPitches.F, Optional.of(EAccidentalSymbols.SHARP), 4, EFigures.WHOLE, 0);
+        score.add(voice, staff, note1);
         return score;
     }
 

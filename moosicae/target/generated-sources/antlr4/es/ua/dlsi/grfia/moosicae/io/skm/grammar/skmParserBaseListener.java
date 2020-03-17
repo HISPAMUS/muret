@@ -750,13 +750,13 @@ public class skmParserBaseListener implements skmParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDiatonicPitch(skmParser.DiatonicPitchContext ctx) { }
+	@Override public void enterDiatonicPitchAndOctave(skmParser.DiatonicPitchAndOctaveContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDiatonicPitch(skmParser.DiatonicPitchContext ctx) { }
+	@Override public void exitDiatonicPitchAndOctave(skmParser.DiatonicPitchAndOctaveContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

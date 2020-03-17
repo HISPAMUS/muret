@@ -1,6 +1,5 @@
-package es.ua.dlsi.grfia.moosicae.io.builders;
+package es.ua.dlsi.grfia.moosicae.core.builders;
 
-import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IKeySignature;
 import es.ua.dlsi.grfia.moosicae.core.IPitchClass;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;

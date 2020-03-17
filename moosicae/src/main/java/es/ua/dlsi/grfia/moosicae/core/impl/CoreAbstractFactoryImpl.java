@@ -53,6 +53,11 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
         return new CutTime();
     }
 
+    @Override
+    public IDots createDots(int ndots) {
+        return new Dots(ndots);
+    }
+
     private <T extends IKeyEnum> Optional<T> findKeyEnum(T[] values, IPitchClass pitchClass) {
         EDiatonicPitches diatonicPitch = pitchClass.getDiatonicPitch().getDiatonicPitch();
         Optional<EAccidentalSymbols> accidentalSymbol;

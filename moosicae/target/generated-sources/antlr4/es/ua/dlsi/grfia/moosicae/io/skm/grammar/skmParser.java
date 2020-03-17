@@ -52,8 +52,8 @@ public class skmParser extends Parser {
 		RULE_mensuralDot = 48, RULE_modernDuration = 49, RULE_coloured = 50, RULE_mensuralFigure = 51, 
 		RULE_mensuralPerfection = 52, RULE_augmentationDot = 53, RULE_separationDot = 54, 
 		RULE_custos = 55, RULE_pitch = 56, RULE_alteration = 57, RULE_note = 58, 
-		RULE_chord = 59, RULE_beforeNote = 60, RULE_diatonicPitch = 61, RULE_trebleNotes = 62, 
-		RULE_bassNotes = 63, RULE_accidental = 64, RULE_alterationDisplay = 65, 
+		RULE_chord = 59, RULE_beforeNote = 60, RULE_diatonicPitchAndOctave = 61, 
+		RULE_trebleNotes = 62, RULE_bassNotes = 63, RULE_accidental = 64, RULE_alterationDisplay = 65, 
 		RULE_afterNote = 66, RULE_slurStart = 67, RULE_ligatureStart = 68, RULE_ligatureEnd = 69, 
 		RULE_slurEnd = 70, RULE_barLineCrossedNoteStart = 71, RULE_barLineCrossedNoteEnd = 72, 
 		RULE_stem = 73, RULE_beam = 74, RULE_staffPosition = 75, RULE_lineSpace = 76, 
@@ -71,7 +71,7 @@ public class skmParser extends Parser {
 			"duration", "fermata", "mensuralDuration", "mensuralDot", "modernDuration", 
 			"coloured", "mensuralFigure", "mensuralPerfection", "augmentationDot", 
 			"separationDot", "custos", "pitch", "alteration", "note", "chord", "beforeNote", 
-			"diatonicPitch", "trebleNotes", "bassNotes", "accidental", "alterationDisplay", 
+			"diatonicPitchAndOctave", "trebleNotes", "bassNotes", "accidental", "alterationDisplay", 
 			"afterNote", "slurStart", "ligatureStart", "ligatureEnd", "slurEnd", 
 			"barLineCrossedNoteStart", "barLineCrossedNoteEnd", "stem", "beam", "staffPosition", 
 			"lineSpace", "lyricsText", "plainChant"
@@ -3380,8 +3380,8 @@ public class skmParser extends Parser {
 	}
 
 	public static class PitchContext extends ParserRuleContext {
-		public DiatonicPitchContext diatonicPitch() {
-			return getRuleContext(DiatonicPitchContext.class,0);
+		public DiatonicPitchAndOctaveContext diatonicPitchAndOctave() {
+			return getRuleContext(DiatonicPitchAndOctaveContext.class,0);
 		}
 		public AlterationContext alteration() {
 			return getRuleContext(AlterationContext.class,0);
@@ -3408,7 +3408,7 @@ public class skmParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(431);
-			diatonicPitch();
+			diatonicPitchAndOctave();
 			setState(433);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -3690,30 +3690,30 @@ public class skmParser extends Parser {
 		return _localctx;
 	}
 
-	public static class DiatonicPitchContext extends ParserRuleContext {
+	public static class DiatonicPitchAndOctaveContext extends ParserRuleContext {
 		public BassNotesContext bassNotes() {
 			return getRuleContext(BassNotesContext.class,0);
 		}
 		public TrebleNotesContext trebleNotes() {
 			return getRuleContext(TrebleNotesContext.class,0);
 		}
-		public DiatonicPitchContext(ParserRuleContext parent, int invokingState) {
+		public DiatonicPitchAndOctaveContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_diatonicPitch; }
+		@Override public int getRuleIndex() { return RULE_diatonicPitchAndOctave; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof skmParserListener ) ((skmParserListener)listener).enterDiatonicPitch(this);
+			if ( listener instanceof skmParserListener ) ((skmParserListener)listener).enterDiatonicPitchAndOctave(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof skmParserListener ) ((skmParserListener)listener).exitDiatonicPitch(this);
+			if ( listener instanceof skmParserListener ) ((skmParserListener)listener).exitDiatonicPitchAndOctave(this);
 		}
 	}
 
-	public final DiatonicPitchContext diatonicPitch() throws RecognitionException {
-		DiatonicPitchContext _localctx = new DiatonicPitchContext(_ctx, getState());
-		enterRule(_localctx, 122, RULE_diatonicPitch);
+	public final DiatonicPitchAndOctaveContext diatonicPitchAndOctave() throws RecognitionException {
+		DiatonicPitchAndOctaveContext _localctx = new DiatonicPitchAndOctaveContext(_ctx, getState());
+		enterRule(_localctx, 122, RULE_diatonicPitchAndOctave);
 		try {
 			setState(461);
 			_errHandler.sync(this);

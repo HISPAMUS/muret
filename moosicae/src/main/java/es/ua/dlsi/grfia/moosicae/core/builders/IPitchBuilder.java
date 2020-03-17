@@ -1,8 +1,9 @@
-package es.ua.dlsi.grfia.moosicae.io.builders;
+package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
+import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
+import es.ua.dlsi.grfia.moosicae.core.enums.EDiatonicPitches;
 
 import java.util.Optional;
 
@@ -28,6 +29,26 @@ public class IPitchBuilder extends CoreObjectBuilder<IPitch> {
 
     public void setDiatonicPitch(IDiatonicPitch diatonicPitch) {
         this.diatonicPitch = diatonicPitch;
+    }
+
+    public void setOctave(int octave) {
+        this.octave = coreObjectFactory.createOctave(octave);
+    }
+
+    /**
+     * Convenience builder
+     */
+    public IPitch build(EDiatonicPitches eDiatonicPitch, Optional<EAccidentalSymbols> accidentalSymbol,
+                        int octaveNumber) throws IMException {
+        octave = coreObjectFactory.createOctave(octaveNumber);
+        if (accidentalSymbol.isPresent()) {
+            alteration = coreObjectFactory.createAlteration(
+                    coreObjectFactory.createAccidentalSymbol(accidentalSymbol.get()),
+                    Optional.empty()
+            );
+        }
+        diatonicPitch = coreObjectFactory.createDiatonicPitch(eDiatonicPitch);
+        return build();
     }
 
     @Override

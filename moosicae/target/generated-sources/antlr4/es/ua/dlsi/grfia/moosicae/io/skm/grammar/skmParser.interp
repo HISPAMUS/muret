@@ -252,7 +252,7 @@ alteration
 note
 chord
 beforeNote
-diatonicPitch
+diatonicPitchAndOctave
 trebleNotes
 bassNotes
 accidental

@@ -186,7 +186,7 @@ augmentationDot: DOT;
 separationDot: COLON;
 
 custos: TANDEM_CUSTOS pitch;
-pitch: diatonicPitch alteration?;
+pitch: diatonicPitchAndOctave alteration?;
 alteration: accidental alterationDisplay?;
 
 //note:  beforeNote duration noteName (alteration alterationVisualMode?)? afterNote;
@@ -201,7 +201,7 @@ beforeNote:  //TODO Regla semantica (boolean) para que no se repitan
     )*
     ;
 
-diatonicPitch:
+diatonicPitchAndOctave:
     bassNotes // BASS
     |
     trebleNotes

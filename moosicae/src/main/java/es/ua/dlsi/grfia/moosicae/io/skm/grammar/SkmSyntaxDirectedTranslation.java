@@ -4,7 +4,7 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
-import es.ua.dlsi.grfia.moosicae.io.builders.*;
+import es.ua.dlsi.grfia.moosicae.core.builders.*;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmCoreSymbol;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmHeader;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmPart;
@@ -57,6 +57,10 @@ public class SkmSyntaxDirectedTranslation {
         private IAlterationBuilder alterationBuilder;
         private IBarlineTypeBuilder barlineTypeBuilder;
         private IModeBuilder modeBuilder;
+        private IRestBuilder restBuilder;
+        private INoteBuilder noteBuilder;
+        private IDurationalSingleBuilder durationalSingleBuilder;
+        private Integer octave; // we don't need a builder here
 
         private void resetBuilders() { // written here to have all object just above
             clefBuilder = null;
@@ -262,11 +266,8 @@ public class SkmSyntaxDirectedTranslation {
             accidentalSymbolBuilder.setAccidentalSymbol(accidentalSymbols);
         }
 
-        @Override
-        public void exitDiatonicPitch(skmParser.DiatonicPitchContext ctx) {
-            super.exitDiatonicPitch(ctx);
-            diatonicPitchBuilder = new IDiatonicPitchBuilder(coreAbstractFactory);
-            diatonicPitchBuilder.setDiatonicPitch(EDiatonicPitches.valueOf(ctx.getText().toUpperCase()));
+        public void exitDiatonicPitchAndOctave(skmParser.DiatonicPitchAndOctaveContext ctx) {
+            super.exitDiatonicPitchAndOctave(ctx);
         }
 
         @Override
@@ -541,14 +542,6 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void enterMensuralDuration(skmParser.MensuralDurationContext ctx) {
             super.enterMensuralDuration(ctx);
-
-           /* if (lastAgumentationDots > 0) {
-                lastSkmDots = new SkmDots(lastAgumentationDots);
-            }
-
-            lastColoured = null;
-            lastPerfection = null;
-            lastAgumentationDots = 0;*/
         }
 
         @Override
@@ -562,11 +555,7 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Mensural figure {0}", ctx.getText());
             super.exitMensuralFigure(ctx);
 
-            /*try {
-                lastFigure = SkmFigureFactory.getInstance().create(ctx.getText());
-            } catch (IM4Exception e) {
-                throw new GrammarParseRuntimeException(e);
-            }*/
+            //TODO
         }
 
 
@@ -593,6 +582,16 @@ public class SkmSyntaxDirectedTranslation {
         public void exitModernDuration(skmParser.ModernDurationContext ctx) {
             super.exitModernDuration(ctx);
 
+            // this durationalSingleBuilder will be the pointer to the restBuilder or the noteBuilder (see enterNote, enterRest)
+            try {
+                EFigures figure = EFigures.findMeterUnit(Integer.parseInt(ctx.getText()), ENotationTypes.eModern);
+                int augmentationDots = ctx.augmentationDot().size();
+                durationalSingleBuilder.setFigure(coreAbstractFactory.createFigure(figure));
+                durationalSingleBuilder.setDots(augmentationDots);
+            } catch (IMException e) {
+                throw createException(e);
+            }
+
            /* try {
                 lastFigure = SkmFigureFactory.getInstance().create(ctx.number().getText());
             } catch (IM4Exception e) {
@@ -609,8 +608,8 @@ public class SkmSyntaxDirectedTranslation {
 
         @Override
         public void enterRest(skmParser.RestContext ctx) {
-            /*lastRestLinePosition = null;
-            lastFermata = null;*/
+            restBuilder = new IRestBuilder(coreAbstractFactory);
+            durationalSingleBuilder = restBuilder; // used the same pointer for rests and notes (for exitDuration rules)
         }
 
         @Override
@@ -629,8 +628,13 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Mensural rest {0}", ctx.getText());
             super.exitRest(ctx);
 
-           /* SkmRest rest = new SkmRest(lastFigure, lastSkmDots, lastPerfection, lastRestLinePosition, lastFermata);
-            addItemToSpine(rest);*/
+            try {
+                SkmCoreSymbol skmNote = new SkmCoreSymbol(ctx.getText(), restBuilder.build());
+                addItemToSpine(skmNote);
+            } catch (IMException e) {
+                throw createException(e);
+            }
+
         }
 
 
@@ -645,10 +649,17 @@ public class SkmSyntaxDirectedTranslation {
             }
         }
 
+        @Override
+        public void enterDiatonicPitchAndOctave(skmParser.DiatonicPitchAndOctaveContext ctx) {
+            super.enterDiatonicPitchAndOctave(ctx);
+            diatonicPitchBuilder = new IDiatonicPitchBuilder(coreAbstractFactory);
+        }
+
         private void handleNoteName(String code, int octaveModif) {
             checkAllNoteNameEqual(code);
-           /* this.octaveModif = octaveModif;
-            noteName = code.substring(0, 1).toLowerCase();*/
+            this.octave = 4 + octaveModif;
+            String noteName = code.substring(0, 1).toUpperCase();
+            diatonicPitchBuilder.setDiatonicPitch(EDiatonicPitches.valueOf(noteName));
         }
 
         @Override
@@ -668,8 +679,8 @@ public class SkmSyntaxDirectedTranslation {
 
         @Override
         public void enterNote(skmParser.NoteContext ctx) {
-          /*  this.lastStemDirection = null;
-            this.lastFermata = null;*/
+            noteBuilder = new INoteBuilder(coreAbstractFactory);
+            durationalSingleBuilder = noteBuilder; // used the same pointer for rests and notes (for exitDuration rules)
         }
 
         @Override
@@ -688,60 +699,14 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Note {0}", ctx.getText());
             super.exitNote(ctx);
 
-//           SkmAccidental skmAccidental = null;
-//            if (ctx.accidental() != null) {
-//                try {
-//                    skmAccidental = SkmAccidentalFactory.getInstance().create(ctx.accidental().getText());
-//                } catch (IM4Exception e) {
-//                    throw new GrammarParseRuntimeException(e);
-//                }
-//            } else {
-//                skmAccidental = new SkmAccidentalNatural();
-//            }
-//
-//            SkmAlterationQualifier alterationQualifier = null;
-//            if (ctx.alterationQualifier() != null) {
-//                try {
-//                    alterationQualifier = SkmAlterationQualifierFactory.getInstance().create(ctx.alterationQualifier().getText());
-//                } catch (IM4Exception e) {
-//                    throw new GrammarParseRuntimeException(e);
-//                }
-//            }
-//
-//            SkmAlteration skmAlteration;
-//            if (alterationQualifier == null) {
-//                skmAlteration = new SkmAlteration(skmAccidental);
-//            } else {
-//                skmAlteration = new SkmAlteration(skmAccidental, alterationQualifier);
-//            }
-//
-//            //TODO Ties ...
-//            SkmDiatonicPitch skmDiatonicPitch = null;
-//            try {
-//                skmDiatonicPitch = SkmDiatonicPitchFactory.getInstance().create(noteName);
-//            } catch (IM4Exception e) {
-//                throw new GrammarParseRuntimeException(e);
-//            }
-//
-//            SkmScientificPitch skmScientificPitch = new SkmScientificPitch(skmDiatonicPitch, skmAlteration, octaveModif);
-//            SkmNote skmNote = new SkmNote(lastFigure, lastSkmDots, lastPerfection, lastColoured, skmScientificPitch);
-//
-//            lastFermata = null;
-//
-//            if (chordNotes == null) {
-//                addItemToSpine(skmNote);
-//
-//                //TODO separation dot
-//                /*if (lastHasSeparationDot) {
-//                    addToCurrentSpinePart(new DivisionDot());
-//                }*/
-//            } else {
-//                chordNotes.add(skmNote);
-//
-//                /*if (lastHasSeparationDot) {
-//                    throw new GrammarParseRuntimeException("There cannot be a separation dot in a chord");
-//                }*/
-//            }
+            try {
+                noteBuilder.setPitch(pitchBuilder.build());
+                SkmCoreSymbol skmNote = new SkmCoreSymbol(ctx.getText(), noteBuilder.build());
+                addItemToSpine(skmNote);
+            } catch (IMException e) {
+                throw createException(e);
+            }
+
         }
 
         @Override
@@ -813,6 +778,7 @@ public class SkmSyntaxDirectedTranslation {
         public void exitPitch(skmParser.PitchContext ctx) {
             super.exitPitch(ctx);
             try {
+                pitchBuilder.setOctave(octave);
                 pitchBuilder.setDiatonicPitch(diatonicPitchBuilder.build());
                 if (alterationBuilder != null) {
                     pitchBuilder.setAlteration(alterationBuilder.build());

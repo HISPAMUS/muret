@@ -21,6 +21,7 @@ public interface ICoreAbstractFactory {
     ICommonTime createCommonTime();
     ICustos createCustos(IPitch pitch);
     ICutTime createCutTime();
+    IDots createDots(int ndots);
     IKey createKey(IPitchClass pitchClass, IMode mode) throws IMException;
     IKey createKey(IPitchClass pitchClass, IMode mode, IKeySignature keySignature);
     ICommonAlterationKey createKey(int nAccidentals, IAccidentalSymbol accidentalSymbol, IMode mode) throws IMException;

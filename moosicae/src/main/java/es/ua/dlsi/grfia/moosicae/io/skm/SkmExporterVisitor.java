@@ -147,7 +147,6 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
 
     @Override
     public void export(IDiatonicPitch diatonicPitch, SkmExporterVisitorTokenParam inputOutput) {
-        
         inputOutput.append(diatonicPitch.getDiatonicPitch().name().toLowerCase());
     }
 
@@ -215,9 +214,29 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
         }
     }
 
+    public void exportDiatonicPitchAndOctave(IDiatonicPitch diatonicPitch, IOctave octave, SkmExporterVisitorTokenParam inputOutput) {
+        String middleOctaveNote = diatonicPitch.getDiatonicPitch().name().toLowerCase();
+
+        int octaveValue = octave.getNumber();
+        if (octaveValue < 4) {
+            int characters = 4 - octaveValue;
+            middleOctaveNote = middleOctaveNote.toUpperCase();
+            for (int i=0; i<characters; i++) {
+                inputOutput.append(middleOctaveNote);
+            }
+        } else if (octaveValue == 4) {
+            inputOutput.append(middleOctaveNote);
+        } else {
+            int characters = 1 + octaveValue - 4;
+            for (int i=0; i<characters; i++) {
+                inputOutput.append(middleOctaveNote);
+            }
+        }
+    }
+
     @Override
     public void export(IPitch pitch, SkmExporterVisitorTokenParam inputOutput) {
-        export(pitch.getDiatonicPitch(), inputOutput);
+        exportDiatonicPitchAndOctave(pitch.getDiatonicPitch(), pitch.getOctave(), inputOutput);
         if (pitch.getAlteration().isPresent()) {
             export(pitch.getAlteration().get(), inputOutput);
         }

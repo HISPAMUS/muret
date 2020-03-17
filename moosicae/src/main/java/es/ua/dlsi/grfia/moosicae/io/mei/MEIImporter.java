@@ -7,7 +7,7 @@ import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.enums.EMeterSymbols;
 import es.ua.dlsi.grfia.moosicae.core.enums.EModes;
 import es.ua.dlsi.grfia.moosicae.io.AbstractImporter;
-import es.ua.dlsi.grfia.moosicae.io.builders.*;
+import es.ua.dlsi.grfia.moosicae.core.builders.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

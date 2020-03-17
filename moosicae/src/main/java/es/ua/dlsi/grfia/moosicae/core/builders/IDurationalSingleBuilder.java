@@ -1,4 +1,4 @@
-package es.ua.dlsi.grfia.moosicae.io.builders;
+package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
@@ -25,6 +25,16 @@ public abstract class IDurationalSingleBuilder<T extends IDurationalSingle> exte
 
     public void setDots(IDots dots) {
         this.dots = dots;
+    }
+
+    public void setFigure(EFigures figure) {
+        this.figure = coreObjectFactory.createFigure(figure);
+    }
+
+    public void setDots(int ndots) {
+        if (ndots > 0) {
+            this.dots = coreObjectFactory.createDots(ndots);
+        }
     }
 
     protected void assertRequired() throws IMException {

@@ -1,4 +1,4 @@
-package es.ua.dlsi.grfia.moosicae.io.builders;
+package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.core.IClef;
 import es.ua.dlsi.grfia.moosicae.core.IClefSign;
