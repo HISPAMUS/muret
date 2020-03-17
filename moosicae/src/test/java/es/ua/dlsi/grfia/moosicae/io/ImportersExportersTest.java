@@ -19,17 +19,13 @@ public class ImportersExportersTest {
         IScore score = abstractFactory.createScore();
         IPart part = abstractFactory.createPart(score, "default");
         IVoice voice = abstractFactory.createVoice(part);
-        IClef clef = abstractFactory.createClef(2, abstractFactory.createClefSign(EClefSigns.G));
         IStaff staff = abstractFactory.createStaff(score);
+        IClef clef = abstractFactory.createClef(2, abstractFactory.createClefSign(EClefSigns.G));
+        score.add(voice, staff, clef);
         IKey key = abstractFactory.createKey(ECommonAlterationKeys.DM);
-        voice.addItem(key);
-        staff.put(key);
+        score.add(voice, staff, key);
         IMeterSymbol meterSymbol = abstractFactory.createMeterSymbol(EMeterSymbols.commonTime);
-        voice.addItem(meterSymbol);
-        staff.put(meterSymbol);
-
-        staff.put(clef);
-        voice.addItem(clef);
+        score.add(voice, staff, meterSymbol);
         return score;
     }
 

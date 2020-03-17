@@ -10,6 +10,6 @@ public interface IScore {
     void add(IPart part);
     void add(ISystemElement staves);
     void moveVoice(IVoice voice, IPart fromPart, IPart toPart);
-
     void remove(IPart part);
+    void add(IVoice toVoice, IStaff inStaff, ISymbol symbol);
 }

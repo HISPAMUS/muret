@@ -62,4 +62,10 @@ public class Score implements IScore {
         this.parts.remove(part);
     }
 
+    @Override
+    public void add(IVoice toVoice, IStaff inStaff, ISymbol symbol) {
+        toVoice.addItem(symbol);
+        inStaff.put(symbol);
+    }
+
 }
