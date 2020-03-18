@@ -591,19 +591,6 @@ public class SkmSyntaxDirectedTranslation {
             } catch (IMException e) {
                 throw createException(e);
             }
-
-           /* try {
-                lastFigure = SkmFigureFactory.getInstance().create(ctx.number().getText());
-            } catch (IM4Exception e) {
-                throw new GrammarParseRuntimeException(e);
-            }
-
-
-            lastAgumentationDots = ctx.augmentationDot().size();
-            if (lastAgumentationDots > 0) {
-                lastSkmDots = new SkmDots(lastAgumentationDots);
-            }
-            lastAgumentationDots = 0;*/
         }
 
         @Override

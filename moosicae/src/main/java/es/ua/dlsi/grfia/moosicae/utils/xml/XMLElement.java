@@ -1,6 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.utils.xml;
 
 
+import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
+
 import java.util.LinkedList;
 import java.util.List;
 /**
@@ -68,6 +70,9 @@ public class XMLElement {
             this.children = new LinkedList<>();
         }
 
+        if (element == this) {
+            throw new IMRuntimeException("Cannot add an element as child of itself");
+        }
         this.children.add(element);
     }
 

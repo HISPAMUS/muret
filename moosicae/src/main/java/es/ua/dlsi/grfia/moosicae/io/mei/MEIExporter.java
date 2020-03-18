@@ -2,23 +2,31 @@ package es.ua.dlsi.grfia.moosicae.io.mei;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.impl.StaffElementOfSymbol;
 import es.ua.dlsi.grfia.moosicae.io.IExporter;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLPreambleElement;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLTree;
 
+import java.util.HashSet;
 import java.util.Optional;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class MEIExporter implements IExporter {
     MEIExporterVisitor meiExporterVisitor;
+    /**
+     * Used to avoid exporting twice symbols such as the key signature, meter, clef that are exporte in the scoreDef or staffDef elements as attributes
+     */
+    HashSet<IStaffElement> exportedSymbols;
+
     public MEIExporter() {
         meiExporterVisitor = new MEIExporterVisitor();
     }
 
     @Override
     public String exportScore(IScore score) throws IMException {
+        exportedSymbols = new HashSet<>();
         XMLTree xmlTree = new XMLTree("mei");
         xmlTree.getRoot().addAttribute("xmlns", "http://www.music-encoding.org/ns/mei");
         xmlTree.getRoot().addAttribute("meiversion", "4.0.0");
@@ -97,16 +105,37 @@ public class MEIExporter implements IExporter {
         Optional<IMeter> commonBeginningMeter = getCommonBeginning(score, IMeter.class);
         MEIExporterVisitorParam param = new MEIExporterVisitorParam(MEIExporterVisitorParam.ExportMode.attribute, xmlScoreDef);
         if (commonBeginningMeter.isPresent()) {
+            exportedSymbols.add(commonBeginningMeter.get());
             commonBeginningMeter.get().export(meiExporterVisitor, param);
         }
 
         Optional<IKey> commonBeginningKey = getCommonBeginning(score, IKey.class);
         if (commonBeginningKey.isPresent()) {
+            exportedSymbols.add(commonBeginningKey.get());
             commonBeginningKey.get().export(meiExporterVisitor, param);
         }
 
-        //TODO - gropus
+        //TODO - staff groups
         export(xmlScoreDef, score.getSystemElements());
+
+        //TODO hacer lo de los compases - staves - layers !!!!!!!!!!!
+        XMLElement xmlSection = xmlScore.addChild("section");
+        XMLElement xmlMeasure = xmlSection.addChild("measure");
+        int nstaff = 1;
+        for (IStaff staff: score.getAllStaves()) {
+            //TODO asociar staves a layers
+            XMLElement xmlStaff = xmlMeasure.addChild("staff");
+            xmlStaff.addAttribute("n", Integer.toString(nstaff));
+            XMLElement xmlLayer = xmlStaff.addChild("layer");
+            xmlLayer.addAttribute("n", Integer.toString(nstaff));
+            for (IStaffElement staffElement: staff.getStaffSymbols()) {
+                if (!(staffElement instanceof StaffElementOfSymbol) || !exportedSymbols.contains(((StaffElementOfSymbol) staffElement).getSymbol())) {
+                    MEIExporterVisitorParam meiExporterVisitorParam = new MEIExporterVisitorParam(MEIExporterVisitorParam.ExportMode.element, xmlLayer);
+                    System.out.println(staffElement);
+                    staffElement.export(meiExporterVisitor, meiExporterVisitorParam);
+                }
+            }
+        }
     }
 
     private void export(XMLElement xmlScoreDef, ISystemElement[] systemElements) throws IMException {
@@ -128,6 +157,7 @@ public class MEIExporter implements IExporter {
 
         Optional<IClef> firstClef = findFirst(staff, IClef.class);
         if (firstClef.isPresent()) {
+            exportedSymbols.add(firstClef.get());
             MEIExporterVisitorParam param = new MEIExporterVisitorParam(MEIExporterVisitorParam.ExportMode.attribute, xmlStaffDef);
             firstClef.get().export(meiExporterVisitor, param);
         }

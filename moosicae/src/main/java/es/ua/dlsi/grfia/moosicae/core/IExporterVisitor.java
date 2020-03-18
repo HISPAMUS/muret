@@ -36,4 +36,7 @@ public interface IExporterVisitor<InputOutputType>  {
 
     void export(IBarline barline, InputOutputType inputOutput) throws IMException;
     void export(IBarlineType barlineType, InputOutputType inputOutput) throws IMException;
+
+    void export(IPageBeginning pageBeginning, InputOutputType inputOutput);
+    void export(ISystemBeginning systemBeginning, InputOutputType inputOutput);
 }

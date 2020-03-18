@@ -345,4 +345,15 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
         inputOutput.append(encoding);
     }
 
+    @Override
+    public void export(IPageBeginning pageBeginning, SkmExporterVisitorTokenParam inputOutput) {
+
+    }
+
+    @Override
+    public void export(ISystemBeginning systemBeginning, SkmExporterVisitorTokenParam inputOutput) {
+
+    }
+
+
 }

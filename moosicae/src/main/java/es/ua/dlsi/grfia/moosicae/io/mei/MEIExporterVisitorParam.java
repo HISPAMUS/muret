@@ -31,7 +31,7 @@ public class MEIExporterVisitorParam {
     }
 
     public void addChild(XMLElement child) {
-        xmlElement.addChild(xmlElement);
+        xmlElement.addChild(child);
     }
 
     public void addChild(String childElementName) {

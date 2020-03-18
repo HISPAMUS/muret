@@ -2,19 +2,16 @@ package es.ua.dlsi.grfia.moosicae.io;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.builders.INoteBuilder;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.impl.CoreAbstractFactoryImpl;
-import es.ua.dlsi.grfia.moosicae.io.mei.MEIExporter;
-import es.ua.dlsi.grfia.moosicae.io.mei.MEIImporter;
 import es.ua.dlsi.grfia.moosicae.io.skm.SkmExporter;
 import es.ua.dlsi.grfia.moosicae.io.skm.SkmImporter;
-import es.ua.dlsi.grfia.moosicae.core.builders.*;
 import org.junit.Test;
-
 
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 //TODO hacer un test de añadir una key signature sin key (sin modo)
 public class ImportersExportersTest {
@@ -51,6 +48,6 @@ public class ImportersExportersTest {
         ICoreAbstractFactory abstractFactory = new CoreAbstractFactoryImpl();
         IScore score = createScore(abstractFactory);
         testExportImport(score, new SkmExporter(), new SkmImporter(abstractFactory));
-        testExportImport(score, new MEIExporter(), new MEIImporter(abstractFactory));
+      //  testExportImport(score, new MEIExporter(), new MEIImporter(abstractFactory));
     }
 }

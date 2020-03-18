@@ -33,6 +33,7 @@ public class Clef implements IClef {
 
     @Override
     public boolean equals(Object o) {
+        System.out.println("equals");
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Clef clef = (Clef) o;

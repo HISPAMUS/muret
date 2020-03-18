@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.io.mei;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -29,8 +30,15 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorPa
     }
 
     @Override
-    public void export(INote note, MEIExporterVisitorParam inputOutput) {
-        throw new UnsupportedOperationException("TO-DO"); //TODO
+    public void export(INote note, MEIExporterVisitorParam inputOutput) throws IMException {
+        XMLElement xmlNote = new XMLElement("note");
+        MEIExporterVisitorParam meiExporterVisitorParam = new MEIExporterVisitorParam(MEIExporterVisitorParam.ExportMode.attribute, xmlNote);
+        export(note.getPitch(), meiExporterVisitorParam);
+        export(note.getFigure(), meiExporterVisitorParam);
+        if (note.getDots().isPresent()) {
+            export(note.getDots().get(), meiExporterVisitorParam);
+        }
+        inputOutput.addChild(xmlNote);
     }
 
     @Override
@@ -120,7 +128,11 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorPa
 
     @Override
     public void export(IDiatonicPitch diatonicPitch, MEIExporterVisitorParam inputOutput) {
-        throw new UnsupportedOperationException("TO-DO"); //TODO
+        if (inputOutput.getExportMode() == MEIExporterVisitorParam.ExportMode.attribute) {
+            inputOutput.addAttribute("pname", diatonicPitch.getDiatonicPitch().name().toLowerCase());
+        } else {
+            throw new UnsupportedOperationException("Cannot export a diatonic pitch as other thing different to attribute");
+        }
     }
 
     @Override
@@ -159,8 +171,15 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorPa
     }
 
     @Override
-    public void export(IAlteration alteration, MEIExporterVisitorParam inputOutput) {
-        throw new UnsupportedOperationException("TO-DO"); //TODO
+    public void export(IAlteration alteration, MEIExporterVisitorParam inputOutput) throws IMException {
+        XMLElement alterationXMLElement = new XMLElement("accid");
+        inputOutput.addChild(alterationXMLElement);
+
+        //TODO ges.... - IAlterationDisplayType
+        MEIExporterVisitorParam accidentalParam = new MEIExporterVisitorParam(MEIExporterVisitorParam.ExportMode.string, null);
+        export(alteration.getAccidentalSymbol(), accidentalParam);
+        alterationXMLElement.addAttribute("accid.ges", accidentalParam.getStringBuilderValue());
+
     }
 
     @Override
@@ -169,18 +188,52 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorPa
     }
 
     @Override
-    public void export(IPitch pitch, MEIExporterVisitorParam inputOutput) {
-        throw new UnsupportedOperationException("TO-DO"); //TODO
+    public void export(IPitch pitch, MEIExporterVisitorParam inputOutput) throws IMException {
+        if (inputOutput.getExportMode() == MEIExporterVisitorParam.ExportMode.attribute) {
+            if (pitch.getAlteration().isPresent()) {
+                export(pitch.getAlteration().get(), inputOutput);
+            }
+            export(pitch.getDiatonicPitch(), inputOutput);
+            inputOutput.addAttribute("oct", Integer.toString(pitch.getOctave().getNumber())); //TODO mejor como exporterVisitor por si hay anotaciones de octava alta?
+        } else {
+            throw new UnsupportedOperationException("TO-DO"); //TODO
+        }
+
     }
 
     @Override
     public void export(IDots dots, MEIExporterVisitorParam inputOutput) {
-        throw new UnsupportedOperationException("TO-DO"); //TODO
+        if (inputOutput.getExportMode() == MEIExporterVisitorParam.ExportMode.attribute) {
+            if (dots.getCount() > 0) {
+                inputOutput.addAttribute("dots", Integer.toString(dots.getCount()));
+            }
+        } else {
+            throw new UnsupportedOperationException("TO-DO"); //TODO
+        }
     }
 
     @Override
     public void export(IFigure figures, MEIExporterVisitorParam inputOutput) {
-        throw new UnsupportedOperationException("TO-DO"); //TODO
+        if (inputOutput.getExportMode() == MEIExporterVisitorParam.ExportMode.attribute) {
+            String value;
+            switch (figures.getFigure()) {
+                case MAXIMA: value = "maxima"; break;
+                case LONGA: value = "longa"; break;
+                case BREVE: value = "brevis"; break;
+                case SEMIBREVE: value = "semibrevis"; break;
+                case MINIM: value = "minima"; break;
+                case SEMIMINIM: value = "semiminima"; break;
+                case FUSA: value = "fusa"; break;
+                case SEMIFUSA: value =  "semifusa"; break;
+                case QUADRUPLE_WHOLE: value = "long"; break;
+                case DOUBLE_WHOLE: value = "breve"; break;
+                default:
+                    value = Integer.toString(figures.getMeterUnit());
+            }
+            inputOutput.addAttribute("dur", value);
+        } else {
+            throw new UnsupportedOperationException("TO-DO"); //TODO
+        }
     }
 
     @Override
@@ -197,5 +250,16 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorPa
     public void export(IBarlineType barlineType, MEIExporterVisitorParam inputOutput) throws IMException {
         throw new UnsupportedOperationException("TO-DO"); //TODO
     }
+
+    @Override
+    public void export(IPageBeginning pageBeginning, MEIExporterVisitorParam inputOutput) {
+
+    }
+
+    @Override
+    public void export(ISystemBeginning systemBeginning, MEIExporterVisitorParam inputOutput) {
+
+    }
+
 
 }

@@ -2,10 +2,7 @@ package es.ua.dlsi.grfia.moosicae.io.mei;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
-import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
-import es.ua.dlsi.grfia.moosicae.core.enums.EMeterSymbols;
-import es.ua.dlsi.grfia.moosicae.core.enums.EModes;
+import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.io.AbstractImporter;
 import es.ua.dlsi.grfia.moosicae.core.builders.*;
 import org.w3c.dom.Document;
@@ -29,6 +26,12 @@ public class MEIImporter extends AbstractImporter {
 
     private IMeterSymbolBuilder meterSymbolBuilder;
     private IKeyFromAccidentalCountBuilder keyFromAccidentalCountBuilder;
+    private IAccidentalSymbolBuilder accidentalSymbolBuilder;
+    private IDiatonicPitchBuilder diatonicPitchBuilder;
+    private IFigureBuilder figureBuilder;
+    private INoteBuilder noteBuilder;
+    private IPitchBuilder pitchBuilder;
+    private Integer octave; // no need of a builder
 
     /**
      * It uses the default core factory
@@ -64,15 +67,22 @@ public class MEIImporter extends AbstractImporter {
             //TODO quitar la inicialización a pelo
             IPart part = coreAbstractFactory.createPart(score, "TODO");
             IVoice voice = coreAbstractFactory.createVoice(part);
+            IStaff staff = coreAbstractFactory.createStaff(score);
 
-            parse(nList.item(0), score, voice); //TODO quitar voice y staff
+            parse(nList.item(0), score, voice, staff); //TODO quitar voice y staff
             return score;
         } catch (SAXException | IOException e) {
             throw new IMException("Cannot parse string", e);
         }
     }
 
-    private void parse(Node node, IScore score, IVoice voice) throws IMException {
+    private void parse(Node node, IScore score, IVoice voice, IStaff staff) throws IMException {
+        NodeList children = node.getChildNodes();
+        if (children != null) {
+            for (int i=0; i< children.getLength(); i++) {
+                parse(children.item(i), score, voice, staff);
+            }
+        }
         switch (node.getNodeName()) { // removing this switch makes it much more difficult
             case "scoreDef":
                 processScoreDef(node, score);
@@ -80,27 +90,151 @@ public class MEIImporter extends AbstractImporter {
             case "staffDef":
                 processStaffDef(node, score, voice);
                 break;
-        }
-        NodeList children = node.getChildNodes();
-        if (children != null) {
-            for (int i=0; i< children.getLength(); i++) {
-                parse(children.item(i), score, voice);
-            }
+            case "accid":
+                processAccid(node);
+                break;
+            case "note":
+                processNote(node, score, voice, staff);
+                break;
         }
     }
 
+    private void processNote(Node node, IScore score, IVoice voice, IStaff staff) throws IMException {
+        noteBuilder = new INoteBuilder(coreAbstractFactory);
+        processPitch(node);
+        processFigure(node);
+        noteBuilder.setPitch(pitchBuilder.build());
+        noteBuilder.setFigure(figureBuilder.build());
+        //TODO dots
+        INote note = noteBuilder.build();
+        score.add(voice, staff, note);
+
+        // set to null all used values
+        this.diatonicPitchBuilder = null;
+        this.accidentalSymbolBuilder = null;
+        this.figureBuilder = null;
+        this.octave = null;
+
+    }
+
+    private void processPitch(Node node) throws IMException {
+        pitchBuilder = new IPitchBuilder(coreAbstractFactory);
+        processDiatonicPitch(node);
+        //TODO process Accid si aparece como parámetro
+        processOctave(node);
+        if (octave != null) {
+            pitchBuilder.setOctave(octave);
+        }
+        if (diatonicPitchBuilder != null) {
+            pitchBuilder.setDiatonicPitch(diatonicPitchBuilder.build());
+        }
+    }
+
+    private void processOctave(Node node) {
+        Optional<String> oct = getOptionalAttrValue(node, "oct");
+        if (oct.isPresent()) {
+            octave = Integer.parseInt(oct.get());
+        }
+    }
+
+    private void processAccid(Node node) throws IMException {
+        //TODO hidden, editorial...
+        Optional<String> accidGes = getOptionalAttrValue(node, "accid.ges");
+        if (accidGes.isPresent()) {
+            processAccidentalSymbol(accidGes.get()); //TODO procesarlo como ges
+        }         
+    }
+
+    private void processDiatonicPitch(Node node) {
+        Optional<String> pname = getOptionalAttrValue(node, "pname");
+        if (pname.isPresent()) {
+            diatonicPitchBuilder = new IDiatonicPitchBuilder(coreAbstractFactory);
+            diatonicPitchBuilder.setDiatonicPitch(EDiatonicPitches.valueOf(pname.get().toUpperCase()));
+        }
+    }
+
+    private void processFigure(Node node) throws IMException {
+        String dur = getRequiredAttrValue(node, "dur");
+        EFigures eFigure;
+        switch (dur) {
+            case "maxima":
+                eFigure = EFigures.MAXIMA;
+                break;
+            case "longa":
+                eFigure = EFigures.LONGA;
+                break;
+            case "brevis":
+                eFigure = EFigures.BREVE;
+                break;
+            case "semibrevis":
+                eFigure = EFigures.SEMIBREVE;
+                break;
+            case "minima":
+                eFigure = EFigures.MINIM;
+                break;
+            case "semiminima":
+                eFigure = EFigures.SEMIMINIM;
+                break;
+            case "fusa":
+                eFigure = EFigures.FUSA;
+                break;
+            case "semifusa":
+                eFigure = EFigures.SEMIFUSA;
+                break;
+            case "long":
+                eFigure = EFigures.QUADRUPLE_WHOLE;
+                break;
+            case "breve":
+                eFigure = EFigures.DOUBLE_WHOLE;
+                break;
+            default:
+                eFigure = EFigures.findMeterUnit(Integer.parseInt(dur), ENotationTypes.eModern);
+        }
+        figureBuilder = new IFigureBuilder(coreAbstractFactory);
+        figureBuilder.setFigure(eFigure);
+    }
+
+    private void processAccidentalSymbol(String accidentalValue) throws IMException {
+        accidentalSymbolBuilder = new IAccidentalSymbolBuilder(coreAbstractFactory);
+        EAccidentalSymbols eAccidentalSymbol;
+        switch (accidentalValue) {
+            case "fff":
+                eAccidentalSymbol = EAccidentalSymbols.TRIPLE_FLAT;
+                break;
+            case "ff":
+                eAccidentalSymbol = EAccidentalSymbols.DOUBLE_FLAT;
+                break;
+            case "f":
+                eAccidentalSymbol = EAccidentalSymbols.FLAT;
+                break;
+            case "n":
+                eAccidentalSymbol = EAccidentalSymbols.NATURAL;
+                break;
+            case "s":
+                eAccidentalSymbol = EAccidentalSymbols.SHARP;
+                break;
+            case "ss":
+                eAccidentalSymbol = EAccidentalSymbols.DOUBLE_SHARP;
+                break;
+            default:
+                throw new IMException("Unkown accidental symbol '" + accidentalValue + "'");
+        }
+
+        accidentalSymbolBuilder.setAccidentalSymbol(eAccidentalSymbol);
+    }
+
     private void processScoreDef(Node node, IScore score) throws IMException {
-        Optional<String> keySig = getAttrValue(node, "key.sig");
+        Optional<String> keySig = getOptionalAttrValue(node, "key.sig");
         if (keySig.isPresent()) {
             processScoreDefKeySig(node, keySig);
         }
-        Optional<String> meterSym = getAttrValue(node, "meter.sym");
+        Optional<String> meterSym = getOptionalAttrValue(node, "meter.sym");
         if (meterSym.isPresent()) {
             processScoreDefMeterSym(node, meterSym);
         }
     }
 
-    private Optional<String> getAttrValue(Node node, String name) {
+    private Optional<String> getOptionalAttrValue(Node node, String name) {
         if (node.getAttributes() == null) {
             return Optional.empty();
         } else {
@@ -114,10 +248,24 @@ public class MEIImporter extends AbstractImporter {
         }
     }
 
+    private String getRequiredAttrValue(Node node, String name) throws IMException {
+        if (node.getAttributes() == null) {
+            throw new IMException("Expected an attribute '" + name + "' at node " + node.toString());
+        } else {
+            Node attribute = node.getAttributes().getNamedItem(name);
+            if (attribute != null) {
+                return attribute.getNodeValue();
+            } else {
+                throw new IMException("Expected an attribute '" + name + "' at node " + node.toString());
+            }
+
+        }
+    }
+
     private void processStaffDef(Node node, IScore score, IVoice voice) throws IMException {
         IStaff staff = coreAbstractFactory.createStaff(score);
 
-        Optional<String> clefShape = getAttrValue(node, "clef.shape");
+        Optional<String> clefShape = getOptionalAttrValue(node, "clef.shape");
         if (clefShape.isPresent()) {
             processStaffDefClef(node, voice, staff, clefShape);
         }
@@ -170,7 +318,7 @@ public class MEIImporter extends AbstractImporter {
         }
         keyFromAccidentalCountBuilder.setAccidentalSymbol(accidentalSymbol);
 
-        Optional<String> modeString = getAttrValue(node, "key.mode");
+        Optional<String> modeString = getOptionalAttrValue(node, "key.mode");
         if (modeString.isPresent()) {
             IModeBuilder modeBuilder = new IModeBuilder(coreAbstractFactory);
             modeBuilder.setMode(EModes.valueOf(modeString.get().toLowerCase()));
@@ -185,7 +333,7 @@ public class MEIImporter extends AbstractImporter {
     private void processStaffDefClef(Node node, IVoice voice, IStaff staff, Optional<String> clefShape) throws IMException {
         IClefBuilder clefBuilder = new IClefBuilder(coreAbstractFactory);
         clefBuilder.setClefSign(coreAbstractFactory.createClefSign(EClefSigns.valueOf(clefShape.get())));
-        Optional<String> clefLine = getAttrValue(node, "clef.line");
+        Optional<String> clefLine = getOptionalAttrValue(node, "clef.line");
         if (clefLine.isPresent()) {
             clefBuilder.setLine(Integer.parseInt(clefLine.get()));
         }
