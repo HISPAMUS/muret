@@ -5,7 +5,6 @@ import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.IMetronomeMark;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
-import es.ua.dlsi.grfia.moosicae.io.mei.MEIExporterVisitorParam;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmCoreSymbol;
 
 /**
@@ -126,9 +125,10 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     }
 
     @Override
-    public void export(IMode mode, MEIExporterVisitorParam inputOutput) {
+    public void export(IMode mode, SkmExporterVisitorTokenParam inputOutput) {
 
     }
+
 
     @Override
     public void export(IKeySignature keySignature, SkmExporterVisitorTokenParam inputOutput) throws IMException {

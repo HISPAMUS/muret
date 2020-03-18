@@ -5,8 +5,10 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.INoteBuilder;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.impl.CoreAbstractFactoryImpl;
+import es.ua.dlsi.grfia.moosicae.io.lilypond.LilypondExporter;
 import es.ua.dlsi.grfia.moosicae.io.skm.SkmExporter;
 import es.ua.dlsi.grfia.moosicae.io.skm.SkmImporter;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -15,7 +17,14 @@ import static org.junit.Assert.assertEquals;
 
 //TODO hacer un test de añadir una key signature sin key (sin modo)
 public class ImportersExportersTest {
-    private IScore createScore(ICoreAbstractFactory abstractFactory) throws IMException {
+    private ICoreAbstractFactory abstractFactory;
+
+    @Before
+    public void init() {
+        abstractFactory = new CoreAbstractFactoryImpl();
+    }
+
+    private IScore createScore() throws IMException {
         IScore score = abstractFactory.createScore();
         IPart part = abstractFactory.createPart(score, "default");
         IVoice voice = abstractFactory.createVoice(part);
@@ -46,8 +55,17 @@ public class ImportersExportersTest {
     @Test
     public void exportScore() throws IMException {
         ICoreAbstractFactory abstractFactory = new CoreAbstractFactoryImpl();
-        IScore score = createScore(abstractFactory);
+        IScore score = createScore();
         testExportImport(score, new SkmExporter(), new SkmImporter(abstractFactory));
       //  testExportImport(score, new MEIExporter(), new MEIImporter(abstractFactory));
+    }
+
+
+    @Test
+    public void exportLilypondScore() throws IMException {
+        ICoreAbstractFactory abstractFactory = new CoreAbstractFactoryImpl();
+        IScore score = createScore();
+        LilypondExporter exporter = new LilypondExporter();
+        System.out.println(exporter.exportScore(score));
     }
 }

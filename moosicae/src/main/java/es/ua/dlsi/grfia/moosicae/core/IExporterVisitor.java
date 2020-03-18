@@ -1,7 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.core;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.io.mei.MEIExporterVisitorParam;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -20,7 +19,7 @@ public interface IExporterVisitor<InputOutputType>  {
     void export(IKey key, InputOutputType inputOutputOutput) throws IMException;
     void export(ICommonAlterationKey commonAlterationKey, InputOutputType inputOutputOutput) throws IMException;
 
-    void export(IMode mode, MEIExporterVisitorParam inputOutput);
+    void export(IMode mode, InputOutputType inputOutput);
 
     void export(IKeySignature keySignature, InputOutputType inputOutputOutput) throws IMException;
     void export(IVoice voice, InputOutputType inputOutput) throws IMException;
