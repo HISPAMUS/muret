@@ -14,9 +14,21 @@ public class XMLExporterVisitorParam {
     private XMLElement xmlElement;
     private final StringBuilder stringBuilder;
 
+    public XMLExporterVisitorParam(XMLParamExportMode XMLParamExportMode) {
+        this.XMLParamExportMode = XMLParamExportMode;
+        this.xmlElement = null;
+        this.stringBuilder = new StringBuilder();
+    }
+
     public XMLExporterVisitorParam(XMLParamExportMode XMLParamExportMode, XMLElement xmlElement) {
         this.XMLParamExportMode = XMLParamExportMode;
         this.xmlElement = xmlElement;
+        this.stringBuilder = new StringBuilder();
+    }
+
+    public XMLExporterVisitorParam(XMLParamExportMode XMLParamExportMode, String childElementName) {
+        this.XMLParamExportMode = XMLParamExportMode;
+        this.xmlElement = new XMLElement(childElementName);
         this.stringBuilder = new StringBuilder();
     }
 
@@ -32,8 +44,12 @@ public class XMLExporterVisitorParam {
         xmlElement.addChild(child);
     }
 
-    public void addChild(String childElementName) {
-        xmlElement.addChild(childElementName);
+    public XMLElement addChild(String childElementName) {
+        return xmlElement.addChild(childElementName);
+    }
+
+    public XMLElement addChild(String childElementName, String value) {
+        return xmlElement.addChild(childElementName, value);
     }
 
     public void append(String string) {

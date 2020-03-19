@@ -65,6 +65,12 @@ public class XMLElement {
         return child;
     }
 
+    public XMLElement addChild(String elementName, String content) {
+        XMLElement child = new XMLElement(elementName, content);
+        addChild(child);
+        return child;
+    }
+
     public void addChild(XMLElement element) {
         if (this.children == null) {
             this.children = new LinkedList<>();
@@ -100,17 +106,23 @@ public class XMLElement {
             }
         }
 
-        if (children == null || children.isEmpty()) {
+        if (value == null && (children == null || children.isEmpty())) {
             stringBuilder.append('/');
             stringBuilder.append('>');
         } else {
             stringBuilder.append('>');
-            stringBuilder.append('\n');
 
-            for (XMLElement child: children) {
-                stringBuilder.append(child.export(tabs+1));
+            if (value != null) {
+                stringBuilder.append(value);
             }
-            addTabs(tabs, stringBuilder);
+
+            if (children != null && !children.isEmpty()) {
+                stringBuilder.append('\n');
+                for (XMLElement child : children) {
+                    stringBuilder.append(child.export(tabs + 1));
+                }
+                addTabs(tabs, stringBuilder);
+            }
             stringBuilder.append('<');
             stringBuilder.append('/');
             stringBuilder.append(name);

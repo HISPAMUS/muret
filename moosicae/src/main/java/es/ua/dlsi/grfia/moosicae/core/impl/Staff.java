@@ -7,7 +7,7 @@ import java.util.LinkedList;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class Staff implements IStaff {
-    private final LinkedList<IStaffElement> items;
+    private final LinkedList<ISymbol> items;
 
     public Staff() {
         items = new LinkedList<>();
@@ -19,8 +19,8 @@ public class Staff implements IStaff {
     }
 
     @Override
-    public IStaffElement[] getStaffSymbols() {
-        return items.toArray(new IStaffElement[items.size()]);
+    public ISymbol[] getStaffSymbols() {
+        return items.toArray(new ISymbol[items.size()]);
     }
 
     @Override
@@ -29,10 +29,8 @@ public class Staff implements IStaff {
     }
 
     @Override
-    public IStaffElementOfSymbol put(ISymbol symbol) {
-        IStaffElementOfSymbol wrapper = new StaffElementOfSymbol(symbol);
-        this.items.add(wrapper);
-        return wrapper;
+    public void put(ISymbol symbol) {
+        this.items.add(symbol);
     }
 
     @Override

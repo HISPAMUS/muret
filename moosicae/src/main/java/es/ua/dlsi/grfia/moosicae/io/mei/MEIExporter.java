@@ -2,7 +2,6 @@ package es.ua.dlsi.grfia.moosicae.io.mei;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.core.impl.StaffElementOfSymbol;
 import es.ua.dlsi.grfia.moosicae.io.IExporter;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLExporterVisitorParam;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLParamExportMode;
@@ -20,7 +19,7 @@ public class MEIExporter implements IExporter {
     /**
      * Used to avoid exporting twice symbols such as the key signature, meter, clef that are exporte in the scoreDef or staffDef elements as attributes
      */
-    HashSet<IStaffElement> exportedSymbols;
+    HashSet<ISymbol> exportedSymbols;
 
     public MEIExporter() {
         meiExporterVisitor = new MEIExporterVisitor();
@@ -63,17 +62,9 @@ public class MEIExporter implements IExporter {
     }
 
     private <T> Optional<T> findFirst(IStaff staff, Class<T> type) {
-        for (IStaffElement staffSymbol: staff.getStaffSymbols()) {
-            /*if (staffSymbol instanceof ISymbolInStaff &&
-                    type.isInstance(((ISymbolInStaff) staffSymbol).getSymbol())) {
-                return (Optional<T>) Optional.of((T) ((ISymbolInStaff) staffSymbol).getSymbol());
-            }*/
-
-            if (staffSymbol instanceof IStaffElementOfSymbol) {
-                ISymbol symbol = ((IStaffElementOfSymbol) staffSymbol).getSymbol();
-                if (type.isAssignableFrom(symbol.getClass())) {
-                    return (Optional<T>) Optional.of(symbol);
-                }
+        for (ISymbol symbol: staff.getStaffSymbols()) {
+            if (type.isAssignableFrom(symbol.getClass())) {
+                return (Optional<T>) Optional.of(symbol);
             }
         }
         return Optional.empty();
@@ -130,12 +121,9 @@ public class MEIExporter implements IExporter {
             xmlStaff.addAttribute("n", Integer.toString(nstaff));
             XMLElement xmlLayer = xmlStaff.addChild("layer");
             xmlLayer.addAttribute("n", Integer.toString(nstaff));
-            for (IStaffElement staffElement: staff.getStaffSymbols()) {
-                if (!(staffElement instanceof StaffElementOfSymbol) || !exportedSymbols.contains(((StaffElementOfSymbol) staffElement).getSymbol())) {
-                    XMLExporterVisitorParam XMLExporterVisitorParam = new XMLExporterVisitorParam(XMLParamExportMode.element, xmlLayer);
-                    System.out.println(staffElement);
-                    staffElement.export(meiExporterVisitor, XMLExporterVisitorParam);
-                }
+            for (ISymbol staffElement: staff.getStaffSymbols()) {
+                XMLExporterVisitorParam XMLExporterVisitorParam = new XMLExporterVisitorParam(XMLParamExportMode.element, xmlLayer);
+                staffElement.export(meiExporterVisitor, XMLExporterVisitorParam);
             }
         }
     }

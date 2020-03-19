@@ -1,7 +1,8 @@
-package es.ua.dlsi.grfia.moosicae.io.mei;
+package es.ua.dlsi.grfia.moosicae.io.musicxml;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLExporterVisitorParam;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLParamExportMode;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
@@ -10,12 +11,16 @@ import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 16/03/2020
  */
-public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorParam> {
+public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisitorParam> {
+    static final int MAX_DUR = 256;
+
     @Override
     public void export(IClef clef, XMLExporterVisitorParam inputOutput) {
-        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
-            inputOutput.addAttribute("clef.line", Integer.toString(clef.getLine()));
-            export(clef.getSignType(), inputOutput);
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
+            XMLExporterVisitorParam clefXMLParam = new XMLExporterVisitorParam(XMLParamExportMode.element, inputOutput.addChild("clef"));
+            export(clef.getSignType(), clefXMLParam);
+            clefXMLParam.addChild("line", Integer.toString(clef.getLine()));
+
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }
@@ -23,8 +28,8 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
 
     @Override
     public void export(IClefSign clefSign, XMLExporterVisitorParam inputOutput) {
-        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
-            inputOutput.addAttribute("clef.shape", clefSign.getClefSign().name().toUpperCase());
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
+            inputOutput.addChild("sign", clefSign.getClefSign().name().toUpperCase());
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }
@@ -34,7 +39,7 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
     @Override
     public void export(INote note, XMLExporterVisitorParam inputOutput) throws IMException {
         XMLElement xmlNote = new XMLElement("note");
-        XMLExporterVisitorParam XMLExporterVisitorParam = new XMLExporterVisitorParam(XMLParamExportMode.attribute, xmlNote);
+        XMLExporterVisitorParam XMLExporterVisitorParam = new XMLExporterVisitorParam(XMLParamExportMode.element, xmlNote);
         export(note.getPitch(), XMLExporterVisitorParam);
         export(note.getFigure(), XMLExporterVisitorParam);
         if (note.getDots().isPresent()) {
@@ -60,22 +65,26 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
 
     @Override
     public void export(ICutTime meter, XMLExporterVisitorParam inputOutput) {
-        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
-            inputOutput.addAttribute("meter.sym", "cut");
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
+            XMLExporterVisitorParam timeXMLParam = new XMLExporterVisitorParam(XMLParamExportMode.element, inputOutput.addChild("time"));
+            timeXMLParam.addAttribute("symbol", "cut");
+            timeXMLParam.addChild("beats", "2");
+            timeXMLParam.addChild("beat-type", "2");
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }
-
     }
 
     @Override
     public void export(ICommonTime meter, XMLExporterVisitorParam inputOutput) {
-        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
-            inputOutput.addAttribute("meter.sym", "common");
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
+            XMLExporterVisitorParam timeXMLParam = new XMLExporterVisitorParam(XMLParamExportMode.element, inputOutput.addChild("time"));
+            timeXMLParam.addAttribute("symbol", "common");
+            timeXMLParam.addChild("beats", "4");
+            timeXMLParam.addChild("beat-type", "4");
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }
-
     }
 
     @Override
@@ -96,17 +105,22 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
 
     @Override
     public void export(ICommonAlterationKey commonAlterationKey, XMLExporterVisitorParam inputOutput) throws IMException {
-        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
-            StringBuilder keySig = new StringBuilder();
-            keySig.append(commonAlterationKey.getAccidentalCount());
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
+            XMLExporterVisitorParam keyXMLParam = new XMLExporterVisitorParam(XMLParamExportMode.element, inputOutput.addChild("key"));
+            int fifths;
             if (commonAlterationKey.getAccidentalSymbol().isPresent()) {
-                XMLExporterVisitorParam accidentalParam = new XMLExporterVisitorParam(XMLParamExportMode.string);
-                export(commonAlterationKey.getAccidentalSymbol().get(), accidentalParam);
-                keySig.append(accidentalParam.getStringBuilderValue());
+                if (commonAlterationKey.getAccidentalSymbol().get().getAccidentalSymbol() == EAccidentalSymbols.SHARP) {
+                    fifths = commonAlterationKey.getAccidentalCount();
+                } else if (commonAlterationKey.getAccidentalSymbol().get().getAccidentalSymbol() == EAccidentalSymbols.FLAT){
+                    fifths = -commonAlterationKey.getAccidentalCount();
+                } else {
+                    throw new IMException("Unsupported accidental in standard key " + commonAlterationKey.getAccidentalSymbol().get());
+                }
+            } else {
+                fifths = 0;
             }
-
-            inputOutput.addAttribute("key.sig", keySig.toString());
-            export(commonAlterationKey.getMode(), inputOutput);
+            keyXMLParam.addChild("fifths", Integer.toString(fifths));
+            export(commonAlterationKey.getMode(), keyXMLParam);
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }
@@ -130,8 +144,8 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
 
     @Override
     public void export(IDiatonicPitch diatonicPitch, XMLExporterVisitorParam inputOutput) {
-        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
-            inputOutput.addAttribute("pname", diatonicPitch.getDiatonicPitch().name().toLowerCase());
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
+            inputOutput.addChild("step", diatonicPitch.getDiatonicPitch().name().toUpperCase());
         } else {
             throw new UnsupportedOperationException("Cannot export a diatonic pitch as other thing different to attribute");
         }
@@ -139,29 +153,8 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
 
     @Override
     public void export(IAccidentalSymbol accidental, XMLExporterVisitorParam inputOutput) throws IMException {
-        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.string) {
-            switch (accidental.getAccidentalSymbol()) {
-                case TRIPLE_FLAT:
-                    inputOutput.append("fff");
-                    break;
-                case DOUBLE_FLAT:
-                    inputOutput.append("ff");
-                    break;
-                case FLAT:
-                    inputOutput.append("f");
-                    break;
-                case NATURAL:
-                    inputOutput.append("n");
-                    break;
-                case SHARP:
-                    inputOutput.append("s");
-                    break;
-                case DOUBLE_SHARP:
-                    inputOutput.append("x");
-                    break;
-                default:
-                    throw new IMException("Unkown accidental symbol: " + accidental.getAccidentalSymbol());
-            }
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
+            inputOutput.addChild("alter", Integer.toString(accidental.getAccidentalSymbol().getAlteration()));
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }
@@ -174,13 +167,8 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
 
     @Override
     public void export(IAlteration alteration, XMLExporterVisitorParam inputOutput) throws IMException {
-        XMLElement alterationXMLElement = new XMLElement("accid");
-        inputOutput.addChild(alterationXMLElement);
-
+        export(alteration.getAccidentalSymbol(), inputOutput);
         //TODO ges.... - IAlterationDisplayType
-        XMLExporterVisitorParam accidentalParam = new XMLExporterVisitorParam(XMLParamExportMode.string);
-        export(alteration.getAccidentalSymbol(), accidentalParam);
-        alterationXMLElement.addAttribute("accid.ges", accidentalParam.getStringBuilderValue());
 
     }
 
@@ -191,12 +179,13 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
 
     @Override
     public void export(IPitch pitch, XMLExporterVisitorParam inputOutput) throws IMException {
-        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
+            XMLExporterVisitorParam pitchXMLElement = new XMLExporterVisitorParam(XMLParamExportMode.element, inputOutput.addChild("pitch"));
+            export(pitch.getDiatonicPitch(), inputOutput);
+            export(pitch.getOctave(), inputOutput);
             if (pitch.getAlteration().isPresent()) {
                 export(pitch.getAlteration().get(), inputOutput);
             }
-            export(pitch.getDiatonicPitch(), inputOutput);
-            export(pitch.getOctave(), inputOutput);
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }
@@ -216,28 +205,42 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
 
     @Override
     public void export(IOctave octave, XMLExporterVisitorParam inputOutput) throws IMException {
-        inputOutput.addAttribute("oct", Integer.toString(octave.getNumber()));
+        inputOutput.addChild("octave", Integer.toString(octave.getNumber()));
     }
 
     @Override
     public void export(IFigure figures, XMLExporterVisitorParam inputOutput) {
-        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
-            String value;
+        //TODO ¿es necesario type?
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
+            String type;
             switch (figures.getFigure()) {
-                case MAXIMA: value = "maxima"; break;
-                case LONGA: value = "longa"; break;
-                case BREVE: value = "brevis"; break;
-                case SEMIBREVE: value = "semibrevis"; break;
-                case MINIM: value = "minima"; break;
-                case SEMIMINIM: value = "semiminima"; break;
-                case FUSA: value = "fusa"; break;
-                case SEMIFUSA: value =  "semifusa"; break;
-                case QUADRUPLE_WHOLE: value = "long"; break;
-                case DOUBLE_WHOLE: value = "breve"; break;
+                //TODO todos estos valores
+                case MAXIMA: type = "maxima"; break;
+                case LONGA: type = "long"; break;
+                case BREVE: type = "breve"; break;
+                case SEMIBREVE: type = "whole"; break;
+                case MINIM: type = "half"; break;
+                case SEMIMINIM: type = "quarter"; break;
+                case FUSA: type = "eighth"; break;
+                case SEMIFUSA: type =  "16th"; break;
+                case OCTUPLE_WHOLE: type = "maxima"; break;
+                case QUADRUPLE_WHOLE: type = "long"; break;
+                case DOUBLE_WHOLE: type = "breve"; break;
+                case WHOLE: type = "whole"; break;
+                case HALF: type = "half"; break;
+                case QUARTER: type = "quarter"; break;
+                case EIGHTH: type = "eighth"; break;
+                case SIXTEENTH: type = "16th"; break;
+                case THIRTY_SECOND: type = "32nd"; break;
+                case SIXTY_FOURTH: type = "64th"; break;
+                case HUNDRED_TWENTY_EIGHTH: type = "128th"; break;
+                case TWO_HUNDRED_FIFTY_SIX: type = "256th"; break;
                 default:
-                    value = Integer.toString(figures.getMeterUnit());
+                    type = Integer.toString(figures.getMeterUnit());
             }
-            inputOutput.addAttribute("dur", value);
+            int dur = MAX_DUR / figures.getFigure().getMeterUnit();
+            inputOutput.addChild("dur", Integer.toString(dur));
+            inputOutput.addChild("type", type);
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }

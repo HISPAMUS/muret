@@ -6,8 +6,8 @@ import es.ua.dlsi.grfia.moosicae.core.builders.INoteBuilder;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.impl.CoreAbstractFactoryImpl;
 import es.ua.dlsi.grfia.moosicae.io.lilypond.LilypondExporter;
-import es.ua.dlsi.grfia.moosicae.io.skm.SkmExporter;
-import es.ua.dlsi.grfia.moosicae.io.skm.SkmImporter;
+import es.ua.dlsi.grfia.moosicae.io.musicxml.MusicXMLExporter;
+import es.ua.dlsi.grfia.moosicae.io.musicxml.MusicXMLImporter;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -56,8 +56,9 @@ public class ImportersExportersTest {
     public void exportScore() throws IMException {
         ICoreAbstractFactory abstractFactory = new CoreAbstractFactoryImpl();
         IScore score = createScore();
-        testExportImport(score, new SkmExporter(), new SkmImporter(abstractFactory));
-      //  testExportImport(score, new MEIExporter(), new MEIImporter(abstractFactory));
+        //testExportImport(score, new SkmExporter(), new SkmImporter(abstractFactory));
+        //testExportImport(score, new MEIExporter(), new MEIImporter(abstractFactory));
+        testExportImport(score, new MusicXMLExporter(), new MusicXMLImporter(abstractFactory));
     }
 
 

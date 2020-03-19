@@ -6,7 +6,7 @@ package es.ua.dlsi.grfia.moosicae.core;
  */
 public interface IStaff extends ISystemElement {
     int getNumber();
-    IStaffElement[] getStaffSymbols();
+    ISymbol[] getStaffSymbols();
 
     /**
      * Add a page or system beginning
@@ -14,12 +14,7 @@ public interface IStaff extends ISystemElement {
      */
     void addLayoutElement(IStaffLayoutElement staffLayoutElement);
 
-    /**
-     * Wrap a symbol inside a IStaffElementOfSymbol placeholder and add to the staff
-     * @param symbol
-     * @return
-     */
-    IStaffElementOfSymbol put(ISymbol symbol);
+    void put(ISymbol symbol);
 
     void remove(ISymbol symbol);
 }
