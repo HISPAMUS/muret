@@ -1,4 +1,4 @@
-package es.ua.dlsi.grfia.moosicae.io.mei;
+package es.ua.dlsi.grfia.moosicae.io.xml;
 
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
 
@@ -7,23 +7,21 @@ import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 16/03/2020
  */
-public class MEIExporterVisitorParam {
-    enum ExportMode {
-        string, attribute, element
-    };
+public class XMLExporterVisitorParam {
+    ;
 
-    private ExportMode exportMode;
+    private XMLParamExportMode XMLParamExportMode;
     private XMLElement xmlElement;
     private final StringBuilder stringBuilder;
 
-    public MEIExporterVisitorParam(ExportMode exportMode, XMLElement xmlElement) {
-        this.exportMode = exportMode;
+    public XMLExporterVisitorParam(XMLParamExportMode XMLParamExportMode, XMLElement xmlElement) {
+        this.XMLParamExportMode = XMLParamExportMode;
         this.xmlElement = xmlElement;
         this.stringBuilder = new StringBuilder();
     }
 
-    public ExportMode getExportMode() {
-        return exportMode;
+    public XMLParamExportMode getXMLParamExportMode() {
+        return XMLParamExportMode;
     }
 
     public void addAttribute(String name, String value) {

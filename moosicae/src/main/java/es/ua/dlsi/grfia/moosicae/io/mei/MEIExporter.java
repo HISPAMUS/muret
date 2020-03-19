@@ -4,6 +4,8 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.impl.StaffElementOfSymbol;
 import es.ua.dlsi.grfia.moosicae.io.IExporter;
+import es.ua.dlsi.grfia.moosicae.io.xml.XMLExporterVisitorParam;
+import es.ua.dlsi.grfia.moosicae.io.xml.XMLParamExportMode;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLPreambleElement;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLTree;
@@ -103,7 +105,7 @@ public class MEIExporter implements IExporter {
     private void exportScoreDef(XMLElement xmlScore, IScore score) throws IMException {
         XMLElement xmlScoreDef = xmlScore.addChild("scoreDef");
         Optional<IMeter> commonBeginningMeter = getCommonBeginning(score, IMeter.class);
-        MEIExporterVisitorParam param = new MEIExporterVisitorParam(MEIExporterVisitorParam.ExportMode.attribute, xmlScoreDef);
+        XMLExporterVisitorParam param = new XMLExporterVisitorParam(XMLParamExportMode.attribute, xmlScoreDef);
         if (commonBeginningMeter.isPresent()) {
             exportedSymbols.add(commonBeginningMeter.get());
             commonBeginningMeter.get().export(meiExporterVisitor, param);
@@ -130,9 +132,9 @@ public class MEIExporter implements IExporter {
             xmlLayer.addAttribute("n", Integer.toString(nstaff));
             for (IStaffElement staffElement: staff.getStaffSymbols()) {
                 if (!(staffElement instanceof StaffElementOfSymbol) || !exportedSymbols.contains(((StaffElementOfSymbol) staffElement).getSymbol())) {
-                    MEIExporterVisitorParam meiExporterVisitorParam = new MEIExporterVisitorParam(MEIExporterVisitorParam.ExportMode.element, xmlLayer);
+                    XMLExporterVisitorParam XMLExporterVisitorParam = new XMLExporterVisitorParam(XMLParamExportMode.element, xmlLayer);
                     System.out.println(staffElement);
-                    staffElement.export(meiExporterVisitor, meiExporterVisitorParam);
+                    staffElement.export(meiExporterVisitor, XMLExporterVisitorParam);
                 }
             }
         }
@@ -158,7 +160,7 @@ public class MEIExporter implements IExporter {
         Optional<IClef> firstClef = findFirst(staff, IClef.class);
         if (firstClef.isPresent()) {
             exportedSymbols.add(firstClef.get());
-            MEIExporterVisitorParam param = new MEIExporterVisitorParam(MEIExporterVisitorParam.ExportMode.attribute, xmlStaffDef);
+            XMLExporterVisitorParam param = new XMLExporterVisitorParam(XMLParamExportMode.attribute, xmlStaffDef);
             firstClef.get().export(meiExporterVisitor, param);
         }
     }

@@ -2,16 +2,18 @@ package es.ua.dlsi.grfia.moosicae.io.mei;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.io.xml.XMLExporterVisitorParam;
+import es.ua.dlsi.grfia.moosicae.io.xml.XMLParamExportMode;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 16/03/2020
  */
-public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorParam> {
+public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorParam> {
     @Override
-    public void export(IClef clef, MEIExporterVisitorParam inputOutput) {
-        if (inputOutput.getExportMode() == MEIExporterVisitorParam.ExportMode.attribute) {
+    public void export(IClef clef, XMLExporterVisitorParam inputOutput) {
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
             inputOutput.addAttribute("clef.line", Integer.toString(clef.getLine()));
             export(clef.getSignType(), inputOutput);
         } else {
@@ -20,8 +22,8 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorPa
     }
 
     @Override
-    public void export(IClefSign clefSign, MEIExporterVisitorParam inputOutput) {
-        if (inputOutput.getExportMode() == MEIExporterVisitorParam.ExportMode.attribute) {
+    public void export(IClefSign clefSign, XMLExporterVisitorParam inputOutput) {
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
             inputOutput.addAttribute("clef.shape", clefSign.getClefSign().name().toUpperCase());
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
@@ -30,35 +32,35 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorPa
     }
 
     @Override
-    public void export(INote note, MEIExporterVisitorParam inputOutput) throws IMException {
+    public void export(INote note, XMLExporterVisitorParam inputOutput) throws IMException {
         XMLElement xmlNote = new XMLElement("note");
-        MEIExporterVisitorParam meiExporterVisitorParam = new MEIExporterVisitorParam(MEIExporterVisitorParam.ExportMode.attribute, xmlNote);
-        export(note.getPitch(), meiExporterVisitorParam);
-        export(note.getFigure(), meiExporterVisitorParam);
+        XMLExporterVisitorParam XMLExporterVisitorParam = new XMLExporterVisitorParam(XMLParamExportMode.attribute, xmlNote);
+        export(note.getPitch(), XMLExporterVisitorParam);
+        export(note.getFigure(), XMLExporterVisitorParam);
         if (note.getDots().isPresent()) {
-            export(note.getDots().get(), meiExporterVisitorParam);
+            export(note.getDots().get(), XMLExporterVisitorParam);
         }
         inputOutput.addChild(xmlNote);
     }
 
     @Override
-    public void export(IRest rest, MEIExporterVisitorParam inputOutput) {
+    public void export(IRest rest, XMLExporterVisitorParam inputOutput) {
         throw new UnsupportedOperationException("TO-DO"); //TODO
     }
 
     @Override
-    public void export(IMultimeasureRest mrest, MEIExporterVisitorParam inputOutput) {
+    public void export(IMultimeasureRest mrest, XMLExporterVisitorParam inputOutput) {
         throw new UnsupportedOperationException("TO-DO"); //TODO
     }
 
     @Override
-    public void export(IFractionalTimeSignature meter, MEIExporterVisitorParam inputOutput) {
+    public void export(IFractionalTimeSignature meter, XMLExporterVisitorParam inputOutput) {
         throw new UnsupportedOperationException("TO-DO"); //TODO
     }
 
     @Override
-    public void export(ICutTime meter, MEIExporterVisitorParam inputOutput) {
-        if (inputOutput.getExportMode() == MEIExporterVisitorParam.ExportMode.attribute) {
+    public void export(ICutTime meter, XMLExporterVisitorParam inputOutput) {
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
             inputOutput.addAttribute("meter.sym", "cut");
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
@@ -67,8 +69,8 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorPa
     }
 
     @Override
-    public void export(ICommonTime meter, MEIExporterVisitorParam inputOutput) {
-        if (inputOutput.getExportMode() == MEIExporterVisitorParam.ExportMode.attribute) {
+    public void export(ICommonTime meter, XMLExporterVisitorParam inputOutput) {
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
             inputOutput.addAttribute("meter.sym", "common");
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
@@ -77,28 +79,28 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorPa
     }
 
     @Override
-    public void export(IChord chord, MEIExporterVisitorParam inputOutput) {
+    public void export(IChord chord, XMLExporterVisitorParam inputOutput) {
         throw new UnsupportedOperationException("TO-DO"); //TODO
     }
 
     @Override
-    public void export(ICustos custos, MEIExporterVisitorParam inputOutput) {
+    public void export(ICustos custos, XMLExporterVisitorParam inputOutput) {
         throw new UnsupportedOperationException("TO-DO"); //TODO
     }
 
     @Override
-    public void export(IKey key, MEIExporterVisitorParam inputOutput) {
+    public void export(IKey key, XMLExporterVisitorParam inputOutput) {
         throw new UnsupportedOperationException("TO-DO"); //TODO
     }
 
 
     @Override
-    public void export(ICommonAlterationKey commonAlterationKey, MEIExporterVisitorParam inputOutput) throws IMException {
-        if (inputOutput.getExportMode() == MEIExporterVisitorParam.ExportMode.attribute) {
+    public void export(ICommonAlterationKey commonAlterationKey, XMLExporterVisitorParam inputOutput) throws IMException {
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
             StringBuilder keySig = new StringBuilder();
             keySig.append(commonAlterationKey.getAccidentalCount());
             if (commonAlterationKey.getAccidentalSymbol().isPresent()) {
-                MEIExporterVisitorParam accidentalParam = new MEIExporterVisitorParam(MEIExporterVisitorParam.ExportMode.string, null);
+                XMLExporterVisitorParam accidentalParam = new XMLExporterVisitorParam(XMLParamExportMode.string, null);
                 export(commonAlterationKey.getAccidentalSymbol().get(), accidentalParam);
                 keySig.append(accidentalParam.getStringBuilderValue());
             }
@@ -111,24 +113,24 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorPa
     }
 
     @Override
-    public void export(IMode mode, MEIExporterVisitorParam inputOutput) {
+    public void export(IMode mode, XMLExporterVisitorParam inputOutput) {
         inputOutput.addAttribute("key.mode", mode.getMode().name().toLowerCase());
 
     }
 
     @Override
-    public void export(IKeySignature keySignature, MEIExporterVisitorParam inputOutput) {
+    public void export(IKeySignature keySignature, XMLExporterVisitorParam inputOutput) {
         throw new UnsupportedOperationException("TO-DO"); //TODO
     }
 
     @Override
-    public void export(IVoice voice, MEIExporterVisitorParam inputOutput) {
+    public void export(IVoice voice, XMLExporterVisitorParam inputOutput) {
 
     }
 
     @Override
-    public void export(IDiatonicPitch diatonicPitch, MEIExporterVisitorParam inputOutput) {
-        if (inputOutput.getExportMode() == MEIExporterVisitorParam.ExportMode.attribute) {
+    public void export(IDiatonicPitch diatonicPitch, XMLExporterVisitorParam inputOutput) {
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
             inputOutput.addAttribute("pname", diatonicPitch.getDiatonicPitch().name().toLowerCase());
         } else {
             throw new UnsupportedOperationException("Cannot export a diatonic pitch as other thing different to attribute");
@@ -136,8 +138,8 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorPa
     }
 
     @Override
-    public void export(IAccidentalSymbol accidental, MEIExporterVisitorParam inputOutput) throws IMException {
-        if (inputOutput.getExportMode() == MEIExporterVisitorParam.ExportMode.string) {
+    public void export(IAccidentalSymbol accidental, XMLExporterVisitorParam inputOutput) throws IMException {
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.string) {
             switch (accidental.getAccidentalSymbol()) {
                 case TRIPLE_FLAT:
                     inputOutput.append("fff");
@@ -166,30 +168,30 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorPa
     }
 
     @Override
-    public void export(IAlterationDisplayType alterationDisplayType, MEIExporterVisitorParam inputOutput) {
+    public void export(IAlterationDisplayType alterationDisplayType, XMLExporterVisitorParam inputOutput) {
         throw new UnsupportedOperationException("TO-DO"); //TODO
     }
 
     @Override
-    public void export(IAlteration alteration, MEIExporterVisitorParam inputOutput) throws IMException {
+    public void export(IAlteration alteration, XMLExporterVisitorParam inputOutput) throws IMException {
         XMLElement alterationXMLElement = new XMLElement("accid");
         inputOutput.addChild(alterationXMLElement);
 
         //TODO ges.... - IAlterationDisplayType
-        MEIExporterVisitorParam accidentalParam = new MEIExporterVisitorParam(MEIExporterVisitorParam.ExportMode.string, null);
+        XMLExporterVisitorParam accidentalParam = new XMLExporterVisitorParam(XMLParamExportMode.string, null);
         export(alteration.getAccidentalSymbol(), accidentalParam);
         alterationXMLElement.addAttribute("accid.ges", accidentalParam.getStringBuilderValue());
 
     }
 
     @Override
-    public void export(IPitchClass pitchClass, MEIExporterVisitorParam inputOutput) {
+    public void export(IPitchClass pitchClass, XMLExporterVisitorParam inputOutput) {
         throw new UnsupportedOperationException("TO-DO"); //TODO
     }
 
     @Override
-    public void export(IPitch pitch, MEIExporterVisitorParam inputOutput) throws IMException {
-        if (inputOutput.getExportMode() == MEIExporterVisitorParam.ExportMode.attribute) {
+    public void export(IPitch pitch, XMLExporterVisitorParam inputOutput) throws IMException {
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
             if (pitch.getAlteration().isPresent()) {
                 export(pitch.getAlteration().get(), inputOutput);
             }
@@ -202,8 +204,8 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorPa
     }
 
     @Override
-    public void export(IDots dots, MEIExporterVisitorParam inputOutput) {
-        if (inputOutput.getExportMode() == MEIExporterVisitorParam.ExportMode.attribute) {
+    public void export(IDots dots, XMLExporterVisitorParam inputOutput) {
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
             if (dots.getCount() > 0) {
                 inputOutput.addAttribute("dots", Integer.toString(dots.getCount()));
             }
@@ -213,13 +215,13 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorPa
     }
 
     @Override
-    public void export(IOctave octave, MEIExporterVisitorParam inputOutput) throws IMException {
+    public void export(IOctave octave, XMLExporterVisitorParam inputOutput) throws IMException {
         inputOutput.addAttribute("oct", Integer.toString(octave.getNumber()));
     }
 
     @Override
-    public void export(IFigure figures, MEIExporterVisitorParam inputOutput) {
-        if (inputOutput.getExportMode() == MEIExporterVisitorParam.ExportMode.attribute) {
+    public void export(IFigure figures, XMLExporterVisitorParam inputOutput) {
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
             String value;
             switch (figures.getFigure()) {
                 case MAXIMA: value = "maxima"; break;
@@ -242,27 +244,27 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorPa
     }
 
     @Override
-    public void export(IMetronomeMark metronomeMark, MEIExporterVisitorParam inputOutput) throws IMException {
+    public void export(IMetronomeMark metronomeMark, XMLExporterVisitorParam inputOutput) throws IMException {
         throw new UnsupportedOperationException("TO-DO"); //TODO
     }
 
     @Override
-    public void export(IBarline barline, MEIExporterVisitorParam inputOutput) throws IMException {
+    public void export(IBarline barline, XMLExporterVisitorParam inputOutput) throws IMException {
         throw new UnsupportedOperationException("TO-DO"); //TODO
     }
 
     @Override
-    public void export(IBarlineType barlineType, MEIExporterVisitorParam inputOutput) throws IMException {
+    public void export(IBarlineType barlineType, XMLExporterVisitorParam inputOutput) throws IMException {
         throw new UnsupportedOperationException("TO-DO"); //TODO
     }
 
     @Override
-    public void export(IPageBeginning pageBeginning, MEIExporterVisitorParam inputOutput) {
+    public void export(IPageBeginning pageBeginning, XMLExporterVisitorParam inputOutput) {
 
     }
 
     @Override
-    public void export(ISystemBeginning systemBeginning, MEIExporterVisitorParam inputOutput) {
+    public void export(ISystemBeginning systemBeginning, XMLExporterVisitorParam inputOutput) {
 
     }
 
