@@ -30,6 +30,7 @@ public interface IExporterVisitor<InputOutputType>  {
     void export(IPitchClass pitchClass, InputOutputType inputOutput) throws IMException;
     void export(IPitch pitch, InputOutputType inputOutput) throws IMException;
     void export(IDots dots, InputOutputType inputOutput) throws IMException;
+    void export(IOctave octave, InputOutputType inputOutput) throws IMException;
     void export(IFigure figures, InputOutputType inputOutput) throws IMException;
     void export(IMetronomeMark metronomeMark, InputOutputType inputOutput) throws IMException;
 

@@ -18,7 +18,6 @@ public class LilypondExporter implements IExporter {
     public String exportScore(IScore score) throws IMException {
         List<ILilypondElement> output = new LinkedList<>();
         output.add(new LilypondLine("\\version \"2.20\"\n"));
-
         LilypondContext scoreContext = new LilypondContext("score", false);
         output.add(scoreContext);
         export(scoreContext, score);
@@ -37,7 +36,8 @@ public class LilypondExporter implements IExporter {
             LilypondContext staffContext = new LilypondContext("Staff", true);
             scoreContext.addChild(staffContext);
             for (IStaffElement staffElement: staff.getStaffSymbols()) {
-                staffElement.export(lilypondExporterVisitor, staffContext);
+                LilypondExporterVisitorParam lilypondExporterVisitorParam = new LilypondExporterVisitorParam(staffContext);
+                staffElement.export(lilypondExporterVisitor, lilypondExporterVisitorParam);
             }
         }
     }

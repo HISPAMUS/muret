@@ -250,6 +250,11 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     }
 
     @Override
+    public void export(IOctave octave, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+        // not used, exported using exportDiatonicPitchAndOctave
+    }
+
+    @Override
     public void export(IFigure figure, SkmExporterVisitorTokenParam inputOutput) {
         String encoding;
         switch (figure.getFigure()) {

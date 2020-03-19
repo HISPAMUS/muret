@@ -194,7 +194,7 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorPa
                 export(pitch.getAlteration().get(), inputOutput);
             }
             export(pitch.getDiatonicPitch(), inputOutput);
-            inputOutput.addAttribute("oct", Integer.toString(pitch.getOctave().getNumber())); //TODO mejor como exporterVisitor por si hay anotaciones de octava alta?
+            export(pitch.getOctave(), inputOutput);
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }
@@ -210,6 +210,11 @@ public class MEIExporterVisitor implements IExporterVisitor<MEIExporterVisitorPa
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }
+    }
+
+    @Override
+    public void export(IOctave octave, MEIExporterVisitorParam inputOutput) throws IMException {
+        inputOutput.addAttribute("oct", Integer.toString(octave.getNumber()));
     }
 
     @Override
