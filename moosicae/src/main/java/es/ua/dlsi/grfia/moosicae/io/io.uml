@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="352.0" y="261.0">es.ua.dlsi.grfia.im4.io.skm.builders.SkmClefBuilder</node>
+    <node x="627.7619047619048" y="95.0">es.ua.dlsi.grfia.im4.io.builders.IIOAbstractBuilderFactory</node>
+    <node x="683.0119047619048" y="234.0">es.ua.dlsi.grfia.im4.io.skm.SkmBuilderFactory</node>
+    <node x="30.25" y="122.0">es.ua.dlsi.grfia.im4.io.IImporter</node>
+    <node x="30.250000000000014" y="368.0">es.ua.dlsi.grfia.im4.io.IExporter</node>
+    <node x="212.21785714285716" y="0.0">es.ua.dlsi.grfia.im4.core.ICoreAbstractFactory</node>
+    <node x="161.0" y="261.0">es.ua.dlsi.grfia.im4.io.skm.SkmImporter</node>
+    <node x="161.0" y="453.0">es.ua.dlsi.grfia.im4.io.skm.SkmExporter</node>
+    <node x="0.0" y="453.0">es.ua.dlsi.grfia.im4.io.Exporter</node>
+    <node x="0.0" y="261.0">es.ua.dlsi.grfia.im4.io.Importer</node>
+    <node x="635.6857142857143" y="0.0">es.ua.dlsi.grfia.im4.io.builders.ISymbolBuilder</node>
+    <node x="416.7619047619048" y="122.0">es.ua.dlsi.grfia.im4.io.builders.impl.SymbolBuilder</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="es.ua.dlsi.grfia.im4.io.IImporter" target="es.ua.dlsi.grfia.im4.core.ICoreAbstractFactory">
+      <point x="0.0" y="-17.5" />
+      <point x="105.75" y="75.0" />
+      <point x="233.96785714285716" y="75.0" />
+      <point x="-108.75" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.io.skm.builders.SkmClefBuilder" target="es.ua.dlsi.grfia.im4.core.ICoreAbstractFactory">
+      <point x="-67.0" y="-17.5" />
+      <point x="385.5" y="214.0" />
+      <point x="352.6190476190477" y="214.0" />
+      <point x="352.6190476190477" y="75.0" />
+      <point x="320.96785714285716" y="75.0" />
+      <point x="-21.75" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.io.Importer" target="es.ua.dlsi.grfia.im4.io.IImporter">
+      <point x="35.25" y="-17.5" />
+      <point x="0.0" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.io.skm.builders.SkmClefBuilder" target="es.ua.dlsi.grfia.im4.io.builders.impl.SymbolBuilder">
+      <point x="67.0" y="-17.5" />
+      <point x="519.5" y="214.0" />
+      <point x="560.0119047619048" y="214.0" />
+      <point x="47.75" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.io.skm.SkmBuilderFactory" target="es.ua.dlsi.grfia.im4.io.builders.ISymbolBuilder">
+      <point x="113.25" y="-44.5" />
+      <point x="947.2619047619048" y="214.0" />
+      <point x="960.2619047619048" y="214.0" />
+      <point x="960.2619047619048" y="55.0" />
+      <point x="819.9357142857143" y="55.0" />
+      <point x="83.75" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.io.builders.impl.SymbolBuilder" target="es.ua.dlsi.grfia.im4.io.builders.ISymbolBuilder">
+      <point x="38.200000000000045" y="-17.5" />
+      <point x="550.4619047619049" y="65.0" />
+      <point x="685.9357142857143" y="65.0" />
+      <point x="-50.25" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.io.Exporter" target="es.ua.dlsi.grfia.im4.io.IExporter">
+      <point x="-35.25" y="-17.5" />
+      <point x="35.25" y="428.0" />
+      <point x="55.41666666666667" y="428.0" />
+      <point x="-50.33333333333334" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.io.skm.SkmBuilderFactory" target="es.ua.dlsi.grfia.im4.core.ICoreAbstractFactory">
+      <point x="-113.25" y="-44.5" />
+      <point x="720.7619047619048" y="204.0" />
+      <point x="380.0" y="204.0" />
+      <point x="380.0" y="75.0" />
+      <point x="364.46785714285716" y="75.0" />
+      <point x="21.75" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.io.skm.SkmImporter" target="es.ua.dlsi.grfia.im4.io.IImporter">
+      <point x="-42.75" y="-17.5" />
+      <point x="203.75" y="214.0" />
+      <point x="156.08333333333337" y="214.0" />
+      <point x="50.33333333333337" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.io.builders.impl.SymbolBuilder" target="es.ua.dlsi.grfia.im4.core.ICoreAbstractFactory">
+      <point x="-76.39999999999998" y="-17.5" />
+      <point x="435.86190476190484" y="75.0" />
+      <point x="407.96785714285716" y="75.0" />
+      <point x="65.25" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.io.builders.IIOAbstractBuilderFactory" target="es.ua.dlsi.grfia.im4.io.builders.ISymbolBuilder">
+      <point x="0.0" y="-44.5" />
+      <point x="783.2619047619048" y="75.0" />
+      <point x="752.9357142857143" y="75.0" />
+      <point x="16.75" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.io.skm.SkmBuilderFactory" target="es.ua.dlsi.grfia.im4.io.builders.IIOAbstractBuilderFactory">
+      <point x="-37.75" y="-44.5" />
+      <point x="796.2619047619048" y="214.0" />
+      <point x="783.2619047619048" y="214.0" />
+      <point x="0.0" y="44.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.io.skm.SkmExporter" target="es.ua.dlsi.grfia.im4.io.IExporter">
+      <point x="0.0" y="-17.5" />
+      <point x="246.5" y="428.0" />
+      <point x="156.08333333333337" y="428.0" />
+      <point x="50.33333333333337" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.io.skm.SkmImporter" target="es.ua.dlsi.grfia.im4.core.ICoreAbstractFactory">
+      <point x="42.75" y="-17.5" />
+      <point x="289.25" y="75.0" />
+      <point x="277.46785714285716" y="75.0" />
+      <point x="-65.25" y="17.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="689.0" y="433.5" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

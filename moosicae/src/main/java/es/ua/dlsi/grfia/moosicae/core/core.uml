@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="342.4999999999999" y="212.0">es.ua.dlsi.grfia.im4.core.IStaves</node>
+    <node x="11.5" y="198.0">es.ua.dlsi.grfia.im4.core.IPart</node>
+    <node x="1615.6876436781604" y="503.0">es.ua.dlsi.grfia.im4.core.INote</node>
+    <node x="0.0" y="85.0">es.ua.dlsi.grfia.im4.core.IVoice</node>
+    <node x="1551.6876436781604" y="99.0">es.ua.dlsi.grfia.im4.core.ISymbol</node>
+    <node x="384.9999999999999" y="489.0">es.ua.dlsi.grfia.im4.core.IStaffGroup</node>
+    <node x="1149.5" y="503.0">es.ua.dlsi.grfia.im4.core.IBeamGroup</node>
+    <node x="418.4999999999999" y="324.0">es.ua.dlsi.grfia.im4.core.IStaff</node>
+    <node x="60.09913793103419" y="0.0">es.ua.dlsi.grfia.im4.core.IVoiced</node>
+    <node x="2319.6876436781604" y="503.0">es.ua.dlsi.grfia.im4.core.IKeySignature</node>
+    <node x="106.10431034482713" y="311.0">es.ua.dlsi.grfia.im4.core.IScore</node>
+    <node x="1361.875" y="324.0">es.ua.dlsi.grfia.im4.core.IDurationalSingle</node>
+    <node x="1988.1876436781604" y="351.0">es.ua.dlsi.grfia.im4.core.INonDurational</node>
+    <node x="1330.5" y="503.0">es.ua.dlsi.grfia.im4.core.IRest</node>
+    <node x="1612.875" y="351.0">es.ua.dlsi.grfia.im4.core.IPitched</node>
+    <node x="2018.6876436781604" y="476.0">es.ua.dlsi.grfia.im4.core.IClef</node>
+    <node x="667.4999999999999" y="351.0">es.ua.dlsi.grfia.im4.core.ISystemBeginning</node>
+    <node x="677.4999999999999" y="503.0">es.ua.dlsi.grfia.im4.core.IPageBeginning</node>
+    <node x="567.2658045977008" y="212.0">es.ua.dlsi.grfia.im4.core.IStaffSymbol</node>
+    <node x="971.0158045977008" y="337.0">es.ua.dlsi.grfia.im4.core.IDurationalComposite</node>
+    <node x="171.4999999999999" y="198.0">es.ua.dlsi.grfia.im4.core.IMetadata</node>
+    <node x="1462.6876436781604" y="503.0">es.ua.dlsi.grfia.im4.core.IChord</node>
+    <node x="1746.6876436781604" y="503.0">es.ua.dlsi.grfia.im4.core.ICustos</node>
+    <node x="1102.9376436781604" y="198.0">es.ua.dlsi.grfia.im4.core.IDurational</node>
+    <node x="2178.6876436781604" y="503.0">es.ua.dlsi.grfia.im4.core.IMeter</node>
+    <node x="898.4999999999999" y="489.0">es.ua.dlsi.grfia.im4.core.IMultimeasureRest</node>
+    <node x="1897.6876436781604" y="503.0">es.ua.dlsi.grfia.im4.core.IKey</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="es.ua.dlsi.grfia.im4.core.IVoice" target="es.ua.dlsi.grfia.im4.core.IVoiced">
+      <point x="40.75" y="-31.5" />
+      <point x="122.25" y="60.0" />
+      <point x="125.59913793103419" y="60.0" />
+      <point x="0.0" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.IStaffGroup" target="es.ua.dlsi.grfia.im4.core.IStaves">
+      <point x="-42.75" y="-31.5" />
+      <point x="427.7499999999999" y="456.0" />
+      <point x="407.9999999999999" y="456.0" />
+      <point x="0.0" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.IScore" target="es.ua.dlsi.grfia.im4.core.IMetadata">
+      <point x="0.0" y="-57.5" />
+      <point x="195.10431034482713" y="286.0" />
+      <point x="246.9999999999999" y="286.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.IMeter" target="es.ua.dlsi.grfia.im4.core.INonDurational">
+      <point x="0.0" y="-17.5" />
+      <point x="2239.1876436781604" y="456.0" />
+      <point x="2128.88764367816" y="456.0" />
+      <point x="40.200000000000045" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.IPart" target="es.ua.dlsi.grfia.im4.core.IVoice">
+      <point x="0.0" y="-31.5" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.IChord" target="es.ua.dlsi.grfia.im4.core.IDurationalSingle">
+      <point x="-30.25" y="-17.5" />
+      <point x="1492.9376436781604" y="456.0" />
+      <point x="1477.375" y="456.0" />
+      <point x="0.0" y="44.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.INote" target="es.ua.dlsi.grfia.im4.core.IDurationalSingle">
+      <point x="-27.75" y="-17.5" />
+      <point x="1643.4376436781604" y="446.0" />
+      <point x="1554.375" y="446.0" />
+      <point x="77.0" y="44.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.IStaffGroup" target="es.ua.dlsi.grfia.im4.core.IStaff">
+      <point x="42.75" y="-31.5" />
+      <point x="513.2499999999999" y="456.0" />
+      <point x="532.9999999999999" y="456.0" />
+      <point x="0.0" y="44.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.IKeySignature" target="es.ua.dlsi.grfia.im4.core.INonDurational">
+      <point x="0.0" y="-17.5" />
+      <point x="2415.1876436781604" y="446.0" />
+      <point x="2169.0876436781605" y="446.0" />
+      <point x="80.40000000000009" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.IChord" target="es.ua.dlsi.grfia.im4.core.IPitched">
+      <point x="30.25" y="-17.5" />
+      <point x="1553.4376436781604" y="456.0" />
+      <point x="1636.375" y="456.0" />
+      <point x="-47.0" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.IKey" target="es.ua.dlsi.grfia.im4.core.INonDurational">
+      <point x="0.0" y="-17.5" />
+      <point x="1948.1876436781604" y="456.0" />
+      <point x="2048.4876436781606" y="456.0" />
+      <point x="-40.200000000000045" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.IScore" target="es.ua.dlsi.grfia.im4.core.IStaves">
+      <point x="59.33333333333334" y="-57.5" />
+      <point x="254.4376436781605" y="286.0" />
+      <point x="364.33333333333326" y="286.0" />
+      <point x="-43.666666666666686" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.IDurational" target="es.ua.dlsi.grfia.im4.core.ISymbol">
+      <point x="0.0" y="-31.5" />
+      <point x="1188.4376436781604" y="173.0" />
+      <point x="1584.4376436781604" y="173.0" />
+      <point x="-32.75" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.IClef" target="es.ua.dlsi.grfia.im4.core.INonDurational">
+      <point x="0.0" y="-44.5" />
+      <point x="0.0" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.ICustos" target="es.ua.dlsi.grfia.im4.core.INonDurational">
+      <point x="32.75" y="-17.5" />
+      <point x="1844.9376436781604" y="446.0" />
+      <point x="2008.2876436781603" y="446.0" />
+      <point x="-80.40000000000009" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.IPageBeginning" target="es.ua.dlsi.grfia.im4.core.ISystemBeginning">
+      <point x="0.0" y="-17.5" />
+      <point x="0.0" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.IDurationalComposite" target="es.ua.dlsi.grfia.im4.core.IDurational">
+      <point x="65.25" y="-31.5" />
+      <point x="1166.765804597701" y="286.0" />
+      <point x="1188.4376436781604" y="286.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.ISystemBeginning" target="es.ua.dlsi.grfia.im4.core.IStaffSymbol">
+      <point x="0.0" y="-17.5" />
+      <point x="777.9999999999999" y="286.0" />
+      <point x="703.0158045977008" y="286.0" />
+      <point x="45.25" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.INonDurational" target="es.ua.dlsi.grfia.im4.core.ISymbol">
+      <point x="0.0" y="-17.5" />
+      <point x="2088.6876436781604" y="173.0" />
+      <point x="1649.9376436781604" y="173.0" />
+      <point x="32.75" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.IRest" target="es.ua.dlsi.grfia.im4.core.IDurationalSingle">
+      <point x="0.0" y="-17.5" />
+      <point x="1386.0" y="456.0" />
+      <point x="1400.375" y="456.0" />
+      <point x="-77.0" y="44.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.ISymbol" target="es.ua.dlsi.grfia.im4.core.IVoiced">
+      <point x="0.0" y="-17.5" />
+      <point x="1617.1876436781604" y="60.0" />
+      <point x="169.26580459770082" y="60.0" />
+      <point x="43.66666666666663" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.IDurationalSingle" target="es.ua.dlsi.grfia.im4.core.IDurational">
+      <point x="0.0" y="-44.5" />
+      <point x="1477.375" y="286.0" />
+      <point x="1245.4376436781604" y="286.0" />
+      <point x="57.0" y="31.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.IBeamGroup" target="es.ua.dlsi.grfia.im4.core.IDurationalComposite">
+      <point x="0.0" y="-17.5" />
+      <point x="1230.0" y="456.0" />
+      <point x="1166.765804597701" y="456.0" />
+      <point x="65.25" y="31.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.INote" target="es.ua.dlsi.grfia.im4.core.IPitched">
+      <point x="27.75" y="-17.5" />
+      <point x="1698.9376436781604" y="456.0" />
+      <point x="1683.375" y="456.0" />
+      <point x="0.0" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.IStaff" target="es.ua.dlsi.grfia.im4.core.IStaves">
+      <point x="-57.25" y="-44.5" />
+      <point x="475.7499999999999" y="286.0" />
+      <point x="451.6666666666665" y="286.0" />
+      <point x="43.66666666666663" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.IScore" target="es.ua.dlsi.grfia.im4.core.IPart">
+      <point x="-59.33333333333334" y="-57.5" />
+      <point x="135.77097701149376" y="286.0" />
+      <point x="81.5" y="286.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.ICustos" target="es.ua.dlsi.grfia.im4.core.IPitched">
+      <point x="-32.75" y="-17.5" />
+      <point x="1779.4376436781604" y="456.0" />
+      <point x="1730.375" y="456.0" />
+      <point x="47.0" y="17.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.IMultimeasureRest" target="es.ua.dlsi.grfia.im4.core.IDurationalComposite">
+      <point x="0.0" y="-31.5" />
+      <point x="1013.9999999999999" y="456.0" />
+      <point x="1036.265804597701" y="456.0" />
+      <point x="-65.25" y="31.5" />
+    </edge>
+    <edge source="es.ua.dlsi.grfia.im4.core.IStaff" target="es.ua.dlsi.grfia.im4.core.IStaffSymbol">
+      <point x="57.25" y="-44.5" />
+      <point x="590.2499999999999" y="286.0" />
+      <point x="612.5158045977008" y="286.0" />
+      <point x="-45.25" y="17.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.8" x="791.0" y="439.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

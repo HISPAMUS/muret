@@ -3,3 +3,6 @@ uploads/
 spring/target/
 .idea/
 .DS_Store
+/moosicae/gen/
+/moosicae/target/
+/moosicae/src/main/antlr4/es/ua/dlsi/grfia/moosicae/io/skm/grammar/gen/
