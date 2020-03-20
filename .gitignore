@@ -3,3 +3,5 @@ uploads/
 spring/target/
 .idea/
 .DS_Store
+/moosicae/gen/
+/moosicae/target/
