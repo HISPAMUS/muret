@@ -58,7 +58,7 @@ public class ImportersExportersTest {
         IScore score = createScore();
         //testExportImport(score, new SkmExporter(), new SkmImporter(abstractFactory));
         //testExportImport(score, new MEIExporter(), new MEIImporter(abstractFactory));
-        testExportImport(score, new MusicXMLExporter(), new MusicXMLImporter(abstractFactory));
+        //testExportImport(score, new MusicXMLExporter(), new MusicXMLImporter(abstractFactory));
     }
 
 
