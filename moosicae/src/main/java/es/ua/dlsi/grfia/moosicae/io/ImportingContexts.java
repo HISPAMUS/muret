@@ -14,6 +14,9 @@ import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
 import java.util.HashMap;
 
 /**
+ * Used to handle context organized importers, such as XML tree structures. It allows to add core object builders (method begin),
+ * that when are finished (method end) look for available objects built by previous contexts that can be used to build
+ * the new core object, that in turn is added to the list of available objects for being used by further contexts
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 21/03/2020
  */
