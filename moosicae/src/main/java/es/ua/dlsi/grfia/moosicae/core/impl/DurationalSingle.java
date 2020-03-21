@@ -48,4 +48,12 @@ public abstract class DurationalSingle extends Durational implements IDurational
         result = 31 * result + dots.hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "DurationalSingle{" +
+                "figure=" + figure +
+                ", dots=" + dots +
+                "} " + super.toString();
+    }
 }

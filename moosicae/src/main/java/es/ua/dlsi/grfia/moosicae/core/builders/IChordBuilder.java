@@ -21,6 +21,7 @@ public class IChordBuilder extends IDurationalSingleBuilder<IChord> {
     public void addPitch(IPitch pitch) {
         pitchList.add(pitch);
     }
+
     @Override
     public IChord build() throws IMException {
         if (pitchList.isEmpty()) {
