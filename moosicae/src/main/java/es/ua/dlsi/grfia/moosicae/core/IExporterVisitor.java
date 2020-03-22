@@ -24,7 +24,7 @@ public interface IExporterVisitor<InputOutputType>  {
     void export(IKeySignature keySignature, InputOutputType inputOutputOutput) throws IMException;
     void export(IVoice voice, InputOutputType inputOutput) throws IMException;
     void export(IDiatonicPitch diatonicPitch, InputOutputType inputOutput) throws IMException;
-    void export(IAccidentalSymbol accidental, InputOutputType inputOutput) throws IMException;
+    void export(IAccidentalCore accidental, InputOutputType inputOutput) throws IMException;
     void export(IAlterationDisplayType alterationDisplayType, InputOutputType inputOutput) throws IMException;
     void export(IAlteration alteration, InputOutputType inputOutput) throws IMException;
     void export(IPitchClass pitchClass, InputOutputType inputOutput) throws IMException;

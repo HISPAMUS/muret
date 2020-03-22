@@ -6,8 +6,6 @@ import es.ua.dlsi.grfia.moosicae.core.builders.INoteBuilder;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.impl.CoreAbstractFactoryImpl;
 import es.ua.dlsi.grfia.moosicae.io.lilypond.LilypondExporter;
-import es.ua.dlsi.grfia.moosicae.io.musicxml.MusicXMLExporter;
-import es.ua.dlsi.grfia.moosicae.io.musicxml.MusicXMLImporter;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,17 +23,17 @@ public class ImportersExportersTest {
     }
 
     private IScore createScore() throws IMException {
-        IScore score = abstractFactory.createScore();
-        IPart part = abstractFactory.createPart(score, "default");
-        IVoice voice = abstractFactory.createVoice(part);
-        IStaff staff = abstractFactory.createStaff(score);
-        IClef clef = abstractFactory.createClef(2, abstractFactory.createClefSign(EClefSigns.G));
+        IScore score = abstractFactory.createScore(abstractFactory.createId());
+        IPart part = abstractFactory.createPart(score, abstractFactory.createId(), null);
+        IVoice voice = abstractFactory.createVoice(part, abstractFactory.createId(), null);
+        IStaff staff = abstractFactory.createStaff(score, abstractFactory.createId());
+        IClef clef = abstractFactory.createClef(abstractFactory.createId(), 2, abstractFactory.createClefSign(abstractFactory.createId(), EClefSigns.G));
         score.add(voice, staff, clef);
-        IKey key = abstractFactory.createKey(ECommonAlterationKeys.DM);
+        IKey key = abstractFactory.createKey(abstractFactory.createId(), ECommonAlterationKeys.DM);
         score.add(voice, staff, key);
-        IMeterSymbol meterSymbol = abstractFactory.createMeterSymbol(EMeterSymbols.commonTime);
+        IMeterSymbol meterSymbol = abstractFactory.createMeterSymbol(abstractFactory.createId(), EMeterSymbols.commonTime);
         score.add(voice, staff, meterSymbol);
-        INote note1 = new INoteBuilder(abstractFactory).build(EDiatonicPitches.F, Optional.of(EAccidentalSymbols.SHARP), 4, EFigures.WHOLE, 0);
+        INote note1 = new INoteBuilder(abstractFactory).build(EDiatonicPitches.F, EAccidentalSymbols.SHARP, 4, EFigures.WHOLE, 0);
         score.add(voice, staff, note1);
         return score;
     }

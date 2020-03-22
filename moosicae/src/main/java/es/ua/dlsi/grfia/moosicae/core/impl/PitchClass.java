@@ -1,8 +1,11 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
-import es.ua.dlsi.grfia.moosicae.core.IAccidentalSymbol;
+import es.ua.dlsi.grfia.moosicae.core.IAccidentalCore;
 import es.ua.dlsi.grfia.moosicae.core.IDiatonicPitch;
+import es.ua.dlsi.grfia.moosicae.core.IId;
 import es.ua.dlsi.grfia.moosicae.core.IPitchClass;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -10,11 +13,14 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 14/03/2020
  */
-public class PitchClass implements IPitchClass {
+public class PitchClass extends CoreProperty implements IPitchClass {
+    @NotNull
     private final IDiatonicPitch diatonicPitch;
-    private final Optional<IAccidentalSymbol> accidental;
+    @Nullable
+    private final IAccidentalCore accidental;
 
-    public PitchClass(IDiatonicPitch diatonicPitch, Optional<IAccidentalSymbol> accidental) {
+    public PitchClass(@NotNull IId id, @NotNull IDiatonicPitch diatonicPitch, @Nullable IAccidentalCore accidental) {
+        super(id);
         this.diatonicPitch = diatonicPitch;
         this.accidental = accidental;
     }
@@ -25,13 +31,13 @@ public class PitchClass implements IPitchClass {
     }
 
     @Override
-    public Optional<IAccidentalSymbol> getAccidental() {
-        return accidental;
+    public Optional<IAccidentalCore> getAccidental() {
+        return Optional.ofNullable(accidental);
     }
 
     @Override
     public PitchClass clone() {
-        return new PitchClass(diatonicPitch, accidental);
+        return new PitchClass(IdGenerator.getInstance().generateUniqueId(), diatonicPitch, accidental);
     }
 
     @Override
@@ -42,13 +48,13 @@ public class PitchClass implements IPitchClass {
         PitchClass that = (PitchClass) o;
 
         if (!diatonicPitch.equals(that.diatonicPitch)) return false;
-        return accidental.equals(that.accidental);
+        return accidental != null ? accidental.equals(that.accidental) : that.accidental == null;
     }
 
     @Override
     public int hashCode() {
         int result = diatonicPitch.hashCode();
-        result = 31 * result + accidental.hashCode();
+        result = 31 * result + (accidental != null ? accidental.hashCode() : 0);
         return result;
     }
 

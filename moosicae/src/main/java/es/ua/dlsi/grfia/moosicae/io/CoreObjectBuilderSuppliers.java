@@ -1,27 +1,39 @@
-package es.ua.dlsi.grfia.moosicae.utils;
+package es.ua.dlsi.grfia.moosicae.io;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
+import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 
 import java.util.HashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * @param <T> Base class from which the derived will be instantiated
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class Factory<T> {
-    protected HashMap<String, Supplier<T>> defaultConstructor = new HashMap<>();
-    protected HashMap<String, Function<Integer, T>> integerConstructor = new HashMap<>();
-    protected HashMap<String, Function<String, T>> stringConstructor = new HashMap<>();
+public class CoreObjectBuilderSuppliers {
+    protected HashMap<String, Function<ICoreAbstractFactory, ?>> constructors = new HashMap<>();
 
-    private String typeName;
-
-    public Factory(String typeName) {
-        this.typeName = typeName;
+    public CoreObjectBuilderSuppliers() {
     }
 
-    public T create(String code) throws IMException {
+    public <T> Object create(String code, ICoreAbstractFactory constructorParameter) throws IMException {
+        Function<ICoreAbstractFactory, ?> function = constructors.get(code);
+        if (function != null) {
+            return function.apply(constructorParameter);
+        } else {
+            throw new IMException("Cannot create a " + code + "' and an ICoreAbstractFactory parameter");
+        }
+    }
+
+    public void add(String code, Function<ICoreAbstractFactory, ?> constructor) {
+        constructors.put(code, constructor);
+    }
+
+    public boolean contains(String code) {
+        return constructors.containsKey(code);
+    }
+
+   /* public T create(String code) throws IMException {
         Supplier<T> supplier = defaultConstructor.get(code);
         if (supplier != null) {
             return supplier.get();
@@ -46,7 +58,7 @@ public class Factory<T> {
         } else {
             throw new IMException("Cannot create any " + typeName + " using the code '" + code + "' and a string parameter");
         }
-    }
+    }*/
 
 
 }

@@ -10,6 +10,8 @@ import es.ua.dlsi.grfia.moosicae.core.impl.mensural.Mensuration;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.mensurations.*;
 import es.ua.dlsi.grfia.moosicae.core.mensural.*;
 import es.ua.dlsi.grfia.moosicae.core.metadata.ITitle;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -19,50 +21,55 @@ import java.util.Optional;
  */
 public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     @Override
-    public IAlteration createAlteration(IAccidentalSymbol accidentalSymbol, Optional<IAlterationDisplayType> alterationDisplayType) {
-        return new Alteration(accidentalSymbol, alterationDisplayType);
+    public IAlteration createAlteration(@NotNull IId id, @NotNull IAccidentalCore accidentalSymbol, @Nullable IAlterationDisplayType alterationDisplayType) {
+        return new Alteration(id, accidentalSymbol, alterationDisplayType);
     }
 
     @Override
-    public IBarline createBarline(Optional<Integer> barNumber, Optional<IBarlineType> barlineType) {
-        return new Barline(barNumber, barlineType);
+    public IBarline createBarline(@NotNull IId id, @Nullable Integer barNumber, @Nullable IBarlineType barlineType) {
+        return new Barline(id, barNumber, barlineType);
     }
 
     @Override
-    public IChord createChord(IFigure figure, Optional<IDots> dots, IPitch[] pitches) {
-        return new Chord(figure, dots, pitches);
+    public IChord createChord(@NotNull IId id, @NotNull IFigure figure, @Nullable IDots dots, @NotNull IPitch[] pitches) {
+        return new Chord(id, figure, dots, pitches);
     }
 
     @Override
-    public IClef createClef(int line, IClefSign clefSign) {
-        return new Clef(line, clefSign);
+    public IClef createClef(@NotNull IId id, @NotNull Integer line, IClefSign clefSign) {
+        return new Clef(id, line, clefSign);
     }
 
     @Override
-    public ICommonTime createCommonTime() {
-        return new CommonTime();
+    public ICommonTime createCommonTime(@NotNull IId id) {
+        return new CommonTime(id);
     }
 
     @Override
-    public ICustos createCustos(IPitch pitch) {
-        return new Custos(pitch);
+    public ICustos createCustos(@NotNull IId id, @NotNull IPitch pitch) {
+        return new Custos(id, pitch);
     }
 
     @Override
-    public ICutTime createCutTime() {
-        return new CutTime();
+    public ICutTime createCutTime(@NotNull IId id) {
+        return new CutTime(id);
     }
 
     @Override
-    public IDots createDots(int ndots) {
-        return new Dots(ndots);
+    public IDots createDots(@NotNull IId id, @NotNull Integer ndots) {
+        return new Dots(id, ndots);
+    }
+
+    @Override
+    public IId createId() {
+        return IdGenerator.getInstance().generateUniqueId();
     }
 
     private <T extends IKeyEnum> Optional<T> findKeyEnum(T[] values, IPitchClass pitchClass) {
-        EDiatonicPitches diatonicPitch = pitchClass.getDiatonicPitch().getDiatonicPitch();
+        EDiatonicPitches diatonicPitch = pitchClass.getDiatonicPitch().getValue();
         Optional<EAccidentalSymbols> accidentalSymbol;
         if (pitchClass.getAccidental().isPresent()) {
-            accidentalSymbol = Optional.of(pitchClass.getAccidental().get().getAccidentalSymbol());
+            accidentalSymbol = Optional.of(pitchClass.getAccidental().get().getValue());
         } else {
             accidentalSymbol = Optional.empty();
         }
@@ -76,71 +83,71 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
         return Optional.empty();
     }
     @Override
-    public IKey createKey(IPitchClass pitchClass, IMode mode) throws IMException {
+    public IKey createKey(@NotNull IId id, @NotNull IPitchClass pitchClass, @NotNull IMode mode) throws IMException {
         // find the pitch class among the enums
         Optional<ECommonAlterationKeys> commonAlterationKey = findKeyEnum(ECommonAlterationKeys.values(), pitchClass);
         if (commonAlterationKey.isPresent()) {
-            return createKey(commonAlterationKey.get());
+            return createKey(id, commonAlterationKey.get());
         }
 
         Optional<ECommonAlterationKeys> mixedAlterationKey = findKeyEnum(ECommonAlterationKeys.values(), pitchClass);
         if (mixedAlterationKey.isPresent()) {
-            return createKey(mixedAlterationKey.get());
+            return createKey(id, mixedAlterationKey.get());
         }
 
         throw new IMException("Cannot find a key for pitch class " + pitchClass + " and mode " + mode);
     }
 
     @Override
-    public IKey createKey(IPitchClass pitchClass, IMode mode, IKeySignature keySignature) {
-        return new Key(pitchClass, mode, keySignature);
+    public IKey createKey(@NotNull IId id, @NotNull IPitchClass pitchClass, @NotNull IMode mode, @NotNull IKeySignature keySignature) {
+        return new Key(id, pitchClass, mode, keySignature);
     }
 
     @Override
-    public ICommonAlterationKey createKey(int nAccidentals, IAccidentalSymbol accidentalSymbol, IMode mode) throws IMException {
+    public ICommonAlterationKey createKey(@NotNull IId id, @NotNull Integer nAccidentals, @NotNull IAccidentalCore accidentalSymbol, @NotNull IMode mode) throws IMException {
         EModes modeValue = mode.getMode();
-        EAccidentalSymbols accidentalSymbolValue = accidentalSymbol.getAccidentalSymbol();
+        EAccidentalSymbols accidentalSymbolValue = accidentalSymbol.getValue();
         for (ECommonAlterationKeys key: ECommonAlterationKeys.values()) {
             if (key.getMode().equals(modeValue)
                     && key.getKeySignatureAccidentalCount() == nAccidentals
                     && key.getKeySignatureAccidental().isPresent()
                     && key.getKeySignatureAccidental().get().equals(accidentalSymbolValue)) {
-                return createKey(key);
+                return createKey(id, key);
             }
         }
-        throw new IMException("Cannot find a key with " + nAccidentals + " " + accidentalSymbol.getAccidentalSymbol().name() + "s and mode " + mode.getMode());
+        throw new IMException("Cannot find a key with " + nAccidentals + " " + accidentalSymbol.getValue().name() + "s and mode " + mode.getMode());
     }
 
 
     @Override
-    public IKeySignature createKeySignature(IPitchClass[] pitchClasses) {
-        return new KeySignature(pitchClasses);
+    public IKeySignature createKeySignature(@NotNull IId id, @NotNull IPitchClass[] pitchClasses) {
+        return new KeySignature(id, pitchClasses);
     }
 
     @Override
-    public IFractionalTimeSignature createFractionalTimeSignature(int numerator, int denominator) {
-        return new FractionalTimeSignature(numerator, denominator);
+    public IFractionalTimeSignature createFractionalTimeSignature(@NotNull IId id, @NotNull Integer numerator, @NotNull Integer denominator) {
+        return new FractionalTimeSignature(id, numerator, denominator);
     }
 
     @Override
-    public IMensuration createMensuration(EMensuralPerfections modusMaior, EMensuralPerfections modusMinor, EMensuralPerfections tempus, EMensuralPerfections prolatio) {
+    public IMensuration createMensuration(@NotNull IId id, @Nullable EMensuralPerfections modusMaior, @Nullable EMensuralPerfections modusMinor, @NotNull EMensuralPerfections tempus, @NotNull EMensuralPerfections prolatio) {
         Mensuration result;
 
         switch (tempus) {
             case imperfectum:
                 if (prolatio == EMensuralPerfections.imperfectum) {
-                    result = new TempusImperfectumCumProlationeImperfecta();
+                    result = new TempusImperfectumCumProlationeImperfecta(id);
                 } else if (prolatio == EMensuralPerfections.perfectum) {
-                    result = new TempusImperfectumCumProlationePerfecta();
+                    result = new TempusImperfectumCumProlationePerfecta(id);
                 } else {
                     throw new IMRuntimeException("Invalid prolatio: " + prolatio);
                 }
                 break;
             case perfectum:
                 if (prolatio == EMensuralPerfections.imperfectum) {
-                    result = new TempusPerfectumCumProlationeImperfecta();
+                    result = new TempusPerfectumCumProlationeImperfecta(id);
                 } else if (prolatio == EMensuralPerfections.perfectum) {
-                    result = new TempusPerfectumCumProlationePerfecta();
+                    result = new TempusPerfectumCumProlationePerfecta(id);
                 } else {
                     throw new IMRuntimeException("Invalid prolatio: " + prolatio);
                 }
@@ -159,173 +166,177 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IMetronomeMark createMetronomeMark(IFigure figure, Optional<IDots> dots, int value) {
-        return new MetronomeMark(figure, dots, value);
+    public IMetronomeMark createMetronomeMark(@NotNull IId id, @NotNull IFigure figure, @Nullable IDots dots, @NotNull Integer value) {
+        return new MetronomeMark(id, figure, dots, value);
     }
 
     @Override
-    public IMultimeasureRest createMultimeasureRest(int measureCount) {
-        return new MultimeasureRest(measureCount);
+    public IMultimeasureRest createMultimeasureRest(@NotNull IId id, @NotNull Integer measureCount) {
+        return new MultimeasureRest(id, measureCount);
     }
 
     @Override
-    public INote createNote(IFigure figure, Optional<IDots> dots, IPitch pitches) {
-        return new Note(figure, dots, pitches);
-    }
-
-
-    @Override
-    public IPitch createPitch(IOctave octave, Optional<IAlteration> alteration, IDiatonicPitch diatonicPitch) {
-        return new Pitch(octave, alteration,  diatonicPitch);
-    }
-
-    @Override
-    public IPitchClass createPitchClass(IDiatonicPitch diatonicPitch, Optional<IAccidentalSymbol> accidentalSymbol) {
-        return new PitchClass(diatonicPitch, accidentalSymbol);
-    }
-
-    @Override
-    public IOctave createOctave(int number) {
-        return new Octave(number);
+    public INote createNote(@NotNull IId id, @NotNull IFigure figure, @Nullable IDots dots, @NotNull IPitch pitches) {
+        return new Note(id, figure, dots, pitches);
     }
 
 
     @Override
-    public ITitle createTitle(String title) {
-        return new Title(title);
+    public IPitch createPitch(@NotNull IId id, @NotNull IOctave octave, @Nullable IAlteration alteration, @NotNull IDiatonicPitch diatonicPitch) {
+        return new Pitch(id, octave, alteration,  diatonicPitch);
+    }
+
+    @Override
+    public IPitchClass createPitchClass(@NotNull IId id, @NotNull IDiatonicPitch diatonicPitch, @Nullable IAccidentalCore accidentalSymbol) {
+        return new PitchClass(id, diatonicPitch, accidentalSymbol);
+    }
+
+    @Override
+    public IOctave createOctave(@NotNull IId id, @NotNull Integer number) {
+        return new Octave(id, number);
     }
 
 
     @Override
-    public IPart createPart(IScore score, String name) {
-        IPart part = new Part(name);
+    public ITitle createTitle(@NotNull IId id, @NotNull String title) {
+        return new Title(id, title);
+    }
+
+
+    @Override
+    public IPart createPart(@NotNull IScore score, @NotNull IId id, @Nullable IName name) {
+        IPart part = new Part(id, name);
         score.add(part);
         return part;
     }
 
-
     @Override
-    public IScore createScore() {
-        return new Score();
-    }
-
-    @Override
-    public IRest createRest(IFigure figure, Optional<IDots> dots) {
-        return new Rest(figure, dots);
+    public IPart createPart(@NotNull IId id, @Nullable IName name) {
+        return new Part(id, name);
     }
 
 
     @Override
-    public IStaff createStaff(IStaffGroup staves) {
-        Staff staff = new Staff();
+    public IScore createScore(@NotNull IId id) {
+        return new Score(id);
+    }
+
+    @Override
+    public IRest createRest(@NotNull IId id, @NotNull IFigure figure, @Nullable IDots dots) {
+        return new Rest(id, figure, dots);
+    }
+
+    @Override
+    public IStaff createStaff(@NotNull IStaffGroup staves, @NotNull IId id) {
+        Staff staff = new Staff(id);
         staves.add(staff);
         return null;
     }
 
     @Override
-    public IStaff createStaff(IScore score) {
-        Staff staff = new Staff();
+    public IStaff createStaff(@NotNull IScore score, @NotNull IId id) {
+        Staff staff = new Staff(id);
         score.add(staff);
         return staff;
     }
 
     @Override
-    public IStaffGroup createStaffGroup(IScore score) {
-        StaffGroup staffGroup = new StaffGroup();
+    public IStaffGroup createStaffGroup(@NotNull IScore score, @NotNull IId id) {
+        StaffGroup staffGroup = new StaffGroup(id);
         score.add(staffGroup);
         return staffGroup;
     }
 
     @Override
-    public IStaffGroup createStaffGroup(IStaffGroup staffGroup) {
-        StaffGroup childStaffGroup = new StaffGroup();
+    public IStaffGroup createStaffGroup(@NotNull IStaffGroup staffGroup, @NotNull IId id) {
+        StaffGroup childStaffGroup = new StaffGroup(id);
         staffGroup.add(childStaffGroup);
         return childStaffGroup;
     }
 
     @Override
-    public IVoice createVoice(IPart part) {
-        Voice voice = new Voice();
+    public IVoice createVoice(@NotNull IPart part, @NotNull IId id, @Nullable IName name) {
+        Voice voice = new Voice(id, name);
         part.add(voice);
         return voice;
     }
 
     @Override
-    public IBarlineType createBarlineType(EBarlineTypes barlineType) {
-        return new BarlineType(barlineType);
+    public IBarlineType createBarlineType(@NotNull IId id, @NotNull EBarlineTypes barlineType) {
+        return new BarlineType(id, barlineType);
     }
 
     @Override
-    public IFigure createFigure(EFigures figure) {
-        return new Figure(figure);
+    public IFigure createFigure(@NotNull IId id, @NotNull EFigures figure) {
+        return new Figure(id, figure);
     }
 
     @Override
-    public IAccidentalSymbol createAccidentalSymbol(EAccidentalSymbols accidentalSymbol) {
-        return new AccidentalSymbol(accidentalSymbol);
+    public IAccidentalCore createAccidentalSymbol(@NotNull IId id, @NotNull EAccidentalSymbols accidentalSymbol) {
+        return new AccidentalCore(id, accidentalSymbol);
     }
 
     @Override
-    public IAlterationDisplayType createAlterationDisplayType(EAlterationDisplayTypes alterationDisplayType) {
-        return new AlterationDisplayType(alterationDisplayType);
+    public IAlterationDisplayType createAlterationDisplayType(@NotNull IId id, @NotNull EAlterationDisplayTypes alterationDisplayType) {
+        return new AlterationDisplayType(id, alterationDisplayType);
     }
 
     @Override
-    public IClefSign createClefSign(EClefSigns clefSign) {
-        return new ClefSign(clefSign);
+    public IClefSign createClefSign(@NotNull IId id, @NotNull EClefSigns clefSign) {
+        return new ClefSign(id, clefSign);
     }
 
     @Override
-    public IDiatonicPitch createDiatonicPitch(EDiatonicPitches diatonicPitch) {
-        return new DiatonicPitch(diatonicPitch);
+    public IDiatonicPitch createDiatonicPitch(@NotNull IId id, @NotNull EDiatonicPitches diatonicPitch) {
+        return new DiatonicPitch(id, diatonicPitch);
     }
 
     @Override
-    public INotationType createNotationType(ENotationTypes notationType) {
-        return new NotationType(notationType);
+    public INotationType createNotationType(@NotNull IId id, @NotNull ENotationTypes notationType) {
+        return new NotationType(id, notationType);
     }
 
     @Override
-    public IMeterSymbol createMeterSymbol(EMeterSymbols meterSymbols) {
+    public IMeterSymbol createMeterSymbol(@NotNull IId id, @NotNull EMeterSymbols meterSymbols) {
         switch (meterSymbols) {
             case commonTime:
-                return new CommonTime();
+                return new CommonTime(id);
             case cutTime:
-                return new CutTime();
+                return new CutTime(id);
             default:
                 throw new IMRuntimeException("Unknown meter symbol: " + meterSymbols);
         }
     }
 
     @Override
-    public IMensuration createMensuration(EMensurations mensuration) {
+    public IMensuration createMensuration(@NotNull IId id, @NotNull EMensurations mensuration) {
         switch (mensuration) {
             case proportioTripla:
-                return new ProportioTripla();
+                return new ProportioTripla(id);
             case proportioChangeDupla:
-                return new ProportioChangeDupla();
+                return new ProportioChangeDupla(id);
             case proportioChangeTripla:
-                return new ProportioChangeTripla();
+                return new ProportioChangeTripla(id);
             case proportioSesquialtera:
-                return new ProportioSesquialtera();
+                return new ProportioSesquialtera(id);
             case tempusImperfectumCumProlationeImperfecta:
-                return new TempusImperfectumCumProlationeImperfecta();
+                return new TempusImperfectumCumProlationeImperfecta(id);
             case tempusImperfectumCumProlationeImperfectaDiminutum:
-                return new TempusImperfectumCumProlationeImperfectaDiminutum();
+                return new TempusImperfectumCumProlationeImperfectaDiminutum(id);
             case tempusImperfectumCumProlationePerfecta:
-                return new TempusImperfectumCumProlationePerfecta();
+                return new TempusImperfectumCumProlationePerfecta(id);
             case tempusPerfectumCumProlationeImperfecta:
-                return new TempusPerfectumCumProlationeImperfecta();
+                return new TempusPerfectumCumProlationeImperfecta(id);
             case tempusPerfectumCumProlationePerfecta:
-                return new TempusPerfectumCumProlationePerfecta();
+                return new TempusPerfectumCumProlationePerfecta(id);
             default:
                 throw new IMRuntimeException("Unknown mensuration: " + mensuration);
         }
     }
 
     @Override
-    public IMode createMode(EModes mode) {
-        return new Mode(mode);
+    public IMode createMode(@NotNull IId id, @NotNull EModes mode) {
+        return new Mode(id, mode);
     }
 
     private final EDiatonicPitches [] SHARP_CIRCLE_FIFTHS = {
@@ -333,80 +344,80 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
             EDiatonicPitches.E, EDiatonicPitches.B
     };
 
-    private IPitchClass createPitchClass(EDiatonicPitches eDiatonicPitch, Optional<EAccidentalSymbols> eAccidentalSymbol) {
-        IDiatonicPitch diatonicPitch = createDiatonicPitch(eDiatonicPitch);
-        IAccidentalSymbol accidentalSymbol = null;
-        if (eAccidentalSymbol.isPresent()) {
-            accidentalSymbol = createAccidentalSymbol(eAccidentalSymbol.get());
+    private IPitchClass createPitchClass(IId id, EDiatonicPitches eDiatonicPitch, Optional<EAccidentalSymbols> eAccidentalSymbol) {
+        IDiatonicPitch diatonicPitch = createDiatonicPitch(IdGenerator.getInstance().generateUniqueId(), eDiatonicPitch);
+        IAccidentalCore accidentalSymbol = null;
+        if (eAccidentalSymbol != null) {
+            accidentalSymbol = createAccidentalSymbol(IdGenerator.getInstance().generateUniqueId(), eAccidentalSymbol.isPresent() ? eAccidentalSymbol.get() : null);
         }
-        IPitchClass pitchClass = createPitchClass(diatonicPitch, Optional.ofNullable(accidentalSymbol));
+        IPitchClass pitchClass = createPitchClass(id, diatonicPitch, accidentalSymbol);
         return pitchClass;
     }
 
     @Override
-    public ICommonAlterationKey createKey(ECommonAlterationKeys commonKeys) {
-        IPitchClass pitchClass = createPitchClass(commonKeys.getDiatonicPitch(), commonKeys.getPitchAccidentalSymbol());
-        IMode mode = createMode(commonKeys.getMode());
+    public ICommonAlterationKey createKey(@NotNull IId id, @NotNull ECommonAlterationKeys commonKeys) {
+        IPitchClass pitchClass = createPitchClass(IdGenerator.getInstance().generateUniqueId(), commonKeys.getDiatonicPitch(), commonKeys.getPitchAccidentalSymbol());
+        IMode mode = createMode(id, commonKeys.getMode());
 
-        IAccidentalSymbol keySignatureAccidentalSymbol = null;
+        IAccidentalCore keySignatureAccidentalSymbol = null;
         if (commonKeys.getKeySignatureAccidental().isPresent()) {
-            keySignatureAccidentalSymbol = createAccidentalSymbol(commonKeys.getKeySignatureAccidental().get());
+            keySignatureAccidentalSymbol = createAccidentalSymbol(IdGenerator.getInstance().generateUniqueId(), commonKeys.getKeySignatureAccidental().get());
         }
 
         IPitchClass [] pitchClasses = new IPitchClass[commonKeys.getKeySignatureAccidentalCount()];
-        for (int i=0; i<commonKeys.getKeySignatureAccidentalCount(); i++) {
+        for (Integer i=0; i<commonKeys.getKeySignatureAccidentalCount(); i++) {
             IPitchClass pitchClassAccidental;
             if (commonKeys.getKeySignatureAccidental().get() == EAccidentalSymbols.FLAT) {
-                pitchClassAccidental = createPitchClass(SHARP_CIRCLE_FIFTHS[6-i], Optional.of(EAccidentalSymbols.FLAT));
+                pitchClassAccidental = createPitchClass(IdGenerator.getInstance().generateUniqueId(), SHARP_CIRCLE_FIFTHS[6-i], Optional.of(EAccidentalSymbols.FLAT));
             } else if (commonKeys.getKeySignatureAccidental().get() == EAccidentalSymbols.SHARP) {
-                pitchClassAccidental = createPitchClass(SHARP_CIRCLE_FIFTHS[i], Optional.of(EAccidentalSymbols.SHARP));
+                pitchClassAccidental = createPitchClass(IdGenerator.getInstance().generateUniqueId(), SHARP_CIRCLE_FIFTHS[i], Optional.of(EAccidentalSymbols.SHARP));
             } else {
                 throw new IMRuntimeException("Invalid accidental in a common key " + commonKeys.getKeySignatureAccidental().get());
             }
             pitchClasses[i] = pitchClassAccidental;
         }
 
-        return new CommonAlterationKey(pitchClass,
+        return new CommonAlterationKey(id, pitchClass,
                 mode,
-                createKeySignature(pitchClasses),
+                createKeySignature(IdGenerator.getInstance().generateUniqueId(), pitchClasses),
                 commonKeys.getKeySignatureAccidentalCount(),
-                Optional.ofNullable(keySignatureAccidentalSymbol)
+                keySignatureAccidentalSymbol
                 );
     }
 
     @Override
-    public IMixedAlterationsKey createKey(EMixedAlterationKeys mixedAlterationKeys) {
-        IPitchClass pitchClass = createPitchClass(mixedAlterationKeys.getDiatonicPitch(), mixedAlterationKeys.getAccidentalSymbol());
-        IMode mode = createMode(mixedAlterationKeys.getMode());
+    public IMixedAlterationsKey createKey(@NotNull IId id, @NotNull EMixedAlterationKeys mixedAlterationKeys) {
+        IPitchClass pitchClass = createPitchClass(IdGenerator.getInstance().generateUniqueId(), mixedAlterationKeys.getDiatonicPitch(), mixedAlterationKeys.getAccidentalSymbol());
+        IMode mode = createMode(IdGenerator.getInstance().generateUniqueId(), mixedAlterationKeys.getMode());
 
         IPitchClass [] pitchClasses = new IPitchClass[7];
-        for (int i=0; i<mixedAlterationKeys.getFirstAlterationCount(); i++) {
+        for (Integer i=0; i<mixedAlterationKeys.getFirstAlterationCount(); i++) {
             IPitchClass pitchClassAccidental;
             if (mixedAlterationKeys.getKeySignatureFirstAccidental() == EAccidentalSymbols.DOUBLE_FLAT) {
-                pitchClassAccidental = createPitchClass(SHARP_CIRCLE_FIFTHS[6-i], Optional.of(EAccidentalSymbols.DOUBLE_FLAT));
+                pitchClassAccidental = createPitchClass(IdGenerator.getInstance().generateUniqueId(), SHARP_CIRCLE_FIFTHS[6-i], Optional.of(EAccidentalSymbols.DOUBLE_FLAT));
             } else if (mixedAlterationKeys.getKeySignatureFirstAccidental() == EAccidentalSymbols.DOUBLE_SHARP) {
-                pitchClassAccidental = createPitchClass(SHARP_CIRCLE_FIFTHS[i], Optional.of(EAccidentalSymbols.DOUBLE_SHARP));
+                pitchClassAccidental = createPitchClass(IdGenerator.getInstance().generateUniqueId(), SHARP_CIRCLE_FIFTHS[i], Optional.of(EAccidentalSymbols.DOUBLE_SHARP));
             } else {
                 throw new IMRuntimeException("Invalid accidental in a mixed alterations key " + mixedAlterationKeys.getKeySignatureFirstAccidental());
             }
             pitchClasses[i] = pitchClassAccidental;
         }
 
-        for (int i = mixedAlterationKeys.getFirstAlterationCount(); i < 7; i++) {
+        for (Integer i = mixedAlterationKeys.getFirstAlterationCount(); i < 7; i++) {
             IPitchClass pitchClassAccidental;
             if (mixedAlterationKeys.getKeySignatureSecondAccidental().get() == EAccidentalSymbols.FLAT) {
-                pitchClassAccidental = createPitchClass(SHARP_CIRCLE_FIFTHS[6-i], Optional.of(EAccidentalSymbols.FLAT));
+                pitchClassAccidental = createPitchClass(IdGenerator.getInstance().generateUniqueId(), SHARP_CIRCLE_FIFTHS[6-i], Optional.of(EAccidentalSymbols.FLAT));
             } else if (mixedAlterationKeys.getKeySignatureSecondAccidental().get() == EAccidentalSymbols.SHARP) {
-                pitchClassAccidental = createPitchClass(SHARP_CIRCLE_FIFTHS[i], Optional.of(EAccidentalSymbols.SHARP));
+                pitchClassAccidental = createPitchClass(IdGenerator.getInstance().generateUniqueId(), SHARP_CIRCLE_FIFTHS[i], Optional.of(EAccidentalSymbols.SHARP));
             } else {
                 throw new IMRuntimeException("Invalid accidental in a mixed alterations key " + mixedAlterationKeys.getKeySignatureSecondAccidental().get());
             }
             pitchClasses[i] = pitchClassAccidental;
         }
 
-        return new MixedAlterationsKey(pitchClass,
+        return new MixedAlterationsKey(id, pitchClass,
                 mode,
-                createKeySignature(pitchClasses));
+                createKeySignature(IdGenerator.getInstance().generateUniqueId(), pitchClasses));
     }
 
 }

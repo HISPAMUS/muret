@@ -8,7 +8,7 @@ import es.ua.dlsi.grfia.moosicae.utils.Time;
  * @created 15/03/2020
  */
 public interface IFigure extends ICoreObject {
-    EFigures getFigure();
+    EFigures getValue();
     Time getDurationWithDots(int dots);
     int getMeterUnit();
 }

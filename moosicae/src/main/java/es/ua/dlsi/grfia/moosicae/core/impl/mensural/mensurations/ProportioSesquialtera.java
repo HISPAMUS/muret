@@ -17,11 +17,13 @@
 
 package es.ua.dlsi.grfia.moosicae.core.impl.mensural.mensurations;
 
+import es.ua.dlsi.grfia.moosicae.core.IId;
 import es.ua.dlsi.grfia.moosicae.core.mensural.EMensuralPerfections;
 import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.Mensuration;
 import es.ua.dlsi.grfia.moosicae.core.mensural.IProportioSesquialtera;
 import es.ua.dlsi.grfia.moosicae.utils.Time;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * "Proporción menor"
@@ -31,8 +33,8 @@ import es.ua.dlsi.grfia.moosicae.utils.Time;
  */
 public class ProportioSesquialtera extends Mensuration implements IProportioSesquialtera {
 
-    public ProportioSesquialtera() {
-		super(EMensuralPerfections.imperfectum, EMensuralPerfections.imperfectum, EMensuralPerfections.imperfectum, EMensuralPerfections.perfectum);
+    public ProportioSesquialtera(@NotNull IId id) {
+		super(id, EMensuralPerfections.imperfectum, EMensuralPerfections.imperfectum, EMensuralPerfections.imperfectum, EMensuralPerfections.perfectum);
     }
 
 	@Override
@@ -48,7 +50,7 @@ public class ProportioSesquialtera extends Mensuration implements IProportioSesq
 
 	@Override
 	public ProportioSesquialtera clone() {
-		return new ProportioSesquialtera();
+		return new ProportioSesquialtera(id);
 	}
 
 	@Override

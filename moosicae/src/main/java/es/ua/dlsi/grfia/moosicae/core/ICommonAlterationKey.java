@@ -8,5 +8,5 @@ import java.util.Optional;
  */
 public interface ICommonAlterationKey extends IKey {
     int getAccidentalCount();
-    Optional<IAccidentalSymbol> getAccidentalSymbol();
+    Optional<IAccidentalCore> getAccidentalSymbol();
 }

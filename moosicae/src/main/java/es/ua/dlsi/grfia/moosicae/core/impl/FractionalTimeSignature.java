@@ -3,8 +3,10 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.IFractionalTimeSignature;
+import es.ua.dlsi.grfia.moosicae.core.IId;
 import es.ua.dlsi.grfia.moosicae.utils.Time;
 import org.apache.commons.lang3.math.Fraction;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -15,7 +17,8 @@ public class FractionalTimeSignature extends Meter implements IFractionalTimeSig
     private final int denominator;
     private final Time barDuration;
 
-    public FractionalTimeSignature(int numerator, int denominator) {
+    FractionalTimeSignature(@NotNull IId id, @NotNull Integer numerator, @NotNull Integer denominator) {
+        super(id);
         this.numerator = numerator;
         this.denominator = denominator;
         this.barDuration = new Time(Fraction.getFraction(numerator, 1).multiplyBy(Fraction.getFraction(4, denominator)));
@@ -43,7 +46,7 @@ public class FractionalTimeSignature extends Meter implements IFractionalTimeSig
 
     @Override
     public FractionalTimeSignature clone() {
-        return new FractionalTimeSignature(numerator, denominator);
+        return new FractionalTimeSignature(IdGenerator.getInstance().generateUniqueId(), numerator, denominator);
     }
 
     @Override

@@ -5,6 +5,6 @@ import es.ua.dlsi.grfia.moosicae.utils.Time;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public interface IDurational extends ISymbol {
+public interface IDurational extends ICoreItem {
     Time getDuration();
 }

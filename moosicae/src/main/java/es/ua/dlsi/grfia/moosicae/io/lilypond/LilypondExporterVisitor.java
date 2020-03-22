@@ -15,7 +15,7 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
         //TODO
         inputOutput.startString();
         inputOutput.append("\\clef ");
-        inputOutput.append(clef.getSignType().getClefSign().name().toUpperCase());
+        inputOutput.append(clef.getSignType().getValue().name().toUpperCase());
         inputOutput.finishString();
     }
 
@@ -81,7 +81,7 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
     public void export(ICommonAlterationKey commonAlterationKey, LilypondExporterVisitorParam inputOutput) throws IMException {
         inputOutput.startString();
         inputOutput.append("\\key ");
-        inputOutput.append(commonAlterationKey.getPitchClass().getDiatonicPitch().getDiatonicPitch().name().toLowerCase());
+        inputOutput.append(commonAlterationKey.getPitchClass().getDiatonicPitch().getValue().name().toLowerCase());
         inputOutput.append(' ');
         inputOutput.append('\\');
         inputOutput.append(commonAlterationKey.getMode().getMode().name().toLowerCase());
@@ -106,12 +106,12 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
 
     @Override
     public void export(IDiatonicPitch diatonicPitch, LilypondExporterVisitorParam inputOutput) throws IMException {
-        inputOutput.append(diatonicPitch.getDiatonicPitch().name().toLowerCase());
+        inputOutput.append(diatonicPitch.getValue().name().toLowerCase());
     }
 
     @Override
-    public void export(IAccidentalSymbol accidental, LilypondExporterVisitorParam inputOutput) throws IMException {
-        switch (accidental.getAccidentalSymbol()) {
+    public void export(IAccidentalCore accidental, LilypondExporterVisitorParam inputOutput) throws IMException {
+        switch (accidental.getValue()) {
             case TRIPLE_FLAT:
                 inputOutput.append("eseses");
                 break;
@@ -131,7 +131,7 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
                 inputOutput.append("isis");
                 break;
             default:
-                throw new IMException("Unkown accidental symbol: " + accidental.getAccidentalSymbol());
+                throw new IMException("Unkown accidental symbol: " + accidental.getValue());
         }
     }
 
@@ -184,7 +184,7 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
     @Override
     public void export(IFigure figures, LilypondExporterVisitorParam inputOutput) throws IMException {
         String value;
-        switch (figures.getFigure()) {
+        switch (figures.getValue()) {
             case MAXIMA: value = "maxima"; break;
             case LONGA: value = "longa"; break;
             case BREVE: value = "breve"; break;

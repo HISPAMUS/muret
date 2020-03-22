@@ -62,12 +62,12 @@ public class MEIImporter extends AbstractImporter {
                 int count = nList == null ? 0 : nList.getLength();
                 throw new IMException("Expected one top element named 'mei' and found '" + count);
             }
-            IScore score = coreAbstractFactory.createScore();
+            IScore score = coreAbstractFactory.createScore(coreAbstractFactory.createId());
 
             //TODO quitar la inicialización a pelo
-            IPart part = coreAbstractFactory.createPart(score, "TODO");
-            IVoice voice = coreAbstractFactory.createVoice(part);
-            IStaff staff = coreAbstractFactory.createStaff(score);
+            IPart part = coreAbstractFactory.createPart(score, coreAbstractFactory.createId(), null);
+            IVoice voice = coreAbstractFactory.createVoice(part, coreAbstractFactory.createId(), null);
+            IStaff staff = coreAbstractFactory.createStaff(score, coreAbstractFactory.createId());
 
             parse(nList.item(0), score, voice, staff); //TODO quitar voice y staff
             return score;
@@ -263,7 +263,7 @@ public class MEIImporter extends AbstractImporter {
     }
 
     private void processStaffDef(Node node, IScore score, IVoice voice) throws IMException {
-        IStaff staff = coreAbstractFactory.createStaff(score);
+        IStaff staff = coreAbstractFactory.createStaff(score, coreAbstractFactory.createId());
 
         Optional<String> clefShape = getOptionalAttrValue(node, "clef.shape");
         if (clefShape.isPresent()) {
@@ -308,11 +308,11 @@ public class MEIImporter extends AbstractImporter {
         keyFromAccidentalCountBuilder.setAccidentalCount(nAccidentals);
 
         char accidental = keySig.get().charAt(1);
-        IAccidentalSymbol accidentalSymbol;
+        IAccidentalCore accidentalSymbol;
         if (accidental == 'f') {
-            accidentalSymbol = coreAbstractFactory.createAccidentalSymbol(EAccidentalSymbols.FLAT);
+            accidentalSymbol = coreAbstractFactory.createAccidentalSymbol(coreAbstractFactory.createId(), EAccidentalSymbols.FLAT);
         } else if (accidental == 's') {
-            accidentalSymbol = coreAbstractFactory.createAccidentalSymbol(EAccidentalSymbols.SHARP);
+            accidentalSymbol = coreAbstractFactory.createAccidentalSymbol(coreAbstractFactory.createId(), EAccidentalSymbols.SHARP);
         } else {
             throw new IMException("Unkown accidental: '" + accidental + "'");
         }
@@ -332,7 +332,7 @@ public class MEIImporter extends AbstractImporter {
 
     private void processStaffDefClef(Node node, IVoice voice, IStaff staff, Optional<String> clefShape) throws IMException {
         IClefBuilder clefBuilder = new IClefBuilder(coreAbstractFactory);
-        clefBuilder.setClefSign(coreAbstractFactory.createClefSign(EClefSigns.valueOf(clefShape.get())));
+        clefBuilder.setClefSign(coreAbstractFactory.createClefSign(coreAbstractFactory.createId(), EClefSigns.valueOf(clefShape.get())));
         Optional<String> clefLine = getOptionalAttrValue(node, "clef.line");
         if (clefLine.isPresent()) {
             clefBuilder.setLine(Integer.parseInt(clefLine.get()));

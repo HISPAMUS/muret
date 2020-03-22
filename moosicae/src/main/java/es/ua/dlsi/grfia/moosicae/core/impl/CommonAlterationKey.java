@@ -2,6 +2,8 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -10,11 +12,13 @@ import java.util.Optional;
  * @created 16/03/2020
  */
 public class CommonAlterationKey extends Key implements ICommonAlterationKey {
+    @NotNull
     private final int accidentalCount;
-    private final Optional<IAccidentalSymbol> accidentalSymbol;
+    @NotNull
+    private final IAccidentalCore accidentalSymbol;
 
-    CommonAlterationKey(IPitchClass pitchClass, IMode mode, IKeySignature keySignature, int accidentalCount, Optional<IAccidentalSymbol> accidentalSymbol) {
-        super(pitchClass, mode, keySignature);
+    CommonAlterationKey(@NotNull IId id, @NotNull IPitchClass pitchClass, @NotNull IMode mode, @NotNull IKeySignature keySignature, @NotNull Integer accidentalCount, @Nullable IAccidentalCore accidentalSymbol) {
+        super(id, pitchClass, mode, keySignature);
         this.accidentalCount = accidentalCount;
         this.accidentalSymbol = accidentalSymbol;
     }
@@ -25,13 +29,13 @@ public class CommonAlterationKey extends Key implements ICommonAlterationKey {
     }
 
     @Override
-    public Optional<IAccidentalSymbol> getAccidentalSymbol() {
-        return accidentalSymbol;
+    public Optional<IAccidentalCore> getAccidentalSymbol() {
+        return Optional.ofNullable(accidentalSymbol);
     }
 
     @Override
     public Key clone() {
-        return new CommonAlterationKey(getPitchClass(), getMode(), getKeySignature(), accidentalCount, accidentalSymbol);
+        return new CommonAlterationKey(IdGenerator.getInstance().generateUniqueId(), getPitchClass(), getMode(), getKeySignature(), accidentalCount, accidentalSymbol);
     }
 
     @Override
@@ -39,10 +43,10 @@ public class CommonAlterationKey extends Key implements ICommonAlterationKey {
         if (this == o) return true;
         if (!(o instanceof CommonAlterationKey)) return false;
 
-        CommonAlterationKey commonKey = (CommonAlterationKey) o;
+        CommonAlterationKey that = (CommonAlterationKey) o;
 
-        if (accidentalCount != commonKey.accidentalCount) return false;
-        return accidentalSymbol.equals(commonKey.accidentalSymbol);
+        if (accidentalCount != that.accidentalCount) return false;
+        return accidentalSymbol.equals(that.accidentalSymbol);
     }
 
     @Override

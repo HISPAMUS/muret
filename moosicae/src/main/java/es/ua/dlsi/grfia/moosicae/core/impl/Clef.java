@@ -4,13 +4,20 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IClef;
 import es.ua.dlsi.grfia.moosicae.core.IClefSign;
 import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
+import es.ua.dlsi.grfia.moosicae.core.IId;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.Optional;
+
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class Clef implements IClef {
-    private final int line;
+public class Clef extends CoreItem implements IClef {
+    @Nullable
+    private final Integer line;
+    @NotNull
     private final IClefSign signType;
 
     /**
@@ -18,13 +25,15 @@ public class Clef implements IClef {
      * @param line
      * @param signType
      */
-    Clef(int line, IClefSign signType) {
+    Clef(@NotNull IId id, @Nullable Integer line, @NotNull IClefSign signType) {
+        super(id);
         this.line = line;
         this.signType = signType;
     }
 
-    public int getLine() {
-        return line;
+    @Override
+    public Optional<Integer> getLine() {
+        return Optional.ofNullable(line);
     }
 
     public IClefSign getSignType() {
@@ -32,23 +41,8 @@ public class Clef implements IClef {
     }
 
     @Override
-    public boolean equals(Object o) {
-        System.out.println("equals");
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Clef clef = (Clef) o;
-        return line == clef.line &&
-                signType == clef.signType;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(line, signType);
-    }
-
-    @Override
     public Clef clone() {
-        return new Clef(line, signType);
+        return new Clef(IdGenerator.getInstance().generateUniqueId(), line, signType);
     }
 
     @Override
@@ -57,10 +51,28 @@ public class Clef implements IClef {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Clef)) return false;
+
+        Clef clef = (Clef) o;
+
+        if (line != null ? !line.equals(clef.line) : clef.line != null) return false;
+        return signType.equals(clef.signType);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = line != null ? line.hashCode() : 0;
+        result = 31 * result + signType.hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "Clef{" +
                 "line=" + line +
                 ", signType=" + signType +
-                '}';
+                "} " + super.toString();
     }
 }

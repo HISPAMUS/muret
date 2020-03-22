@@ -14,7 +14,9 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
     @Override
     public void export(IClef clef, XMLExporterVisitorParam inputOutput) {
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
-            inputOutput.addAttribute("clef.line", Integer.toString(clef.getLine()));
+            if (clef.getLine().isPresent()) {
+                inputOutput.addAttribute("clef.line", Integer.toString(clef.getLine().get()));
+            }
             export(clef.getSignType(), inputOutput);
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
@@ -24,7 +26,7 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
     @Override
     public void export(IClefSign clefSign, XMLExporterVisitorParam inputOutput) {
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
-            inputOutput.addAttribute("clef.shape", clefSign.getClefSign().name().toUpperCase());
+            inputOutput.addAttribute("clef.shape", clefSign.getValue().name().toUpperCase());
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }
@@ -131,16 +133,16 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
     @Override
     public void export(IDiatonicPitch diatonicPitch, XMLExporterVisitorParam inputOutput) {
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
-            inputOutput.addAttribute("pname", diatonicPitch.getDiatonicPitch().name().toLowerCase());
+            inputOutput.addAttribute("pname", diatonicPitch.getValue().name().toLowerCase());
         } else {
             throw new UnsupportedOperationException("Cannot export a diatonic pitch as other thing different to attribute");
         }
     }
 
     @Override
-    public void export(IAccidentalSymbol accidental, XMLExporterVisitorParam inputOutput) throws IMException {
+    public void export(IAccidentalCore accidental, XMLExporterVisitorParam inputOutput) throws IMException {
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.string) {
-            switch (accidental.getAccidentalSymbol()) {
+            switch (accidental.getValue()) {
                 case TRIPLE_FLAT:
                     inputOutput.append("fff");
                     break;
@@ -160,7 +162,7 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
                     inputOutput.append("x");
                     break;
                 default:
-                    throw new IMException("Unkown accidental symbol: " + accidental.getAccidentalSymbol());
+                    throw new IMException("Unkown accidental symbol: " + accidental.getValue());
             }
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
@@ -223,7 +225,7 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
     public void export(IFigure figures, XMLExporterVisitorParam inputOutput) {
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
             String value;
-            switch (figures.getFigure()) {
+            switch (figures.getValue()) {
                 case MAXIMA: value = "maxima"; break;
                 case LONGA: value = "longa"; break;
                 case BREVE: value = "brevis"; break;

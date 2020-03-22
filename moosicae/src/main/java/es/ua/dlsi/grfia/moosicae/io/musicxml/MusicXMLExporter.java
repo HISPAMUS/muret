@@ -45,7 +45,7 @@ public class MusicXMLExporter implements IExporter {
             XMLElement xmlPart = xmlScore.addChild("score-part");
             xmlPart.addAttribute("id", Integer.toString(part.hashCode())); //TODO en lugar de esto usar IDs generados
             if (part.getName().isPresent()) {
-                xmlPart.addChild("part-name", part.getName().get());
+                xmlPart.addChild("part-name", part.getName().get().getValue());
             }
         }
     }
@@ -66,7 +66,7 @@ public class MusicXMLExporter implements IExporter {
             boolean nonAttributesFound = false;
             //TODO ordenar por tiempos - ver qué staves pertenecen a partes
             for (IStaff staff: score.getAllStaves()) {
-                for (ISymbol staffElement: staff.getStaffSymbols()) { //TODO quitar lo de StaffElement y dejarlo en ISymbol
+                for (ICoreItem staffElement: staff.getStaffSymbols()) { //TODO quitar lo de StaffElement y dejarlo en ISymbol
                     XMLElement parentElement = xmlMeasure; // by default
                     if (staffElement instanceof INonDurational) {
                         if (!nonAttributesFound) {

@@ -29,6 +29,6 @@ public class IChordBuilder extends IDurationalSingleBuilder<IChord> {
         }
 
         super.assertRequired();
-        return coreObjectFactory.createChord(figure, Optional.ofNullable(dots), pitchList.toArray(new IPitch[pitchList.size()]));
+        return coreObjectFactory.createChord(getId(), figure, dots, pitchList.toArray(new IPitch[pitchList.size()]));
     }
 }

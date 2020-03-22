@@ -4,6 +4,8 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.core.enums.EDiatonicPitches;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -32,22 +34,23 @@ public class IPitchBuilder extends CoreObjectBuilder<IPitch> {
     }
 
     public void setOctave(int octave) {
-        this.octave = coreObjectFactory.createOctave(octave);
+        this.octave = coreObjectFactory.createOctave(getId(), octave);
     }
 
     /**
      * Convenience builder
      */
-    public IPitch build(EDiatonicPitches eDiatonicPitch, Optional<EAccidentalSymbols> accidentalSymbol,
+    public IPitch build(@NotNull EDiatonicPitches eDiatonicPitch, @Nullable EAccidentalSymbols accidentalSymbol,
                         int octaveNumber) throws IMException {
-        octave = coreObjectFactory.createOctave(octaveNumber);
-        if (accidentalSymbol.isPresent()) {
+        octave = coreObjectFactory.createOctave(getId(), octaveNumber);
+        if (accidentalSymbol != null) {
             alteration = coreObjectFactory.createAlteration(
-                    coreObjectFactory.createAccidentalSymbol(accidentalSymbol.get()),
-                    Optional.empty()
+                    getId(),
+                    coreObjectFactory.createAccidentalSymbol(getId(), accidentalSymbol),
+                    null
             );
         }
-        diatonicPitch = coreObjectFactory.createDiatonicPitch(eDiatonicPitch);
+        diatonicPitch = coreObjectFactory.createDiatonicPitch(getId(), eDiatonicPitch);
         return build();
     }
 
@@ -55,6 +58,6 @@ public class IPitchBuilder extends CoreObjectBuilder<IPitch> {
     public IPitch build() throws IMException {
         assertRequired("octave", octave);
         assertRequired("diatonicPitch", diatonicPitch);
-        return coreObjectFactory.createPitch(octave, Optional.ofNullable(alteration), diatonicPitch);
+        return coreObjectFactory.createPitch(getId(), octave, alteration, diatonicPitch);
     }
 }

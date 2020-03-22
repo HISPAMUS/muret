@@ -23,6 +23,6 @@ public class IModeBuilder extends CoreObjectBuilder<IMode>  {
     @Override
     public IMode build() throws IMException {
         assertRequired("mode", mode);
-        return coreObjectFactory.createMode(mode);
+        return coreObjectFactory.createMode(getId(), mode);
     }
 }

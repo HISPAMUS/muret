@@ -287,7 +287,7 @@ public class SkmSyntaxDirectedTranslation {
                 }
             }
 
-            pitchClassBuilder.setDiatonicPitch(coreAbstractFactory.createDiatonicPitch(EDiatonicPitches.valueOf(ctx.lowerCasePitch().getText().toUpperCase())));
+            pitchClassBuilder.setDiatonicPitch(coreAbstractFactory.createDiatonicPitch(coreAbstractFactory.createId(), EDiatonicPitches.valueOf(ctx.lowerCasePitch().getText().toUpperCase())));
         }
 
         @Override
@@ -363,7 +363,7 @@ public class SkmSyntaxDirectedTranslation {
             try {
                 IPitchClass pitchClass = pitchClassBuilder.build();
                 IMode mode = modeBuilder.build();
-                IKey key = coreAbstractFactory.createKey(pitchClass, mode);
+                IKey key = coreAbstractFactory.createKey(coreAbstractFactory.createId(), pitchClass, mode);
                 addItemToSpine(new SkmCoreSymbol(ctx.getText(), key));
             } catch (IMException e) {
                 throw createException(e);
@@ -458,7 +458,7 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Metronome {0}", ctx.getText());
             super.exitMetronome(ctx);
             IMetronomeMarkBuilder metronomeMarkBuilder = new IMetronomeMarkBuilder(coreAbstractFactory);
-            metronomeMarkBuilder.setFigure(coreAbstractFactory.createFigure(EFigures.QUARTER));
+            metronomeMarkBuilder.setFigure(coreAbstractFactory.createFigure(coreAbstractFactory.createId(), EFigures.QUARTER));
             metronomeMarkBuilder.setValue(Integer.parseInt(ctx.number().getText()));
             SkmCoreSymbol mm = null;
             try {
@@ -586,7 +586,7 @@ public class SkmSyntaxDirectedTranslation {
             try {
                 EFigures figure = EFigures.findMeterUnit(Integer.parseInt(ctx.getText()), ENotationTypes.eModern);
                 int augmentationDots = ctx.augmentationDot().size();
-                durationalSingleBuilder.setFigure(coreAbstractFactory.createFigure(figure));
+                durationalSingleBuilder.setFigure(coreAbstractFactory.createFigure(coreAbstractFactory.createId(), figure));
                 durationalSingleBuilder.setDots(augmentationDots);
             } catch (IMException e) {
                 throw createException(e);

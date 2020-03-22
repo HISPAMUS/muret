@@ -1,19 +1,17 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.IDots;
-import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
-import es.ua.dlsi.grfia.moosicae.core.IFigure;
-import es.ua.dlsi.grfia.moosicae.core.IRest;
+import es.ua.dlsi.grfia.moosicae.core.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class Rest extends DurationalSingle implements IRest {
-    public Rest(IFigure figure, Optional<IDots> dots) {
-        super(figure, dots);
+    public Rest(@NotNull IId id, @NotNull IFigure figure, @Nullable IDots dots) {
+        super(id, figure, dots);
     }
 
     @Override
@@ -23,7 +21,7 @@ public class Rest extends DurationalSingle implements IRest {
 
     @Override
     public Rest clone() {
-        return new Rest(figure, dots);
+        return new Rest(IdGenerator.getInstance().generateUniqueId(), figure, dots);
     }
 
     @Override

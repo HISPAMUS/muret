@@ -5,25 +5,24 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAlterationDisplayTypes;
 
-import java.util.Optional;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class IAlterationBuilder extends CoreObjectBuilder<IAlteration> {
-    private IAccidentalSymbol accidentalSymbol;
+    private IAccidentalCore accidentalSymbol;
     private IAlterationDisplayType alterationDisplayType;
 
     public IAlterationBuilder(ICoreAbstractFactory coreObjectFactory) {
         super(coreObjectFactory);
     }
 
-    public void setAccidentalSymbol(IAccidentalSymbol accidentalSymbol) {
+    public void setAccidentalSymbol(IAccidentalCore accidentalSymbol) {
         this.accidentalSymbol = accidentalSymbol;
     }
 
     public void setAccidentalSymbol(EAccidentalSymbols accidentalSymbol) {
-        this.accidentalSymbol = coreObjectFactory.createAccidentalSymbol(accidentalSymbol);
+        this.accidentalSymbol = coreObjectFactory.createAccidentalSymbol(getId(), accidentalSymbol);
     }
 
     public void setAlterationDisplayType(IAlterationDisplayType alterationDisplayType) {
@@ -31,13 +30,13 @@ public class IAlterationBuilder extends CoreObjectBuilder<IAlteration> {
     }
 
     public void setAlterationDisplayType(EAlterationDisplayTypes alterationDisplayType) {
-        this.alterationDisplayType = coreObjectFactory.createAlterationDisplayType(alterationDisplayType);
+        this.alterationDisplayType = coreObjectFactory.createAlterationDisplayType(getId(), alterationDisplayType);
     }
 
 
     @Override
     public IAlteration build() throws IMException {
         assertRequired("accidentalSymbol", accidentalSymbol);
-        return coreObjectFactory.createAlteration(accidentalSymbol, Optional.ofNullable(alterationDisplayType));
+        return coreObjectFactory.createAlteration(getId(), accidentalSymbol, alterationDisplayType);
     }
 }

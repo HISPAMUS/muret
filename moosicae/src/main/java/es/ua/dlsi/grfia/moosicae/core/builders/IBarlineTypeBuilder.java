@@ -23,6 +23,6 @@ public class IBarlineTypeBuilder extends CoreObjectBuilder<IBarlineType>  {
     @Override
     public IBarlineType build() throws IMException {
         assertRequired("barlineTypes", barlineType);
-        return coreObjectFactory.createBarlineType(barlineType);
+        return coreObjectFactory.createBarlineType(getId(), barlineType);
     }
 }

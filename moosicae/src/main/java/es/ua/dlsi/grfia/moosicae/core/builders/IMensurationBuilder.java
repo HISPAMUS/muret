@@ -23,6 +23,6 @@ public class IMensurationBuilder extends CoreObjectBuilder<IMensuration>  {
     @Override
     public IMensuration build() throws IMException {
         assertRequired("mensurations", mensurations);
-        return coreObjectFactory.createMensuration(mensurations);
+        return coreObjectFactory.createMensuration(getId(), mensurations);
     }
 }

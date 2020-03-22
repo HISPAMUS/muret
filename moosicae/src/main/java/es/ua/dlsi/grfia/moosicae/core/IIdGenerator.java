@@ -2,7 +2,8 @@ package es.ua.dlsi.grfia.moosicae.core;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
- * @created 14/03/2020
+ * @created 22/03/2020
  */
-public interface ISymbolProperty extends ICoreObject {
+public interface IIdGenerator {
+    IId generateUniqueId();
 }

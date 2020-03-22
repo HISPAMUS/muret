@@ -34,6 +34,6 @@ public class IMetronomeMarkBuilder extends CoreObjectBuilder<IMetronomeMark> {
     public IMetronomeMark build() throws IMException {
         assertRequired("figure", figure);
         assertRequired("value", value);
-        return coreObjectFactory.createMetronomeMark(figure, Optional.ofNullable(dots), value);
+        return coreObjectFactory.createMetronomeMark(getId(), figure, dots, value);
     }
 }

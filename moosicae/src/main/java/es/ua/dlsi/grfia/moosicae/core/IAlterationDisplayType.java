@@ -7,5 +7,5 @@ import es.ua.dlsi.grfia.moosicae.core.enums.EAlterationDisplayTypes;
  * @created 15/03/2020
  */
 public interface IAlterationDisplayType extends ICoreObject {
-    EAlterationDisplayTypes getAlterationDisplayType();
+    EAlterationDisplayTypes getValue();
 }

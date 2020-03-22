@@ -19,7 +19,9 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
             XMLExporterVisitorParam clefXMLParam = new XMLExporterVisitorParam(XMLParamExportMode.element, inputOutput.addChild("clef"));
             export(clef.getSignType(), clefXMLParam);
-            clefXMLParam.addChild("line", Integer.toString(clef.getLine()));
+            if (clef.getLine().isPresent()) {
+                clefXMLParam.addChild("line", Integer.toString(clef.getLine().get()));
+            }
 
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
@@ -29,7 +31,7 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
     @Override
     public void export(IClefSign clefSign, XMLExporterVisitorParam inputOutput) {
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
-            inputOutput.addChild("sign", clefSign.getClefSign().name().toUpperCase());
+            inputOutput.addChild("sign", clefSign.getValue().name().toUpperCase());
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }
@@ -109,9 +111,9 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
             XMLExporterVisitorParam keyXMLParam = new XMLExporterVisitorParam(XMLParamExportMode.element, inputOutput.addChild("key"));
             int fifths;
             if (commonAlterationKey.getAccidentalSymbol().isPresent()) {
-                if (commonAlterationKey.getAccidentalSymbol().get().getAccidentalSymbol() == EAccidentalSymbols.SHARP) {
+                if (commonAlterationKey.getAccidentalSymbol().get().getValue() == EAccidentalSymbols.SHARP) {
                     fifths = commonAlterationKey.getAccidentalCount();
-                } else if (commonAlterationKey.getAccidentalSymbol().get().getAccidentalSymbol() == EAccidentalSymbols.FLAT){
+                } else if (commonAlterationKey.getAccidentalSymbol().get().getValue() == EAccidentalSymbols.FLAT){
                     fifths = -commonAlterationKey.getAccidentalCount();
                 } else {
                     throw new IMException("Unsupported accidental in standard key " + commonAlterationKey.getAccidentalSymbol().get());
@@ -145,16 +147,16 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
     @Override
     public void export(IDiatonicPitch diatonicPitch, XMLExporterVisitorParam inputOutput) {
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
-            inputOutput.addChild("step", diatonicPitch.getDiatonicPitch().name().toUpperCase());
+            inputOutput.addChild("step", diatonicPitch.getValue().name().toUpperCase());
         } else {
             throw new UnsupportedOperationException("Cannot export a diatonic pitch as other thing different to attribute");
         }
     }
 
     @Override
-    public void export(IAccidentalSymbol accidental, XMLExporterVisitorParam inputOutput) throws IMException {
+    public void export(IAccidentalCore accidental, XMLExporterVisitorParam inputOutput) throws IMException {
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
-            inputOutput.addChild("alter", Integer.toString(accidental.getAccidentalSymbol().getAlteration()));
+            inputOutput.addChild("alter", Integer.toString(accidental.getValue().getAlteration()));
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }
@@ -213,7 +215,7 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
         //TODO ¿es necesario type?
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
             String type;
-            switch (figures.getFigure()) {
+            switch (figures.getValue()) {
                 //TODO todos estos valores
                 case MAXIMA: type = "maxima"; break;
                 case LONGA: type = "long"; break;
@@ -238,7 +240,7 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
                 default:
                     type = Integer.toString(figures.getMeterUnit());
             }
-            int dur = MAX_DUR / figures.getFigure().getMeterUnit();
+            int dur = MAX_DUR / figures.getValue().getMeterUnit();
             inputOutput.addChild("dur", Integer.toString(dur));
             inputOutput.addChild("type", type);
         } else {

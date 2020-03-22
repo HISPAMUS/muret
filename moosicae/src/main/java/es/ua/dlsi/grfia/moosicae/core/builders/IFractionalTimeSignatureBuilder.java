@@ -26,6 +26,6 @@ public class IFractionalTimeSignatureBuilder extends CoreObjectBuilder<IFraction
     public IFractionalTimeSignature build() throws IMException {
         assertRequired("numerator", numerator);
         assertRequired("denominator", denominator);
-        return coreObjectFactory.createFractionalTimeSignature(numerator, denominator);
+        return coreObjectFactory.createFractionalTimeSignature(getId(), numerator, denominator);
     }
 }

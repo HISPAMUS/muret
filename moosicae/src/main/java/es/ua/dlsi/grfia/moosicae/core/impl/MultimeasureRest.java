@@ -2,26 +2,30 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
+import es.ua.dlsi.grfia.moosicae.core.IId;
 import es.ua.dlsi.grfia.moosicae.core.IMultimeasureRest;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class MultimeasureRest extends DurationalComposite implements IMultimeasureRest {
-    private final int measureCount;
+    @NotNull
+    private final Integer measureCount;
 
-    public MultimeasureRest(int measureCount) {
+    MultimeasureRest(@NotNull IId id, @NotNull Integer measureCount) {
+        super(id);
         this.measureCount = measureCount;
     }
 
     @Override
-    public int getMeasureCount() {
+    public Integer getMeasureCount() {
         return measureCount;
     }
 
     @Override
     public MultimeasureRest clone() {
-        return new MultimeasureRest(measureCount);
+        return new MultimeasureRest(IdGenerator.getInstance().generateUniqueId(), measureCount);
     }
 
     @Override
@@ -36,12 +40,12 @@ public class MultimeasureRest extends DurationalComposite implements IMultimeasu
 
         MultimeasureRest that = (MultimeasureRest) o;
 
-        return measureCount == that.measureCount;
+        return measureCount.equals(that.measureCount);
     }
 
     @Override
     public int hashCode() {
-        return measureCount;
+        return measureCount.hashCode();
     }
 
     @Override

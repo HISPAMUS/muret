@@ -21,6 +21,6 @@ public class INotationTypeBuilder extends CoreObjectBuilder<INotationType> {
     @Override
     public INotationType build() throws IMException {
         assertRequired("notationType", notationType);
-        return coreObjectFactory.createNotationType(notationType);
+        return coreObjectFactory.createNotationType(getId(), notationType);
     }
 }

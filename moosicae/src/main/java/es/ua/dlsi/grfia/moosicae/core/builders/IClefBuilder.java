@@ -26,6 +26,6 @@ public class IClefBuilder extends CoreObjectBuilder<IClef> {
     public IClef build() throws IMException {
         assertRequired("clefSign", clefSign);
         assertRequired("line", line);
-        return coreObjectFactory.createClef(line, clefSign);
+        return coreObjectFactory.createClef(getId(), line, clefSign);
     }
 }

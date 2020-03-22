@@ -1,26 +1,26 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.ICustos;
-import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
-import es.ua.dlsi.grfia.moosicae.core.IPitch;
-import es.ua.dlsi.grfia.moosicae.core.IVoiced;
+import es.ua.dlsi.grfia.moosicae.core.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class Custos implements ICustos {
+public class Custos extends CoreItem implements ICustos {
+    @NotNull
     private final IPitch pitch;
 
-    Custos(IPitch pitch) {
+    Custos(@NotNull IId id, @NotNull IPitch pitch) {
+        super(id);
         this.pitch = pitch;
     }
 
     @Override
-    public IVoiced clone() {
-        return new Custos(pitch);
+    public Custos clone() {
+        return new Custos(IdGenerator.getInstance().generateUniqueId(), pitch);
     }
 
     @Override
@@ -36,14 +36,16 @@ public class Custos implements ICustos {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Custos)) return false;
+
         Custos custos = (Custos) o;
+
         return pitch.equals(custos.pitch);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pitch);
+        return pitch.hashCode();
     }
 
     @Override

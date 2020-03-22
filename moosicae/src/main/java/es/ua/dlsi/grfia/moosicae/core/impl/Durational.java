@@ -1,15 +1,19 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.core.IDurational;
+import es.ua.dlsi.grfia.moosicae.core.IId;
 import es.ua.dlsi.grfia.moosicae.utils.Time;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public abstract class Durational implements IDurational {
+public abstract class Durational extends CoreItem implements IDurational {
+    @NotNull
     private final Time duration;
 
-    protected Durational(Time duration) {
+    protected Durational(@NotNull IId id, @NotNull Time duration) {
+        super(id);
         this.duration = duration;
     }
 
@@ -20,5 +24,23 @@ public abstract class Durational implements IDurational {
 
     public abstract Durational clone();
 
+    @Override
+    public IId getId() {
+        return id;
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Durational)) return false;
+
+        Durational that = (Durational) o;
+
+        return duration.equals(that.duration);
+    }
+
+    @Override
+    public int hashCode() {
+        return duration.hashCode();
+    }
 }

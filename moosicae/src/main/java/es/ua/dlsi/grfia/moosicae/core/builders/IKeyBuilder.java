@@ -32,6 +32,6 @@ public class IKeyBuilder extends CoreObjectBuilder<IKey> {
         assertRequired("pitchClass", pitchClass);
         assertRequired("mode", mode);
         assertRequired("keySignature", keySignature);
-        return coreObjectFactory.createKey(pitchClass, mode, keySignature);
+        return coreObjectFactory.createKey(getId(), pitchClass, mode, keySignature);
     }
 }

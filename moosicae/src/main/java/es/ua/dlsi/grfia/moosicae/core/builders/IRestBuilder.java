@@ -17,6 +17,6 @@ public class IRestBuilder extends IDurationalSingleBuilder<IRest> {
     @Override
     public IRest build() throws IMException {
         super.assertRequired();
-        return coreObjectFactory.createRest(figure, Optional.ofNullable(dots));
+        return coreObjectFactory.createRest(getId(), figure, dots);
     }
 }

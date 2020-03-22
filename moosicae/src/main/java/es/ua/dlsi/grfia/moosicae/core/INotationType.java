@@ -7,5 +7,5 @@ import es.ua.dlsi.grfia.moosicae.core.enums.ENotationTypes;
  * @created 15/03/2020
  */
 public interface INotationType extends ICoreObject {
-    ENotationTypes getNotationType();
+    ENotationTypes getValue();
 }

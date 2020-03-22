@@ -23,6 +23,6 @@ public class IClefSignBuilder extends CoreObjectBuilder<IClefSign>  {
     @Override
     public IClefSign build() throws IMException {
         assertRequired("clefSign", clefSign);
-        return coreObjectFactory.createClefSign(clefSign);
+        return coreObjectFactory.createClefSign(getId(), clefSign);
     }
 }

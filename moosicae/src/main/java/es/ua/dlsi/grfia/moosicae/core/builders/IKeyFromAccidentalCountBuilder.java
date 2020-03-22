@@ -7,7 +7,7 @@ import es.ua.dlsi.grfia.moosicae.core.*;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class IKeyFromAccidentalCountBuilder extends CoreObjectBuilder<IKey> {
-    private IAccidentalSymbol accidentalSymbol;
+    private IAccidentalCore accidentalSymbol;
     private Integer accidentalCount;
     private IMode mode;
 
@@ -15,7 +15,7 @@ public class IKeyFromAccidentalCountBuilder extends CoreObjectBuilder<IKey> {
         super(coreObjectFactory);
     }
 
-    public void setAccidentalSymbol(IAccidentalSymbol accidentalSymbol) {
+    public void setAccidentalSymbol(IAccidentalCore accidentalSymbol) {
         this.accidentalSymbol = accidentalSymbol;
     }
 
@@ -32,6 +32,6 @@ public class IKeyFromAccidentalCountBuilder extends CoreObjectBuilder<IKey> {
         assertRequired("accidentalSymbol", accidentalSymbol);
         assertRequired("accidentalCount", accidentalCount);
         assertRequired("mode", mode);
-        return coreObjectFactory.createKey(accidentalCount, accidentalSymbol, mode);
+        return coreObjectFactory.createKey(getId(), accidentalCount, accidentalSymbol, mode);
     }
 }

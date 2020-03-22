@@ -21,6 +21,6 @@ public class IDiatonicPitchBuilder extends CoreObjectBuilder<IDiatonicPitch> {
     @Override
     public IDiatonicPitch build() throws IMException {
         assertRequired("diatonicPitch", diatonicPitch);
-        return coreObjectFactory.createDiatonicPitch(diatonicPitch);
+        return coreObjectFactory.createDiatonicPitch(getId(), diatonicPitch);
     }
 }

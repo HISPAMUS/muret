@@ -23,7 +23,7 @@ public class SkmDocument2IScore {
 
     public SkmDocument2IScore(ICoreAbstractFactory abstractFactory) {
         this.abstractFactory = abstractFactory;
-        this.score = abstractFactory.createScore();
+        this.score = abstractFactory.createScore(abstractFactory.createId());
         this.partNumbers = new HashMap<>();
         this.voiceParts = new HashMap<>();
         this.staffNumbers = new HashMap<>();
@@ -32,8 +32,8 @@ public class SkmDocument2IScore {
 
 
     public IScore convert(DAGNode<SkmToken> firstNode) throws IMException {
-        defaultPart = abstractFactory.createPart(score, "Default");
-        defaultStaff = abstractFactory.createStaff(score);
+        defaultPart = abstractFactory.createPart(score, abstractFactory.createId(), null);
+        defaultStaff = abstractFactory.createStaff(score, abstractFactory.createId());
 
         // first create voices, all associated to a default part that will be moved to other part when the **part token is found
         for (DAGNode<SkmToken> node: firstNode.getNextList()) {
@@ -41,10 +41,10 @@ public class SkmDocument2IScore {
             if (skmToken instanceof SkmHeader) {
                 ESkmHeaders headerType = ((SkmHeader) skmToken).getSkmHeaderType();
                 if (headerType == ESkmHeaders.skern || headerType == ESkmHeaders.smens) {
-                    IVoice voice = abstractFactory.createVoice(defaultPart);
+                    IVoice voice = abstractFactory.createVoice(defaultPart, abstractFactory.createId(), null);
                     voiceParts.put(voice, defaultPart);
                     //TODO staves - cuando se encuentre con *staff1 o *staff1/2
-                    IStaff defaultStaff = abstractFactory.createStaff(score);
+                    IStaff defaultStaff = abstractFactory.createStaff(score, abstractFactory.createId());
                     voiceStaves.put(voice, defaultStaff);
                     // now traverse the spine
                     for (DAGNode<SkmToken> next: node.getNextList()) {
@@ -101,7 +101,7 @@ public class SkmDocument2IScore {
         IStaff staff = staffNumbers.get(skmStaff.getNumber());
 
         if (staff == null) {
-            staff = abstractFactory.createStaff(score);
+            staff = abstractFactory.createStaff(score, abstractFactory.createId());
             staffNumbers.put(skmStaff.getNumber(), staff);
         }
 
@@ -112,7 +112,7 @@ public class SkmDocument2IScore {
         IPart part = partNumbers.get(skmPart.getNumber());
 
         if (part == null) {
-            part = abstractFactory.createPart(score, "Part #" + skmPart.getNumber());
+            part = abstractFactory.createPart(score, abstractFactory.createId(), null);
             partNumbers.put(skmPart.getNumber(), part);
         }
 

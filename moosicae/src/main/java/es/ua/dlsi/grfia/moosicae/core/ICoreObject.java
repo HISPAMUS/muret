@@ -6,6 +6,7 @@ package es.ua.dlsi.grfia.moosicae.core;
  * @created 14/03/2020
  */
 public interface ICoreObject extends Cloneable {
+    IId getId();
     ICoreObject clone();
     int hashCode();
     boolean equals(Object o);

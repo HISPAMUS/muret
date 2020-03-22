@@ -1,16 +1,20 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.core.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class Score implements IScore {
+public class Score extends CoreObject implements IScore {
+    @NotNull
     private final LinkedList<IPart> parts;
+    @NotNull
     private final LinkedList<ISystemElement> systemElements;
 
-    public Score() {
+    public Score(@NotNull IId id) {
+        super(id);
         parts = new LinkedList<>();
         systemElements = new LinkedList<>();
     }
@@ -63,9 +67,31 @@ public class Score implements IScore {
     }
 
     @Override
-    public void add(IVoice toVoice, IStaff inStaff, ISymbol symbol) {
+    public void add(IVoice toVoice, IStaff inStaff, ICoreItem symbol) {
         toVoice.addItem(symbol);
         inStaff.put(symbol);
     }
 
+    @Override
+    public Score clone() {
+        throw new UnsupportedOperationException("TODO"); //TODO
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Score)) return false;
+
+        Score score = (Score) o;
+
+        if (!parts.equals(score.parts)) return false;
+        return systemElements.equals(score.systemElements);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = parts.hashCode();
+        result = 31 * result + systemElements.hashCode();
+        return result;
+    }
 }

@@ -16,13 +16,15 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     public void export(IClef clef, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         inputOutput.append("*clef");
         export(clef.getSignType(), inputOutput);
-        inputOutput.append(clef.getLine());
+        if (clef.getLine().isPresent()) {
+            inputOutput.append(clef.getLine().get());
+        }
         inputOutput.buildAndAddToken(clef);
     }
 
     @Override
     public void export(IClefSign clefSign, SkmExporterVisitorTokenParam inputOutput) {
-        inputOutput.append(clefSign.getClefSign().name().toUpperCase());
+        inputOutput.append(clefSign.getValue().name().toUpperCase());
     }
 
     @Override
@@ -102,10 +104,10 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
         String diatonicPitch;
         switch (key.getMode().getMode()) {
             case major:
-                diatonicPitch = key.getPitchClass().getDiatonicPitch().getDiatonicPitch().name().toUpperCase();
+                diatonicPitch = key.getPitchClass().getDiatonicPitch().getValue().name().toUpperCase();
                 break;
             case minor:
-                diatonicPitch = key.getPitchClass().getDiatonicPitch().getDiatonicPitch().name().toLowerCase();
+                diatonicPitch = key.getPitchClass().getDiatonicPitch().getValue().name().toLowerCase();
                 break;
             default:
                 throw new IMException("Unknown mode: " + key.getMode().getMode());
@@ -147,13 +149,13 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
 
     @Override
     public void export(IDiatonicPitch diatonicPitch, SkmExporterVisitorTokenParam inputOutput) {
-        inputOutput.append(diatonicPitch.getDiatonicPitch().name().toLowerCase());
+        inputOutput.append(diatonicPitch.getValue().name().toLowerCase());
     }
 
     @Override
     public void export(IAlterationDisplayType alterationDisplayType, SkmExporterVisitorTokenParam inputOutput) {
         String encoding;
-        switch (alterationDisplayType.getAlterationDisplayType()) {
+        switch (alterationDisplayType.getValue()) {
             case ficta:
                 encoding = "Y";
                 break;
@@ -173,9 +175,9 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     }
 
     @Override
-    public void export(IAccidentalSymbol accidental, SkmExporterVisitorTokenParam inputOutput) {
+    public void export(IAccidentalCore accidental, SkmExporterVisitorTokenParam inputOutput) {
         String encoding;
-        switch (accidental.getAccidentalSymbol()) {
+        switch (accidental.getValue()) {
             case DOUBLE_FLAT:
                 encoding = "--";
                 break;
@@ -215,7 +217,7 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     }
 
     public void exportDiatonicPitchAndOctave(IDiatonicPitch diatonicPitch, IOctave octave, SkmExporterVisitorTokenParam inputOutput) {
-        String middleOctaveNote = diatonicPitch.getDiatonicPitch().name().toLowerCase();
+        String middleOctaveNote = diatonicPitch.getValue().name().toLowerCase();
 
         int octaveValue = octave.getNumber();
         if (octaveValue < 4) {
@@ -257,7 +259,7 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     @Override
     public void export(IFigure figure, SkmExporterVisitorTokenParam inputOutput) {
         String encoding;
-        switch (figure.getFigure()) {
+        switch (figure.getValue()) {
             case MAXIMA:
                 encoding = "X";
                 break;
@@ -302,8 +304,8 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
         if (metronomeMark.getDots().isPresent()) {
             throw new IMException("Unsupported dots in metronome"); //TODO
         }
-        if (metronomeMark.getFigure().getFigure() != EFigures.QUARTER) {
-            throw new IMException("Unsupported figure in metronome: " + metronomeMark.getFigure().getFigure()); //TODO
+        if (metronomeMark.getFigure().getValue() != EFigures.QUARTER) {
+            throw new IMException("Unsupported figure in metronome: " + metronomeMark.getFigure().getValue()); //TODO
         }
         inputOutput.append("MM");
         inputOutput.append(metronomeMark.getValue());
@@ -325,7 +327,7 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     @Override
     public void export(IBarlineType barlineType, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         String encoding;
-        switch (barlineType.getBarlineType()) {
+        switch (barlineType.getValue()) {
             case end:
                 encoding = "=";
                 break;
@@ -345,7 +347,7 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
                 encoding = ":|!";
                 break;
             default:
-                throw new IMException("Unkown barline type: " + barlineType.getBarlineType());
+                throw new IMException("Unkown barline type: " + barlineType.getValue());
         }
         inputOutput.append(encoding);
     }

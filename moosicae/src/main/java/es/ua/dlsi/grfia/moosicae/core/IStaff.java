@@ -5,8 +5,7 @@ package es.ua.dlsi.grfia.moosicae.core;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public interface IStaff extends ISystemElement {
-    int getNumber();
-    ISymbol[] getStaffSymbols();
+    ICoreItem[] getStaffSymbols();
 
     /**
      * Add a page or system beginning
@@ -14,7 +13,7 @@ public interface IStaff extends ISystemElement {
      */
     void addLayoutElement(IStaffLayoutElement staffLayoutElement);
 
-    void put(ISymbol symbol);
+    void put(ICoreItem symbol);
 
-    void remove(ISymbol symbol);
+    void remove(ICoreItem symbol);
 }

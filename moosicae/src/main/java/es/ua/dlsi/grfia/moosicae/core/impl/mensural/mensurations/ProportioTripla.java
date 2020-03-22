@@ -17,11 +17,13 @@
 
 package es.ua.dlsi.grfia.moosicae.core.impl.mensural.mensurations;
 
+import es.ua.dlsi.grfia.moosicae.core.IId;
 import es.ua.dlsi.grfia.moosicae.core.mensural.EMensuralPerfections;
 import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.Mensuration;
 import es.ua.dlsi.grfia.moosicae.core.mensural.IProportioTripla;
 import es.ua.dlsi.grfia.moosicae.utils.Time;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * "Proporción mayor"
@@ -31,8 +33,8 @@ import es.ua.dlsi.grfia.moosicae.utils.Time;
  */
 public class ProportioTripla extends Mensuration implements IProportioTripla {
 
-    public ProportioTripla() {
-    		super(EMensuralPerfections.imperfectum, EMensuralPerfections.imperfectum, EMensuralPerfections.perfectum, EMensuralPerfections.imperfectum);
+    public ProportioTripla(@NotNull IId id) {
+    		super(id, EMensuralPerfections.imperfectum, EMensuralPerfections.imperfectum, EMensuralPerfections.perfectum, EMensuralPerfections.imperfectum);
     }
 
 	@Override
@@ -47,8 +49,8 @@ public class ProportioTripla extends Mensuration implements IProportioTripla {
 
 
 	@Override
-	public ProportioChangeTripla clone() {
-		return new ProportioChangeTripla();
+	public ProportioTripla clone() {
+		return new ProportioTripla(id);
 	}
 
 	@Override

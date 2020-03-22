@@ -23,6 +23,6 @@ public class IMeterSymbolBuilder extends CoreObjectBuilder<IMeterSymbol>  {
     @Override
     public IMeterSymbol build() throws IMException {
         assertRequired("meterSymbols", meterSymbols);
-        return coreObjectFactory.createMeterSymbol(meterSymbols);
+        return coreObjectFactory.createMeterSymbol(getId(), meterSymbols);
     }
 }

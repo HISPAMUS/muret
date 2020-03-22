@@ -2,17 +2,18 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
-
-import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class Note extends DurationalSingle implements INote {
+    @NotNull
     private final IPitch pitch;
 
-    Note(IFigure figure, Optional<IDots> dots, IPitch pitch) {
-        super(figure, dots);
+    Note(@NotNull IId id, @NotNull IFigure figure, @Nullable IDots dots, @NotNull IPitch pitch) {
+        super(id, figure, dots);
         this.pitch = pitch;
     }
 
@@ -23,7 +24,7 @@ public class Note extends DurationalSingle implements INote {
 
     @Override
     public DurationalSingle clone() {
-        return new Note(figure, dots, pitch);
+        return new Note(IdGenerator.getInstance().generateUniqueId(), figure, dots, pitch);
     }
 
     @Override

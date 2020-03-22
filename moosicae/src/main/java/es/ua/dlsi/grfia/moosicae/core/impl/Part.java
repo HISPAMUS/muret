@@ -1,23 +1,28 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
-import es.ua.dlsi.grfia.moosicae.core.IPart;
-import es.ua.dlsi.grfia.moosicae.core.IVoice;
+import es.ua.dlsi.grfia.moosicae.core.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.Optional;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class Part implements IPart {
-    private final String name;
+public class Part extends CoreObject implements IPart {
+    @Nullable
+    private final IName name;
+    @NotNull
     private final LinkedList<IVoice> voices;
 
-    public Part(String name) {
+    public Part(@NotNull IId id, @Nullable IName name) {
+        super(id);
         this.name = name;
         this.voices = new LinkedList<>();
     }
 
-    public Optional<String> getName() {
+    @Override
+    public Optional<IName> getName() {
         return Optional.ofNullable(name);
     }
 
@@ -34,5 +39,40 @@ public class Part implements IPart {
     @Override
     public void remove(IVoice voice) {
         this.voices.remove(voice);
+    }
+
+    @Override
+    public Part clone() {
+        Part part = new Part(IdGenerator.getInstance().generateUniqueId(), name);
+        for (IVoice voice: voices) {
+            part.add((IVoice) voice.clone());
+        }
+        return part;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Part)) return false;
+
+        Part part = (Part) o;
+
+        if (name != null ? !name.equals(part.name) : part.name != null) return false;
+        return voices.equals(part.voices);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + voices.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Part{" +
+                "name=" + name +
+                ", voices=" + voices +
+                "} " + super.toString();
     }
 }

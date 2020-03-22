@@ -1,12 +1,18 @@
 package es.ua.dlsi.grfia.moosicae.core.impl.mensural;
 
+import es.ua.dlsi.grfia.moosicae.core.IId;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
+import es.ua.dlsi.grfia.moosicae.core.impl.Meter;
 import es.ua.dlsi.grfia.moosicae.core.mensural.EMensuralPerfections;
 import es.ua.dlsi.grfia.moosicae.core.mensural.IMensuration;
 import es.ua.dlsi.grfia.moosicae.utils.Time;
 import org.apache.commons.lang3.math.Fraction;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public abstract class Mensuration implements IMensuration {
+import java.util.Optional;
+
+public abstract class Mensuration extends Meter implements IMensuration {
 	/**
 	 * Or maximarum
 	 */
@@ -30,7 +36,8 @@ public abstract class Mensuration implements IMensuration {
 	 * @param tempus
 	 * @param prolatio
 	 */
-	public Mensuration(EMensuralPerfections modusMaior, EMensuralPerfections modusMinor, EMensuralPerfections tempus, EMensuralPerfections prolatio) {
+	public Mensuration(@NotNull IId id, @Nullable EMensuralPerfections modusMaior, @Nullable EMensuralPerfections modusMinor, @NotNull EMensuralPerfections tempus, @NotNull EMensuralPerfections prolatio) {
+		super(id);
         this.prolatio = prolatio;
         this.tempus = tempus;
         this.modusMinor = modusMinor;
@@ -70,12 +77,12 @@ public abstract class Mensuration implements IMensuration {
 		return tempus;
 	}
 
-	public final EMensuralPerfections getModusMaior() {
-		return modusMaior;
+	public final Optional<EMensuralPerfections> getModusMaior() {
+		return Optional.of(modusMaior);
 	}
 
-	public final EMensuralPerfections getModusMinor() {
-		return modusMinor;
+	public final Optional<EMensuralPerfections> getModusMinor() {
+		return Optional.of(modusMinor);
 	}
 
 	/*public final Time getMaximaDuration() {

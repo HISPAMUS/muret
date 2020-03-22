@@ -28,12 +28,12 @@ public abstract class IDurationalSingleBuilder<T extends IDurationalSingle> exte
     }
 
     public void setFigure(EFigures figure) {
-        this.figure = coreObjectFactory.createFigure(figure);
+        this.figure = coreObjectFactory.createFigure(getId(), figure);
     }
 
     public void setDots(int ndots) {
         if (ndots > 0) {
-            this.dots = coreObjectFactory.createDots(ndots);
+            this.dots = coreObjectFactory.createDots(getId(), ndots);
         }
     }
 

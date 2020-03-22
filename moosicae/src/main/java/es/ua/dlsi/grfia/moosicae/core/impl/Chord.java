@@ -3,6 +3,8 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -11,10 +13,11 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class Chord extends DurationalSingle implements IChord {
+    @NotNull
     private final IPitch[] pitches;
 
-    Chord(IFigure figure, Optional<IDots> dots, IPitch [] pitches) {
-        super(figure, dots);
+    Chord(@NotNull IId id, IFigure figure, @Nullable IDots dots, @NotNull IPitch [] pitches) {
+        super(id, figure, dots);
         this.pitches = pitches.clone();
     }
 
@@ -25,7 +28,7 @@ public class Chord extends DurationalSingle implements IChord {
 
     @Override
     public Chord clone() {
-        return new Chord(figure, dots, pitches);
+        return new Chord(IdGenerator.getInstance().generateUniqueId(), figure, dots, pitches);
     }
 
     @Override

@@ -10,7 +10,7 @@ import java.util.Optional;
  */
 public class IPitchClassBuilder extends CoreObjectBuilder<IPitchClass> {
     IDiatonicPitch diatonicPitch;
-    IAccidentalSymbol accidentalSymbol;
+    IAccidentalCore accidentalSymbol;
 
     public IPitchClassBuilder(ICoreAbstractFactory coreObjectFactory) {
         super(coreObjectFactory);
@@ -20,13 +20,13 @@ public class IPitchClassBuilder extends CoreObjectBuilder<IPitchClass> {
         this.diatonicPitch = diatonicPitch;
     }
 
-    public void setAccidentalSymbol(IAccidentalSymbol accidentalSymbol) {
+    public void setAccidentalSymbol(IAccidentalCore accidentalSymbol) {
         this.accidentalSymbol = accidentalSymbol;
     }
 
     @Override
     public IPitchClass build() throws IMException {
         assertRequired("diatonicPitch", diatonicPitch);
-        return coreObjectFactory.createPitchClass(diatonicPitch, Optional.ofNullable(accidentalSymbol));
+        return coreObjectFactory.createPitchClass(getId(), diatonicPitch, accidentalSymbol);
     }
 }

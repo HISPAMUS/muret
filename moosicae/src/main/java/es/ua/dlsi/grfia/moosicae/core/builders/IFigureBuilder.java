@@ -23,6 +23,6 @@ public class IFigureBuilder extends CoreObjectBuilder<IFigure>  {
     @Override
     public IFigure build() throws IMException {
         assertRequired("figure", figure);
-        return coreObjectFactory.createFigure(figure);
+        return coreObjectFactory.createFigure(getId(), figure);
     }
 }

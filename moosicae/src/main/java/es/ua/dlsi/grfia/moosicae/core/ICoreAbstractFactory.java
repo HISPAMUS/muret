@@ -6,74 +6,88 @@ import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
 import es.ua.dlsi.grfia.moosicae.core.mensural.*;
 import es.ua.dlsi.grfia.moosicae.core.metadata.ITitle;
-
-import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * It knows how to create all main objects in the core package
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public interface ICoreAbstractFactory {
-    IAlteration createAlteration(IAccidentalSymbol accidentals, Optional<IAlterationDisplayType> alterationDisplayType);
-    IBarline createBarline(Optional<Integer> barNumber, Optional<IBarlineType> barlineType);
-    IChord createChord(IFigure figures, Optional<IDots> dots, IPitch [] pitches);
-    IClef createClef(int line, IClefSign clefSign);
-    ICommonTime createCommonTime();
-    ICustos createCustos(IPitch pitch);
-    ICutTime createCutTime();
-    IDots createDots(int ndots);
-    IKey createKey(IPitchClass pitchClass, IMode mode) throws IMException;
-    IKey createKey(IPitchClass pitchClass, IMode mode, IKeySignature keySignature);
-    ICommonAlterationKey createKey(int nAccidentals, IAccidentalSymbol accidentalSymbol, IMode mode) throws IMException;
-    IKeySignature createKeySignature(IPitchClass [] pitchClasses);
-    IFractionalTimeSignature createFractionalTimeSignature(int numerator, int denominator);
-    IMensuration createMensuration(EMensuralPerfections modusMaior, EMensuralPerfections modusMinor, EMensuralPerfections tempus, EMensuralPerfections prolatio);
-    IMetronomeMark createMetronomeMark(IFigure figure, Optional<IDots> dots, int value);
-    IMultimeasureRest createMultimeasureRest(int measureCount);
-    INote createNote(IFigure figures, Optional<IDots> dots, IPitch pitches);
-    IOctave createOctave(int number);
-    IPart createPart(IScore score, String name);
-    IPitch createPitch(IOctave octave, Optional<IAlteration> alteration, IDiatonicPitch diatonicPitch);
-    IPitchClass createPitchClass(IDiatonicPitch diatonicPitch, Optional<IAccidentalSymbol> accidentalSymbol);
+    IAlteration createAlteration(@NotNull IId id, @NotNull IAccidentalCore accidentals, @Nullable IAlterationDisplayType alterationDisplayType);
+    IBarline createBarline(@NotNull IId id, @Nullable Integer barNumber, @Nullable IBarlineType barlineType);
+    IChord createChord(@NotNull IId id, @NotNull IFigure figures, @Nullable IDots dots, @NotNull IPitch [] pitches);
+    IClef createClef(@NotNull IId id, @NotNull Integer line, @NotNull IClefSign clefSign);
+    ICommonTime createCommonTime(@NotNull IId id);
+    ICustos createCustos(@NotNull IId id, @NotNull IPitch pitch);
+    ICutTime createCutTime(@NotNull IId id);
+    IDots createDots(@NotNull IId id, @NotNull Integer ndots);
+    IId createId();
+    IKey createKey(@NotNull IId id, @NotNull IPitchClass pitchClass, @NotNull IMode mode) throws IMException;
+    IKey createKey(@NotNull IId id, @NotNull IPitchClass pitchClass, @NotNull IMode mode, @NotNull IKeySignature keySignature);
+    ICommonAlterationKey createKey(@NotNull IId id, @NotNull Integer nAccidentals, @NotNull IAccidentalCore accidentalSymbol, @NotNull IMode mode) throws IMException;
+    IKeySignature createKeySignature(@NotNull IId id, @NotNull IPitchClass [] pitchClasses);
+    IFractionalTimeSignature createFractionalTimeSignature(@NotNull IId id, @NotNull Integer numerator, @NotNull Integer denominator);
+    IMensuration createMensuration(@NotNull IId id, @Nullable EMensuralPerfections modusMaior, @Nullable EMensuralPerfections modusMinor, @NotNull EMensuralPerfections tempus, @NotNull EMensuralPerfections prolatio);
+    IMetronomeMark createMetronomeMark(@NotNull IId id, @NotNull IFigure figure, @Nullable IDots dots, @NotNull Integer value);
+    IMultimeasureRest createMultimeasureRest(@NotNull IId id, @NotNull Integer measureCount);
+    INote createNote(@NotNull IId id, IFigure figures, @Nullable IDots dots, @NotNull IPitch pitches);
+    IOctave createOctave(@NotNull IId id, @NotNull Integer number);
 
-    IScore createScore();
-    IRest createRest(IFigure figure, Optional<IDots> dots);
+    /**
+     * Creates and adds the part to the score
+     * @return
+     */
+    IPart createPart(@NotNull IScore score, @NotNull IId id, @Nullable IName name);
+
+    /**
+     * Creates the part alone
+     * @param id
+     * @param name
+     * @return
+     */
+    IPart createPart(@NotNull IId id, @Nullable IName name);
+    IPitch createPitch(@NotNull IId id, @NotNull IOctave octave, @Nullable IAlteration alteration, @NotNull IDiatonicPitch diatonicPitch);
+    IPitchClass createPitchClass(@NotNull IId id, @NotNull IDiatonicPitch diatonicPitch, @Nullable IAccidentalCore accidentalSymbol);
+
+    IScore createScore(@NotNull IId id);
+    IRest createRest(@NotNull IId id, @NotNull IFigure figure, @Nullable IDots dots);
 
     /**
      * For nested staff
      * @param staffGroup
      * @return
      */
-    IStaff createStaff(IStaffGroup staffGroup);
+    IStaff createStaff(@NotNull IStaffGroup staffGroup, @NotNull IId id);
     /**
      * For ungrouped staves
      * @param score
      * @return
      */
-    IStaff createStaff(IScore score);
-    IStaffGroup createStaffGroup(IScore score);
+    IStaff createStaff(@NotNull IScore score, @NotNull IId id);
+    IStaffGroup createStaffGroup(@NotNull IScore score, @NotNull IId id);
     /**
      * For nested groups
      * @param staffGroup
      * @return
      */
-    IStaffGroup createStaffGroup(IStaffGroup staffGroup);
+    IStaffGroup createStaffGroup(@NotNull IStaffGroup staffGroup, @NotNull IId id);
 
-    ITitle createTitle(String title);
-    IVoice createVoice(IPart part);
+    ITitle createTitle(@NotNull IId id, @NotNull String title);
+    IVoice createVoice(@NotNull IPart part, @NotNull IId id, @Nullable IName name);
 
 
     /** Enum based **/
-    IBarlineType createBarlineType(EBarlineTypes barlineType);
-    IFigure createFigure(EFigures figure);
-    IAccidentalSymbol createAccidentalSymbol(EAccidentalSymbols accidentalSymbol);
-    IAlterationDisplayType createAlterationDisplayType(EAlterationDisplayTypes alterationDisplayType);
-    IClefSign createClefSign(EClefSigns clefSign);
-    IDiatonicPitch createDiatonicPitch(EDiatonicPitches diatonicPitch);
-    INotationType createNotationType(ENotationTypes notationType);
-    IMeterSymbol createMeterSymbol(EMeterSymbols meterSymbol);
-    IMensuration createMensuration(EMensurations mensuration);
-    IMode createMode(EModes mode);
-    ICommonAlterationKey createKey(ECommonAlterationKeys commonAlterationKeys);
-    IMixedAlterationsKey createKey(EMixedAlterationKeys mixedAlterationKeys);
+    IBarlineType createBarlineType(@NotNull IId id, @NotNull EBarlineTypes barlineType);
+    IFigure createFigure(@NotNull IId id, @NotNull EFigures figure);
+    IAccidentalCore createAccidentalSymbol(@NotNull IId id, @NotNull EAccidentalSymbols accidentalSymbol);
+    IAlterationDisplayType createAlterationDisplayType(@NotNull IId id, @NotNull EAlterationDisplayTypes alterationDisplayType);
+    IClefSign createClefSign(@NotNull IId id, @NotNull EClefSigns clefSign);
+    IDiatonicPitch createDiatonicPitch(@NotNull IId id, @NotNull EDiatonicPitches diatonicPitch);
+    INotationType createNotationType(@NotNull IId id, @NotNull ENotationTypes notationType);
+    IMeterSymbol createMeterSymbol(@NotNull IId id, @NotNull EMeterSymbols meterSymbol);
+    IMensuration createMensuration(@NotNull IId id, @NotNull EMensurations mensuration);
+    IMode createMode(@NotNull IId id, EModes mode);
+    ICommonAlterationKey createKey(@NotNull IId id, @NotNull ECommonAlterationKeys commonAlterationKeys);
+    IMixedAlterationsKey createKey(@NotNull IId id, @NotNull EMixedAlterationKeys mixedAlterationKeys);
 }

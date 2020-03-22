@@ -1,17 +1,18 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
-import es.ua.dlsi.grfia.moosicae.core.IStaff;
-import es.ua.dlsi.grfia.moosicae.core.IStaffGroup;
-import es.ua.dlsi.grfia.moosicae.core.ISystemElement;
+import es.ua.dlsi.grfia.moosicae.core.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class StaffGroup extends Staves implements IStaffGroup {
+    @NotNull
     private final LinkedList<ISystemElement> children;
 
-    public StaffGroup() {
+    public StaffGroup(@NotNull IId id) {
+        super(id);
         children = new LinkedList<>();
     }
 
@@ -34,5 +35,36 @@ public class StaffGroup extends Staves implements IStaffGroup {
             }
         }
         return staves.toArray(new IStaff[staves.size()]);
+    }
+
+    @Override
+    public StaffGroup clone() {
+        StaffGroup staffGroup = new StaffGroup(IdGenerator.getInstance().generateUniqueId());
+        for (ISystemElement systemElement: children) {
+            add((ISystemElement) systemElement.clone());
+        }
+        return staffGroup;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof StaffGroup)) return false;
+
+        StaffGroup that = (StaffGroup) o;
+
+        return children.equals(that.children);
+    }
+
+    @Override
+    public int hashCode() {
+        return children.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "StaffGroup{" +
+                "children=" + children +
+                "} " + super.toString();
     }
 }

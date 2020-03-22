@@ -1,18 +1,20 @@
 package es.ua.dlsi.grfia.moosicae.core.impl.mensural.mensurations;
 
+import es.ua.dlsi.grfia.moosicae.core.IId;
 import es.ua.dlsi.grfia.moosicae.core.mensural.EMensuralPerfections;
 import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.Mensuration;
 import es.ua.dlsi.grfia.moosicae.core.mensural.ITempusPerfectumCumProlationeImperfecta;
 import es.ua.dlsi.grfia.moosicae.utils.Time;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Visually rendered as O
  * 1 breve = 3 semibreves, 1 semibreve = 2 minim
  */
 public class TempusPerfectumCumProlationeImperfecta extends Mensuration implements ITempusPerfectumCumProlationeImperfecta {
-    public TempusPerfectumCumProlationeImperfecta() {
-        super(EMensuralPerfections.imperfectum, EMensuralPerfections.imperfectum, EMensuralPerfections.perfectum, EMensuralPerfections.imperfectum);
+    public TempusPerfectumCumProlationeImperfecta(@NotNull IId id) {
+        super(id, EMensuralPerfections.imperfectum, EMensuralPerfections.imperfectum, EMensuralPerfections.perfectum, EMensuralPerfections.imperfectum);
     }
 
     @Override
@@ -22,7 +24,7 @@ public class TempusPerfectumCumProlationeImperfecta extends Mensuration implemen
 
     @Override
     public TempusPerfectumCumProlationeImperfecta clone() {
-        return new TempusPerfectumCumProlationeImperfecta();
+        return new TempusPerfectumCumProlationeImperfecta(id);
     }
 
     @Override

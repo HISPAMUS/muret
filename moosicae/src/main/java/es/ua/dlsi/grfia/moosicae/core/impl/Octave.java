@@ -1,6 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
+import es.ua.dlsi.grfia.moosicae.core.IId;
 import es.ua.dlsi.grfia.moosicae.core.IOctave;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -8,34 +10,38 @@ import java.util.Objects;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 14/03/2020
  */
-public class Octave implements IOctave {
-    private final int number;
+public class Octave extends CoreProperty implements IOctave {
+    @NotNull
+    private final Integer number;
 
-    public Octave(int number) {
+    public Octave(@NotNull IId id, @NotNull Integer number) {
+        super(id);
         this.number = number;
     }
 
     @Override
-    public int getNumber() {
+    public Integer getNumber() {
         return number;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Octave)) return false;
+
         Octave octave = (Octave) o;
-        return number == octave.number;
+
+        return number.equals(octave.number);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(number);
+        return number.hashCode();
     }
 
     @Override
     public Octave clone() {
-        return new Octave(number);
+        return new Octave(IdGenerator.getInstance().generateUniqueId(), number);
     }
 
     @Override

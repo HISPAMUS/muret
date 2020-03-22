@@ -25,6 +25,6 @@ public class IKeySignatureBuilder extends CoreObjectBuilder<IKeySignature> {
     @Override
     public IKeySignature build() {
         // the key signature can have no pitch class (CM or Am)
-        return coreObjectFactory.createKeySignature(pitchClassList.toArray(new IPitchClass[pitchClassList.size()]));
+        return coreObjectFactory.createKeySignature(getId(), pitchClassList.toArray(new IPitchClass[pitchClassList.size()]));
     }
 }

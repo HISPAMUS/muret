@@ -30,6 +30,6 @@ public class IBarlineBuilder extends CoreObjectBuilder<IBarline>  {
 
     @Override
     public IBarline build() throws IMException {
-        return coreObjectFactory.createBarline(Optional.ofNullable(barNumber), Optional.ofNullable(barlineType));
+        return coreObjectFactory.createBarline(getId(), barNumber, barlineType);
     }
 }

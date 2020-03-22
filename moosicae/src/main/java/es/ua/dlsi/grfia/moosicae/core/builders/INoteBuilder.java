@@ -5,6 +5,8 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.core.enums.EDiatonicPitches;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -26,13 +28,13 @@ public class INoteBuilder extends IDurationalSingleBuilder<INote> {
     public INote build() throws IMException {
         super.assertRequired();
         assertRequired("pitch", pitch);
-        return coreObjectFactory.createNote(figure, Optional.ofNullable(dots), pitch);
+        return coreObjectFactory.createNote(getId(), figure, dots, pitch);
     }
 
     /**
      * Convenience builder
      */
-    public INote build(EDiatonicPitches eDiatonicPitch, Optional<EAccidentalSymbols> accidentalSymbol,
+    public INote build(@NotNull EDiatonicPitches eDiatonicPitch, @Nullable EAccidentalSymbols accidentalSymbol,
                        int octaveNumber, EFigures efigure, int ndots) throws IMException {
         IPitchBuilder pitchBuilder = new IPitchBuilder(coreObjectFactory);
         pitch = pitchBuilder.build(eDiatonicPitch, accidentalSymbol, octaveNumber);

@@ -19,6 +19,6 @@ public class ICustosBuilder extends CoreObjectBuilder<ICustos> {
     @Override
     public ICustos build() throws IMException {
         assertRequired("pitch", pitch);
-        return coreObjectFactory.createCustos(pitch);
+        return coreObjectFactory.createCustos(getId(), pitch);
     }
 }

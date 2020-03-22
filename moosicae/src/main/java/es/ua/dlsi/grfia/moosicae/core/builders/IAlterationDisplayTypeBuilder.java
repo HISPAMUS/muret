@@ -23,6 +23,6 @@ public class IAlterationDisplayTypeBuilder extends CoreObjectBuilder<IAlteration
     @Override
     public IAlterationDisplayType build() throws IMException {
         assertRequired("alterationDisplayType", alterationDisplayType);
-        return coreObjectFactory.createAlterationDisplayType(alterationDisplayType);
+        return coreObjectFactory.createAlterationDisplayType(getId(), alterationDisplayType);
     }
 }

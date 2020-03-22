@@ -5,8 +5,8 @@ import java.util.Optional;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public interface IPart {
-    Optional<String> getName();
+public interface IPart extends ICoreObject {
+    Optional<IName> getName();
 
     void add(IVoice voice);
 

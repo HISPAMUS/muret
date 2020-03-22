@@ -1,16 +1,20 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
+import es.ua.dlsi.grfia.moosicae.core.IId;
 import es.ua.dlsi.grfia.moosicae.core.metadata.ITitle;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class Title implements ITitle {
+public class Title extends CoreProperty implements ITitle {
+    @NotNull
     private final String title;
 
-    public Title(String title) {
+    public Title(@NotNull IId id, @NotNull String title) {
+        super(id);
         this.title = title;
     }
 
@@ -21,20 +25,22 @@ public class Title implements ITitle {
 
     @Override
     public Title clone() {
-        return new Title(title);
+        return new Title(IdGenerator.getInstance().generateUniqueId(), title);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Title)) return false;
+
         Title title1 = (Title) o;
+
         return title.equals(title1.title);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title);
+        return title.hashCode();
     }
 
     @Override

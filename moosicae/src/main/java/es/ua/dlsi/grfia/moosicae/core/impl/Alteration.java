@@ -1,8 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
-import es.ua.dlsi.grfia.moosicae.core.IAccidentalSymbol;
-import es.ua.dlsi.grfia.moosicae.core.IAlteration;
-import es.ua.dlsi.grfia.moosicae.core.IAlterationDisplayType;
+import es.ua.dlsi.grfia.moosicae.core.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -10,49 +10,56 @@ import java.util.Optional;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class Alteration implements IAlteration {
-    private final IAccidentalSymbol accidentalSymbol;
-    private final Optional<IAlterationDisplayType> alterationDisplayType;
+public class Alteration extends CoreProperty implements IAlteration {
+    @NotNull
+    private final IAccidentalCore accidentalSymbol;
+    @Nullable
+    private final IAlterationDisplayType alterationDisplayType;
 
-    Alteration(IAccidentalSymbol accidentalSymbol, Optional<IAlterationDisplayType> alterationDisplayType) {
+    Alteration(@NotNull IId id, @NotNull IAccidentalCore accidentalSymbol, @Nullable IAlterationDisplayType alterationDisplayType) {
+        super(id);
         this.accidentalSymbol = accidentalSymbol;
         this.alterationDisplayType = alterationDisplayType;
     }
 
     @Override
-    public IAccidentalSymbol getAccidentalSymbol() {
+    public IAccidentalCore getAccidentalSymbol() {
         return accidentalSymbol;
     }
 
     @Override
     public Optional<IAlterationDisplayType> getAlterationDisplayType() {
-        return Optional.empty();
+        return Optional.ofNullable(alterationDisplayType);
     }
 
     @Override
     public Alteration clone() {
-        return new Alteration(accidentalSymbol, alterationDisplayType);
+        return new Alteration(IdGenerator.getInstance().generateUniqueId(), accidentalSymbol, alterationDisplayType);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Alteration)) return false;
+
         Alteration that = (Alteration) o;
-        return accidentalSymbol == that.accidentalSymbol &&
-                alterationDisplayType.equals(that.alterationDisplayType);
+
+        if (!accidentalSymbol.equals(that.accidentalSymbol)) return false;
+        return alterationDisplayType != null ? alterationDisplayType.equals(that.alterationDisplayType) : that.alterationDisplayType == null;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(accidentalSymbol, alterationDisplayType);
+        int result = accidentalSymbol.hashCode();
+        result = 31 * result + (alterationDisplayType != null ? alterationDisplayType.hashCode() : 0);
+        return result;
     }
 
     @Override
     public String toString() {
         return "Alteration{" +
-                "accidental=" + accidentalSymbol +
+                "accidentalSymbol=" + accidentalSymbol +
                 ", alterationDisplayType=" + alterationDisplayType +
-                '}';
+                "} " + super.toString();
     }
 }

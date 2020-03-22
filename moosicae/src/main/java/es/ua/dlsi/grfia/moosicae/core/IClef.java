@@ -1,10 +1,12 @@
 package es.ua.dlsi.grfia.moosicae.core;
 
 
+import java.util.Optional;
+
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public interface IClef extends INonDurational {
-    int getLine();
+    Optional<Integer> getLine();
     IClefSign getSignType();
 }

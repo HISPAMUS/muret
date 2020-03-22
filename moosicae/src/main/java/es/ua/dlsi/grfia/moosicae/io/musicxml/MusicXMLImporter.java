@@ -2,12 +2,14 @@ package es.ua.dlsi.grfia.moosicae.io.musicxml;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
-import es.ua.dlsi.grfia.moosicae.core.INote;
-import es.ua.dlsi.grfia.moosicae.core.IPitch;
 import es.ua.dlsi.grfia.moosicae.core.IScore;
+import es.ua.dlsi.grfia.moosicae.core.builders.CoreObjectBuilder;
 import es.ua.dlsi.grfia.moosicae.core.builders.INoteBuilder;
+import es.ua.dlsi.grfia.moosicae.core.builders.IPartBuilder;
 import es.ua.dlsi.grfia.moosicae.core.builders.IPitchBuilder;
 import es.ua.dlsi.grfia.moosicae.io.AbstractImporter;
+import es.ua.dlsi.grfia.moosicae.io.CoreObjectBuilderSuppliers;
+import es.ua.dlsi.grfia.moosicae.io.ImportingContexts;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -16,7 +18,6 @@ import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import java.io.*;
-import java.util.Stack;
 
 /**
  * Use StAX for parsing
@@ -24,8 +25,15 @@ import java.util.Stack;
  * @created 19/03/2020
  */
 public class MusicXMLImporter extends AbstractImporter {
+    private CoreObjectBuilderSuppliers coreObjectBuilderSuppliers;
+
     public MusicXMLImporter(ICoreAbstractFactory abstractFactory) {
         super(abstractFactory);
+        coreObjectBuilderSuppliers = new CoreObjectBuilderSuppliers();
+        coreObjectBuilderSuppliers.add("score-part", IPartBuilder::new);
+
+        coreObjectBuilderSuppliers.add("note", INoteBuilder::new);
+        coreObjectBuilderSuppliers.add("pitch", IPitchBuilder::new);
     }
 
     @Override
@@ -44,46 +52,40 @@ public class MusicXMLImporter extends AbstractImporter {
     }
 
     public IScore importScore(InputStream inputStream) throws IMException {
-       /* XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+        ImportingContexts importingContexts = new ImportingContexts();
+
+
+        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
         try {
             XMLEventReader reader = xmlInputFactory.createXMLEventReader(inputStream);
 
-            StackMap<String, ImporterContext<?>> importerContexts = new StackMap<>();
             while (reader.hasNext()) {
                 XMLEvent nextEvent = reader.nextEvent();
                 if (nextEvent.isStartElement()) {
                     StartElement startElement = nextEvent.asStartElement();
-                    switch (startElement.getName().getLocalPart()) {
-                        case "part":
-                            ImporterContext<IPartBuilder> partBuilderImporterContext = new ImporterContext<>(coreAbstractFactory);
-                            importerContexts.push("part", partBuilderImporterContext);
-                            break;
-                        case "note":
-                            ImporterContext<INoteBuilder> noteImporterContext = new ImporterContext<>(new INoteBuilder(coreAbstractFactory));
-                            importerContexts.peekRequired("part").add(noteImporterContext);
-                            break;
-                        case "pitch":
-                            ImporterContext<IPitchBuilder> pitchImporterContext = new ImporterContext<>(new IPitchBuilder(coreAbstractFactory));
-                            importerContexts.peekRequired("note").add(pitchImporterContext);
-                            break;
+                    String elementName = startElement.getName().getLocalPart();
+                    if (coreObjectBuilderSuppliers.contains(elementName)) {
+                        importingContexts.begin(elementName, (CoreObjectBuilder<?>) coreObjectBuilderSuppliers.create(elementName, coreAbstractFactory));
+                    } else {
+                        switch (elementName) {
+                        }
                     }
                 }
                 if (nextEvent.isEndElement()) {
                     EndElement endElement = nextEvent.asEndElement();
-                    switch (endElement.getName().getLocalPart()) {
-                        case "note":
-                            ImporterContext<INoteBuilder> noteImporterContext = (ImporterContext<INoteBuilder>) importerContexts.pop();
-                            noteImporterContext.build();
-                            break;
+                    String elementName = endElement.getName().getLocalPart();
 
+                    if (importingContexts.contains(elementName)) {
+                        importingContexts.end(elementName);
+                    } else {
+                        switch (elementName) {
+                        }
                     }
                 }
             }
-
         } catch (XMLStreamException e) {
             throw new IMException(e);
         }
-*/
         return null;
     }
 }

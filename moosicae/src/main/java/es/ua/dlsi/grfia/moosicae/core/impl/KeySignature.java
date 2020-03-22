@@ -1,31 +1,30 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
-import es.ua.dlsi.grfia.moosicae.core.IKeySignature;
-import es.ua.dlsi.grfia.moosicae.core.IPitchClass;
-import es.ua.dlsi.grfia.moosicae.core.IVoiced;
+import es.ua.dlsi.grfia.moosicae.core.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class KeySignature implements IKeySignature {
+public class KeySignature extends CoreItem implements IKeySignature {
+    @NotNull
     private final IPitchClass [] pitchClasses;
 
     /**
      * Created by factories
      * @param pitchClasses
      */
-    KeySignature(IPitchClass[] pitchClasses) {
+    KeySignature(@NotNull IId id, @NotNull IPitchClass[] pitchClasses) {
+        super(id);
         this.pitchClasses = pitchClasses.clone();
     }
 
     @Override
-    public IVoiced clone() {
-        return new KeySignature(pitchClasses);
+    public KeySignature clone() {
+        return new KeySignature(IdGenerator.getInstance().generateUniqueId(), pitchClasses);
     }
 
     @Override
@@ -41,8 +40,11 @@ public class KeySignature implements IKeySignature {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof KeySignature)) return false;
+
         KeySignature that = (KeySignature) o;
+
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
         return Arrays.equals(pitchClasses, that.pitchClasses);
     }
 

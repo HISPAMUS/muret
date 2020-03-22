@@ -20,6 +20,6 @@ public class IMultimeasureRestBuilder extends CoreObjectBuilder<IMultimeasureRes
     @Override
     public IMultimeasureRest build() throws IMException {
         assertRequired("count", count);
-        return coreObjectFactory.createMultimeasureRest(count);
+        return coreObjectFactory.createMultimeasureRest(getId(), count);
     }
 }

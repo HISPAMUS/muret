@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface IMetronomeMark extends IMark {
     IFigure getFigure();
     Optional<IDots> getDots();
-    int getValue();
+    Integer getValue();
 }

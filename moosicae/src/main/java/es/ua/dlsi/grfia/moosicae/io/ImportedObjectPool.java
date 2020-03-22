@@ -30,7 +30,7 @@ public class ImportedObjectPool {
     }
 
     /**
-     * It tries to find setters and methods starting with "add" in order to add elements to lists
+     * THis method contains the "magic". It tries to find setters and methods starting with "add" in order to add elements to lists
      * @param target
      * @throws IMException
      */
@@ -39,12 +39,13 @@ public class ImportedObjectPool {
             for (Method method : target.getClass().getMethods()) {
                 if (method.getName().startsWith(SET) || method.getName().startsWith(ADD)) {
                     if (method.getParameters().length == 1) {
-                        for (Object property: availableObjects) {
+                        for (Iterator iterator = availableObjects.iterator(); iterator.hasNext(); ) {
+                            Object property = iterator.next();
                             if (method.getParameters()[0].getType().isAssignableFrom(property.getClass())) {
                                 method.invoke(target, property);
-                                availableObjects.remove(target);
+                                iterator.remove();
                                 if (method.getName().startsWith(SET)) {
-                                    break; // don't need to add other object
+                                    break; // there will not be any other method with the same signature
                                 }
                             }
                         }
