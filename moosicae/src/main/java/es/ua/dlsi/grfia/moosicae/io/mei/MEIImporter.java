@@ -305,10 +305,10 @@ public class MEIImporter extends AbstractImporter {
             throw new IMException("Expected 2 characters for keySig value: '" + keySig.get() + "'");
         }
         int nAccidentals = Integer.parseInt(keySig.get().substring(0, 1));
-        keyFromAccidentalCountBuilder.setAccidentalCount(nAccidentals);
+        keyFromAccidentalCountBuilder.setAccidentalCount(coreAbstractFactory.createKeyAccidentalCount(coreAbstractFactory.createId(), nAccidentals));
 
         char accidental = keySig.get().charAt(1);
-        IAccidentalCore accidentalSymbol;
+        IAccidentalSymbol accidentalSymbol;
         if (accidental == 'f') {
             accidentalSymbol = coreAbstractFactory.createAccidentalSymbol(coreAbstractFactory.createId(), EAccidentalSymbols.FLAT);
         } else if (accidental == 's') {
@@ -335,7 +335,7 @@ public class MEIImporter extends AbstractImporter {
         clefBuilder.setClefSign(coreAbstractFactory.createClefSign(coreAbstractFactory.createId(), EClefSigns.valueOf(clefShape.get())));
         Optional<String> clefLine = getOptionalAttrValue(node, "clef.line");
         if (clefLine.isPresent()) {
-            clefBuilder.setLine(Integer.parseInt(clefLine.get()));
+            clefBuilder.setLine(coreAbstractFactory.createClefLine(coreAbstractFactory.createId(), Integer.parseInt(clefLine.get())));
         }
 
         IClef clef = clefBuilder.build();

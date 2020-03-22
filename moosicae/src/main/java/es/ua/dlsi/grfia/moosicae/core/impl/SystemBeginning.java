@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
+import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.IId;
 import es.ua.dlsi.grfia.moosicae.core.ISystemBeginning;
 import org.jetbrains.annotations.NotNull;

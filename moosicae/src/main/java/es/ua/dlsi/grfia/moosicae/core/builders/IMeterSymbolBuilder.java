@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.IMeterSymbol;
 import es.ua.dlsi.grfia.moosicae.core.enums.EMeterSymbols;
+import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -24,5 +25,10 @@ public class IMeterSymbolBuilder extends CoreObjectBuilder<IMeterSymbol>  {
     public IMeterSymbol build() throws IMException {
         assertRequired("meterSymbols", meterSymbols);
         return coreObjectFactory.createMeterSymbol(getId(), meterSymbols);
+    }
+
+    @Override
+    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
+        importerVisitor.importMeterSymbol(this, inputOutputType);
     }
 }

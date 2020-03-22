@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.core.IBeamGroup;
-import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
+import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.IId;
 import org.jetbrains.annotations.NotNull;
 

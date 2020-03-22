@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,5 +31,10 @@ public class IChordBuilder extends IDurationalSingleBuilder<IChord> {
 
         super.assertRequired();
         return coreObjectFactory.createChord(getId(), figure, dots, pitchList.toArray(new IPitch[pitchList.size()]));
+    }
+
+    @Override
+    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
+        importerVisitor.importChord(this, inputOutputType);
     }
 }

@@ -7,6 +7,6 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public interface IAlteration extends ICoreProperty {
-    IAccidentalCore getAccidentalSymbol();
+    IAccidentalSymbol getAccidentalSymbol();
     Optional<IAlterationDisplayType> getAlterationDisplayType();
 }

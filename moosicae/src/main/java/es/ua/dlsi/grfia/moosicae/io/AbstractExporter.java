@@ -1,6 +1,5 @@
 package es.ua.dlsi.grfia.moosicae.io;
 
-import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */

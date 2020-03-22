@@ -9,11 +9,11 @@ import org.jetbrains.annotations.Nullable;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 15/03/2020
  */
-public abstract class EnumBased<EnumType> extends CoreProperty {
+public abstract class EnumCoreProperty<EnumType> extends CoreProperty {
     @NotNull
     protected final EnumType enumValue;
 
-    public EnumBased(@Nullable IId id, @NotNull EnumType enumValue) {
+    public EnumCoreProperty(@Nullable IId id, @NotNull EnumType enumValue) {
         super(id);
         this.enumValue = enumValue;
     }
@@ -21,11 +21,11 @@ public abstract class EnumBased<EnumType> extends CoreProperty {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof EnumBased)) return false;
+        if (!(o instanceof EnumCoreProperty)) return false;
 
-        EnumBased<?> enumBased = (EnumBased<?>) o;
+        EnumCoreProperty<?> enumCoreProperty = (EnumCoreProperty<?>) o;
 
-        return enumValue.equals(enumBased.enumValue);
+        return enumValue.equals(enumCoreProperty.enumValue);
     }
 
     @Override

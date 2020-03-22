@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.io.lilypond;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -110,7 +111,7 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
     }
 
     @Override
-    public void export(IAccidentalCore accidental, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void export(IAccidentalSymbol accidental, LilypondExporterVisitorParam inputOutput) throws IMException {
         switch (accidental.getValue()) {
             case TRIPLE_FLAT:
                 inputOutput.append("eseses");

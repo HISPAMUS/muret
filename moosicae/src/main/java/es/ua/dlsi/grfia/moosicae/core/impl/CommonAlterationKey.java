@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,9 +16,9 @@ public class CommonAlterationKey extends Key implements ICommonAlterationKey {
     @NotNull
     private final int accidentalCount;
     @NotNull
-    private final IAccidentalCore accidentalSymbol;
+    private final IAccidentalSymbol accidentalSymbol;
 
-    CommonAlterationKey(@NotNull IId id, @NotNull IPitchClass pitchClass, @NotNull IMode mode, @NotNull IKeySignature keySignature, @NotNull Integer accidentalCount, @Nullable IAccidentalCore accidentalSymbol) {
+    CommonAlterationKey(@NotNull IId id, @NotNull IPitchClass pitchClass, @NotNull IMode mode, @NotNull IKeySignature keySignature, @NotNull Integer accidentalCount, @Nullable IAccidentalSymbol accidentalSymbol) {
         super(id, pitchClass, mode, keySignature);
         this.accidentalCount = accidentalCount;
         this.accidentalSymbol = accidentalSymbol;
@@ -29,7 +30,7 @@ public class CommonAlterationKey extends Key implements ICommonAlterationKey {
     }
 
     @Override
-    public Optional<IAccidentalCore> getAccidentalSymbol() {
+    public Optional<IAccidentalSymbol> getAccidentalSymbol() {
         return Optional.ofNullable(accidentalSymbol);
     }
 

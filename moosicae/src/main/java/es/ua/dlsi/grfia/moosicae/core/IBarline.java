@@ -7,6 +7,6 @@ import java.util.Optional;
  * @created 15/03/2020
  */
 public interface IBarline extends INonDurational {
-    Optional<Integer> getBarNumber();
+    Optional<INumber> getBarNumber();
     Optional<IBarlineType> getBarlineType();
 }

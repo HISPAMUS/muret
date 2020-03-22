@@ -3,6 +3,7 @@ package es.ua.dlsi.grfia.moosicae.io.musicxml;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
+import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLExporterVisitorParam;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLParamExportMode;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
@@ -20,7 +21,7 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
             XMLExporterVisitorParam clefXMLParam = new XMLExporterVisitorParam(XMLParamExportMode.element, inputOutput.addChild("clef"));
             export(clef.getSignType(), clefXMLParam);
             if (clef.getLine().isPresent()) {
-                clefXMLParam.addChild("line", Integer.toString(clef.getLine().get()));
+                clefXMLParam.addChild("line", Integer.toString(clef.getLine().get().getValue()));
             }
 
         } else {
@@ -130,8 +131,7 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
 
     @Override
     public void export(IMode mode, XMLExporterVisitorParam inputOutput) {
-        inputOutput.addAttribute("key.mode", mode.getMode().name().toLowerCase());
-
+        inputOutput.addChild("mode", mode.getMode().name().toLowerCase());
     }
 
     @Override
@@ -154,7 +154,7 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
     }
 
     @Override
-    public void export(IAccidentalCore accidental, XMLExporterVisitorParam inputOutput) throws IMException {
+    public void export(IAccidentalSymbol accidental, XMLExporterVisitorParam inputOutput) throws IMException {
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
             inputOutput.addChild("alter", Integer.toString(accidental.getValue().getAlteration()));
         } else {

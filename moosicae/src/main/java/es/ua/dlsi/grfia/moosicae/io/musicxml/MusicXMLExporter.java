@@ -42,7 +42,7 @@ public class MusicXMLExporter implements IExporter {
     private void exportPartDefinitions(IScore score, XMLElement xmlScore) {
         XMLElement xmlPartList = xmlScore.addChild("part-list");
         for (IPart part: score.getParts()) {
-            XMLElement xmlPart = xmlScore.addChild("score-part");
+            XMLElement xmlPart = xmlPartList.addChild("score-part");
             xmlPart.addAttribute("id", Integer.toString(part.hashCode())); //TODO en lugar de esto usar IDs generados
             if (part.getName().isPresent()) {
                 xmlPart.addChild("part-name", part.getName().get().getValue());

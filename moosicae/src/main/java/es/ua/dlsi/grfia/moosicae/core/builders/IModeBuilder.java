@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IMode;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.enums.EModes;
+import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -24,5 +25,10 @@ public class IModeBuilder extends CoreObjectBuilder<IMode>  {
     public IMode build() throws IMException {
         assertRequired("mode", mode);
         return coreObjectFactory.createMode(getId(), mode);
+    }
+
+    @Override
+    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
+        importerVisitor.importMode(this, inputOutputType);
     }
 }

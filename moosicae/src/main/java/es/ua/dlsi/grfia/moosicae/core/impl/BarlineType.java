@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 15/03/2020
  */
-public class BarlineType extends EnumBased<EBarlineTypes> implements IBarlineType {
+public class BarlineType extends EnumCoreProperty<EBarlineTypes> implements IBarlineType {
     BarlineType(@NotNull IId id, @NotNull EBarlineTypes enumValue) {
         super(id, enumValue);
     }

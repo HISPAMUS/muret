@@ -7,6 +7,6 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public interface IClef extends INonDurational {
-    Optional<Integer> getLine();
+    Optional<IClefLine> getLine();
     IClefSign getSignType();
 }

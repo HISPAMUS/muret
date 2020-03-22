@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 15/03/2020
  */
-public class DiatonicPitch extends EnumBased<EDiatonicPitches> implements IDiatonicPitch {
+public class DiatonicPitch extends EnumCoreProperty<EDiatonicPitches> implements IDiatonicPitch {
     DiatonicPitch(@NotNull IId id, @NotNull EDiatonicPitches enumValue) {
         super(id, enumValue);
     }

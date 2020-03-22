@@ -4,7 +4,6 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -12,18 +11,18 @@ import java.util.Optional;
  */
 public class Alteration extends CoreProperty implements IAlteration {
     @NotNull
-    private final IAccidentalCore accidentalSymbol;
+    private final IAccidentalSymbol accidentalSymbol;
     @Nullable
     private final IAlterationDisplayType alterationDisplayType;
 
-    Alteration(@NotNull IId id, @NotNull IAccidentalCore accidentalSymbol, @Nullable IAlterationDisplayType alterationDisplayType) {
+    Alteration(@NotNull IId id, @NotNull IAccidentalSymbol accidentalSymbol, @Nullable IAlterationDisplayType alterationDisplayType) {
         super(id);
         this.accidentalSymbol = accidentalSymbol;
         this.alterationDisplayType = alterationDisplayType;
     }
 
     @Override
-    public IAccidentalCore getAccidentalSymbol() {
+    public IAccidentalSymbol getAccidentalSymbol() {
         return accidentalSymbol;
     }
 

@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.io.mei;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLExporterVisitorParam;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLParamExportMode;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
@@ -15,7 +16,7 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
     public void export(IClef clef, XMLExporterVisitorParam inputOutput) {
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
             if (clef.getLine().isPresent()) {
-                inputOutput.addAttribute("clef.line", Integer.toString(clef.getLine().get()));
+                inputOutput.addAttribute("clef.line", Integer.toString(clef.getLine().get().getValue()));
             }
             export(clef.getSignType(), inputOutput);
         } else {
@@ -140,7 +141,7 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
     }
 
     @Override
-    public void export(IAccidentalCore accidental, XMLExporterVisitorParam inputOutput) throws IMException {
+    public void export(IAccidentalSymbol accidental, XMLExporterVisitorParam inputOutput) throws IMException {
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.string) {
             switch (accidental.getValue()) {
                 case TRIPLE_FLAT:

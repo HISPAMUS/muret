@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
+import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es

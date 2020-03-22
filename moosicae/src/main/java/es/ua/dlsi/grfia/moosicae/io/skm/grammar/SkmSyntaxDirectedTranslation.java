@@ -213,7 +213,7 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void exitClefLine(skmParser.ClefLineContext ctx) {
             super.exitClefLine(ctx);
-            clefBuilder.setLine(Integer.parseInt(ctx.getText()));
+            clefBuilder.setLine(coreAbstractFactory.createClefLine(coreAbstractFactory.createId(), Integer.parseInt(ctx.getText())));
         }
 
         @Override
@@ -374,8 +374,8 @@ public class SkmSyntaxDirectedTranslation {
         public void exitFractionalTimeSignature(skmParser.FractionalTimeSignatureContext ctx) {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Time signature {0}", ctx.getText());
             IFractionalTimeSignatureBuilder fractionalTimeSignatureBuilder = new IFractionalTimeSignatureBuilder(coreAbstractFactory);
-            fractionalTimeSignatureBuilder.setNumerator(Integer.parseInt(ctx.numerator().getText()));
-            fractionalTimeSignatureBuilder.setDenominator(Integer.parseInt(ctx.denominator().getText()));
+            fractionalTimeSignatureBuilder.setNumerator(coreAbstractFactory.createTimeSignatureNumerator(coreAbstractFactory.createId(), Integer.parseInt(ctx.numerator().getText())));
+            fractionalTimeSignatureBuilder.setDenominator(coreAbstractFactory.createTimeSignatureDenominator(coreAbstractFactory.createId(), Integer.parseInt(ctx.denominator().getText())));
             try {
                 addItemToSpine(new SkmCoreSymbol(ctx.getText(), fractionalTimeSignatureBuilder.build()));
             } catch (IMException e) {
@@ -513,7 +513,7 @@ public class SkmSyntaxDirectedTranslation {
             IBarlineBuilder barlineBuilder = new IBarlineBuilder(coreAbstractFactory);
 
             if (ctx.number() != null) {
-                barlineBuilder.setBarNumber(Integer.parseInt(ctx.number().getText()));
+                barlineBuilder.setBarNumber(coreAbstractFactory.createNumber(coreAbstractFactory.createId(), Integer.parseInt(ctx.number().getText())));
             }
 
             if (barlineTypeBuilder != null) {

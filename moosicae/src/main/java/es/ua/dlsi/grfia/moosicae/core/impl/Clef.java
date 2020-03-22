@@ -2,13 +2,13 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IClef;
+import es.ua.dlsi.grfia.moosicae.core.IClefLine;
 import es.ua.dlsi.grfia.moosicae.core.IClefSign;
-import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
+import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.IId;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -16,7 +16,7 @@ import java.util.Optional;
  */
 public class Clef extends CoreItem implements IClef {
     @Nullable
-    private final Integer line;
+    private final IClefLine line;
     @NotNull
     private final IClefSign signType;
 
@@ -25,14 +25,14 @@ public class Clef extends CoreItem implements IClef {
      * @param line
      * @param signType
      */
-    Clef(@NotNull IId id, @Nullable Integer line, @NotNull IClefSign signType) {
+    Clef(@NotNull IId id, @Nullable IClefLine line, @NotNull IClefSign signType) {
         super(id);
         this.line = line;
         this.signType = signType;
     }
 
     @Override
-    public Optional<Integer> getLine() {
+    public Optional<IClefLine> getLine() {
         return Optional.ofNullable(line);
     }
 

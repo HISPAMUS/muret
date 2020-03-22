@@ -4,20 +4,21 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAlterationDisplayTypes;
+import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
 
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class IAlterationBuilder extends CoreObjectBuilder<IAlteration> {
-    private IAccidentalCore accidentalSymbol;
+    private IAccidentalSymbol accidentalSymbol;
     private IAlterationDisplayType alterationDisplayType;
 
     public IAlterationBuilder(ICoreAbstractFactory coreObjectFactory) {
         super(coreObjectFactory);
     }
 
-    public void setAccidentalSymbol(IAccidentalCore accidentalSymbol) {
+    public void setAccidentalSymbol(IAccidentalSymbol accidentalSymbol) {
         this.accidentalSymbol = accidentalSymbol;
     }
 
@@ -38,5 +39,10 @@ public class IAlterationBuilder extends CoreObjectBuilder<IAlteration> {
     public IAlteration build() throws IMException {
         assertRequired("accidentalSymbol", accidentalSymbol);
         return coreObjectFactory.createAlteration(getId(), accidentalSymbol, alterationDisplayType);
+    }
+
+    @Override
+    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
+        importerVisitor.importAlteration(this, inputOutputType);
     }
 }

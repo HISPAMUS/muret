@@ -1,91 +1,71 @@
 package es.ua.dlsi.grfia.moosicae.io.musicxml;
 
-import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
-import es.ua.dlsi.grfia.moosicae.core.IScore;
-import es.ua.dlsi.grfia.moosicae.core.builders.CoreObjectBuilder;
-import es.ua.dlsi.grfia.moosicae.core.builders.INoteBuilder;
-import es.ua.dlsi.grfia.moosicae.core.builders.IPartBuilder;
-import es.ua.dlsi.grfia.moosicae.core.builders.IPitchBuilder;
-import es.ua.dlsi.grfia.moosicae.io.AbstractImporter;
-import es.ua.dlsi.grfia.moosicae.io.CoreObjectBuilderSuppliers;
-import es.ua.dlsi.grfia.moosicae.io.ImportingContexts;
+import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.builders.*;
+import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
+import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporter;
 
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.EndElement;
-import javax.xml.stream.events.StartElement;
-import javax.xml.stream.events.XMLEvent;
-import java.io.*;
+import javax.xml.stream.events.*;
 
 /**
  * Use StAX for parsing
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 19/03/2020
  */
-public class MusicXMLImporter extends AbstractImporter {
-    private CoreObjectBuilderSuppliers coreObjectBuilderSuppliers;
-
+public class MusicXMLImporter extends XMLImporter<MusicXMLImporterVisitor> {
     public MusicXMLImporter(ICoreAbstractFactory abstractFactory) {
-        super(abstractFactory);
-        coreObjectBuilderSuppliers = new CoreObjectBuilderSuppliers();
+        super(abstractFactory, new MusicXMLImporterVisitor(abstractFactory));
         coreObjectBuilderSuppliers.add("score-part", IPartBuilder::new);
+        coreObjectBuilderSuppliers.add("part-name", INameBuilder::new);
+        coreObjectBuilderSuppliers.add("measure", IBarlineBuilder::new);
+
+        coreObjectBuilderSuppliers.add("key", IKeyFromAccidentalCountBuilder::new);
+        coreObjectBuilderSuppliers.add("mode", IModeBuilder::new);
 
         coreObjectBuilderSuppliers.add("note", INoteBuilder::new);
         coreObjectBuilderSuppliers.add("pitch", IPitchBuilder::new);
     }
 
     @Override
-    public IScore importScore(String input) throws IMException {
-        InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        return importScore(inputStream);
+    protected boolean handleSpecialStartElement(StartElement startElement) {
+        return false;
     }
 
-    public IScore importScore(File file) throws IMException {
-        try {
-            InputStream inputStream = new FileInputStream(file);
-            return importScore(inputStream);
-        } catch (FileNotFoundException e) {
-            throw new IMException(e);
+    @Override
+    protected boolean handleSpecialCharactersElement(String elementName, String data) {
+        boolean consumed = true;
+        switch (elementName) {
+            case "divisions":
+                xmlImporterVisitor.setDivisions(Integer.parseInt(data));
+                break;
+            case "fifths":
+                handleFifths(data);
+                break;
+            default:
+                consumed = false;
+        }
+        return consumed;
+    }
+
+    private void handleFifths(String data) {
+        int fifths = Integer.parseInt(data);
+        IKeyAccidentalCount keyAccidentalCount = null;
+        IAccidentalSymbol accidentalSymbol = null;
+        if (fifths < 0) {
+            fifths = -fifths;
+            accidentalSymbol = coreAbstractFactory.createAccidentalSymbol(coreAbstractFactory.createId(), EAccidentalSymbols.FLAT);
+        } else if (fifths > 0) {
+            accidentalSymbol = coreAbstractFactory.createAccidentalSymbol(coreAbstractFactory.createId(), EAccidentalSymbols.SHARP);
+        }
+        keyAccidentalCount = coreAbstractFactory.createKeyAccidentalCount(coreAbstractFactory.createId(), fifths);
+        importingContexts.addObjectToPool(keyAccidentalCount);
+        if (accidentalSymbol != null) {
+            importingContexts.addObjectToPool(accidentalSymbol);
         }
     }
 
-    public IScore importScore(InputStream inputStream) throws IMException {
-        ImportingContexts importingContexts = new ImportingContexts();
-
-
-        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-        try {
-            XMLEventReader reader = xmlInputFactory.createXMLEventReader(inputStream);
-
-            while (reader.hasNext()) {
-                XMLEvent nextEvent = reader.nextEvent();
-                if (nextEvent.isStartElement()) {
-                    StartElement startElement = nextEvent.asStartElement();
-                    String elementName = startElement.getName().getLocalPart();
-                    if (coreObjectBuilderSuppliers.contains(elementName)) {
-                        importingContexts.begin(elementName, (CoreObjectBuilder<?>) coreObjectBuilderSuppliers.create(elementName, coreAbstractFactory));
-                    } else {
-                        switch (elementName) {
-                        }
-                    }
-                }
-                if (nextEvent.isEndElement()) {
-                    EndElement endElement = nextEvent.asEndElement();
-                    String elementName = endElement.getName().getLocalPart();
-
-                    if (importingContexts.contains(elementName)) {
-                        importingContexts.end(elementName);
-                    } else {
-                        switch (elementName) {
-                        }
-                    }
-                }
-            }
-        } catch (XMLStreamException e) {
-            throw new IMException(e);
-        }
-        return null;
+    @Override
+    protected boolean handleSpecialEndElement(EndElement endElement) {
+        return false;
     }
 }

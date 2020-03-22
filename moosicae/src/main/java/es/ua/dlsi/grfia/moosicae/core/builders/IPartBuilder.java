@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.IName;
 import es.ua.dlsi.grfia.moosicae.core.IPart;
+import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
 
 import java.util.Optional;
 
@@ -25,5 +26,10 @@ public class IPartBuilder extends CoreObjectBuilder<IPart>  {
     @Override
     public IPart build() throws IMException {
         return coreObjectFactory.createPart(getId(), name);
+    }
+
+    @Override
+    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
+        importerVisitor.importPartBuilder(this, inputOutputType);
     }
 }

@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 15/03/2020
  */
-public class AlterationDisplayType extends EnumBased<EAlterationDisplayTypes> implements IAlterationDisplayType {
+public class AlterationDisplayType extends EnumCoreProperty<EAlterationDisplayTypes> implements IAlterationDisplayType {
     AlterationDisplayType(@NotNull IId id, @NotNull EAlterationDisplayTypes enumValue) {
         super(id, enumValue);
     }

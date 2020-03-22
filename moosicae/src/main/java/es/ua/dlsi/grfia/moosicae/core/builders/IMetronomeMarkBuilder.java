@@ -3,6 +3,7 @@ package es.ua.dlsi.grfia.moosicae.core.builders;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IMetronomeMark;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
 
 import java.util.Optional;
 
@@ -35,5 +36,10 @@ public class IMetronomeMarkBuilder extends CoreObjectBuilder<IMetronomeMark> {
         assertRequired("figure", figure);
         assertRequired("value", value);
         return coreObjectFactory.createMetronomeMark(getId(), figure, dots, value);
+    }
+
+    @Override
+    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
+        importerVisitor.importMetronome(this, inputOutputType);
     }
 }

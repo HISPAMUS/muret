@@ -1,7 +1,9 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
+import es.ua.dlsi.grfia.moosicae.core.ITimeSignatureDenominator;
+import es.ua.dlsi.grfia.moosicae.core.ITimeSignatureNumrerator;
+import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.IFractionalTimeSignature;
 import es.ua.dlsi.grfia.moosicae.core.IId;
 import es.ua.dlsi.grfia.moosicae.utils.Time;
@@ -13,25 +15,28 @@ import org.jetbrains.annotations.NotNull;
  * @created 14/03/2020
  */
 public class FractionalTimeSignature extends Meter implements IFractionalTimeSignature {
-    private final int numerator;
-    private final int denominator;
+    @NotNull
+    private final ITimeSignatureNumrerator numerator;
+    @NotNull
+    private final ITimeSignatureDenominator denominator;
+    @NotNull
     private final Time barDuration;
 
-    FractionalTimeSignature(@NotNull IId id, @NotNull Integer numerator, @NotNull Integer denominator) {
+    FractionalTimeSignature(@NotNull IId id, @NotNull ITimeSignatureNumrerator numerator, @NotNull ITimeSignatureDenominator denominator) {
         super(id);
         this.numerator = numerator;
         this.denominator = denominator;
-        this.barDuration = new Time(Fraction.getFraction(numerator, 1).multiplyBy(Fraction.getFraction(4, denominator)));
+        this.barDuration = new Time(Fraction.getFraction(numerator.getValue(), 1).multiplyBy(Fraction.getFraction(4, denominator.getValue())));
     }
 
     @Override
-    public int getNumerator() {
+    public ITimeSignatureNumrerator getNumerator() {
         return numerator;
     }
 
     @Override
-    public int getDenominator() {
-        return numerator;
+    public ITimeSignatureDenominator getDenominator() {
+        return denominator;
     }
 
     @Override
@@ -56,14 +61,16 @@ public class FractionalTimeSignature extends Meter implements IFractionalTimeSig
 
         FractionalTimeSignature that = (FractionalTimeSignature) o;
 
-        if (numerator != that.numerator) return false;
-        return denominator == that.denominator;
+        if (!numerator.equals(that.numerator)) return false;
+        if (!denominator.equals(that.denominator)) return false;
+        return barDuration.equals(that.barDuration);
     }
 
     @Override
     public int hashCode() {
-        int result = numerator;
-        result = 31 * result + denominator;
+        int result = numerator.hashCode();
+        result = 31 * result + denominator.hashCode();
+        result = 31 * result + barDuration.hashCode();
         return result;
     }
 

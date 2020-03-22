@@ -1,6 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
-import es.ua.dlsi.grfia.moosicae.core.IAccidentalCore;
+import es.ua.dlsi.grfia.moosicae.core.IAccidentalSymbol;
 import es.ua.dlsi.grfia.moosicae.core.IDiatonicPitch;
 import es.ua.dlsi.grfia.moosicae.core.IId;
 import es.ua.dlsi.grfia.moosicae.core.IPitchClass;
@@ -17,9 +17,9 @@ public class PitchClass extends CoreProperty implements IPitchClass {
     @NotNull
     private final IDiatonicPitch diatonicPitch;
     @Nullable
-    private final IAccidentalCore accidental;
+    private final IAccidentalSymbol accidental;
 
-    public PitchClass(@NotNull IId id, @NotNull IDiatonicPitch diatonicPitch, @Nullable IAccidentalCore accidental) {
+    public PitchClass(@NotNull IId id, @NotNull IDiatonicPitch diatonicPitch, @Nullable IAccidentalSymbol accidental) {
         super(id);
         this.diatonicPitch = diatonicPitch;
         this.accidental = accidental;
@@ -31,7 +31,7 @@ public class PitchClass extends CoreProperty implements IPitchClass {
     }
 
     @Override
-    public Optional<IAccidentalCore> getAccidental() {
+    public Optional<IAccidentalSymbol> getAccidental() {
         return Optional.ofNullable(accidental);
     }
 

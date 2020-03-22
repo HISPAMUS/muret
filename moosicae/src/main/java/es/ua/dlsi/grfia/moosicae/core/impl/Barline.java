@@ -3,7 +3,8 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IBarline;
 import es.ua.dlsi.grfia.moosicae.core.IBarlineType;
-import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
+import es.ua.dlsi.grfia.moosicae.core.INumber;
+import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.IId;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,18 +17,18 @@ import java.util.Optional;
  */
 public class Barline extends CoreItem implements IBarline {
     @Nullable
-    private Integer barNumber;
-    @NotNull
+    private INumber barNumber;
+    @Nullable
     private IBarlineType barlineType;
 
-    Barline(@NotNull IId id, @Nullable Integer barNumber, @NotNull IBarlineType barlineType) {
+    Barline(@NotNull IId id, @Nullable INumber barNumber, @Nullable IBarlineType barlineType) {
         super(id);
         this.barNumber = barNumber;
         this.barlineType = barlineType;
     }
 
     @Override
-    public Optional<Integer> getBarNumber() {
+    public Optional<INumber> getBarNumber() {
         return Optional.ofNullable(barNumber);
     }
 
@@ -54,13 +55,13 @@ public class Barline extends CoreItem implements IBarline {
         Barline barline = (Barline) o;
 
         if (barNumber != null ? !barNumber.equals(barline.barNumber) : barline.barNumber != null) return false;
-        return barlineType.equals(barline.barlineType);
+        return barlineType != null ? barlineType.equals(barline.barlineType) : barline.barlineType == null;
     }
 
     @Override
     public int hashCode() {
         int result = barNumber != null ? barNumber.hashCode() : 0;
-        result = 31 * result + barlineType.hashCode();
+        result = 31 * result + (barlineType != null ? barlineType.hashCode() : 0);
         return result;
     }
 

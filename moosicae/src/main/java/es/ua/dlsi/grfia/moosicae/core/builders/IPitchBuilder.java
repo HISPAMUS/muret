@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.core.enums.EDiatonicPitches;
+import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,5 +60,10 @@ public class IPitchBuilder extends CoreObjectBuilder<IPitch> {
         assertRequired("octave", octave);
         assertRequired("diatonicPitch", diatonicPitch);
         return coreObjectFactory.createPitch(getId(), octave, alteration, diatonicPitch);
+    }
+
+    @Override
+    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
+        importerVisitor.importPitch(this, inputOutputType);
     }
 }

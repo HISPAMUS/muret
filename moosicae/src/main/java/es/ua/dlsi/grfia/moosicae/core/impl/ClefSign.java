@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 15/03/2020
  */
-public class ClefSign extends EnumBased<EClefSigns> implements IClefSign {
+public class ClefSign extends EnumCoreProperty<EClefSigns> implements IClefSign {
     ClefSign(@NotNull IId id, @NotNull EClefSigns enumValue) {
         super(id, enumValue);
     }

@@ -6,6 +6,7 @@ import es.ua.dlsi.grfia.moosicae.core.builders.CoreObjectBuilder;
 
 
 import java.util.HashMap;
+import java.util.Stack;
 
 /**
  * Used to handle context organized importers, such as XML tree structures. It allows to add core object builders (method begin),
@@ -23,8 +24,9 @@ public class ImportingContexts {
         objectPool = new ImportedObjectPool();
     }
 
-    public void begin(String contextName, CoreObjectBuilder<?> coreObjectBuilder) {
+    public CoreObjectBuilder<?> begin(String contextName, CoreObjectBuilder<?> coreObjectBuilder) {
         objectBuilders.put(contextName, coreObjectBuilder);
+        return coreObjectBuilder;
     }
 
     public boolean contains(String contextName) {
@@ -42,7 +44,7 @@ public class ImportingContexts {
         return coreObject;
     }
 
-    void addObjectToPool(Object object) {
+    public void addObjectToPool(Object object) {
         this.objectPool.add(object);
     }
 

@@ -2,15 +2,14 @@ package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
-
-import java.util.Optional;
+import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class IPitchClassBuilder extends CoreObjectBuilder<IPitchClass> {
     IDiatonicPitch diatonicPitch;
-    IAccidentalCore accidentalSymbol;
+    IAccidentalSymbol accidentalSymbol;
 
     public IPitchClassBuilder(ICoreAbstractFactory coreObjectFactory) {
         super(coreObjectFactory);
@@ -20,7 +19,7 @@ public class IPitchClassBuilder extends CoreObjectBuilder<IPitchClass> {
         this.diatonicPitch = diatonicPitch;
     }
 
-    public void setAccidentalSymbol(IAccidentalCore accidentalSymbol) {
+    public void setAccidentalSymbol(IAccidentalSymbol accidentalSymbol) {
         this.accidentalSymbol = accidentalSymbol;
     }
 
@@ -28,5 +27,10 @@ public class IPitchClassBuilder extends CoreObjectBuilder<IPitchClass> {
     public IPitchClass build() throws IMException {
         assertRequired("diatonicPitch", diatonicPitch);
         return coreObjectFactory.createPitchClass(getId(), diatonicPitch, accidentalSymbol);
+    }
+
+    @Override
+    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
+        importerVisitor.importPitchClass(this, inputOutputType);
     }
 }

@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -21,5 +22,10 @@ public class IMultimeasureRestBuilder extends CoreObjectBuilder<IMultimeasureRes
     public IMultimeasureRest build() throws IMException {
         assertRequired("count", count);
         return coreObjectFactory.createMultimeasureRest(getId(), count);
+    }
+
+    @Override
+    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
+        importerVisitor.importMutimeasureRest(this, inputOutputType);
     }
 }

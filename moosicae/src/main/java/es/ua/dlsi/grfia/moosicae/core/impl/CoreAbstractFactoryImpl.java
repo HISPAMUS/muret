@@ -21,12 +21,12 @@ import java.util.Optional;
  */
 public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     @Override
-    public IAlteration createAlteration(@NotNull IId id, @NotNull IAccidentalCore accidentalSymbol, @Nullable IAlterationDisplayType alterationDisplayType) {
+    public IAlteration createAlteration(@NotNull IId id, @NotNull IAccidentalSymbol accidentalSymbol, @Nullable IAlterationDisplayType alterationDisplayType) {
         return new Alteration(id, accidentalSymbol, alterationDisplayType);
     }
 
     @Override
-    public IBarline createBarline(@NotNull IId id, @Nullable Integer barNumber, @Nullable IBarlineType barlineType) {
+    public IBarline createBarline(@NotNull IId id, @Nullable INumber barNumber, @Nullable IBarlineType barlineType) {
         return new Barline(id, barNumber, barlineType);
     }
 
@@ -36,8 +36,13 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IClef createClef(@NotNull IId id, @NotNull Integer line, IClefSign clefSign) {
+    public IClef createClef(@NotNull IId id, @NotNull IClefLine line, IClefSign clefSign) {
         return new Clef(id, line, clefSign);
+    }
+
+    @Override
+    public IClefLine createClefLine(@NotNull IId id, @NotNull Integer line) {
+        return new ClefLine(id, line);
     }
 
     @Override
@@ -63,6 +68,11 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     @Override
     public IId createId() {
         return IdGenerator.getInstance().generateUniqueId();
+    }
+
+    @Override
+    public IId createId(@NotNull String value) {
+        return new ID(value);
     }
 
     private <T extends IKeyEnum> Optional<T> findKeyEnum(T[] values, IPitchClass pitchClass) {
@@ -104,18 +114,23 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public ICommonAlterationKey createKey(@NotNull IId id, @NotNull Integer nAccidentals, @NotNull IAccidentalCore accidentalSymbol, @NotNull IMode mode) throws IMException {
+    public ICommonAlterationKey createKey(@NotNull IId id, @NotNull IKeyAccidentalCount nAccidentals, @NotNull IAccidentalSymbol accidentalSymbol, @NotNull IMode mode) throws IMException {
         EModes modeValue = mode.getMode();
         EAccidentalSymbols accidentalSymbolValue = accidentalSymbol.getValue();
         for (ECommonAlterationKeys key: ECommonAlterationKeys.values()) {
             if (key.getMode().equals(modeValue)
-                    && key.getKeySignatureAccidentalCount() == nAccidentals
+                    && key.getKeySignatureAccidentalCount() == nAccidentals.getValue()
                     && key.getKeySignatureAccidental().isPresent()
                     && key.getKeySignatureAccidental().get().equals(accidentalSymbolValue)) {
                 return createKey(id, key);
             }
         }
         throw new IMException("Cannot find a key with " + nAccidentals + " " + accidentalSymbol.getValue().name() + "s and mode " + mode.getMode());
+    }
+
+    @Override
+    public IKeyAccidentalCount createKeyAccidentalCount(@NotNull IId id, @NotNull Integer nAccidentals) {
+        return new KeyAccidentalCount(id, nAccidentals);
     }
 
 
@@ -125,7 +140,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IFractionalTimeSignature createFractionalTimeSignature(@NotNull IId id, @NotNull Integer numerator, @NotNull Integer denominator) {
+    public IFractionalTimeSignature createFractionalTimeSignature(@NotNull IId id, @NotNull ITimeSignatureNumrerator numerator, @NotNull ITimeSignatureDenominator denominator) {
         return new FractionalTimeSignature(id, numerator, denominator);
     }
 
@@ -176,6 +191,16 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
+    public IName createName(@NotNull IId id, @NotNull String value) {
+        return new Name(id, value);
+    }
+
+    @Override
+    public INumber createNumber(@NotNull IId id, @NotNull Integer value) {
+        return new Number(id, value);
+    }
+
+    @Override
     public INote createNote(@NotNull IId id, @NotNull IFigure figure, @Nullable IDots dots, @NotNull IPitch pitches) {
         return new Note(id, figure, dots, pitches);
     }
@@ -187,7 +212,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IPitchClass createPitchClass(@NotNull IId id, @NotNull IDiatonicPitch diatonicPitch, @Nullable IAccidentalCore accidentalSymbol) {
+    public IPitchClass createPitchClass(@NotNull IId id, @NotNull IDiatonicPitch diatonicPitch, @Nullable IAccidentalSymbol accidentalSymbol) {
         return new PitchClass(id, diatonicPitch, accidentalSymbol);
     }
 
@@ -255,6 +280,16 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
+    public ITimeSignatureNumrerator createTimeSignatureNumerator(@NotNull IId id, @NotNull Integer value) {
+        return new TimeSignatureNumerator(id, value);
+    }
+
+    @Override
+    public ITimeSignatureDenominator createTimeSignatureDenominator(@NotNull IId id, @NotNull Integer value) {
+        return new TimeSignatureDenominator(id, value);
+    }
+
+    @Override
     public IVoice createVoice(@NotNull IPart part, @NotNull IId id, @Nullable IName name) {
         Voice voice = new Voice(id, name);
         part.add(voice);
@@ -272,8 +307,8 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IAccidentalCore createAccidentalSymbol(@NotNull IId id, @NotNull EAccidentalSymbols accidentalSymbol) {
-        return new AccidentalCore(id, accidentalSymbol);
+    public IAccidentalSymbol createAccidentalSymbol(@NotNull IId id, @NotNull EAccidentalSymbols accidentalSymbol) {
+        return new AccidentalSymbol(id, accidentalSymbol);
     }
 
     @Override
@@ -346,8 +381,8 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
 
     private IPitchClass createPitchClass(IId id, EDiatonicPitches eDiatonicPitch, Optional<EAccidentalSymbols> eAccidentalSymbol) {
         IDiatonicPitch diatonicPitch = createDiatonicPitch(IdGenerator.getInstance().generateUniqueId(), eDiatonicPitch);
-        IAccidentalCore accidentalSymbol = null;
-        if (eAccidentalSymbol != null) {
+        IAccidentalSymbol accidentalSymbol = null;
+        if (eAccidentalSymbol.isPresent()) {
             accidentalSymbol = createAccidentalSymbol(IdGenerator.getInstance().generateUniqueId(), eAccidentalSymbol.isPresent() ? eAccidentalSymbol.get() : null);
         }
         IPitchClass pitchClass = createPitchClass(id, diatonicPitch, accidentalSymbol);
@@ -359,7 +394,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
         IPitchClass pitchClass = createPitchClass(IdGenerator.getInstance().generateUniqueId(), commonKeys.getDiatonicPitch(), commonKeys.getPitchAccidentalSymbol());
         IMode mode = createMode(id, commonKeys.getMode());
 
-        IAccidentalCore keySignatureAccidentalSymbol = null;
+        IAccidentalSymbol keySignatureAccidentalSymbol = null;
         if (commonKeys.getKeySignatureAccidental().isPresent()) {
             keySignatureAccidentalSymbol = createAccidentalSymbol(IdGenerator.getInstance().generateUniqueId(), commonKeys.getKeySignatureAccidental().get());
         }

@@ -33,15 +33,16 @@ public class XMLTree {
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
 
+        for (XMLPreambleElement xmlPreambleElement: preamble) {
+            stringBuilder.append(xmlPreambleElement.toString());
+            stringBuilder.append('\n');
+        }
+
         if (dtdDeclaration.isPresent()) {
             stringBuilder.append(dtdDeclaration.get().toString());
             stringBuilder.append('\n');
         }
 
-        for (XMLPreambleElement xmlPreambleElement: preamble) {
-            stringBuilder.append(xmlPreambleElement.toString());
-            stringBuilder.append('\n');
-        }
         stringBuilder.append(root.export(0));
         return stringBuilder.toString();
     }

@@ -4,8 +4,8 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IBarline;
 import es.ua.dlsi.grfia.moosicae.core.IBarlineType;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
-
-import java.util.Optional;
+import es.ua.dlsi.grfia.moosicae.core.INumber;
+import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -13,7 +13,7 @@ import java.util.Optional;
  */
 public class IBarlineBuilder extends CoreObjectBuilder<IBarline>  {
     private IBarlineType barlineType;
-    private Integer barNumber;
+    private INumber barNumber;
 
     public IBarlineBuilder(ICoreAbstractFactory coreObjectFactory) {
         super(coreObjectFactory);
@@ -24,12 +24,17 @@ public class IBarlineBuilder extends CoreObjectBuilder<IBarline>  {
         this.barlineType = barlineType;
     }
 
-    public void setBarNumber(Integer barNumber) {
+    public void setBarNumber(INumber barNumber) {
         this.barNumber = barNumber;
     }
 
     @Override
     public IBarline build() throws IMException {
         return coreObjectFactory.createBarline(getId(), barNumber, barlineType);
+    }
+
+    @Override
+    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
+        importerVisitor.importBarline(this, inputOutputType);
     }
 }

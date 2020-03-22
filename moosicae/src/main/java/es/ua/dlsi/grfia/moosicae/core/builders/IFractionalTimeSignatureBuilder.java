@@ -2,23 +2,24 @@ package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class IFractionalTimeSignatureBuilder extends CoreObjectBuilder<IFractionalTimeSignature> {
-    private Integer numerator;
-    private Integer denominator;
+    private ITimeSignatureNumrerator numerator;
+    private ITimeSignatureDenominator denominator;
 
     public IFractionalTimeSignatureBuilder(ICoreAbstractFactory coreObjectFactory) {
         super(coreObjectFactory);
     }
 
-    public void setNumerator(Integer numerator) {
+    public void setNumerator(ITimeSignatureNumrerator numerator) {
         this.numerator = numerator;
     }
 
-    public void setDenominator(Integer denominator) {
+    public void setDenominator(ITimeSignatureDenominator denominator) {
         this.denominator = denominator;
     }
 
@@ -27,5 +28,10 @@ public class IFractionalTimeSignatureBuilder extends CoreObjectBuilder<IFraction
         assertRequired("numerator", numerator);
         assertRequired("denominator", denominator);
         return coreObjectFactory.createFractionalTimeSignature(getId(), numerator, denominator);
+    }
+
+    @Override
+    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
+        importerVisitor.importFractionalTimeSignature(this, inputOutputType);
     }
 }

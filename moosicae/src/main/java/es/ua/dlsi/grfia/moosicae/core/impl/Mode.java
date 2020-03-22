@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 15/03/2020
  */
-public class Mode extends EnumBased<EModes> implements IMode {
+public class Mode extends EnumCoreProperty<EModes> implements IMode {
     Mode(@NotNull IId id, @NotNull EModes enumValue) {
         super(id, enumValue);
     }

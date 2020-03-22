@@ -2,7 +2,7 @@ package es.ua.dlsi.grfia.moosicae.core.impl.mensural.mensurations;
 
 import es.ua.dlsi.grfia.moosicae.core.IId;
 import es.ua.dlsi.grfia.moosicae.core.mensural.EMensuralPerfections;
-import es.ua.dlsi.grfia.moosicae.core.IExporterVisitor;
+import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.Mensuration;
 import es.ua.dlsi.grfia.moosicae.core.mensural.ITempusPerfectumCumProlationeImperfecta;
 import es.ua.dlsi.grfia.moosicae.utils.Time;

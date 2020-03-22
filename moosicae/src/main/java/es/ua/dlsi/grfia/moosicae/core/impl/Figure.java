@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 15/03/2020
  */
-public class Figure extends EnumBased<EFigures> implements IFigure {
+public class Figure extends EnumCoreProperty<EFigures> implements IFigure {
     Figure(@NotNull IId id, @NotNull EFigures enumValue) {
         super(id, enumValue);
     }

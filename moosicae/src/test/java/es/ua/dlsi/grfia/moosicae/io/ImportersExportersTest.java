@@ -6,6 +6,8 @@ import es.ua.dlsi.grfia.moosicae.core.builders.INoteBuilder;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.impl.CoreAbstractFactoryImpl;
 import es.ua.dlsi.grfia.moosicae.io.lilypond.LilypondExporter;
+import es.ua.dlsi.grfia.moosicae.io.musicxml.MusicXMLExporter;
+import es.ua.dlsi.grfia.moosicae.io.musicxml.MusicXMLImporter;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,7 +29,7 @@ public class ImportersExportersTest {
         IPart part = abstractFactory.createPart(score, abstractFactory.createId(), null);
         IVoice voice = abstractFactory.createVoice(part, abstractFactory.createId(), null);
         IStaff staff = abstractFactory.createStaff(score, abstractFactory.createId());
-        IClef clef = abstractFactory.createClef(abstractFactory.createId(), 2, abstractFactory.createClefSign(abstractFactory.createId(), EClefSigns.G));
+        IClef clef = abstractFactory.createClef(abstractFactory.createId(), abstractFactory.createClefLine(abstractFactory.createId(), 2), abstractFactory.createClefSign(abstractFactory.createId(), EClefSigns.G));
         score.add(voice, staff, clef);
         IKey key = abstractFactory.createKey(abstractFactory.createId(), ECommonAlterationKeys.DM);
         score.add(voice, staff, key);
@@ -56,7 +58,7 @@ public class ImportersExportersTest {
         IScore score = createScore();
         //testExportImport(score, new SkmExporter(), new SkmImporter(abstractFactory));
         //testExportImport(score, new MEIExporter(), new MEIImporter(abstractFactory));
-        //testExportImport(score, new MusicXMLExporter(), new MusicXMLImporter(abstractFactory));
+       // testExportImport(score, new MusicXMLExporter(), new MusicXMLImporter(abstractFactory));
     }
 
 

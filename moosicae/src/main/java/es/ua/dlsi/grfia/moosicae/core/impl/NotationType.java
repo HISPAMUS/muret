@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 15/03/2020
  */
-public class NotationType extends EnumBased<ENotationTypes> implements INotationType {
+public class NotationType extends EnumCoreProperty<ENotationTypes> implements INotationType {
     public NotationType(@NotNull IId id, ENotationTypes enumValue) {
         super(id, enumValue);
     }

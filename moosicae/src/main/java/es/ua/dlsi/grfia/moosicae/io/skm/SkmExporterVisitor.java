@@ -5,6 +5,7 @@ import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.IMetronomeMark;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
+import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmCoreSymbol;
 
 /**
@@ -17,7 +18,7 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
         inputOutput.append("*clef");
         export(clef.getSignType(), inputOutput);
         if (clef.getLine().isPresent()) {
-            inputOutput.append(clef.getLine().get());
+            inputOutput.append(clef.getLine().get().getValue());
         }
         inputOutput.buildAndAddToken(clef);
     }
@@ -57,9 +58,9 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     @Override
     public void export(IFractionalTimeSignature meter, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         inputOutput.append("*M");
-        inputOutput.append(meter.getNumerator());
+        inputOutput.append(meter.getNumerator().getValue());
         inputOutput.append('/');
-        inputOutput.append(meter.getDenominator());
+        inputOutput.append(meter.getDenominator().getValue());
         inputOutput.buildAndAddToken(meter);
     }
 
@@ -175,7 +176,7 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     }
 
     @Override
-    public void export(IAccidentalCore accidental, SkmExporterVisitorTokenParam inputOutput) {
+    public void export(IAccidentalSymbol accidental, SkmExporterVisitorTokenParam inputOutput) {
         String encoding;
         switch (accidental.getValue()) {
             case DOUBLE_FLAT:
@@ -316,7 +317,7 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     public void export(IBarline barline, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         inputOutput.append('=');
         if (barline.getBarNumber().isPresent()) {
-            inputOutput.append(barline.getBarNumber().get());
+            inputOutput.append(barline.getBarNumber().get().getValue());
         }
         if (barline.getBarlineType().isPresent()) {
             export(barline.getBarlineType().get(), inputOutput);
