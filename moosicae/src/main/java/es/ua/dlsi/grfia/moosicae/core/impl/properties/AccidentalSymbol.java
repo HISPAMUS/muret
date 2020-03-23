@@ -3,7 +3,7 @@ package es.ua.dlsi.grfia.moosicae.core.impl.properties;
 import es.ua.dlsi.grfia.moosicae.core.properties.IAccidentalSymbol;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
-import org.jetbrains.annotations.NotNull;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es

@@ -49,7 +49,7 @@ public class IAlterationBuilder extends CoreObjectBuilder<IAlteration> {
     }
 
     @Override
-    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
+    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) throws IMException {
         importerVisitor.importAlteration(this, inputOutputType);
     }
 }

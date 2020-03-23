@@ -9,7 +9,7 @@ import es.ua.dlsi.grfia.moosicae.core.IFractionalTimeSignature;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.utils.Time;
 import org.apache.commons.lang3.math.Fraction;
-import org.jetbrains.annotations.NotNull;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es

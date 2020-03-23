@@ -4,8 +4,8 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IAccidentalSymbol;
 import es.ua.dlsi.grfia.moosicae.core.properties.IDiatonicPitch;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.properties.IPitchClass;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.validation.constraints.NotNull;
+
 
 import java.util.Optional;
 
@@ -16,10 +16,10 @@ import java.util.Optional;
 public class PitchClass extends CoreProperty implements IPitchClass {
     @NotNull
     private final IDiatonicPitch diatonicPitch;
-    @Nullable
+
     private final IAccidentalSymbol accidental;
 
-    public PitchClass(@NotNull IId id, @NotNull IDiatonicPitch diatonicPitch, @Nullable IAccidentalSymbol accidental) {
+    public PitchClass(@NotNull IId id, @NotNull IDiatonicPitch diatonicPitch,  IAccidentalSymbol accidental) {
         super(id);
         this.diatonicPitch = diatonicPitch;
         this.accidental = accidental;

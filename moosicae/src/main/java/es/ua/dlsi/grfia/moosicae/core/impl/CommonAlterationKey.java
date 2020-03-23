@@ -8,8 +8,8 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.properties.IMode;
 import es.ua.dlsi.grfia.moosicae.core.properties.IPitchClass;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.validation.constraints.NotNull;
+
 
 import java.util.Optional;
 
@@ -23,7 +23,7 @@ public class CommonAlterationKey extends Key implements ICommonAlterationKey {
     @NotNull
     private final IAccidentalSymbol accidentalSymbol;
 
-    CommonAlterationKey(@NotNull IId id, @NotNull IPitchClass pitchClass, @NotNull IMode mode, @NotNull IKeySignature keySignature, @NotNull Integer accidentalCount, @Nullable IAccidentalSymbol accidentalSymbol) {
+    CommonAlterationKey(@NotNull IId id, @NotNull IPitchClass pitchClass, @NotNull IMode mode, @NotNull IKeySignature keySignature, @NotNull Integer accidentalCount,  IAccidentalSymbol accidentalSymbol) {
         super(id, pitchClass, mode, keySignature);
         this.accidentalCount = accidentalCount;
         this.accidentalSymbol = accidentalSymbol;

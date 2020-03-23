@@ -22,7 +22,7 @@ public class IClefSignBuilder extends IEnumPropertyBuilder<EClefSigns, IClefSign
     }
 
     @Override
-    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
+    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) throws IMException {
         importerVisitor.importClefSign(this, inputOutputType);
     }
 }

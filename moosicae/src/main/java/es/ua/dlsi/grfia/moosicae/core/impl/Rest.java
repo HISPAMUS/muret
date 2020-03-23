@@ -7,15 +7,15 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IDots;
 import es.ua.dlsi.grfia.moosicae.core.properties.IFigure;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.validation.constraints.NotNull;
+
 
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class Rest extends DurationalSingle implements IRest {
-    public Rest(@NotNull IId id, @NotNull IFigure figure, @Nullable IDots dots) {
+    public Rest(@NotNull IId id, @NotNull IFigure figure,  IDots dots) {
         super(id, figure, dots);
     }
 

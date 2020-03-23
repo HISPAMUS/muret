@@ -23,7 +23,7 @@ import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.Mensuration;
 import es.ua.dlsi.grfia.moosicae.core.mensural.IProportioTripla;
 import es.ua.dlsi.grfia.moosicae.utils.Time;
-import org.jetbrains.annotations.NotNull;
+import javax.validation.constraints.NotNull;
 
 /**
  * "Proporción mayor"

@@ -7,8 +7,8 @@ import es.ua.dlsi.grfia.moosicae.core.mensural.EMensuralPerfections;
 import es.ua.dlsi.grfia.moosicae.core.mensural.IMensuration;
 import es.ua.dlsi.grfia.moosicae.utils.Time;
 import org.apache.commons.lang3.math.Fraction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.validation.constraints.NotNull;
+
 
 import java.util.Optional;
 
@@ -36,7 +36,7 @@ public abstract class Mensuration extends Meter implements IMensuration {
 	 * @param tempus
 	 * @param prolatio
 	 */
-	public Mensuration(@NotNull IId id, @Nullable EMensuralPerfections modusMaior, @Nullable EMensuralPerfections modusMinor, @NotNull EMensuralPerfections tempus, @NotNull EMensuralPerfections prolatio) {
+	public Mensuration(@NotNull IId id,  EMensuralPerfections modusMaior,  EMensuralPerfections modusMinor, @NotNull EMensuralPerfections tempus, @NotNull EMensuralPerfections prolatio) {
 		super(id);
         this.prolatio = prolatio;
         this.tempus = tempus;

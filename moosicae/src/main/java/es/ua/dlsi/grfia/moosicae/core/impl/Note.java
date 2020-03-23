@@ -8,8 +8,8 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IFigure;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.properties.IPitch;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.validation.constraints.NotNull;
+
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -18,7 +18,7 @@ public class Note extends DurationalSingle implements INote {
     @NotNull
     private final IPitch pitch;
 
-    Note(@NotNull IId id, @NotNull IFigure figure, @Nullable IDots dots, @NotNull IPitch pitch) {
+    Note(@NotNull IId id, @NotNull IFigure figure,  IDots dots, @NotNull IPitch pitch) {
         super(id, figure, dots);
         this.pitch = pitch;
     }

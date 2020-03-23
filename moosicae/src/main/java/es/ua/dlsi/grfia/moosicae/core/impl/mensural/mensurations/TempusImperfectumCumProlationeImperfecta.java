@@ -6,7 +6,7 @@ import es.ua.dlsi.grfia.moosicae.core.mensural.EMensuralPerfections;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.mensural.ITempusImperfectumCumProlationeImperfecta;
 import es.ua.dlsi.grfia.moosicae.utils.Time;
-import org.jetbrains.annotations.NotNull;
+import javax.validation.constraints.NotNull;
 
 /**
  * Visually rendered as C

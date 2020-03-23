@@ -7,8 +7,8 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IClefLine;
 import es.ua.dlsi.grfia.moosicae.core.properties.IClefSign;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.validation.constraints.NotNull;
+
 
 import java.util.Optional;
 
@@ -16,7 +16,7 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class Clef extends CoreItem implements IClef {
-    @Nullable
+
     private final IClefLine line;
     @NotNull
     private final IClefSign signType;
@@ -26,7 +26,7 @@ public class Clef extends CoreItem implements IClef {
      * @param line
      * @param signType
      */
-    Clef(@NotNull IId id, @Nullable IClefLine line, @NotNull IClefSign signType) {
+    Clef(@NotNull IId id,  IClefLine line, @NotNull IClefSign signType) {
         super(id);
         this.line = line;
         this.signType = signType;

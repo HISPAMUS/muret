@@ -37,7 +37,7 @@ public class ImportersExportersTest {
         score.add(voice, staff, clef);
         IKey key = abstractFactory.createKey(abstractFactory.createId(), ECommonAlterationKeys.DM);
         score.add(voice, staff, key);
-        IMeterSymbol meterSymbol = abstractFactory.createMeterSymbol(abstractFactory.createId(), EMeterSymbols.commonTime);
+        IMeter meterSymbol = abstractFactory.createCommonTime(abstractFactory.createId());
         score.add(voice, staff, meterSymbol);
         INote note1 = new INoteBuilder(abstractFactory).build(EDiatonicPitches.F, EAccidentalSymbols.SHARP, 4, EFigures.WHOLE, 0);
         score.add(voice, staff, note1);
@@ -62,7 +62,7 @@ public class ImportersExportersTest {
         IScore score = createScore();
         //testExportImport(score, new SkmExporter(), new SkmImporter(abstractFactory));
         //testExportImport(score, new MEIExporter(), new MEIImporter(abstractFactory));
-        // testExportImport(score, new MusicXMLExporter(), new MusicXMLImporter(abstractFactory));
+        testExportImport(score, new MusicXMLExporter(), new MusicXMLImporter(abstractFactory));
     }
 
 

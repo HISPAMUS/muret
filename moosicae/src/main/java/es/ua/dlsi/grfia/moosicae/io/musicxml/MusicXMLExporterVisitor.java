@@ -14,7 +14,7 @@ import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
  * @created 16/03/2020
  */
 public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisitorParam> {
-    static final int MAX_DUR = 256;
+    public static final int MAX_DUR = 256;
 
     @Override
     public void exportClef(IClef clef, XMLExporterVisitorParam inputOutput) {
@@ -64,7 +64,13 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
 
     @Override
     public void exportFractionalTimeSignature(IFractionalTimeSignature meter, XMLExporterVisitorParam inputOutput) throws IMException {
-
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
+            XMLExporterVisitorParam timeXMLParam = new XMLExporterVisitorParam(XMLParamExportMode.element, inputOutput.addChild("time"));
+            timeXMLParam.addChild("beats", meter.getNumerator().getValue().toString());
+            timeXMLParam.addChild("beat-type", meter.getDenominator().getValue().toString());
+        } else {
+            throw new UnsupportedOperationException("TO-DO"); //TODO
+        }
     }
 
     @Override

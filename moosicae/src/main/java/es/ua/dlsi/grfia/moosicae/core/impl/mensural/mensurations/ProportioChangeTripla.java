@@ -7,7 +7,7 @@ import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.mensural.IProportioChangeTripla;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.Mensuration;
 import es.ua.dlsi.grfia.moosicae.utils.Time;
-import org.jetbrains.annotations.NotNull;
+import javax.validation.constraints.NotNull;
 
 public class ProportioChangeTripla extends Mensuration implements IProportioChangeTripla  {
     public ProportioChangeTripla(@NotNull IId id) {

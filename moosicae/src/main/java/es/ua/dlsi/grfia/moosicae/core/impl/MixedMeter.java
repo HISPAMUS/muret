@@ -6,7 +6,7 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.IMeter;
 import es.ua.dlsi.grfia.moosicae.core.IMixedMeter;
 import es.ua.dlsi.grfia.moosicae.utils.Time;
-import org.jetbrains.annotations.NotNull;
+import javax.validation.constraints.NotNull;
 
 import java.util.Arrays;
 

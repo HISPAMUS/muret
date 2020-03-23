@@ -4,8 +4,8 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IAccidentalSymbol;
 import es.ua.dlsi.grfia.moosicae.core.properties.IAlteration;
 import es.ua.dlsi.grfia.moosicae.core.properties.IAlterationDisplayType;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.validation.constraints.NotNull;
+
 
 import java.util.Optional;
 
@@ -15,10 +15,10 @@ import java.util.Optional;
 public class Alteration extends CoreProperty implements IAlteration {
     @NotNull
     private final IAccidentalSymbol accidentalSymbol;
-    @Nullable
+
     private final IAlterationDisplayType alterationDisplayType;
 
-    public Alteration(@NotNull IId id, @NotNull IAccidentalSymbol accidentalSymbol, @Nullable IAlterationDisplayType alterationDisplayType) {
+    public Alteration(@NotNull IId id, @NotNull IAccidentalSymbol accidentalSymbol,  IAlterationDisplayType alterationDisplayType) {
         super(id);
         this.accidentalSymbol = accidentalSymbol;
         this.alterationDisplayType = alterationDisplayType;

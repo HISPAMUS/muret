@@ -5,7 +5,6 @@ import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 
 import java.util.HashMap;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es

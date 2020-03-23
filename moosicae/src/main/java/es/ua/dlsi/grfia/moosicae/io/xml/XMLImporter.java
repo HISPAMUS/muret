@@ -28,7 +28,7 @@ public abstract class XMLImporter<ImporterVisitor extends IImporterVisitor<IXMLI
     protected final CoreObjectBuilderSuppliers coreObjectBuilderSuppliers;
     protected final ImporterVisitor xmlImporterVisitor;
     private Stack<String> elementStack;
-    private Stack<CoreObjectBuilder<?>> builderStack;
+    private Stack<IObjectBuilder<?>> builderStack;
     protected ImportingContexts importingContexts;
 
     public XMLImporter(ICoreAbstractFactory abstractFactory, ImporterVisitor importerVisitor) {
@@ -84,7 +84,7 @@ public abstract class XMLImporter<ImporterVisitor extends IImporterVisitor<IXMLI
         return buildScore();
     }
 
-    protected abstract IScore buildScore();
+    protected abstract IScore buildScore() throws IMException;
 
 
     /**
@@ -106,11 +106,16 @@ public abstract class XMLImporter<ImporterVisitor extends IImporterVisitor<IXMLI
     protected abstract boolean handleSpecialEndElement(EndElement endElement);
 
     private void handleStartElement(StartElement startElement) throws IMException {
+        // if not specifically handled by the derived class
         if (!handleSpecialStartElement(startElement)) {
             String elementName = startElement.getName().getLocalPart();
+            // if there is an specific builder associated to this element name, create it and import it with the specific importer visitor
+            // e.g. <note> may be imported with a INoteBuilder
+            // If the importer is MEIImporterVisitor, there will be a method in MEIImporterVisitor able to import the specifics of MEI
+            // and insert them into the INoteBuilder
             if (coreObjectBuilderSuppliers.contains(elementName)) {
-                CoreObjectBuilder<?> coreObjectBuilder = (CoreObjectBuilder<?>) importingContexts.begin(elementName,
-                        (CoreObjectBuilder<?>) coreObjectBuilderSuppliers.create(elementName, coreAbstractFactory));
+                IObjectBuilder<?> coreObjectBuilder = (IObjectBuilder<?>) importingContexts.begin(elementName,
+                        (IObjectBuilder<?>) coreObjectBuilderSuppliers.create(elementName, coreAbstractFactory));
                 builderStack.push(coreObjectBuilder);
                 coreObjectBuilder.doImport(xmlImporterVisitor, new XMLImporterVisitorAtrributes(startElement.getAttributes()));
             }
@@ -119,10 +124,17 @@ public abstract class XMLImporter<ImporterVisitor extends IImporterVisitor<IXMLI
 
 
     private void handleCharacters(String elementName, String data) throws IMException {
+        // if not specifically handled by the derived class
         if (!handleSpecialCharactersElement(elementName, data)) {
+            IObjectBuilder<?> currentBuilder = null;
+            if (!builderStack.isEmpty()) {
+                currentBuilder = builderStack.peek();
+            }
+            // if there is an specific builder associated to this element name, handle the contents using the specific importer visitor
             if (coreObjectBuilderSuppliers.contains(elementName)) {
-                CoreObjectBuilder<?> currentBuilder = builderStack.peek();
-                currentBuilder.doImport(xmlImporterVisitor, new XMLImporterVisitorCharacters(data));
+                if (currentBuilder != null) {
+                    currentBuilder.doImport(xmlImporterVisitor, new XMLImporterVisitorCharacters(data));
+                }
             }
         }
     }
@@ -131,12 +143,17 @@ public abstract class XMLImporter<ImporterVisitor extends IImporterVisitor<IXMLI
     private void handleEndElement(EndElement endElement) throws IMException {
         String elementName = endElement.getName().getLocalPart();
 
+        // if not specifically handled by the derived class
         if (!handleSpecialEndElement(endElement)) {
+            // if there is an specific builder associated to this element name, finish the context
+            // (it will build an object and prepare it for the parent context to be inserted)
             if (importingContexts.contains(elementName)) {
-                importingContexts.end(elementName);
+                onEndElement(elementName, importingContexts.end(elementName));
                 builderStack.pop();
             }
         }
     }
+
+    protected abstract void onEndElement(String elementName, Object end);
 
 }

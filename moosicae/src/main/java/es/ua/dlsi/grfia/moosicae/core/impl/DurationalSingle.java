@@ -4,8 +4,8 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IDots;
 import es.ua.dlsi.grfia.moosicae.core.IDurationalSingle;
 import es.ua.dlsi.grfia.moosicae.core.properties.IFigure;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.validation.constraints.NotNull;
+
 
 import java.util.Optional;
 
@@ -15,10 +15,10 @@ import java.util.Optional;
 public abstract class DurationalSingle extends Durational implements IDurationalSingle {
     @NotNull
     protected final IFigure figure;
-    @Nullable
+
     protected final IDots dots;
 
-    public DurationalSingle(@NotNull IId id, @NotNull IFigure figure, @Nullable IDots dots) {
+    public DurationalSingle(@NotNull IId id, @NotNull IFigure figure,  IDots dots) {
         super(id, figure.getDurationWithDots(dots != null ? dots.getValue() : 0));
         this.figure = figure;
         this.dots = dots;

@@ -10,7 +10,7 @@ import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.Mensuration;
 import es.ua.dlsi.grfia.moosicae.core.mensural.ITempusImperfectumCumProlationeImperfectaDiminutum;
 import es.ua.dlsi.grfia.moosicae.utils.Time;
-import org.jetbrains.annotations.NotNull;
+import javax.validation.constraints.NotNull;
 
 /**
  * Visually rendered as cut time (see https://en.wikipedia.org/wiki/Mensural_notation, unicode U+1D1CD)

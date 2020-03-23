@@ -8,8 +8,8 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IFigure;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.properties.IPitch;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.validation.constraints.NotNull;
+
 
 import java.util.Arrays;
 
@@ -20,7 +20,7 @@ public class Chord extends DurationalSingle implements IChord {
     @NotNull
     private final IPitch[] pitches;
 
-    Chord(@NotNull IId id, IFigure figure, @Nullable IDots dots, @NotNull IPitch [] pitches) {
+    Chord(@NotNull IId id, IFigure figure,  IDots dots, @NotNull IPitch [] pitches) {
         super(id, figure, dots);
         this.pitches = pitches.clone();
     }

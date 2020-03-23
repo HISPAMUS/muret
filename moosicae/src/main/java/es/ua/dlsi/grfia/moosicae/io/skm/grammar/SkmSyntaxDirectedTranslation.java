@@ -389,21 +389,19 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void exitModernMeterSymbolSign(skmParser.ModernMeterSymbolSignContext ctx) {
             super.exitModernMeterSymbolSign(ctx);
-            IMeterSymbolBuilder meterSymbolBuilder = new IMeterSymbolBuilder(coreAbstractFactory);
-            EMeterSymbols eMeterSymbols;
+            IMeter meter;
             switch (ctx.getText()) {
                 case "c":
-                    eMeterSymbols = EMeterSymbols.commonTime;
+                    meter = coreAbstractFactory.createCommonTime(coreAbstractFactory.createId());
                     break;
                 case "c|":
-                    eMeterSymbols = EMeterSymbols.cutTime;
+                    meter = coreAbstractFactory.createCutTime(coreAbstractFactory.createId());
                     break;
                 default:
                     throw createException("Unkown meter symbol: " + ctx.getText());
             }
-            meterSymbolBuilder.from(eMeterSymbols);
             try {
-                addItemToSpine(new SkmCoreSymbol(ctx.getText(), meterSymbolBuilder.build()));
+                addItemToSpine(new SkmCoreSymbol(ctx.getText(), meter));
             } catch (IMException e) {
                 throw createException(e);
             }

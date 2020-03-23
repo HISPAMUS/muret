@@ -7,8 +7,8 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IBarlineType;
 import es.ua.dlsi.grfia.moosicae.core.properties.INumber;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.validation.constraints.NotNull;
+
 
 import java.util.Optional;
 
@@ -17,12 +17,12 @@ import java.util.Optional;
  * @created 15/03/2020
  */
 public class Barline extends CoreItem implements IBarline {
-    @Nullable
+
     private INumber barNumber;
-    @Nullable
+
     private IBarlineType barlineType;
 
-    Barline(@NotNull IId id, @Nullable INumber barNumber, @Nullable IBarlineType barlineType) {
+    Barline(@NotNull IId id,  INumber barNumber,  IBarlineType barlineType) {
         super(id);
         this.barNumber = barNumber;
         this.barlineType = barlineType;

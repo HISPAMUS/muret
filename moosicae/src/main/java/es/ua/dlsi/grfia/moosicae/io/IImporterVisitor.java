@@ -14,27 +14,25 @@ public interface IImporterVisitor<InputOutputType>  {
 
     void importAlterationDisplayType(IAlterationDisplayTypeBuilder iAlterationDisplayTypeBuilder, InputOutputType inputOutputType);
 
-    void importMeterSymbol(IMeterSymbolBuilder iMeterSymbolBuilder, InputOutputType inputOutputType);
-
     void importCustos(ICustosBuilder iCustosBuilder, InputOutputType inputOutputType);
 
     void importMensuration(IMensurationBuilder iMensurationBuilder, InputOutputType inputOutputType);
 
     void importMode(IModeBuilder iModeBuilder, InputOutputType inputOutputType);
 
-    void importClefSign(IClefSignBuilder iClefSignBuilder, InputOutputType inputOutputType);
+    void importClefSign(IClefSignBuilder iClefSignBuilder, InputOutputType inputOutputType) throws IMException;
 
     void importClef(IClefBuilder iClefBuilder, InputOutputType inputOutputType);
 
     void importPitchClass(IPitchClassBuilder iPitchClassBuilder, InputOutputType inputOutputType);
 
-    void importAccidentalSymbol(IAccidentalSymbolBuilder iAccidentalSymbolBuilder, InputOutputType inputOutputType);
+    void importAccidentalSymbol(IAccidentalSymbolBuilder iAccidentalSymbolBuilder, InputOutputType inputOutputType) throws IMException;
 
     void importDiatonicPitch(IDiatonicPitchBuilder iDiatonicPitchBuilder, InputOutputType inputOutputType);
 
     void importPitch(IPitchBuilder iPitchBuilder, InputOutputType inputOutputType);
 
-    void importAlteration(IAlterationBuilder iAlterationBuilder, InputOutputType inputOutputType);
+    void importAlteration(IAlterationBuilder iAlterationBuilder, InputOutputType inputOutputType) throws IMException;
 
     void importBarlineType(IBarlineTypeBuilder iBarlineTypeBuilder, InputOutputType inputOutputType);
 
@@ -52,7 +50,7 @@ public interface IImporterVisitor<InputOutputType>  {
 
     void importBarline(IBarlineBuilder iBarlineBuilder, InputOutputType inputOutputType);
 
-    void importFractionalTimeSignature(IFractionalTimeSignatureBuilder iFractionalTimeSignatureBuilder, InputOutputType inputOutputType);
+    void importFractionalTimeSignature(IFractionalTimeSignatureBuilder iFractionalTimeSignatureBuilder, InputOutputType inputOutputType) throws IMException;
 
     void importKey(IKeyBuilder iKeyBuilder, InputOutputType inputOutputType);
 
@@ -77,4 +75,6 @@ public interface IImporterVisitor<InputOutputType>  {
     void importMultimeasureRestCount(IMultimeasureRestCountBuilder iMultimeasureRestCountBuilder, InputOutputType inputOutputType);
 
     void importDots(IDotsBuilder iDotsBuilder, InputOutputType inputOutputType);
+
+    void importClefLine(IClefLineBuilder iClefLineBuilder, InputOutputType inputOutputType);
 }

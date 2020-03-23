@@ -3,8 +3,8 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 import es.ua.dlsi.grfia.moosicae.core.impl.properties.CoreProperty;
 import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.validation.constraints.NotNull;
+
 
 import java.util.Optional;
 
@@ -15,12 +15,12 @@ import java.util.Optional;
 public class Pitch extends CoreProperty implements IPitch {
     @NotNull
     private final IOctave octave;
-    @Nullable
+
     private final IAlteration alteration;
     @NotNull
     private final IDiatonicPitch diatonicPitch;
 
-    public Pitch(@NotNull IId id, @NotNull IOctave octave, @Nullable IAlteration alteration, @NotNull IDiatonicPitch diatonicPitch) {
+    public Pitch(@NotNull IId id, @NotNull IOctave octave,  IAlteration alteration, @NotNull IDiatonicPitch diatonicPitch) {
         super(id);
         this.octave = octave;
         this.alteration = alteration;

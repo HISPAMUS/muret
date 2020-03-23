@@ -43,7 +43,7 @@ public class MusicXMLExporter implements IExporter {
         XMLElement xmlPartList = xmlScore.addChild("part-list");
         for (IPart part: score.getParts()) {
             XMLElement xmlPart = xmlPartList.addChild("score-part");
-            xmlPart.addAttribute("id", Integer.toString(part.hashCode())); //TODO en lugar de esto usar IDs generados
+            xmlPart.addAttribute("id", part.getId().getValue());
             if (part.getName().isPresent()) {
                 xmlPart.addChild("part-name", part.getName().get().getValue());
             }
@@ -55,7 +55,7 @@ public class MusicXMLExporter implements IExporter {
             IKey lastKey = null;
             IMeter lastMeter = null;
             XMLElement xmlPart = xmlScore.addChild("part");
-            xmlPart.addAttribute("id", Integer.toString(part.hashCode())); //TODO en lugar de esto usar IDs generados
+            xmlPart.addAttribute("id", part.getId().getValue());
 
             //TODO measures
             XMLElement xmlMeasure = xmlPart.addChild("measure");
@@ -66,7 +66,7 @@ public class MusicXMLExporter implements IExporter {
             boolean nonAttributesFound = false;
             //TODO ordenar por tiempos - ver qué staves pertenecen a partes
             for (IStaff staff: score.getAllStaves()) {
-                for (ICoreItem staffElement: staff.getStaffSymbols()) { //TODO quitar lo de StaffElement y dejarlo en ISymbol
+                for (ICoreItem staffElement: staff.getStaffSymbols()) {
                     XMLElement parentElement = xmlMeasure; // by default
                     if (staffElement instanceof INonDurational) {
                         if (!nonAttributesFound) {
@@ -76,6 +76,8 @@ public class MusicXMLExporter implements IExporter {
                             }
                             parentElement = xmlAttributes;
                         }
+
+                        System.out.println(staffElement);
                     } else {
                         nonAttributesFound = true;
                     }

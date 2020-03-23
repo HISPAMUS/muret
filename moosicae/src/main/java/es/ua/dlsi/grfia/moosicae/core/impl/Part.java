@@ -4,8 +4,8 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.properties.IName;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.validation.constraints.NotNull;
+
 
 import java.util.LinkedList;
 import java.util.Optional;
@@ -13,12 +13,12 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class Part extends CoreObject implements IPart {
-    @Nullable
+
     private final IName name;
     @NotNull
     private final LinkedList<IVoice> voices;
 
-    public Part(@NotNull IId id, @Nullable IName name) {
+    public Part(@NotNull IId id,  IName name) {
         super(id);
         this.name = name;
         this.voices = new LinkedList<>();

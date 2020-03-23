@@ -1,14 +1,15 @@
-package es.ua.dlsi.grfia.moosicae.io.musicxml;
+package es.ua.dlsi.grfia.moosicae.io.musicxml.importer;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.builders.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.*;
-import es.ua.dlsi.grfia.moosicae.core.enums.EDiatonicPitches;
-import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
-import es.ua.dlsi.grfia.moosicae.core.enums.EModes;
-import es.ua.dlsi.grfia.moosicae.core.enums.ENotationTypes;
+import es.ua.dlsi.grfia.moosicae.core.enums.*;
+import es.ua.dlsi.grfia.moosicae.core.properties.IAlteration;
+import es.ua.dlsi.grfia.moosicae.core.properties.IEnumCoreProperty;
 import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
+import es.ua.dlsi.grfia.moosicae.io.musicxml.MusicXMLExporterVisitor;
+import es.ua.dlsi.grfia.moosicae.io.musicxml.MusicXMLPartBuilder;
 import es.ua.dlsi.grfia.moosicae.io.xml.IXMLImporterVisitorParam;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterVisitorAtrributes;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterVisitorCharacters;
@@ -32,6 +33,16 @@ public class MusicXMLImporterVisitor implements IImporterVisitor<IXMLImporterVis
         if (ixmlImporterVisitorParam instanceof XMLImporterVisitorCharacters) {
             XMLImporterVisitorCharacters characters = (XMLImporterVisitorCharacters) ixmlImporterVisitorParam;
             builder.from(Integer.parseInt(characters.getCharacters()));
+        }
+    }
+
+    private <T extends Enum<T>> T parseEnumPropertyValue(IXMLImporterVisitorParam ixmlImporterVisitorParam, Class<T> enumType) throws IMException {
+        if (ixmlImporterVisitorParam instanceof XMLImporterVisitorCharacters) {
+            XMLImporterVisitorCharacters characters = (XMLImporterVisitorCharacters) ixmlImporterVisitorParam;
+            T enumValue = Enum.valueOf(enumType, characters.getCharacters());
+            return enumValue;
+        } else {
+            throw new IMException("Expecting an XMLImporterVisitorCharacters and found a " + ixmlImporterVisitorParam.getClass());
         }
     }
 
@@ -60,11 +71,6 @@ public class MusicXMLImporterVisitor implements IImporterVisitor<IXMLImporterVis
     }
 
     @Override
-    public void importMeterSymbol(IMeterSymbolBuilder iMeterSymbolBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
-
-    }
-
-    @Override
     public void importCustos(ICustosBuilder iCustosBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
 
     }
@@ -82,8 +88,10 @@ public class MusicXMLImporterVisitor implements IImporterVisitor<IXMLImporterVis
     }
 
     @Override
-    public void importClefSign(IClefSignBuilder iClefSignBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
-
+    public void importClefSign(IClefSignBuilder iClefSignBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) throws IMException {
+        if (xmlImporterVisitorParam instanceof XMLImporterVisitorCharacters) {
+            iClefSignBuilder.from(parseEnumPropertyValue(xmlImporterVisitorParam, EClefSigns.class));
+        }
     }
 
     @Override
@@ -97,8 +105,7 @@ public class MusicXMLImporterVisitor implements IImporterVisitor<IXMLImporterVis
     }
 
     @Override
-    public void importAccidentalSymbol(IAccidentalSymbolBuilder iAccidentalSymbolBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
-
+    public void importAccidentalSymbol(IAccidentalSymbolBuilder iAccidentalSymbolBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) throws IMException {
     }
 
     @Override
@@ -115,7 +122,12 @@ public class MusicXMLImporterVisitor implements IImporterVisitor<IXMLImporterVis
     }
 
     @Override
-    public void importAlteration(IAlterationBuilder iAlterationBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
+    public void importAlteration(IAlterationBuilder iAlterationBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) throws IMException {
+        if (xmlImporterVisitorParam instanceof XMLImporterVisitorCharacters) {
+            String characters = ((XMLImporterVisitorCharacters) xmlImporterVisitorParam).getCharacters();
+            EAccidentalSymbols accidentalSymbol = EAccidentalSymbols.fromSemitonesAlteration(Integer.parseInt(characters));
+            iAlterationBuilder.from(accidentalSymbol);
+        }
 
     }
 
@@ -131,7 +143,6 @@ public class MusicXMLImporterVisitor implements IImporterVisitor<IXMLImporterVis
 
     @Override
     public void importNote(INoteBuilder iNoteBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
-
     }
 
     @Override
@@ -153,7 +164,8 @@ public class MusicXMLImporterVisitor implements IImporterVisitor<IXMLImporterVis
     public void importFigure(IFigureBuilder iFigureBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) throws IMException {
         if (xmlImporterVisitorParam instanceof XMLImporterVisitorCharacters) {
             XMLImporterVisitorCharacters characters = (XMLImporterVisitorCharacters) xmlImporterVisitorParam;
-            int meterUnit = Integer.parseInt(characters.getCharacters());
+            int meterUnit = Integer.parseInt(characters.getCharacters()) / MusicXMLExporterVisitor.MAX_DUR;
+            //TODO - meter unit ¿cuando tiene puntillos? - mejor buscar type... --- ¿es obligatorio type?
             EFigures figure = EFigures.findMeterUnit(meterUnit, ENotationTypes.eModern);
             iFigureBuilder.from(figure);
         }
@@ -174,8 +186,26 @@ public class MusicXMLImporterVisitor implements IImporterVisitor<IXMLImporterVis
     }
 
     @Override
-    public void importFractionalTimeSignature(IFractionalTimeSignatureBuilder iFractionalTimeSignatureBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
-
+    public void importFractionalTimeSignature(IFractionalTimeSignatureBuilder iFractionalTimeSignatureBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) throws IMException {
+        if (xmlImporterVisitorParam instanceof XMLImporterVisitorAtrributes) {
+            for (Iterator<Attribute> iterator = ((XMLImporterVisitorAtrributes) xmlImporterVisitorParam).getAttributeIterator(); iterator.hasNext(); ) {
+                Attribute attribute = iterator.next();
+                switch (attribute.getName().getLocalPart()) {
+                    case "symbol":
+                        switch (attribute.getValue()) {
+                            case "common":
+                                iFractionalTimeSignatureBuilder.from(ETimeSignatureSymbols.common);
+                                break;
+                            case "cut":
+                                iFractionalTimeSignatureBuilder.from(ETimeSignatureSymbols.cut);
+                                break;
+                            default:
+                                throw new IMException("Unkown time signature symbol: '" + attribute.getValue() + "'");
+                        }
+                        break;
+                }
+            }
+        }
     }
 
     @Override
@@ -240,7 +270,43 @@ public class MusicXMLImporterVisitor implements IImporterVisitor<IXMLImporterVis
 
     }
 
+    @Override
+    public void importClefLine(IClefLineBuilder iClefLineBuilder, IXMLImporterVisitorParam visitorParam) {
+        importIntegerProperty(iClefLineBuilder, visitorParam);
+    }
+
     public void setDivisions(int divisions) {
         this.currentDivisions = divisions;
     }
+
+    public void importPartContent(MusicXMLPartBuilder musicXMLPartBuilder, IXMLImporterVisitorParam ixmlImporterVisitorParam) {
+
+    }
+
+    public void importMusicXMLPartBuilder(MusicXMLPartBuilder musicXMLPartBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
+        if (xmlImporterVisitorParam instanceof XMLImporterVisitorAtrributes) {
+            for (Iterator<Attribute> iterator = ((XMLImporterVisitorAtrributes) xmlImporterVisitorParam).getAttributeIterator(); iterator.hasNext(); ) {
+                Attribute attribute = iterator.next();
+                switch (attribute.getName().getLocalPart()) {
+                    case "id":
+                        musicXMLPartBuilder.from(coreAbstractFactory.createId(attribute.getValue()));
+                        break;
+                }
+            }
+        }
+    }
+
+
+    /*public void startImportPartContent(Iterator<Attribute> attributes) {
+        for (Iterator<Attribute> iterator = attributes; iterator.hasNext(); ) {
+            Attribute attribute = iterator.next();
+            switch (attribute.getName().getLocalPart()) {
+                case "id":
+                    currentPartID = attribute.getValue();
+                    partItems = new LinkedList<>();
+                    break;
+            }
+
+        }
+    }*/
 }

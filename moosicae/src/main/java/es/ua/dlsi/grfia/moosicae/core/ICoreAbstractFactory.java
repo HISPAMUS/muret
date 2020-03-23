@@ -7,20 +7,21 @@ import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
 import es.ua.dlsi.grfia.moosicae.core.mensural.*;
 import es.ua.dlsi.grfia.moosicae.core.metadata.ITitle;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.validation.constraints.NotNull;
+
 
 /**
  * It knows how to create all main objects in the core package
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public interface ICoreAbstractFactory {
-    IAlteration createAlteration(@NotNull IId id, @NotNull IAccidentalSymbol accidentals, @Nullable IAlterationDisplayType alterationDisplayType);
+    IAlteration createAlteration(@NotNull IId id, @NotNull IAccidentalSymbol accidentals, IAlterationDisplayType alterationDisplayType);
     IAlterationDisplayType createAlterationDisplayType(@NotNull IId id, @NotNull EAlterationDisplayTypes alterationDisplayType);
     IAccidentalSymbol createAccidentalSymbol(@NotNull IId id, @NotNull EAccidentalSymbols accidentalSymbol);
-    IBarline createBarline(@NotNull IId id, @Nullable INumber barNumber, @Nullable IBarlineType barlineType);
+    IBarline createBarline(@NotNull IId id,  INumber barNumber,  IBarlineType barlineType);
     IBarlineType createBarlineType(@NotNull IId id, @NotNull EBarlineTypes barlineType);
-    IChord createChord(@NotNull IId id, @NotNull IFigure figures, @Nullable IDots dots, @NotNull IPitch [] pitches);
+    IChord createChord(@NotNull IId id, @NotNull IFigure figures,  IDots dots, @NotNull IPitch [] pitches);
     IClef createClef(@NotNull IId id, @NotNull IClefLine line, @NotNull IClefSign clefSign);
     IClefLine createClefLine(@NotNull IId id, @NotNull Integer line);
     IClefSign createClefSign(@NotNull IId id, @NotNull EClefSigns clefSign);
@@ -41,9 +42,8 @@ public interface ICoreAbstractFactory {
     IKeySignature createKeySignature(@NotNull IId id, @NotNull IPitchClass [] pitchClasses);
     IFractionalTimeSignature createFractionalTimeSignature(@NotNull IId id, @NotNull ITimeSignatureNumrerator numerator, @NotNull ITimeSignatureDenominator denominator);
     IMensuration createMensuration(@NotNull IId id, @NotNull EMensurations mensuration);
-    IMensuration createMensuration(@NotNull IId id, @Nullable EMensuralPerfections modusMaior, @Nullable EMensuralPerfections modusMinor, @NotNull EMensuralPerfections tempus, @NotNull EMensuralPerfections prolatio);
-    IMeterSymbol createMeterSymbol(@NotNull IId id, @NotNull EMeterSymbols meterSymbol);
-    IMetronomeMark createMetronomeMark(@NotNull IId id, @NotNull IFigure figure, @Nullable IDots dots, @NotNull IMetronomeMarkValue value);
+    IMensuration createMensuration(@NotNull IId id,  EMensuralPerfections modusMaior,  EMensuralPerfections modusMinor, @NotNull EMensuralPerfections tempus, @NotNull EMensuralPerfections prolatio);
+    IMetronomeMark createMetronomeMark(@NotNull IId id, @NotNull IFigure figure,  IDots dots, @NotNull IMetronomeMarkValue value);
     IMetronomeMarkValue createMetronomeMarkValue(IId id, Integer value);
     IMode createMode(@NotNull IId id, EModes mode);
     IMultimeasureRest createMultimeasureRest(@NotNull IId id, @NotNull IMultimeasureRestCount measureCount);
@@ -52,14 +52,14 @@ public interface ICoreAbstractFactory {
     IName createName(@NotNull IId id, @NotNull String value);
     INotationType createNotationType(@NotNull IId id, @NotNull ENotationTypes notationType);
     INumber createNumber(@NotNull IId id, @NotNull Integer value);
-    INote createNote(@NotNull IId id, IFigure figures, @Nullable IDots dots, @NotNull IPitch pitch);
+    INote createNote(@NotNull IId id, IFigure figures,  IDots dots, @NotNull IPitch pitch);
     IOctave createOctave(@NotNull IId id, @NotNull Integer number);
 
     /**
      * Creates and adds the part to the score
      * @return
      */
-    IPart createPart(@NotNull IScore score, @NotNull IId id, @Nullable IName name);
+    IPart createPart(@NotNull IScore score, @NotNull IId id,  IName name);
 
     /**
      * Creates the part alone
@@ -67,12 +67,12 @@ public interface ICoreAbstractFactory {
      * @param name
      * @return
      */
-    IPart createPart(@NotNull IId id, @Nullable IName name);
-    IPitch createPitch(@NotNull IId id, @NotNull IOctave octave, @Nullable IAlteration alteration, @NotNull IDiatonicPitch diatonicPitch);
-    IPitchClass createPitchClass(@NotNull IId id, @NotNull IDiatonicPitch diatonicPitch, @Nullable IAccidentalSymbol accidentalSymbol);
+    IPart createPart(@NotNull IId id,  IName name);
+    IPitch createPitch(@NotNull IId id, @NotNull IOctave octave,  IAlteration alteration, @NotNull IDiatonicPitch diatonicPitch);
+    IPitchClass createPitchClass(@NotNull IId id, @NotNull IDiatonicPitch diatonicPitch,  IAccidentalSymbol accidentalSymbol);
 
     IScore createScore(@NotNull IId id);
-    IRest createRest(@NotNull IId id, @NotNull IFigure figure, @Nullable IDots dots);
+    IRest createRest(@NotNull IId id, @NotNull IFigure figure,  IDots dots);
 
     /**
      * For nested staff
@@ -97,6 +97,6 @@ public interface ICoreAbstractFactory {
     ITimeSignatureNumrerator createTimeSignatureNumerator(@NotNull IId id, @NotNull Integer value);
     ITimeSignatureDenominator createTimeSignatureDenominator(@NotNull IId id, @NotNull Integer value);
     ITitle createTitle(@NotNull IId id, @NotNull String title);
-    IVoice createVoice(@NotNull IPart part, @NotNull IId id, @Nullable IName name);
+    IVoice createVoice(@NotNull IPart part, @NotNull IId id,  IName name);
 
 }

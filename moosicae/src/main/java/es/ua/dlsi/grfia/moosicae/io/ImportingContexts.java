@@ -2,12 +2,10 @@ package es.ua.dlsi.grfia.moosicae.io;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreObject;
-import es.ua.dlsi.grfia.moosicae.core.IScore;
-import es.ua.dlsi.grfia.moosicae.core.builders.CoreObjectBuilder;
+import es.ua.dlsi.grfia.moosicae.core.builders.IObjectBuilder;
 
 
 import java.util.HashMap;
-import java.util.Stack;
 
 /**
  * Used to handle context organized importers, such as XML tree structures. It allows to add core object builders (method begin),
@@ -18,14 +16,14 @@ import java.util.Stack;
  */
 public class ImportingContexts {
     private final ImportedObjectPool objectPool;
-    private final HashMap<String, CoreObjectBuilder<?>> objectBuilders;
+    private final HashMap<String, IObjectBuilder<?>> objectBuilders;
 
     public ImportingContexts() {
         objectBuilders = new HashMap<>();
         objectPool = new ImportedObjectPool();
     }
 
-    public CoreObjectBuilder<?> begin(String contextName, CoreObjectBuilder<?> coreObjectBuilder) {
+    public IObjectBuilder<?> begin(String contextName, IObjectBuilder<?> coreObjectBuilder) {
         objectBuilders.put(contextName, coreObjectBuilder);
         return coreObjectBuilder;
     }
@@ -34,13 +32,13 @@ public class ImportingContexts {
         return objectBuilders.containsKey(contextName);
     }
 
-    public ICoreObject end(String contextName) throws IMException {
-        CoreObjectBuilder<?> coreObjectBuilder = objectBuilders.get(contextName);
+    public Object end(String contextName) throws IMException {
+        IObjectBuilder<?> coreObjectBuilder = objectBuilders.get(contextName);
         if (coreObjectBuilder == null) {
             throw new IMException("Cannot find a core object builder for the context with name '" + contextName + "'");
         }
         objectPool.populate(coreObjectBuilder);
-        ICoreObject coreObject = coreObjectBuilder.build();
+        Object coreObject = coreObjectBuilder.build();
         objectPool.add(coreObject);
         return coreObject;
     }

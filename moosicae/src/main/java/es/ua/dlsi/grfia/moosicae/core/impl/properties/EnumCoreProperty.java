@@ -1,8 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.core.impl.properties;
 
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.validation.constraints.NotNull;
+
 
 /**
  * Used as a convenience class serving as base for all classes wrapping an enum
@@ -13,7 +13,7 @@ public abstract class EnumCoreProperty<EnumType> extends CoreProperty {
     @NotNull
     protected final EnumType value;
 
-    public EnumCoreProperty(@Nullable IId id, @NotNull EnumType value) {
+    public EnumCoreProperty( IId id, @NotNull EnumType value) {
         super(id);
         this.value = value;
     }

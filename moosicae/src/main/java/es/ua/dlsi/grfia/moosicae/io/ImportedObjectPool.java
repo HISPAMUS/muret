@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.io;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.builders.CoreObjectBuilder;
+import es.ua.dlsi.grfia.moosicae.core.builders.IObjectBuilder;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -21,12 +21,19 @@ public class ImportedObjectPool {
      */
     private final List<Object> availableObjects;
 
+    /**
+     * Other properties attached to the object not inserted to the object as properties.
+     * Key = identity hash code
+     */
+    private final HashMap<Object, Properties> notHandledProperties;
+
     public ImportedObjectPool() {
         availableObjects = new LinkedList<>();
+        notHandledProperties = new HashMap<>();
     }
 
     public void add(Object object) {
-        availableObjects.add(0, object);
+        availableObjects.add(object);
     }
 
     /**
@@ -34,7 +41,7 @@ public class ImportedObjectPool {
      * @param target
      * @throws IMException
      */
-    public void populate(CoreObjectBuilder<?> target) throws IMException {
+    public void populate(IObjectBuilder<?> target) throws IMException {
         try {
             for (Method method : target.getClass().getMethods()) {
                 if (method.getName().equals(FROM) || method.getName().equals(ADD)) {

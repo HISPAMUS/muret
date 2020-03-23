@@ -9,8 +9,8 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IDiatonicPitch;
 import es.ua.dlsi.grfia.moosicae.core.properties.IOctave;
 import es.ua.dlsi.grfia.moosicae.core.properties.IPitch;
 import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.validation.constraints.NotNull;
+
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es

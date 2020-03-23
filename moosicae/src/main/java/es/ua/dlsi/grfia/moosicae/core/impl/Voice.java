@@ -6,8 +6,8 @@ import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.properties.IName;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.validation.constraints.NotNull;
+
 
 import java.util.LinkedList;
 import java.util.Optional;
@@ -16,12 +16,12 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class Voice extends CoreObject implements IVoice {
-    @Nullable
+
     private final IName name;
     @NotNull
     private final LinkedList<IVoiced> items;
 
-    public Voice(@NotNull IId id, @Nullable IName name) {
+    public Voice(@NotNull IId id,  IName name) {
         super(id);
         this.name = name;
         items = new LinkedList<>();

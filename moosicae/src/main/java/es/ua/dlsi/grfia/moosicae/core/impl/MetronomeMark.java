@@ -8,8 +8,8 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IFigure;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.properties.IMetronomeMarkValue;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.validation.constraints.NotNull;
+
 
 import java.util.Optional;
 
@@ -20,12 +20,12 @@ import java.util.Optional;
 public class MetronomeMark extends CoreItem implements IMetronomeMark {
     @NotNull
     private IFigure figure;
-    @Nullable
+
     private IDots dots;
     @NotNull
     private IMetronomeMarkValue value;
 
-    MetronomeMark(@NotNull IId id, @NotNull IFigure figure, @Nullable IDots dots, IMetronomeMarkValue value) {
+    MetronomeMark(@NotNull IId id, @NotNull IFigure figure,  IDots dots, IMetronomeMarkValue value) {
         super(id);
         this.figure = figure;
         this.dots = dots;

@@ -4,7 +4,7 @@ import es.ua.dlsi.grfia.moosicae.core.IDurational;
 import es.ua.dlsi.grfia.moosicae.core.IDurationalComposite;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.utils.Time;
-import org.jetbrains.annotations.NotNull;
+import javax.validation.constraints.NotNull;
 
 //TODO Durational composite
 /**

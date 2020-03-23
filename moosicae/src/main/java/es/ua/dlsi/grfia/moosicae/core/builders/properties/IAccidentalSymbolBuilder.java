@@ -22,7 +22,7 @@ public class IAccidentalSymbolBuilder extends IEnumPropertyBuilder<EAccidentalSy
     }
 
     @Override
-    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
+    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) throws IMException {
         importerVisitor.importAccidentalSymbol(this, inputOutputType);
     }
 }

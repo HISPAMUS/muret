@@ -29,7 +29,6 @@ import java.util.Optional;
  */
 public class MEIImporter extends AbstractImporter {
 
-    private IMeterSymbolBuilder meterSymbolBuilder;
     private IKeyFromAccidentalCountBuilder keyFromAccidentalCountBuilder;
     private IAccidentalSymbolBuilder accidentalSymbolBuilder;
     private IDiatonicPitchBuilder diatonicPitchBuilder;
@@ -236,7 +235,7 @@ public class MEIImporter extends AbstractImporter {
         }
         Optional<String> meterSym = getOptionalAttrValue(node, "meter.sym");
         if (meterSym.isPresent()) {
-            processScoreDefMeterSym(node, meterSym);
+            //TODO processScoreDefMeterSym(node, meterSym);
         }
     }
 
@@ -281,15 +280,15 @@ public class MEIImporter extends AbstractImporter {
             staff.put(key);
             voice.addItem(key);
         }
-        if (meterSymbolBuilder != null) {
+        /*TODO if (meterSymbolBuilder != null) {
             IMeterSymbol meterSymbol = meterSymbolBuilder.build();
             staff.put(meterSymbol);
             voice.addItem(meterSymbol);
-        }
+        }*/
 
     }
 
-    private void processScoreDefMeterSym(Node node, Optional<String> meterSym) throws IMException {
+    /*private void processScoreDefMeterSym(Node node, Optional<String> meterSym) throws IMException {
         meterSymbolBuilder = new IMeterSymbolBuilder(coreAbstractFactory);
         switch (meterSym.get()) {
             case "common":
@@ -301,7 +300,7 @@ public class MEIImporter extends AbstractImporter {
             default:
                 throw new IMException("Unsupported meter symbol '" + meterSym.get() + "'");
         }
-    }
+    }*/
 
     private void processScoreDefKeySig(Node node, Optional<String> keySig) throws IMException {
         //TODO quizás habrá que hacer que IKeyFromAccidentalCountBuilder herede de un IKeyBuilder para poder generalizar las formas de crear keys
@@ -348,11 +347,12 @@ public class MEIImporter extends AbstractImporter {
         voice.addItem(clef);
         staff.put(clef);
 
+        /*TODO
         if (meterSymbolBuilder != null) {
             IMeterSymbol meterSymbol = meterSymbolBuilder.build();
             voice.addItem(meterSymbol);
             staff.put(meterSymbol);
             meterSymbolBuilder = null;
-        }
+        }*/
     }
 }
