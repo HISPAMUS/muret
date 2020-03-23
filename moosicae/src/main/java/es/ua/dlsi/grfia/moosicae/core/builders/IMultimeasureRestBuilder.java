@@ -2,25 +2,27 @@ package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.IMultimeasureRestCountBuilder;
+import es.ua.dlsi.grfia.moosicae.core.properties.IMultimeasureRestCount;
 import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class IMultimeasureRestBuilder extends CoreObjectBuilder<IMultimeasureRest> {
-    private Integer count;
+    private IMultimeasureRestCount count;
 
     public IMultimeasureRestBuilder(ICoreAbstractFactory coreObjectFactory) {
         super(coreObjectFactory);
     }
 
-    public void setCount(Integer count) {
+    public IMultimeasureRestBuilder from(IMultimeasureRestCount count) {
         this.count = count;
+        return this;
     }
 
     @Override
     public IMultimeasureRest build() throws IMException {
-        assertRequired("count", count);
         return coreObjectFactory.createMultimeasureRest(getId(), count);
     }
 

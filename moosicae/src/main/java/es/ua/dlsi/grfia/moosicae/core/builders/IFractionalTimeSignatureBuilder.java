@@ -15,18 +15,18 @@ public class IFractionalTimeSignatureBuilder extends CoreObjectBuilder<IFraction
         super(coreObjectFactory);
     }
 
-    public void setNumerator(ITimeSignatureNumrerator numerator) {
+    public IFractionalTimeSignatureBuilder from(ITimeSignatureNumrerator numerator) {
         this.numerator = numerator;
+        return this;
     }
 
-    public void setDenominator(ITimeSignatureDenominator denominator) {
+    public IFractionalTimeSignatureBuilder from(ITimeSignatureDenominator denominator) {
         this.denominator = denominator;
+        return this;
     }
 
     @Override
     public IFractionalTimeSignature build() throws IMException {
-        assertRequired("numerator", numerator);
-        assertRequired("denominator", denominator);
         return coreObjectFactory.createFractionalTimeSignature(getId(), numerator, denominator);
     }
 

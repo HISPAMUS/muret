@@ -1,4 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.core;
+
+import es.ua.dlsi.grfia.moosicae.core.properties.IMode;
+import es.ua.dlsi.grfia.moosicae.core.properties.IPitchClass;
+
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */

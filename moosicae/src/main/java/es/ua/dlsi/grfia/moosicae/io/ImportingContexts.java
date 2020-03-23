@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.io;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreObject;
+import es.ua.dlsi.grfia.moosicae.core.IScore;
 import es.ua.dlsi.grfia.moosicae.core.builders.CoreObjectBuilder;
 
 

@@ -1,5 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core;
 
+import es.ua.dlsi.grfia.moosicae.core.properties.IId;
+
 /**
  * By adding clone, hashCode, equals we force a canonical form of the class
  * @author David Rizo - drizo@dlsi.ua.es

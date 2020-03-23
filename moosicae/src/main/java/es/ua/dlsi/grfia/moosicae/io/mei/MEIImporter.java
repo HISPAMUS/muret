@@ -2,7 +2,12 @@ package es.ua.dlsi.grfia.moosicae.io.mei;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.IAccidentalSymbolBuilder;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.IDiatonicPitchBuilder;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.IFigureBuilder;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
+import es.ua.dlsi.grfia.moosicae.core.properties.IAccidentalSymbol;
+import es.ua.dlsi.grfia.moosicae.core.properties.IMode;
 import es.ua.dlsi.grfia.moosicae.io.AbstractImporter;
 import es.ua.dlsi.grfia.moosicae.core.builders.*;
 import org.w3c.dom.Document;
@@ -103,10 +108,11 @@ public class MEIImporter extends AbstractImporter {
         noteBuilder = new INoteBuilder(coreAbstractFactory);
         processPitch(node);
         processFigure(node);
-        noteBuilder.setPitch(pitchBuilder.build());
-        noteBuilder.setFigure(figureBuilder.build());
         //TODO dots
-        INote note = noteBuilder.build();
+        INote note = noteBuilder.
+                from(pitchBuilder.build()).
+                from(figureBuilder.build()).
+                build();
         score.add(voice, staff, note);
 
         // set to null all used values
@@ -123,10 +129,10 @@ public class MEIImporter extends AbstractImporter {
         //TODO process Accid si aparece como parámetro
         processOctave(node);
         if (octave != null) {
-            pitchBuilder.setOctave(octave);
+            pitchBuilder.from(octave);
         }
         if (diatonicPitchBuilder != null) {
-            pitchBuilder.setDiatonicPitch(diatonicPitchBuilder.build());
+            pitchBuilder.from(diatonicPitchBuilder.build());
         }
     }
 
@@ -149,7 +155,7 @@ public class MEIImporter extends AbstractImporter {
         Optional<String> pname = getOptionalAttrValue(node, "pname");
         if (pname.isPresent()) {
             diatonicPitchBuilder = new IDiatonicPitchBuilder(coreAbstractFactory);
-            diatonicPitchBuilder.setDiatonicPitch(EDiatonicPitches.valueOf(pname.get().toUpperCase()));
+            diatonicPitchBuilder.from(EDiatonicPitches.valueOf(pname.get().toUpperCase()));
         }
     }
 
@@ -191,7 +197,7 @@ public class MEIImporter extends AbstractImporter {
                 eFigure = EFigures.findMeterUnit(Integer.parseInt(dur), ENotationTypes.eModern);
         }
         figureBuilder = new IFigureBuilder(coreAbstractFactory);
-        figureBuilder.setFigure(eFigure);
+        figureBuilder.from(eFigure);
     }
 
     private void processAccidentalSymbol(String accidentalValue) throws IMException {
@@ -220,7 +226,7 @@ public class MEIImporter extends AbstractImporter {
                 throw new IMException("Unkown accidental symbol '" + accidentalValue + "'");
         }
 
-        accidentalSymbolBuilder.setAccidentalSymbol(eAccidentalSymbol);
+        accidentalSymbolBuilder.from(eAccidentalSymbol);
     }
 
     private void processScoreDef(Node node, IScore score) throws IMException {
@@ -287,10 +293,10 @@ public class MEIImporter extends AbstractImporter {
         meterSymbolBuilder = new IMeterSymbolBuilder(coreAbstractFactory);
         switch (meterSym.get()) {
             case "common":
-                meterSymbolBuilder.setMeterSymbols(EMeterSymbols.commonTime);
+                meterSymbolBuilder.from(EMeterSymbols.commonTime);
                 break;
             case "cut":
-                meterSymbolBuilder.setMeterSymbols(EMeterSymbols.cutTime);
+                meterSymbolBuilder.from(EMeterSymbols.cutTime);
                 break;
             default:
                 throw new IMException("Unsupported meter symbol '" + meterSym.get() + "'");
@@ -305,7 +311,7 @@ public class MEIImporter extends AbstractImporter {
             throw new IMException("Expected 2 characters for keySig value: '" + keySig.get() + "'");
         }
         int nAccidentals = Integer.parseInt(keySig.get().substring(0, 1));
-        keyFromAccidentalCountBuilder.setAccidentalCount(coreAbstractFactory.createKeyAccidentalCount(coreAbstractFactory.createId(), nAccidentals));
+        keyFromAccidentalCountBuilder.from(coreAbstractFactory.createKeyAccidentalCount(coreAbstractFactory.createId(), nAccidentals));
 
         char accidental = keySig.get().charAt(1);
         IAccidentalSymbol accidentalSymbol;
@@ -316,15 +322,15 @@ public class MEIImporter extends AbstractImporter {
         } else {
             throw new IMException("Unkown accidental: '" + accidental + "'");
         }
-        keyFromAccidentalCountBuilder.setAccidentalSymbol(accidentalSymbol);
+        keyFromAccidentalCountBuilder.from(accidentalSymbol);
 
         Optional<String> modeString = getOptionalAttrValue(node, "key.mode");
         if (modeString.isPresent()) {
             IModeBuilder modeBuilder = new IModeBuilder(coreAbstractFactory);
-            modeBuilder.setMode(EModes.valueOf(modeString.get().toLowerCase()));
+            modeBuilder.from(EModes.valueOf(modeString.get().toLowerCase()));
             IMode mode = modeBuilder.build();
 
-            keyFromAccidentalCountBuilder.setMode(mode);
+            keyFromAccidentalCountBuilder.from(mode);
         } else {
             throw new UnsupportedOperationException("TODO-crear keysignature");
         }
@@ -332,10 +338,10 @@ public class MEIImporter extends AbstractImporter {
 
     private void processStaffDefClef(Node node, IVoice voice, IStaff staff, Optional<String> clefShape) throws IMException {
         IClefBuilder clefBuilder = new IClefBuilder(coreAbstractFactory);
-        clefBuilder.setClefSign(coreAbstractFactory.createClefSign(coreAbstractFactory.createId(), EClefSigns.valueOf(clefShape.get())));
+        clefBuilder.from(coreAbstractFactory.createClefSign(coreAbstractFactory.createId(), EClefSigns.valueOf(clefShape.get())));
         Optional<String> clefLine = getOptionalAttrValue(node, "clef.line");
         if (clefLine.isPresent()) {
-            clefBuilder.setLine(coreAbstractFactory.createClefLine(coreAbstractFactory.createId(), Integer.parseInt(clefLine.get())));
+            clefBuilder.from(coreAbstractFactory.createClefLine(coreAbstractFactory.createId(), Integer.parseInt(clefLine.get())));
         }
 
         IClef clef = clefBuilder.build();

@@ -1,10 +1,11 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
-import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.impl.properties.CoreProperty;
+import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
+import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
 import java.util.Optional;
 
 /**

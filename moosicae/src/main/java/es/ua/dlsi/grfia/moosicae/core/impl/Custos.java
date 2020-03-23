@@ -2,6 +2,9 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
+import es.ua.dlsi.grfia.moosicae.core.properties.IId;
+import es.ua.dlsi.grfia.moosicae.core.properties.IPitch;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,7 +27,7 @@ public class Custos extends CoreItem implements ICustos {
 
     @Override
     public <InputOutputType> void export(IExporterVisitor exportVisitor, InputOutputType inputOutput) throws IMException {
-        exportVisitor.export(this, inputOutput);
+        exportVisitor.exportCustos(this, inputOutput);
     }
 
     @Override

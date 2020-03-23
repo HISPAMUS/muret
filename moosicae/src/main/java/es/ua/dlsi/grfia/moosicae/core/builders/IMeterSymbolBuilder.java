@@ -10,21 +10,19 @@ import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 15/03/2020
  */
-public class IMeterSymbolBuilder extends CoreObjectBuilder<IMeterSymbol>  {
-    private EMeterSymbols meterSymbols;
-
+public class IMeterSymbolBuilder extends CoreObjectBuilder<IMeterSymbol> {
+    private EMeterSymbols meterSymbol;
     public IMeterSymbolBuilder(ICoreAbstractFactory coreObjectFactory) {
         super(coreObjectFactory);
     }
 
-    public void setMeterSymbols(EMeterSymbols meterSymbols) {
-        this.meterSymbols = meterSymbols;
+    public IMeterSymbolBuilder from(EMeterSymbols meterSymbol) {
+        this.meterSymbol = meterSymbol;
+        return this;
     }
-
     @Override
     public IMeterSymbol build() throws IMException {
-        assertRequired("meterSymbols", meterSymbols);
-        return coreObjectFactory.createMeterSymbol(getId(), meterSymbols);
+        return coreObjectFactory.createMeterSymbol(getId(), meterSymbol);
     }
 
     @Override

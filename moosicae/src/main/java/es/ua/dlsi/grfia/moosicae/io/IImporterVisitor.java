@@ -1,6 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.io;
 
+import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.builders.*;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.*;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -46,7 +48,7 @@ public interface IImporterVisitor<InputOutputType>  {
 
     void importMetronome(IMetronomeMarkBuilder iMetronomeMarkBuilder, InputOutputType inputOutputType);
 
-    void importFigure(IFigureBuilder iFigureBuilder, InputOutputType inputOutputType);
+    void importFigure(IFigureBuilder iFigureBuilder, InputOutputType inputOutputType) throws IMException;
 
     void importBarline(IBarlineBuilder iBarlineBuilder, InputOutputType inputOutputType);
 
@@ -61,4 +63,18 @@ public interface IImporterVisitor<InputOutputType>  {
     void importName(INameBuilder iNameBuilder, InputOutputType inputOutputType);
 
     void importKeyAccidentalCount(IKeyAccidentalCountBuilder iKeyAccidentalCountBuilder, InputOutputType inputOutputType);
+
+    void importTimeSignatureNumerator(ITimeSignatureNumeratorBuilder iTimeSignatureNumeratorBuilder, InputOutputType inputOutputType);
+
+    void importNumber(INumberBuilder iNumberBuilder, InputOutputType inputOutputType);
+
+    void importTimeSignatureDenominator(ITimeSignatureDenominatorBuilder iTimeSignatureDenominatorBuilder, InputOutputType inputOutputType);
+
+    void importOctave(IOctaveBuilder iOctaveBuilder, InputOutputType inputOutputType);
+
+    void importMetronomeMarkValue(IIMetronomeMarkValueBuilder iiMetronomeMarkValueBuilder, InputOutputType inputOutputType);
+
+    void importMultimeasureRestCount(IMultimeasureRestCountBuilder iMultimeasureRestCountBuilder, InputOutputType inputOutputType);
+
+    void importDots(IDotsBuilder iDotsBuilder, InputOutputType inputOutputType);
 }

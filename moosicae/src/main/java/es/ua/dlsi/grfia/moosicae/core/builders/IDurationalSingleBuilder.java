@@ -1,10 +1,9 @@
 package es.ua.dlsi.grfia.moosicae.core.builders;
 
-import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
-import es.ua.dlsi.grfia.moosicae.core.IDots;
+import es.ua.dlsi.grfia.moosicae.core.properties.IDots;
 import es.ua.dlsi.grfia.moosicae.core.IDurationalSingle;
-import es.ua.dlsi.grfia.moosicae.core.IFigure;
+import es.ua.dlsi.grfia.moosicae.core.properties.IFigure;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
 
 /**
@@ -19,25 +18,25 @@ public abstract class IDurationalSingleBuilder<T extends IDurationalSingle> exte
         super(coreObjectFactory);
     }
 
-    public void setFigure(IFigure figure) {
+    public IDurationalSingleBuilder<T> from(IFigure figure) {
         this.figure = figure;
+        return this;
     }
 
-    public void setDots(IDots dots) {
+    public IDurationalSingleBuilder<T> from(IDots dots) {
         this.dots = dots;
+        return this;
     }
 
-    public void setFigure(EFigures figure) {
+    public IDurationalSingleBuilder<T> from(EFigures figure) {
         this.figure = coreObjectFactory.createFigure(getId(), figure);
+        return this;
     }
 
-    public void setDots(int ndots) {
+    public IDurationalSingleBuilder<T> from(int ndots) {
         if (ndots > 0) {
             this.dots = coreObjectFactory.createDots(getId(), ndots);
         }
-    }
-
-    protected void assertRequired() throws IMException {
-        assertRequired("figure", figure);
+        return this;
     }
 }

@@ -1,9 +1,9 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
-import es.ua.dlsi.grfia.moosicae.core.IDots;
+import es.ua.dlsi.grfia.moosicae.core.properties.IDots;
 import es.ua.dlsi.grfia.moosicae.core.IDurationalSingle;
-import es.ua.dlsi.grfia.moosicae.core.IFigure;
-import es.ua.dlsi.grfia.moosicae.core.IId;
+import es.ua.dlsi.grfia.moosicae.core.properties.IFigure;
+import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,7 +19,7 @@ public abstract class DurationalSingle extends Durational implements IDurational
     protected final IDots dots;
 
     public DurationalSingle(@NotNull IId id, @NotNull IFigure figure, @Nullable IDots dots) {
-        super(id, figure.getDurationWithDots(dots != null ? dots.getCount() : 0));
+        super(id, figure.getDurationWithDots(dots != null ? dots.getValue() : 0));
         this.figure = figure;
         this.dots = dots;
     }

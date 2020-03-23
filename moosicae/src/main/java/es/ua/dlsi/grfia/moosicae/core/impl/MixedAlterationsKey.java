@@ -1,6 +1,10 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
+import es.ua.dlsi.grfia.moosicae.core.properties.IId;
+import es.ua.dlsi.grfia.moosicae.core.properties.IMode;
+import es.ua.dlsi.grfia.moosicae.core.properties.IPitchClass;
 import org.jetbrains.annotations.NotNull;
 
 /**

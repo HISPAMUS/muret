@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.io.lilypond;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 
 /**
@@ -12,7 +13,7 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
 
 
     @Override
-    public void export(IClef clef, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportClef(IClef clef, LilypondExporterVisitorParam inputOutput) throws IMException {
         //TODO
         inputOutput.startString();
         inputOutput.append("\\clef ");
@@ -21,97 +22,97 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
     }
 
     @Override
-    public void export(IClefSign clefSign, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportClefSign(IClefSign clefSign, LilypondExporterVisitorParam inputOutput) throws IMException {
 
     }
 
     @Override
-    public void export(INote note, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportNote(INote note, LilypondExporterVisitorParam inputOutput) throws IMException {
         inputOutput.startString();
-        export(note.getPitch(), inputOutput);
-        export(note.getFigure(), inputOutput);
+        exportPitch(note.getPitch(), inputOutput);
+        exportFigure(note.getFigure(), inputOutput);
         if (note.getDots().isPresent()) {
-            export(note.getDots().get(), inputOutput);
+            exportDots(note.getDots().get(), inputOutput);
         }
         inputOutput.finishString();
     }
 
     @Override
-    public void export(IRest rest, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportRest(IRest rest, LilypondExporterVisitorParam inputOutput) throws IMException {
+
+    }
+    @Override
+    public void exportMultimeasureRest(IMultimeasureRest mrest, LilypondExporterVisitorParam inputOutput) throws IMException {
 
     }
 
     @Override
-    public void export(IMultimeasureRest mrest, LilypondExporterVisitorParam inputOutput) throws IMException {
-
-    }
-
-    @Override
-    public void export(IFractionalTimeSignature meter, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportFractionalTimeSignature(IFractionalTimeSignature meter, LilypondExporterVisitorParam inputOutput) throws IMException {
         inputOutput.addChild("\\numericTimeSignature");
         inputOutput.addChild("\\time " + meter.getNumerator() + "/" + meter.getDenominator());
     }
 
     @Override
-    public void export(ICutTime meter, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportCutTime(ICutTime meter, LilypondExporterVisitorParam inputOutput) throws IMException {
         inputOutput.addChild("\\defaultTimeSignature");
         inputOutput.addChild("\\time 2/2");
     }
 
     @Override
-    public void export(ICommonTime meter, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportCommonTime(ICommonTime meter, LilypondExporterVisitorParam inputOutput) throws IMException {
         inputOutput.addChild("\\defaultTimeSignature");
         inputOutput.addChild("\\time 4/4");
     }
 
     @Override
-    public void export(IChord chord, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportChord(IChord chord, LilypondExporterVisitorParam inputOutputOutput) throws IMException {
 
     }
 
     @Override
-    public void export(ICustos custos, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportCustos(ICustos custos, LilypondExporterVisitorParam inputOutputOutput) throws IMException {
 
     }
 
     @Override
-    public void export(IKey key, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportKey(IKey key, LilypondExporterVisitorParam inputOutputOutput) throws IMException {
+
     }
 
     @Override
-    public void export(ICommonAlterationKey commonAlterationKey, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportCommonAlterationKey(ICommonAlterationKey commonAlterationKey, LilypondExporterVisitorParam inputOutput) throws IMException {
         inputOutput.startString();
         inputOutput.append("\\key ");
         inputOutput.append(commonAlterationKey.getPitchClass().getDiatonicPitch().getValue().name().toLowerCase());
         inputOutput.append(' ');
         inputOutput.append('\\');
-        inputOutput.append(commonAlterationKey.getMode().getMode().name().toLowerCase());
+        inputOutput.append(commonAlterationKey.getMode().getValue().name().toLowerCase());
         inputOutput.finishString();
 
     }
 
     @Override
-    public void export(IMode mode, LilypondExporterVisitorParam inputOutput) {
+    public void exportMode(IMode mode, LilypondExporterVisitorParam inputOutput) {
 
     }
 
     @Override
-    public void export(IKeySignature keySignature, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportKeySignature(IKeySignature keySignature, LilypondExporterVisitorParam inputOutputOutput) throws IMException {
 
     }
 
     @Override
-    public void export(IVoice voice, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportVoice(IVoice voice, LilypondExporterVisitorParam inputOutput) throws IMException {
 
     }
 
     @Override
-    public void export(IDiatonicPitch diatonicPitch, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportDiatonicPitch(IDiatonicPitch diatonicPitch, LilypondExporterVisitorParam inputOutput) throws IMException {
         inputOutput.append(diatonicPitch.getValue().name().toLowerCase());
     }
 
     @Override
-    public void export(IAccidentalSymbol accidental, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportAccidentalSymbol(IAccidentalSymbol accidental, LilypondExporterVisitorParam inputOutput) throws IMException {
         switch (accidental.getValue()) {
             case TRIPLE_FLAT:
                 inputOutput.append("eseses");
@@ -137,33 +138,33 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
     }
 
     @Override
-    public void export(IAlterationDisplayType alterationDisplayType, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportAlterationDisplayType(IAlterationDisplayType alterationDisplayType, LilypondExporterVisitorParam inputOutput) throws IMException {
 
     }
 
     @Override
-    public void export(IAlteration alteration, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportAlteration(IAlteration alteration, LilypondExporterVisitorParam inputOutput) throws IMException {
         //TODO display type
-        export(alteration.getAccidentalSymbol(), inputOutput);
+        exportAccidentalSymbol(alteration.getAccidentalSymbol(), inputOutput);
    }
 
     @Override
-    public void export(IPitchClass pitchClass, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportPitchClass(IPitchClass pitchClass, LilypondExporterVisitorParam inputOutput) throws IMException {
 
     }
 
     @Override
-    public void export(IPitch pitch, LilypondExporterVisitorParam inputOutput) throws IMException {
-        export(pitch.getDiatonicPitch(), inputOutput);
+    public void exportPitch(IPitch pitch, LilypondExporterVisitorParam inputOutput) throws IMException {
+        exportDiatonicPitch(pitch.getDiatonicPitch(), inputOutput);
         if (pitch.getAlteration().isPresent()) {
-            export(pitch.getAlteration().get(), inputOutput);
+            exportAlteration(pitch.getAlteration().get(), inputOutput);
         }
-        export(pitch.getOctave(), inputOutput);
+        exportOctave(pitch.getOctave(), inputOutput);
     }
 
     @Override
-    public void export(IOctave octave, LilypondExporterVisitorParam inputOutput) {
-        int n = octave.getNumber();
+    public void exportOctave(IOctave octave, LilypondExporterVisitorParam inputOutput) {
+        int n = octave.getValue();
         if (n > 3) {
             for (int i = 3; i < n; i++) {
                 inputOutput.append('\'');
@@ -176,14 +177,14 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
     }
 
     @Override
-    public void export(IDots dots, LilypondExporterVisitorParam inputOutput) throws IMException {
-        for (int i=0; i<dots.getCount(); i++) {
+    public void exportDots(IDots dots, LilypondExporterVisitorParam inputOutput) throws IMException {
+        for (int i=0; i<dots.getValue(); i++) {
             inputOutput.append('.');
         }
     }
 
     @Override
-    public void export(IFigure figures, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportFigure(IFigure figures, LilypondExporterVisitorParam inputOutput) throws IMException {
         String value;
         switch (figures.getValue()) {
             case MAXIMA: value = "maxima"; break;
@@ -203,27 +204,27 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
     }
 
     @Override
-    public void export(IMetronomeMark metronomeMark, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportMetronomeMark(IMetronomeMark metronomeMark, LilypondExporterVisitorParam inputOutput) throws IMException {
 
     }
 
     @Override
-    public void export(IBarline barline, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportBarline(IBarline barline, LilypondExporterVisitorParam inputOutput) throws IMException {
 
     }
 
     @Override
-    public void export(IBarlineType barlineType, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportBarlineType(IBarlineType barlineType, LilypondExporterVisitorParam inputOutput) throws IMException {
 
     }
 
     @Override
-    public void export(IPageBeginning pageBeginning, LilypondExporterVisitorParam inputOutput) {
+    public void exportPageBeginning(IPageBeginning pageBeginning, LilypondExporterVisitorParam inputOutput) {
 
     }
 
     @Override
-    public void export(ISystemBeginning systemBeginning, LilypondExporterVisitorParam inputOutput) {
+    public void exportSystemBeginning(ISystemBeginning systemBeginning, LilypondExporterVisitorParam inputOutput) {
 
     }
 }

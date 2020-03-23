@@ -2,6 +2,9 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
+import es.ua.dlsi.grfia.moosicae.core.properties.IId;
+import es.ua.dlsi.grfia.moosicae.core.properties.IPitchClass;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,7 +15,7 @@ import java.util.Arrays;
  */
 public class KeySignature extends CoreItem implements IKeySignature {
     @NotNull
-    private final IPitchClass [] pitchClasses;
+    private final IPitchClass[] pitchClasses;
 
     /**
      * Created by factories
@@ -30,7 +33,7 @@ public class KeySignature extends CoreItem implements IKeySignature {
 
     @Override
     public <InputOutputType> void export(IExporterVisitor exportVisitor, InputOutputType inputOutput) throws IMException {
-        exportVisitor.export(this, inputOutput);
+        exportVisitor.exportKeySignature(this, inputOutput);
     }
 
     @Override

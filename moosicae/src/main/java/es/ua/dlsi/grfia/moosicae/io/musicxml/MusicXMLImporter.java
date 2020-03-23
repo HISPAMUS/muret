@@ -2,7 +2,10 @@ package es.ua.dlsi.grfia.moosicae.io.musicxml;
 
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.*;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
+import es.ua.dlsi.grfia.moosicae.core.properties.IAccidentalSymbol;
+import es.ua.dlsi.grfia.moosicae.core.properties.IKeyAccidentalCount;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporter;
 
 import javax.xml.stream.events.*;
@@ -15,6 +18,7 @@ import javax.xml.stream.events.*;
 public class MusicXMLImporter extends XMLImporter<MusicXMLImporterVisitor> {
     public MusicXMLImporter(ICoreAbstractFactory abstractFactory) {
         super(abstractFactory, new MusicXMLImporterVisitor(abstractFactory));
+        coreObjectBuilderSuppliers.add("score-partwise", IScoreBuilder::new);
         coreObjectBuilderSuppliers.add("score-part", IPartBuilder::new);
         coreObjectBuilderSuppliers.add("part-name", INameBuilder::new);
         coreObjectBuilderSuppliers.add("measure", IBarlineBuilder::new);
@@ -22,8 +26,22 @@ public class MusicXMLImporter extends XMLImporter<MusicXMLImporterVisitor> {
         coreObjectBuilderSuppliers.add("key", IKeyFromAccidentalCountBuilder::new);
         coreObjectBuilderSuppliers.add("mode", IModeBuilder::new);
 
+        coreObjectBuilderSuppliers.add("time", IFractionalTimeSignatureBuilder::new);
+        coreObjectBuilderSuppliers.add("beats", ITimeSignatureNumeratorBuilder::new);
+        coreObjectBuilderSuppliers.add("beat-type", ITimeSignatureDenominatorBuilder::new);
+
         coreObjectBuilderSuppliers.add("note", INoteBuilder::new);
         coreObjectBuilderSuppliers.add("pitch", IPitchBuilder::new);
+        coreObjectBuilderSuppliers.add("octave", IOctaveBuilder::new);
+        coreObjectBuilderSuppliers.add("step", IDiatonicPitchBuilder::new);
+
+        coreObjectBuilderSuppliers.add("duration", IFigureBuilder::new);
+    }
+
+    @Override
+    protected IScore buildScore() {
+        System.out.println("AAA");
+        return null;
     }
 
     @Override

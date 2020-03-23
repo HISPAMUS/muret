@@ -8,8 +8,11 @@ import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.Mensuration;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.mensurations.*;
+import es.ua.dlsi.grfia.moosicae.core.impl.properties.*;
+import es.ua.dlsi.grfia.moosicae.core.impl.properties.Number;
 import es.ua.dlsi.grfia.moosicae.core.mensural.*;
 import es.ua.dlsi.grfia.moosicae.core.metadata.ITitle;
+import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -115,7 +118,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
 
     @Override
     public ICommonAlterationKey createKey(@NotNull IId id, @NotNull IKeyAccidentalCount nAccidentals, @NotNull IAccidentalSymbol accidentalSymbol, @NotNull IMode mode) throws IMException {
-        EModes modeValue = mode.getMode();
+        EModes modeValue = mode.getValue();
         EAccidentalSymbols accidentalSymbolValue = accidentalSymbol.getValue();
         for (ECommonAlterationKeys key: ECommonAlterationKeys.values()) {
             if (key.getMode().equals(modeValue)
@@ -125,7 +128,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
                 return createKey(id, key);
             }
         }
-        throw new IMException("Cannot find a key with " + nAccidentals + " " + accidentalSymbol.getValue().name() + "s and mode " + mode.getMode());
+        throw new IMException("Cannot find a key with " + nAccidentals + " " + accidentalSymbol.getValue().name() + "s and mode " + mode.getValue());
     }
 
     @Override
@@ -181,13 +184,23 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IMetronomeMark createMetronomeMark(@NotNull IId id, @NotNull IFigure figure, @Nullable IDots dots, @NotNull Integer value) {
+    public IMetronomeMark createMetronomeMark(@NotNull IId id, @NotNull IFigure figure, @Nullable IDots dots, @NotNull IMetronomeMarkValue value) {
         return new MetronomeMark(id, figure, dots, value);
     }
 
     @Override
-    public IMultimeasureRest createMultimeasureRest(@NotNull IId id, @NotNull Integer measureCount) {
+    public IMetronomeMarkValue createMetronomeMarkValue(IId id, Integer value) {
+        return new MetronomeMarkValue(id, value);
+    }
+
+    @Override
+    public IMultimeasureRest createMultimeasureRest(@NotNull IId id, @NotNull IMultimeasureRestCount measureCount) {
         return new MultimeasureRest(id, measureCount);
+    }
+
+    @Override
+    public IMultimeasureRestCount createMultimeasureRestCount(IId id, Integer value) {
+        return new MultimeasureRestCount(id, value);
     }
 
     @Override
@@ -201,8 +214,8 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public INote createNote(@NotNull IId id, @NotNull IFigure figure, @Nullable IDots dots, @NotNull IPitch pitches) {
-        return new Note(id, figure, dots, pitches);
+    public INote createNote(@NotNull IId id, @NotNull IFigure figure, @Nullable IDots dots, @NotNull IPitch pitch) {
+        return new Note(id, figure, dots, pitch);
     }
 
 

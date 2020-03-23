@@ -2,9 +2,12 @@ package es.ua.dlsi.grfia.moosicae.io.skm.grammar;
 
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.IMException;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
 import es.ua.dlsi.grfia.moosicae.core.builders.*;
+import es.ua.dlsi.grfia.moosicae.core.properties.IMode;
+import es.ua.dlsi.grfia.moosicae.core.properties.IPitchClass;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmCoreSymbol;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmHeader;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmPart;
@@ -202,9 +205,9 @@ public class SkmSyntaxDirectedTranslation {
         public void exitClefSign(skmParser.ClefSignContext ctx) {
             super.exitClefSign(ctx);
             IClefSignBuilder clefSignBuilder = new IClefSignBuilder(coreAbstractFactory);
-            clefSignBuilder.setClefSign(EClefSigns.valueOf(ctx.getText()));
+            clefSignBuilder.from(EClefSigns.valueOf(ctx.getText()));
             try {
-                clefBuilder.setClefSign(clefSignBuilder.build());
+                clefBuilder.from(clefSignBuilder.build());
             } catch (IMException e) {
                 throw createException(e);
             }
@@ -213,7 +216,7 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void exitClefLine(skmParser.ClefLineContext ctx) {
             super.exitClefLine(ctx);
-            clefBuilder.setLine(coreAbstractFactory.createClefLine(coreAbstractFactory.createId(), Integer.parseInt(ctx.getText())));
+            clefBuilder.from(coreAbstractFactory.createClefLine(coreAbstractFactory.createId(), Integer.parseInt(ctx.getText())));
         }
 
         @Override
@@ -263,7 +266,7 @@ public class SkmSyntaxDirectedTranslation {
                 default:
                     throw createException("Unkown accidental symbol: " + ctx.getText());
             }
-            accidentalSymbolBuilder.setAccidentalSymbol(accidentalSymbols);
+            accidentalSymbolBuilder.from(accidentalSymbols);
         }
 
         public void exitDiatonicPitchAndOctave(skmParser.DiatonicPitchAndOctaveContext ctx) {
@@ -281,13 +284,13 @@ public class SkmSyntaxDirectedTranslation {
         public void exitPitchClass(skmParser.PitchClassContext ctx) {
             if (accidentalSymbolBuilder != null) {
                 try {
-                    pitchClassBuilder.setAccidentalSymbol(accidentalSymbolBuilder.build());
+                    pitchClassBuilder.from(accidentalSymbolBuilder.build());
                 } catch (IMException e) {
                     throw createException(e);
                 }
             }
 
-            pitchClassBuilder.setDiatonicPitch(coreAbstractFactory.createDiatonicPitch(coreAbstractFactory.createId(), EDiatonicPitches.valueOf(ctx.lowerCasePitch().getText().toUpperCase())));
+            pitchClassBuilder.from(coreAbstractFactory.createDiatonicPitch(coreAbstractFactory.createId(), EDiatonicPitches.valueOf(ctx.lowerCasePitch().getText().toUpperCase())));
         }
 
         @Override
@@ -302,7 +305,7 @@ public class SkmSyntaxDirectedTranslation {
         public void exitKeySignaturePitchClass(skmParser.KeySignaturePitchClassContext ctx) {
             super.exitKeySignaturePitchClass(ctx);
             try {
-                keySignatureBuilder.addPitchClass(pitchClassBuilder.build());
+                keySignatureBuilder.add(pitchClassBuilder.build());
             } catch (IMException e) {
                 throw createException(e);
             }
@@ -327,14 +330,14 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void exitMajorKey(skmParser.MajorKeyContext ctx) {
             super.exitMajorKey(ctx);
-            modeBuilder.setMode(EModes.major);
+            modeBuilder.from(EModes.major);
             pitchClassBuilder = new IPitchClassBuilder(coreAbstractFactory);
             diatonicPitchBuilder = new IDiatonicPitchBuilder(coreAbstractFactory);
-            diatonicPitchBuilder.setDiatonicPitch(EDiatonicPitches.valueOf(ctx.upperCasePitch().getText().toUpperCase()));
+            diatonicPitchBuilder.from(EDiatonicPitches.valueOf(ctx.upperCasePitch().getText().toUpperCase()));
             try {
-                pitchClassBuilder.setDiatonicPitch(diatonicPitchBuilder.build());
+                pitchClassBuilder.from(diatonicPitchBuilder.build());
                 if (accidentalSymbolBuilder != null) {
-                    pitchClassBuilder.setAccidentalSymbol(accidentalSymbolBuilder.build());
+                    pitchClassBuilder.from(accidentalSymbolBuilder.build());
                 }
             } catch (IMException e) {
                 throw createException(e);
@@ -344,14 +347,14 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void exitMinorKey(skmParser.MinorKeyContext ctx) {
             super.exitMinorKey(ctx);
-            modeBuilder.setMode(EModes.minor);
+            modeBuilder.from(EModes.minor);
             pitchClassBuilder = new IPitchClassBuilder(coreAbstractFactory);
             diatonicPitchBuilder = new IDiatonicPitchBuilder(coreAbstractFactory);
-            diatonicPitchBuilder.setDiatonicPitch(EDiatonicPitches.valueOf(ctx.lowerCasePitch().getText().toUpperCase()));
+            diatonicPitchBuilder.from(EDiatonicPitches.valueOf(ctx.lowerCasePitch().getText().toUpperCase()));
             try {
-                pitchClassBuilder.setDiatonicPitch(diatonicPitchBuilder.build());
+                pitchClassBuilder.from(diatonicPitchBuilder.build());
                 if (accidentalSymbolBuilder != null) {
-                    pitchClassBuilder.setAccidentalSymbol(accidentalSymbolBuilder.build());
+                    pitchClassBuilder.from(accidentalSymbolBuilder.build());
                 }
             } catch (IMException e) {
                 throw createException(e);
@@ -374,8 +377,8 @@ public class SkmSyntaxDirectedTranslation {
         public void exitFractionalTimeSignature(skmParser.FractionalTimeSignatureContext ctx) {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Time signature {0}", ctx.getText());
             IFractionalTimeSignatureBuilder fractionalTimeSignatureBuilder = new IFractionalTimeSignatureBuilder(coreAbstractFactory);
-            fractionalTimeSignatureBuilder.setNumerator(coreAbstractFactory.createTimeSignatureNumerator(coreAbstractFactory.createId(), Integer.parseInt(ctx.numerator().getText())));
-            fractionalTimeSignatureBuilder.setDenominator(coreAbstractFactory.createTimeSignatureDenominator(coreAbstractFactory.createId(), Integer.parseInt(ctx.denominator().getText())));
+            fractionalTimeSignatureBuilder.from(coreAbstractFactory.createTimeSignatureNumerator(coreAbstractFactory.createId(), Integer.parseInt(ctx.numerator().getText())));
+            fractionalTimeSignatureBuilder.from(coreAbstractFactory.createTimeSignatureDenominator(coreAbstractFactory.createId(), Integer.parseInt(ctx.denominator().getText())));
             try {
                 addItemToSpine(new SkmCoreSymbol(ctx.getText(), fractionalTimeSignatureBuilder.build()));
             } catch (IMException e) {
@@ -398,7 +401,7 @@ public class SkmSyntaxDirectedTranslation {
                 default:
                     throw createException("Unkown meter symbol: " + ctx.getText());
             }
-            meterSymbolBuilder.setMeterSymbols(eMeterSymbols);
+            meterSymbolBuilder.from(eMeterSymbols);
             try {
                 addItemToSpine(new SkmCoreSymbol(ctx.getText(), meterSymbolBuilder.build()));
             } catch (IMException e) {
@@ -443,7 +446,7 @@ public class SkmSyntaxDirectedTranslation {
                     throw createException("Unkown mensuration: " + ctx.getText());
 
             }
-            mensurationBuilder.setMensurations(mensuration);
+            mensurationBuilder.from(mensuration);
             try {
                 addItemToSpine(new SkmCoreSymbol(ctx.getText(), mensurationBuilder.build()));
             } catch (IMException e) {
@@ -458,8 +461,8 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Metronome {0}", ctx.getText());
             super.exitMetronome(ctx);
             IMetronomeMarkBuilder metronomeMarkBuilder = new IMetronomeMarkBuilder(coreAbstractFactory);
-            metronomeMarkBuilder.setFigure(coreAbstractFactory.createFigure(coreAbstractFactory.createId(), EFigures.QUARTER));
-            metronomeMarkBuilder.setValue(Integer.parseInt(ctx.number().getText()));
+            metronomeMarkBuilder.from(coreAbstractFactory.createFigure(coreAbstractFactory.createId(), EFigures.QUARTER));
+            metronomeMarkBuilder.from(coreAbstractFactory.createMetronomeMarkValue(coreAbstractFactory.createId(), Integer.parseInt(ctx.number().getText())));
             SkmCoreSymbol mm = null;
             try {
                 mm = new SkmCoreSymbol(ctx.getText(), metronomeMarkBuilder.build());
@@ -502,7 +505,7 @@ public class SkmSyntaxDirectedTranslation {
                 default:
                     throw createException("Unkopwn barline type: " + ctx.getText());
             }
-            barlineTypeBuilder.setBarlineType(barlineType);
+            barlineTypeBuilder.from(barlineType);
         }
 
         @Override
@@ -513,12 +516,12 @@ public class SkmSyntaxDirectedTranslation {
             IBarlineBuilder barlineBuilder = new IBarlineBuilder(coreAbstractFactory);
 
             if (ctx.number() != null) {
-                barlineBuilder.setBarNumber(coreAbstractFactory.createNumber(coreAbstractFactory.createId(), Integer.parseInt(ctx.number().getText())));
+                barlineBuilder.from(coreAbstractFactory.createNumber(coreAbstractFactory.createId(), Integer.parseInt(ctx.number().getText())));
             }
 
             if (barlineTypeBuilder != null) {
                 try {
-                    barlineBuilder.setBarlineType(barlineTypeBuilder.build());
+                    barlineBuilder.from(barlineTypeBuilder.build());
                 } catch (IMException e) {
                     throw createException(e);
                 }
@@ -586,8 +589,8 @@ public class SkmSyntaxDirectedTranslation {
             try {
                 EFigures figure = EFigures.findMeterUnit(Integer.parseInt(ctx.getText()), ENotationTypes.eModern);
                 int augmentationDots = ctx.augmentationDot().size();
-                durationalSingleBuilder.setFigure(coreAbstractFactory.createFigure(coreAbstractFactory.createId(), figure));
-                durationalSingleBuilder.setDots(augmentationDots);
+                durationalSingleBuilder.from(coreAbstractFactory.createFigure(coreAbstractFactory.createId(), figure));
+                durationalSingleBuilder.from(augmentationDots);
             } catch (IMException e) {
                 throw createException(e);
             }
@@ -646,7 +649,7 @@ public class SkmSyntaxDirectedTranslation {
             checkAllNoteNameEqual(code);
             this.octave = 4 + octaveModif;
             String noteName = code.substring(0, 1).toUpperCase();
-            diatonicPitchBuilder.setDiatonicPitch(EDiatonicPitches.valueOf(noteName));
+            diatonicPitchBuilder.from(EDiatonicPitches.valueOf(noteName));
         }
 
         @Override
@@ -687,7 +690,7 @@ public class SkmSyntaxDirectedTranslation {
             super.exitNote(ctx);
 
             try {
-                noteBuilder.setPitch(pitchBuilder.build());
+                noteBuilder.from(pitchBuilder.build());
                 SkmCoreSymbol skmNote = new SkmCoreSymbol(ctx.getText(), noteBuilder.build());
                 addItemToSpine(skmNote);
             } catch (IMException e) {
@@ -732,7 +735,7 @@ public class SkmSyntaxDirectedTranslation {
         public void exitAlterationDisplay(skmParser.AlterationDisplayContext ctx) {
             super.exitAlterationDisplay(ctx);
             alterationDisplayTypeBuilder = new IAlterationDisplayTypeBuilder(coreAbstractFactory);
-            alterationDisplayTypeBuilder.setAlterationDisplayType(EAlterationDisplayTypes.valueOf(ctx.getText()));
+            alterationDisplayTypeBuilder.from(EAlterationDisplayTypes.valueOf(ctx.getText()));
         }
 
         @Override
@@ -745,10 +748,10 @@ public class SkmSyntaxDirectedTranslation {
         public void exitAlteration(skmParser.AlterationContext ctx) {
             super.enterAlteration(ctx);
             try {
-                alterationBuilder.setAccidentalSymbol(accidentalSymbolBuilder.build());
+                alterationBuilder.from(accidentalSymbolBuilder.build());
 
                 if (alterationDisplayTypeBuilder != null) {
-                    alterationBuilder.setAlterationDisplayType(alterationDisplayTypeBuilder.build());
+                    alterationBuilder.from(alterationDisplayTypeBuilder.build());
                 }
             } catch (IMException e) {
                 throw createException(e);
@@ -765,10 +768,10 @@ public class SkmSyntaxDirectedTranslation {
         public void exitPitch(skmParser.PitchContext ctx) {
             super.exitPitch(ctx);
             try {
-                pitchBuilder.setOctave(octave);
-                pitchBuilder.setDiatonicPitch(diatonicPitchBuilder.build());
+                pitchBuilder.from(octave);
+                pitchBuilder.from(diatonicPitchBuilder.build());
                 if (alterationBuilder != null) {
-                    pitchBuilder.setAlteration(alterationBuilder.build());
+                    pitchBuilder.from(alterationBuilder.build());
                 }
             } catch (IMException e) {
                 throw createException(e);
@@ -785,7 +788,7 @@ public class SkmSyntaxDirectedTranslation {
         public void exitCustos(skmParser.CustosContext ctx) {
             super.exitCustos(ctx);
             try {
-                custosBuilder.setPitch(pitchBuilder.build());
+                custosBuilder.from(pitchBuilder.build());
                 addItemToSpine(new SkmCoreSymbol(ctx.getText(), custosBuilder.build()));
             } catch (IMException e) {
                 throw createException(e);

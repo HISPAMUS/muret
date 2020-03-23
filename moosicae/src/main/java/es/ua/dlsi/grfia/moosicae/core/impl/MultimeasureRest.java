@@ -1,8 +1,10 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
+import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
+import es.ua.dlsi.grfia.moosicae.core.properties.IMultimeasureRestCount;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
-import es.ua.dlsi.grfia.moosicae.core.IId;
+import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.IMultimeasureRest;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,15 +13,15 @@ import org.jetbrains.annotations.NotNull;
  */
 public class MultimeasureRest extends DurationalComposite implements IMultimeasureRest {
     @NotNull
-    private final Integer measureCount;
+    private final IMultimeasureRestCount measureCount;
 
-    MultimeasureRest(@NotNull IId id, @NotNull Integer measureCount) {
+    MultimeasureRest(@NotNull IId id, @NotNull IMultimeasureRestCount measureCount) {
         super(id);
         this.measureCount = measureCount;
     }
 
     @Override
-    public Integer getMeasureCount() {
+    public IMultimeasureRestCount getMeasureCount() {
         return measureCount;
     }
 
@@ -30,7 +32,7 @@ public class MultimeasureRest extends DurationalComposite implements IMultimeasu
 
     @Override
     public <InputOutputType> void export(IExporterVisitor exportVisitor, InputOutputType inputOutput) throws IMException {
-        exportVisitor.export(this, inputOutput);
+        exportVisitor.exportMultimeasureRest(this, inputOutput);
     }
 
     @Override

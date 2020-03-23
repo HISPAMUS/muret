@@ -1,8 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.core.IClef;
-import es.ua.dlsi.grfia.moosicae.core.IClefLine;
-import es.ua.dlsi.grfia.moosicae.core.IClefSign;
+import es.ua.dlsi.grfia.moosicae.core.properties.IClefLine;
+import es.ua.dlsi.grfia.moosicae.core.properties.IClefSign;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
@@ -17,18 +17,18 @@ public class IClefBuilder extends CoreObjectBuilder<IClef> {
     private IClefLine line;
     private IClefSign clefSign;
 
-    public void setLine(IClefLine line) {
+    public IClefBuilder from(IClefLine line) {
         this.line = line;
+        return this;
     }
 
-    public void setClefSign(IClefSign clefSign) {
+    public IClefBuilder from(IClefSign clefSign) {
         this.clefSign = clefSign;
+        return this;
     }
 
     @Override
     public IClef build() throws IMException {
-        assertRequired("clefSign", clefSign);
-        assertRequired("line", line);
         return coreObjectFactory.createClef(getId(), line, clefSign);
     }
 

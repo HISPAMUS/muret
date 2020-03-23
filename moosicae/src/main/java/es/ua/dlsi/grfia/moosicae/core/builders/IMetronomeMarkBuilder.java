@@ -3,9 +3,10 @@ package es.ua.dlsi.grfia.moosicae.core.builders;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IMetronomeMark;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.properties.IDots;
+import es.ua.dlsi.grfia.moosicae.core.properties.IFigure;
+import es.ua.dlsi.grfia.moosicae.core.properties.IMetronomeMarkValue;
 import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
-
-import java.util.Optional;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -13,28 +14,29 @@ import java.util.Optional;
 public class IMetronomeMarkBuilder extends CoreObjectBuilder<IMetronomeMark> {
     private IFigure figure;
     private IDots dots;
-    private Integer value;
+    private IMetronomeMarkValue value;
 
     public IMetronomeMarkBuilder(ICoreAbstractFactory coreObjectFactory) {
         super(coreObjectFactory);
     }
 
-    public void setFigure(IFigure figure) {
+    public IMetronomeMarkBuilder from(IFigure figure) {
         this.figure = figure;
+        return this;
     }
 
-    public void setDots(IDots dots) {
+    public IMetronomeMarkBuilder from(IDots dots) {
         this.dots = dots;
+        return this;
     }
 
-    public void setValue(Integer value) {
+    public IMetronomeMarkBuilder from(IMetronomeMarkValue value) {
         this.value = value;
+        return this;
     }
 
     @Override
     public IMetronomeMark build() throws IMException {
-        assertRequired("figure", figure);
-        assertRequired("value", value);
         return coreObjectFactory.createMetronomeMark(getId(), figure, dots, value);
     }
 

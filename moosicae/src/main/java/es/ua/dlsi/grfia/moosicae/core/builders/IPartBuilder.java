@@ -2,11 +2,9 @@ package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
-import es.ua.dlsi.grfia.moosicae.core.IName;
+import es.ua.dlsi.grfia.moosicae.core.properties.IName;
 import es.ua.dlsi.grfia.moosicae.core.IPart;
 import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
-
-import java.util.Optional;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es

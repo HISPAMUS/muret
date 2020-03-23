@@ -10,20 +10,20 @@ import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 15/03/2020
  */
-public class IMensurationBuilder extends CoreObjectBuilder<IMensuration>  {
+public class IMensurationBuilder extends CoreObjectBuilder<IMensuration> {
     private EMensurations mensurations;
 
     public IMensurationBuilder(ICoreAbstractFactory coreObjectFactory) {
         super(coreObjectFactory);
     }
 
-    public void setMensurations(EMensurations mensurations) {
+    public IMensurationBuilder from(EMensurations mensurations) {
         this.mensurations = mensurations;
+        return this;
     }
 
     @Override
     public IMensuration build() throws IMException {
-        assertRequired("mensurations", mensurations);
         return coreObjectFactory.createMensuration(getId(), mensurations);
     }
 

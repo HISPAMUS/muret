@@ -4,11 +4,13 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.core.enums.EDiatonicPitches;
+import es.ua.dlsi.grfia.moosicae.core.properties.IAlteration;
+import es.ua.dlsi.grfia.moosicae.core.properties.IDiatonicPitch;
+import es.ua.dlsi.grfia.moosicae.core.properties.IOctave;
+import es.ua.dlsi.grfia.moosicae.core.properties.IPitch;
 import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -22,43 +24,28 @@ public class IPitchBuilder extends CoreObjectBuilder<IPitch> {
         super(coreObjectFactory);
     }
 
-    public void setOctave(IOctave octave) {
+    public IPitchBuilder from(IOctave octave) {
         this.octave = octave;
+        return this;
     }
 
-    public void setAlteration(IAlteration alteration) {
+    public IPitchBuilder from(IAlteration alteration) {
         this.alteration = alteration;
+        return this;
     }
 
-    public void setDiatonicPitch(IDiatonicPitch diatonicPitch) {
+    public IPitchBuilder from(IDiatonicPitch diatonicPitch) {
         this.diatonicPitch = diatonicPitch;
+        return this;
     }
 
-    public void setOctave(int octave) {
+    public IPitchBuilder from(int octave) {
         this.octave = coreObjectFactory.createOctave(getId(), octave);
-    }
-
-    /**
-     * Convenience builder
-     */
-    public IPitch build(@NotNull EDiatonicPitches eDiatonicPitch, @Nullable EAccidentalSymbols accidentalSymbol,
-                        int octaveNumber) throws IMException {
-        octave = coreObjectFactory.createOctave(getId(), octaveNumber);
-        if (accidentalSymbol != null) {
-            alteration = coreObjectFactory.createAlteration(
-                    getId(),
-                    coreObjectFactory.createAccidentalSymbol(getId(), accidentalSymbol),
-                    null
-            );
-        }
-        diatonicPitch = coreObjectFactory.createDiatonicPitch(getId(), eDiatonicPitch);
-        return build();
+        return this;
     }
 
     @Override
     public IPitch build() throws IMException {
-        assertRequired("octave", octave);
-        assertRequired("diatonicPitch", diatonicPitch);
         return coreObjectFactory.createPitch(getId(), octave, alteration, diatonicPitch);
     }
 

@@ -1,7 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
+import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
-import es.ua.dlsi.grfia.moosicae.core.IId;
+import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.IMeter;
 import es.ua.dlsi.grfia.moosicae.core.IMixedMeter;
 import es.ua.dlsi.grfia.moosicae.utils.Time;

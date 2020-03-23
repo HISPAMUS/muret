@@ -2,6 +2,11 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
+import es.ua.dlsi.grfia.moosicae.core.properties.IDots;
+import es.ua.dlsi.grfia.moosicae.core.properties.IFigure;
+import es.ua.dlsi.grfia.moosicae.core.properties.IId;
+import es.ua.dlsi.grfia.moosicae.core.properties.IMetronomeMarkValue;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,9 +23,9 @@ public class MetronomeMark extends CoreItem implements IMetronomeMark {
     @Nullable
     private IDots dots;
     @NotNull
-    private Integer value;
+    private IMetronomeMarkValue value;
 
-    MetronomeMark(@NotNull IId id, @NotNull IFigure figure, @Nullable IDots dots, Integer value) {
+    MetronomeMark(@NotNull IId id, @NotNull IFigure figure, @Nullable IDots dots, IMetronomeMarkValue value) {
         super(id);
         this.figure = figure;
         this.dots = dots;
@@ -38,13 +43,13 @@ public class MetronomeMark extends CoreItem implements IMetronomeMark {
     }
 
     @Override
-    public Integer getValue() {
+    public IMetronomeMarkValue getValue() {
         return value;
     }
 
     @Override
     public <InputOutputType> void export(IExporterVisitor exportVisitor, InputOutputType inputOutput) throws IMException {
-        exportVisitor.export(this, inputOutput);
+        exportVisitor.exportMetronomeMark(this, inputOutput);
     }
 
     @Override

@@ -2,9 +2,9 @@ package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IBarline;
-import es.ua.dlsi.grfia.moosicae.core.IBarlineType;
+import es.ua.dlsi.grfia.moosicae.core.properties.IBarlineType;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
-import es.ua.dlsi.grfia.moosicae.core.INumber;
+import es.ua.dlsi.grfia.moosicae.core.properties.INumber;
 import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
 
 /**
@@ -20,12 +20,14 @@ public class IBarlineBuilder extends CoreObjectBuilder<IBarline>  {
     }
 
 
-    public void setBarlineType(IBarlineType barlineType) {
+    public IBarlineBuilder from(IBarlineType barlineType) {
         this.barlineType = barlineType;
+        return this;
     }
 
-    public void setBarNumber(INumber barNumber) {
+    public IBarlineBuilder from(INumber barNumber) {
         this.barNumber = barNumber;
+        return this;
     }
 
     @Override

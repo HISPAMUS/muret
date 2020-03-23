@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.core.ICoreObject;
-import es.ua.dlsi.grfia.moosicae.core.IId;
+import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import org.jetbrains.annotations.NotNull;
 
 

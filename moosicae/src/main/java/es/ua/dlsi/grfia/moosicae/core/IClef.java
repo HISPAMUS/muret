@@ -1,6 +1,9 @@
 package es.ua.dlsi.grfia.moosicae.core;
 
 
+import es.ua.dlsi.grfia.moosicae.core.properties.IClefLine;
+import es.ua.dlsi.grfia.moosicae.core.properties.IClefSign;
+
 import java.util.Optional;
 
 /**

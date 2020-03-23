@@ -5,6 +5,7 @@ import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.IMetronomeMark;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
+import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmCoreSymbol;
 
@@ -14,9 +15,9 @@ import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmCoreSymbol;
 public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTokenParam> {
 
     @Override
-    public void export(IClef clef, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+    public void exportClef(IClef clef, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         inputOutput.append("*clef");
-        export(clef.getSignType(), inputOutput);
+        exportClefSign(clef.getSignType(), inputOutput);
         if (clef.getLine().isPresent()) {
             inputOutput.append(clef.getLine().get().getValue());
         }
@@ -24,39 +25,39 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     }
 
     @Override
-    public void export(IClefSign clefSign, SkmExporterVisitorTokenParam inputOutput) {
+    public void exportClefSign(IClefSign clefSign, SkmExporterVisitorTokenParam inputOutput) {
         inputOutput.append(clefSign.getValue().name().toUpperCase());
     }
 
     @Override
-    public void export(INote note, SkmExporterVisitorTokenParam inputOutput) throws IMException {
-        export(note.getFigure(), inputOutput);
+    public void exportNote(INote note, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+        exportFigure(note.getFigure(), inputOutput);
         if (note.getDots().isPresent()) {
-            export(note.getDots().get(), inputOutput);
+            exportDots(note.getDots().get(), inputOutput);
         }
-        export(note.getPitch(), inputOutput);
+        exportPitch(note.getPitch(), inputOutput);
         inputOutput.buildAndAddToken(note);
     }
 
     @Override
-    public void export(IRest rest, SkmExporterVisitorTokenParam inputOutput) throws IMException {
-        export(rest.getFigure(), inputOutput);
+    public void exportRest(IRest rest, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+        exportFigure(rest.getFigure(), inputOutput);
         if (rest.getDots().isPresent()) {
-            export(rest.getDots().get(), inputOutput);
+            exportDots(rest.getDots().get(), inputOutput);
         }
         inputOutput.append("r");
         inputOutput.buildAndAddToken(rest);
     }
 
     @Override
-    public void export(IMultimeasureRest mrest, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+    public void exportMultimeasureRest(IMultimeasureRest mrest, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         inputOutput.append("rr");
-        inputOutput.append(mrest.getMeasureCount());
+        inputOutput.append(mrest.getMeasureCount().getValue());
         inputOutput.buildAndAddToken(mrest);
     }
 
     @Override
-    public void export(IFractionalTimeSignature meter, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+    public void exportFractionalTimeSignature(IFractionalTimeSignature meter, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         inputOutput.append("*M");
         inputOutput.append(meter.getNumerator().getValue());
         inputOutput.append('/');
@@ -65,45 +66,45 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     }
 
     @Override
-    public void export(ICutTime meter, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+    public void exportCutTime(ICutTime meter, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         inputOutput.append("*met(c|)");
         inputOutput.buildAndAddToken(meter);
     }
 
     @Override
-    public void export(ICommonTime meter, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+    public void exportCommonTime(ICommonTime meter, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         inputOutput.append("*met(c)");
         inputOutput.buildAndAddToken(meter);
     }
 
     @Override
-    public void export(IChord chord, SkmExporterVisitorTokenParam inputOutput) throws IMException {
-        export(chord.getFigure(), inputOutput);
+    public void exportChord(IChord chord, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+        exportFigure(chord.getFigure(), inputOutput);
         if (chord.getDots().isPresent()) {
-            export(chord.getDots().get(), inputOutput);
+            exportDots(chord.getDots().get(), inputOutput);
         }
         for (IPitch pitch: chord.getPitches()) {
-            export(pitch, inputOutput);
+            exportPitch(pitch, inputOutput);
         }
         inputOutput.buildAndAddToken(chord);
     }
 
     @Override
-    public void export(ICustos custos, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+    public void exportCustos(ICustos custos, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         inputOutput.append("*custos");
-        export(custos.getPitch(), inputOutput);
+        exportPitch(custos.getPitch(), inputOutput);
         inputOutput.buildAndAddToken(custos);
     }
 
     @Override
-    public void export(IKey key, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+    public void exportKey(IKey key, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         if (!(inputOutput.getLastToken() instanceof SkmCoreSymbol)
         || !((SkmCoreSymbol) inputOutput.getLastToken()).getSymbol().equals(key.getKeySignature())) {
-            export(key.getKeySignature(), inputOutput); // do not repeat previous explicit key signature and the key signature of the key
+            exportKeySignature(key.getKeySignature(), inputOutput); // do not repeat previous explicit key signature and the key signature of the key
         }
 
         String diatonicPitch;
-        switch (key.getMode().getMode()) {
+        switch (key.getMode().getValue()) {
             case major:
                 diatonicPitch = key.getPitchClass().getDiatonicPitch().getValue().name().toUpperCase();
                 break;
@@ -111,50 +112,49 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
                 diatonicPitch = key.getPitchClass().getDiatonicPitch().getValue().name().toLowerCase();
                 break;
             default:
-                throw new IMException("Unknown mode: " + key.getMode().getMode());
+                throw new IMException("Unknown mode: " + key.getMode().getValue());
         }
         inputOutput.append('*');
         inputOutput.append(diatonicPitch);
         if (key.getPitchClass().getAccidental().isPresent()) {
-            export(key.getPitchClass().getAccidental().get(), inputOutput);
+            exportAccidentalSymbol(key.getPitchClass().getAccidental().get(), inputOutput);
         }
         inputOutput.append(':');
         inputOutput.buildAndAddToken(key);
     }
 
     @Override
-    public void export(ICommonAlterationKey commonAlterationKey, SkmExporterVisitorTokenParam inputOutput) throws IMException {
-        export((IKey)commonAlterationKey, inputOutput);
+    public void exportCommonAlterationKey(ICommonAlterationKey commonAlterationKey, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+        exportKey((IKey)commonAlterationKey, inputOutput);
     }
 
     @Override
-    public void export(IMode mode, SkmExporterVisitorTokenParam inputOutput) {
+    public void exportMode(IMode mode, SkmExporterVisitorTokenParam inputOutput) {
 
     }
 
-
     @Override
-    public void export(IKeySignature keySignature, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+    public void exportKeySignature(IKeySignature keySignature, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         inputOutput.append("*k[");
         for (IPitchClass pitchClass: keySignature.getPitchClasses()) {
-            export(pitchClass, inputOutput);
+            exportPitchClass(pitchClass, inputOutput);
         }
         inputOutput.append(']');
         inputOutput.buildAndAddToken(keySignature);
     }
 
     @Override
-    public void export(IVoice exportVisitor, SkmExporterVisitorTokenParam inputOutput) {
+    public void exportVoice(IVoice voice, SkmExporterVisitorTokenParam inputOutput) throws IMException {
 
     }
 
     @Override
-    public void export(IDiatonicPitch diatonicPitch, SkmExporterVisitorTokenParam inputOutput) {
+    public void exportDiatonicPitch(IDiatonicPitch diatonicPitch, SkmExporterVisitorTokenParam inputOutput) {
         inputOutput.append(diatonicPitch.getValue().name().toLowerCase());
     }
 
     @Override
-    public void export(IAlterationDisplayType alterationDisplayType, SkmExporterVisitorTokenParam inputOutput) {
+    public void exportAlterationDisplayType(IAlterationDisplayType alterationDisplayType, SkmExporterVisitorTokenParam inputOutput) {
         String encoding;
         switch (alterationDisplayType.getValue()) {
             case ficta:
@@ -176,7 +176,7 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     }
 
     @Override
-    public void export(IAccidentalSymbol accidental, SkmExporterVisitorTokenParam inputOutput) {
+    public void exportAccidentalSymbol(IAccidentalSymbol accidental, SkmExporterVisitorTokenParam inputOutput) {
         String encoding;
         switch (accidental.getValue()) {
             case DOUBLE_FLAT:
@@ -202,25 +202,25 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
 
 
     @Override
-    public void export(IAlteration alteration, SkmExporterVisitorTokenParam inputOutput) {
-        export(alteration.getAccidentalSymbol(), inputOutput);
+    public void exportAlteration(IAlteration alteration, SkmExporterVisitorTokenParam inputOutput) {
+        exportAccidentalSymbol(alteration.getAccidentalSymbol(), inputOutput);
         if (alteration.getAlterationDisplayType().isPresent()) {
-            export(alteration.getAlterationDisplayType().get(), inputOutput);
+            exportAlterationDisplayType(alteration.getAlterationDisplayType().get(), inputOutput);
         }
     }
 
     @Override
-    public void export(IPitchClass pitchClass, SkmExporterVisitorTokenParam inputOutput) {
-        export(pitchClass.getDiatonicPitch(), inputOutput);
+    public void exportPitchClass(IPitchClass pitchClass, SkmExporterVisitorTokenParam inputOutput) {
+        exportDiatonicPitch(pitchClass.getDiatonicPitch(), inputOutput);
         if (pitchClass.getAccidental().isPresent()) {
-            export(pitchClass.getAccidental().get(), inputOutput);
+            exportAccidentalSymbol(pitchClass.getAccidental().get(), inputOutput);
         }
     }
 
-    public void exportDiatonicPitchAndOctave(IDiatonicPitch diatonicPitch, IOctave octave, SkmExporterVisitorTokenParam inputOutput) {
+    private void exportDiatonicPitchAndOctave(IDiatonicPitch diatonicPitch, IOctave octave, SkmExporterVisitorTokenParam inputOutput) {
         String middleOctaveNote = diatonicPitch.getValue().name().toLowerCase();
 
-        int octaveValue = octave.getNumber();
+        int octaveValue = octave.getValue();
         if (octaveValue < 4) {
             int characters = 4 - octaveValue;
             middleOctaveNote = middleOctaveNote.toUpperCase();
@@ -238,27 +238,27 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     }
 
     @Override
-    public void export(IPitch pitch, SkmExporterVisitorTokenParam inputOutput) {
+    public void exportPitch(IPitch pitch, SkmExporterVisitorTokenParam inputOutput) {
         exportDiatonicPitchAndOctave(pitch.getDiatonicPitch(), pitch.getOctave(), inputOutput);
         if (pitch.getAlteration().isPresent()) {
-            export(pitch.getAlteration().get(), inputOutput);
+            exportAlteration(pitch.getAlteration().get(), inputOutput);
         }
     }
 
     @Override
-    public void export(IDots dots, SkmExporterVisitorTokenParam inputOutput) {
-        for (int i=0; i<dots.getCount(); i++) {
+    public void exportDots(IDots dots, SkmExporterVisitorTokenParam inputOutput) {
+        for (int i=0; i<dots.getValue(); i++) {
             inputOutput.append('.');
         }
     }
 
     @Override
-    public void export(IOctave octave, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+    public void exportOctave(IOctave octave, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         // not used, exported using exportDiatonicPitchAndOctave
     }
 
     @Override
-    public void export(IFigure figure, SkmExporterVisitorTokenParam inputOutput) {
+    public void exportFigure(IFigure figure, SkmExporterVisitorTokenParam inputOutput) {
         String encoding;
         switch (figure.getValue()) {
             case MAXIMA:
@@ -301,7 +301,7 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     }
 
     @Override
-    public void export(IMetronomeMark metronomeMark, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+    public void exportMetronomeMark(IMetronomeMark metronomeMark, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         if (metronomeMark.getDots().isPresent()) {
             throw new IMException("Unsupported dots in metronome"); //TODO
         }
@@ -309,24 +309,24 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
             throw new IMException("Unsupported figure in metronome: " + metronomeMark.getFigure().getValue()); //TODO
         }
         inputOutput.append("MM");
-        inputOutput.append(metronomeMark.getValue());
+        inputOutput.append(metronomeMark.getValue().getValue());
         inputOutput.buildAndAddToken(metronomeMark);
     }
 
     @Override
-    public void export(IBarline barline, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+    public void exportBarline(IBarline barline, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         inputOutput.append('=');
         if (barline.getBarNumber().isPresent()) {
             inputOutput.append(barline.getBarNumber().get().getValue());
         }
         if (barline.getBarlineType().isPresent()) {
-            export(barline.getBarlineType().get(), inputOutput);
+            exportBarlineType(barline.getBarlineType().get(), inputOutput);
         }
         inputOutput.buildAndAddToken(barline);
     }
 
     @Override
-    public void export(IBarlineType barlineType, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+    public void exportBarlineType(IBarlineType barlineType, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         String encoding;
         switch (barlineType.getValue()) {
             case end:
@@ -354,12 +354,12 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     }
 
     @Override
-    public void export(IPageBeginning pageBeginning, SkmExporterVisitorTokenParam inputOutput) {
+    public void exportPageBeginning(IPageBeginning pageBeginning, SkmExporterVisitorTokenParam inputOutput) {
 
     }
 
     @Override
-    public void export(ISystemBeginning systemBeginning, SkmExporterVisitorTokenParam inputOutput) {
+    public void exportSystemBeginning(ISystemBeginning systemBeginning, SkmExporterVisitorTokenParam inputOutput) {
 
     }
 

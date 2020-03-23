@@ -2,6 +2,9 @@ package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.properties.IAccidentalSymbol;
+import es.ua.dlsi.grfia.moosicae.core.properties.IKeyAccidentalCount;
+import es.ua.dlsi.grfia.moosicae.core.properties.IMode;
 import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
 
 /**
@@ -16,23 +19,23 @@ public class IKeyFromAccidentalCountBuilder extends CoreObjectBuilder<IKey> {
         super(coreObjectFactory);
     }
 
-    public void setAccidentalSymbol(IAccidentalSymbol accidentalSymbol) {
+    public IKeyFromAccidentalCountBuilder from(IAccidentalSymbol accidentalSymbol) {
         this.accidentalSymbol = accidentalSymbol;
+        return this;
     }
 
-    public void setAccidentalCount(IKeyAccidentalCount accidentalCount) {
+    public IKeyFromAccidentalCountBuilder from(IKeyAccidentalCount accidentalCount) {
         this.accidentalCount = accidentalCount;
+        return this;
     }
 
-    public void setMode(IMode mode) {
+    public IKeyFromAccidentalCountBuilder from(IMode mode) {
         this.mode = mode;
+        return this;
     }
 
     @Override
     public IKey build() throws IMException {
-        assertRequired("accidentalSymbol", accidentalSymbol);
-        assertRequired("accidentalCount", accidentalCount);
-        assertRequired("mode", mode);
         return coreObjectFactory.createKey(getId(), accidentalCount, accidentalSymbol, mode);
     }
 

@@ -1,6 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.core.impl.mensural;
 
-import es.ua.dlsi.grfia.moosicae.core.IId;
+import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
 import es.ua.dlsi.grfia.moosicae.core.impl.Meter;
 import es.ua.dlsi.grfia.moosicae.core.mensural.EMensuralPerfections;

@@ -81,8 +81,10 @@ public abstract class XMLImporter<ImporterVisitor extends IImporterVisitor<IXMLI
         } catch (XMLStreamException e) {
             throw new IMException(e);
         }
-        return null;
+        return buildScore();
     }
+
+    protected abstract IScore buildScore();
 
 
     /**
@@ -116,7 +118,7 @@ public abstract class XMLImporter<ImporterVisitor extends IImporterVisitor<IXMLI
     }
 
 
-    private void handleCharacters(String elementName, String data) {
+    private void handleCharacters(String elementName, String data) throws IMException {
         if (!handleSpecialCharactersElement(elementName, data)) {
             if (coreObjectBuilderSuppliers.contains(elementName)) {
                 CoreObjectBuilder<?> currentBuilder = builderStack.peek();

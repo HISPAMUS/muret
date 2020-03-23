@@ -1,5 +1,9 @@
 package es.ua.dlsi.grfia.moosicae.core;
 
+import es.ua.dlsi.grfia.moosicae.core.properties.IDots;
+import es.ua.dlsi.grfia.moosicae.core.properties.IFigure;
+import es.ua.dlsi.grfia.moosicae.core.properties.IMetronomeMarkValue;
+
 import java.util.Optional;
 
 /**
@@ -10,5 +14,5 @@ import java.util.Optional;
 public interface IMetronomeMark extends IMark {
     IFigure getFigure();
     Optional<IDots> getDots();
-    Integer getValue();
+    IMetronomeMarkValue getValue();
 }

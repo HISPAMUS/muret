@@ -1,0 +1,32 @@
+package es.ua.dlsi.grfia.moosicae.core.impl.properties;
+
+import es.ua.dlsi.grfia.moosicae.core.properties.IFigure;
+import es.ua.dlsi.grfia.moosicae.core.properties.IId;
+import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
+import es.ua.dlsi.grfia.moosicae.utils.Time;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * @author David Rizo - drizo@dlsi.ua.es
+ * @created 15/03/2020
+ */
+public class Figure extends EnumCoreProperty<EFigures> implements IFigure {
+    public Figure(@NotNull IId id, @NotNull EFigures enumValue) {
+        super(id, enumValue);
+    }
+
+    @Override
+    public Figure clone() {
+        return new Figure(IdGenerator.getInstance().generateUniqueId(), value);
+    }
+
+    @Override
+    public Time getDurationWithDots(int dots) {
+        return value.getDurationWithDots(dots);
+    }
+
+    @Override
+    public int getMeterUnit() {
+        return value.getMeterUnit();
+    }
+}

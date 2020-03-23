@@ -1,5 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core;
 
+import es.ua.dlsi.grfia.moosicae.core.properties.IAccidentalSymbol;
+
 import java.util.Optional;
 
 /**

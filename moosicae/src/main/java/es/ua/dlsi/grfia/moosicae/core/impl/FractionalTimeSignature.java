@@ -3,9 +3,10 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ITimeSignatureDenominator;
 import es.ua.dlsi.grfia.moosicae.core.ITimeSignatureNumrerator;
+import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.IFractionalTimeSignature;
-import es.ua.dlsi.grfia.moosicae.core.IId;
+import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.utils.Time;
 import org.apache.commons.lang3.math.Fraction;
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +47,7 @@ public class FractionalTimeSignature extends Meter implements IFractionalTimeSig
 
     @Override
     public <InputOutputType> void export(IExporterVisitor exportVisitor, InputOutputType inputOutput) throws IMException {
-        exportVisitor.export(this, inputOutput);
+        exportVisitor.exportFractionalTimeSignature(this, inputOutput);
     }
 
     @Override

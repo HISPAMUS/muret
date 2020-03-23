@@ -1,5 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.core;
 
+import es.ua.dlsi.grfia.moosicae.core.properties.IBarlineType;
+import es.ua.dlsi.grfia.moosicae.core.properties.INumber;
+
 import java.util.Optional;
 
 /**

@@ -2,24 +2,25 @@ package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.properties.IPitch;
 import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class ICustosBuilder extends CoreObjectBuilder<ICustos> {
-    private  IPitch pitch;
+    private IPitch pitch;
     public ICustosBuilder(ICoreAbstractFactory coreObjectFactory) {
         super(coreObjectFactory);
     }
 
-    public void setPitch(IPitch pitch) {
+    public ICustosBuilder from(IPitch pitch) {
         this.pitch = pitch;
+        return this;
     }
 
     @Override
     public ICustos build() throws IMException {
-        assertRequired("pitch", pitch);
         return coreObjectFactory.createCustos(getId(), pitch);
     }
 

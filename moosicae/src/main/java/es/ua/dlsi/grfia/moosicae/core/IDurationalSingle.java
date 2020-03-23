@@ -1,5 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.core;
 
+import es.ua.dlsi.grfia.moosicae.core.properties.IDots;
+import es.ua.dlsi.grfia.moosicae.core.properties.IFigure;
+
 import java.util.Optional;
 
 /**

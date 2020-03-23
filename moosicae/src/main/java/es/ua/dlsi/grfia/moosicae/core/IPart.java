@@ -1,6 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.core;
 
 
+import es.ua.dlsi.grfia.moosicae.core.properties.IName;
+
 import java.util.Optional;
 /**
  * @author David Rizo - drizo@dlsi.ua.es

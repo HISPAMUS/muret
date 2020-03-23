@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.core.IKeySignature;
-import es.ua.dlsi.grfia.moosicae.core.IPitchClass;
+import es.ua.dlsi.grfia.moosicae.core.properties.IPitchClass;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
 
@@ -19,8 +19,9 @@ public class IKeySignatureBuilder extends CoreObjectBuilder<IKeySignature> {
         this.pitchClassList = new LinkedList<>();
     }
 
-    public void addPitchClass(IPitchClass pitchClass) {
+    public IKeySignatureBuilder add(IPitchClass pitchClass) {
         pitchClassList.add(pitchClass);
+        return this;
     }
 
     @Override

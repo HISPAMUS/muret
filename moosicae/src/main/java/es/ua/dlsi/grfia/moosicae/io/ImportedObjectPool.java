@@ -14,7 +14,7 @@ import java.util.*;
  * @created 21/03/2020
  */
 public class ImportedObjectPool {
-    public static final String SET = "set";
+    public static final String FROM = "from";
     public static final String ADD = "add";
     /**
      * Always insert and retrieve from the beginning of the list
@@ -37,14 +37,14 @@ public class ImportedObjectPool {
     public void populate(CoreObjectBuilder<?> target) throws IMException {
         try {
             for (Method method : target.getClass().getMethods()) {
-                if (method.getName().startsWith(SET) || method.getName().startsWith(ADD)) {
+                if (method.getName().equals(FROM) || method.getName().equals(ADD)) {
                     if (method.getParameters().length == 1) {
                         for (Iterator iterator = availableObjects.iterator(); iterator.hasNext(); ) {
                             Object property = iterator.next();
                             if (method.getParameters()[0].getType().isAssignableFrom(property.getClass())) {
                                 method.invoke(target, property);
                                 iterator.remove();
-                                if (method.getName().startsWith(SET)) {
+                                if (method.getName().equals(FROM)) {
                                     break; // there will not be any other method with the same signature
                                 }
                             }
