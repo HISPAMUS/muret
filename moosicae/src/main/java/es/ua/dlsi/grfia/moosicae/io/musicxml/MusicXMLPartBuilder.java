@@ -7,7 +7,7 @@ import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.musicxml.importer.IMusicXMLPartItem;
 import es.ua.dlsi.grfia.moosicae.io.musicxml.importer.MusicXMLImportedPart;
 import es.ua.dlsi.grfia.moosicae.io.musicxml.importer.MusicXMLImporterVisitor;
-import es.ua.dlsi.grfia.moosicae.io.xml.IXMLImporterVisitorParam;
+import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterVisitorParam;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class MusicXMLPartBuilder extends CoreObjectBuilder<MusicXMLImportedPart>
     @Override
     public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) throws IMException {
         MusicXMLImporterVisitor musicXMLImporterVisitor = (MusicXMLImporterVisitor) importerVisitor; // only used by this visitor
-        musicXMLImporterVisitor.importMusicXMLPartBuilder(this, (IXMLImporterVisitorParam)inputOutputType);
+        musicXMLImporterVisitor.importMusicXMLPartBuilder(this, (XMLImporterVisitorParam)inputOutputType);
     }
 
     public void add(IMusicXMLPartItem voiced) {

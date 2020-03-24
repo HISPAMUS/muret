@@ -2,8 +2,6 @@ package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
-import es.ua.dlsi.grfia.moosicae.io.xml.IXMLImporterVisitorParam;
-import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterVisitorCharacters;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es

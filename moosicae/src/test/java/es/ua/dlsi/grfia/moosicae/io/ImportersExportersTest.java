@@ -6,16 +6,10 @@ import es.ua.dlsi.grfia.moosicae.core.builders.INoteBuilder;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.impl.CoreAbstractFactoryImpl;
 import es.ua.dlsi.grfia.moosicae.io.lilypond.LilypondExporter;
-import es.ua.dlsi.grfia.moosicae.io.mei.MEIExporter;
-import es.ua.dlsi.grfia.moosicae.io.mei.MEIImporter;
 import es.ua.dlsi.grfia.moosicae.io.musicxml.MusicXMLExporter;
 import es.ua.dlsi.grfia.moosicae.io.musicxml.MusicXMLImporter;
-import es.ua.dlsi.grfia.moosicae.io.skm.SkmExporter;
-import es.ua.dlsi.grfia.moosicae.io.skm.SkmImporter;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 

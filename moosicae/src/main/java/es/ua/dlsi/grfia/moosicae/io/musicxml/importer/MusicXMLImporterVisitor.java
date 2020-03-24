@@ -5,14 +5,10 @@ import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.builders.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
-import es.ua.dlsi.grfia.moosicae.core.properties.IAlteration;
-import es.ua.dlsi.grfia.moosicae.core.properties.IEnumCoreProperty;
 import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.musicxml.MusicXMLExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.musicxml.MusicXMLPartBuilder;
-import es.ua.dlsi.grfia.moosicae.io.xml.IXMLImporterVisitorParam;
-import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterVisitorAtrributes;
-import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterVisitorCharacters;
+import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterVisitorParam;
 
 import javax.xml.stream.events.Attribute;
 import java.util.Iterator;
@@ -21,7 +17,7 @@ import java.util.Iterator;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 22/03/2020
  */
-public class MusicXMLImporterVisitor implements IImporterVisitor<IXMLImporterVisitorParam> {
+public class MusicXMLImporterVisitor implements IImporterVisitor<XMLImporterVisitorParam> {
     private final ICoreAbstractFactory coreAbstractFactory;
     private Integer currentDivisions;
 
@@ -29,32 +25,15 @@ public class MusicXMLImporterVisitor implements IImporterVisitor<IXMLImporterVis
         this.coreAbstractFactory = coreAbstractFactory;
     }
 
-    private <TBuilder extends IIntegerPropertyBuilder> void importIntegerProperty(TBuilder builder, IXMLImporterVisitorParam ixmlImporterVisitorParam) {
-        if (ixmlImporterVisitorParam instanceof XMLImporterVisitorCharacters) {
-            XMLImporterVisitorCharacters characters = (XMLImporterVisitorCharacters) ixmlImporterVisitorParam;
-            builder.from(Integer.parseInt(characters.getCharacters()));
-        }
-    }
-
-    private <T extends Enum<T>> T parseEnumPropertyValue(IXMLImporterVisitorParam ixmlImporterVisitorParam, Class<T> enumType) throws IMException {
-        if (ixmlImporterVisitorParam instanceof XMLImporterVisitorCharacters) {
-            XMLImporterVisitorCharacters characters = (XMLImporterVisitorCharacters) ixmlImporterVisitorParam;
-            T enumValue = Enum.valueOf(enumType, characters.getCharacters());
-            return enumValue;
-        } else {
-            throw new IMException("Expecting an XMLImporterVisitorCharacters and found a " + ixmlImporterVisitorParam.getClass());
-        }
-    }
-
     @Override
-    public void importKeySignature(IKeySignatureBuilder iKeySignatureBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
+    public void importKeySignature(IKeySignatureBuilder iKeySignatureBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
 
     }
 
     @Override
-    public void importPartBuilder(IPartBuilder partBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
-        if (xmlImporterVisitorParam instanceof XMLImporterVisitorAtrributes) {
-            for (Iterator<Attribute> iterator = ((XMLImporterVisitorAtrributes) xmlImporterVisitorParam).getAttributeIterator(); iterator.hasNext(); ) {
+    public void importPartBuilder(IPartBuilder partBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
+        if (xmlImporterVisitorParam.getAttributeIterator().isPresent()) {
+            for (Iterator<Attribute> iterator = xmlImporterVisitorParam.getAttributeIterator().get(); iterator.hasNext(); ) {
                 Attribute attribute = iterator.next();
                 switch (attribute.getName().getLocalPart()) {
                     case "id":
@@ -66,105 +45,101 @@ public class MusicXMLImporterVisitor implements IImporterVisitor<IXMLImporterVis
     }
 
     @Override
-    public void importAlterationDisplayType(IAlterationDisplayTypeBuilder iAlterationDisplayTypeBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
+    public void importAlterationDisplayType(IAlterationDisplayTypeBuilder iAlterationDisplayTypeBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
 
     }
 
     @Override
-    public void importCustos(ICustosBuilder iCustosBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
+    public void importCustos(ICustosBuilder iCustosBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
 
     }
 
     @Override
-    public void importMensuration(IMensurationBuilder iMensurationBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
+    public void importMensuration(IMensurationBuilder iMensurationBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
 
     }
 
     @Override
-    public void importMode(IModeBuilder iModeBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
-        if (xmlImporterVisitorParam instanceof XMLImporterVisitorCharacters) {
-            iModeBuilder.from(EModes.valueOf(((XMLImporterVisitorCharacters)xmlImporterVisitorParam).getCharacters().toLowerCase()));
+    public void importMode(IModeBuilder iModeBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
+        if (xmlImporterVisitorParam.getCharacters().isPresent()) {
+            iModeBuilder.from(EModes.valueOf(xmlImporterVisitorParam.getCharacters().get()));
         }
     }
 
     @Override
-    public void importClefSign(IClefSignBuilder iClefSignBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) throws IMException {
-        if (xmlImporterVisitorParam instanceof XMLImporterVisitorCharacters) {
-            iClefSignBuilder.from(parseEnumPropertyValue(xmlImporterVisitorParam, EClefSigns.class));
+    public void importClefSign(IClefSignBuilder iClefSignBuilder, XMLImporterVisitorParam xmlImporterVisitorParam)  {
+        if (xmlImporterVisitorParam.getCharacters().isPresent()) {
+            iClefSignBuilder.from(EClefSigns.valueOf(xmlImporterVisitorParam.getCharacters().get()));
         }
     }
 
     @Override
-    public void importClef(IClefBuilder iClefBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
+    public void importClef(IClefBuilder iClefBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
 
     }
 
     @Override
-    public void importPitchClass(IPitchClassBuilder iPitchClassBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
+    public void importPitchClass(IPitchClassBuilder iPitchClassBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
 
     }
 
     @Override
-    public void importAccidentalSymbol(IAccidentalSymbolBuilder iAccidentalSymbolBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) throws IMException {
+    public void importAccidentalSymbol(IAccidentalSymbolBuilder iAccidentalSymbolBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) throws IMException {
     }
 
     @Override
-    public void importDiatonicPitch(IDiatonicPitchBuilder iDiatonicPitchBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
-        if (xmlImporterVisitorParam instanceof XMLImporterVisitorCharacters) {
-            iDiatonicPitchBuilder.from(EDiatonicPitches.valueOf(((XMLImporterVisitorCharacters)xmlImporterVisitorParam).getCharacters().toUpperCase()));
+    public void importDiatonicPitch(IDiatonicPitchBuilder iDiatonicPitchBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
+        if (xmlImporterVisitorParam.getCharacters().isPresent()) {
+            iDiatonicPitchBuilder.from(EDiatonicPitches.valueOf(xmlImporterVisitorParam.getCharacters().get()));
         }
+    }
+
+    @Override
+    public void importPitch(IPitchBuilder iPitchBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
 
     }
 
     @Override
-    public void importPitch(IPitchBuilder iPitchBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
-
-    }
-
-    @Override
-    public void importAlteration(IAlterationBuilder iAlterationBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) throws IMException {
-        if (xmlImporterVisitorParam instanceof XMLImporterVisitorCharacters) {
-            String characters = ((XMLImporterVisitorCharacters) xmlImporterVisitorParam).getCharacters();
-            EAccidentalSymbols accidentalSymbol = EAccidentalSymbols.fromSemitonesAlteration(Integer.parseInt(characters));
-            iAlterationBuilder.from(accidentalSymbol);
+    public void importAlteration(IAlterationBuilder iAlterationBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) throws IMException {
+        if (xmlImporterVisitorParam.getCharacters().isPresent()) {
+            iAlterationBuilder.from(EAccidentalSymbols.fromSemitonesAlteration(Integer.parseInt(xmlImporterVisitorParam.getCharacters().get())));
         }
 
     }
 
     @Override
-    public void importBarlineType(IBarlineTypeBuilder iBarlineTypeBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
+    public void importBarlineType(IBarlineTypeBuilder iBarlineTypeBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
 
     }
 
     @Override
-    public void importRest(IRestBuilder iRestBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
+    public void importRest(IRestBuilder iRestBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
 
     }
 
     @Override
-    public void importNote(INoteBuilder iNoteBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
+    public void importNote(INoteBuilder iNoteBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
     }
 
     @Override
-    public void importMutimeasureRest(IMultimeasureRestBuilder iMultimeasureRestBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
-
-    }
-
-    @Override
-    public void importKeyFromAccidentalCount(IKeyFromAccidentalCountBuilder iKeyFromAccidentalCountBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
+    public void importMutimeasureRest(IMultimeasureRestBuilder iMultimeasureRestBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
 
     }
 
     @Override
-    public void importMetronome(IMetronomeMarkBuilder iMetronomeMarkBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
+    public void importKeyFromAccidentalCount(IKeyFromAccidentalCountBuilder iKeyFromAccidentalCountBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
 
     }
 
     @Override
-    public void importFigure(IFigureBuilder iFigureBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) throws IMException {
-        if (xmlImporterVisitorParam instanceof XMLImporterVisitorCharacters) {
-            XMLImporterVisitorCharacters characters = (XMLImporterVisitorCharacters) xmlImporterVisitorParam;
-            int meterUnit = Integer.parseInt(characters.getCharacters()) / MusicXMLExporterVisitor.MAX_DUR;
+    public void importMetronome(IMetronomeMarkBuilder iMetronomeMarkBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
+
+    }
+
+    @Override
+    public void importFigure(IFigureBuilder iFigureBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) throws IMException {
+        if (xmlImporterVisitorParam.getCharacters().isPresent()) {
+            int meterUnit = Integer.parseInt(xmlImporterVisitorParam.getCharacters().get()) / MusicXMLExporterVisitor.MAX_DUR;
             //TODO - meter unit ¿cuando tiene puntillos? - mejor buscar type... --- ¿es obligatorio type?
             EFigures figure = EFigures.findMeterUnit(meterUnit, ENotationTypes.eModern);
             iFigureBuilder.from(figure);
@@ -172,9 +147,9 @@ public class MusicXMLImporterVisitor implements IImporterVisitor<IXMLImporterVis
     }
 
     @Override
-    public void importBarline(IBarlineBuilder iBarlineBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
-        if (xmlImporterVisitorParam instanceof XMLImporterVisitorAtrributes) {
-            for (Iterator<Attribute> iterator = ((XMLImporterVisitorAtrributes) xmlImporterVisitorParam).getAttributeIterator(); iterator.hasNext(); ) {
+    public void importBarline(IBarlineBuilder iBarlineBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
+        if (xmlImporterVisitorParam.getAttributeIterator().isPresent()) {
+            for (Iterator<Attribute> iterator = xmlImporterVisitorParam.getAttributeIterator().get(); iterator.hasNext(); ) {
                 Attribute attribute = iterator.next();
                 switch (attribute.getName().getLocalPart()) {
                     case "number":
@@ -186,9 +161,9 @@ public class MusicXMLImporterVisitor implements IImporterVisitor<IXMLImporterVis
     }
 
     @Override
-    public void importFractionalTimeSignature(IFractionalTimeSignatureBuilder iFractionalTimeSignatureBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) throws IMException {
-        if (xmlImporterVisitorParam instanceof XMLImporterVisitorAtrributes) {
-            for (Iterator<Attribute> iterator = ((XMLImporterVisitorAtrributes) xmlImporterVisitorParam).getAttributeIterator(); iterator.hasNext(); ) {
+    public void importFractionalTimeSignature(IFractionalTimeSignatureBuilder iFractionalTimeSignatureBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) throws IMException {
+        if (xmlImporterVisitorParam.getAttributeIterator().isPresent()) {
+            for (Iterator<Attribute> iterator = xmlImporterVisitorParam.getAttributeIterator().get(); iterator.hasNext(); ) {
                 Attribute attribute = iterator.next();
                 switch (attribute.getName().getLocalPart()) {
                     case "symbol":
@@ -209,83 +184,91 @@ public class MusicXMLImporterVisitor implements IImporterVisitor<IXMLImporterVis
     }
 
     @Override
-    public void importKey(IKeyBuilder iKeyBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
+    public void importKey(IKeyBuilder iKeyBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
 
     }
 
     @Override
-    public void importNotationType(INotationTypeBuilder iNotationTypeBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
+    public void importNotationType(INotationTypeBuilder iNotationTypeBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
 
     }
 
     @Override
-    public void importChord(IChordBuilder iChordBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
+    public void importChord(IChordBuilder iChordBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
 
     }
 
     @Override
-    public void importName(INameBuilder iNameBuilder, IXMLImporterVisitorParam ixmlImporterVisitorParam) {
-        if (ixmlImporterVisitorParam instanceof XMLImporterVisitorCharacters) {
-            iNameBuilder.from(((XMLImporterVisitorCharacters)ixmlImporterVisitorParam).getCharacters());
+    public void importName(INameBuilder iNameBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
+        if (xmlImporterVisitorParam.getCharacters().isPresent()) {
+            iNameBuilder.from(xmlImporterVisitorParam.getCharacters().get());
         }
     }
 
     @Override
-    public void importKeyAccidentalCount(IKeyAccidentalCountBuilder iKeyAccidentalCountBuilder, IXMLImporterVisitorParam ixmlImporterVisitorParam) {
+    public void importKeyAccidentalCount(IKeyAccidentalCountBuilder iKeyAccidentalCountBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
     }
 
 
     @Override
-    public void importTimeSignatureNumerator(ITimeSignatureNumeratorBuilder iTimeSignatureNumeratorBuilder, IXMLImporterVisitorParam ixmlImporterVisitorParam) {
-        importIntegerProperty(iTimeSignatureNumeratorBuilder, ixmlImporterVisitorParam);
+    public void importTimeSignatureNumerator(ITimeSignatureNumeratorBuilder iTimeSignatureNumeratorBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
+        if (xmlImporterVisitorParam.getCharacters().isPresent()) {
+            iTimeSignatureNumeratorBuilder.from(Integer.parseInt(xmlImporterVisitorParam.getCharacters().get()));
+        }
     }
 
     @Override
-    public void importNumber(INumberBuilder iNumberBuilder, IXMLImporterVisitorParam ixmlImporterVisitorParam) {
-
-    }
-
-    @Override
-    public void importTimeSignatureDenominator(ITimeSignatureDenominatorBuilder iTimeSignatureDenominatorBuilder, IXMLImporterVisitorParam ixmlImporterVisitorParam) {
-        importIntegerProperty(iTimeSignatureDenominatorBuilder, ixmlImporterVisitorParam);
-    }
-
-    @Override
-    public void importOctave(IOctaveBuilder iOctaveBuilder, IXMLImporterVisitorParam ixmlImporterVisitorParam) {
-        importIntegerProperty(iOctaveBuilder, ixmlImporterVisitorParam);
-    }
-
-    @Override
-    public void importMetronomeMarkValue(IIMetronomeMarkValueBuilder iiMetronomeMarkValueBuilder, IXMLImporterVisitorParam ixmlImporterVisitorParam) {
+    public void importNumber(INumberBuilder iNumberBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
 
     }
 
     @Override
-    public void importMultimeasureRestCount(IMultimeasureRestCountBuilder iMultimeasureRestCountBuilder, IXMLImporterVisitorParam ixmlImporterVisitorParam) {
+    public void importTimeSignatureDenominator(ITimeSignatureDenominatorBuilder iTimeSignatureDenominatorBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
+        if (xmlImporterVisitorParam.getCharacters().isPresent()) {
+            iTimeSignatureDenominatorBuilder.from(Integer.parseInt(xmlImporterVisitorParam.getCharacters().get()));
+        }
+    }
+
+    @Override
+    public void importOctave(IOctaveBuilder iOctaveBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
+        if (xmlImporterVisitorParam.getCharacters().isPresent()) {
+            iOctaveBuilder.from(Integer.parseInt(xmlImporterVisitorParam.getCharacters().get()));
+        }
+    }
+
+    @Override
+    public void importMetronomeMarkValue(IIMetronomeMarkValueBuilder iiMetronomeMarkValueBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
 
     }
 
     @Override
-    public void importDots(IDotsBuilder iDotsBuilder, IXMLImporterVisitorParam ixmlImporterVisitorParam) {
+    public void importMultimeasureRestCount(IMultimeasureRestCountBuilder iMultimeasureRestCountBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
 
     }
 
     @Override
-    public void importClefLine(IClefLineBuilder iClefLineBuilder, IXMLImporterVisitorParam visitorParam) {
-        importIntegerProperty(iClefLineBuilder, visitorParam);
+    public void importDots(IDotsBuilder iDotsBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
+
+    }
+
+    @Override
+    public void importClefLine(IClefLineBuilder iClefLineBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
+        if (xmlImporterVisitorParam.getCharacters().isPresent()) {
+            iClefLineBuilder.from(Integer.parseInt(xmlImporterVisitorParam.getCharacters().get()));
+        }
     }
 
     public void setDivisions(int divisions) {
         this.currentDivisions = divisions;
     }
 
-    public void importPartContent(MusicXMLPartBuilder musicXMLPartBuilder, IXMLImporterVisitorParam ixmlImporterVisitorParam) {
+    public void importPartContent(MusicXMLPartBuilder musicXMLPartBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
 
     }
 
-    public void importMusicXMLPartBuilder(MusicXMLPartBuilder musicXMLPartBuilder, IXMLImporterVisitorParam xmlImporterVisitorParam) {
-        if (xmlImporterVisitorParam instanceof XMLImporterVisitorAtrributes) {
-            for (Iterator<Attribute> iterator = ((XMLImporterVisitorAtrributes) xmlImporterVisitorParam).getAttributeIterator(); iterator.hasNext(); ) {
+    public void importMusicXMLPartBuilder(MusicXMLPartBuilder musicXMLPartBuilder, XMLImporterVisitorParam xmlImporterVisitorParam) {
+        if (xmlImporterVisitorParam.getAttributeIterator().isPresent()) {
+            for (Iterator<Attribute> iterator = xmlImporterVisitorParam.getAttributeIterator().get(); iterator.hasNext(); ) {
                 Attribute attribute = iterator.next();
                 switch (attribute.getName().getLocalPart()) {
                     case "id":
@@ -295,18 +278,4 @@ public class MusicXMLImporterVisitor implements IImporterVisitor<IXMLImporterVis
             }
         }
     }
-
-
-    /*public void startImportPartContent(Iterator<Attribute> attributes) {
-        for (Iterator<Attribute> iterator = attributes; iterator.hasNext(); ) {
-            Attribute attribute = iterator.next();
-            switch (attribute.getName().getLocalPart()) {
-                case "id":
-                    currentPartID = attribute.getValue();
-                    partItems = new LinkedList<>();
-                    break;
-            }
-
-        }
-    }*/
 }

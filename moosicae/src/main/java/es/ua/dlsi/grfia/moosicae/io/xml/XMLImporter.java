@@ -24,7 +24,7 @@ import java.util.Stack;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 19/03/2020
  */
-public abstract class XMLImporter<ImporterVisitor extends IImporterVisitor<IXMLImporterVisitorParam>> extends AbstractImporter {
+public abstract class XMLImporter<ImporterVisitor extends IImporterVisitor<XMLImporterVisitorParam>> extends AbstractImporter {
     protected final CoreObjectBuilderSuppliers coreObjectBuilderSuppliers;
     protected final ImporterVisitor xmlImporterVisitor;
     private Stack<String> elementStack;
@@ -117,7 +117,7 @@ public abstract class XMLImporter<ImporterVisitor extends IImporterVisitor<IXMLI
                 IObjectBuilder<?> coreObjectBuilder = (IObjectBuilder<?>) importingContexts.begin(elementName,
                         (IObjectBuilder<?>) coreObjectBuilderSuppliers.create(elementName, coreAbstractFactory));
                 builderStack.push(coreObjectBuilder);
-                coreObjectBuilder.doImport(xmlImporterVisitor, new XMLImporterVisitorAtrributes(startElement.getAttributes()));
+                coreObjectBuilder.doImport(xmlImporterVisitor, new XMLImporterVisitorParam(startElement.getAttributes()));
             }
         }
     }
@@ -133,7 +133,7 @@ public abstract class XMLImporter<ImporterVisitor extends IImporterVisitor<IXMLI
             // if there is an specific builder associated to this element name, handle the contents using the specific importer visitor
             if (coreObjectBuilderSuppliers.contains(elementName)) {
                 if (currentBuilder != null) {
-                    currentBuilder.doImport(xmlImporterVisitor, new XMLImporterVisitorCharacters(data));
+                    currentBuilder.doImport(xmlImporterVisitor, new XMLImporterVisitorParam(data));
                 }
             }
         }
