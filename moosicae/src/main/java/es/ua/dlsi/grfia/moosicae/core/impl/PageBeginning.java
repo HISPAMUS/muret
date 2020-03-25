@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class PageBeginning extends CoreItem implements IPageBeginning {
-    public PageBeginning(@NotNull IId id) {
+    public PageBeginning(IId id) {
         super(id);
     }
 
@@ -22,6 +22,6 @@ public class PageBeginning extends CoreItem implements IPageBeginning {
 
     @Override
     public PageBeginning clone() {
-        return new PageBeginning(IdGenerator.getInstance().generateUniqueId());
+        return new PageBeginning(null);
     }
 }

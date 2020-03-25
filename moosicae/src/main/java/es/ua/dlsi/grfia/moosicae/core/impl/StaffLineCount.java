@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
  * @created 24/03/2020
  */
 public class StaffLineCount extends IntegerCoreCoreProperty implements IStaffLineCount {
-    public StaffLineCount(@NotNull IId id, @NotNull Integer value) {
+    public StaffLineCount(IId id, @NotNull Integer value) {
         super(id, value);
     }
 

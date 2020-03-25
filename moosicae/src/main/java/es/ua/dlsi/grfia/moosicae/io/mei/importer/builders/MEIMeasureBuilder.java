@@ -37,7 +37,9 @@ public class MEIMeasureBuilder extends MEIObjectBuilder<MEIMeasure> {
     }
 
     @Override
-    public void readMEI(XMLImporterParam xmlImporterParam) throws IMException {
+    public void read(XMLImporterParam xmlImporterParam) throws IMException {
+        MEIObjectBuilder.readMEI(this, xmlImporterParam);
+
         Optional<String> rightAttr = xmlImporterParam.getAttribute("right");
         if (rightAttr.isPresent()) {
             right = new MEIMeasureRightProperty(rightAttr.get());

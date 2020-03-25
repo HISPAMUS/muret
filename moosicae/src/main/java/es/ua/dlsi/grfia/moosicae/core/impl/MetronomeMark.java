@@ -25,7 +25,7 @@ public class MetronomeMark extends CoreItem implements IMetronomeMark {
     @NotNull
     private IMetronomeMarkValue value;
 
-    MetronomeMark(@NotNull IId id, @NotNull IFigure figure,  IDots dots, IMetronomeMarkValue value) {
+    MetronomeMark(IId id, @NotNull IFigure figure,  IDots dots, IMetronomeMarkValue value) {
         super(id);
         this.figure = figure;
         this.dots = dots;
@@ -54,7 +54,7 @@ public class MetronomeMark extends CoreItem implements IMetronomeMark {
 
     @Override
     public MetronomeMark clone() {
-        return new MetronomeMark(IdGenerator.getInstance().generateUniqueId(), figure, dots, value);
+        return new MetronomeMark(null, figure, dots, value);
     }
 
     @Override

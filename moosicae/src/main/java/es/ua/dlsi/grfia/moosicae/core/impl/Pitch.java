@@ -20,8 +20,9 @@ public class Pitch extends CoreProperty implements IPitch {
     @NotNull
     private final IDiatonicPitch diatonicPitch;
 
-    public Pitch(@NotNull IId id, @NotNull IOctave octave,  IAlteration alteration, @NotNull IDiatonicPitch diatonicPitch) {
+    public Pitch(IId id, @NotNull IOctave octave,  IAlteration alteration, @NotNull IDiatonicPitch diatonicPitch) {
         super(id);
+
         this.octave = octave;
         this.alteration = alteration;
         this.diatonicPitch = diatonicPitch;
@@ -65,7 +66,7 @@ public class Pitch extends CoreProperty implements IPitch {
 
     @Override
     public Pitch clone() {
-        return new Pitch(IdGenerator.getInstance().generateUniqueId(), octave, alteration, diatonicPitch);
+        return new Pitch(null, octave, alteration, diatonicPitch);
     }
 
     @Override

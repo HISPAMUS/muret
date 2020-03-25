@@ -18,17 +18,19 @@ public abstract class MEIObjectBuilder<ObjectType extends ICoreObject> extends C
         super(coreObjectFactory);
     }
 
-    @Override
-    public void read(XMLImporterParam xmlImporterParam) throws IMException {
+    /**
+     * This element is static because not all elements will derive from MEIObjectBuilder but from others such as INoteBuilder
+     * @param meiObjectBuilder
+     * @param xmlImporterParam
+     * @throws IMException
+     */
+    public static void readMEI(MEIObjectBuilder meiObjectBuilder, XMLImporterParam xmlImporterParam) throws IMException {
         // all MEI objects may have an xml:id element that will be used as ID in the core object
         if (xmlImporterParam.hasAttributes()) {
             Optional<String> xmlID = xmlImporterParam.getAttribute("xml:id");
             if (xmlID.isPresent()) {
-                this.from(coreObjectFactory.createId(xmlID.get()));
+                meiObjectBuilder.from(meiObjectBuilder.coreObjectFactory.createId(xmlID.get()));
             }
         }
-        readMEI(xmlImporterParam);
     }
-
-    protected abstract void readMEI(XMLImporterParam xmlImporterParam) throws IMException;
 }

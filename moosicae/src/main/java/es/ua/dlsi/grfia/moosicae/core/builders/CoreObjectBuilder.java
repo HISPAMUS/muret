@@ -31,11 +31,12 @@ public abstract class CoreObjectBuilder<T extends ICoreObject> implements IObjec
      * @return
      */
     protected IId getId() {
-        if (this.id != null) {
+        return id;
+        /*if (this.id != null) {
             return id;
         } else {
             return coreObjectFactory.createId();
-        }
+        }*/
     }
 
     // we don't need it because the ICoreAbstractFactory already uses @NotNull annotations

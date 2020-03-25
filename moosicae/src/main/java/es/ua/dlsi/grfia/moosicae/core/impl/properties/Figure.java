@@ -11,13 +11,13 @@ import javax.validation.constraints.NotNull;
  * @created 15/03/2020
  */
 public class Figure extends EnumCoreProperty<EFigures> implements IFigure {
-    public Figure(@NotNull IId id, @NotNull EFigures enumValue) {
+    public Figure(IId id, @NotNull EFigures enumValue) {
         super(id, enumValue);
     }
 
     @Override
     public Figure clone() {
-        return new Figure(IdGenerator.getInstance().generateUniqueId(), value);
+        return new Figure(null, value);
     }
 
     @Override

@@ -13,7 +13,7 @@ public abstract class CoreObject implements ICoreObject {
     @NotNull
     protected final IId id;
 
-    public CoreObject(@NotNull IId id) {
+    public CoreObject(IId id) {
         this.id = id;
     }
 

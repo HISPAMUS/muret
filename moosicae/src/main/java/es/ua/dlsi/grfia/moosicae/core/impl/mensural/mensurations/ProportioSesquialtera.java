@@ -33,7 +33,7 @@ import javax.validation.constraints.NotNull;
  */
 public class ProportioSesquialtera extends Mensuration implements IProportioSesquialtera {
 
-    public ProportioSesquialtera(@NotNull IId id) {
+    public ProportioSesquialtera(IId id) {
 		super(id, EMensuralPerfections.imperfectum, EMensuralPerfections.imperfectum, EMensuralPerfections.imperfectum, EMensuralPerfections.perfectum);
     }
 

@@ -8,22 +8,20 @@ import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 24/03/2020
  */
 public class MEILayerBuilder extends MEIObjectBuilder<MEILayer> {
+    private Integer n;
     private final List<ICoreItem> coreItemList;
+
 
     public MEILayerBuilder(ICoreAbstractFactory coreObjectFactory) {
         super(coreObjectFactory);
         coreItemList = new LinkedList<>();
-    }
-
-    @Override
-    protected void readMEI(XMLImporterParam xmlImporterParam) throws IMException {
-
     }
 
     public void add(ICoreItem coreItem) {
@@ -32,6 +30,16 @@ public class MEILayerBuilder extends MEIObjectBuilder<MEILayer> {
 
     @Override
     public MEILayer build() throws IMException {
-        return new MEILayer(getId(), coreItemList.toArray(new ICoreItem[coreItemList.size()]));
+        return new MEILayer(getId(), coreItemList.toArray(new ICoreItem[coreItemList.size()]), n);
+    }
+
+    @Override
+    public void read(XMLImporterParam xmlImporterParam) throws IMException {
+        MEIObjectBuilder.readMEI(this, xmlImporterParam);
+        Optional<String> nattr = xmlImporterParam.getAttribute("n");
+        if (nattr.isPresent()) {
+            n = Integer.parseInt(nattr.get());
+        }
+
     }
 }

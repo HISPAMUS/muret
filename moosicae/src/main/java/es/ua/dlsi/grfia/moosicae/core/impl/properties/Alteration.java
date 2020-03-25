@@ -18,7 +18,7 @@ public class Alteration extends CoreProperty implements IAlteration {
 
     private final IAlterationDisplayType alterationDisplayType;
 
-    public Alteration(@NotNull IId id, @NotNull IAccidentalSymbol accidentalSymbol,  IAlterationDisplayType alterationDisplayType) {
+    public Alteration(IId id, @NotNull IAccidentalSymbol accidentalSymbol,  IAlterationDisplayType alterationDisplayType) {
         super(id);
         this.accidentalSymbol = accidentalSymbol;
         this.alterationDisplayType = alterationDisplayType;
@@ -36,7 +36,7 @@ public class Alteration extends CoreProperty implements IAlteration {
 
     @Override
     public Alteration clone() {
-        return new Alteration(IdGenerator.getInstance().generateUniqueId(), accidentalSymbol, alterationDisplayType);
+        return new Alteration(null, accidentalSymbol, alterationDisplayType);
     }
 
     @Override

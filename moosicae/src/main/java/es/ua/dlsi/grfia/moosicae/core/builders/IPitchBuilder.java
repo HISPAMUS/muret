@@ -39,6 +39,11 @@ public class IPitchBuilder extends CoreObjectBuilder<IPitch> {
         return this;
     }
 
+    public IPitchBuilder from(EDiatonicPitches diatonicPitch) {
+        this.diatonicPitch = coreObjectFactory.createDiatonicPitch(null, diatonicPitch);
+        return this;
+    }
+
     public IPitchBuilder from(int octave) {
         this.octave = coreObjectFactory.createOctave(getId(), octave);
         return this;

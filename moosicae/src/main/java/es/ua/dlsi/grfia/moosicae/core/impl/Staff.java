@@ -7,7 +7,9 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IStaffLineCount;
 
 import javax.validation.constraints.NotNull;
 
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -17,11 +19,18 @@ public class Staff extends CoreObject implements IStaff {
     IStaffLineCount staffLineCount;
 
     @NotNull
-    private final LinkedList<ICoreItem> items;
+    private final List<ICoreItem> items;
 
-    public Staff(@NotNull IId id, @NotNull IStaffLineCount staffLineCount) {
+    public Staff(IId id, @NotNull IStaffLineCount staffLineCount) {
         super(id);
+        this.staffLineCount = staffLineCount;
         items = new LinkedList<>();
+    }
+
+    public Staff(IId id, IStaffLineCount staffLineCount, ICoreItem[] items) {
+        super(id);
+        this.staffLineCount = staffLineCount;
+        this.items = Arrays.asList(items);
     }
 
     @Override
@@ -57,7 +66,7 @@ public class Staff extends CoreObject implements IStaff {
 
     @Override
     public Staff clone() {
-        Staff staff = new Staff(IdGenerator.getInstance().generateUniqueId(), staffLineCount);
+        Staff staff = new Staff(null, staffLineCount);
         for (ICoreItem symbol: items) {
             items.add(symbol); // do not clone, it's an aggregation
         }

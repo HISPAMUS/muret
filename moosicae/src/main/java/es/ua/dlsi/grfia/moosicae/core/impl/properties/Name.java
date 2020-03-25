@@ -12,7 +12,7 @@ public class Name extends CoreProperty implements IName {
     @NotNull
     private final String value;
 
-    public Name(@NotNull IId id, @NotNull String value) {
+    public Name(IId id, @NotNull String value) {
         super(id);
         this.value = value;
     }

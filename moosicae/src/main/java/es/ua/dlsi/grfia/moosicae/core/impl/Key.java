@@ -20,7 +20,7 @@ public class Key extends CoreItem implements IKey {
     @NotNull
     private final IKeySignature keySignature;
 
-    Key(@NotNull IId id, @NotNull IPitchClass pitchClass, @NotNull IMode mode, @NotNull IKeySignature keySignature) {
+    Key(IId id, @NotNull IPitchClass pitchClass, @NotNull IMode mode, @NotNull IKeySignature keySignature) {
         super(id);
         this.pitchClass = pitchClass;
         this.mode = mode;
@@ -29,7 +29,7 @@ public class Key extends CoreItem implements IKey {
 
     @Override
     public Key clone() {
-        return new Key(IdGenerator.getInstance().generateUniqueId(), pitchClass, mode, keySignature);
+        return new Key(null, pitchClass, mode, keySignature);
     }
 
     @Override

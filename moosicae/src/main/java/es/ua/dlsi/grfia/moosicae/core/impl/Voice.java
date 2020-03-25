@@ -21,7 +21,7 @@ public class Voice extends CoreObject implements IVoice {
     @NotNull
     private final LinkedList<IVoiced> items;
 
-    public Voice(@NotNull IId id,  IName name) {
+    public Voice(IId id,  IName name) {
         super(id);
         this.name = name;
         items = new LinkedList<>();
@@ -44,7 +44,7 @@ public class Voice extends CoreObject implements IVoice {
 
     @Override
     public Voice clone() {
-        Voice voice = new Voice(IdGenerator.getInstance().generateUniqueId(), name);
+        Voice voice = new Voice(null, name);
         for (IVoiced voiced: items) {
             voice.addItem((IVoiced) voiced.clone());
         }

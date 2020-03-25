@@ -20,7 +20,7 @@ public class Chord extends DurationalSingle implements IChord {
     @NotNull
     private final IPitch[] pitches;
 
-    Chord(@NotNull IId id, IFigure figure,  IDots dots, @NotNull IPitch [] pitches) {
+    Chord(IId id, IFigure figure,  IDots dots, @NotNull IPitch [] pitches) {
         super(id, figure, dots);
         this.pitches = pitches.clone();
     }
@@ -32,7 +32,7 @@ public class Chord extends DurationalSingle implements IChord {
 
     @Override
     public Chord clone() {
-        return new Chord(IdGenerator.getInstance().generateUniqueId(), figure, dots, pitches);
+        return new Chord(null, figure, dots, pitches);
     }
 
     @Override

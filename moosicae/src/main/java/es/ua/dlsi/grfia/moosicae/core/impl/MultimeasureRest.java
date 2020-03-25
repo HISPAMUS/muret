@@ -15,7 +15,7 @@ public class MultimeasureRest extends DurationalComposite implements IMultimeasu
     @NotNull
     private final IMultimeasureRestCount measureCount;
 
-    MultimeasureRest(@NotNull IId id, @NotNull IMultimeasureRestCount measureCount) {
+    MultimeasureRest(IId id, @NotNull IMultimeasureRestCount measureCount) {
         super(id);
         this.measureCount = measureCount;
     }
@@ -27,7 +27,7 @@ public class MultimeasureRest extends DurationalComposite implements IMultimeasu
 
     @Override
     public MultimeasureRest clone() {
-        return new MultimeasureRest(IdGenerator.getInstance().generateUniqueId(), measureCount);
+        return new MultimeasureRest(null, measureCount);
     }
 
     @Override

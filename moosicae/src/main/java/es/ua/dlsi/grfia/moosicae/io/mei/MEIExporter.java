@@ -122,15 +122,17 @@ public class MEIExporter implements IExporter {
             XMLElement xmlLayer = xmlStaff.addChild("layer");
             xmlLayer.addAttribute("n", Integer.toString(nstaff));
             for (ICoreItem staffElement: staff.getStaffSymbols()) {
-                XMLExporterVisitorParam XMLExporterVisitorParam = new XMLExporterVisitorParam(XMLParamExportMode.element, xmlLayer);
-                staffElement.export(meiExporterVisitor, XMLExporterVisitorParam);
+                if (!exportedSymbols.contains(staffElement)) {
+                    XMLExporterVisitorParam XMLExporterVisitorParam = new XMLExporterVisitorParam(XMLParamExportMode.element, xmlLayer);
+                    staffElement.export(meiExporterVisitor, XMLExporterVisitorParam);
+                }
             }
         }
     }
 
-    private void export(XMLElement xmlScoreDef, ISystemElement[] systemElements) throws IMException {
+    private void export(XMLElement xmlScoreDef, ISystem[] systemElements) throws IMException {
         XMLElement xmlStaffGrp = xmlScoreDef.addChild("staffGrp"); // TODO anidado
-        for (ISystemElement staffOurGroup : systemElements) {
+        for (ISystem staffOurGroup : systemElements) {
             IStaff [] staves = staffOurGroup.getStaves();
             for (IStaff staff : staves) {
                 exportDef(xmlStaffGrp, staff);

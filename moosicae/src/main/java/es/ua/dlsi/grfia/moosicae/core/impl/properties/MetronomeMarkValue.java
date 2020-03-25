@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
  * @created 23/03/2020
  */
 public class MetronomeMarkValue extends IntegerCoreCoreProperty implements IMetronomeMarkValue {
-    public MetronomeMarkValue(@NotNull IId id, @NotNull Integer value) {
+    public MetronomeMarkValue(IId id, @NotNull Integer value) {
         super(id, value);
     }
 

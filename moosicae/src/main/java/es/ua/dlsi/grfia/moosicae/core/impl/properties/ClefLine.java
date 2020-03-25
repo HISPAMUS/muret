@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 public class ClefLine extends IntegerCoreCoreProperty implements IClefLine {
 
 
-    public ClefLine(@NotNull IId id, @NotNull Integer value) {
+    public ClefLine(IId id, @NotNull Integer value) {
         super(id, value);
     }
 

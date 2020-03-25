@@ -15,6 +15,8 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import java.io.*;
 import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Use StAX for parsing
@@ -123,7 +125,9 @@ public abstract class XMLImporter {
         // if there is an specific builder associated to this element name, finish the context
         // (it will build an object and prepare it for the parent context to be inserted)
         if (importingContexts.contains(elementName)) {
-            onEndElement(elementName, importingContexts.end(elementName));
+            Object coreObject = importingContexts.end(elementName);
+            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Parsed element {0} into object {1} = {2}", new Object[] { elementName, coreObject.getClass().getName(), coreObject });
+            onEndElement(elementName, coreObject);
             builderStack.pop();
         }
     }

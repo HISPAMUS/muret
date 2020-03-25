@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
  * 1 breve = 2 semibreves, 1 semibreve = 2 minim
  */
 public class TempusImperfectumCumProlationeImperfecta extends Mensuration implements ITempusImperfectumCumProlationeImperfecta {
-    public TempusImperfectumCumProlationeImperfecta(@NotNull IId id) {
+    public TempusImperfectumCumProlationeImperfecta(IId id) {
         super(id, EMensuralPerfections.imperfectum, EMensuralPerfections.imperfectum, EMensuralPerfections.imperfectum, EMensuralPerfections.imperfectum);
     }
 

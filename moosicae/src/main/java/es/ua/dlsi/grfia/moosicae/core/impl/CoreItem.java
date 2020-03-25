@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public abstract class CoreItem extends CoreObject implements ICoreItem {
-    public CoreItem(@NotNull IId id) {
+    public CoreItem(IId id) {
         super(id);
     }
 

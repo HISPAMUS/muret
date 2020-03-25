@@ -18,7 +18,7 @@ public class MixedMeter extends Meter implements IMixedMeter {
     @NotNull
     private final IMeter[] submeters;
 
-    MixedMeter(@NotNull IId id, @NotNull IMeter[] submeters) {
+    MixedMeter(IId id, @NotNull IMeter[] submeters) {
         super(id);
         this.submeters = submeters.clone();
     }
@@ -44,7 +44,7 @@ public class MixedMeter extends Meter implements IMixedMeter {
 
     @Override
     public MixedMeter clone() {
-        return new MixedMeter(IdGenerator.getInstance().generateUniqueId(), submeters);
+        return new MixedMeter(null, submeters);
     }
 
     @Override

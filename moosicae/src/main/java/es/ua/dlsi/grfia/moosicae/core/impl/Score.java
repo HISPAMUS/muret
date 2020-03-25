@@ -12,9 +12,9 @@ public class Score extends CoreObject implements IScore {
     @NotNull
     private final LinkedList<IPart> parts;
     @NotNull
-    private final LinkedList<ISystemElement> systemElements;
+    private final LinkedList<ISystem> systemElements;
 
-    public Score(@NotNull IId id) {
+    public Score(IId id) {
         super(id);
         parts = new LinkedList<>();
         systemElements = new LinkedList<>();
@@ -31,14 +31,14 @@ public class Score extends CoreObject implements IScore {
     }
 
     @Override
-    public ISystemElement[] getSystemElements() {
-        return systemElements.toArray(new ISystemElement[systemElements.size()]);
+    public ISystem[] getSystemElements() {
+        return systemElements.toArray(new ISystem[systemElements.size()]);
     }
 
     @Override
     public IStaff[] getAllStaves() {
         LinkedList<IStaff> staves = new LinkedList<>();
-        for (ISystemElement child: systemElements) {
+        for (ISystem child: systemElements) {
             for (IStaff staff: child.getStaves()) {
                 staves.add(staff);
             }
@@ -52,7 +52,7 @@ public class Score extends CoreObject implements IScore {
     }
 
     @Override
-    public void add(ISystemElement systemElement) {
+    public void add(ISystem systemElement) {
         this.systemElements.add(systemElement);
     }
 

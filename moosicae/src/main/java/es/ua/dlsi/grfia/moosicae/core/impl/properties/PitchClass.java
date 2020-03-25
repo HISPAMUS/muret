@@ -19,7 +19,7 @@ public class PitchClass extends CoreProperty implements IPitchClass {
 
     private final IAccidentalSymbol accidental;
 
-    public PitchClass(@NotNull IId id, @NotNull IDiatonicPitch diatonicPitch,  IAccidentalSymbol accidental) {
+    public PitchClass(IId id, @NotNull IDiatonicPitch diatonicPitch,  IAccidentalSymbol accidental) {
         super(id);
         this.diatonicPitch = diatonicPitch;
         this.accidental = accidental;
@@ -37,7 +37,7 @@ public class PitchClass extends CoreProperty implements IPitchClass {
 
     @Override
     public PitchClass clone() {
-        return new PitchClass(IdGenerator.getInstance().generateUniqueId(), diatonicPitch, accidental);
+        return new PitchClass(null, diatonicPitch, accidental);
     }
 
     @Override

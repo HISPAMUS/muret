@@ -12,7 +12,7 @@ public class MxmlPartContents extends MxmlObject {
     @NotNull
     private final MxmlMeasure[] measures;
 
-    public MxmlPartContents(@NotNull IId id, MxmlMeasure[] measures) {
+    public MxmlPartContents(IId id, MxmlMeasure[] measures) {
         super(id);
         this.measures = measures;
     }

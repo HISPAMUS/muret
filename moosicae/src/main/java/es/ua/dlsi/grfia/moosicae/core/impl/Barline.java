@@ -22,7 +22,7 @@ public class Barline extends CoreItem implements IBarline {
 
     private IBarlineType barlineType;
 
-    Barline(@NotNull IId id,  INumber barNumber,  IBarlineType barlineType) {
+    Barline(IId id,  INumber barNumber,  IBarlineType barlineType) {
         super(id);
         this.barNumber = barNumber;
         this.barlineType = barlineType;
@@ -45,7 +45,7 @@ public class Barline extends CoreItem implements IBarline {
 
     @Override
     public Barline clone() {
-        return new Barline(IdGenerator.getInstance().generateUniqueId(), barNumber, barlineType);
+        return new Barline(null, barNumber, barlineType);
     }
 
     @Override

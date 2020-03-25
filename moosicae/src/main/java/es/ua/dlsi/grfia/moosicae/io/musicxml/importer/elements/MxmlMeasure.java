@@ -14,7 +14,7 @@ public class MxmlMeasure extends MxmlObject {
     @NotNull
     private final IMxmlPartItem[] items;
 
-    public MxmlMeasure(@NotNull IId id, IMxmlPartItem[] items) {
+    public MxmlMeasure(IId id, IMxmlPartItem[] items) {
         super(id);
         this.items = items;
     }

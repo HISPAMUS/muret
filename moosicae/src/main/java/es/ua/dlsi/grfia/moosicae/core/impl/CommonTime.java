@@ -15,10 +15,10 @@ import javax.validation.constraints.NotNull;
  * @created 14/03/2020
  */
 public class CommonTime extends FractionalTimeSignature implements ICommonTime {
-    CommonTime(@NotNull IId id) {
+    CommonTime(IId id) {
         super(id,
-                new TimeSignatureNumerator(IdGenerator.getInstance().generateUniqueId(), 4),
-                new TimeSignatureDenominator(IdGenerator.getInstance().generateUniqueId(), 4));
+                new TimeSignatureNumerator(null, 4),
+                new TimeSignatureDenominator(null, 4));
     }
 
     @Override
@@ -33,7 +33,7 @@ public class CommonTime extends FractionalTimeSignature implements ICommonTime {
 
     @Override
     public CommonTime clone() {
-        return new CommonTime(IdGenerator.getInstance().generateUniqueId());
+        return new CommonTime(null);
     }
 
     @Override

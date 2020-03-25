@@ -13,7 +13,7 @@ public class Title extends CoreProperty implements ITitle {
     @NotNull
     private final String title;
 
-    public Title(@NotNull IId id, @NotNull String title) {
+    public Title(IId id, @NotNull String title) {
         super(id);
         this.title = title;
     }
@@ -25,7 +25,7 @@ public class Title extends CoreProperty implements ITitle {
 
     @Override
     public Title clone() {
-        return new Title(IdGenerator.getInstance().generateUniqueId(), title);
+        return new Title(null, title);
     }
 
     @Override

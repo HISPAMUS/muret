@@ -10,13 +10,13 @@ import javax.validation.constraints.NotNull;
  */
 public class Octave extends IntegerCoreCoreProperty implements IOctave {
 
-    public Octave(@NotNull IId id, @NotNull Integer value) {
+    public Octave(IId id, @NotNull Integer value) {
         super(id, value);
     }
 
     @Override
     public Octave clone() {
-        return new Octave(IdGenerator.getInstance().generateUniqueId(), value);
+        return new Octave(null, value);
     }
 
     @Override

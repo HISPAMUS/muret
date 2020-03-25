@@ -10,13 +10,13 @@ import javax.validation.constraints.NotNull;
  * @created 15/03/2020
  */
 public class DiatonicPitch extends EnumCoreProperty<EDiatonicPitches> implements IDiatonicPitch {
-    public DiatonicPitch(@NotNull IId id, @NotNull EDiatonicPitches enumValue) {
+    public DiatonicPitch(IId id, @NotNull EDiatonicPitches enumValue) {
         super(id, enumValue);
     }
 
     @Override
     public DiatonicPitch clone() {
-        return new DiatonicPitch(IdGenerator.getInstance().generateUniqueId(), value);
+        return new DiatonicPitch(null, value);
     }
 
 }

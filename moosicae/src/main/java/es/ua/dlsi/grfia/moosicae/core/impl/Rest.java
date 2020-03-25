@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class Rest extends DurationalSingle implements IRest {
-    public Rest(@NotNull IId id, @NotNull IFigure figure,  IDots dots) {
+    public Rest(IId id, @NotNull IFigure figure,  IDots dots) {
         super(id, figure, dots);
     }
 
@@ -26,7 +26,7 @@ public class Rest extends DurationalSingle implements IRest {
 
     @Override
     public Rest clone() {
-        return new Rest(IdGenerator.getInstance().generateUniqueId(), figure, dots);
+        return new Rest(null, figure, dots);
     }
 
     @Override

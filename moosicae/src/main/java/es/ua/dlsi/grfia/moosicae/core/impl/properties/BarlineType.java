@@ -10,13 +10,13 @@ import javax.validation.constraints.NotNull;
  * @created 15/03/2020
  */
 public class BarlineType extends EnumCoreProperty<EBarlineTypes> implements IBarlineType {
-    public BarlineType(@NotNull IId id, @NotNull EBarlineTypes enumValue) {
+    public BarlineType(IId id, @NotNull EBarlineTypes enumValue) {
         super(id, enumValue);
     }
 
     @Override
     public BarlineType clone() {
-        return new BarlineType(IdGenerator.getInstance().generateUniqueId(), value);
+        return new BarlineType(null, value);
     }
 
 }

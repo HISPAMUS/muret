@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public abstract class NonDurational  extends CoreItem implements INonDurational {
-    public NonDurational(@NotNull IId id) {
+    public NonDurational(IId id) {
         super(id);
     }
 

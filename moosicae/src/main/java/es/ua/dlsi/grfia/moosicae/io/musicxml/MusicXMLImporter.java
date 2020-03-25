@@ -10,8 +10,6 @@ import es.ua.dlsi.grfia.moosicae.io.musicxml.importer.elements.*;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporter;
 
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Use StAX for parsing
@@ -58,7 +56,6 @@ public class MusicXMLImporter extends XMLImporter implements IImporter {
 
     @Override
     protected void onEndElement(String elementName, Object coreObject) {
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Parsed element {0} into object {1} = {2}", new Object[] { elementName, coreObject.getClass().getName(), coreObject });
         switch (elementName) {
             case "score-partwise":
                 mxmlScorePartWise = (MxmlScorePartWise) coreObject;
@@ -68,7 +65,7 @@ public class MusicXMLImporter extends XMLImporter implements IImporter {
 
     @Override
     protected IScore buildScore() throws IMException {
-        IScore score = coreAbstractFactory.createScore(coreAbstractFactory.createId());
+        IScore score = coreAbstractFactory.createScore(null);
         // now build the score from all parts
         if (mxmlScorePartWise == null) {
             throw new IMException("No mxmlScorePartWise object found"); // see onEndElement
@@ -88,8 +85,8 @@ public class MusicXMLImporter extends XMLImporter implements IImporter {
 
             //TODO voices, staves
             IStaffLineCount staffLineCount = coreAbstractFactory.createStaffLineCount(5);
-            IVoice defaultVoice = coreAbstractFactory.createVoice(part, coreAbstractFactory.createId(), null);
-            IStaff defaultStaff = coreAbstractFactory.createStaff(score, coreAbstractFactory.createId(), staffLineCount);
+            IVoice defaultVoice = coreAbstractFactory.createVoice(part, null, null);
+            IStaff defaultStaff = coreAbstractFactory.createStaff(score, null, staffLineCount);
             for (MxmlMeasure measure : mxmlImportedPart.getMeasures()) {
                 for (IMxmlPartItem item: measure.getItems()) {
                     ICoreItem[] subitems = item.getItems(); //TODO sacar los datos adicionales del MusicXMLNote como es la staff...
@@ -98,7 +95,7 @@ public class MusicXMLImporter extends XMLImporter implements IImporter {
                     }
                 }
                 //TODO parámetros barline
-                IBarline barline = coreAbstractFactory.createBarline(coreAbstractFactory.createId(), null, null);
+                IBarline barline = coreAbstractFactory.createBarline(null, null, null);
                 score.add(defaultVoice, defaultStaff, barline);
             }
 

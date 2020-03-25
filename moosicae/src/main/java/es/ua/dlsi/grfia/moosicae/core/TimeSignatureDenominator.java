@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 public class TimeSignatureDenominator extends IntegerCoreCoreProperty implements ITimeSignatureDenominator {
 
 
-    public TimeSignatureDenominator(@NotNull IId id, @NotNull Integer value) {
+    public TimeSignatureDenominator(IId id, @NotNull Integer value) {
         super(id, value);
     }
 

@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 public class KeyAccidentalCount extends IntegerCoreCoreProperty implements IKeyAccidentalCount {
 
 
-    public KeyAccidentalCount(@NotNull IId id, @NotNull Integer value) {
+    public KeyAccidentalCount(IId id, @NotNull Integer value) {
         super(id, value);
     }
 

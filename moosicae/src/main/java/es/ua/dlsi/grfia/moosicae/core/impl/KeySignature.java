@@ -21,14 +21,14 @@ public class KeySignature extends CoreItem implements IKeySignature {
      * Created by factories
      * @param pitchClasses
      */
-    KeySignature(@NotNull IId id, @NotNull IPitchClass[] pitchClasses) {
+    KeySignature(IId id, @NotNull IPitchClass[] pitchClasses) {
         super(id);
         this.pitchClasses = pitchClasses.clone();
     }
 
     @Override
     public KeySignature clone() {
-        return new KeySignature(IdGenerator.getInstance().generateUniqueId(), pitchClasses);
+        return new KeySignature(null, pitchClasses);
     }
 
     @Override

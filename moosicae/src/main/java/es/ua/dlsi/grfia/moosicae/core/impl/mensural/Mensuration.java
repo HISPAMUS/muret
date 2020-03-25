@@ -36,7 +36,7 @@ public abstract class Mensuration extends Meter implements IMensuration {
 	 * @param tempus
 	 * @param prolatio
 	 */
-	public Mensuration(@NotNull IId id,  EMensuralPerfections modusMaior,  EMensuralPerfections modusMinor, @NotNull EMensuralPerfections tempus, @NotNull EMensuralPerfections prolatio) {
+	public Mensuration(IId id,  EMensuralPerfections modusMaior,  EMensuralPerfections modusMinor, @NotNull EMensuralPerfections tempus, @NotNull EMensuralPerfections prolatio) {
 		super(id);
         this.prolatio = prolatio;
         this.tempus = tempus;

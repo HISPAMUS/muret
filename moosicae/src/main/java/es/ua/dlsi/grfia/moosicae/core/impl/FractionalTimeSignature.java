@@ -23,7 +23,7 @@ public class FractionalTimeSignature extends Meter implements IFractionalTimeSig
     @NotNull
     private final Time barDuration;
 
-    FractionalTimeSignature(@NotNull IId id, @NotNull ITimeSignatureNumerator numerator, @NotNull ITimeSignatureDenominator denominator) {
+    FractionalTimeSignature(IId id, @NotNull ITimeSignatureNumerator numerator, @NotNull ITimeSignatureDenominator denominator) {
         super(id);
         this.numerator = numerator;
         this.denominator = denominator;
@@ -52,7 +52,7 @@ public class FractionalTimeSignature extends Meter implements IFractionalTimeSig
 
     @Override
     public FractionalTimeSignature clone() {
-        return new FractionalTimeSignature(IdGenerator.getInstance().generateUniqueId(), numerator, denominator);
+        return new FractionalTimeSignature(null, numerator, denominator);
     }
 
     @Override

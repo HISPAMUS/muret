@@ -15,6 +15,7 @@ import es.ua.dlsi.grfia.moosicae.core.metadata.ITitle;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 
 
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -70,7 +71,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
 
     @Override
     public IId createId() {
-        return IdGenerator.getInstance().generateUniqueId();
+        return null;
     }
 
     @Override
@@ -283,6 +284,11 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
+    public IStaff createStaff(IId id, @NotNull IStaffLineCount staffLineCount, @NotNull @NotNull ICoreItem[] items) {
+        return new Staff(id, staffLineCount, items);
+    }
+
+    @Override
     public IStaff createStaff(IStaffGroup staves, IId id, IStaffLineCount staffLineCount) {
         Staff staff = new Staff(id, staffLineCount);
         staves.add(staff);
@@ -294,6 +300,11 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
         Staff staff = new Staff(id, staffLineCount);
         score.add(staff);
         return staff;
+    }
+
+    @Override
+    public IStaffGroup createStaffGroup(IId id, ISystem[] children) {
+        return new StaffGroup(id, children);
     }
 
     @Override
@@ -312,7 +323,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
 
     @Override
     public IStaffLineCount createStaffLineCount(int value) {
-        return new StaffLineCount(IdGenerator.getInstance().generateUniqueId(), value);
+        return new StaffLineCount(null, value);
     }
 
     @Override
@@ -404,10 +415,10 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     };
 
     private IPitchClass createPitchClass(IId id, EDiatonicPitches eDiatonicPitch, Optional<EAccidentalSymbols> eAccidentalSymbol) {
-        IDiatonicPitch diatonicPitch = createDiatonicPitch(IdGenerator.getInstance().generateUniqueId(), eDiatonicPitch);
+        IDiatonicPitch diatonicPitch = createDiatonicPitch(null, eDiatonicPitch);
         IAccidentalSymbol accidentalSymbol = null;
         if (eAccidentalSymbol.isPresent()) {
-            accidentalSymbol = createAccidentalSymbol(IdGenerator.getInstance().generateUniqueId(), eAccidentalSymbol.isPresent() ? eAccidentalSymbol.get() : null);
+            accidentalSymbol = createAccidentalSymbol(null, eAccidentalSymbol.isPresent() ? eAccidentalSymbol.get() : null);
         }
         IPitchClass pitchClass = createPitchClass(id, diatonicPitch, accidentalSymbol);
         return pitchClass;
@@ -415,21 +426,21 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
 
     @Override
     public ICommonAlterationKey createCommonAlterationKey(IId id, ECommonAlterationKeys commonKeys) {
-        IPitchClass pitchClass = createPitchClass(IdGenerator.getInstance().generateUniqueId(), commonKeys.getDiatonicPitch(), commonKeys.getPitchAccidentalSymbol());
+        IPitchClass pitchClass = createPitchClass(null, commonKeys.getDiatonicPitch(), commonKeys.getPitchAccidentalSymbol());
         IMode mode = createMode(id, commonKeys.getMode());
 
         IAccidentalSymbol keySignatureAccidentalSymbol = null;
         if (commonKeys.getKeySignatureAccidental().isPresent()) {
-            keySignatureAccidentalSymbol = createAccidentalSymbol(IdGenerator.getInstance().generateUniqueId(), commonKeys.getKeySignatureAccidental().get());
+            keySignatureAccidentalSymbol = createAccidentalSymbol(null, commonKeys.getKeySignatureAccidental().get());
         }
 
         IPitchClass [] pitchClasses = new IPitchClass[commonKeys.getKeySignatureAccidentalCount()];
         for (Integer i=0; i<commonKeys.getKeySignatureAccidentalCount(); i++) {
             IPitchClass pitchClassAccidental;
             if (commonKeys.getKeySignatureAccidental().get() == EAccidentalSymbols.FLAT) {
-                pitchClassAccidental = createPitchClass(IdGenerator.getInstance().generateUniqueId(), SHARP_CIRCLE_FIFTHS[6-i], Optional.of(EAccidentalSymbols.FLAT));
+                pitchClassAccidental = createPitchClass(null, SHARP_CIRCLE_FIFTHS[6-i], Optional.of(EAccidentalSymbols.FLAT));
             } else if (commonKeys.getKeySignatureAccidental().get() == EAccidentalSymbols.SHARP) {
-                pitchClassAccidental = createPitchClass(IdGenerator.getInstance().generateUniqueId(), SHARP_CIRCLE_FIFTHS[i], Optional.of(EAccidentalSymbols.SHARP));
+                pitchClassAccidental = createPitchClass(null, SHARP_CIRCLE_FIFTHS[i], Optional.of(EAccidentalSymbols.SHARP));
             } else {
                 throw new IMRuntimeException("Invalid accidental in a common key " + commonKeys.getKeySignatureAccidental().get());
             }
@@ -438,7 +449,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
 
         return new CommonAlterationKey(id, pitchClass,
                 mode,
-                createKeySignature(IdGenerator.getInstance().generateUniqueId(), pitchClasses),
+                createKeySignature(null, pitchClasses),
                 commonKeys.getKeySignatureAccidentalCount(),
                 keySignatureAccidentalSymbol
                 );
@@ -446,16 +457,16 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
 
     @Override
     public IMixedAlterationsKey createMixedAlterationsKey(IId id, EMixedAlterationKeys mixedAlterationKeys) {
-        IPitchClass pitchClass = createPitchClass(IdGenerator.getInstance().generateUniqueId(), mixedAlterationKeys.getDiatonicPitch(), mixedAlterationKeys.getAccidentalSymbol());
-        IMode mode = createMode(IdGenerator.getInstance().generateUniqueId(), mixedAlterationKeys.getMode());
+        IPitchClass pitchClass = createPitchClass(null, mixedAlterationKeys.getDiatonicPitch(), mixedAlterationKeys.getAccidentalSymbol());
+        IMode mode = createMode(null, mixedAlterationKeys.getMode());
 
         IPitchClass [] pitchClasses = new IPitchClass[7];
         for (Integer i=0; i<mixedAlterationKeys.getFirstAlterationCount(); i++) {
             IPitchClass pitchClassAccidental;
             if (mixedAlterationKeys.getKeySignatureFirstAccidental() == EAccidentalSymbols.DOUBLE_FLAT) {
-                pitchClassAccidental = createPitchClass(IdGenerator.getInstance().generateUniqueId(), SHARP_CIRCLE_FIFTHS[6-i], Optional.of(EAccidentalSymbols.DOUBLE_FLAT));
+                pitchClassAccidental = createPitchClass(null, SHARP_CIRCLE_FIFTHS[6-i], Optional.of(EAccidentalSymbols.DOUBLE_FLAT));
             } else if (mixedAlterationKeys.getKeySignatureFirstAccidental() == EAccidentalSymbols.DOUBLE_SHARP) {
-                pitchClassAccidental = createPitchClass(IdGenerator.getInstance().generateUniqueId(), SHARP_CIRCLE_FIFTHS[i], Optional.of(EAccidentalSymbols.DOUBLE_SHARP));
+                pitchClassAccidental = createPitchClass(null, SHARP_CIRCLE_FIFTHS[i], Optional.of(EAccidentalSymbols.DOUBLE_SHARP));
             } else {
                 throw new IMRuntimeException("Invalid accidental in a mixed alterations key " + mixedAlterationKeys.getKeySignatureFirstAccidental());
             }
@@ -465,9 +476,9 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
         for (Integer i = mixedAlterationKeys.getFirstAlterationCount(); i < 7; i++) {
             IPitchClass pitchClassAccidental;
             if (mixedAlterationKeys.getKeySignatureSecondAccidental().get() == EAccidentalSymbols.FLAT) {
-                pitchClassAccidental = createPitchClass(IdGenerator.getInstance().generateUniqueId(), SHARP_CIRCLE_FIFTHS[6-i], Optional.of(EAccidentalSymbols.FLAT));
+                pitchClassAccidental = createPitchClass(null, SHARP_CIRCLE_FIFTHS[6-i], Optional.of(EAccidentalSymbols.FLAT));
             } else if (mixedAlterationKeys.getKeySignatureSecondAccidental().get() == EAccidentalSymbols.SHARP) {
-                pitchClassAccidental = createPitchClass(IdGenerator.getInstance().generateUniqueId(), SHARP_CIRCLE_FIFTHS[i], Optional.of(EAccidentalSymbols.SHARP));
+                pitchClassAccidental = createPitchClass(null, SHARP_CIRCLE_FIFTHS[i], Optional.of(EAccidentalSymbols.SHARP));
             } else {
                 throw new IMRuntimeException("Invalid accidental in a mixed alterations key " + mixedAlterationKeys.getKeySignatureSecondAccidental().get());
             }
@@ -476,7 +487,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
 
         return new MixedAlterationsKey(id, pitchClass,
                 mode,
-                createKeySignature(IdGenerator.getInstance().generateUniqueId(), pitchClasses));
+                createKeySignature(null, pitchClasses));
     }
 
 }

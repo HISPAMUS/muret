@@ -57,7 +57,7 @@ public enum EDiatonicPitches {
 
     public static EDiatonicPitches noteFromName(String name) throws IMException {
         for (EDiatonicPitches acc : EDiatonicPitches.values()) {
-            if (acc.name().equals(name)) {
+            if (acc.name().equalsIgnoreCase(name)) {
                 return acc;
             }
 

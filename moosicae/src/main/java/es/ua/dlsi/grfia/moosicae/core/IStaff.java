@@ -6,7 +6,7 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IStaffLineCount;
  * Designed using a composite pattern, this is the leaf class
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public interface IStaff extends ISystemElement {
+public interface IStaff extends ISystem {
     ICoreItem[] getStaffSymbols();
     IStaffLineCount getStaffLineCount();
 

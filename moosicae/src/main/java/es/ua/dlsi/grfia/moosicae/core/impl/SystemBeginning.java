@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class SystemBeginning extends PageBeginning implements ISystemBeginning {
-    public SystemBeginning(@NotNull IId id) {
+    public SystemBeginning(IId id) {
         super(id);
     }
 
@@ -22,6 +22,6 @@ public class SystemBeginning extends PageBeginning implements ISystemBeginning {
 
     @Override
     public SystemBeginning clone() {
-        return new SystemBeginning(IdGenerator.getInstance().generateUniqueId());
+        return new SystemBeginning(null);
     }
 }

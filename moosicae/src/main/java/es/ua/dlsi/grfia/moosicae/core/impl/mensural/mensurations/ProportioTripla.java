@@ -33,7 +33,7 @@ import javax.validation.constraints.NotNull;
  */
 public class ProportioTripla extends Mensuration implements IProportioTripla {
 
-    public ProportioTripla(@NotNull IId id) {
+    public ProportioTripla(IId id) {
     		super(id, EMensuralPerfections.imperfectum, EMensuralPerfections.imperfectum, EMensuralPerfections.perfectum, EMensuralPerfections.imperfectum);
     }
 

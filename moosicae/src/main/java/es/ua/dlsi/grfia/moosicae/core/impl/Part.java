@@ -18,7 +18,7 @@ public class Part extends CoreObject implements IPart {
     @NotNull
     private final LinkedList<IVoice> voices;
 
-    public Part(@NotNull IId id,  IName name) {
+    public Part(IId id,  IName name) {
         super(id);
         this.name = name;
         this.voices = new LinkedList<>();
@@ -46,7 +46,7 @@ public class Part extends CoreObject implements IPart {
 
     @Override
     public Part clone() {
-        Part part = new Part(IdGenerator.getInstance().generateUniqueId(), name);
+        Part part = new Part(null, name);
         for (IVoice voice: voices) {
             part.add((IVoice) voice.clone());
         }

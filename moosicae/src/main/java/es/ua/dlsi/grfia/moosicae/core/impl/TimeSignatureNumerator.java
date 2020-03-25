@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 public class TimeSignatureNumerator extends IntegerCoreCoreProperty implements ITimeSignatureNumerator {
 
 
-    public TimeSignatureNumerator(@NotNull IId id, @NotNull Integer value) {
+    public TimeSignatureNumerator(IId id, @NotNull Integer value) {
         super(id, value);
     }
 

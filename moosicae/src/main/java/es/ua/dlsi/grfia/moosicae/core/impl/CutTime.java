@@ -16,10 +16,10 @@ import javax.validation.constraints.NotNull;
  */
 public class CutTime extends FractionalTimeSignature implements ICutTime {
 
-    CutTime(@NotNull IId id) {
+    CutTime(IId id) {
         super(id,
-                new TimeSignatureNumerator(IdGenerator.getInstance().generateUniqueId(), 2),
-                new TimeSignatureDenominator(IdGenerator.getInstance().generateUniqueId(), 2));
+                new TimeSignatureNumerator(null, 2),
+                new TimeSignatureDenominator(null, 2));
     }
 
     @Override
@@ -34,7 +34,7 @@ public class CutTime extends FractionalTimeSignature implements ICutTime {
 
     @Override
     public CutTime clone() {
-        return new CutTime(IdGenerator.getInstance().generateUniqueId());
+        return new CutTime(null);
     }
 
     @Override

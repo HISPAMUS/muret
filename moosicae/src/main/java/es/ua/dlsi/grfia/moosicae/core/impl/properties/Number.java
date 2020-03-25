@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 public class Number extends IntegerCoreCoreProperty implements INumber {
 
 
-    public Number(@NotNull IId id, @NotNull Integer value) {
+    public Number(IId id, @NotNull Integer value) {
         super(id, value);
     }
 

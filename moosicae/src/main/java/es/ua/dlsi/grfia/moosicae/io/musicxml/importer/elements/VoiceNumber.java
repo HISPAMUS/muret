@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
  * @created 23/03/2020
  */
 public class VoiceNumber extends IntegerCoreCoreProperty {
-    public VoiceNumber(@NotNull IId id, @NotNull Integer value) {
+    public VoiceNumber(IId id, @NotNull Integer value) {
         super(id, value);
     }
 

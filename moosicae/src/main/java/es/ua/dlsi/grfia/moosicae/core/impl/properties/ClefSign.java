@@ -10,13 +10,13 @@ import javax.validation.constraints.NotNull;
  * @created 15/03/2020
  */
 public class ClefSign extends EnumCoreProperty<EClefSigns> implements IClefSign {
-    public ClefSign(@NotNull IId id, @NotNull EClefSigns enumValue) {
+    public ClefSign(IId id, @NotNull EClefSigns enumValue) {
         super(id, enumValue);
     }
 
     @Override
     public ClefSign clone() {
-        return new ClefSign(IdGenerator.getInstance().generateUniqueId(), value);
+        return new ClefSign(null, value);
     }
 
 }

@@ -10,13 +10,13 @@ import javax.validation.constraints.NotNull;
  * @created 15/03/2020
  */
 public class AccidentalSymbol extends EnumCoreProperty<EAccidentalSymbols> implements IAccidentalSymbol {
-    public AccidentalSymbol(@NotNull IId id, @NotNull EAccidentalSymbols enumValue) {
+    public AccidentalSymbol(IId id, @NotNull EAccidentalSymbols enumValue) {
         super(id, enumValue);
     }
 
     @Override
     public AccidentalSymbol clone() {
-        return new AccidentalSymbol(IdGenerator.getInstance().generateUniqueId(), value);
+        return new AccidentalSymbol(null, value);
     }
 
 

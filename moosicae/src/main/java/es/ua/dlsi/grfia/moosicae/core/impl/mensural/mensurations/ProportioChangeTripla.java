@@ -10,7 +10,7 @@ import es.ua.dlsi.grfia.moosicae.utils.Time;
 import javax.validation.constraints.NotNull;
 
 public class ProportioChangeTripla extends Mensuration implements IProportioChangeTripla  {
-    public ProportioChangeTripla(@NotNull IId id) {
+    public ProportioChangeTripla(IId id) {
         super(id, EMensuralPerfections.imperfectum, EMensuralPerfections.imperfectum, EMensuralPerfections.perfectum, EMensuralPerfections.imperfectum);
     }
 

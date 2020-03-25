@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
  */
 public abstract class DurationalComposite extends CoreItem implements IDurationalComposite {
 
-    public DurationalComposite(@NotNull IId id) {
+    public DurationalComposite(IId id) {
         super(id);
     }
 

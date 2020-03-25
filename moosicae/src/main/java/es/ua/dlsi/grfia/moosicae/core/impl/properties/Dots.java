@@ -8,12 +8,12 @@ import javax.validation.constraints.NotNull;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class Dots extends IntegerCoreCoreProperty implements IDots {
-    public Dots(@NotNull IId id, @NotNull Integer count) {
+    public Dots(IId id, @NotNull Integer count) {
         super(id, count);
     }
     @Override
     public Dots clone() {
-        return new Dots(IdGenerator.getInstance().generateUniqueId(), value);
+        return new Dots(null, value);
     }
 
     @Override

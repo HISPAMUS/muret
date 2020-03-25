@@ -10,13 +10,13 @@ import javax.validation.constraints.NotNull;
  * @created 15/03/2020
  */
 public class AlterationDisplayType extends EnumCoreProperty<EAlterationDisplayTypes> implements IAlterationDisplayType {
-    public AlterationDisplayType(@NotNull IId id, @NotNull EAlterationDisplayTypes enumValue) {
+    public AlterationDisplayType(IId id, @NotNull EAlterationDisplayTypes enumValue) {
         super(id, enumValue);
     }
 
     @Override
     public AlterationDisplayType clone() {
-        return new AlterationDisplayType(IdGenerator.getInstance().generateUniqueId(), value);
+        return new AlterationDisplayType(null, value);
     }
 
 }

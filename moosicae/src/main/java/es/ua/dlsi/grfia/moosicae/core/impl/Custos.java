@@ -15,14 +15,14 @@ public class Custos extends CoreItem implements ICustos {
     @NotNull
     private final IPitch pitch;
 
-    Custos(@NotNull IId id, @NotNull IPitch pitch) {
+    Custos(IId id, @NotNull IPitch pitch) {
         super(id);
         this.pitch = pitch;
     }
 
     @Override
     public Custos clone() {
-        return new Custos(IdGenerator.getInstance().generateUniqueId(), pitch);
+        return new Custos(null, pitch);
     }
 
     @Override

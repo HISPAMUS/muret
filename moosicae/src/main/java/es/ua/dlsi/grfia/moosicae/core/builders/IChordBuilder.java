@@ -26,7 +26,7 @@ public class IChordBuilder extends IDurationalSingleBuilder<IChord> {
 
     @Override
     public IChord build() throws IMException {
-        return coreObjectFactory.createChord(getId(), figure, dots, pitchList.toArray(new IPitch[pitchList.size()]));
+        return coreObjectFactory.createChord(getId(), figure, dots, pitchList.toArray(new IPitch[0]));
     }
 
 

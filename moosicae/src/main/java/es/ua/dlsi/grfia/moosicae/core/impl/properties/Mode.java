@@ -10,13 +10,13 @@ import javax.validation.constraints.NotNull;
  * @created 15/03/2020
  */
 public class Mode extends EnumCoreProperty<EModes> implements IMode {
-    public Mode(@NotNull IId id, @NotNull EModes enumValue) {
+    public Mode(IId id, @NotNull EModes enumValue) {
         super(id, enumValue);
     }
 
     @Override
     public Mode clone() {
-        return new Mode(IdGenerator.getInstance().generateUniqueId(), value);
+        return new Mode(null, value);
     }
 
 }

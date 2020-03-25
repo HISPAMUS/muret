@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
+import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
 import es.ua.dlsi.grfia.moosicae.core.properties.IDots;
@@ -18,7 +19,7 @@ public class Note extends DurationalSingle implements INote {
     @NotNull
     private final IPitch pitch;
 
-    Note(@NotNull IId id, @NotNull IFigure figure,  IDots dots, @NotNull IPitch pitch) {
+    Note(IId id, @NotNull IFigure figure,  IDots dots, @NotNull IPitch pitch) {
         super(id, figure, dots);
         this.pitch = pitch;
     }
@@ -30,7 +31,7 @@ public class Note extends DurationalSingle implements INote {
 
     @Override
     public DurationalSingle clone() {
-        return new Note(IdGenerator.getInstance().generateUniqueId(), figure, dots, pitch);
+        return new Note(null, figure, dots, pitch);
     }
 
     @Override

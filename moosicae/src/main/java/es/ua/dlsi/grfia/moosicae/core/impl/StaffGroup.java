@@ -5,33 +5,41 @@ import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import javax.validation.constraints.NotNull;
 
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
+
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class StaffGroup extends Staves implements IStaffGroup {
+public class StaffGroup extends System implements IStaffGroup {
     @NotNull
-    private final LinkedList<ISystemElement> children;
+    private final List<ISystem> children;
 
-    public StaffGroup(@NotNull IId id) {
+    public StaffGroup(IId id) {
         super(id);
         children = new LinkedList<>();
     }
 
-    @Override
-    public ISystemElement[] getChildren() {
-        return children.toArray(new ISystemElement[children.size()]);
+    public StaffGroup(IId id, ISystem[] children) {
+        super(id);
+        this.children = Arrays.asList(children);
     }
 
     @Override
-    public void add(ISystemElement child) {
+    public ISystem[] getChildren() {
+        return children.toArray(new ISystem[children.size()]);
+    }
+
+    @Override
+    public void add(ISystem child) {
         this.children.add(child);
     }
 
     @Override
     public IStaff[] getStaves() {
         LinkedList<IStaff> staves = new LinkedList<>();
-        for (ISystemElement child: children) {
+        for (ISystem child: children) {
             for (IStaff staff: child.getStaves()) {
                 staves.add(staff);
             }
@@ -41,9 +49,9 @@ public class StaffGroup extends Staves implements IStaffGroup {
 
     @Override
     public StaffGroup clone() {
-        StaffGroup staffGroup = new StaffGroup(IdGenerator.getInstance().generateUniqueId());
-        for (ISystemElement systemElement: children) {
-            add((ISystemElement) systemElement.clone());
+        StaffGroup staffGroup = new StaffGroup(null);
+        for (ISystem systemElement: children) {
+            add((ISystem) systemElement.clone());
         }
         return staffGroup;
     }

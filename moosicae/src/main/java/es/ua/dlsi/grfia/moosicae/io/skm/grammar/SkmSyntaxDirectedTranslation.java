@@ -216,7 +216,7 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void exitClefLine(skmParser.ClefLineContext ctx) {
             super.exitClefLine(ctx);
-            clefBuilder.from(coreAbstractFactory.createClefLine(coreAbstractFactory.createId(), Integer.parseInt(ctx.getText())));
+            clefBuilder.from(coreAbstractFactory.createClefLine(null, Integer.parseInt(ctx.getText())));
         }
 
         @Override
@@ -290,7 +290,7 @@ public class SkmSyntaxDirectedTranslation {
                 }
             }
 
-            pitchClassBuilder.from(coreAbstractFactory.createDiatonicPitch(coreAbstractFactory.createId(), EDiatonicPitches.valueOf(ctx.lowerCasePitch().getText().toUpperCase())));
+            pitchClassBuilder.from(coreAbstractFactory.createDiatonicPitch(null, EDiatonicPitches.valueOf(ctx.lowerCasePitch().getText().toUpperCase())));
         }
 
         @Override
@@ -366,7 +366,7 @@ public class SkmSyntaxDirectedTranslation {
             try {
                 IPitchClass pitchClass = pitchClassBuilder.build();
                 IMode mode = modeBuilder.build();
-                IKey key = coreAbstractFactory.createKey(coreAbstractFactory.createId(), pitchClass, mode);
+                IKey key = coreAbstractFactory.createKey(null, pitchClass, mode);
                 addItemToSpine(new SkmCoreSymbol(ctx.getText(), key));
             } catch (IMException e) {
                 throw createException(e);
@@ -377,8 +377,8 @@ public class SkmSyntaxDirectedTranslation {
         public void exitFractionalTimeSignature(skmParser.FractionalTimeSignatureContext ctx) {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Time signature {0}", ctx.getText());
             IFractionalTimeSignatureBuilder fractionalTimeSignatureBuilder = new IFractionalTimeSignatureBuilder(coreAbstractFactory);
-            fractionalTimeSignatureBuilder.from(coreAbstractFactory.createTimeSignatureNumerator(coreAbstractFactory.createId(), Integer.parseInt(ctx.numerator().getText())));
-            fractionalTimeSignatureBuilder.from(coreAbstractFactory.createTimeSignatureDenominator(coreAbstractFactory.createId(), Integer.parseInt(ctx.denominator().getText())));
+            fractionalTimeSignatureBuilder.from(coreAbstractFactory.createTimeSignatureNumerator(null, Integer.parseInt(ctx.numerator().getText())));
+            fractionalTimeSignatureBuilder.from(coreAbstractFactory.createTimeSignatureDenominator(null, Integer.parseInt(ctx.denominator().getText())));
             try {
                 addItemToSpine(new SkmCoreSymbol(ctx.getText(), fractionalTimeSignatureBuilder.build()));
             } catch (IMException e) {
@@ -392,10 +392,10 @@ public class SkmSyntaxDirectedTranslation {
             IMeter meter;
             switch (ctx.getText()) {
                 case "c":
-                    meter = coreAbstractFactory.createCommonTime(coreAbstractFactory.createId());
+                    meter = coreAbstractFactory.createCommonTime(null);
                     break;
                 case "c|":
-                    meter = coreAbstractFactory.createCutTime(coreAbstractFactory.createId());
+                    meter = coreAbstractFactory.createCutTime(null);
                     break;
                 default:
                     throw createException("Unkown meter symbol: " + ctx.getText());
@@ -459,8 +459,8 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Metronome {0}", ctx.getText());
             super.exitMetronome(ctx);
             IMetronomeMarkBuilder metronomeMarkBuilder = new IMetronomeMarkBuilder(coreAbstractFactory);
-            metronomeMarkBuilder.from(coreAbstractFactory.createFigure(coreAbstractFactory.createId(), EFigures.QUARTER));
-            metronomeMarkBuilder.from(coreAbstractFactory.createMetronomeMarkValue(coreAbstractFactory.createId(), Integer.parseInt(ctx.number().getText())));
+            metronomeMarkBuilder.from(coreAbstractFactory.createFigure(null, EFigures.QUARTER));
+            metronomeMarkBuilder.from(coreAbstractFactory.createMetronomeMarkValue(null, Integer.parseInt(ctx.number().getText())));
             SkmCoreSymbol mm = null;
             try {
                 mm = new SkmCoreSymbol(ctx.getText(), metronomeMarkBuilder.build());
@@ -514,7 +514,7 @@ public class SkmSyntaxDirectedTranslation {
             IBarlineBuilder barlineBuilder = new IBarlineBuilder(coreAbstractFactory);
 
             if (ctx.number() != null) {
-                barlineBuilder.from(coreAbstractFactory.createNumber(coreAbstractFactory.createId(), Integer.parseInt(ctx.number().getText())));
+                barlineBuilder.from(coreAbstractFactory.createNumber(null, Integer.parseInt(ctx.number().getText())));
             }
 
             if (barlineTypeBuilder != null) {
@@ -587,7 +587,7 @@ public class SkmSyntaxDirectedTranslation {
             try {
                 EFigures figure = EFigures.findMeterUnit(Integer.parseInt(ctx.getText()), ENotationTypes.eModern);
                 int augmentationDots = ctx.augmentationDot().size();
-                durationalSingleBuilder.from(coreAbstractFactory.createFigure(coreAbstractFactory.createId(), figure));
+                durationalSingleBuilder.from(coreAbstractFactory.createFigure(null, figure));
                 durationalSingleBuilder.from(augmentationDots);
             } catch (IMException e) {
                 throw createException(e);

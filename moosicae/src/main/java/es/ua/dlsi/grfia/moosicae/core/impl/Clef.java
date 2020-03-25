@@ -26,7 +26,7 @@ public class Clef extends CoreItem implements IClef {
      * @param line
      * @param signType
      */
-    Clef(@NotNull IId id,  IClefLine line, @NotNull IClefSign signType) {
+    Clef(IId id,  IClefLine line, @NotNull IClefSign signType) {
         super(id);
         this.line = line;
         this.signType = signType;
@@ -43,7 +43,7 @@ public class Clef extends CoreItem implements IClef {
 
     @Override
     public Clef clone() {
-        return new Clef(IdGenerator.getInstance().generateUniqueId(), line, signType);
+        return new Clef(null, line, signType);
     }
 
     @Override

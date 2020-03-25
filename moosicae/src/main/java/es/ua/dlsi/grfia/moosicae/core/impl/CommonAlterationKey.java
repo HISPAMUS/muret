@@ -23,7 +23,7 @@ public class CommonAlterationKey extends Key implements ICommonAlterationKey {
     @NotNull
     private final IAccidentalSymbol accidentalSymbol;
 
-    CommonAlterationKey(@NotNull IId id, @NotNull IPitchClass pitchClass, @NotNull IMode mode, @NotNull IKeySignature keySignature, @NotNull Integer accidentalCount,  IAccidentalSymbol accidentalSymbol) {
+    CommonAlterationKey(IId id, @NotNull IPitchClass pitchClass, @NotNull IMode mode, @NotNull IKeySignature keySignature, @NotNull Integer accidentalCount,  IAccidentalSymbol accidentalSymbol) {
         super(id, pitchClass, mode, keySignature);
         this.accidentalCount = accidentalCount;
         this.accidentalSymbol = accidentalSymbol;
@@ -41,7 +41,7 @@ public class CommonAlterationKey extends Key implements ICommonAlterationKey {
 
     @Override
     public Key clone() {
-        return new CommonAlterationKey(IdGenerator.getInstance().generateUniqueId(), getPitchClass(), getMode(), getKeySignature(), accidentalCount, accidentalSymbol);
+        return new CommonAlterationKey(null, getPitchClass(), getMode(), getKeySignature(), accidentalCount, accidentalSymbol);
     }
 
     @Override

@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public abstract class Meter extends NonDurational implements IMeter {
-    public Meter(@NotNull IId id) {
+    public Meter(IId id) {
         super(id);
     }
 }

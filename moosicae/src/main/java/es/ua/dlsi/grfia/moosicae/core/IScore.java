@@ -5,10 +5,10 @@ package es.ua.dlsi.grfia.moosicae.core;
 public interface IScore extends ICoreObject{
     IMetadata getMetadata();
     IPart[] getParts();
-    ISystemElement[] getSystemElements();
+    ISystem[] getSystemElements();
     IStaff[] getAllStaves();
     void add(IPart part);
-    void add(ISystemElement staves);
+    void add(ISystem staves);
     void moveVoice(IVoice voice, IPart fromPart, IPart toPart);
     void remove(IPart part);
 

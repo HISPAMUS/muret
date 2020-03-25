@@ -12,7 +12,7 @@ public abstract class IntegerCoreCoreProperty extends CoreProperty implements II
     @NotNull
     protected final Integer value;
 
-    public IntegerCoreCoreProperty(@NotNull IId id, @NotNull Integer value) {
+    public IntegerCoreCoreProperty(IId id, @NotNull Integer value) {
         super(id);
         this.value = value;
     }

@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
  * @created 22/03/2020
  */
 public abstract class CoreProperty extends CoreObject implements ICoreProperty {
-    public CoreProperty(@NotNull IId id) {
+    public CoreProperty(IId id) {
         super(id);
     }
     public abstract CoreProperty clone();

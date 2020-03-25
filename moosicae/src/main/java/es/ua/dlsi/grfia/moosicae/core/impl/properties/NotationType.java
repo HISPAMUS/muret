@@ -10,13 +10,13 @@ import javax.validation.constraints.NotNull;
  * @created 15/03/2020
  */
 public class NotationType extends EnumCoreProperty<ENotationTypes> implements INotationType {
-    public NotationType(@NotNull IId id, ENotationTypes enumValue) {
+    public NotationType(IId id, ENotationTypes enumValue) {
         super(id, enumValue);
     }
 
     @Override
     public NotationType clone() {
-        return new NotationType(IdGenerator.getInstance().generateUniqueId(), value);
+        return new NotationType(null, value);
     }
 
 }

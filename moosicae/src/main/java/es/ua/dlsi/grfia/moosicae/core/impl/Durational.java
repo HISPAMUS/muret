@@ -12,7 +12,7 @@ public abstract class Durational extends CoreItem implements IDurational {
     @NotNull
     private final Time duration;
 
-    protected Durational(@NotNull IId id, @NotNull Time duration) {
+    protected Durational(IId id, @NotNull Time duration) {
         super(id);
         this.duration = duration;
     }

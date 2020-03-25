@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
  */
 public class BeamGroup extends DurationalComposite implements IBeamGroup {
 
-    BeamGroup(@NotNull IId id) {
+    BeamGroup(IId id) {
         super(id);
     }
 
