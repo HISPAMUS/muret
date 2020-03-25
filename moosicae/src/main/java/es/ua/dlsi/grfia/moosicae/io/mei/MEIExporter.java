@@ -9,6 +9,7 @@ import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLPreambleElement;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLTree;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Optional;
 /**
@@ -20,6 +21,7 @@ public class MEIExporter implements IExporter {
      * Used to avoid exporting twice symbols such as the key signature, meter, clef that are exporte in the scoreDef or staffDef elements as attributes
      */
     HashSet<ICoreItem> exportedSymbols;
+    HashMap<IStaff, Integer> staffNumbers;
 
     public MEIExporter() {
         meiExporterVisitor = new MEIExporterVisitor();
@@ -28,6 +30,7 @@ public class MEIExporter implements IExporter {
     @Override
     public String exportScore(IScore score) throws IMException {
         exportedSymbols = new HashSet<>();
+        staffNumbers = new HashMap<>();
         XMLTree xmlTree = new XMLTree("mei");
         xmlTree.getRoot().addAttribute("xmlns", "http://www.music-encoding.org/ns/mei");
         xmlTree.getRoot().addAttribute("meiversion", "4.0.0");
@@ -114,9 +117,12 @@ public class MEIExporter implements IExporter {
         //TODO hacer lo de los compases - staves - layers !!!!!!!!!!!
         XMLElement xmlSection = xmlScore.addChild("section");
         XMLElement xmlMeasure = xmlSection.addChild("measure");
-        int nstaff = 1;
         for (IStaff staff: score.getAllStaves()) {
             //TODO asociar staves a layers
+            Integer nstaff = staffNumbers.get(staff);
+            if (nstaff == null) {
+                throw new IMException("Cannot find the staff number for the staff " + staff);
+            }
             XMLElement xmlStaff = xmlMeasure.addChild("staff");
             xmlStaff.addAttribute("n", Integer.toString(nstaff));
             XMLElement xmlLayer = xmlStaff.addChild("layer");
@@ -144,7 +150,9 @@ public class MEIExporter implements IExporter {
         //TODO - cosas como compases especiales, transposiciones.... - habrá que indicar qué compases se han exportado ya (common...)
         //TODO Debemos guardar la equivalencia de nº de staff
         XMLElement xmlStaffDef = xmlStaffGrp.addChild("staffDef");
-        xmlStaffDef.addAttribute("n", "1").
+        int n = staffNumbers.size() + 1;
+        staffNumbers.put(staff, n);
+        xmlStaffDef.addAttribute("n", Integer.toString(n)).
                 addAttribute("lines", "5");
 
         Optional<IClef> firstClef = findFirst(staff, IClef.class);

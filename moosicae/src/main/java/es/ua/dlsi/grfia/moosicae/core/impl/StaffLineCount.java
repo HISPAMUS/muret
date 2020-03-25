@@ -17,6 +17,6 @@ public class StaffLineCount extends IntegerCoreCoreProperty implements IStaffLin
 
     @Override
     public StaffLineCount clone() {
-        return new StaffLineCount(getId(), value);
+        return new StaffLineCount(null, value);
     }
 }

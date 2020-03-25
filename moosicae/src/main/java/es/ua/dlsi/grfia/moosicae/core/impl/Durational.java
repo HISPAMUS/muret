@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.moosicae.core.IDurational;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.utils.Time;
 import javax.validation.constraints.NotNull;
+import java.util.Optional;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -23,11 +24,6 @@ public abstract class Durational extends CoreItem implements IDurational {
     }
 
     public abstract Durational clone();
-
-    @Override
-    public IId getId() {
-        return id;
-    }
 
     @Override
     public boolean equals(Object o) {

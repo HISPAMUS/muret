@@ -2,6 +2,8 @@ package es.ua.dlsi.grfia.moosicae.io.musicxml;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
+import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.io.IExporter;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLExporterVisitorParam;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLParamExportMode;
@@ -10,11 +12,15 @@ import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLPreambleElement;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLTree;
 
+import java.util.HashMap;
+import java.util.Optional;
+
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class MusicXMLExporter implements IExporter {
-    MusicXMLExporterVisitor musicXMLExporterVisitor;
+    private MusicXMLExporterVisitor musicXMLExporterVisitor;
+    private MxmlPartIDs mxmlPartIDs;
 
     public MusicXMLExporter() {
         musicXMLExporterVisitor = new MusicXMLExporterVisitor();
@@ -22,6 +28,7 @@ public class MusicXMLExporter implements IExporter {
 
     @Override
     public String exportScore(IScore score) throws IMException {
+        mxmlPartIDs = new MxmlPartIDs();
         DTDDeclaration dtdDeclaration = new DTDDeclaration(
         "score-partwise", "PUBLIC", "-//Recordare//DTD MusicXML Partwise//EN", "http://www.musicxml.org/dtds/partwise.dtd"
         );
@@ -43,19 +50,20 @@ public class MusicXMLExporter implements IExporter {
         XMLElement xmlPartList = xmlScore.addChild("part-list");
         for (IPart part: score.getParts()) {
             XMLElement xmlPart = xmlPartList.addChild("score-part");
-            xmlPart.addAttribute("id", part.getId().getValue());
+            xmlPart.addAttribute("id", mxmlPartIDs.getID(part));
             if (part.getName().isPresent()) {
                 xmlPart.addChild("part-name", part.getName().get().getValue());
             }
         }
     }
 
+
     private void exportParts(IScore score, XMLElement xmlScore) throws IMException {
         for (IPart part: score.getParts()) {
             IKey lastKey = null;
             IMeter lastMeter = null;
             XMLElement xmlPart = xmlScore.addChild("part");
-            xmlPart.addAttribute("id", part.getId().getValue());
+            xmlPart.addAttribute("id", mxmlPartIDs.getID(part));
 
             //TODO measures
             XMLElement xmlMeasure = xmlPart.addChild("measure");

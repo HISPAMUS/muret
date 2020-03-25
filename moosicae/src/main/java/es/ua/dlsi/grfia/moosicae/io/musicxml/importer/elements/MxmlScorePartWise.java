@@ -23,7 +23,7 @@ public class MxmlScorePartWise extends MxmlObject {
 
     @Override
     public MxmlScorePartWise clone() {
-        return new MxmlScorePartWise(getId(), coreParts, mxmlPartsContents);
+        return new MxmlScorePartWise(null, coreParts, mxmlPartsContents);
     }
 
 

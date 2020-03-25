@@ -3,6 +3,7 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 import es.ua.dlsi.grfia.moosicae.core.ICoreObject;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import javax.validation.constraints.NotNull;
+import java.util.Optional;
 
 
 /**
@@ -18,8 +19,8 @@ public abstract class CoreObject implements ICoreObject {
     }
 
     @Override
-    public IId getId() {
-        return id;
+    public Optional<IId> getId() {
+        return Optional.ofNullable(id);
     }
 
     @Override

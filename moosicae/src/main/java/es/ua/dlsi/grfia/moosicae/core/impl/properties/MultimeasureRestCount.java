@@ -15,6 +15,6 @@ public class MultimeasureRestCount extends IntegerCoreCoreProperty implements IM
 
     @Override
     public MultimeasureRestCount clone() {
-        return new MultimeasureRestCount(getId(), value);
+        return new MultimeasureRestCount(null, value);
     }
 }

@@ -19,6 +19,7 @@ import java.util.HashMap;
 public class MusicXMLImporter extends XMLImporter implements IImporter {
 
     private MxmlScorePartWise mxmlScorePartWise;
+    private MxmlPartIDs mxmlPartIDs;
 
     public MusicXMLImporter(ICoreAbstractFactory abstractFactory) {
         super(abstractFactory);
@@ -66,19 +67,20 @@ public class MusicXMLImporter extends XMLImporter implements IImporter {
     @Override
     protected IScore buildScore() throws IMException {
         IScore score = coreAbstractFactory.createScore(null);
+        mxmlPartIDs = new MxmlPartIDs();
         // now build the score from all parts
         if (mxmlScorePartWise == null) {
             throw new IMException("No mxmlScorePartWise object found"); // see onEndElement
         }
 
-        HashMap<IId, IPart> partHashMap = new HashMap<>();
+        HashMap<String, IPart> partHashMap = new HashMap<>();
         for (IPart part: mxmlScorePartWise.getCoreParts()) {
-            partHashMap.put(part.getId(), part);
+            partHashMap.put(mxmlPartIDs.getID(part), part);
             score.add(part);
         }
 
         for (MxmlPartContents mxmlImportedPart : mxmlScorePartWise.getMxmlPartsContents()) {
-            IPart part = partHashMap.get(mxmlImportedPart.getId());
+            IPart part = partHashMap.get(mxmlImportedPart.getId().get().getValue());
             if (part == null) {
                 throw new IMException("There is a <part> with id='" + mxmlImportedPart.getId() + "' not defined in part-list");
             }

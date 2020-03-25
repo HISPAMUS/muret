@@ -57,7 +57,7 @@ public class ImportersExportersTest {
         ICoreAbstractFactory abstractFactory = new CoreAbstractFactoryImpl();
         IScore score = createScore();
         testExportImport(score, new MEIExporter(), new MEIImporter(abstractFactory));
-        //testExportImport(score, new MusicXMLExporter(), new MusicXMLImporter(abstractFactory));
+        testExportImport(score, new MusicXMLExporter(), new MusicXMLImporter(abstractFactory));
         //testExportImport(score, new SkmExporter(), new SkmImporter(abstractFactory));
 
     }

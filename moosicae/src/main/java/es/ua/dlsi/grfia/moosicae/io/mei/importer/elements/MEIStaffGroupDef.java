@@ -19,7 +19,7 @@ public class MEIStaffGroupDef extends MEISystemDef {
 
     @Override
     public MEIStaffGroupDef clone() {
-        return new MEIStaffGroupDef(getId(), children.clone());
+        return new MEIStaffGroupDef(null, children.clone());
     }
 
     public MEISystemDef[] getChildren() {

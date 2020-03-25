@@ -15,6 +15,6 @@ public class MetronomeMarkValue extends IntegerCoreCoreProperty implements IMetr
 
     @Override
     public MetronomeMarkValue clone() {
-        return new MetronomeMarkValue(getId(), value);
+        return new MetronomeMarkValue(null, value);
     }
 }

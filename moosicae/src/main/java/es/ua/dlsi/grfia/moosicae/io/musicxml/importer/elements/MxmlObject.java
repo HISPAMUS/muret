@@ -3,6 +3,8 @@ package es.ua.dlsi.grfia.moosicae.io.musicxml.importer.elements;
 import es.ua.dlsi.grfia.moosicae.core.ICoreObject;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 
+import java.util.Optional;
+
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 24/03/2020
@@ -15,8 +17,8 @@ public abstract class MxmlObject implements ICoreObject {
     }
 
     @Override
-    public IId getId() {
-        return id;
+    public Optional<IId> getId() {
+        return Optional.ofNullable(id);
     }
 
     @Override

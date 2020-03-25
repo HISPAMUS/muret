@@ -22,7 +22,7 @@ public class MEISection extends MEIObject {
 
     @Override
     public MEISection clone() {
-        return new MEISection(getId(), measures.clone());
+        return new MEISection(null, measures.clone());
     }
 
     @Override

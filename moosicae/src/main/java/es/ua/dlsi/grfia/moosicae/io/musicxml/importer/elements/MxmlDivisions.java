@@ -20,7 +20,7 @@ public class MxmlDivisions extends MxmlObject implements IIntegerCoreProperty {
 
     @Override
     public MxmlDivisions clone() {
-        return new MxmlDivisions(getId(), value);
+        return new MxmlDivisions(null, value);
     }
 
     @Override
