@@ -9,6 +9,7 @@ import es.ua.dlsi.grfia.moosicae.io.mei.importer.elements.*;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporter;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 
 /**
@@ -19,6 +20,7 @@ public class MEIImporter extends XMLImporter implements IImporter {
     private MEIScoreDef meiScoreDef;
     private MEISection section;
     private HashMap<Integer, IStaff> staffNumbers;
+    private HashMap<Integer, MEIStaffDef> staffDefs;
 
     public MEIImporter(ICoreAbstractFactory abstractFactory) {
         super(abstractFactory);
@@ -31,9 +33,10 @@ public class MEIImporter extends XMLImporter implements IImporter {
         coreObjectBuilderSuppliers.add("layer", MEILayerBuilder::new);
 
         coreObjectBuilderSuppliers.add("note", MEINoteBuilder::new);
+        coreObjectBuilderSuppliers.add("accid", MEIAlterationBuilder::new);
     }
 
-    private void convert(IScore score, IStaffGroup parent, MEISystemDef systemDef) {
+    private void convert(IScore score, IVoice voice, IStaffGroup parent, MEISystemDef systemDef) {
         if (systemDef instanceof MEIStaffDef) {
             MEIStaffDef meiStaffDef = (MEIStaffDef) systemDef;
             //TODO line count parameter in MEI
@@ -45,6 +48,7 @@ public class MEIImporter extends XMLImporter implements IImporter {
                 staff = coreAbstractFactory.createStaff(parent, null, staffLineCount);
             }
             staffNumbers.put(meiStaffDef.getN(), staff);
+            staffDefs.put(meiStaffDef.getN(), meiStaffDef);
         } else if (systemDef instanceof MEIStaffGroupDef) {
             MEIStaffGroupDef meiStaffGroupDef = (MEIStaffGroupDef) systemDef;
             IStaffGroup staffGroup;
@@ -54,18 +58,37 @@ public class MEIImporter extends XMLImporter implements IImporter {
                 staffGroup = coreAbstractFactory.createStaffGroup(parent, null);
             }
             for (MEISystemDef child: meiStaffGroupDef.getChildren()) {
-                convert(score, staffGroup, child);
+                convert(score, voice, staffGroup, child);
             }
         }
     }
 
-    private void insertContents(IScore score, IPart part, IVoice voice, MEISection section) throws IMException {
+    private void insertContents(MEIScoreDef scoreDef, MEISection section, IScore score, IPart part, IVoice voice) throws IMException {
+        boolean firstMeasure = true;
         for (MEIMeasure measure: section.getMeasures()) {
             for (MEIStaff measureStaff: measure.getStaves()) {
                 IStaff staff = staffNumbers.get(measureStaff.getN());
                 if (staff == null) {
                     throw new IMException("Cannot find a staff with n=" + measureStaff.getN());
                 }
+
+                if (firstMeasure) {
+                    MEIStaffDef meiStaffDef = staffDefs.get(measureStaff.getN());
+                    if (meiStaffDef == null) {
+                        throw new IMException("Cannot find a staffDef with n=" + measureStaff.getN());
+                    }
+
+                    if (meiStaffDef.getClef().isPresent()) {
+                        score.add(voice, staff, meiStaffDef.getClef().get());
+                    }
+
+                    addCommonDefElements(meiStaffDef, score, voice, staff);
+
+                    addCommonDefElements(scoreDef, score, voice, staff);
+
+                }
+
+
                 for (MEILayer layer: measureStaff.getLayers()) {
                     for (ICoreItem coreItem: layer.getItems()) {
                         //TODO insertar los elementos comunes
@@ -73,6 +96,18 @@ public class MEIImporter extends XMLImporter implements IImporter {
                     }
                 }
             }
+            firstMeasure = false;
+        }
+    }
+
+    private void addCommonDefElements(IMEIDef imeiDef, IScore score, IVoice voice, IStaff staff) {
+        Optional<IMeter> meter = imeiDef.getMeter();
+        if (meter.isPresent()) {
+            score.add(voice, staff, meter.get());
+        }
+        Optional<ICommonAlterationKey> commonAlterationKey = imeiDef.getCommonAlterationKey();
+        if (commonAlterationKey.isPresent()) {
+            score.add(voice, staff, commonAlterationKey.get());
         }
     }
 
@@ -87,11 +122,12 @@ public class MEIImporter extends XMLImporter implements IImporter {
 
         // TODO everything goes to a part
         staffNumbers = new HashMap<>();
+        staffDefs = new HashMap<>();
         IScore score = coreAbstractFactory.createScore(null);
         IPart part = coreAbstractFactory.createPart(score, null,null);
         IVoice voice = coreAbstractFactory.createVoice(part, null, null);
-        convert(score, null, meiScoreDef.getMeiStaffGroupDef());
-        insertContents(score, part, voice, section);
+        convert(score, voice, null, meiScoreDef.getMeiStaffGroupDef());
+        insertContents(meiScoreDef, section, score, part, voice);
         return score;
     }
 

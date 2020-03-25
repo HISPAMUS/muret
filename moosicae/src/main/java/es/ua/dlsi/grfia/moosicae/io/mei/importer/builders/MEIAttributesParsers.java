@@ -1,10 +1,18 @@
 package es.ua.dlsi.grfia.moosicae.io.mei.importer.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
-import es.ua.dlsi.grfia.moosicae.core.enums.EDiatonicPitches;
-import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
-import es.ua.dlsi.grfia.moosicae.core.enums.ENotationTypes;
+import es.ua.dlsi.grfia.moosicae.core.IClef;
+import es.ua.dlsi.grfia.moosicae.core.ICommonAlterationKey;
+import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
+import es.ua.dlsi.grfia.moosicae.core.IMeter;
+import es.ua.dlsi.grfia.moosicae.core.builders.IClefBuilder;
+import es.ua.dlsi.grfia.moosicae.core.builders.IKeyFromAccidentalCountBuilder;
+import es.ua.dlsi.grfia.moosicae.core.builders.IModeBuilder;
+import es.ua.dlsi.grfia.moosicae.core.enums.*;
+import es.ua.dlsi.grfia.moosicae.core.properties.IAccidentalSymbol;
+import es.ua.dlsi.grfia.moosicae.core.properties.IClefLine;
+import es.ua.dlsi.grfia.moosicae.core.properties.IClefSign;
+import es.ua.dlsi.grfia.moosicae.core.properties.IMode;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
 
 import java.util.Optional;
@@ -131,6 +139,77 @@ public class MEIAttributesParsers {
             return Optional.empty();
         }
         //TODO hidden, editorial...
+    }
+
+    Optional<IMeter> parseMeter(ICoreAbstractFactory abstractFactory, XMLImporterParam xmlImporterParam) throws IMException {
+        Optional<String> meterSym = xmlImporterParam.getAttribute("meter.sym");
+        if (meterSym.isPresent()) {
+            switch (meterSym.get()) {
+                case "common":
+                    return Optional.of(abstractFactory.createCommonTime(null));
+                case "cut":
+                    return Optional.of(abstractFactory.createCutTime(null));
+                default:
+                    throw new IMException("Unkown meter symbol: " + meterSym.get());
+            }
+        } else {
+            //TODO fracionales y mensurales
+            return Optional.empty();
+        }
+    }
+
+    Optional<IClef> parseClef(ICoreAbstractFactory abstractFactory, XMLImporterParam xmlImporterParam) throws IMException {
+        Optional<String> shape = xmlImporterParam.getAttribute("clef.shape");
+        if (shape.isPresent()) {
+            IClefBuilder clefBuilder = new IClefBuilder(abstractFactory);
+            EClefSigns clefSign = EClefSigns.valueOf(shape.get());
+            clefBuilder.from(clefSign);
+
+            Optional<String> line = xmlImporterParam.getAttribute("clef.line");
+            if (line.isPresent()) {
+                IClefLine clefLine = abstractFactory.createClefLine(null, Integer.parseInt(line.get()));
+                clefBuilder.from(clefLine);
+            }
+            return Optional.of(clefBuilder.build());
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    Optional<ICommonAlterationKey> parseCommonAlterationKey(ICoreAbstractFactory coreAbstractFactory, XMLImporterParam xmlImporterParam) throws IMException {
+        Optional<String> keySig = xmlImporterParam.getAttribute("key.sig");
+        if (keySig.isPresent()) {
+            if (keySig.get().length() != 2) {
+                throw new IMException("Expected 2 characters for keySig value: '" + keySig.get() + "'");
+            }
+
+            IKeyFromAccidentalCountBuilder keyFromAccidentalCountBuilder = new IKeyFromAccidentalCountBuilder(coreAbstractFactory);
+
+            int nAccidentals = Integer.parseInt(keySig.get().substring(0, 1));
+            keyFromAccidentalCountBuilder.from(coreAbstractFactory.createKeyAccidentalCount(coreAbstractFactory.createId(), nAccidentals));
+
+            char accidental = keySig.get().charAt(1);
+            IAccidentalSymbol accidentalSymbol;
+            if (accidental == 'f') {
+                accidentalSymbol = coreAbstractFactory.createAccidentalSymbol(coreAbstractFactory.createId(), EAccidentalSymbols.FLAT);
+            } else if (accidental == 's') {
+                accidentalSymbol = coreAbstractFactory.createAccidentalSymbol(coreAbstractFactory.createId(), EAccidentalSymbols.SHARP);
+            } else {
+                throw new IMException("Unkown accidental: '" + accidental + "'");
+            }
+            keyFromAccidentalCountBuilder.from(accidentalSymbol);
+
+            Optional<String> modeString = xmlImporterParam.getAttribute("key.mode");
+            if (modeString.isPresent()) {
+                IModeBuilder modeBuilder = new IModeBuilder(coreAbstractFactory);
+                modeBuilder.from(EModes.valueOf(modeString.get().toLowerCase()));
+                IMode mode = modeBuilder.build();
+                keyFromAccidentalCountBuilder.from(mode);
+            }
+            return Optional.of(keyFromAccidentalCountBuilder.build());
+        } else {
+            return Optional.empty();
+        }
     }
 
 }

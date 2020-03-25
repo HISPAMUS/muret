@@ -4,11 +4,13 @@ import es.ua.dlsi.grfia.moosicae.core.ICommonAlterationKey;
 import es.ua.dlsi.grfia.moosicae.core.IMeter;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 
+import java.util.Optional;
+
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 25/03/2020
  */
-public class MEIScoreDef extends MEIObject {
+public class MEIScoreDef extends MEIObject implements IMEIDef {
     private final ICommonAlterationKey commonAlterationKey;
     private final IMeter meter;
     private final MEIStaffGroupDef meiStaffGroupDef;
@@ -20,12 +22,14 @@ public class MEIScoreDef extends MEIObject {
         this.meiStaffGroupDef = meiStaffGroupDef;
     }
 
-    public ICommonAlterationKey getCommonAlterationKey() {
-        return commonAlterationKey;
+    @Override
+    public Optional<ICommonAlterationKey> getCommonAlterationKey() {
+        return Optional.ofNullable(commonAlterationKey);
     }
 
-    public IMeter getMeter() {
-        return meter;
+    @Override
+    public Optional<IMeter> getMeter() {
+        return Optional.ofNullable(meter);
     }
 
     public MEIStaffGroupDef getMeiStaffGroupDef() {

@@ -9,6 +9,7 @@ import es.ua.dlsi.grfia.moosicae.core.builders.properties.IAlterationBuilder;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.core.enums.EDiatonicPitches;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
+import es.ua.dlsi.grfia.moosicae.core.properties.IAlteration;
 import es.ua.dlsi.grfia.moosicae.io.IImporterAdapter;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
 
@@ -19,8 +20,20 @@ import java.util.Optional;
  * @created 25/03/2020
  */
 public class MEINoteBuilder extends INoteBuilder implements IImporterAdapter<INote, XMLImporterParam> {
+    /**
+     * In MEI the alteration is child of the note because there is no pitch element inside note
+     */
+    private IAlteration alteration;
+
+    private IPitchBuilder pitchBuilder;
+
     public MEINoteBuilder(ICoreAbstractFactory coreObjectFactory) {
         super(coreObjectFactory);
+    }
+
+    public MEINoteBuilder from(IAlteration alteration) {
+        this.alteration = alteration;
+        return this;
     }
 
     @Override
@@ -35,7 +48,7 @@ public class MEINoteBuilder extends INoteBuilder implements IImporterAdapter<INo
         }
 
         if (xmlImporterParam.hasAttributes()) { // pname... are included as parameters
-            IPitchBuilder pitchBuilder = new IPitchBuilder(coreObjectFactory);
+            this.pitchBuilder = new IPitchBuilder(coreObjectFactory);
             Optional<EDiatonicPitches> diatonicPitch = MEIAttributesParsers.getInstance().parseDiatonicPitch(xmlImporterParam);
             if (diatonicPitch.isPresent()) {
                 pitchBuilder.from(diatonicPitch.get());
@@ -55,5 +68,19 @@ public class MEINoteBuilder extends INoteBuilder implements IImporterAdapter<INo
 
             from(pitchBuilder.build());
         }
+    }
+
+    @Override
+    public INote build() throws IMException {
+        if (this.pitchBuilder != null) {
+            if (alteration != null) {
+                this.pitchBuilder.from(alteration);
+                this.from(this.pitchBuilder.build());
+            }
+        } else {
+            throw new IMException("Missing pitch builder");
+        }
+
+        return super.build();
     }
 }

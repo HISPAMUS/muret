@@ -8,6 +8,8 @@ import es.ua.dlsi.grfia.moosicae.io.mei.importer.elements.MEIScoreDef;
 import es.ua.dlsi.grfia.moosicae.io.mei.importer.elements.MEIStaffGroupDef;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
 
+import java.util.Optional;
+
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 25/03/2020
@@ -21,18 +23,8 @@ public class MEIScoreDefBuilder extends MEIObjectBuilder<MEIScoreDef> {
         super(coreObjectFactory);
     }
 
-    public MEIScoreDefBuilder from(ICommonAlterationKey commonAlterationKey) {
-        this.commonAlterationKey = commonAlterationKey;
-        return this;
-    }
-
     public MEIScoreDefBuilder from(MEIStaffGroupDef staffGroupDef) {
         this.staffGroupDef = staffGroupDef;
-        return this;
-    }
-
-    public MEIScoreDefBuilder from(IMeter meter) {
-        this.meter = meter;
         return this;
     }
 
@@ -43,5 +35,17 @@ public class MEIScoreDefBuilder extends MEIObjectBuilder<MEIScoreDef> {
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
+        Optional<IMeter> meter = MEIAttributesParsers.getInstance().parseMeter(coreObjectFactory, xmlImporterParam);
+
+        Optional<ICommonAlterationKey> commonAlterationKey = MEIAttributesParsers.getInstance().parseCommonAlterationKey(coreObjectFactory, xmlImporterParam);
+        if (commonAlterationKey.isPresent()) {
+            this.commonAlterationKey = commonAlterationKey.get();
+        }
+
+        if (meter.isPresent()) {
+            this.meter = meter.get();
+        }
+
+
     }
 }

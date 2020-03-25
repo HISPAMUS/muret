@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.core.IClef;
+import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.properties.IClefLine;
 import es.ua.dlsi.grfia.moosicae.core.properties.IClefSign;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
@@ -25,6 +26,10 @@ public class IClefBuilder extends CoreObjectBuilder<IClef> {
     public IClefBuilder from(IClefSign clefSign) {
         this.clefSign = clefSign;
         return this;
+    }
+
+    public void from(EClefSigns clefSign) {
+        this.clefSign = coreObjectFactory.createClefSign(null, clefSign);
     }
 
     @Override
