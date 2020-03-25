@@ -3,7 +3,7 @@ package es.ua.dlsi.grfia.moosicae.core.builders.properties;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.properties.IClefLine;
-import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
+
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -19,8 +19,5 @@ public class IClefLineBuilder extends IIntegerPropertyBuilder<IClefLine>  {
         return coreObjectFactory.createClefLine(getId(), value);
     }
 
-    @Override
-    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
-        importerVisitor.importClefLine(this, inputOutputType);
-    }
+
 }

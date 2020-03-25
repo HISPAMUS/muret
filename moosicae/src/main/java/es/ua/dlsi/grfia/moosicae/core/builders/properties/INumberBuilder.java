@@ -4,7 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.builders.CoreObjectBuilder;
 import es.ua.dlsi.grfia.moosicae.core.properties.INumber;
-import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
+
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -27,9 +27,5 @@ public class INumberBuilder extends CoreObjectBuilder<INumber> {
         return coreObjectFactory.createNumber(getId(), value);
     }
 
-    @Override
-    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
-        importerVisitor.importNumber(this, inputOutputType);
-    }
 
 }

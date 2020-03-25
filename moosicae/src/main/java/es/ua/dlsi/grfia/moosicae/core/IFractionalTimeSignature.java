@@ -5,6 +5,6 @@ package es.ua.dlsi.grfia.moosicae.core;
  * @created 14/03/2020
  */
 public interface IFractionalTimeSignature extends IMeter {
-    ITimeSignatureNumrerator getNumerator();
+    ITimeSignatureNumerator getNumerator();
     ITimeSignatureDenominator getDenominator();
 }

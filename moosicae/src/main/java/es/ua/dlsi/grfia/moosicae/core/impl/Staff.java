@@ -3,6 +3,8 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
+import es.ua.dlsi.grfia.moosicae.core.properties.IStaffLineCount;
+
 import javax.validation.constraints.NotNull;
 
 import java.util.LinkedList;
@@ -12,9 +14,12 @@ import java.util.LinkedList;
  */
 public class Staff extends CoreObject implements IStaff {
     @NotNull
+    IStaffLineCount staffLineCount;
+
+    @NotNull
     private final LinkedList<ICoreItem> items;
 
-    public Staff(@NotNull IId id) {
+    public Staff(@NotNull IId id, @NotNull IStaffLineCount staffLineCount) {
         super(id);
         items = new LinkedList<>();
     }
@@ -22,6 +27,11 @@ public class Staff extends CoreObject implements IStaff {
     @Override
     public ICoreItem[] getStaffSymbols() {
         return items.toArray(new ICoreItem[items.size()]);
+    }
+
+    @Override
+    public IStaffLineCount getStaffLineCount() {
+        return staffLineCount;
     }
 
     @Override
@@ -47,7 +57,7 @@ public class Staff extends CoreObject implements IStaff {
 
     @Override
     public Staff clone() {
-        Staff staff = new Staff(IdGenerator.getInstance().generateUniqueId());
+        Staff staff = new Staff(IdGenerator.getInstance().generateUniqueId(), staffLineCount);
         for (ICoreItem symbol: items) {
             items.add(symbol); // do not clone, it's an aggregation
         }

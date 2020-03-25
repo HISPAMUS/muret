@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.io.skm.grammar;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.properties.IStaffLineCount;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.*;
 import es.ua.dlsi.grfia.moosicae.utils.dag.DAGNode;
 
@@ -33,7 +34,8 @@ public class SkmDocument2IScore {
 
     public IScore convert(DAGNode<SkmToken> firstNode) throws IMException {
         defaultPart = abstractFactory.createPart(score, abstractFactory.createId(), null);
-        defaultStaff = abstractFactory.createStaff(score, abstractFactory.createId());
+        IStaffLineCount defaultStaffLineCount = abstractFactory.createStaffLineCount(5);
+        defaultStaff = abstractFactory.createStaff(score, abstractFactory.createId(), defaultStaffLineCount);
 
         // first create voices, all associated to a default part that will be moved to other part when the **part token is found
         for (DAGNode<SkmToken> node: firstNode.getNextList()) {
@@ -44,7 +46,7 @@ public class SkmDocument2IScore {
                     IVoice voice = abstractFactory.createVoice(defaultPart, abstractFactory.createId(), null);
                     voiceParts.put(voice, defaultPart);
                     //TODO staves - cuando se encuentre con *staff1 o *staff1/2
-                    IStaff defaultStaff = abstractFactory.createStaff(score, abstractFactory.createId());
+                    IStaff defaultStaff = abstractFactory.createStaff(score, abstractFactory.createId(), defaultStaffLineCount);
                     voiceStaves.put(voice, defaultStaff);
                     // now traverse the spine
                     for (DAGNode<SkmToken> next: node.getNextList()) {
@@ -101,7 +103,7 @@ public class SkmDocument2IScore {
         IStaff staff = staffNumbers.get(skmStaff.getNumber());
 
         if (staff == null) {
-            staff = abstractFactory.createStaff(score, abstractFactory.createId());
+            staff = abstractFactory.createStaff(score, abstractFactory.createId(), abstractFactory.createStaffLineCount(5));
             staffNumbers.put(skmStaff.getNumber(), staff);
         }
 

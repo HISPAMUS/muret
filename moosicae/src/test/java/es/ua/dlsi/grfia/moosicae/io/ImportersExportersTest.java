@@ -24,12 +24,12 @@ public class ImportersExportersTest {
 
     private IScore createScore() throws IMException {
         IScore score = abstractFactory.createScore(abstractFactory.createId());
-        IPart part = abstractFactory.createPart(score, abstractFactory.createId(), null);
+        IPart part = abstractFactory.createPart(score, abstractFactory.createId(), abstractFactory.createName(abstractFactory.createId(), "Violin"));
         IVoice voice = abstractFactory.createVoice(part, abstractFactory.createId(), null);
-        IStaff staff = abstractFactory.createStaff(score, abstractFactory.createId());
+        IStaff staff = abstractFactory.createStaff(score, abstractFactory.createId(), abstractFactory.createStaffLineCount(5));
         IClef clef = abstractFactory.createClef(abstractFactory.createId(), abstractFactory.createClefLine(abstractFactory.createId(), 2), abstractFactory.createClefSign(abstractFactory.createId(), EClefSigns.G));
         score.add(voice, staff, clef);
-        IKey key = abstractFactory.createKey(abstractFactory.createId(), ECommonAlterationKeys.DM);
+        IKey key = abstractFactory.createCommonAlterationKey(abstractFactory.createId(), ECommonAlterationKeys.DM);
         score.add(voice, staff, key);
         IMeter meterSymbol = abstractFactory.createCommonTime(abstractFactory.createId());
         score.add(voice, staff, meterSymbol);
@@ -55,7 +55,7 @@ public class ImportersExportersTest {
         ICoreAbstractFactory abstractFactory = new CoreAbstractFactoryImpl();
         IScore score = createScore();
         //testExportImport(score, new SkmExporter(), new SkmImporter(abstractFactory));
-        //testExportImport(score, new MEIExporter(), new MEIImporter(abstractFactory));
+        // testExportImport(score, new MEIExporter(), new MEIImporter(abstractFactory));
         testExportImport(score, new MusicXMLExporter(), new MusicXMLImporter(abstractFactory));
     }
 

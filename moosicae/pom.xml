@@ -54,17 +54,17 @@
             <artifactId>antlr4-runtime</artifactId>
             <version>4.8-1</version>
         </dependency>
-        <!-- used for the @NotNull annotation that performs a runtime check of parameters. Both must be added -->
+        <!-- used for the @NotNull annotation that performs a runtime check of parameters -->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>6.1.2.Final</version>
         </dependency>
-        <dependency>
+        <!--<dependency> If added, the inherited annotations from an interface do not work
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator-annotation-processor</artifactId>
             <version>6.1.2.Final</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
     <properties>

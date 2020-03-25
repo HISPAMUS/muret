@@ -6,7 +6,7 @@ import es.ua.dlsi.grfia.moosicae.core.builders.CoreObjectBuilder;
 import es.ua.dlsi.grfia.moosicae.core.properties.IAccidentalSymbol;
 import es.ua.dlsi.grfia.moosicae.core.properties.IDiatonicPitch;
 import es.ua.dlsi.grfia.moosicae.core.properties.IPitchClass;
-import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
+
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -34,8 +34,5 @@ public class IPitchClassBuilder extends CoreObjectBuilder<IPitchClass> {
         return coreObjectFactory.createPitchClass(getId(), diatonicPitch, accidentalSymbol);
     }
 
-    @Override
-    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
-        importerVisitor.importPitchClass(this, inputOutputType);
-    }
+
 }

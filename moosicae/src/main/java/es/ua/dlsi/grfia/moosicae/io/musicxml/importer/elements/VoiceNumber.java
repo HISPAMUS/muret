@@ -1,4 +1,4 @@
-package es.ua.dlsi.grfia.moosicae.io.musicxml.importer;
+package es.ua.dlsi.grfia.moosicae.io.musicxml.importer.elements;
 
 import es.ua.dlsi.grfia.moosicae.core.impl.properties.IntegerCoreCoreProperty;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;

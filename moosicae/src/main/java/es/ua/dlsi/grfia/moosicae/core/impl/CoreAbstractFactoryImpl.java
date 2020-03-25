@@ -19,6 +19,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
+ * Note the @NotNull from interfaces are not actually checked by the hibernate validator
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
@@ -99,12 +100,12 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
         // find the pitch class among the enums
         Optional<ECommonAlterationKeys> commonAlterationKey = findKeyEnum(ECommonAlterationKeys.values(), pitchClass);
         if (commonAlterationKey.isPresent()) {
-            return createKey(id, commonAlterationKey.get());
+            return createCommonAlterationKey(id, commonAlterationKey.get());
         }
 
         Optional<ECommonAlterationKeys> mixedAlterationKey = findKeyEnum(ECommonAlterationKeys.values(), pitchClass);
         if (mixedAlterationKey.isPresent()) {
-            return createKey(id, mixedAlterationKey.get());
+            return createCommonAlterationKey(id, mixedAlterationKey.get());
         }
 
         throw new IMException("Cannot find a key for pitch class " + pitchClass + " and mode " + mode);
@@ -116,18 +117,36 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public ICommonAlterationKey createKey(IId id, IKeyAccidentalCount nAccidentals, IAccidentalSymbol accidentalSymbol, IMode mode) throws IMException {
-        EModes modeValue = mode.getValue();
-        EAccidentalSymbols accidentalSymbolValue = accidentalSymbol.getValue();
-        for (ECommonAlterationKeys key: ECommonAlterationKeys.values()) {
-            if (key.getMode().equals(modeValue)
-                    && key.getKeySignatureAccidentalCount() == nAccidentals.getValue()
-                    && key.getKeySignatureAccidental().isPresent()
-                    && key.getKeySignatureAccidental().get().equals(accidentalSymbolValue)) {
-                return createKey(id, key);
-            }
+    public ICommonAlterationKey createCommonAlterationKey(IId id, IKeyAccidentalCount accidentalCount, IAccidentalSymbol accidentalSymbol, IMode mode) throws IMException {
+        if (accidentalCount == null) {
+            throw new IllegalArgumentException("accidentalCount");
         }
-        throw new IMException("Cannot find a key with " + nAccidentals + " " + accidentalSymbol.getValue().name() + "s and mode " + mode.getValue());
+        if (mode == null) {
+            throw new IllegalArgumentException("mode");
+        }
+
+        EModes modeValue = mode.getValue();
+
+        if (accidentalCount != null && accidentalCount.getValue() == 0) {
+            if (mode.getValue() == EModes.major) {
+                return createCommonAlterationKey(id, ECommonAlterationKeys.CM);
+            } else {
+                return createCommonAlterationKey(id, ECommonAlterationKeys.Am);
+            }
+        } else if (accidentalSymbol == null) {
+            throw new IllegalArgumentException("The accidental symbol cannot be null for accidentalCount != 0");
+        } else {
+            EAccidentalSymbols accidentalSymbolValue = accidentalSymbol.getValue();
+            for (ECommonAlterationKeys key : ECommonAlterationKeys.values()) {
+                if (key.getMode().equals(modeValue)
+                        && key.getKeySignatureAccidentalCount() == accidentalCount.getValue()
+                        && key.getKeySignatureAccidental().isPresent()
+                        && key.getKeySignatureAccidental().get().equals(accidentalSymbolValue)) {
+                    return createCommonAlterationKey(id, key);
+                }
+            }
+            throw new IMException("Cannot find a key with " + accidentalCount + " " + accidentalSymbol.getValue().name() + "s and mode " + mode.getValue());
+        }
     }
 
     @Override
@@ -142,7 +161,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IFractionalTimeSignature createFractionalTimeSignature(IId id, ITimeSignatureNumrerator numerator, ITimeSignatureDenominator denominator) {
+    public IFractionalTimeSignature createFractionalTimeSignature(IId id, ITimeSignatureNumerator numerator, ITimeSignatureDenominator denominator) {
         return new FractionalTimeSignature(id, numerator, denominator);
     }
 
@@ -264,15 +283,15 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IStaff createStaff(IStaffGroup staves, IId id) {
-        Staff staff = new Staff(id);
+    public IStaff createStaff(IStaffGroup staves, IId id, IStaffLineCount staffLineCount) {
+        Staff staff = new Staff(id, staffLineCount);
         staves.add(staff);
-        return null;
+        return staff;
     }
 
     @Override
-    public IStaff createStaff(IScore score, IId id) {
-        Staff staff = new Staff(id);
+    public IStaff createStaff(IScore score, IId id, IStaffLineCount staffLineCount) {
+        Staff staff = new Staff(id, staffLineCount);
         score.add(staff);
         return staff;
     }
@@ -292,7 +311,12 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public ITimeSignatureNumrerator createTimeSignatureNumerator(IId id, Integer value) {
+    public IStaffLineCount createStaffLineCount(int value) {
+        return new StaffLineCount(IdGenerator.getInstance().generateUniqueId(), value);
+    }
+
+    @Override
+    public ITimeSignatureNumerator createTimeSignatureNumerator(IId id, Integer value) {
         return new TimeSignatureNumerator(id, value);
     }
 
@@ -390,7 +414,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public ICommonAlterationKey createKey(IId id, ECommonAlterationKeys commonKeys) {
+    public ICommonAlterationKey createCommonAlterationKey(IId id, ECommonAlterationKeys commonKeys) {
         IPitchClass pitchClass = createPitchClass(IdGenerator.getInstance().generateUniqueId(), commonKeys.getDiatonicPitch(), commonKeys.getPitchAccidentalSymbol());
         IMode mode = createMode(id, commonKeys.getMode());
 
@@ -421,7 +445,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IMixedAlterationsKey createKey(IId id, EMixedAlterationKeys mixedAlterationKeys) {
+    public IMixedAlterationsKey createMixedAlterationsKey(IId id, EMixedAlterationKeys mixedAlterationKeys) {
         IPitchClass pitchClass = createPitchClass(IdGenerator.getInstance().generateUniqueId(), mixedAlterationKeys.getDiatonicPitch(), mixedAlterationKeys.getAccidentalSymbol());
         IMode mode = createMode(IdGenerator.getInstance().generateUniqueId(), mixedAlterationKeys.getMode());
 

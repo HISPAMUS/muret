@@ -2,7 +2,7 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ITimeSignatureDenominator;
-import es.ua.dlsi.grfia.moosicae.core.ITimeSignatureNumrerator;
+import es.ua.dlsi.grfia.moosicae.core.ITimeSignatureNumerator;
 import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.IFractionalTimeSignature;
@@ -17,13 +17,13 @@ import javax.validation.constraints.NotNull;
  */
 public class FractionalTimeSignature extends Meter implements IFractionalTimeSignature {
     @NotNull
-    private final ITimeSignatureNumrerator numerator;
+    private final ITimeSignatureNumerator numerator;
     @NotNull
     private final ITimeSignatureDenominator denominator;
     @NotNull
     private final Time barDuration;
 
-    FractionalTimeSignature(@NotNull IId id, @NotNull ITimeSignatureNumrerator numerator, @NotNull ITimeSignatureDenominator denominator) {
+    FractionalTimeSignature(@NotNull IId id, @NotNull ITimeSignatureNumerator numerator, @NotNull ITimeSignatureDenominator denominator) {
         super(id);
         this.numerator = numerator;
         this.denominator = denominator;
@@ -31,7 +31,7 @@ public class FractionalTimeSignature extends Meter implements IFractionalTimeSig
     }
 
     @Override
-    public ITimeSignatureNumrerator getNumerator() {
+    public ITimeSignatureNumerator getNumerator() {
         return numerator;
     }
 

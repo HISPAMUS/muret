@@ -4,7 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.enums.EBarlineTypes;
 import es.ua.dlsi.grfia.moosicae.core.properties.IBarlineType;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
-import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
+
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -21,8 +21,4 @@ public class IBarlineTypeBuilder extends IEnumPropertyBuilder<EBarlineTypes, IBa
         return coreObjectFactory.createBarlineType(getId(), value);
     }
 
-    @Override
-    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
-        importerVisitor.importBarlineType(this, inputOutputType);
-    }
 }

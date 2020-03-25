@@ -3,7 +3,7 @@ package es.ua.dlsi.grfia.moosicae.core.builders;
 import es.ua.dlsi.grfia.moosicae.core.IKeySignature;
 import es.ua.dlsi.grfia.moosicae.core.properties.IPitchClass;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
-import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
+
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,8 +30,5 @@ public class IKeySignatureBuilder extends CoreObjectBuilder<IKeySignature> {
         return coreObjectFactory.createKeySignature(getId(), pitchClassList.toArray(new IPitchClass[pitchClassList.size()]));
     }
 
-    @Override
-    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
-        importerVisitor.importKeySignature(this, inputOutputType);
-    }
+
 }

@@ -4,7 +4,6 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.core.properties.IAccidentalSymbol;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
-import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -21,8 +20,4 @@ public class IAccidentalSymbolBuilder extends IEnumPropertyBuilder<EAccidentalSy
         return coreObjectFactory.createAccidentalSymbol(getId(), value);
     }
 
-    @Override
-    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) throws IMException {
-        importerVisitor.importAccidentalSymbol(this, inputOutputType);
-    }
 }

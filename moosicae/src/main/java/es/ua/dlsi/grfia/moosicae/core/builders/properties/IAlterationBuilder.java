@@ -8,7 +8,7 @@ import es.ua.dlsi.grfia.moosicae.core.enums.EAlterationDisplayTypes;
 import es.ua.dlsi.grfia.moosicae.core.properties.IAccidentalSymbol;
 import es.ua.dlsi.grfia.moosicae.core.properties.IAlteration;
 import es.ua.dlsi.grfia.moosicae.core.properties.IAlterationDisplayType;
-import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
+
 
 
 /**
@@ -48,8 +48,4 @@ public class IAlterationBuilder extends CoreObjectBuilder<IAlteration> {
         return coreObjectFactory.createAlteration(getId(), accidentalSymbol, alterationDisplayType);
     }
 
-    @Override
-    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) throws IMException {
-        importerVisitor.importAlteration(this, inputOutputType);
-    }
 }

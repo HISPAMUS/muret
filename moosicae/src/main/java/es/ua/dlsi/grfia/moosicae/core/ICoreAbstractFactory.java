@@ -33,14 +33,14 @@ public interface ICoreAbstractFactory {
     IFigure createFigure(@NotNull IId id, @NotNull EFigures figure);
     IId createId();
     IId createId(@NotNull String value);
-    ICommonAlterationKey createKey(@NotNull IId id, @NotNull ECommonAlterationKeys commonAlterationKeys);
-    IMixedAlterationsKey createKey(@NotNull IId id, @NotNull EMixedAlterationKeys mixedAlterationKeys);
+    ICommonAlterationKey createCommonAlterationKey(@NotNull IId id, @NotNull ECommonAlterationKeys commonAlterationKeys);
+    IMixedAlterationsKey createMixedAlterationsKey(@NotNull IId id, @NotNull EMixedAlterationKeys mixedAlterationKeys);
     IKey createKey(@NotNull IId id, @NotNull IPitchClass pitchClass, @NotNull IMode mode) throws IMException;
     IKey createKey(@NotNull IId id, @NotNull IPitchClass pitchClass, @NotNull IMode mode, @NotNull IKeySignature keySignature);
-    ICommonAlterationKey createKey(@NotNull IId id, @NotNull IKeyAccidentalCount nAccidentals, @NotNull IAccidentalSymbol accidentalSymbol, @NotNull IMode mode) throws IMException;
+    ICommonAlterationKey createCommonAlterationKey(@NotNull IId id, @NotNull IKeyAccidentalCount accidentalCount, IAccidentalSymbol accidentalSymbol, @NotNull IMode mode) throws IMException;
     IKeyAccidentalCount createKeyAccidentalCount(@NotNull IId id, @NotNull Integer nAccidentals);
     IKeySignature createKeySignature(@NotNull IId id, @NotNull IPitchClass [] pitchClasses);
-    IFractionalTimeSignature createFractionalTimeSignature(@NotNull IId id, @NotNull ITimeSignatureNumrerator numerator, @NotNull ITimeSignatureDenominator denominator);
+    IFractionalTimeSignature createFractionalTimeSignature(@NotNull IId id, @NotNull ITimeSignatureNumerator numerator, @NotNull ITimeSignatureDenominator denominator);
     IMensuration createMensuration(@NotNull IId id, @NotNull EMensurations mensuration);
     IMensuration createMensuration(@NotNull IId id,  EMensuralPerfections modusMaior,  EMensuralPerfections modusMinor, @NotNull EMensuralPerfections tempus, @NotNull EMensuralPerfections prolatio);
     IMetronomeMark createMetronomeMark(@NotNull IId id, @NotNull IFigure figure,  IDots dots, @NotNull IMetronomeMarkValue value);
@@ -79,13 +79,13 @@ public interface ICoreAbstractFactory {
      * @param staffGroup
      * @return
      */
-    IStaff createStaff(@NotNull IStaffGroup staffGroup, @NotNull IId id);
+    IStaff createStaff(@NotNull IStaffGroup staffGroup, @NotNull IId id, @NotNull IStaffLineCount staffLineCount);
     /**
      * For ungrouped staves
      * @param score
      * @return
      */
-    IStaff createStaff(@NotNull IScore score, @NotNull IId id);
+    IStaff createStaff(@NotNull IScore score, @NotNull IId id, @NotNull IStaffLineCount staffLineCount);
     IStaffGroup createStaffGroup(@NotNull IScore score, @NotNull IId id);
     /**
      * For nested groups
@@ -93,8 +93,9 @@ public interface ICoreAbstractFactory {
      * @return
      */
     IStaffGroup createStaffGroup(@NotNull IStaffGroup staffGroup, @NotNull IId id);
+    IStaffLineCount createStaffLineCount(int value);
 
-    ITimeSignatureNumrerator createTimeSignatureNumerator(@NotNull IId id, @NotNull Integer value);
+    ITimeSignatureNumerator createTimeSignatureNumerator(@NotNull IId id, @NotNull Integer value);
     ITimeSignatureDenominator createTimeSignatureDenominator(@NotNull IId id, @NotNull Integer value);
     ITitle createTitle(@NotNull IId id, @NotNull String title);
     IVoice createVoice(@NotNull IPart part, @NotNull IId id,  IName name);

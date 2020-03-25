@@ -4,7 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAlterationDisplayTypes;
 import es.ua.dlsi.grfia.moosicae.core.properties.IAlterationDisplayType;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
-import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
+
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -21,8 +21,4 @@ public class IAlterationDisplayTypeBuilder extends IEnumPropertyBuilder<EAlterat
         return coreObjectFactory.createAlterationDisplayType(getId(), value);
     }
 
-    @Override
-    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
-        importerVisitor.importAlterationDisplayType(this, inputOutputType);
-    }
 }

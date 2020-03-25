@@ -8,7 +8,7 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IAlteration;
 import es.ua.dlsi.grfia.moosicae.core.properties.IDiatonicPitch;
 import es.ua.dlsi.grfia.moosicae.core.properties.IOctave;
 import es.ua.dlsi.grfia.moosicae.core.properties.IPitch;
-import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
+
 import javax.validation.constraints.NotNull;
 
 
@@ -49,8 +49,5 @@ public class IPitchBuilder extends CoreObjectBuilder<IPitch> {
         return coreObjectFactory.createPitch(getId(), octave, alteration, diatonicPitch);
     }
 
-    @Override
-    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
-        importerVisitor.importPitch(this, inputOutputType);
-    }
+
 }

@@ -12,6 +12,9 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IId;
  */
 public abstract class CoreObjectBuilder<T extends ICoreObject> implements IObjectBuilder<T> {
     protected final ICoreAbstractFactory coreObjectFactory;
+    /**
+     * Must be private beacuse if it's null, a new ID is generated in getId()
+     */
     private IId id;
 
     public CoreObjectBuilder(ICoreAbstractFactory coreObjectFactory) {

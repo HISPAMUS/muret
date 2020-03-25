@@ -1,8 +1,7 @@
-package es.ua.dlsi.grfia.moosicae.io.musicxml.importer;
+package es.ua.dlsi.grfia.moosicae.io.musicxml.importer.elements;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreItem;
-import es.ua.dlsi.grfia.moosicae.core.ICoreObject;
 import es.ua.dlsi.grfia.moosicae.core.INote;
 import es.ua.dlsi.grfia.moosicae.core.properties.IDots;
 import es.ua.dlsi.grfia.moosicae.core.properties.IFigure;
@@ -20,7 +19,7 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 23/03/2020
  */
-public class MusicXMLNote implements IMusicXMLPartItem, INote {
+public class MxmlNote extends MxmlObject implements IMxmlPartItem, INote {
     @NotNull
     private final INote note;
 
@@ -28,10 +27,11 @@ public class MusicXMLNote implements IMusicXMLPartItem, INote {
 
     private final VoiceNumber voiceNumber;
 
-    private final MusicXMLChord chord;
+    private final MxmlChord chord;
 
 
-    public MusicXMLNote(@NotNull INote note,  StaffNumber staffNumber,  VoiceNumber voiceNumber,  MusicXMLChord chord) {
+    public MxmlNote(@NotNull INote note, StaffNumber staffNumber, VoiceNumber voiceNumber, MxmlChord chord) {
+        super(note.getId());
         this.note = note;
         this.staffNumber = staffNumber;
         this.voiceNumber = voiceNumber;
@@ -77,12 +77,12 @@ public class MusicXMLNote implements IMusicXMLPartItem, INote {
 
     @Override
     public IId getId() {
-        return null;
+        return note.getId();
     }
 
     @Override
-    public ICoreObject clone() {
-        return null;
+    public MxmlNote clone() {
+        return new MxmlNote(note, staffNumber, voiceNumber, chord);
     }
 
     @Override

@@ -4,7 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.properties.IMode;
 import es.ua.dlsi.grfia.moosicae.core.properties.IPitchClass;
-import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
+
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -38,8 +38,5 @@ public class IKeyBuilder extends CoreObjectBuilder<IKey> {
         return coreObjectFactory.createKey(getId(), pitchClass, mode, keySignature);
     }
 
-    @Override
-    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
-        importerVisitor.importKey(this, inputOutputType);
-    }
+
 }

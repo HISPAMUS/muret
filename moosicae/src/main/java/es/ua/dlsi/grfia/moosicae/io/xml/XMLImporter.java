@@ -4,10 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.IScore;
 import es.ua.dlsi.grfia.moosicae.core.builders.*;
-import es.ua.dlsi.grfia.moosicae.io.AbstractImporter;
-import es.ua.dlsi.grfia.moosicae.io.CoreObjectBuilderSuppliers;
-import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
-import es.ua.dlsi.grfia.moosicae.io.ImportingContexts;
+import es.ua.dlsi.grfia.moosicae.io.*;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -24,20 +21,18 @@ import java.util.Stack;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 19/03/2020
  */
-public abstract class XMLImporter<ImporterVisitor extends IImporterVisitor<XMLImporterVisitorParam>> extends AbstractImporter {
-    protected final CoreObjectBuilderSuppliers coreObjectBuilderSuppliers;
-    protected final ImporterVisitor xmlImporterVisitor;
+public abstract class XMLImporter {
     private Stack<String> elementStack;
-    private Stack<IObjectBuilder<?>> builderStack;
+    private Stack<IImporterAdapter<?, XMLImporterParam>> builderStack;
     protected ImportingContexts importingContexts;
+    protected final ICoreAbstractFactory coreAbstractFactory;
+    protected final CoreObjectBuilderSuppliers coreObjectBuilderSuppliers;
 
-    public XMLImporter(ICoreAbstractFactory abstractFactory, ImporterVisitor importerVisitor) {
-        super(abstractFactory);
-        coreObjectBuilderSuppliers = new CoreObjectBuilderSuppliers();
-        this.xmlImporterVisitor = importerVisitor;
+    public XMLImporter(ICoreAbstractFactory coreAbstractFactory) {
+        this.coreAbstractFactory = coreAbstractFactory;
+        this.coreObjectBuilderSuppliers = new CoreObjectBuilderSuppliers();
     }
 
-    @Override
     public IScore importScore(String input) throws IMException {
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
         return importScore(inputStream);
@@ -86,55 +81,37 @@ public abstract class XMLImporter<ImporterVisitor extends IImporterVisitor<XMLIm
 
     protected abstract IScore buildScore() throws IMException;
 
-
-    /**
-     * @param startElement
-     * @return True if handled and consumed
-     */
-    protected abstract boolean handleSpecialStartElement(StartElement startElement);
-
-    /**
-     * @param data
-     * @return True if handled and consumed
-     */
-    protected abstract boolean handleSpecialCharactersElement(String elementName, String data);
-
-    /**
-     * @param endElement
-     * @return True if handled and consumed
-     */
-    protected abstract boolean handleSpecialEndElement(EndElement endElement);
-
     private void handleStartElement(StartElement startElement) throws IMException {
-        // if not specifically handled by the derived class
-        if (!handleSpecialStartElement(startElement)) {
-            String elementName = startElement.getName().getLocalPart();
-            // if there is an specific builder associated to this element name, create it and import it with the specific importer visitor
-            // e.g. <note> may be imported with a INoteBuilder
-            // If the importer is MEIImporterVisitor, there will be a method in MEIImporterVisitor able to import the specifics of MEI
-            // and insert them into the INoteBuilder
-            if (coreObjectBuilderSuppliers.contains(elementName)) {
-                IObjectBuilder<?> coreObjectBuilder = (IObjectBuilder<?>) importingContexts.begin(elementName,
-                        (IObjectBuilder<?>) coreObjectBuilderSuppliers.create(elementName, coreAbstractFactory));
-                builderStack.push(coreObjectBuilder);
-                coreObjectBuilder.doImport(xmlImporterVisitor, new XMLImporterVisitorParam(startElement.getAttributes()));
+        String elementName = startElement.getName().getLocalPart();
+        // if there is an specific builder associated to this element name, create it and import it with the specific importer visitor
+        // e.g. <note> may be imported with a INoteBuilder
+        // If the importer is MEIImporterVisitor, there will be a method in MEIImporterVisitor able to import the specifics of MEI
+        // and insert them into the INoteBuilder
+        if (coreObjectBuilderSuppliers.contains(elementName)) {
+            IImporterAdapter<?, XMLImporterParam> coreObjectBuilder = (IImporterAdapter<?, XMLImporterParam>) importingContexts.begin(elementName,
+                    (IObjectBuilder<?>) coreObjectBuilderSuppliers.create(elementName, coreAbstractFactory));
+            builderStack.push(coreObjectBuilder);
+            // coreObjectBuilder.doImport(xmlImporterVisitor, new XMLImporterVisitorParam(startElement.getAttributes()));
+            XMLImporterParam importerParam = new XMLImporterParam(startElement.getAttributes());
+            if (importerParam.getCharacters().isPresent() || importerParam.hasAttributes()) {
+                coreObjectBuilder.read(importerParam);
             }
         }
     }
 
 
     private void handleCharacters(String elementName, String data) throws IMException {
-        // if not specifically handled by the derived class
-        if (!handleSpecialCharactersElement(elementName, data)) {
-            IObjectBuilder<?> currentBuilder = null;
-            if (!builderStack.isEmpty()) {
-                currentBuilder = builderStack.peek();
-            }
-            // if there is an specific builder associated to this element name, handle the contents using the specific importer visitor
-            if (coreObjectBuilderSuppliers.contains(elementName)) {
-                if (currentBuilder != null) {
-                    currentBuilder.doImport(xmlImporterVisitor, new XMLImporterVisitorParam(data));
-                }
+        IImporterAdapter<?, XMLImporterParam> currentBuilder = null;
+        if (!builderStack.isEmpty()) {
+            currentBuilder = builderStack.peek();
+        }
+        // if there is an specific builder associated to this element name, handle the contents using the specific importer visitor
+        if (coreObjectBuilderSuppliers.contains(elementName)) {
+            if (currentBuilder != null && !data.isEmpty()) {
+                //currentBuilder.doImport(xmlImporterVisitor, new XMLImporterVisitorParam(data));
+                XMLImporterParam importerParam = new XMLImporterParam(data);
+                currentBuilder.read(importerParam);
+
             }
         }
     }
@@ -143,17 +120,13 @@ public abstract class XMLImporter<ImporterVisitor extends IImporterVisitor<XMLIm
     private void handleEndElement(EndElement endElement) throws IMException {
         String elementName = endElement.getName().getLocalPart();
 
-        // if not specifically handled by the derived class
-        if (!handleSpecialEndElement(endElement)) {
-            // if there is an specific builder associated to this element name, finish the context
-            // (it will build an object and prepare it for the parent context to be inserted)
-            if (importingContexts.contains(elementName)) {
-                onEndElement(elementName, importingContexts.end(elementName));
-                builderStack.pop();
-            }
+        // if there is an specific builder associated to this element name, finish the context
+        // (it will build an object and prepare it for the parent context to be inserted)
+        if (importingContexts.contains(elementName)) {
+            onEndElement(elementName, importingContexts.end(elementName));
+            builderStack.pop();
         }
     }
 
     protected abstract void onEndElement(String elementName, Object end);
-
 }

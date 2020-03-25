@@ -2,153 +2,107 @@ package es.ua.dlsi.grfia.moosicae.io.musicxml;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.core.builders.*;
-import es.ua.dlsi.grfia.moosicae.core.builders.properties.*;
-import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
-import es.ua.dlsi.grfia.moosicae.core.impl.CoreItem;
-import es.ua.dlsi.grfia.moosicae.core.properties.*;
-import es.ua.dlsi.grfia.moosicae.io.musicxml.importer.*;
+import es.ua.dlsi.grfia.moosicae.core.properties.IId;
+import es.ua.dlsi.grfia.moosicae.core.properties.IStaffLineCount;
+import es.ua.dlsi.grfia.moosicae.io.IImporter;
+import es.ua.dlsi.grfia.moosicae.io.musicxml.importer.builders.*;
+import es.ua.dlsi.grfia.moosicae.io.musicxml.importer.elements.*;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporter;
 
-import javax.xml.stream.events.*;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Use StAX for parsing
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 19/03/2020
  */
-public class MusicXMLImporter extends XMLImporter<MusicXMLImporterVisitor> {
-    private List<MusicXMLImportedPart> musicXMLImportedParts;
-    private IScore score;
+public class MusicXMLImporter extends XMLImporter implements IImporter {
+
+    private MxmlScorePartWise mxmlScorePartWise;
 
     public MusicXMLImporter(ICoreAbstractFactory abstractFactory) {
-        super(abstractFactory, new MusicXMLImporterVisitor(abstractFactory));
-        coreObjectBuilderSuppliers.add("score-partwise", IScoreBuilder::new);
-        coreObjectBuilderSuppliers.add("score-part", IPartBuilder::new);
-        coreObjectBuilderSuppliers.add("part-name", INameBuilder::new);
-        coreObjectBuilderSuppliers.add("part", MusicXMLPartBuilder::new);
-        coreObjectBuilderSuppliers.add("measure", IBarlineBuilder::new);
-        coreObjectBuilderSuppliers.add("attributes", MusicXMLAttributesBuilder::new);
+        super(abstractFactory);
+        coreObjectBuilderSuppliers.add("score-partwise", MxmlScorePartWiseBuilder::new);
+        coreObjectBuilderSuppliers.add("score-part", MxmlPartDefinitionBuilder::new);
+        coreObjectBuilderSuppliers.add("part-name", MxmlNameBuilder::new);
+        coreObjectBuilderSuppliers.add("part", MxmlPartContentsBuilder::new);
+        coreObjectBuilderSuppliers.add("measure", MxmlMeasureBuilder::new);
+        coreObjectBuilderSuppliers.add("divisions", MxmlDivisionsBuilder::new);
 
-        coreObjectBuilderSuppliers.add("clef", IClefBuilder::new);
-        coreObjectBuilderSuppliers.add("sign", IClefSignBuilder::new);
-        coreObjectBuilderSuppliers.add("line", IClefLineBuilder::new);
+        coreObjectBuilderSuppliers.add("attributes", MxmlAttributesBuilder::new);
 
-        coreObjectBuilderSuppliers.add("key", IKeyFromAccidentalCountBuilder::new);
-        coreObjectBuilderSuppliers.add("mode", IModeBuilder::new);
+        coreObjectBuilderSuppliers.add("clef", MxmlClefBuilder::new);
+        coreObjectBuilderSuppliers.add("sign", MxmlClefSignBuilder::new);
+        coreObjectBuilderSuppliers.add("line", MxmlClefLineBuilder::new);
 
-        coreObjectBuilderSuppliers.add("time", IFractionalTimeSignatureBuilder::new);
-        coreObjectBuilderSuppliers.add("beats", ITimeSignatureNumeratorBuilder::new);
-        coreObjectBuilderSuppliers.add("beat-type", ITimeSignatureDenominatorBuilder::new);
+        coreObjectBuilderSuppliers.add("key", MxmlKeyBuilder::new);
+        coreObjectBuilderSuppliers.add("fifths", MxmlFifthsBuilder::new);
 
-        coreObjectBuilderSuppliers.add("note", MusicXMLNoteBuilder::new);
-        coreObjectBuilderSuppliers.add("pitch", IPitchBuilder::new);
-        coreObjectBuilderSuppliers.add("octave", IOctaveBuilder::new);
-        coreObjectBuilderSuppliers.add("step", IDiatonicPitchBuilder::new);
-        coreObjectBuilderSuppliers.add("alter", IAlterationBuilder::new);
+        coreObjectBuilderSuppliers.add("mode", MxmlModeBuilder::new);
 
-        coreObjectBuilderSuppliers.add("duration", IFigureBuilder::new);
+        coreObjectBuilderSuppliers.add("time", MxmTimeSignatureBuilder::new);
+        coreObjectBuilderSuppliers.add("beats", MxmlTimeSignatureNumeratorBuilder::new);
+        coreObjectBuilderSuppliers.add("beat-type", MxmlTimeSignatureDenominatorBuilder::new);
 
-        musicXMLImportedParts = new LinkedList<>();
-    }
+        coreObjectBuilderSuppliers.add("note", MxmlNoteBuilder::new);
+        coreObjectBuilderSuppliers.add("pitch", MxmlPitchBuilder::new);
+        coreObjectBuilderSuppliers.add("octave", MxmlOctaveBuilder::new);
+        coreObjectBuilderSuppliers.add("step", MxmlDiatonicPitchBuilder::new);
+        coreObjectBuilderSuppliers.add("alter", MxmAlterationBuilder::new);
 
-    @Override
-    protected boolean handleSpecialStartElement(StartElement startElement) {
-        boolean consumed = true;
-        switch (startElement.getName().getLocalPart()) {
-            default:
-                consumed = false;
-        }
-        return consumed;
-    }
+        coreObjectBuilderSuppliers.add("duration", MxmlFigureBuilder::new);
 
-    @Override
-    protected boolean handleSpecialCharactersElement(String elementName, String data) {
-        boolean consumed = true;
-        switch (elementName) {
-            case "divisions":
-                xmlImporterVisitor.setDivisions(Integer.parseInt(data));
-                break;
-            case "fifths":
-                handleFifths(data);
-                break;
-            default:
-                consumed = false;
-        }
-        return consumed;
-    }
-
-    private void handleFifths(String data) {
-        int fifths = Integer.parseInt(data);
-        IKeyAccidentalCount keyAccidentalCount = null;
-        IAccidentalSymbol accidentalSymbol = null;
-        if (fifths < 0) {
-            fifths = -fifths;
-            accidentalSymbol = coreAbstractFactory.createAccidentalSymbol(coreAbstractFactory.createId(), EAccidentalSymbols.FLAT);
-        } else if (fifths > 0) {
-            accidentalSymbol = coreAbstractFactory.createAccidentalSymbol(coreAbstractFactory.createId(), EAccidentalSymbols.SHARP);
-        }
-        keyAccidentalCount = coreAbstractFactory.createKeyAccidentalCount(coreAbstractFactory.createId(), fifths);
-        importingContexts.addObjectToPool(keyAccidentalCount);
-        if (accidentalSymbol != null) {
-            importingContexts.addObjectToPool(accidentalSymbol);
-        }
-    }
-
-    @Override
-    protected boolean handleSpecialEndElement(EndElement endElement) {
-        return false;
     }
 
     @Override
     protected void onEndElement(String elementName, Object coreObject) {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Parsed element {0} into object {1} = {2}", new Object[] { elementName, coreObject.getClass().getName(), coreObject });
         switch (elementName) {
-            case "part":
-                MusicXMLImportedPart part = (MusicXMLImportedPart) coreObject;
-                insertPartItems(part);
-                break;
             case "score-partwise":
-                score = (IScore) coreObject;
+                mxmlScorePartWise = (MxmlScorePartWise) coreObject;
                 break;
         }
     }
-
-    private void insertPartItems(MusicXMLImportedPart part) {
-        musicXMLImportedParts.add(part);
-    }
-
 
     @Override
     protected IScore buildScore() throws IMException {
+        IScore score = coreAbstractFactory.createScore(coreAbstractFactory.createId());
         // now build the score from all parts
-
-        HashMap<IId, IPart> partHashMap = new HashMap<>();
-        for (IPart part: score.getParts()) {
-            partHashMap.put(part.getId(), part);
+        if (mxmlScorePartWise == null) {
+            throw new IMException("No mxmlScorePartWise object found"); // see onEndElement
         }
 
-        for (MusicXMLImportedPart musicXMLImportedPart: musicXMLImportedParts) {
-            IPart part = partHashMap.get(musicXMLImportedPart.getId());
+        HashMap<IId, IPart> partHashMap = new HashMap<>();
+        for (IPart part: mxmlScorePartWise.getCoreParts()) {
+            partHashMap.put(part.getId(), part);
+            score.add(part);
+        }
+
+        for (MxmlPartContents mxmlImportedPart : mxmlScorePartWise.getMxmlPartsContents()) {
+            IPart part = partHashMap.get(mxmlImportedPart.getId());
             if (part == null) {
-                throw new IMException("There is a <part> with id='" + musicXMLImportedPart.getId() + "' not defined in part-list");
+                throw new IMException("There is a <part> with id='" + mxmlImportedPart.getId() + "' not defined in part-list");
             }
 
             //TODO voices, staves
+            IStaffLineCount staffLineCount = coreAbstractFactory.createStaffLineCount(5);
             IVoice defaultVoice = coreAbstractFactory.createVoice(part, coreAbstractFactory.createId(), null);
-            IStaff defaultStaff = coreAbstractFactory.createStaff(score, coreAbstractFactory.createId());
-            for (IMusicXMLPartItem iMusicXMLPartItem: musicXMLImportedPart.getItems()) {
-                ICoreItem[] subitems = iMusicXMLPartItem.getItems(); //TODO sacar los datos adicionales del MusicXMLNote como es la staff...
-                for (ICoreItem coreItem: subitems) {
-                    System.out.println("Adding " + coreItem);
-                    score.add(defaultVoice, defaultStaff, coreItem);
+            IStaff defaultStaff = coreAbstractFactory.createStaff(score, coreAbstractFactory.createId(), staffLineCount);
+            for (MxmlMeasure measure : mxmlImportedPart.getMeasures()) {
+                for (IMxmlPartItem item: measure.getItems()) {
+                    ICoreItem[] subitems = item.getItems(); //TODO sacar los datos adicionales del MusicXMLNote como es la staff...
+                    for (ICoreItem coreItem: subitems) {
+                        score.add(defaultVoice, defaultStaff, coreItem);
+                    }
                 }
+                //TODO parámetros barline
+                IBarline barline = coreAbstractFactory.createBarline(coreAbstractFactory.createId(), null, null);
+                score.add(defaultVoice, defaultStaff, barline);
             }
 
         }
-
         return score;
     }
 }

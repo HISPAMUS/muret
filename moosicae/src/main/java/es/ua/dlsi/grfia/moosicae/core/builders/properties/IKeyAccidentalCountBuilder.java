@@ -3,7 +3,7 @@ package es.ua.dlsi.grfia.moosicae.core.builders.properties;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.properties.IKeyAccidentalCount;
-import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
+
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -19,8 +19,4 @@ public class IKeyAccidentalCountBuilder extends IIntegerPropertyBuilder<IKeyAcci
         return coreObjectFactory.createKeyAccidentalCount(getId(), value);
     }
 
-    @Override
-    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
-        importerVisitor.importKeyAccidentalCount(this, inputOutputType);
-    }
 }

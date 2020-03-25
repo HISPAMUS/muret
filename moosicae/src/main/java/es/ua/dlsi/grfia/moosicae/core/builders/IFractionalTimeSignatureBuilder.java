@@ -3,13 +3,13 @@ package es.ua.dlsi.grfia.moosicae.core.builders;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.ETimeSignatureSymbols;
-import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
+
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class IFractionalTimeSignatureBuilder extends CoreObjectBuilder<IFractionalTimeSignature> {
-    private ITimeSignatureNumrerator numerator;
+    private ITimeSignatureNumerator numerator;
     private ITimeSignatureDenominator denominator;
     private ETimeSignatureSymbols timeSignatureSymbol;
 
@@ -17,7 +17,7 @@ public class IFractionalTimeSignatureBuilder extends CoreObjectBuilder<IFraction
         super(coreObjectFactory);
     }
 
-    public IFractionalTimeSignatureBuilder from(ITimeSignatureNumrerator numerator) {
+    public IFractionalTimeSignatureBuilder from(ITimeSignatureNumerator numerator) {
         this.numerator = numerator;
         return this;
     }
@@ -48,8 +48,4 @@ public class IFractionalTimeSignatureBuilder extends CoreObjectBuilder<IFraction
         }
     }
 
-    @Override
-    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) throws IMException {
-        importerVisitor.importFractionalTimeSignature(this, inputOutputType);
-    }
 }

@@ -4,7 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.IPart;
 import es.ua.dlsi.grfia.moosicae.core.IScore;
-import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
+
 
 import java.util.LinkedList;
 import java.util.List;
@@ -40,7 +40,4 @@ public class IScoreBuilder extends CoreObjectBuilder<IScore> {
         return score;
     }
 
-    @Override
-    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) throws IMException {
-    }
 }

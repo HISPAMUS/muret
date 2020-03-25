@@ -4,7 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.properties.IMultimeasureRestCount;
 import es.ua.dlsi.grfia.moosicae.core.properties.IOctave;
-import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
+
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -20,8 +20,5 @@ public class IMultimeasureRestCountBuilder extends IIntegerPropertyBuilder<IMult
         return coreObjectFactory.createMultimeasureRestCount(getId(), value);
     }
 
-    @Override
-    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
-        importerVisitor.importMultimeasureRestCount(this, inputOutputType);
-    }
+
 }

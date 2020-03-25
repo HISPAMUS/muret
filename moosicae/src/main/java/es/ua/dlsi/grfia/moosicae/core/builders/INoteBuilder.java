@@ -10,7 +10,7 @@ import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.core.enums.EDiatonicPitches;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
-import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
+
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -30,11 +30,6 @@ public class INoteBuilder extends IDurationalSingleBuilder<INote> {
     @Override
     public INote build() throws IMException {
         return coreObjectFactory.createNote(getId(), figure, dots, pitch);
-    }
-
-    @Override
-    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
-        importerVisitor.importNote(this, inputOutputType);
     }
 
     /**

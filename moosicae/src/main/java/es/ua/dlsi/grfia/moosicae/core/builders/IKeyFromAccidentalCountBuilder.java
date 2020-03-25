@@ -5,14 +5,14 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.properties.IAccidentalSymbol;
 import es.ua.dlsi.grfia.moosicae.core.properties.IKeyAccidentalCount;
 import es.ua.dlsi.grfia.moosicae.core.properties.IMode;
-import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
+
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class IKeyFromAccidentalCountBuilder extends CoreObjectBuilder<IKey> {
+public class IKeyFromAccidentalCountBuilder extends CoreObjectBuilder<ICommonAlterationKey> {
     private IAccidentalSymbol accidentalSymbol;
-    private IKeyAccidentalCount accidentalCount;
+    protected IKeyAccidentalCount accidentalCount;
     private IMode mode;
 
     public IKeyFromAccidentalCountBuilder(ICoreAbstractFactory coreObjectFactory) {
@@ -35,12 +35,8 @@ public class IKeyFromAccidentalCountBuilder extends CoreObjectBuilder<IKey> {
     }
 
     @Override
-    public IKey build() throws IMException {
-        return coreObjectFactory.createKey(getId(), accidentalCount, accidentalSymbol, mode);
+    public ICommonAlterationKey build() throws IMException {
+        return coreObjectFactory.createCommonAlterationKey(getId(), accidentalCount, accidentalSymbol, mode);
     }
 
-    @Override
-    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
-        importerVisitor.importKeyFromAccidentalCount(this, inputOutputType);
-    }
 }

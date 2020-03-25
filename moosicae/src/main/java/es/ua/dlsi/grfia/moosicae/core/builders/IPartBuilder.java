@@ -4,7 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.properties.IName;
 import es.ua.dlsi.grfia.moosicae.core.IPart;
-import es.ua.dlsi.grfia.moosicae.io.IImporterVisitor;
+
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -17,8 +17,9 @@ public class IPartBuilder extends CoreObjectBuilder<IPart>  {
         super(coreObjectFactory);
     }
 
-    public void setName(IName name) {
+    public IPartBuilder from(IName name) {
         this.name = name;
+        return this;
     }
 
     @Override
@@ -26,8 +27,4 @@ public class IPartBuilder extends CoreObjectBuilder<IPart>  {
         return coreObjectFactory.createPart(getId(), name);
     }
 
-    @Override
-    public <InputOutputType> void doImport(IImporterVisitor<InputOutputType> importerVisitor, InputOutputType inputOutputType) {
-        importerVisitor.importPartBuilder(this, inputOutputType);
-    }
 }
