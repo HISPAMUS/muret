@@ -6,8 +6,9 @@ import es.ua.dlsi.grfia.moosicae.core.builders.properties.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
 import es.ua.dlsi.grfia.moosicae.core.builders.*;
-import es.ua.dlsi.grfia.moosicae.core.properties.IMode;
-import es.ua.dlsi.grfia.moosicae.core.properties.IPitchClass;
+import es.ua.dlsi.grfia.moosicae.core.mensural.IMensuration;
+import es.ua.dlsi.grfia.moosicae.core.properties.*;
+import es.ua.dlsi.grfia.moosicae.io.ImportingContexts;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmCoreSymbol;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmHeader;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmPart;
@@ -49,35 +50,8 @@ public class SkmSyntaxDirectedTranslation {
          * This array should maintain the spine count including spine splits, joins, etc...
          */
         private ArrayList<SkmToken> lastSpineInsertedItem;
-        private IClefBuilder clefBuilder;
-        private ICustosBuilder custosBuilder;
-        private IPitchClassBuilder pitchClassBuilder;
-        private IAccidentalSymbolBuilder accidentalSymbolBuilder;
-        private IDiatonicPitchBuilder diatonicPitchBuilder;
-        private IKeySignatureBuilder keySignatureBuilder;
-        private IPitchBuilder pitchBuilder;
-        private IAlterationDisplayTypeBuilder alterationDisplayTypeBuilder;
-        private IAlterationBuilder alterationBuilder;
-        private IBarlineTypeBuilder barlineTypeBuilder;
-        private IModeBuilder modeBuilder;
-        private IRestBuilder restBuilder;
-        private INoteBuilder noteBuilder;
-        private IDurationalSingleBuilder durationalSingleBuilder;
-        private Integer octave; // we don't need a builder here
 
-        private void resetBuilders() { // written here to have all object just above
-            clefBuilder = null;
-            custosBuilder = null;
-            pitchClassBuilder = null;
-            accidentalSymbolBuilder = null;
-            diatonicPitchBuilder = null;
-            keySignatureBuilder = null;
-            pitchBuilder = null;
-            alterationDisplayTypeBuilder = null;
-            alterationBuilder = null;
-            barlineTypeBuilder = null;
-            modeBuilder = null;
-        }
+        protected ImportingContexts<ICoreObject> importingContexts;
 
         public Loader(Parser parser, boolean debug, ICoreAbstractFactory coreAbstractFactory) {
             this.debug = debug;
@@ -86,9 +60,14 @@ public class SkmSyntaxDirectedTranslation {
             this.row = 0;
             this.coreAbstractFactory = coreAbstractFactory;
             this.lastSpineInsertedItem = new ArrayList<>();
+            this.importingContexts = new ImportingContexts();
         }
 
-        private GrammarParseRuntimeException createException(IMException e) throws GrammarParseRuntimeException {
+        private GrammarParseRuntimeException createException(String message, Throwable e) throws GrammarParseRuntimeException {
+            return new GrammarParseRuntimeException("[Row #" + this.row + ", spine #" + spineIndex + "] " + message + " :" + e);
+        }
+
+        private GrammarParseRuntimeException createException(Throwable e) throws GrammarParseRuntimeException {
             return new GrammarParseRuntimeException("[Row #" + this.row + ", spine #" + spineIndex + "] " + e);
         }
 
@@ -108,6 +87,34 @@ public class SkmSyntaxDirectedTranslation {
             SkmToken previous = getLastItemForCurrentSpine();
             this.skmDocument.add(previous, skmItem);
             lastSpineInsertedItem.set(this.spineIndex, skmItem);
+        }
+
+        private void beginContext(RuleContext ruleContext, IObjectBuilder<? extends ICoreObject> builder) {
+            this.importingContexts.begin(ruleContext.getClass().getName(), builder);
+        }
+
+        private void beginEndContext(RuleContext ruleContext, IObjectBuilder<? extends ICoreObject> builder, Object ... objects) {
+            try {
+                this.importingContexts.beginEnd(builder, objects);
+            } catch (Throwable e) {
+                throw createException("RuleContext " + ruleContext.getClass().getName(), e);
+            }
+        }
+
+        private ICoreObject endContext(RuleContext ruleContext) {
+            try {
+                return this.importingContexts.end(ruleContext.getClass().getName());
+            } catch (Throwable e) {
+                throw createException("RuleContext " + ruleContext.getClass().getName(), e);
+            }
+        }
+
+        private void endContextAndAddToSpine(RuleContext ruleContext)  {
+            try {
+                this.addItemToSpine(new SkmCoreSymbol(ruleContext.getText(), endContext(ruleContext)));
+            } catch (Throwable e) {
+                throw createException("RuleContext " + ruleContext.getClass().getName(), e);
+            }
         }
 
         @Override
@@ -141,6 +148,10 @@ public class SkmSyntaxDirectedTranslation {
             lastSpineInsertedItem.add(headerToken);
         }
 
+        @Override
+        public void enterPart(skmParser.PartContext ctx) {
+            super.enterPart(ctx);
+        }
 
         @Override
         public void exitPart(skmParser.PartContext ctx) {
@@ -177,7 +188,6 @@ public class SkmSyntaxDirectedTranslation {
         public void exitField(skmParser.FieldContext ctx) {
             super.exitField(ctx);
             this.spineIndex ++;
-            resetBuilders();
         }
 
         @Override
@@ -198,25 +208,7 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void enterClef(skmParser.ClefContext ctx) {
             super.enterClef(ctx);
-            clefBuilder = new IClefBuilder(coreAbstractFactory);
-        }
-
-        @Override
-        public void exitClefSign(skmParser.ClefSignContext ctx) {
-            super.exitClefSign(ctx);
-            IClefSignBuilder clefSignBuilder = new IClefSignBuilder(coreAbstractFactory);
-            clefSignBuilder.from(EClefSigns.valueOf(ctx.getText()));
-            try {
-                clefBuilder.from(clefSignBuilder.build());
-            } catch (IMException e) {
-                throw createException(e);
-            }
-        }
-
-        @Override
-        public void exitClefLine(skmParser.ClefLineContext ctx) {
-            super.exitClefLine(ctx);
-            clefBuilder.from(coreAbstractFactory.createClefLine(null, Integer.parseInt(ctx.getText())));
+            beginContext(ctx, new IClefBuilder(coreAbstractFactory));
         }
 
         @Override
@@ -225,72 +217,76 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
                     "Clef {0}", ctx.getText());
 
-            IClef clef = null;
-            try {
-                clef = clefBuilder.build();
-                addItemToSpine(new SkmCoreSymbol(ctx.getText(), clef));
-            } catch (IMException e) {
-                throw createException(e);
-            }
+            endContextAndAddToSpine(ctx);
         }
 
         @Override
-        public void enterAccidental(skmParser.AccidentalContext ctx) {
-            super.enterAccidental(ctx);
-            accidentalSymbolBuilder = new IAccidentalSymbolBuilder(coreAbstractFactory);
+        public void exitClefSign(skmParser.ClefSignContext ctx) {
+            super.exitClefSign(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Clef sign {0}", ctx.getText());
+
+            beginEndContext(ctx, new IClefSignBuilder(coreAbstractFactory), EClefSigns.valueOf(ctx.getText()));
         }
+
+        @Override
+        public void exitClefLine(skmParser.ClefLineContext ctx) {
+            super.exitClefLine(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Clef line {0}", ctx.getText());
+
+            beginEndContext(ctx, new IClefLineBuilder(coreAbstractFactory), Integer.parseInt(ctx.getText()));
+        }
+
+
 
         @Override
         public void exitAccidental(skmParser.AccidentalContext ctx) {
             super.exitAccidental(ctx);
-            EAccidentalSymbols accidentalSymbols;
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Accidental {0}", ctx.getText());
+
+            EAccidentalSymbols accidentalSymbol;
             switch (ctx.getText()) {
                 case "---":
-                    accidentalSymbols = EAccidentalSymbols.TRIPLE_FLAT;
+                    accidentalSymbol = EAccidentalSymbols.TRIPLE_FLAT;
                     break;
                 case "--":
-                    accidentalSymbols = EAccidentalSymbols.DOUBLE_FLAT;
+                    accidentalSymbol = EAccidentalSymbols.DOUBLE_FLAT;
                     break;
                 case "-":
-                    accidentalSymbols = EAccidentalSymbols.FLAT;
+                    accidentalSymbol = EAccidentalSymbols.FLAT;
                     break;
                 case "n":
-                    accidentalSymbols = EAccidentalSymbols.NATURAL;
+                    accidentalSymbol = EAccidentalSymbols.NATURAL;
                     break;
                 case "#":
-                    accidentalSymbols = EAccidentalSymbols.SHARP;
+                    accidentalSymbol = EAccidentalSymbols.SHARP;
                     break;
                 case "##":
-                    accidentalSymbols = EAccidentalSymbols.DOUBLE_SHARP;
+                    accidentalSymbol = EAccidentalSymbols.DOUBLE_SHARP;
                     break;
                 default:
-                    throw createException("Unkown accidental symbol: " + ctx.getText());
+                    throw createException("Unknown accidental symbol: " + ctx.getText());
             }
-            accidentalSymbolBuilder.from(accidentalSymbols);
-        }
 
-        public void exitDiatonicPitchAndOctave(skmParser.DiatonicPitchAndOctaveContext ctx) {
-            super.exitDiatonicPitchAndOctave(ctx);
+            beginEndContext(ctx, new IAccidentalSymbolBuilder(coreAbstractFactory), accidentalSymbol);
         }
 
         @Override
         public void enterPitchClass(skmParser.PitchClassContext ctx) {
             super.enterPitchClass(ctx);
-            pitchClassBuilder = new IPitchClassBuilder(coreAbstractFactory);
+            beginContext(ctx, new IPitchClassBuilder(coreAbstractFactory));
         }
 
 
         @Override
         public void exitPitchClass(skmParser.PitchClassContext ctx) {
-            if (accidentalSymbolBuilder != null) {
-                try {
-                    pitchClassBuilder.from(accidentalSymbolBuilder.build());
-                } catch (IMException e) {
-                    throw createException(e);
-                }
-            }
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Pitch class {0}", ctx.getText());
 
-            pitchClassBuilder.from(coreAbstractFactory.createDiatonicPitch(null, EDiatonicPitches.valueOf(ctx.lowerCasePitch().getText().toUpperCase())));
+            importingContexts.addObjectToPool(coreAbstractFactory.createDiatonicPitch(null, EDiatonicPitches.valueOf(ctx.lowerCasePitch().getText().toUpperCase())));
+            endContext(ctx);
         }
 
         @Override
@@ -298,97 +294,92 @@ public class SkmSyntaxDirectedTranslation {
             super.enterKeySignature(ctx);
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Beginning a key",
                     ctx.getText());
-            keySignatureBuilder = new IKeySignatureBuilder(coreAbstractFactory);
-        }
 
-        @Override
-        public void exitKeySignaturePitchClass(skmParser.KeySignaturePitchClassContext ctx) {
-            super.exitKeySignaturePitchClass(ctx);
-            try {
-                keySignatureBuilder.add(pitchClassBuilder.build());
-            } catch (IMException e) {
-                throw createException(e);
-            }
+            beginContext(ctx, new IKeySignatureBuilder(coreAbstractFactory));
         }
 
         @Override
         public void exitKeySignature(skmParser.KeySignatureContext ctx) {
             super.exitKeySignature(ctx);
-            try {
-                addItemToSpine(new SkmCoreSymbol(ctx.getText(), keySignatureBuilder.build()));
-            } catch (IMException e) {
-                throw createException(e);
-            }
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Key signature {0}", ctx.getText());
+
+            endContextAndAddToSpine(ctx);
         }
 
         @Override
         public void enterKeyMode(skmParser.KeyModeContext ctx) {
             super.exitKeyMode(ctx);
-            modeBuilder = new IModeBuilder(coreAbstractFactory);
+            beginContext(ctx, new IModeBuilder(coreAbstractFactory));
+            importingContexts.begin("pitchClass", new IPitchClassBuilder(coreAbstractFactory));
+        }
+
+        @Override
+        public void exitKeyMode(skmParser.KeyModeContext ctx) {
+            super.exitKeyMode(ctx);
+            try {
+                importingContexts.end("pitchClass");
+            } catch (IMException e) {
+                throw createException(e);
+            }
+            endContext(ctx);
         }
 
         @Override
         public void exitMajorKey(skmParser.MajorKeyContext ctx) {
             super.exitMajorKey(ctx);
-            modeBuilder.from(EModes.major);
-            pitchClassBuilder = new IPitchClassBuilder(coreAbstractFactory);
-            diatonicPitchBuilder = new IDiatonicPitchBuilder(coreAbstractFactory);
-            diatonicPitchBuilder.from(EDiatonicPitches.valueOf(ctx.upperCasePitch().getText().toUpperCase()));
-            try {
-                pitchClassBuilder.from(diatonicPitchBuilder.build());
-                if (accidentalSymbolBuilder != null) {
-                    pitchClassBuilder.from(accidentalSymbolBuilder.build());
-                }
-            } catch (IMException e) {
-                throw createException(e);
-            }
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Major key {0}", ctx.getText());
+
+            importingContexts.addObjectToPool(EModes.major);
+            importingContexts.addObjectToPool(EDiatonicPitches.valueOf(ctx.upperCasePitch().getText().toUpperCase()));
         }
 
         @Override
         public void exitMinorKey(skmParser.MinorKeyContext ctx) {
             super.exitMinorKey(ctx);
-            modeBuilder.from(EModes.minor);
-            pitchClassBuilder = new IPitchClassBuilder(coreAbstractFactory);
-            diatonicPitchBuilder = new IDiatonicPitchBuilder(coreAbstractFactory);
-            diatonicPitchBuilder.from(EDiatonicPitches.valueOf(ctx.lowerCasePitch().getText().toUpperCase()));
-            try {
-                pitchClassBuilder.from(diatonicPitchBuilder.build());
-                if (accidentalSymbolBuilder != null) {
-                    pitchClassBuilder.from(accidentalSymbolBuilder.build());
-                }
-            } catch (IMException e) {
-                throw createException(e);
-            }
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Minor key {0}", ctx.getText());
+
+            importingContexts.addObjectToPool(EModes.minor);
+            importingContexts.addObjectToPool(EDiatonicPitches.valueOf(ctx.lowerCasePitch().getText().toUpperCase()));
+        }
+
+        @Override
+        public void enterKey(skmParser.KeyContext ctx) {
+            super.enterKey(ctx);
+            beginContext(ctx, new IKeyBuilder(coreAbstractFactory));
         }
 
         @Override
         public void exitKey(skmParser.KeyContext ctx) {
-            try {
-                IPitchClass pitchClass = pitchClassBuilder.build();
-                IMode mode = modeBuilder.build();
-                IKey key = coreAbstractFactory.createKey(null, pitchClass, mode);
-                addItemToSpine(new SkmCoreSymbol(ctx.getText(), key));
-            } catch (IMException e) {
-                throw createException(e);
-            }
+            super.exitKey(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Key {0}", ctx.getText());
+
+            endContextAndAddToSpine(ctx);
+        }
+
+        @Override
+        public void enterFractionalTimeSignature(skmParser.FractionalTimeSignatureContext ctx) {
+            super.enterFractionalTimeSignature(ctx);
+            beginContext(ctx, new IFractionalTimeSignatureBuilder(coreAbstractFactory));
         }
 
         @Override
         public void exitFractionalTimeSignature(skmParser.FractionalTimeSignatureContext ctx) {
+            super.exitFractionalTimeSignature(ctx);
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Time signature {0}", ctx.getText());
-            IFractionalTimeSignatureBuilder fractionalTimeSignatureBuilder = new IFractionalTimeSignatureBuilder(coreAbstractFactory);
-            fractionalTimeSignatureBuilder.from(coreAbstractFactory.createTimeSignatureNumerator(null, Integer.parseInt(ctx.numerator().getText())));
-            fractionalTimeSignatureBuilder.from(coreAbstractFactory.createTimeSignatureDenominator(null, Integer.parseInt(ctx.denominator().getText())));
-            try {
-                addItemToSpine(new SkmCoreSymbol(ctx.getText(), fractionalTimeSignatureBuilder.build()));
-            } catch (IMException e) {
-                throw createException(e);
-            }
+
+            endContextAndAddToSpine(ctx);
         }
 
         @Override
         public void exitModernMeterSymbolSign(skmParser.ModernMeterSymbolSignContext ctx) {
             super.exitModernMeterSymbolSign(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Modern meter symbol sign {0}", ctx.getText());
+
             IMeter meter;
             switch (ctx.getText()) {
                 case "c":
@@ -401,7 +392,7 @@ public class SkmSyntaxDirectedTranslation {
                     throw createException("Unkown meter symbol: " + ctx.getText());
             }
             try {
-                addItemToSpine(new SkmCoreSymbol(ctx.getText(), meter));
+                this.addItemToSpine(new SkmCoreSymbol(ctx.getText(), meter));
             } catch (IMException e) {
                 throw createException(e);
             }
@@ -410,7 +401,9 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void exitMensuration(skmParser.MensurationContext ctx) {
             super.exitMensuration(ctx);
-            IMensurationBuilder mensurationBuilder = new IMensurationBuilder(coreAbstractFactory);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Mensuration {0}", ctx.getText());
+
             EMensurations mensuration;
             switch (ctx.getText()) {
                 case "C":
@@ -444,27 +437,31 @@ public class SkmSyntaxDirectedTranslation {
                     throw createException("Unkown mensuration: " + ctx.getText());
 
             }
-            mensurationBuilder.from(mensuration);
+            IMensuration mensurationObject = coreAbstractFactory.createMensuration(null, mensuration);
             try {
-                addItemToSpine(new SkmCoreSymbol(ctx.getText(), mensurationBuilder.build()));
+                addItemToSpine(new SkmCoreSymbol(ctx.getText(), mensurationObject));
             } catch (IMException e) {
                 throw createException(e);
             }
         }
 
+        @Override
+        public void enterMetronome(skmParser.MetronomeContext ctx) {
+            super.enterMetronome(ctx);
+            beginContext(ctx, new IMetronomeMarkBuilder(coreAbstractFactory));
 
+        }
 
         @Override
         public void exitMetronome(skmParser.MetronomeContext ctx) {
-            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Metronome {0}", ctx.getText());
             super.exitMetronome(ctx);
-            IMetronomeMarkBuilder metronomeMarkBuilder = new IMetronomeMarkBuilder(coreAbstractFactory);
-            metronomeMarkBuilder.from(coreAbstractFactory.createFigure(null, EFigures.QUARTER));
-            metronomeMarkBuilder.from(coreAbstractFactory.createMetronomeMarkValue(null, Integer.parseInt(ctx.number().getText())));
-            SkmCoreSymbol mm = null;
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Metronome {0}", ctx.getText());
+
             try {
-                mm = new SkmCoreSymbol(ctx.getText(), metronomeMarkBuilder.build());
-                addItemToSpine(mm);
+                IFigure figure = coreAbstractFactory.createFigure(null, EFigures.QUARTER);
+                IMetronomeMarkValue metronomeMarkValue = coreAbstractFactory.createMetronomeMarkValue(null, Integer.parseInt(ctx.number().getText()));
+                IMetronomeMark metronomeMark = coreAbstractFactory.createMetronomeMark(null, figure, null, metronomeMarkValue);
+                addItemToSpine(new SkmCoreSymbol(ctx.getText(), metronomeMark));
             } catch (IMException e) {
                 throw createException(e);
             }
@@ -472,14 +469,16 @@ public class SkmSyntaxDirectedTranslation {
 
         @Override
         public void exitNullInterpretation(skmParser.NullInterpretationContext ctx) {
-            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Null interpretation {0}", ctx.getText());
             super.exitNullInterpretation(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Null interpretation {0}", ctx.getText());
         }
 
         @Override
         public void exitBarLineType(skmParser.BarLineTypeContext ctx) {
             super.exitBarLineType(ctx);
-            barlineTypeBuilder = new IBarlineTypeBuilder(coreAbstractFactory);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Bar line type {0}", ctx.getText());
+
             EBarlineTypes barlineType;
             switch (ctx.getText()) {
                 case "=":
@@ -503,40 +502,32 @@ public class SkmSyntaxDirectedTranslation {
                 default:
                     throw createException("Unkopwn barline type: " + ctx.getText());
             }
-            barlineTypeBuilder.from(barlineType);
+            importingContexts.addObjectToPool(barlineType);
+        }
+
+        @Override
+        public void enterBarline(skmParser.BarlineContext ctx) {
+            super.enterBarline(ctx);
+            beginContext(ctx, new IBarlineBuilder(coreAbstractFactory));
         }
 
         @Override
         public void exitBarline(skmParser.BarlineContext ctx) {
-            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "BarLine {0}", ctx.getText());
             super.exitBarline(ctx);
-
-            IBarlineBuilder barlineBuilder = new IBarlineBuilder(coreAbstractFactory);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "BarLine {0}", ctx.getText());
 
             if (ctx.number() != null) {
-                barlineBuilder.from(coreAbstractFactory.createNumber(null, Integer.parseInt(ctx.number().getText())));
+                importingContexts.addObjectToPool(coreAbstractFactory.createNumber(null, Integer.parseInt(ctx.number().getText())));
             }
 
-            if (barlineTypeBuilder != null) {
-                try {
-                    barlineBuilder.from(barlineTypeBuilder.build());
-                } catch (IMException e) {
-                    throw createException(e);
-                }
-            }
-            try {
-                SkmCoreSymbol skmBarLine = new SkmCoreSymbol(ctx.getText(), barlineBuilder.build());
-                addItemToSpine(skmBarLine);
-            } catch (IMException e) {
-                throw createException(e);
-            }
+            endContextAndAddToSpine(ctx);
         }
 
 
         @Override
         public void exitPlaceHolder(skmParser.PlaceHolderContext ctx) {
-            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Placeholder {0}", ctx.getText());
             super.exitPlaceHolder(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Placeholder {0}", ctx.getText());
         }
 
 
@@ -548,13 +539,16 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void exitMensuralDot(skmParser.MensuralDotContext ctx) {
             super.exitMensuralDot(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Mensural dot {0}", ctx.getText());
+
             //lastAgumentationDots = ctx.augmentationDot()==null?0:ctx.augmentationDot().getChildCount();
         }
 
         @Override
         public void exitMensuralFigure(skmParser.MensuralFigureContext ctx) {
-            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Mensural figure {0}", ctx.getText());
             super.exitMensuralFigure(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Mensural figure {0}", ctx.getText());
 
             //TODO
         }
@@ -562,16 +556,17 @@ public class SkmSyntaxDirectedTranslation {
 
         @Override
         public void exitColoured(skmParser.ColouredContext ctx) {
-            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Mensural coloration {0}", ctx.getText());
+
             super.exitColoured(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Mensural coloration {0}", ctx.getText());
           //  this.lastColoured = new SkmColoration();
         }
 
         @Override
         public void exitMensuralPerfection(skmParser.MensuralPerfectionContext ctx) {
-            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Mensural perfection {0}", ctx.getText());
-            super.exitMensuralPerfection(ctx);
 
+            super.exitMensuralPerfection(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Mensural perfection {0}", ctx.getText());
            /* try {
                 this.lastPerfection = SkmPerfectionFactory.getInstance().create(ctx.getText());
             } catch (IM4Exception e) {
@@ -582,13 +577,17 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void exitModernDuration(skmParser.ModernDurationContext ctx) {
             super.exitModernDuration(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Modern duration {0}", ctx.getText());
 
             // this durationalSingleBuilder will be the pointer to the restBuilder or the noteBuilder (see enterNote, enterRest)
             try {
                 EFigures figure = EFigures.findMeterUnit(Integer.parseInt(ctx.getText()), ENotationTypes.eModern);
+                importingContexts.addObjectToPool(figure);
+
                 int augmentationDots = ctx.augmentationDot().size();
-                durationalSingleBuilder.from(coreAbstractFactory.createFigure(null, figure));
-                durationalSingleBuilder.from(augmentationDots);
+                IDots dots = coreAbstractFactory.createDots(null, augmentationDots);
+                importingContexts.addObjectToPool(dots);
             } catch (IMException e) {
                 throw createException(e);
             }
@@ -596,33 +595,34 @@ public class SkmSyntaxDirectedTranslation {
 
         @Override
         public void enterRest(skmParser.RestContext ctx) {
-            restBuilder = new IRestBuilder(coreAbstractFactory);
-            durationalSingleBuilder = restBuilder; // used the same pointer for rests and notes (for exitDuration rules)
+            super.enterRest(ctx);
+            beginContext(ctx, new IRestBuilder(coreAbstractFactory));
+        }
+
+
+        @Override
+        public void exitRest(skmParser.RestContext ctx) {
+            super.exitRest(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Rest {0}", ctx.getText());
+
+            endContextAndAddToSpine(ctx);
         }
 
         @Override
         public void exitRestLinePosition(skmParser.RestLinePositionContext ctx) {
-          //  this.lastRestLinePosition = Integer.parseInt(ctx.getChild(1).getText());
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Rest line position {0}", ctx.getText());
+
+            //  this.lastRestLinePosition = Integer.parseInt(ctx.getChild(1).getText());
         }
 
         @Override
         public void exitFermata(skmParser.FermataContext ctx) {
             super.exitFermata(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Fermata {0}", ctx.getText());
+
             // lastFermata = new SkmFermata();
-        }
-
-        @Override
-        public void exitRest(skmParser.RestContext ctx) {
-            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Mensural rest {0}", ctx.getText());
-            super.exitRest(ctx);
-
-            try {
-                SkmCoreSymbol skmNote = new SkmCoreSymbol(ctx.getText(), restBuilder.build());
-                addItemToSpine(skmNote);
-            } catch (IMException e) {
-                throw createException(e);
-            }
-
         }
 
 
@@ -640,39 +640,59 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void enterDiatonicPitchAndOctave(skmParser.DiatonicPitchAndOctaveContext ctx) {
             super.enterDiatonicPitchAndOctave(ctx);
-            diatonicPitchBuilder = new IDiatonicPitchBuilder(coreAbstractFactory);
-        }
-
-        private void handleNoteName(String code, int octaveModif) {
-            checkAllNoteNameEqual(code);
-            this.octave = 4 + octaveModif;
-            String noteName = code.substring(0, 1).toUpperCase();
-            diatonicPitchBuilder.from(EDiatonicPitches.valueOf(noteName));
+            beginContext(ctx, new IDiatonicPitchBuilder(coreAbstractFactory));
         }
 
         @Override
-        public void enterTrebleNotes(skmParser.TrebleNotesContext ctx) {
-            super.enterTrebleNotes(ctx);
+        public void exitDiatonicPitchAndOctave(skmParser.DiatonicPitchAndOctaveContext ctx) {
+            super.exitDiatonicPitchAndOctave(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Diatonic pitch and octave {0}", ctx.getText());
+
+            endContext(ctx);
+        }
+
+
+        private void handleNoteName(String code, int octaveModif) {
+            checkAllNoteNameEqual(code);
+
+            importingContexts.addObjectToPool(coreAbstractFactory.createOctave(null, 4 + octaveModif));
+            String noteName = code.substring(0, 1).toUpperCase();
+            importingContexts.addObjectToPool(EDiatonicPitches.valueOf(noteName));
+        }
+
+        @Override
+        public void exitTrebleNotes(skmParser.TrebleNotesContext ctx) {
+            super.exitTrebleNotes(ctx);
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "TrebleNotes {0}", ctx.getText());
             handleNoteName(ctx.getText(), ctx.getText().length() - 1);
         }
 
         @Override
-        public void enterBassNotes(skmParser.BassNotesContext ctx) {
-            super.enterBassNotes(ctx);
-            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "BassNotes {0}", ctx.getText());
-            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "TrebleNotes {0}", ctx.getText());
+        public void exitBassNotes(skmParser.BassNotesContext ctx) {
+            super.exitBassNotes(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Bass notes {0}", ctx.getText());
             handleNoteName(ctx.getText(), -ctx.getText().length());
         }
 
         @Override
         public void enterNote(skmParser.NoteContext ctx) {
-            noteBuilder = new INoteBuilder(coreAbstractFactory);
-            durationalSingleBuilder = noteBuilder; // used the same pointer for rests and notes (for exitDuration rules)
+            beginContext(ctx, new INoteBuilder(coreAbstractFactory));
+        }
+
+
+
+        @Override
+        public void exitNote(skmParser.NoteContext ctx) {
+            super.exitNote(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Note {0}", ctx.getText());
+
+            endContextAndAddToSpine(ctx);
         }
 
         @Override
         public void exitStem(skmParser.StemContext ctx) {
+            super.exitStem(ctx);
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Stem {0}", ctx.getText());
             /*try {
                 lastStemDirection = SkmStemFactory.getInstance().create(ctx.getText());
@@ -683,21 +703,6 @@ public class SkmSyntaxDirectedTranslation {
 
 
         @Override
-        public void exitNote(skmParser.NoteContext ctx) {
-            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Note {0}", ctx.getText());
-            super.exitNote(ctx);
-
-            try {
-                noteBuilder.from(pitchBuilder.build());
-                SkmCoreSymbol skmNote = new SkmCoreSymbol(ctx.getText(), noteBuilder.build());
-                addItemToSpine(skmNote);
-            } catch (IMException e) {
-                throw createException(e);
-            }
-
-        }
-
-        @Override
         public void enterChord(skmParser.ChordContext ctx) {
             super.enterChord(ctx);
             //chordNotes = new ArrayList<>();
@@ -706,6 +711,9 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void exitChord(skmParser.ChordContext ctx) {
             super.exitChord(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Chord {0}", ctx.getText());
+
 /*
             // check all notes in chord are the same duration
             if (chordNotes.size() <= 1) {
@@ -732,71 +740,64 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void exitAlterationDisplay(skmParser.AlterationDisplayContext ctx) {
             super.exitAlterationDisplay(ctx);
-            alterationDisplayTypeBuilder = new IAlterationDisplayTypeBuilder(coreAbstractFactory);
-            alterationDisplayTypeBuilder.from(EAlterationDisplayTypes.valueOf(ctx.getText()));
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Alteration display {0}", ctx.getText());
+
+            importingContexts.addObjectToPool(EAlterationDisplayTypes.valueOf(ctx.getText()));
         }
 
         @Override
         public void enterAlteration(skmParser.AlterationContext ctx) {
             super.enterAlteration(ctx);
-            alterationBuilder = new IAlterationBuilder(coreAbstractFactory);
+            beginContext(ctx, new IAlterationBuilder(coreAbstractFactory));
         }
 
         @Override
         public void exitAlteration(skmParser.AlterationContext ctx) {
             super.enterAlteration(ctx);
-            try {
-                alterationBuilder.from(accidentalSymbolBuilder.build());
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Alteration {0}", ctx.getText());
 
-                if (alterationDisplayTypeBuilder != null) {
-                    alterationBuilder.from(alterationDisplayTypeBuilder.build());
-                }
-            } catch (IMException e) {
-                throw createException(e);
-            }
+            endContext(ctx);
         }
 
         @Override
         public void enterPitch(skmParser.PitchContext ctx) {
             super.enterPitch(ctx);
-            pitchBuilder = new IPitchBuilder(coreAbstractFactory);
+            beginContext(ctx, new IPitchBuilder(coreAbstractFactory));
         }
 
         @Override
         public void exitPitch(skmParser.PitchContext ctx) {
             super.exitPitch(ctx);
-            try {
-                pitchBuilder.from(octave);
-                pitchBuilder.from(diatonicPitchBuilder.build());
-                if (alterationBuilder != null) {
-                    pitchBuilder.from(alterationBuilder.build());
-                }
-            } catch (IMException e) {
-                throw createException(e);
-            }
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Pitch {0}", ctx.getText());
+
+            endContext(ctx);
         }
 
         @Override
         public void enterCustos(skmParser.CustosContext ctx) {
             super.enterCustos(ctx);
-            custosBuilder = new ICustosBuilder(coreAbstractFactory);
+            beginContext(ctx, new IPitchBuilder(coreAbstractFactory));
         }
 
         @Override
         public void exitCustos(skmParser.CustosContext ctx) {
             super.exitCustos(ctx);
-            try {
-                custosBuilder.from(pitchBuilder.build());
-                addItemToSpine(new SkmCoreSymbol(ctx.getText(), custosBuilder.build()));
-            } catch (IMException e) {
-                throw createException(e);
-            }
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Custos {0}", ctx.getText());
+
+            endContextAndAddToSpine(ctx);
         }
 
 
         @Override
         public void exitLyricsText(skmParser.LyricsTextContext ctx) {
             super.exitLyricsText(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Lyrics {0}", ctx.getText());
+
             //addItemToSpine(new SkmLyrics(ctx.getText()));
         }
 
@@ -820,6 +821,9 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void exitGraphicalToken(skmParser.GraphicalTokenContext ctx) {
             super.exitGraphicalToken(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Graphical token {0}", ctx.getText());
+
             // TODO
             /*if (associatedIDS != null && !associatedIDS.isEmpty()) {
                 skmMatrix.associateIDSToLastItem(associatedIDS);
@@ -829,30 +833,45 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void exitPlainChant(skmParser.PlainChantContext ctx) {
             super.exitPlainChant(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Plain chant {0}", ctx.getText());
+
             // TODO
         }
 
         @Override
         public void exitSpineTerminator(skmParser.SpineTerminatorContext ctx) {
             super.exitSpineTerminator(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Spine terminator {0}", ctx.getText());
+
             // throw new UnsupportedOperationException("TODO"); //TODO operaciones spine
         }
 
         @Override
         public void exitSpineAdd(skmParser.SpineAddContext ctx) {
             super.exitSpineAdd(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Spine add {0}", ctx.getText());
+
             throw new UnsupportedOperationException("TODO"); //TODO operaciones spine
         }
 
         @Override
         public void exitSpineSplit(skmParser.SpineSplitContext ctx) {
             super.exitSpineSplit(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Spine split {0}", ctx.getText());
+
             throw new UnsupportedOperationException("TODO"); //TODO operaciones spine
         }
 
         @Override
         public void exitSpineJoin(skmParser.SpineJoinContext ctx) {
             super.exitSpineJoin(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Spine join {0}", ctx.getText());
+
             throw new UnsupportedOperationException("TODO"); //TODO operaciones spine
         }
     }

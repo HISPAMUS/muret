@@ -2,6 +2,8 @@ package es.ua.dlsi.grfia.moosicae.io.musicxml.importer.elements;
 
 import es.ua.dlsi.grfia.moosicae.core.ICoreObject;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
+import es.ua.dlsi.grfia.moosicae.io.skm.SkmExporterVisitor;
+import es.ua.dlsi.grfia.moosicae.io.skm.SkmExporterVisitorTokenParam;
 
 import java.util.Optional;
 

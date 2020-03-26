@@ -14,16 +14,22 @@ import java.util.HashMap;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 21/03/2020
  */
-public class ImportingContexts {
+public class ImportingContexts<BuiltType> {
     private final ImportedObjectPool objectPool;
-    private final HashMap<String, IObjectBuilder<?>> objectBuilders;
+    private final HashMap<String, IObjectBuilder<? extends BuiltType>> objectBuilders;
 
     public ImportingContexts() {
         objectBuilders = new HashMap<>();
         objectPool = new ImportedObjectPool();
     }
 
-    public IObjectBuilder<?> begin(String contextName, IObjectBuilder<?> coreObjectBuilder) {
+    /**
+     * It starts a context associating the context name to the builder
+     * @param contextName
+     * @param coreObjectBuilder
+     * @return
+     */
+    public <BuilderType extends IObjectBuilder<? extends BuiltType>> IObjectBuilder<? extends BuiltType> begin(String contextName, BuilderType coreObjectBuilder) {
         objectBuilders.put(contextName, coreObjectBuilder);
         return coreObjectBuilder;
     }
@@ -32,19 +38,44 @@ public class ImportingContexts {
         return objectBuilders.containsKey(contextName);
     }
 
-    public Object end(String contextName) throws IMException {
-        IObjectBuilder<?> coreObjectBuilder = objectBuilders.get(contextName);
+    /**
+     * It looks for the builder associated to the context name, then it assigns all elements in the object pool that can be
+     * assigned (with the 'from' or 'add' method) to the builder. Finally, the builder builds the object that is pushed
+     * into the object pool
+     * @param contextName
+     * @return
+     * @throws IMException
+     */
+    public BuiltType end(String contextName) throws IMException {
+        IObjectBuilder<? extends BuiltType> coreObjectBuilder = objectBuilders.get(contextName);
         if (coreObjectBuilder == null) {
             throw new IMException("Cannot find a core object builder for the context with name '" + contextName + "'");
         }
         objectPool.populate(coreObjectBuilder);
-        Object coreObject = coreObjectBuilder.build();
+        BuiltType coreObject = coreObjectBuilder.build();
         objectPool.add(coreObject);
         return coreObject;
     }
 
+    /**
+     * It just adds an object to the pool to be used by the first active context that can make use of it given the object type
+     * @param object
+     */
     public void addObjectToPool(Object object) {
         this.objectPool.add(object);
+    }
+
+    /**
+     * This is a collapsed version of begin, addObjectToPool and end methods for very simple builders that do not have children
+     * @param coreObjectBuilder
+     * @param objects
+     */
+    public <BuilderType extends IObjectBuilder<? extends BuiltType>> BuiltType beginEnd(BuilderType coreObjectBuilder, Object ... objects) throws IMException {
+        begin(coreObjectBuilder.getClass().getName(), coreObjectBuilder);
+        for (Object object: objects) {
+            addObjectToPool(object);
+        }
+        return end(coreObjectBuilder.getClass().getName());
     }
 
 }

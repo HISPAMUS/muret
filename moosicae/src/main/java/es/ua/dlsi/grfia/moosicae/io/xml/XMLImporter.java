@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.io.xml;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
+import es.ua.dlsi.grfia.moosicae.core.ICoreObject;
 import es.ua.dlsi.grfia.moosicae.core.IScore;
 import es.ua.dlsi.grfia.moosicae.core.builders.*;
 import es.ua.dlsi.grfia.moosicae.io.*;
@@ -26,7 +27,7 @@ import java.util.logging.Logger;
 public abstract class XMLImporter {
     private Stack<String> elementStack;
     private Stack<IImporterAdapter<?, XMLImporterParam>> builderStack;
-    protected ImportingContexts importingContexts;
+    protected ImportingContexts<ICoreObject> importingContexts;
     protected final ICoreAbstractFactory coreAbstractFactory;
     protected final CoreObjectBuilderSuppliers coreObjectBuilderSuppliers;
 
@@ -91,7 +92,7 @@ public abstract class XMLImporter {
         // and insert them into the INoteBuilder
         if (coreObjectBuilderSuppliers.contains(elementName)) {
             IImporterAdapter<?, XMLImporterParam> coreObjectBuilder = (IImporterAdapter<?, XMLImporterParam>) importingContexts.begin(elementName,
-                    (IObjectBuilder<?>) coreObjectBuilderSuppliers.create(elementName, coreAbstractFactory));
+                    (IObjectBuilder<ICoreObject>) coreObjectBuilderSuppliers.create(elementName, coreAbstractFactory));
             builderStack.push(coreObjectBuilder);
             // coreObjectBuilder.doImport(xmlImporterVisitor, new XMLImporterVisitorParam(startElement.getAttributes()));
             XMLImporterParam importerParam = new XMLImporterParam(startElement.getAttributes());

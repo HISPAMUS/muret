@@ -92,11 +92,12 @@ public class SkmDocument2IScore {
 
     private void processCoreSymbol(IVoice voice, SkmCoreSymbol skmCoreSymbol) throws IMException {
         IStaff voiceStaff = voiceStaves.get(voice);
-        if (voiceStaff == null) {
-            throw new IMException("There is no staff for voice " + voice);
+        if (skmCoreSymbol.getSymbol() instanceof IVoiced) {
+            voice.addItem((IVoiced) skmCoreSymbol.getSymbol());
+            if (voiceStaff != null) {
+                voiceStaff.put((ICoreItem) skmCoreSymbol.getSymbol());
+            }
         }
-        voice.addItem(skmCoreSymbol.getSymbol());
-        voiceStaff.put(skmCoreSymbol.getSymbol());
     }
 
     private void processStaff(IVoice voice, SkmStaff skmStaff) {

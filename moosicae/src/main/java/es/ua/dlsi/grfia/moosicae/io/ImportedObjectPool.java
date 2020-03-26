@@ -37,7 +37,7 @@ public class ImportedObjectPool {
     }
 
     /**
-     * THis method contains the "magic". It tries to find setters and methods starting with "add" in order to add elements to lists
+     * This method contains the "magic". It tries to find setters and methods starting with "add" in order to add elements to lists
      * @param target
      * @throws IMException
      */

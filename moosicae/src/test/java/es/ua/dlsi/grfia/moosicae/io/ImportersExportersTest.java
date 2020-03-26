@@ -10,6 +10,8 @@ import es.ua.dlsi.grfia.moosicae.io.mei.MEIExporter;
 import es.ua.dlsi.grfia.moosicae.io.mei.MEIImporter;
 import es.ua.dlsi.grfia.moosicae.io.musicxml.MusicXMLExporter;
 import es.ua.dlsi.grfia.moosicae.io.musicxml.MusicXMLImporter;
+import es.ua.dlsi.grfia.moosicae.io.skm.SkmExporter;
+import es.ua.dlsi.grfia.moosicae.io.skm.SkmImporter;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -58,8 +60,7 @@ public class ImportersExportersTest {
         IScore score = createScore();
         testExportImport(score, new MEIExporter(), new MEIImporter(abstractFactory));
         testExportImport(score, new MusicXMLExporter(), new MusicXMLImporter(abstractFactory));
-        //testExportImport(score, new SkmExporter(), new SkmImporter(abstractFactory));
-
+        testExportImport(score, new SkmExporter(), new SkmImporter(abstractFactory));
     }
 
 

@@ -2,6 +2,8 @@ package es.ua.dlsi.grfia.moosicae.io.musicxml.importer.elements;
 
 import es.ua.dlsi.grfia.moosicae.core.IPart;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
+import es.ua.dlsi.grfia.moosicae.io.skm.SkmExporterVisitor;
+import es.ua.dlsi.grfia.moosicae.io.skm.SkmExporterVisitorTokenParam;
 
 import javax.validation.constraints.NotNull;
 
@@ -25,7 +27,6 @@ public class MxmlScorePartWise extends MxmlObject {
     public MxmlScorePartWise clone() {
         return new MxmlScorePartWise(null, coreParts, mxmlPartsContents);
     }
-
 
     public IPart[] getCoreParts() {
         return coreParts;

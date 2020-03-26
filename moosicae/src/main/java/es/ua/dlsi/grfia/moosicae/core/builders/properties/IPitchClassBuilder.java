@@ -3,6 +3,7 @@ package es.ua.dlsi.grfia.moosicae.core.builders.properties;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.CoreObjectBuilder;
+import es.ua.dlsi.grfia.moosicae.core.enums.EDiatonicPitches;
 import es.ua.dlsi.grfia.moosicae.core.properties.IAccidentalSymbol;
 import es.ua.dlsi.grfia.moosicae.core.properties.IDiatonicPitch;
 import es.ua.dlsi.grfia.moosicae.core.properties.IPitchClass;
@@ -21,6 +22,11 @@ public class IPitchClassBuilder extends CoreObjectBuilder<IPitchClass> {
 
     public IPitchClassBuilder from(IDiatonicPitch diatonicPitch) {
         this.diatonicPitch = diatonicPitch;
+        return this;
+    }
+
+    public IPitchClassBuilder from(EDiatonicPitches diatonicPitch) {
+        this.diatonicPitch = coreObjectFactory.createDiatonicPitch(null, diatonicPitch);
         return this;
     }
 
