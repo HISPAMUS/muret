@@ -29,7 +29,7 @@ public class TempusImperfectumCumProlationeImperfecta extends Mensuration implem
 
 
     @Override
-    public <InputOutputType> void export(IExporterVisitor exportVisitor, InputOutputType inputOutput) {
+    public <InputOutputType> void export(IExporterVisitor<InputOutputType> exportVisitor, InputOutputType inputOutput) {
 
     }
 

@@ -25,7 +25,7 @@ public class ProportioChangeTripla extends Mensuration implements IProportioChan
     }
 
     @Override
-    public <InputOutputType> void export(IExporterVisitor exportVisitor, InputOutputType inputOutput) {
+    public <InputOutputType> void export(IExporterVisitor<InputOutputType> exportVisitor, InputOutputType inputOutput) {
 
     }
 

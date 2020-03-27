@@ -54,7 +54,7 @@ public class ProportioSesquialtera extends Mensuration implements IProportioSesq
 	}
 
 	@Override
-	public <InputOutputType> void export(IExporterVisitor exportVisitor, InputOutputType inputOutput) {
+	public <InputOutputType> void export(IExporterVisitor<InputOutputType> exportVisitor, InputOutputType inputOutput) {
 
 	}
 }

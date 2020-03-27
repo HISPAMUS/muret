@@ -21,7 +21,7 @@ public interface ICoreAbstractFactory {
     IAccidentalSymbol createAccidentalSymbol(IId id, @NotNull EAccidentalSymbols accidentalSymbol);
     IBarline createBarline(IId id,  INumber barNumber,  IBarlineType barlineType);
     IBarlineType createBarlineType(IId id, @NotNull EBarlineTypes barlineType);
-    IChord createChord(IId id, @NotNull IFigure figures,  IDots dots, @NotNull IPitch [] pitches);
+    IChord createChord(IId id, @NotNull IFigure figures,  IDots dots, @NotNull INoteHead [] noteHead);
     IClef createClef(IId id, @NotNull IClefLine line, @NotNull IClefSign clefSign);
     IClefLine createClefLine(IId id, @NotNull Integer line);
     IClefSign createClefSign(IId id, @NotNull EClefSigns clefSign);
@@ -52,7 +52,16 @@ public interface ICoreAbstractFactory {
     IName createName(IId id, @NotNull String value);
     INotationType createNotationType(IId id, @NotNull ENotationTypes notationType);
     INumber createNumber(IId id, @NotNull Integer value);
-    INote createNote(IId id, IFigure figures,  IDots dots, @NotNull IPitch pitch);
+    INote createNote(IId id, IFigure figures,  IDots dots, @NotNull INoteHead noteHead);
+
+    /**
+     *
+     * @param id
+     * @param pitch
+     * @param tieToNext The note head (right) to which this note head (left) will be tied to
+     * @return
+     */
+    INoteHead createNoteHead(IId id, @NotNull IPitch pitch, ITie tieToNext);
     IOctave createOctave(IId id, @NotNull Integer number);
 
     /**
@@ -98,6 +107,7 @@ public interface ICoreAbstractFactory {
     IStaffGroup createStaffGroup(@NotNull IStaffGroup staffGroup, IId id);
     IStaffLineCount createStaffLineCount(int value);
 
+    ITie createTie(IId  id, ITieOrientation tieOrientation);
     ITimeSignatureNumerator createTimeSignatureNumerator(IId id, @NotNull Integer value);
     ITimeSignatureDenominator createTimeSignatureDenominator(IId id, @NotNull Integer value);
     ITitle createTitle(IId id, @NotNull String title);

@@ -42,7 +42,7 @@ public class TestNotNullAnnotations {
         ICoreAbstractFactory coreAbstractFactory = new CoreFactory().create();
         // name element is required
         IName name = coreAbstractFactory.createName(coreAbstractFactory.createId(), null);
-        fail("It should not arrive here");
+        fail("It should not arrive here: recompile with Maven and reimport project in IDE");
     }
 
     @Test (expected = java.lang.IllegalArgumentException.class)
@@ -50,7 +50,7 @@ public class TestNotNullAnnotations {
         ICoreAbstractFactory coreAbstractFactory = new CoreFactory().create();
         // name element is required
         IClef clef =  coreAbstractFactory.createClef(null, null, null);
-        fail("It should not arrive here");
+        fail("It should not arrive here: recompile with Maven and reimport project in IDE");
     }
 
     @Test (expected = java.lang.IllegalArgumentException.class)
@@ -58,7 +58,6 @@ public class TestNotNullAnnotations {
         ICoreAbstractFactory coreAbstractFactory = new CoreFactory().create();
         // name element is required
         ICommonAlterationKey key = coreAbstractFactory.createCommonAlterationKey(coreAbstractFactory.createId(), null, null, coreAbstractFactory.createMode(coreAbstractFactory.createId(), EModes.major));
-        fail("It should not arrive here");
+        fail("It should not arrive here: recompile with Maven and reimport project in IDE");
     }
-
 }

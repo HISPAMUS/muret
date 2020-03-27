@@ -5,6 +5,7 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.properties.IName;
+import es.ua.dlsi.grfia.moosicae.core.properties.INoteHead;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import javax.validation.constraints.NotNull;
 
@@ -43,6 +44,16 @@ public class Voice extends CoreObject implements IVoice {
     }
 
     @Override
+    public void tie(INoteHead prev, INoteHead next) throws IMException {
+        //TODO
+    }
+
+    @Override
+    public void untie(INoteHead prev, INoteHead next) throws IMException {
+//TODO
+    }
+
+    @Override
     public Voice clone() {
         Voice voice = new Voice(null, name);
         for (IVoiced voiced: items) {
@@ -52,7 +63,7 @@ public class Voice extends CoreObject implements IVoice {
     }
 
     @Override
-    public <InputOutputType> void export(IExporterVisitor exportVisitor, InputOutputType inputOutput) throws IMException {
+    public <InputOutputType> void export(IExporterVisitor<InputOutputType> exportVisitor, InputOutputType inputOutput) throws IMException {
         exportVisitor.exportVoice(this, inputOutput);
     }
 

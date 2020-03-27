@@ -48,7 +48,7 @@ public class MetronomeMark extends CoreItem implements IMetronomeMark {
     }
 
     @Override
-    public <InputOutputType> void export(IExporterVisitor exportVisitor, InputOutputType inputOutput) throws IMException {
+    public <InputOutputType> void export(IExporterVisitor<InputOutputType> exportVisitor, InputOutputType inputOutput) throws IMException {
         exportVisitor.exportMetronomeMark(this, inputOutput);
     }
 

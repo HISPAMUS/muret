@@ -652,7 +652,6 @@ public class SkmSyntaxDirectedTranslation {
             endContext(ctx);
         }
 
-
         private void handleNoteName(String code, int octaveModif) {
             checkAllNoteNameEqual(code);
 
@@ -678,6 +677,7 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void enterNote(skmParser.NoteContext ctx) {
             beginContext(ctx, new INoteBuilder(coreAbstractFactory));
+            this.importingContexts.begin("noteHead", new INoteHeadBuilder(coreAbstractFactory));
         }
 
 
@@ -687,6 +687,11 @@ public class SkmSyntaxDirectedTranslation {
             super.exitNote(ctx);
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Note {0}", ctx.getText());
 
+            try {
+                this.importingContexts.end("noteHead");
+            } catch (IMException e) {
+                throw createException(e);
+            }
             endContextAndAddToSpine(ctx);
         }
 

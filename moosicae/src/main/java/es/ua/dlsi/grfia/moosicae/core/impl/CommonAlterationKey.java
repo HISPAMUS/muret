@@ -71,7 +71,7 @@ public class CommonAlterationKey extends Key implements ICommonAlterationKey {
     }
 
     @Override
-    public <InputOutputType> void export(IExporterVisitor exportVisitor, InputOutputType inputOutput) throws IMException {
+    public <InputOutputType> void export(IExporterVisitor<InputOutputType> exportVisitor, InputOutputType inputOutput) throws IMException {
         exportVisitor.exportCommonAlterationKey(this, inputOutput);
     }
 }

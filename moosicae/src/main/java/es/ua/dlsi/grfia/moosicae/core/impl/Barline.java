@@ -39,7 +39,7 @@ public class Barline extends CoreItem implements IBarline {
     }
 
     @Override
-    public <InputOutputType> void export(IExporterVisitor exportVisitor, InputOutputType inputOutput) throws IMException {
+    public <InputOutputType> void export(IExporterVisitor<InputOutputType> exportVisitor, InputOutputType inputOutput) throws IMException {
         exportVisitor.exportBarline(this, inputOutput);
     }
 

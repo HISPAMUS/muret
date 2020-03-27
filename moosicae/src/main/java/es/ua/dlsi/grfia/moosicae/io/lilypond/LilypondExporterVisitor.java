@@ -29,7 +29,7 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
     @Override
     public void exportNote(INote note, LilypondExporterVisitorParam inputOutput) throws IMException {
         inputOutput.startString();
-        exportPitch(note.getPitch(), inputOutput);
+        exportNoteHead(note.getNoteHead(), inputOutput);
         exportFigure(note.getFigure(), inputOutput);
         if (note.getDots().isPresent()) {
             exportDots(note.getDots().get(), inputOutput);
@@ -160,6 +160,11 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
             exportAlteration(pitch.getAlteration().get(), inputOutput);
         }
         exportOctave(pitch.getOctave(), inputOutput);
+    }
+
+    @Override
+    public void exportNoteHead(INoteHead head, LilypondExporterVisitorParam inputOutput) throws IMException {
+        exportPitch(head.getPitch(), inputOutput); //TODO ties
     }
 
     @Override

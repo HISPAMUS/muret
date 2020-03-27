@@ -35,8 +35,8 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IChord createChord(IId id, IFigure figure,  IDots dots, IPitch[] pitches) {
-        return new Chord(id, figure, dots, pitches);
+    public IChord createChord(IId id, IFigure figure,  IDots dots, INoteHead[] noteHeads) {
+        return new Chord(id, figure, dots, noteHeads);
     }
 
     @Override
@@ -233,8 +233,13 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public INote createNote(IId id, IFigure figure,  IDots dots, IPitch pitch) {
-        return new Note(id, figure, dots, pitch);
+    public INote createNote(IId id, IFigure figure,  IDots dots, INoteHead noteHead) {
+        return new Note(id, figure, dots, noteHead);
+    }
+
+    @Override
+    public INoteHead createNoteHead(IId id, @NotNull IPitch pitch, ITie tiedToNext) {
+        return new NoteHead(id, pitch, tiedToNext);
     }
 
 
@@ -324,6 +329,11 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     @Override
     public IStaffLineCount createStaffLineCount(int value) {
         return new StaffLineCount(null, value);
+    }
+
+    @Override
+    public ITie createTie(IId id, ITieOrientation tieOrientation) {
+        return new Tie(id, tieOrientation);
     }
 
     @Override

@@ -44,7 +44,7 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
     public void exportNote(INote note, XMLExporterVisitorParam inputOutput) throws IMException {
         XMLElement xmlNote = new XMLElement("note");
         XMLExporterVisitorParam XMLExporterVisitorParam = new XMLExporterVisitorParam(XMLParamExportMode.element, xmlNote);
-        exportPitch(note.getPitch(), XMLExporterVisitorParam);
+        exportNoteHead(note.getNoteHead(), XMLExporterVisitorParam);
         exportFigure(note.getFigure(), XMLExporterVisitorParam);
         if (note.getDots().isPresent()) {
             exportDots(note.getDots().get(), XMLExporterVisitorParam);
@@ -199,6 +199,12 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }
 
+    }
+
+    @Override
+    public void exportNoteHead(INoteHead noteHead, XMLExporterVisitorParam inputOutput) throws IMException {
+        //TODO ties
+        exportPitch(noteHead.getPitch(), inputOutput);
     }
 
     @Override

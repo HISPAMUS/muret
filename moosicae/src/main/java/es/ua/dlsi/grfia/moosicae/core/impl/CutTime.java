@@ -38,7 +38,7 @@ public class CutTime extends FractionalTimeSignature implements ICutTime {
     }
 
     @Override
-    public <InputOutputType> void export(IExporterVisitor exportVisitor, InputOutputType inputOutput) throws IMException {
+    public <InputOutputType> void export(IExporterVisitor<InputOutputType> exportVisitor, InputOutputType inputOutput) throws IMException {
         exportVisitor.exportCutTime(this, inputOutput);
     }
 }

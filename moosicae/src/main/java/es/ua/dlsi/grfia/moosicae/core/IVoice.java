@@ -1,6 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.core;
 
+import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.properties.IName;
+import es.ua.dlsi.grfia.moosicae.core.properties.INoteHead;
 
 import java.util.Optional;
 
@@ -13,4 +15,7 @@ public interface IVoice extends IVoiced {
     Optional<IName> getName();
     IVoiced[] getItems();
     void addItem(IVoiced voiced);
+    void tie(INoteHead prev, INoteHead next) throws IMException;
+    void untie(INoteHead prev, INoteHead next) throws IMException;
+
 }

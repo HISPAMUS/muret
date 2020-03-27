@@ -10,6 +10,7 @@ import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.core.enums.EDiatonicPitches;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
 import es.ua.dlsi.grfia.moosicae.core.properties.IAlteration;
+import es.ua.dlsi.grfia.moosicae.core.properties.INoteHead;
 import es.ua.dlsi.grfia.moosicae.io.IImporterAdapter;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
 
@@ -24,7 +25,6 @@ public class MEINoteBuilder extends INoteBuilder implements IImporterAdapter<INo
      * In MEI the alteration is child of the note because there is no pitch element inside note
      */
     private IAlteration alteration;
-
     private IPitchBuilder pitchBuilder;
 
     public MEINoteBuilder(ICoreAbstractFactory coreObjectFactory) {
@@ -48,7 +48,7 @@ public class MEINoteBuilder extends INoteBuilder implements IImporterAdapter<INo
         }
 
         if (xmlImporterParam.hasAttributes()) { // pname... are included as parameters
-            this.pitchBuilder = new IPitchBuilder(coreObjectFactory);
+            pitchBuilder = new IPitchBuilder(coreObjectFactory);
             Optional<EDiatonicPitches> diatonicPitch = MEIAttributesParsers.getInstance().parseDiatonicPitch(xmlImporterParam);
             if (diatonicPitch.isPresent()) {
                 pitchBuilder.from(diatonicPitch.get());
@@ -66,7 +66,8 @@ public class MEINoteBuilder extends INoteBuilder implements IImporterAdapter<INo
                 pitchBuilder.from(alterationBuilder.build());
             }
 
-            from(pitchBuilder.build());
+            INoteHead noteHead = coreObjectFactory.createNoteHead(null, pitchBuilder.build(), null); //TODO ties
+            from(noteHead);
         }
     }
 
@@ -75,7 +76,8 @@ public class MEINoteBuilder extends INoteBuilder implements IImporterAdapter<INo
         if (this.pitchBuilder != null) {
             if (alteration != null) {
                 this.pitchBuilder.from(alteration);
-                this.from(this.pitchBuilder.build());
+                INoteHead noteHead = coreObjectFactory.createNoteHead(null, pitchBuilder.build(), null); //TODO ties;
+                this.from(noteHead);
             }
         } else {
             throw new IMException("Missing pitch builder");

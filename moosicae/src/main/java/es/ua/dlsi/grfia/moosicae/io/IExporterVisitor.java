@@ -31,6 +31,7 @@ public interface IExporterVisitor<InputOutputType>  {
     void exportAlteration(IAlteration alteration, InputOutputType inputOutput) throws IMException;
     void exportPitchClass(IPitchClass pitchClass, InputOutputType inputOutput) throws IMException;
     void exportPitch(IPitch pitch, InputOutputType inputOutput) throws IMException;
+    void exportNoteHead(INoteHead noteHead, InputOutputType inputOutput) throws IMException;
     void exportDots(IDots dots, InputOutputType inputOutput) throws IMException;
     void exportOctave(IOctave octave, InputOutputType inputOutput) throws IMException;
     void exportFigure(IFigure figures, InputOutputType inputOutput) throws IMException;

@@ -8,6 +8,7 @@ import es.ua.dlsi.grfia.moosicae.core.builders.IChordBuilder;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IDiatonicPitchBuilder;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IFigureBuilder;
 import es.ua.dlsi.grfia.moosicae.core.builders.IPitchBuilder;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.INoteHeadBuilder;
 import es.ua.dlsi.grfia.moosicae.core.enums.EDiatonicPitches;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
 import org.junit.Test;
@@ -33,21 +34,25 @@ public class ImportingContextsTest {
         importingContexts.addObjectToPool(EFigures.WHOLE);
         importingContexts.end("figure");
 
+        importingContexts.begin("noteHead", new INoteHeadBuilder(coreFactory));
         importingContexts.begin("pitch", new IPitchBuilder(coreFactory));
         importingContexts.addObjectToPool(coreFactory.createOctave(coreFactory.createId(), 4));
         importingContexts.begin("diatonicPitch", new IDiatonicPitchBuilder(coreFactory));
         importingContexts.addObjectToPool(EDiatonicPitches.B);
         importingContexts.end("diatonicPitch");
         importingContexts.end("pitch");
+        importingContexts.end("noteHead");
 
+        importingContexts.begin("noteHead", new INoteHeadBuilder(coreFactory));
         importingContexts.begin("pitch", new IPitchBuilder(coreFactory));
         importingContexts.addObjectToPool(coreFactory.createOctave(coreFactory.createId(), 5));
         importingContexts.begin("diatonicPitch", new IDiatonicPitchBuilder(coreFactory));
         importingContexts.addObjectToPool(EDiatonicPitches.D);
         importingContexts.end("diatonicPitch");
         importingContexts.end("pitch");
+        importingContexts.end("noteHead");
 
         IChord chord = (IChord) importingContexts.end("chord");
         System.out.println(chord.toString());
-        assertEquals(2, chord.getPitches().length);
+        assertEquals(2, chord.getNoteHeads().length);
     }}

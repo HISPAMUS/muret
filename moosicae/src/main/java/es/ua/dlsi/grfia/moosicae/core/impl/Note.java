@@ -1,13 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
-import es.ua.dlsi.grfia.moosicae.core.properties.IDots;
-import es.ua.dlsi.grfia.moosicae.core.properties.IFigure;
-import es.ua.dlsi.grfia.moosicae.core.properties.IId;
-import es.ua.dlsi.grfia.moosicae.core.properties.IPitch;
+import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import javax.validation.constraints.NotNull;
 
@@ -17,26 +12,26 @@ import javax.validation.constraints.NotNull;
  */
 public class Note extends DurationalSingle implements INote {
     @NotNull
-    private final IPitch pitch;
+    private final INoteHead noteHead;
 
-    Note(IId id, @NotNull IFigure figure,  IDots dots, @NotNull IPitch pitch) {
+    Note(IId id, @NotNull IFigure figure,  IDots dots, @NotNull INoteHead noteHead) {
         super(id, figure, dots);
-        this.pitch = pitch;
+        this.noteHead = noteHead;
     }
 
     @Override
-    public <InputOutputType> void export(IExporterVisitor exportVisitor, InputOutputType inputOutput) throws IMException {
+    public <InputOutputType> void export(IExporterVisitor<InputOutputType> exportVisitor, InputOutputType inputOutput) throws IMException {
         exportVisitor.exportNote(this, inputOutput);
     }
 
     @Override
     public DurationalSingle clone() {
-        return new Note(null, figure, dots, pitch);
+        return new Note(null, figure, dots, noteHead);
     }
 
     @Override
-    public IPitch getPitch() {
-        return pitch;
+    public INoteHead getNoteHead() {
+        return noteHead;
     }
 
     @Override
@@ -47,20 +42,20 @@ public class Note extends DurationalSingle implements INote {
 
         Note note = (Note) o;
 
-        return pitch.equals(note.pitch);
+        return noteHead.equals(note.noteHead);
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + pitch.hashCode();
+        result = 31 * result + noteHead.hashCode();
         return result;
     }
 
     @Override
     public String toString() {
         return "Note{" +
-                "pitch=" + pitch +
+                "pitch=" + noteHead +
                 "} " + super.toString();
     }
 }

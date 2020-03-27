@@ -16,20 +16,20 @@ import es.ua.dlsi.grfia.moosicae.core.properties.*;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class INoteBuilder extends IDurationalSingleBuilder<INote> {
-    private IPitch pitch;
+    protected INoteHead noteHead;
 
     public INoteBuilder(ICoreAbstractFactory coreObjectFactory) {
         super(coreObjectFactory);
     }
 
-    public INoteBuilder from(IPitch pitch) {
-        this.pitch = pitch;
+    public INoteBuilder from(INoteHead noteHead) {
+        this.noteHead = noteHead;
         return this;
     }
 
     @Override
     public INote build() throws IMException {
-        return coreObjectFactory.createNote(getId(), figure, dots, pitch);
+        return coreObjectFactory.createNote(getId(), figure, dots, noteHead);
     }
 
     /**
@@ -43,7 +43,8 @@ public class INoteBuilder extends IDurationalSingleBuilder<INote> {
             dots = new IDotsBuilder(coreObjectFactory).from(ndots).build();
         }
         IPitch pitch = new IPitchBuilder(coreObjectFactory).from(diatonicPitch).from(alteration).from(octave).build();
-        from(pitch);
+        INoteHead noteHead = coreObjectFactory.createNoteHead(null, pitch, null);
+        from(noteHead);
         from(efigure);
         from(dots);
         return build();

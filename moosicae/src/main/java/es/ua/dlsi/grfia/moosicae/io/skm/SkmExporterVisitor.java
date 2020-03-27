@@ -35,7 +35,7 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
         if (note.getDots().isPresent()) {
             exportDots(note.getDots().get(), inputOutput);
         }
-        exportPitch(note.getPitch(), inputOutput);
+        exportNoteHead(note.getNoteHead(), inputOutput);
         inputOutput.buildAndAddToken(note);
     }
 
@@ -83,8 +83,8 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
         if (chord.getDots().isPresent()) {
             exportDots(chord.getDots().get(), inputOutput);
         }
-        for (IPitch pitch: chord.getPitches()) {
-            exportPitch(pitch, inputOutput);
+        for (INoteHead noteHead: chord.getNoteHeads()) {
+            exportNoteHead(noteHead, inputOutput);
         }
         inputOutput.buildAndAddToken(chord);
     }
@@ -243,6 +243,12 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
         if (pitch.getAlteration().isPresent()) {
             exportAlteration(pitch.getAlteration().get(), inputOutput);
         }
+    }
+
+    @Override
+    public void exportNoteHead(INoteHead noteHead, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+        //TODO ties
+        exportPitch(noteHead.getPitch(), inputOutput);
     }
 
     @Override

@@ -2,11 +2,7 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
-import es.ua.dlsi.grfia.moosicae.core.properties.IDots;
-import es.ua.dlsi.grfia.moosicae.core.properties.IFigure;
-import es.ua.dlsi.grfia.moosicae.core.properties.IId;
-import es.ua.dlsi.grfia.moosicae.core.properties.IPitch;
+import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import javax.validation.constraints.NotNull;
 
@@ -18,26 +14,25 @@ import java.util.Arrays;
  */
 public class Chord extends DurationalSingle implements IChord {
     @NotNull
-    private final IPitch[] pitches;
+    private final INoteHead[] noteHeads;
 
-    Chord(IId id, IFigure figure,  IDots dots, @NotNull IPitch [] pitches) {
+    Chord(IId id, IFigure figure,  IDots dots, @NotNull INoteHead [] noteHeads) {
         super(id, figure, dots);
-        this.pitches = pitches.clone();
+        this.noteHeads = noteHeads.clone();
     }
 
     @Override
-    public <InputOutputType> void export(IExporterVisitor exportVisitor, InputOutputType inputOutput) throws IMException {
+    public <InputOutputType> void export(IExporterVisitor<InputOutputType> exportVisitor, InputOutputType inputOutput) throws IMException {
         exportVisitor.exportChord(this, inputOutput);
     }
 
     @Override
     public Chord clone() {
-        return new Chord(null, figure, dots, pitches);
+        return new Chord(null, figure, dots, noteHeads);
     }
 
-    @Override
-    public IPitch[] getPitches() {
-        return pitches;
+    public INoteHead[] getNoteHeads() {
+        return noteHeads;
     }
 
     @Override
@@ -49,20 +44,20 @@ public class Chord extends DurationalSingle implements IChord {
         Chord chord = (Chord) o;
 
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        return Arrays.equals(pitches, chord.pitches);
+        return Arrays.equals(noteHeads, chord.noteHeads);
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + Arrays.hashCode(pitches);
+        result = 31 * result + Arrays.hashCode(noteHeads);
         return result;
     }
 
     @Override
     public String toString() {
         return "Chord{" +
-                "pitches=" + Arrays.toString(pitches) +
+                "pitches=" + Arrays.toString(noteHeads) +
                 "} " + super.toString();
     }
 }
