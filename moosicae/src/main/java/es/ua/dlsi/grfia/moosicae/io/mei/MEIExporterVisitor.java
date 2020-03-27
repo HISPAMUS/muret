@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.io.mei;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLExporterVisitorParam;
@@ -28,7 +29,19 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
     @Override
     public void exportClefSign(IClefSign clefSign, XMLExporterVisitorParam inputOutput) {
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
-            inputOutput.addAttribute("clef.shape", clefSign.getValue().name().toUpperCase());
+            EClefSigns clefSigns = clefSign.getValue();
+            String str;
+            switch (clefSigns) {
+                case TAB:
+                    str = "TAB";
+                    break;
+                case Percussion:
+                    str = "perc";
+                    break;
+                default:
+                    str = clefSign.getValue().name().toUpperCase();
+            }
+            inputOutput.addAttribute("clef.shape", str);
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }

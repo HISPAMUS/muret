@@ -3,6 +3,7 @@ package es.ua.dlsi.grfia.moosicae.io.musicxml;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
+import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLExporterVisitorParam;
@@ -23,6 +24,8 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
             exportClefSign(clef.getSignType(), clefXMLParam);
             if (clef.getLine().isPresent()) {
                 clefXMLParam.addChild("line", Integer.toString(clef.getLine().get().getValue()));
+            } else if (clef.getSignType().getValue() == EClefSigns.TAB) {
+                clefXMLParam.addChild("line", "5");
             }
 
         } else {
@@ -33,7 +36,19 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
     @Override
     public void exportClefSign(IClefSign clefSign, XMLExporterVisitorParam inputOutput) {
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
-            inputOutput.addChild("sign", clefSign.getValue().name().toUpperCase());
+            EClefSigns clefSigns = clefSign.getValue();
+            String str;
+            switch (clefSigns) {
+                case TAB:
+                    str = "TAB";
+                    break;
+                case Percussion:
+                    str = "percussion";
+                    break;
+                default:
+                    str = clefSign.getValue().name().toUpperCase();
+            }
+            inputOutput.addChild("sign", str);
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }

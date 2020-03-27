@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.IMetronomeMark;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
@@ -26,7 +27,20 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
 
     @Override
     public void exportClefSign(IClefSign clefSign, SkmExporterVisitorTokenParam inputOutput) {
-        inputOutput.append(clefSign.getValue().name().toUpperCase());
+        EClefSigns clefSigns = clefSign.getValue();
+        String str;
+        switch (clefSigns) {
+            case TAB:
+                str = "T";
+                break;
+            case Percussion:
+                str = "P";
+                break;
+            default:
+                str = clefSign.getValue().name().toUpperCase();
+        }
+
+        inputOutput.append(str);
     }
 
     @Override

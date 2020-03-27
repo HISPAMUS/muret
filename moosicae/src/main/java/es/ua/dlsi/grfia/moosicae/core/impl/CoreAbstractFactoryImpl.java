@@ -40,7 +40,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IClef createClef(IId id, IClefLine line, IClefSign clefSign) {
+    public IClef createClef(IId id, IClefSign clefSign, IClefLine line) {
         return new Clef(id, line, clefSign);
     }
 

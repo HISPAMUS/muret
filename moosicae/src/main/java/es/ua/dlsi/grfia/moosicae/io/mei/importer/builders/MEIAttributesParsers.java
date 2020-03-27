@@ -11,7 +11,6 @@ import es.ua.dlsi.grfia.moosicae.core.builders.IModeBuilder;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.properties.IAccidentalSymbol;
 import es.ua.dlsi.grfia.moosicae.core.properties.IClefLine;
-import es.ua.dlsi.grfia.moosicae.core.properties.IClefSign;
 import es.ua.dlsi.grfia.moosicae.core.properties.IMode;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
 
@@ -162,7 +161,17 @@ public class MEIAttributesParsers {
         Optional<String> shape = xmlImporterParam.getAttribute("clef.shape");
         if (shape.isPresent()) {
             IClefBuilder clefBuilder = new IClefBuilder(abstractFactory);
-            EClefSigns clefSign = EClefSigns.valueOf(shape.get());
+            EClefSigns clefSign;
+            switch (shape.get()) {
+                case "perc":
+                    clefSign = EClefSigns.Percussion;
+                    break;
+                case "TAB":
+                    clefSign = EClefSigns.TAB;
+                    break;
+                default:
+                    clefSign = EClefSigns.valueOf(shape.get());
+            }
             clefBuilder.from(clefSign);
 
             Optional<String> line = xmlImporterParam.getAttribute("clef.line");

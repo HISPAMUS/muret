@@ -2,8 +2,11 @@ package es.ua.dlsi.grfia.moosicae.io.lilypond;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
+
+import java.util.Optional;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -14,11 +17,71 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
 
     @Override
     public void exportClef(IClef clef, LilypondExporterVisitorParam inputOutput) throws IMException {
-        //TODO
         inputOutput.startString();
-        inputOutput.append("\\clef ");
-        inputOutput.append(clef.getSignType().getValue().name().toUpperCase());
-        inputOutput.finishString();
+
+        EClefSigns clefSigns = clef.getSignType().getValue();
+
+        if (clefSigns == EClefSigns.Percussion) {
+            inputOutput.append("\\clef percussion");
+        } else if (clefSigns == EClefSigns.TAB) {
+            inputOutput.addChild("new TabStaff");
+            inputOutput.append("\\clef percussion");
+        } else {
+            Optional<IClefLine> clefLine = clef.getLine();
+            if (!clefLine.isPresent()) {
+                throw new IMException("Expecting clef line for clef: " + clef);
+            }
+
+            int line = clefLine.get().getValue();
+            switch (clef.getSignType().getValue()) {
+                case G:
+                    if (line == 2) {
+                        inputOutput.append("\\clef G");
+                    } else {
+                        throw new IMException("Invalid line for G: " + line);
+                    }
+                    break;
+                case F:
+                    switch (line) {
+                        case 3:
+                            inputOutput.append("\\clef varbaritone");
+                            break;
+                        case 4:
+                            inputOutput.append("\\clef F");
+                            break;
+                        case 5:
+                            inputOutput.append("\\clef subbass");
+                            break;
+                        default:
+                            throw new IMException("Invalid line for F: " + line);
+                    }
+                    break;
+                case C:
+                    switch (line) {
+                        case 1:
+                            inputOutput.append("\\clef soprano");
+                            break;
+                        case 2:
+                            inputOutput.append("\\clef mezzosoprano");
+                            break;
+                        case 3:
+                            inputOutput.append("\\clef C");
+                            break;
+                        case 4:
+                            inputOutput.append("\\clef tenor");
+                            break;
+                        case 5:
+                            inputOutput.append("\\clef baritone");
+                            break;
+                        default:
+                            throw new IMException("Invalid line for F: " + line);
+                    }
+                    break;
+                default:
+                    throw new IMException("Unexpected sign: " + clefSigns);
+            }
+            inputOutput.finishString();
+        }
     }
 
     @Override

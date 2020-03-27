@@ -99,8 +99,8 @@ part: TANDEM_PART number;
 staff: TANDEM_STAFF number;
 
 clef: TANDEM_CLEF clefValue;
-clefValue: clefSign clefLine;
-clefSign: CHAR_C | CHAR_F | CHAR_G;
+clefValue: clefSign clefLine?;
+clefSign: CHAR_C | CHAR_F | CHAR_G | CHAR_P | CHAR_T;
 clefLine: DIGIT_1 | DIGIT_2 | DIGIT_3 | DIGIT_4 | DIGIT_5;
 
 keySignature: TANDEM_KEY LEFT_BRACKET keySignaturePitchClass* RIGHT_BRACKET;

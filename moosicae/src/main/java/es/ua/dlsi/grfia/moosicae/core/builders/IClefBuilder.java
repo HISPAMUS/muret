@@ -15,8 +15,8 @@ public class IClefBuilder extends CoreObjectBuilder<IClef> {
     public IClefBuilder(ICoreAbstractFactory coreObjectFactory) {
         super(coreObjectFactory);
     }
-    private IClefLine line;
-    private IClefSign clefSign;
+    protected IClefLine line;
+    protected IClefSign clefSign;
 
     public IClefBuilder from(IClefLine line) {
         this.line = line;
@@ -34,7 +34,7 @@ public class IClefBuilder extends CoreObjectBuilder<IClef> {
 
     @Override
     public IClef build() throws IMException {
-        return coreObjectFactory.createClef(getId(), line, clefSign);
+        return coreObjectFactory.createClef(getId(), clefSign, line);
     }
 
 }

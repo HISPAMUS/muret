@@ -226,7 +226,20 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
                     "Clef sign {0}", ctx.getText());
 
-            beginEndContext(ctx, new IClefSignBuilder(coreAbstractFactory), EClefSigns.valueOf(ctx.getText()));
+            EClefSigns clefSigns;
+            switch (ctx.getText()) {
+                case "P":
+                    clefSigns = EClefSigns.Percussion;
+                    break;
+                case "T":
+                    clefSigns = EClefSigns.TAB;
+                    break;
+                default:
+                    clefSigns = EClefSigns.valueOf(ctx.getText());
+            }
+
+
+            beginEndContext(ctx, new IClefSignBuilder(coreAbstractFactory), clefSigns);
         }
 
         @Override

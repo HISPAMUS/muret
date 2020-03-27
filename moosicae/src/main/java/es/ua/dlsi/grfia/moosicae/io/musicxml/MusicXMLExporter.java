@@ -39,7 +39,7 @@ public class MusicXMLExporter implements IExporter {
         xmlVersion.addAttribute("standalone", "no");
         xmlTree.addPreamble(xmlVersion);
 
-        XMLElement xmlScore = xmlTree.getRoot().addChild("music").addChild("body").addChild("score");
+        XMLElement xmlScore = xmlTree.getRoot();
         exportPartDefinitions(score, xmlScore);
         exportParts(score, xmlScore);
 
@@ -68,9 +68,17 @@ public class MusicXMLExporter implements IExporter {
             //TODO measures
             XMLElement xmlMeasure = xmlPart.addChild("measure");
             xmlMeasure.addAttribute("number", "1");
-            xmlMeasure.addChild("divisions", Integer.toString(MusicXMLExporterVisitor.MAX_DUR));
 
+            // add to the measure <attributes>
             XMLElement xmlAttributes = null;
+
+            //if (primer measure
+            {
+                xmlAttributes = xmlMeasure.addChild("attributes");
+                xmlAttributes.addChild("divisions", Integer.toString(MusicXMLExporterVisitor.MAX_DUR));
+            }
+
+
             boolean nonAttributesFound = false;
             //TODO ordenar por tiempos - ver qué staves pertenecen a partes
             for (IStaff staff: score.getAllStaves()) {
@@ -85,7 +93,6 @@ public class MusicXMLExporter implements IExporter {
                             parentElement = xmlAttributes;
                         }
 
-                        System.out.println(staffElement);
                     } else {
                         nonAttributesFound = true;
                     }

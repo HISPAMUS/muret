@@ -6,7 +6,6 @@ import es.ua.dlsi.grfia.moosicae.core.builders.properties.IClefSignBuilder;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.properties.IClefSign;
 import es.ua.dlsi.grfia.moosicae.io.IImporterAdapter;
-import es.ua.dlsi.grfia.moosicae.io.xml.XMLCorePropertyReaders;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
 
 /**
@@ -21,7 +20,18 @@ public class MxmlClefSignBuilder extends IClefSignBuilder implements IImporterAd
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
         if (xmlImporterParam.getCharacters().isPresent()) {
-            from(XMLCorePropertyReaders.readCharacters(EClefSigns.class, xmlImporterParam));
+            EClefSigns clefSigns;
+            switch (xmlImporterParam.getCharacters().get()) {
+                case "percussion":
+                    clefSigns = EClefSigns.Percussion;
+                    break;
+                case "TAB":
+                    clefSigns = EClefSigns.TAB;
+                    break;
+                default:
+                    clefSigns = EClefSigns.valueOf(xmlImporterParam.getCharacters().get());
+            }
+            from(clefSigns);
         }
     }
 }

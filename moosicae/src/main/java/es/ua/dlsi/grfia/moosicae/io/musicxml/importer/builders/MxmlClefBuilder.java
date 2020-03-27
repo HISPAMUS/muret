@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IClef;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.builders.IClefBuilder;
+import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.io.IImporterAdapter;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
 
@@ -19,5 +20,14 @@ public class MxmlClefBuilder extends IClefBuilder implements IImporterAdapter<IC
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
 
+    }
+
+    @Override
+    public IClef build() throws IMException {
+        if (this.clefSign != null && this.clefSign.getValue() == EClefSigns.TAB) {
+            // remove the line 5
+            this.line = null;
+        }
+        return super.build();
     }
 }
