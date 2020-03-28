@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.IMetronomeMark;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
@@ -21,6 +22,9 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
         exportClefSign(clef.getSignType(), inputOutput);
         if (clef.getLine().isPresent()) {
             inputOutput.append(clef.getLine().get().getValue());
+        }
+        if (clef.getOctaveTransposition().isPresent()) {
+            exportClefOctaveTransposition(clef.getOctaveTransposition().get(), inputOutput);
         }
         inputOutput.buildAndAddToken(clef);
     }
@@ -40,6 +44,30 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
                 str = clefSign.getValue().name().toUpperCase();
         }
 
+        inputOutput.append(str);
+    }
+
+    @Override
+    public void exportClefOctaveTransposition(IOctaveTransposition octaveTransposition, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+        String str = null;
+        switch (octaveTransposition.getValue()) {
+            case -2:
+                str = "vv2";
+                break;
+            case -1:
+                str = "v2";
+                break;
+            case 0:
+                break;
+            case 1:
+                str = "^2";
+                break;
+            case 2:
+                str = "^^2";
+                break;
+            default:
+                throw new IMException("Unsupported octave transposition: " + octaveTransposition);
+        }
         inputOutput.append(str);
     }
 

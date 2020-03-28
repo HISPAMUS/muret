@@ -230,6 +230,16 @@ public interface skmParserListener extends ParseTreeListener {
 	 */
 	void exitClefLine(skmParser.ClefLineContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link skmParser#clefOctave}.
+	 * @param ctx the parse tree
+	 */
+	void enterClefOctave(skmParser.ClefOctaveContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link skmParser#clefOctave}.
+	 * @param ctx the parse tree
+	 */
+	void exitClefOctave(skmParser.ClefOctaveContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link skmParser#keySignature}.
 	 * @param ctx the parse tree
 	 */

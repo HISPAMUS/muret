@@ -2,7 +2,7 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IClef;
-import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.properties.IClefLine;
 import es.ua.dlsi.grfia.moosicae.core.properties.IClefSign;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
@@ -21,15 +21,19 @@ public class Clef extends CoreItem implements IClef {
     @NotNull
     private final IClefSign signType;
 
+    private final IOctaveTransposition octaveTransposition;
+
     /**
      * Used by factory
-     * @param line
      * @param signType
+     * @param line
+     * @param octaveTransposition
      */
-    Clef(IId id,  IClefLine line, @NotNull IClefSign signType) {
+    Clef(IId id, @NotNull IClefSign signType, IClefLine line, IOctaveTransposition octaveTransposition) {
         super(id);
         this.line = line;
         this.signType = signType;
+        this.octaveTransposition = octaveTransposition;
     }
 
     @Override
@@ -37,13 +41,20 @@ public class Clef extends CoreItem implements IClef {
         return Optional.ofNullable(line);
     }
 
+    @Override
+    public Optional<IOctaveTransposition> getOctaveTransposition() {
+        return Optional.ofNullable(octaveTransposition);
+    }
+
+
+
     public IClefSign getSignType() {
         return signType;
     }
 
     @Override
     public Clef clone() {
-        return new Clef(null, line, signType);
+        return new Clef(null, signType, line, octaveTransposition);
     }
 
     @Override
@@ -59,13 +70,15 @@ public class Clef extends CoreItem implements IClef {
         Clef clef = (Clef) o;
 
         if (line != null ? !line.equals(clef.line) : clef.line != null) return false;
-        return signType.equals(clef.signType);
+        if (!signType.equals(clef.signType)) return false;
+        return octaveTransposition != null ? octaveTransposition.equals(clef.octaveTransposition) : clef.octaveTransposition == null;
     }
 
     @Override
     public int hashCode() {
         int result = line != null ? line.hashCode() : 0;
         result = 31 * result + signType.hashCode();
+        result = 31 * result + (octaveTransposition != null ? octaveTransposition.hashCode() : 0);
         return result;
     }
 
@@ -74,6 +87,7 @@ public class Clef extends CoreItem implements IClef {
         return "Clef{" +
                 "line=" + line +
                 ", signType=" + signType +
+                ", octaveTransposition=" + octaveTransposition +
                 "} " + super.toString();
     }
 }

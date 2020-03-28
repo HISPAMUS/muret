@@ -21,7 +21,7 @@ public class MinimalTest extends MonodicTest {
     @Override
     public Map<String, IScore> generateTestScores() throws Exception {
         generateScore();
-        IClef clef = coreAbstractFactory.createClef(coreAbstractFactory.createId(), coreAbstractFactory.createClefSign(coreAbstractFactory.createId(), EClefSigns.G), coreAbstractFactory.createClefLine(coreAbstractFactory.createId(), 2));
+        IClef clef = coreAbstractFactory.createClef(coreAbstractFactory.createId(), coreAbstractFactory.createClefSign(coreAbstractFactory.createId(), EClefSigns.G), coreAbstractFactory.createClefLine(coreAbstractFactory.createId(), 2), null);
         score.add(voice, staff, clef);
         IKey key = coreAbstractFactory.createCommonAlterationKey(coreAbstractFactory.createId(), ECommonAlterationKeys.DM);
         score.add(voice, staff, key);

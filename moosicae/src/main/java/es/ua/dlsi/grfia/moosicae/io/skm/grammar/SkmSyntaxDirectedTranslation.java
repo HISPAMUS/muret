@@ -251,6 +251,31 @@ public class SkmSyntaxDirectedTranslation {
             beginEndContext(ctx, new IClefLineBuilder(coreAbstractFactory), Integer.parseInt(ctx.getText()));
         }
 
+        @Override
+        public void exitClefOctave(skmParser.ClefOctaveContext ctx) {
+            super.exitClefOctave(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Clef octave {0}", ctx.getText());
+
+            Integer octave = null;
+            switch (ctx.getText()) {
+                case "^^2":
+                    octave = 2;
+                    break;
+                case "^2":
+                    octave = 1;
+                    break;
+                case "v2":
+                    octave = -1;
+                    break;
+                case "vv2":
+                    octave = -2;
+                    break;
+                default:
+                    createException("Clef octave not valid: " + ctx.getText());
+            }
+            beginEndContext(ctx, new IOctaveTranspositionBuilder(coreAbstractFactory), octave);
+        }
 
 
         @Override

@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.IMetronomeMark;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.Mensuration;
@@ -40,8 +41,8 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IClef createClef(IId id, IClefSign clefSign, IClefLine line) {
-        return new Clef(id, line, clefSign);
+    public IClef createClef(IId id, IClefSign clefSign, IClefLine line, IOctaveTransposition octaveTransposition) {
+        return new Clef(id, clefSign, line, octaveTransposition);
     }
 
     @Override
@@ -256,6 +257,11 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     @Override
     public IOctave createOctave(IId id, Integer number) {
         return new Octave(id, number);
+    }
+
+    @Override
+    public IOctaveTransposition createOctaveTransposition(IId id, @NotNull Integer value) {
+        return new OctaveTransposition(id, value);
     }
 
 

@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.core;
 
 
 import es.ua.dlsi.grfia.moosicae.IMException;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
 import es.ua.dlsi.grfia.moosicae.core.mensural.*;
@@ -22,7 +23,7 @@ public interface ICoreAbstractFactory {
     IBarline createBarline(IId id,  INumber barNumber,  IBarlineType barlineType);
     IBarlineType createBarlineType(IId id, @NotNull EBarlineTypes barlineType);
     IChord createChord(IId id, @NotNull IFigure figures,  IDots dots, @NotNull INoteHead [] noteHead);
-    IClef createClef(IId id, @NotNull IClefSign clefSign, @NotNull IClefLine line);
+    IClef createClef(IId id, @NotNull IClefSign clefSign, IClefLine line, IOctaveTransposition octaveTransposition);
     IClefLine createClefLine(IId id, @NotNull Integer line);
     IClefSign createClefSign(IId id, @NotNull EClefSigns clefSign);
     ICommonTime createCommonTime(IId id);
@@ -63,6 +64,7 @@ public interface ICoreAbstractFactory {
      */
     INoteHead createNoteHead(IId id, @NotNull IPitch pitch, ITie tieToNext);
     IOctave createOctave(IId id, @NotNull Integer number);
+    IOctaveTransposition createOctaveTransposition(IId id, @NotNull Integer value);
 
     /**
      * Creates and adds the part to the score

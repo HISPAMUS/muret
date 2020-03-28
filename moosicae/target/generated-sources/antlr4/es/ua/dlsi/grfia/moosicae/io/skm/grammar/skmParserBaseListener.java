@@ -282,6 +282,18 @@ public class skmParserBaseListener implements skmParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterClefOctave(skmParser.ClefOctaveContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitClefOctave(skmParser.ClefOctaveContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterKeySignature(skmParser.KeySignatureContext ctx) { }
 	/**
 	 * {@inheritDoc}

@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.io;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 
 /**
@@ -10,6 +11,7 @@ import es.ua.dlsi.grfia.moosicae.core.properties.*;
 public interface IExporterVisitor<InputOutputType>  {
     void exportClef(IClef clef, InputOutputType inputOutput) throws IMException;
     void exportClefSign(IClefSign clefSign, InputOutputType inputOutput) throws IMException;
+    void exportClefOctaveTransposition(IOctaveTransposition octaveTransposition, InputOutputType inputOutput) throws IMException;
     void exportNote(INote note, InputOutputType inputOutput) throws IMException;
     void exportRest(IRest rest, InputOutputType inputOutput) throws IMException;
     void exportMultimeasureRest(IMultimeasureRest mrest, InputOutputType inputOutput) throws IMException;

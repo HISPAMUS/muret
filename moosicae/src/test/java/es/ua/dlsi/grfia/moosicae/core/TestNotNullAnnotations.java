@@ -49,7 +49,7 @@ public class TestNotNullAnnotations {
     public void testNotNullAtICoreAbstractFactory2() {
         ICoreAbstractFactory coreAbstractFactory = new CoreFactory().create();
         // name element is required
-        IClef clef =  coreAbstractFactory.createClef(null, null, null);
+        IClef clef =  coreAbstractFactory.createClef(null, null, null, null);
         fail("It should not arrive here: recompile with Maven and reimport project in IDE");
     }
 

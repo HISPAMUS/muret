@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.io.mei;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
@@ -15,12 +16,15 @@ import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
  */
 public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorParam> {
     @Override
-    public void exportClef(IClef clef, XMLExporterVisitorParam inputOutput) {
+    public void exportClef(IClef clef, XMLExporterVisitorParam inputOutput) throws IMException {
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
             if (clef.getLine().isPresent()) {
                 inputOutput.addAttribute("clef.line", Integer.toString(clef.getLine().get().getValue()));
             }
             exportClefSign(clef.getSignType(), inputOutput);
+            if (clef.getOctaveTransposition().isPresent()) {
+                exportClefOctaveTransposition(clef.getOctaveTransposition().get(), inputOutput);
+            }
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }
@@ -47,6 +51,33 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
         }
 
     }
+
+    @Override
+    public void exportClefOctaveTransposition(IOctaveTransposition octaveTransposition, XMLExporterVisitorParam inputOutput) throws IMException {
+        int oct = octaveTransposition.getValue();
+        if (oct != 0) {
+            if (octaveTransposition.getValue() < 0) {
+                inputOutput.addAttribute("clef.dis.place", "below");
+            } else {
+                inputOutput.addAttribute("clef.dis.place", "above");
+            }
+            String str = null;
+            switch (oct) {
+                case -1:
+                case 1:
+                    str = "8";
+                    break;
+                case -2:
+                case 2:
+                    str = "15";
+                    break;
+                default:
+                    throw new IMException("Unsupported octave transposition:" + oct);
+            }
+            inputOutput.addAttribute("clef.dis", str);
+        }
+    }
+
     @Override
     public void exportNote(INote note, XMLExporterVisitorParam inputOutput) throws IMException {
         XMLElement xmlNote = new XMLElement("note");

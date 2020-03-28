@@ -35,6 +35,8 @@ public class MusicXMLImporter extends XMLImporter implements IImporter {
         coreObjectBuilderSuppliers.add("clef", MxmlClefBuilder::new);
         coreObjectBuilderSuppliers.add("sign", MxmlClefSignBuilder::new);
         coreObjectBuilderSuppliers.add("line", MxmlClefLineBuilder::new);
+        coreObjectBuilderSuppliers.add("clef-octave-change", MxmlClefOctaveTranspositionBuilder::new);
+
 
         coreObjectBuilderSuppliers.add("key", MxmlKeyBuilder::new);
         coreObjectBuilderSuppliers.add("fifths", MxmlFifthsBuilder::new);

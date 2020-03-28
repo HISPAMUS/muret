@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.core.IClef;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.properties.IClefLine;
 import es.ua.dlsi.grfia.moosicae.core.properties.IClefSign;
@@ -17,6 +18,7 @@ public class IClefBuilder extends CoreObjectBuilder<IClef> {
     }
     protected IClefLine line;
     protected IClefSign clefSign;
+    protected IOctaveTransposition octaveTransposition;
 
     public IClefBuilder from(IClefLine line) {
         this.line = line;
@@ -28,13 +30,18 @@ public class IClefBuilder extends CoreObjectBuilder<IClef> {
         return this;
     }
 
+    public IClefBuilder from(IOctaveTransposition octaveTransposition) {
+        this.octaveTransposition = octaveTransposition;
+        return this;
+    }
+
     public void from(EClefSigns clefSign) {
         this.clefSign = coreObjectFactory.createClefSign(null, clefSign);
     }
 
     @Override
     public IClef build() throws IMException {
-        return coreObjectFactory.createClef(getId(), clefSign, line);
+        return coreObjectFactory.createClef(getId(), clefSign, line, octaveTransposition);
     }
 
 }

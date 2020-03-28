@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.io.musicxml;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
@@ -26,6 +27,9 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
                 clefXMLParam.addChild("line", Integer.toString(clef.getLine().get().getValue()));
             } else if (clef.getSignType().getValue() == EClefSigns.TAB) {
                 clefXMLParam.addChild("line", "5");
+            }
+            if (clef.getOctaveTransposition().isPresent()) {
+                exportClefOctaveTransposition(clef.getOctaveTransposition().get(), clefXMLParam);
             }
 
         } else {
@@ -53,6 +57,11 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }
 
+    }
+
+    @Override
+    public void exportClefOctaveTransposition(IOctaveTransposition octaveTransposition, XMLExporterVisitorParam inputOutput) {
+        inputOutput.addChild("clef-octave-change", octaveTransposition.getValue().toString());
     }
 
     @Override

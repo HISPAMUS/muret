@@ -8,6 +8,7 @@ import es.ua.dlsi.grfia.moosicae.core.IMeter;
 import es.ua.dlsi.grfia.moosicae.core.builders.IClefBuilder;
 import es.ua.dlsi.grfia.moosicae.core.builders.IKeyFromAccidentalCountBuilder;
 import es.ua.dlsi.grfia.moosicae.core.builders.IModeBuilder;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.properties.IAccidentalSymbol;
 import es.ua.dlsi.grfia.moosicae.core.properties.IClefLine;
@@ -179,6 +180,32 @@ public class MEIAttributesParsers {
                 IClefLine clefLine = abstractFactory.createClefLine(null, Integer.parseInt(line.get()));
                 clefBuilder.from(clefLine);
             }
+
+            Optional<String> clefDis = xmlImporterParam.getAttribute("clef.dis");
+            Optional<String> clefDisPlace = xmlImporterParam.getAttribute("clef.dis.place");
+            if (clefDis.isPresent() || clefDisPlace.isPresent()) {
+                if (!clefDis.isPresent() || !clefDisPlace.isPresent()) {
+                    throw new IMException("For clef octave transposition, both clef.dis and clef.dis must be present");
+                }
+                int octaves;
+                int clefDisValue = Integer.parseInt(clefDis.get());
+                switch (clefDisValue) {
+                    case 8:
+                        octaves = 1;
+                        break;
+                    case 15:
+                        octaves = 2;
+                        break;
+                    default:
+                        throw new IMException("Unsupported clef octave transposition: " + clefDisValue);
+                }
+                if (clefDisPlace.get().equals("below")) {
+                    octaves = -octaves;
+                }
+                IOctaveTransposition octaveTransposition = abstractFactory.createOctaveTransposition(null, octaves);
+                clefBuilder.from(octaveTransposition);
+            }
+
             return Optional.of(clefBuilder.build());
         } else {
             return Optional.empty();

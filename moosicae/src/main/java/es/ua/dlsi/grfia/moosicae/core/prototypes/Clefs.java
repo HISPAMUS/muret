@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.core.prototypes;
 
 import es.ua.dlsi.grfia.moosicae.core.IClef;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.properties.IClefLine;
 import es.ua.dlsi.grfia.moosicae.core.properties.IClefSign;
@@ -27,22 +28,48 @@ public class Clefs extends Prototypes<IClef> {
     public static String PERCUSSION = "PERCUSSION";
     public static String TAB = "TAB";
 
-    private IClef generateClef(EClefSigns eClefSign, int line) {
+    public static String G2_OTTAVA_BASSA = "G2_8";
+    public static String G2_OTTAVA_ALTA = "G2^8";
+
+    public static String F4_OTTAVA_BASSA = "F4_8";
+    public static String F4_OTTAVA_ALTA = "F4^8";
+
+    public static String G2_QUINDICESIMA_BASSA = "G2_15";
+    public static String G2_QUINDICESIMA_ALTA = "G2^15";
+
+    public static String F4_QUINDICESIMA_BASSA = "F4_18";
+    public static String F4_QUINDICESIMA_ALTA = "F4^18";
+
+
+    private IClef generateClef(EClefSigns eClefSign, int line, Integer octaveTranspositionValue) {
         IClefLine clefLine = coreAbstractFactory.createClefLine(null, line);
         IClefSign clefSign = coreAbstractFactory.createClefSign(null, eClefSign);
-        IClef clef = coreAbstractFactory.createClef(null, clefSign, clefLine);
+        IOctaveTransposition octaveTransposition = null;
+        if (octaveTranspositionValue != null) {
+            octaveTransposition = coreAbstractFactory.createOctaveTransposition(null, octaveTranspositionValue);
+        }
+        IClef clef = coreAbstractFactory.createClef(null, clefSign, clefLine, octaveTransposition);
         return clef;
+    }
+
+
+    private IClef generateClef(EClefSigns eClefSign, int line) {
+        return generateClef(eClefSign, line, null);
     }
 
     private IClef generateClef(EClefSigns eClefSign) {
         IClefSign clefSign = coreAbstractFactory.createClefSign(null, eClefSign);
-        IClef clef = coreAbstractFactory.createClef(null, clefSign, null);
+        IClef clef = coreAbstractFactory.createClef(null, clefSign, null, null);
         return clef;
     }
 
     public Clefs(ICoreAbstractFactory coreAbstractFactory) {
         super(coreAbstractFactory);
         add(G2, generateClef(EClefSigns.G, 2));
+        add(G2_OTTAVA_ALTA, generateClef(EClefSigns.G, 2, 1));
+        add(G2_OTTAVA_BASSA, generateClef(EClefSigns.G, 2, -1));
+        add(G2_QUINDICESIMA_ALTA, generateClef(EClefSigns.G, 2, 2));
+        add(G2_QUINDICESIMA_BASSA, generateClef(EClefSigns.G, 2, -2));
 
         add(C1, generateClef(EClefSigns.C, 1));
         add(C2, generateClef(EClefSigns.C, 2));
@@ -52,6 +79,9 @@ public class Clefs extends Prototypes<IClef> {
 
         add(F3, generateClef(EClefSigns.F, 3));
         add(F4, generateClef(EClefSigns.F, 4));
+        add(F4_OTTAVA_ALTA, generateClef(EClefSigns.F, 4, 1));
+        add(F4_OTTAVA_BASSA, generateClef(EClefSigns.F, 4, -1));
+
         add(F5, generateClef(EClefSigns.F, 5));
 
         add(PERCUSSION, generateClef(EClefSigns.Percussion));

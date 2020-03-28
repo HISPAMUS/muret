@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.io.lilypond;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
@@ -81,13 +82,41 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
                 default:
                     throw new IMException("Unexpected sign: " + clefSigns);
             }
-            inputOutput.addChildLine("\\clef " + clefName);
+            if (clef.getOctaveTransposition().isPresent()) {
+                String octave = null;
+                switch (clef.getOctaveTransposition().get().getValue()) {
+                    case -2:
+                        octave = "_15";
+                        break;
+                    case -1:
+                        octave = "_8";
+                        break;
+                    case 0:
+                        break;
+                    case 1:
+                        octave = "^8";
+                        break;
+                    case 2:
+                        octave = "^15";
+                        break;
+                    default:
+                        throw new IMException("Unsupported clef octave transposition: " + clef.getOctaveTransposition().get().getValue());
+                }
+                inputOutput.addChildLine("\\clef \"" + clefName + octave + "\"");
+            } else {
+                inputOutput.addChildLine("\\clef " + clefName);
+            }
         }
     }
 
     @Override
     public void exportClefSign(IClefSign clefSign, LilypondExporterVisitorParam inputOutput) throws IMException {
 
+    }
+
+    @Override
+    public void exportClefOctaveTransposition(IOctaveTransposition octaveTransposition, LilypondExporterVisitorParam inputOutput) throws IMException {
+        // included above in exportClef
     }
 
     @Override
