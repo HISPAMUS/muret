@@ -28,7 +28,7 @@ public class MxmlPartIDs {
             if (iid.isPresent()) {
                 value = part.getId().get().getValue();
             } else {
-                value = IdGenerator.getInstance().generateUniqueId().getValue();
+                value = "P" + (partIDs.size() + 1);
             }
             partIDs.put(part, value);
             return value;

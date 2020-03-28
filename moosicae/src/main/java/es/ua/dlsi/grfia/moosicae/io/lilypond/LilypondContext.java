@@ -20,16 +20,22 @@ public class LilypondContext implements ILilypondElement {
         this.children = new LinkedList<>();
     }
 
-    public void addChild(ILilypondElement child) {
+    public void addChildLine(ILilypondElement child) {
         if (child == this) {
             throw new IMRuntimeException("Trying to create as child the parent element itself");
         }
         this.children.add(child);
     }
 
-    public void addChild(String string) {
-        this.addChild(new LilypondLine(string));
+    public void addChildLine(String string) {
+        this.addChildLine(new LilypondLine(string));
     }
+    public LilypondContext addChildContext(String string, boolean useNew) {
+        LilypondContext result = new LilypondContext(string, useNew);
+        this.addChildLine(result);
+        return result;
+    }
+
 
     @Override
     public String export(int tabs) {

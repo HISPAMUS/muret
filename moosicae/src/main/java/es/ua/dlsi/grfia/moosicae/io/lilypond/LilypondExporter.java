@@ -34,7 +34,7 @@ public class LilypondExporter implements IExporter {
         LilypondExporterVisitor lilypondExporterVisitor = new LilypondExporterVisitor();
         for (IStaff staff: score.getAllStaves()) {
             LilypondContext staffContext = new LilypondContext("Staff", true);
-            scoreContext.addChild(staffContext);
+            scoreContext.addChildLine(staffContext);
             for (ICoreItem staffElement: staff.getStaffSymbols()) {
                 LilypondExporterVisitorParam lilypondExporterVisitorParam = new LilypondExporterVisitorParam(staffContext);
                 staffElement.export(lilypondExporterVisitor, lilypondExporterVisitorParam);

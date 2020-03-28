@@ -62,7 +62,7 @@ public class AllCore {
         coreTest.generateTestScores().forEach((name, score) -> {
             try {
                 testExportImport(score, new MEIExporter(), new MEIImporter(abstractFactory), outputTmp, name, "mei");
-                testExportImport(score, new MusicXMLExporter(), new MusicXMLImporter(abstractFactory), outputTmp, name, "mxl");
+                testExportImport(score, new MusicXMLExporter(), new MusicXMLImporter(abstractFactory), outputTmp, name, "musicxml");
                 testExportImport(score, new SkmExporter(), new SkmImporter(abstractFactory), outputTmp, name, "skm");
                 LilypondExporter exporter = new LilypondExporter();
                 writeToFile(exporter.exportScore(score), new File(outputTmp, name + ".ly"));
@@ -75,6 +75,8 @@ public class AllCore {
     @Test
     public void allTests() throws Exception {
         System.out.println("############## GENERATING ALL CORE ITEMS TESTS TO " + OUTPUT + " #####################");
+        File outputTmp = new File(OUTPUT);
+        outputTmp.mkdirs();
         AbstractCoreTest [] testScoreBuilders = new AbstractCoreTest[] {
             new MinimalTest(abstractFactory),
                 new ClefsTest(abstractFactory)

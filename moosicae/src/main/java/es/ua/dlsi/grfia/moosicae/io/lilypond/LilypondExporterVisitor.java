@@ -22,10 +22,10 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
         EClefSigns clefSigns = clef.getSignType().getValue();
 
         if (clefSigns == EClefSigns.Percussion) {
-            inputOutput.append("\\clef percussion");
+            inputOutput.addChildLine("\\clef percussion");
         } else if (clefSigns == EClefSigns.TAB) {
-            inputOutput.addChild("new TabStaff");
-            inputOutput.append("\\clef percussion");
+            LilypondExporterVisitorParam child = inputOutput.addChildContext("TabStaff", true);
+            child.addChildLine("\\clef tab");
         } else {
             Optional<IClefLine> clefLine = clef.getLine();
             if (!clefLine.isPresent()) {
@@ -33,10 +33,11 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
             }
 
             int line = clefLine.get().getValue();
+            String clefName;
             switch (clef.getSignType().getValue()) {
                 case G:
                     if (line == 2) {
-                        inputOutput.append("\\clef G");
+                        clefName = "G";
                     } else {
                         throw new IMException("Invalid line for G: " + line);
                     }
@@ -44,13 +45,13 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
                 case F:
                     switch (line) {
                         case 3:
-                            inputOutput.append("\\clef varbaritone");
+                            clefName = "varbaritone";
                             break;
                         case 4:
-                            inputOutput.append("\\clef F");
+                            clefName = "F";
                             break;
                         case 5:
-                            inputOutput.append("\\clef subbass");
+                            clefName = "subbass";
                             break;
                         default:
                             throw new IMException("Invalid line for F: " + line);
@@ -59,19 +60,19 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
                 case C:
                     switch (line) {
                         case 1:
-                            inputOutput.append("\\clef soprano");
+                            clefName = "soprano";
                             break;
                         case 2:
-                            inputOutput.append("\\clef mezzosoprano");
+                            clefName = "mezzosoprano";
                             break;
                         case 3:
-                            inputOutput.append("\\clef C");
+                            clefName = "C";
                             break;
                         case 4:
-                            inputOutput.append("\\clef tenor");
+                            clefName = "tenor";
                             break;
                         case 5:
-                            inputOutput.append("\\clef baritone");
+                            clefName = "baritone";
                             break;
                         default:
                             throw new IMException("Invalid line for F: " + line);
@@ -80,7 +81,7 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
                 default:
                     throw new IMException("Unexpected sign: " + clefSigns);
             }
-            inputOutput.finishString();
+            inputOutput.addChildLine("\\clef " + clefName);
         }
     }
 
@@ -111,20 +112,20 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
 
     @Override
     public void exportFractionalTimeSignature(IFractionalTimeSignature meter, LilypondExporterVisitorParam inputOutput) throws IMException {
-        inputOutput.addChild("\\numericTimeSignature");
-        inputOutput.addChild("\\time " + meter.getNumerator() + "/" + meter.getDenominator());
+        inputOutput.addChildLine("\\numericTimeSignature");
+        inputOutput.addChildLine("\\time " + meter.getNumerator() + "/" + meter.getDenominator());
     }
 
     @Override
     public void exportCutTime(ICutTime meter, LilypondExporterVisitorParam inputOutput) throws IMException {
-        inputOutput.addChild("\\defaultTimeSignature");
-        inputOutput.addChild("\\time 2/2");
+        inputOutput.addChildLine("\\defaultTimeSignature");
+        inputOutput.addChildLine("\\time 2/2");
     }
 
     @Override
     public void exportCommonTime(ICommonTime meter, LilypondExporterVisitorParam inputOutput) throws IMException {
-        inputOutput.addChild("\\defaultTimeSignature");
-        inputOutput.addChild("\\time 4/4");
+        inputOutput.addChildLine("\\defaultTimeSignature");
+        inputOutput.addChildLine("\\time 4/4");
     }
 
     @Override

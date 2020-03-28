@@ -24,8 +24,12 @@ public class LilypondExporterVisitorParam {
         stringBuilder.append(subtoken);
     }
 
-    public void addChild(String string) {
-        this.parent.addChild(string);
+    public void addChildLine(String string) {
+        this.parent.addChildLine(string);
+    }
+    public LilypondExporterVisitorParam addChildContext(String string, boolean useNew) {
+        LilypondContext child = this.parent.addChildContext(string, useNew);
+        return new LilypondExporterVisitorParam(child);
     }
 
     public void startString() {
@@ -33,7 +37,7 @@ public class LilypondExporterVisitorParam {
     }
 
     public void finishString() {
-        this.parent.addChild(stringBuilder.toString());
+        this.parent.addChildLine(stringBuilder.toString());
         this.stringBuilder = new StringBuilder();
     }
 }
