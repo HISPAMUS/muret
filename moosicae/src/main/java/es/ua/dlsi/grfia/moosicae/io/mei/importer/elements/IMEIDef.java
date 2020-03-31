@@ -1,6 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.io.mei.importer.elements;
 
-import es.ua.dlsi.grfia.moosicae.core.ICommonAlterationKey;
+import es.ua.dlsi.grfia.moosicae.core.ICommonAlterationKeySignature;
 import es.ua.dlsi.grfia.moosicae.core.IMeter;
 
 import java.util.Optional;
@@ -10,6 +10,6 @@ import java.util.Optional;
  * @created 25/03/2020
  */
 public interface IMEIDef {
-    Optional<ICommonAlterationKey> getCommonAlterationKey();
+    Optional<ICommonAlterationKeySignature> getCommonAlterationKey();
     Optional<IMeter> getMeter();
 }

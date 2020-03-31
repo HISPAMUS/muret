@@ -71,4 +71,13 @@ public class Key extends CoreItem implements IKey {
         result = 31 * result + keySignature.hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Key{" +
+                "pitchClass=" + pitchClass +
+                ", mode=" + mode +
+                ", keySignature=" + keySignature +
+                "} " + super.toString();
+    }
 }

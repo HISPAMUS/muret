@@ -57,7 +57,7 @@ public class TestNotNullAnnotations {
     public void testNotNullAtICoreAbstractFactory3() throws IMException {
         ICoreAbstractFactory coreAbstractFactory = new CoreFactory().create();
         // name element is required
-        ICommonAlterationKey key = coreAbstractFactory.createCommonAlterationKey(coreAbstractFactory.createId(), null, null, coreAbstractFactory.createMode(coreAbstractFactory.createId(), EModes.major));
+        ICommonAlterationKeySignature key = coreAbstractFactory.createCommonAlterationKey(coreAbstractFactory.createId(), null, null, coreAbstractFactory.createMode(coreAbstractFactory.createId(), EModes.major));
         fail("It should not arrive here: recompile with Maven and reimport project in IDE");
     }
 }

@@ -2,7 +2,7 @@ package es.ua.dlsi.grfia.moosicae.io.mei.importer.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IClef;
-import es.ua.dlsi.grfia.moosicae.core.ICommonAlterationKey;
+import es.ua.dlsi.grfia.moosicae.core.ICommonAlterationKeySignature;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.IMeter;
 import es.ua.dlsi.grfia.moosicae.core.builders.IClefBuilder;
@@ -212,7 +212,7 @@ public class MEIAttributesParsers {
         }
     }
 
-    Optional<ICommonAlterationKey> parseCommonAlterationKey(ICoreAbstractFactory coreAbstractFactory, XMLImporterParam xmlImporterParam) throws IMException {
+    Optional<ICommonAlterationKeySignature> parseCommonAlterationKey(ICoreAbstractFactory coreAbstractFactory, XMLImporterParam xmlImporterParam) throws IMException {
         Optional<String> keySig = xmlImporterParam.getAttribute("key.sig");
         if (keySig.isPresent()) {
             if (keySig.get().length() != 2) {

@@ -79,7 +79,8 @@ public class AllCore {
         outputTmp.mkdirs();
         AbstractCoreTest [] testScoreBuilders = new AbstractCoreTest[] {
             new MinimalTest(abstractFactory),
-                new ClefsTest(abstractFactory)
+                new ClefsTest(abstractFactory),
+                new KeysTest(abstractFactory)
         };
         for (AbstractCoreTest coreTestScoreBuilder: testScoreBuilders) {
             doTest(coreTestScoreBuilder);

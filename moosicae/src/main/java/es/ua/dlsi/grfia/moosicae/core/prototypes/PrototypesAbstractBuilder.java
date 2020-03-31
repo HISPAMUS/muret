@@ -1,5 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.core.prototypes;
 
+import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 
 import java.util.HashMap;
@@ -13,14 +14,16 @@ public class PrototypesAbstractBuilder {
     private final ICoreAbstractFactory coreAbstractFactory;
 
     private final Clefs clefs;
+    private final Keys keys;
 
-    private PrototypesAbstractBuilder(ICoreAbstractFactory coreAbstractFactory) {
+    private PrototypesAbstractBuilder(ICoreAbstractFactory coreAbstractFactory) throws IMException {
         this.coreAbstractFactory = coreAbstractFactory;
 
         this.clefs = new Clefs(coreAbstractFactory);
+        this.keys = new Keys(coreAbstractFactory);
     }
 
-    public static synchronized PrototypesAbstractBuilder getInstance(ICoreAbstractFactory coreAbstractFactory) {
+    public static synchronized PrototypesAbstractBuilder getInstance(ICoreAbstractFactory coreAbstractFactory) throws IMException {
         PrototypesAbstractBuilder p = prototypes.get(coreAbstractFactory);
         if (p == null) {
             p = new PrototypesAbstractBuilder(coreAbstractFactory);
@@ -31,5 +34,9 @@ public class PrototypesAbstractBuilder {
 
     public Clefs getClefs() {
         return clefs;
+    }
+
+    public Keys getKeys() {
+        return keys;
     }
 }

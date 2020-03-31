@@ -8,7 +8,7 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 16/03/2020
  */
-public interface ICommonAlterationKey extends IKey {
+public interface ICommonAlterationKeySignature extends IKey {
     int getAccidentalCount();
     Optional<IAccidentalSymbol> getAccidentalSymbol();
 }

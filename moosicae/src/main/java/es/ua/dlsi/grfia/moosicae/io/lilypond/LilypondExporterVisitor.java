@@ -169,14 +169,18 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
 
     @Override
     public void exportKey(IKey key, LilypondExporterVisitorParam inputOutputOutput) throws IMException {
-
+        if (key instanceof ICommonAlterationKeySignature) {
+            exportCommonAlterationKey((ICommonAlterationKeySignature) key, inputOutputOutput);
+        } else {
+            throw new UnsupportedOperationException("TO-DO");
+        }
     }
 
     @Override
-    public void exportCommonAlterationKey(ICommonAlterationKey commonAlterationKey, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportCommonAlterationKey(ICommonAlterationKeySignature commonAlterationKey, LilypondExporterVisitorParam inputOutput) throws IMException {
         inputOutput.startString();
         inputOutput.append("\\key ");
-        inputOutput.append(commonAlterationKey.getPitchClass().getDiatonicPitch().getValue().name().toLowerCase());
+        exportPitchClass(commonAlterationKey.getPitchClass(), inputOutput);
         inputOutput.append(' ');
         inputOutput.append('\\');
         inputOutput.append(commonAlterationKey.getMode().getValue().name().toLowerCase());
@@ -243,7 +247,11 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
 
     @Override
     public void exportPitchClass(IPitchClass pitchClass, LilypondExporterVisitorParam inputOutput) throws IMException {
-
+        inputOutput.append(pitchClass.getDiatonicPitch().getValue().name().toLowerCase());
+        Optional<IAccidentalSymbol> accidentalSymbol = pitchClass.getAccidental();
+        if (accidentalSymbol.isPresent()) {
+            exportAccidentalSymbol(accidentalSymbol.get(), inputOutput);
+        }
     }
 
     @Override

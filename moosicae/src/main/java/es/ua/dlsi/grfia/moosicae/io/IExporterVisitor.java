@@ -21,7 +21,7 @@ public interface IExporterVisitor<InputOutputType>  {
     void exportChord(IChord chord, InputOutputType inputOutputOutput) throws IMException;
     void exportCustos(ICustos custos, InputOutputType inputOutputOutput) throws IMException;
     void exportKey(IKey key, InputOutputType inputOutputOutput) throws IMException;
-    void exportCommonAlterationKey(ICommonAlterationKey commonAlterationKey, InputOutputType inputOutputOutput) throws IMException;
+    void exportCommonAlterationKey(ICommonAlterationKeySignature commonAlterationKey, InputOutputType inputOutputOutput) throws IMException;
 
     void exportMode(IMode mode, InputOutputType inputOutput);
 

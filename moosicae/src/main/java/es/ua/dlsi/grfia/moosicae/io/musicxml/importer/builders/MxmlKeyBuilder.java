@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.io.musicxml.importer.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.ICommonAlterationKey;
+import es.ua.dlsi.grfia.moosicae.core.ICommonAlterationKeySignature;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.builders.IKeyFromAccidentalCountBuilder;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
@@ -12,7 +12,7 @@ import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 24/03/2020
  */
-public class MxmlKeyBuilder extends IKeyFromAccidentalCountBuilder implements IImporterAdapter<ICommonAlterationKey, XMLImporterParam> {
+public class MxmlKeyBuilder extends IKeyFromAccidentalCountBuilder implements IImporterAdapter<ICommonAlterationKeySignature, XMLImporterParam> {
 
     public MxmlKeyBuilder(ICoreAbstractFactory coreObjectFactory) {
         super(coreObjectFactory);
@@ -23,7 +23,7 @@ public class MxmlKeyBuilder extends IKeyFromAccidentalCountBuilder implements II
     }
 
     @Override
-    public ICommonAlterationKey build() throws IMException {
+    public ICommonAlterationKeySignature build() throws IMException {
         if (accidentalCount == null) {
             throw new IMException("Missing fifths element");
         }

@@ -119,7 +119,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public ICommonAlterationKey createCommonAlterationKey(IId id, IKeyAccidentalCount accidentalCount, IAccidentalSymbol accidentalSymbol, IMode mode) throws IMException {
+    public ICommonAlterationKeySignature createCommonAlterationKey(IId id, IKeyAccidentalCount accidentalCount, IAccidentalSymbol accidentalSymbol, IMode mode) throws IMException {
         if (accidentalCount == null) {
             throw new IllegalArgumentException("accidentalCount");
         }
@@ -441,7 +441,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public ICommonAlterationKey createCommonAlterationKey(IId id, ECommonAlterationKeys commonKeys) {
+    public ICommonAlterationKeySignature createCommonAlterationKey(IId id, ECommonAlterationKeys commonKeys) {
         IPitchClass pitchClass = createPitchClass(null, commonKeys.getDiatonicPitch(), commonKeys.getPitchAccidentalSymbol());
         IMode mode = createMode(id, commonKeys.getMode());
 
