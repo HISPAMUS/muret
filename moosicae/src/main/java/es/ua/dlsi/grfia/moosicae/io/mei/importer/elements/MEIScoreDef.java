@@ -1,6 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.io.mei.importer.elements;
 
-import es.ua.dlsi.grfia.moosicae.core.ICommonAlterationKeySignature;
+import es.ua.dlsi.grfia.moosicae.core.ICommonAlterationKey;
 import es.ua.dlsi.grfia.moosicae.core.IMeter;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 
@@ -11,11 +11,11 @@ import java.util.Optional;
  * @created 25/03/2020
  */
 public class MEIScoreDef extends MEIObject implements IMEIDef {
-    private final ICommonAlterationKeySignature commonAlterationKey;
+    private final ICommonAlterationKey commonAlterationKey;
     private final IMeter meter;
     private final MEIStaffGroupDef meiStaffGroupDef;
 
-    public MEIScoreDef(IId id, ICommonAlterationKeySignature commonAlterationKey, IMeter meter, MEIStaffGroupDef meiStaffGroupDef) {
+    public MEIScoreDef(IId id, ICommonAlterationKey commonAlterationKey, IMeter meter, MEIStaffGroupDef meiStaffGroupDef) {
         super(id);
         this.commonAlterationKey = commonAlterationKey;
         this.meter = meter;
@@ -23,7 +23,7 @@ public class MEIScoreDef extends MEIObject implements IMEIDef {
     }
 
     @Override
-    public Optional<ICommonAlterationKeySignature> getCommonAlterationKey() {
+    public Optional<ICommonAlterationKey> getCommonAlterationKey() {
         return Optional.ofNullable(commonAlterationKey);
     }
 

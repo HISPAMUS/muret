@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.io.mei.importer.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.ICommonAlterationKeySignature;
+import es.ua.dlsi.grfia.moosicae.core.ICommonAlterationKey;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.IMeter;
 import es.ua.dlsi.grfia.moosicae.io.mei.importer.elements.MEIScoreDef;
@@ -15,7 +15,7 @@ import java.util.Optional;
  * @created 25/03/2020
  */
 public class MEIScoreDefBuilder extends MEIObjectBuilder<MEIScoreDef> {
-    protected ICommonAlterationKeySignature commonAlterationKey;
+    protected ICommonAlterationKey commonAlterationKey;
     protected IMeter meter;
     private MEIStaffGroupDef staffGroupDef;
 
@@ -37,7 +37,7 @@ public class MEIScoreDefBuilder extends MEIObjectBuilder<MEIScoreDef> {
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
         Optional<IMeter> meter = MEIAttributesParsers.getInstance().parseMeter(coreObjectFactory, xmlImporterParam);
 
-        Optional<ICommonAlterationKeySignature> commonAlterationKey = MEIAttributesParsers.getInstance().parseCommonAlterationKey(coreObjectFactory, xmlImporterParam);
+        Optional<ICommonAlterationKey> commonAlterationKey = MEIAttributesParsers.getInstance().parseCommonAlterationKey(coreObjectFactory, xmlImporterParam);
         if (commonAlterationKey.isPresent()) {
             this.commonAlterationKey = commonAlterationKey.get();
         }

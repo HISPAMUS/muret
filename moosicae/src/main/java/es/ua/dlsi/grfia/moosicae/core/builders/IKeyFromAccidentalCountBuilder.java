@@ -10,7 +10,7 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IMode;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class IKeyFromAccidentalCountBuilder extends CoreObjectBuilder<ICommonAlterationKeySignature> {
+public class IKeyFromAccidentalCountBuilder extends CoreObjectBuilder<ICommonAlterationKey> {
     private IAccidentalSymbol accidentalSymbol;
     protected IKeyAccidentalCount accidentalCount;
     private IMode mode;
@@ -35,7 +35,7 @@ public class IKeyFromAccidentalCountBuilder extends CoreObjectBuilder<ICommonAlt
     }
 
     @Override
-    public ICommonAlterationKeySignature build() throws IMException {
+    public ICommonAlterationKey build() throws IMException {
         return coreObjectFactory.createCommonAlterationKey(getId(), accidentalCount, accidentalSymbol, mode);
     }
 

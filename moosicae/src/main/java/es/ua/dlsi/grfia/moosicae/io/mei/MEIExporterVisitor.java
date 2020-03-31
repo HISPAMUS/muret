@@ -139,7 +139,7 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
     }
 
     @Override
-    public void exportCommonAlterationKey(ICommonAlterationKeySignature commonAlterationKey, XMLExporterVisitorParam inputOutput) throws IMException {
+    public void exportCommonAlterationKey(ICommonAlterationKey commonAlterationKey, XMLExporterVisitorParam inputOutput) throws IMException {
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
             StringBuilder keySig = new StringBuilder();
             keySig.append(commonAlterationKey.getAccidentalCount());

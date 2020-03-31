@@ -105,7 +105,7 @@ public class MEIImporter extends XMLImporter implements IImporter {
         if (meter.isPresent()) {
             score.add(voice, staff, meter.get());
         }
-        Optional<ICommonAlterationKeySignature> commonAlterationKey = imeiDef.getCommonAlterationKey();
+        Optional<ICommonAlterationKey> commonAlterationKey = imeiDef.getCommonAlterationKey();
         if (commonAlterationKey.isPresent()) {
             score.add(voice, staff, commonAlterationKey.get());
         }

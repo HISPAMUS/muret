@@ -2,9 +2,10 @@ package es.ua.dlsi.grfia.moosicae.io.mei.importer.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IClef;
-import es.ua.dlsi.grfia.moosicae.core.ICommonAlterationKeySignature;
+import es.ua.dlsi.grfia.moosicae.core.ICommonAlterationKey;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.IMeter;
+import es.ua.dlsi.grfia.moosicae.io.mei.importer.elements.MEIScoreDef;
 import es.ua.dlsi.grfia.moosicae.io.mei.importer.elements.MEIStaffDef;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
 
@@ -16,7 +17,7 @@ import java.util.Optional;
  */
 public class MEIStaffDefBuilder extends MEIObjectBuilder<MEIStaffDef> {
     protected IClef clef;
-    protected ICommonAlterationKeySignature commonAlterationKey;
+    protected ICommonAlterationKey commonAlterationKey;
     protected IMeter meter;
     private Integer n;
 
@@ -42,7 +43,7 @@ public class MEIStaffDefBuilder extends MEIObjectBuilder<MEIStaffDef> {
             this.clef = clef.get();
         }
 
-        Optional<ICommonAlterationKeySignature> commonAlterationKey = MEIAttributesParsers.getInstance().parseCommonAlterationKey(coreObjectFactory, xmlImporterParam);
+        Optional<ICommonAlterationKey> commonAlterationKey = MEIAttributesParsers.getInstance().parseCommonAlterationKey(coreObjectFactory, xmlImporterParam);
         if (commonAlterationKey.isPresent()) {
             this.commonAlterationKey = commonAlterationKey.get();
         }

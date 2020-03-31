@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core.prototypes;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.ICommonAlterationKeySignature;
+import es.ua.dlsi.grfia.moosicae.core.ICommonAlterationKey;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.IKey;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
@@ -64,7 +64,7 @@ public class Keys extends Prototypes<IKey> {
         }
         IMode mode = coreAbstractFactory.createMode(null, emode);
 
-        ICommonAlterationKeySignature commonAlterationKey = coreAbstractFactory.createCommonAlterationKey(null, keyAccidentalCount, keyAccidentalSymbol, mode);
+        ICommonAlterationKey commonAlterationKey = coreAbstractFactory.createCommonAlterationKey(null, keyAccidentalCount, keyAccidentalSymbol, mode);
 
         // check they are valid
         IDiatonicPitch expectedDiatonicPitch = coreAbstractFactory.createDiatonicPitch(null, ediatonicPitch);

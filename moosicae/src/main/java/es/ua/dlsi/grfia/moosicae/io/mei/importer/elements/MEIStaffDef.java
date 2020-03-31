@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.io.mei.importer.elements;
 
 import es.ua.dlsi.grfia.moosicae.core.IClef;
-import es.ua.dlsi.grfia.moosicae.core.ICommonAlterationKeySignature;
+import es.ua.dlsi.grfia.moosicae.core.ICommonAlterationKey;
 import es.ua.dlsi.grfia.moosicae.core.IMeter;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 
@@ -13,14 +13,14 @@ import java.util.Optional;
  * @created 25/03/2020
  */
 public class MEIStaffDef extends MEISystemDef implements IMEIDef {
-    private ICommonAlterationKeySignature commonAlterationKey;
+    private ICommonAlterationKey commonAlterationKey;
     private IMeter meter;
     private IClef clef;
 
     @NotNull
     private Integer n;
 
-    public MEIStaffDef(IId id, IClef clef, ICommonAlterationKeySignature commonAlterationKey, IMeter meter, Integer n) {
+    public MEIStaffDef(IId id, IClef clef, ICommonAlterationKey commonAlterationKey, IMeter meter, Integer n) {
         super(id);
         this.clef = clef;
         this.commonAlterationKey = commonAlterationKey;
@@ -37,7 +37,7 @@ public class MEIStaffDef extends MEISystemDef implements IMEIDef {
     }
 
     @Override
-    public Optional<ICommonAlterationKeySignature> getCommonAlterationKey() {
+    public Optional<ICommonAlterationKey> getCommonAlterationKey() {
         return Optional.ofNullable(commonAlterationKey);
     }
 

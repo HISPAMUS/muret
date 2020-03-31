@@ -138,7 +138,7 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
 
 
     @Override
-    public void exportCommonAlterationKey(ICommonAlterationKeySignature commonAlterationKey, XMLExporterVisitorParam inputOutput) throws IMException {
+    public void exportCommonAlterationKey(ICommonAlterationKey commonAlterationKey, XMLExporterVisitorParam inputOutput) throws IMException {
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
             XMLExporterVisitorParam keyXMLParam = new XMLExporterVisitorParam(XMLParamExportMode.element, inputOutput.addChild("key"));
             int fifths;

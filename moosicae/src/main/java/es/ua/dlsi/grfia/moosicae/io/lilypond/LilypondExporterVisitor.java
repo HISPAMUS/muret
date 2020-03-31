@@ -169,15 +169,15 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
 
     @Override
     public void exportKey(IKey key, LilypondExporterVisitorParam inputOutputOutput) throws IMException {
-        if (key instanceof ICommonAlterationKeySignature) {
-            exportCommonAlterationKey((ICommonAlterationKeySignature) key, inputOutputOutput);
+        if (key instanceof ICommonAlterationKey) {
+            exportCommonAlterationKey((ICommonAlterationKey) key, inputOutputOutput);
         } else {
             throw new UnsupportedOperationException("TO-DO");
         }
     }
 
     @Override
-    public void exportCommonAlterationKey(ICommonAlterationKeySignature commonAlterationKey, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportCommonAlterationKey(ICommonAlterationKey commonAlterationKey, LilypondExporterVisitorParam inputOutput) throws IMException {
         inputOutput.startString();
         inputOutput.append("\\key ");
         exportPitchClass(commonAlterationKey.getPitchClass(), inputOutput);

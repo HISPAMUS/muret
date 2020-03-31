@@ -166,7 +166,7 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     }
 
     @Override
-    public void exportCommonAlterationKey(ICommonAlterationKeySignature commonAlterationKey, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+    public void exportCommonAlterationKey(ICommonAlterationKey commonAlterationKey, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         exportKey((IKey)commonAlterationKey, inputOutput);
     }
 
