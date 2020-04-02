@@ -180,8 +180,8 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
     }
 
     @Override
-    public void exportConventionalKeySignature(IConventionalKeySignature commonAlterationKey, LilypondExporterVisitorParam inputOutputOutput) throws IMException {
-        throw new IMException("Cannot export conventional key signature, a key must be added and use it");
+    public void exportConventionalKeySignature(IConventionalKeySignature conventionalKeySignature, LilypondExporterVisitorParam inputOutput) throws IMException {
+        exportKeySignatureAlterations(conventionalKeySignature.getPitchClasses(), inputOutput);
     }
 
     @Override
@@ -189,13 +189,11 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
 
     }
 
-    @Override
-    public void exportUnconventionalKeySignature(IUnconventionalKeySignature unconventionalKeySignature, LilypondExporterVisitorParam inputOutput) throws IMException {
-        // non conventional key signatures
+    private void exportKeySignatureAlterations(IPitchClass [] pitchClasses, LilypondExporterVisitorParam inputOutput) throws IMException {
         inputOutput.startString();
         inputOutput.append("\\set Staff.keyAlterations = #`(");
 
-        for (IPitchClass pitchClass: unconventionalKeySignature.getPitchClasses()) {
+        for (IPitchClass pitchClass: pitchClasses) {
             inputOutput.append('(');
 
             inputOutput.append('(');
@@ -206,7 +204,7 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
 
             Optional<IAccidentalSymbol> accidentalSymbol = pitchClass.getAccidental();
             if (!accidentalSymbol.isPresent()) {
-                throw new IMException("The accidental of the pitch in the key signature must have a value: " + unconventionalKeySignature);
+                throw new IMException("The accidental of the pitch in the key signature must have a value");
             }
 
             inputOutput.append(" . ,");
@@ -214,6 +212,12 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
             inputOutput.append(')');
         }
         inputOutput.append(')');
+    }
+
+    @Override
+    public void exportUnconventionalKeySignature(IUnconventionalKeySignature unconventionalKeySignature, LilypondExporterVisitorParam inputOutput) throws IMException {
+        // non conventional key signatures
+        exportKeySignatureAlterations(unconventionalKeySignature.getPitchClasses(), inputOutput);
     }
 
     @Override

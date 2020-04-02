@@ -95,7 +95,8 @@ public class AllCoreTestSuite {
         AbstractCoreTest [] testScoreBuilders = new AbstractCoreTest[] {
             new MinimalTest(abstractFactory),
                 new ClefsTest(abstractFactory),
-                new KeysTest(abstractFactory)
+                new KeysTest(abstractFactory),
+                new KeySignaturesTest(abstractFactory)
         };
         for (AbstractCoreTest coreTestScoreBuilder: testScoreBuilders) {
             doTest(coreTestScoreBuilder);
