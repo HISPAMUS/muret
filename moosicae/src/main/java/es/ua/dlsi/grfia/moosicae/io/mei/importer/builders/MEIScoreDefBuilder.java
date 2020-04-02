@@ -1,8 +1,9 @@
 package es.ua.dlsi.grfia.moosicae.io.mei.importer.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.ICommonAlterationKey;
+import es.ua.dlsi.grfia.moosicae.core.IConventionalKeySignature;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
+import es.ua.dlsi.grfia.moosicae.core.IKey;
 import es.ua.dlsi.grfia.moosicae.core.IMeter;
 import es.ua.dlsi.grfia.moosicae.io.mei.importer.elements.MEIScoreDef;
 import es.ua.dlsi.grfia.moosicae.io.mei.importer.elements.MEIStaffGroupDef;
@@ -15,7 +16,8 @@ import java.util.Optional;
  * @created 25/03/2020
  */
 public class MEIScoreDefBuilder extends MEIObjectBuilder<MEIScoreDef> {
-    protected ICommonAlterationKey commonAlterationKey;
+    protected IKey key;
+    protected IConventionalKeySignature conventionalKeySignature;
     protected IMeter meter;
     private MEIStaffGroupDef staffGroupDef;
 
@@ -30,22 +32,25 @@ public class MEIScoreDefBuilder extends MEIObjectBuilder<MEIScoreDef> {
 
     @Override
     public MEIScoreDef build() throws IMException {
-        return new MEIScoreDef(getId(), commonAlterationKey, meter, staffGroupDef);
+        return new MEIScoreDef(getId(), key, conventionalKeySignature, meter, staffGroupDef);
     }
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
         Optional<IMeter> meter = MEIAttributesParsers.getInstance().parseMeter(coreObjectFactory, xmlImporterParam);
-
-        Optional<ICommonAlterationKey> commonAlterationKey = MEIAttributesParsers.getInstance().parseCommonAlterationKey(coreObjectFactory, xmlImporterParam);
-        if (commonAlterationKey.isPresent()) {
-            this.commonAlterationKey = commonAlterationKey.get();
-        }
-
         if (meter.isPresent()) {
             this.meter = meter.get();
         }
 
+        Optional<IKey> key = MEIAttributesParsers.getInstance().parseKey(coreObjectFactory, xmlImporterParam);
+        if (key.isPresent()) {
+            this.key = key.get();
+        } else {
+            Optional<IConventionalKeySignature> conventionalKeySignature = MEIAttributesParsers.getInstance().parseConventionalKeySignature(coreObjectFactory, xmlImporterParam);
+            if (conventionalKeySignature.isPresent()) {
+                this.conventionalKeySignature = conventionalKeySignature.get();
+            }
+        }
 
     }
 }

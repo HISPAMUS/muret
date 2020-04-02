@@ -166,8 +166,8 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     }
 
     @Override
-    public void exportCommonAlterationKey(ICommonAlterationKey commonAlterationKey, SkmExporterVisitorTokenParam inputOutput) throws IMException {
-        exportKey((IKey)commonAlterationKey, inputOutput);
+    public void exportConventionalKeySignature(IConventionalKeySignature conventionalKeySignature, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+        exportKeySignature(conventionalKeySignature, inputOutput);
     }
 
     @Override
@@ -175,7 +175,6 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
 
     }
 
-    @Override
     public void exportKeySignature(IKeySignature keySignature, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         inputOutput.append("*k[");
         for (IPitchClass pitchClass: keySignature.getPitchClasses()) {
@@ -396,7 +395,7 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
                 encoding = ":|!";
                 break;
             default:
-                throw new IMException("Unkown barline type: " + barlineType.getValue());
+                throw new IMException("Unknown barline type: " + barlineType.getValue());
         }
         inputOutput.append(encoding);
     }
@@ -409,6 +408,11 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     @Override
     public void exportSystemBeginning(ISystemBeginning systemBeginning, SkmExporterVisitorTokenParam inputOutput) {
 
+    }
+
+    @Override
+    public void exportUnconventionalKeySignature(IUnconventionalKeySignature unconventionalKeySignature, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+        exportKeySignature(unconventionalKeySignature, inputOutput);
     }
 
 

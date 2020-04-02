@@ -24,7 +24,7 @@ public class KeysTest extends MonodicTest {
 
         HashMap<String, IScore> result = new HashMap<>();
         keys.forEach((name, key) -> {
-            generateScore();
+            prepareScore();
             score.add(voice, staff, key);
             result.put("key_" + name, score);
         });

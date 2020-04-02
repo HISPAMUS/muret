@@ -1,13 +1,22 @@
 package es.ua.dlsi.grfia.moosicae.core.enums;
 
+import es.ua.dlsi.grfia.moosicae.IMException;
+import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
+import es.ua.dlsi.grfia.moosicae.core.properties.IPitchClass;
+import es.ua.dlsi.grfia.moosicae.core.utils.ICircleOfFifths;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Keys that have the two different kinds of accidental in the key signature. There are always 7 alterations
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 16/03/2020
  */
-public enum EMixedAlterationKeys {
+public enum ETheoreticalKeys implements IKeyEnum {
     GsM (EDiatonicPitches.G, EAccidentalSymbols.SHARP, EModes.major, 1, EAccidentalSymbols.DOUBLE_SHARP, EAccidentalSymbols.SHARP),
     Esm (EDiatonicPitches.E, EAccidentalSymbols.SHARP, EModes.minor, 1, EAccidentalSymbols.DOUBLE_SHARP, EAccidentalSymbols.SHARP),
     DsM (EDiatonicPitches.D, EAccidentalSymbols.SHARP, EModes.major, 2, EAccidentalSymbols.DOUBLE_SHARP, EAccidentalSymbols.SHARP),
@@ -45,23 +54,89 @@ public enum EMixedAlterationKeys {
     private final EAccidentalSymbols keySignatureFirstAccidental;
     private final Optional<EAccidentalSymbols> keySignatureSecondAccidental;
 
-    private EMixedAlterationKeys(EDiatonicPitches diatonicPitch, EAccidentalSymbols accidentalSymbol, EModes mode, int firstAlterationCount, EAccidentalSymbols keySignatureFirstAccidental, EAccidentalSymbols keySignatureSecondAccidental) {
+    private final Set<Pair<EDiatonicPitches, EAccidentalSymbols>> pitchClasses;
+
+    private ETheoreticalKeys(EDiatonicPitches diatonicPitch, EAccidentalSymbols accidentalSymbol, EModes mode, int firstAlterationCount, EAccidentalSymbols keySignatureFirstAccidental, EAccidentalSymbols keySignatureSecondAccidental) {
         this.diatonicPitch = diatonicPitch;
         this.accidentalSymbol = Optional.ofNullable(accidentalSymbol);
         this.mode = mode;
         this.firstAlterationCount = firstAlterationCount;
         this.keySignatureFirstAccidental = keySignatureFirstAccidental;
         this.keySignatureSecondAccidental = Optional.ofNullable(keySignatureSecondAccidental);
+        pitchClasses = new HashSet<>();
+        fillPitchClasses();
     }
 
+    /**
+     * Order of sharp alterations F, C, G, D, A, E, B
+     */
+    public static final EDiatonicPitches KEY_SIGNATURE_STAFF_SHARPS[] = { EDiatonicPitches.F, EDiatonicPitches.C, EDiatonicPitches.G, EDiatonicPitches.D,
+            EDiatonicPitches.A, EDiatonicPitches.E, EDiatonicPitches.B };
+
+    private void fillPitchClasses() {
+        EDiatonicPitches [] circle;
+        if (keySignatureFirstAccidental == EAccidentalSymbols.FLAT || keySignatureFirstAccidental == EAccidentalSymbols.DOUBLE_FLAT) {
+            circle = ICircleOfFifths.KEY_SIGNATURE_STAFF_FLATS;
+        } else if (keySignatureFirstAccidental == EAccidentalSymbols.SHARP || keySignatureFirstAccidental == EAccidentalSymbols.DOUBLE_SHARP) {
+            circle = ICircleOfFifths.KEY_SIGNATURE_STAFF_SHARPS;
+        } else {
+            throw new IMRuntimeException("Cannot build pitches with this accidental: " + keySignatureFirstAccidental);
+        }
+
+        int i = 0;
+        while (i<firstAlterationCount) {
+            EDiatonicPitches diatonicPitch = circle[i];
+            Pair<EDiatonicPitches, EAccidentalSymbols> pair = Pair.of(diatonicPitch, keySignatureFirstAccidental);
+            pitchClasses.add(pair);
+            i++;
+        }
+
+        while (i<circle.length) {
+            EDiatonicPitches diatonicPitch = circle[i];
+            Pair<EDiatonicPitches, EAccidentalSymbols> pair = Pair.of(diatonicPitch, keySignatureSecondAccidental.get());
+            pitchClasses.add(pair);
+            i++;
+        }
+    }
+
+    /**
+     * Find a theoretical key with the given pitch classes
+     * @param mode
+     * @param pitchClassesParam
+     * @return
+     */
+    public static Optional<ETheoreticalKeys> find(EModes mode, Collection<IPitchClass> pitchClassesParam) throws IMException {
+        HashSet<Pair<EDiatonicPitches, EAccidentalSymbols>>  setParam = new HashSet<>();
+        for (IPitchClass pitchClass: pitchClassesParam) {
+            if (!pitchClass.getAccidental().isPresent()) {
+                throw new IMException("Cannot find a pitch collection where there is a pitch class without an accidental");
+            }
+            setParam.add(Pair.of(
+                    pitchClass.getDiatonicPitch().getValue(),
+                    pitchClass.getAccidental().get().getValue()
+            ));
+        }
+
+        for (ETheoreticalKeys theoreticalKey: ETheoreticalKeys.values()) {
+            if (theoreticalKey.getMode() == mode && theoreticalKey.pitchClasses.equals(setParam)) {
+                return Optional.of(theoreticalKey);
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
     public EDiatonicPitches getDiatonicPitch() {
         return diatonicPitch;
     }
 
-    public Optional<EAccidentalSymbols> getAccidentalSymbol() {
+    @Override
+    public Optional<EAccidentalSymbols> getPitchAccidentalSymbol() {
         return accidentalSymbol;
     }
 
+    @Override
     public EModes getMode() {
         return mode;
     }

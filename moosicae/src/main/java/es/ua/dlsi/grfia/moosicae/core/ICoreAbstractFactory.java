@@ -27,6 +27,7 @@ public interface ICoreAbstractFactory {
     IClefLine createClefLine(IId id, @NotNull Integer line);
     IClefSign createClefSign(IId id, @NotNull EClefSigns clefSign);
     ICommonTime createCommonTime(IId id);
+    IConventionalKeySignature createConventionalKeySignature(IId id, @NotNull IKeyAccidentalCount keyAccidentalCount, IAccidentalSymbol accidentalSymbol);
     ICustos createCustos(IId id, @NotNull IPitch pitch);
     ICutTime createCutTime(IId id);
     IDiatonicPitch createDiatonicPitch(IId id, @NotNull EDiatonicPitches diatonicPitch);
@@ -34,13 +35,12 @@ public interface ICoreAbstractFactory {
     IFigure createFigure(IId id, @NotNull EFigures figure);
     IId createId();
     IId createId(@NotNull String value);
-    ICommonAlterationKey createCommonAlterationKey(IId id, @NotNull ECommonAlterationKeys commonAlterationKeys);
-    IMixedAlterationsKey createMixedAlterationsKey(IId id, @NotNull EMixedAlterationKeys mixedAlterationKeys);
+    IKey createConventionalKey(IId id, @NotNull EConventionalKeys commonAlterationKeys);
+    ITheoreticalKey createTheoreticalKey(IId id, @NotNull ETheoreticalKeys mixedAlterationKeys);
     IKey createKey(IId id, @NotNull IPitchClass pitchClass, @NotNull IMode mode) throws IMException;
     IKey createKey(IId id, @NotNull IPitchClass pitchClass, @NotNull IMode mode, @NotNull IKeySignature keySignature);
-    ICommonAlterationKey createCommonAlterationKey(IId id, @NotNull IKeyAccidentalCount accidentalCount, IAccidentalSymbol accidentalSymbol, @NotNull IMode mode) throws IMException;
     IKeyAccidentalCount createKeyAccidentalCount(IId id, @NotNull Integer nAccidentals);
-    IKeySignature createKeySignature(IId id, @NotNull IPitchClass [] pitchClasses);
+    IUnconventionalKeySignature createUnconventionalKeySignature(IId id, @NotNull IPitchClass [] pitchClasses);
     IFractionalTimeSignature createFractionalTimeSignature(IId id, @NotNull ITimeSignatureNumerator numerator, @NotNull ITimeSignatureDenominator denominator);
     IMensuration createMensuration(IId id, @NotNull EMensurations mensuration);
     IMensuration createMensuration(IId id,  EMensuralPerfections modusMaior,  EMensuralPerfections modusMinor, @NotNull EMensuralPerfections tempus, @NotNull EMensuralPerfections prolatio);

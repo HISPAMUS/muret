@@ -1,6 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.core.builders;
 
-import es.ua.dlsi.grfia.moosicae.core.IKeySignature;
+import es.ua.dlsi.grfia.moosicae.core.IUnconventionalKeySignature;
 import es.ua.dlsi.grfia.moosicae.core.properties.IPitchClass;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 
@@ -11,23 +11,23 @@ import java.util.List;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class IKeySignatureBuilder extends CoreObjectBuilder<IKeySignature> {
+public class IUnconventionalKeySignatureBuilder extends CoreObjectBuilder<IUnconventionalKeySignature> {
     private List<IPitchClass> pitchClassList;
 
-    public IKeySignatureBuilder(ICoreAbstractFactory coreObjectFactory) {
+    public IUnconventionalKeySignatureBuilder(ICoreAbstractFactory coreObjectFactory) {
         super(coreObjectFactory);
         this.pitchClassList = new LinkedList<>();
     }
 
-    public IKeySignatureBuilder add(IPitchClass pitchClass) {
+    public IUnconventionalKeySignatureBuilder add(IPitchClass pitchClass) {
         pitchClassList.add(pitchClass);
         return this;
     }
 
     @Override
-    public IKeySignature build() {
+    public IUnconventionalKeySignature build() {
         // the key signature can have no pitch class (CM or Am)
-        return coreObjectFactory.createKeySignature(getId(), pitchClassList.toArray(new IPitchClass[0]));
+        return coreObjectFactory.createUnconventionalKeySignature(getId(), pitchClassList.toArray(new IPitchClass[0]));
     }
 
 

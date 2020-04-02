@@ -21,11 +21,10 @@ public interface IExporterVisitor<InputOutputType>  {
     void exportChord(IChord chord, InputOutputType inputOutputOutput) throws IMException;
     void exportCustos(ICustos custos, InputOutputType inputOutputOutput) throws IMException;
     void exportKey(IKey key, InputOutputType inputOutputOutput) throws IMException;
-    void exportCommonAlterationKey(ICommonAlterationKey commonAlterationKey, InputOutputType inputOutputOutput) throws IMException;
+    void exportConventionalKeySignature(IConventionalKeySignature commonAlterationKey, InputOutputType inputOutputOutput) throws IMException;
 
     void exportMode(IMode mode, InputOutputType inputOutput);
 
-    void exportKeySignature(IKeySignature keySignature, InputOutputType inputOutputOutput) throws IMException;
     void exportVoice(IVoice voice, InputOutputType inputOutput) throws IMException;
     void exportDiatonicPitch(IDiatonicPitch diatonicPitch, InputOutputType inputOutput) throws IMException;
     void exportAccidentalSymbol(IAccidentalSymbol accidental, InputOutputType inputOutput) throws IMException;
@@ -44,4 +43,6 @@ public interface IExporterVisitor<InputOutputType>  {
 
     void exportPageBeginning(IPageBeginning pageBeginning, InputOutputType inputOutput);
     void exportSystemBeginning(ISystemBeginning systemBeginning, InputOutputType inputOutput);
+
+    void exportUnconventionalKeySignature(IUnconventionalKeySignature unconventionalKeySignature, InputOutputType inputOutput) throws IMException;
 }

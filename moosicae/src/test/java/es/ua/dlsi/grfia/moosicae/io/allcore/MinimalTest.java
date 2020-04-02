@@ -20,10 +20,10 @@ public class MinimalTest extends MonodicTest {
 
     @Override
     public Map<String, IScore> generateTestScores() throws Exception {
-        generateScore();
+        prepareScore();
         IClef clef = coreAbstractFactory.createClef(coreAbstractFactory.createId(), coreAbstractFactory.createClefSign(coreAbstractFactory.createId(), EClefSigns.G), coreAbstractFactory.createClefLine(coreAbstractFactory.createId(), 2), null);
         score.add(voice, staff, clef);
-        IKey key = coreAbstractFactory.createCommonAlterationKey(coreAbstractFactory.createId(), ECommonAlterationKeys.DM);
+        IKey key = coreAbstractFactory.createConventionalKey(coreAbstractFactory.createId(), EConventionalKeys.DM);
         score.add(voice, staff, key);
         IMeter meterSymbol = coreAbstractFactory.createCommonTime(coreAbstractFactory.createId());
         score.add(voice, staff, meterSymbol);

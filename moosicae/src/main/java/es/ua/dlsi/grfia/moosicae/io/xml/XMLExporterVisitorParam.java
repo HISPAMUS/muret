@@ -8,7 +8,6 @@ import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
  * @created 16/03/2020
  */
 public class XMLExporterVisitorParam {
-    ;
 
     private XMLParamExportMode XMLParamExportMode;
     private XMLElement xmlElement;
@@ -50,6 +49,10 @@ public class XMLExporterVisitorParam {
 
     public XMLElement addChild(String childElementName, String value) {
         return xmlElement.addChild(childElementName, value);
+    }
+
+    public XMLExporterVisitorParam addChild(XMLParamExportMode xmlParamExportMode, String childElementName) {
+        return new XMLExporterVisitorParam(xmlParamExportMode, addChild(childElementName));
     }
 
     public void append(String string) {

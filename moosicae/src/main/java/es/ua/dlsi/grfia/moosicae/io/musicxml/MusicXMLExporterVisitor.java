@@ -5,6 +5,7 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
+import es.ua.dlsi.grfia.moosicae.core.impl.UnconventionalKeySignature;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLExporterVisitorParam;
@@ -132,42 +133,73 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
     }
 
     @Override
-    public void exportKey(IKey key, XMLExporterVisitorParam inputOutputOutput) throws IMException {
+    public void exportKey(IKey key, XMLExporterVisitorParam inputOutput) throws IMException {
+        XMLExporterVisitorParam keyXMLParam;
+        if (key.getKeySignature() instanceof IConventionalKeySignature) {
+            keyXMLParam = doExportConventionalKeySignature((IConventionalKeySignature) key.getKeySignature(), inputOutput);
+        } else if (key.getKeySignature() instanceof IUnconventionalKeySignature) {
+            keyXMLParam = doExportUnconventionalKeySignature((IUnconventionalKeySignature) key.getKeySignature(), inputOutput);
+        } else {
+            throw new IMException("Unsupported key signature class in key: " + key.getKeySignature());
+        }
+        exportMode(key.getMode(), keyXMLParam);
+    }
 
+    private XMLExporterVisitorParam doExportUnconventionalKeySignature(IUnconventionalKeySignature unconventionalKeySignature, XMLExporterVisitorParam inputOutput) throws IMException {
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
+            XMLExporterVisitorParam keyXMLParam = new XMLExporterVisitorParam(XMLParamExportMode.element, inputOutput.addChild("key"));
+
+            for (IPitchClass pitchClass: unconventionalKeySignature.getPitchClasses()) {
+                keyXMLParam.addChild("key-step", pitchClass.getDiatonicPitch().getValue().name().toUpperCase());
+                if (pitchClass.getAccidental().isPresent()) {
+                    keyXMLParam.addChild("key-alter", Integer.toString(pitchClass.getAccidental().get().getValue().getAlteration()));
+                } else {
+                    throw new IMException("Expected an alteration for the pitch class in key: " + unconventionalKeySignature);
+                }
+            }
+
+            return keyXMLParam;
+        } else {
+            throw new UnsupportedOperationException("Invalid export mode: " + inputOutput.getXMLParamExportMode()); //TODO
+        }
     }
 
 
     @Override
-    public void exportCommonAlterationKey(ICommonAlterationKey commonAlterationKey, XMLExporterVisitorParam inputOutput) throws IMException {
+    public void exportUnconventionalKeySignature(IUnconventionalKeySignature unconventionalKeySignature, XMLExporterVisitorParam inputOutput) throws IMException {
+        doExportUnconventionalKeySignature(unconventionalKeySignature, inputOutput);
+    }
+
+    @Override
+    public void exportConventionalKeySignature(IConventionalKeySignature conventionalKeySignature, XMLExporterVisitorParam inputOutput) throws IMException {
+        doExportConventionalKeySignature(conventionalKeySignature, inputOutput);
+    }
+
+    private XMLExporterVisitorParam doExportConventionalKeySignature(IConventionalKeySignature conventionalKeySignature, XMLExporterVisitorParam inputOutput) throws IMException {
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
             XMLExporterVisitorParam keyXMLParam = new XMLExporterVisitorParam(XMLParamExportMode.element, inputOutput.addChild("key"));
             int fifths;
-            if (commonAlterationKey.getAccidentalSymbol().isPresent()) {
-                if (commonAlterationKey.getAccidentalSymbol().get().getValue() == EAccidentalSymbols.SHARP) {
-                    fifths = commonAlterationKey.getAccidentalCount();
-                } else if (commonAlterationKey.getAccidentalSymbol().get().getValue() == EAccidentalSymbols.FLAT){
-                    fifths = -commonAlterationKey.getAccidentalCount();
+            if (conventionalKeySignature.getAccidentalSymbol().isPresent()) {
+                if (conventionalKeySignature.getAccidentalSymbol().get().getValue() == EAccidentalSymbols.SHARP) {
+                    fifths = conventionalKeySignature.getAccidentalCount().getValue();
+                } else if (conventionalKeySignature.getAccidentalSymbol().get().getValue() == EAccidentalSymbols.FLAT){
+                    fifths = -conventionalKeySignature.getAccidentalCount().getValue();
                 } else {
-                    throw new IMException("Unsupported accidental in standard key " + commonAlterationKey.getAccidentalSymbol().get());
+                    throw new IMException("Unsupported accidental in standard key " + conventionalKeySignature.getAccidentalSymbol().get());
                 }
             } else {
                 fifths = 0;
             }
             keyXMLParam.addChild("fifths", Integer.toString(fifths));
-            exportMode(commonAlterationKey.getMode(), keyXMLParam);
+            return keyXMLParam;
         } else {
-            throw new UnsupportedOperationException("TO-DO"); //TODO
+            throw new UnsupportedOperationException("Invalid export mode: " + inputOutput.getXMLParamExportMode()); //TODO
         }
     }
 
     @Override
     public void exportMode(IMode mode, XMLExporterVisitorParam inputOutput) {
         inputOutput.addChild("mode", mode.getValue().name().toLowerCase());
-    }
-
-    @Override
-    public void exportKeySignature(IKeySignature keySignature, XMLExporterVisitorParam inputOutput) {
-        throw new UnsupportedOperationException("TO-DO"); //TODO
     }
 
     @Override
@@ -309,6 +341,7 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
     public void exportSystemBeginning(ISystemBeginning systemBeginning, XMLExporterVisitorParam inputOutput) {
 
     }
+
 
 
 }

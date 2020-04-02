@@ -27,6 +27,9 @@ public class MEIImporter extends XMLImporter implements IImporter {
         coreObjectBuilderSuppliers.add("scoreDef", MEIScoreDefBuilder::new);
         coreObjectBuilderSuppliers.add("staffGrp", MEIStaffGroupBuilder::new);
         coreObjectBuilderSuppliers.add("staffDef", MEIStaffDefBuilder::new);
+        coreObjectBuilderSuppliers.add("keySig", MEIKeyOrKeySignatureBuilder::new);
+        coreObjectBuilderSuppliers.add("keyAccid", MEIKeyAccidBuilder::new);
+
         coreObjectBuilderSuppliers.add("section", MEISectionBuilder::new);
         coreObjectBuilderSuppliers.add("measure", MEIMeasureBuilder::new);
         coreObjectBuilderSuppliers.add("staff", MEIStaffBuilder::new);
@@ -105,9 +108,14 @@ public class MEIImporter extends XMLImporter implements IImporter {
         if (meter.isPresent()) {
             score.add(voice, staff, meter.get());
         }
-        Optional<ICommonAlterationKey> commonAlterationKey = imeiDef.getCommonAlterationKey();
-        if (commonAlterationKey.isPresent()) {
-            score.add(voice, staff, commonAlterationKey.get());
+        Optional<IKey> key = imeiDef.getKey();
+        if (key.isPresent()) {
+            score.add(voice, staff, key.get());
+        } else { // else because in the case of importing both key and key signature (it should'n happen) we prefer the key (that is a key signature with a mode)
+            Optional<IConventionalKeySignature> conventionalKeySignature = imeiDef.getConventionalKeySignature();
+            if (conventionalKeySignature.isPresent()) {
+                score.add(voice, staff, conventionalKeySignature.get());
+            }
         }
     }
 

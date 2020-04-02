@@ -28,7 +28,7 @@ public enum EDiatonicPitches {
         return semitonesFromC;
     }
     /**
-     * @return the order (from C=0 to B=6. -1=rest)
+     * @return the order (from C=0 to B=6)
      */
     public final int getOrder() {
         return order;

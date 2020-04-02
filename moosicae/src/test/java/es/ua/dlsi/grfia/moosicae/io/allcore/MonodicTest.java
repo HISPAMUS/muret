@@ -17,7 +17,7 @@ public abstract class MonodicTest extends AbstractCoreTest {
         super(coreAbstractFactory);
     }
 
-    protected void generateScore() {
+    protected void prepareScore() {
         score = coreAbstractFactory.createScore(coreAbstractFactory.createId());
         part = coreAbstractFactory.createPart(score, coreAbstractFactory.createId(), coreAbstractFactory.createName(coreAbstractFactory.createId(), "Violin"));
         voice = coreAbstractFactory.createVoice(part, coreAbstractFactory.createId(), null);

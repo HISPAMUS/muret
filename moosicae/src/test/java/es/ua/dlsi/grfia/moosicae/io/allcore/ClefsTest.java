@@ -21,7 +21,7 @@ public class ClefsTest extends MonodicTest {
 
         HashMap<String, IScore> result = new HashMap<>();
         clefs.forEach((name, clef) -> {
-            generateScore();
+            prepareScore();
             score.add(voice, staff, clef);
             result.put("clef_" + name, score);
         });

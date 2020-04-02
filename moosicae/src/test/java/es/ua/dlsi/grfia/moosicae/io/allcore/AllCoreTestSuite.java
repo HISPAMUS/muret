@@ -28,7 +28,7 @@ import static org.junit.Assert.fail;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 27/03/2020
  */
-public class AllCore {
+public class AllCoreTestSuite {
     private static final String OUTPUT = "/tmp/allcoretests";
     private ICoreAbstractFactory abstractFactory = new CoreFactory().create();
 
@@ -43,7 +43,7 @@ public class AllCore {
         Files.write(path, strToBytes);
     }
 
-    private void testExportImport(IScore score, IExporter exporter, IImporter importer, File outputTmp, String name, String extension) throws IMException, IOException {
+    private void testExportImport(String format, IScore score, IExporter exporter, IImporter importer, File outputTmp, String name, String extension) throws IMException, IOException {
         String exported = exporter.exportScore(score);
         File outputfile = new File(outputTmp, name + "." + extension);
         writeToFile(exported, outputfile);
@@ -52,7 +52,7 @@ public class AllCore {
 
         //TODO evaluate equals - now we export it again and check they are equal
         String reexported = exporter.exportScore(imported);
-        assertEquals(exported, reexported);
+        assertEquals(format, exported, reexported);
     }
 
     public void doTest(AbstractCoreTest coreTest) throws Exception {
@@ -61,14 +61,29 @@ public class AllCore {
 
         coreTest.generateTestScores().forEach((name, score) -> {
             try {
-                testExportImport(score, new MEIExporter(), new MEIImporter(abstractFactory), outputTmp, name, "mei");
-                testExportImport(score, new MusicXMLExporter(), new MusicXMLImporter(abstractFactory), outputTmp, name, "musicxml");
-                testExportImport(score, new SkmExporter(), new SkmImporter(abstractFactory), outputTmp, name, "skm");
+                testExportImport("MEI", score, new MEIExporter(), new MEIImporter(abstractFactory), outputTmp, name, "mei");
+            } catch (Exception e) {
+                e.printStackTrace();
+                fail("MEI: " + name + ": " + e.getMessage());
+            }
+            try {
+                testExportImport("MusicXML", score, new MusicXMLExporter(), new MusicXMLImporter(abstractFactory), outputTmp, name, "musicxml");
+            } catch (Exception e) {
+                e.printStackTrace();
+                fail("MusicXML: " + name + ": " + e.getMessage());
+            }
+            try {
+                testExportImport("SKM", score, new SkmExporter(), new SkmImporter(abstractFactory), outputTmp, name, "skm");
+            } catch (Exception e) {
+                e.printStackTrace();
+                fail("SKM: " + name + ": " + e.getMessage());
+            }
+            try {
                 LilypondExporter exporter = new LilypondExporter();
                 writeToFile(exporter.exportScore(score), new File(outputTmp, name + ".ly"));
             } catch (Exception e) {
                 e.printStackTrace();
-                fail(name + ": " + e.getMessage());
+                fail("Lilypond: " + name + ": " + e.getMessage());
             }
         });
     }

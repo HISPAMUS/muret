@@ -109,6 +109,12 @@ public class MEIExporter implements IExporter {
         if (commonBeginningKey.isPresent()) {
             exportedSymbols.add(commonBeginningKey.get());
             commonBeginningKey.get().export(meiExporterVisitor, param);
+        } else {
+            Optional<IKeySignature> commonBeginningKeySignature = getCommonBeginning(score, IKeySignature.class);
+            if (commonBeginningKeySignature.isPresent()) {
+                exportedSymbols.add(commonBeginningKeySignature.get());
+                commonBeginningKeySignature.get().export(meiExporterVisitor, param);
+            }
         }
 
         //TODO - staff groups

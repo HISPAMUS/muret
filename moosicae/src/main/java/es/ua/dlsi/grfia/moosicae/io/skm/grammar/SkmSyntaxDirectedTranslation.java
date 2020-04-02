@@ -333,7 +333,7 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Beginning a key",
                     ctx.getText());
 
-            beginContext(ctx, new IKeySignatureBuilder(coreAbstractFactory));
+            beginContext(ctx, new IUnconventionalKeySignatureBuilder(coreAbstractFactory));
         }
 
         @Override
@@ -342,6 +342,7 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
                     "Key signature {0}", ctx.getText());
 
+            //TODO we could check whether the unconventional key signature is not unconventional, but conventional?
             endContextAndAddToSpine(ctx);
         }
 

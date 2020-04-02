@@ -1,5 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.core.enums;
 
+import es.ua.dlsi.grfia.moosicae.IMException;
+
+import javax.validation.constraints.NotNull;
 import java.util.Optional;
 
 /**
@@ -8,7 +11,7 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 16/03/2020
  */
-public enum ECommonAlterationKeys implements IKeyEnum {
+public enum EConventionalKeys implements IKeyEnum {
     CM (EDiatonicPitches.C, null, EModes.major, 0, null),
     Am (EDiatonicPitches.A, null, EModes.minor, 0, null),
     GM (EDiatonicPitches.G, null, EModes.major, 1, EAccidentalSymbols.SHARP),
@@ -47,7 +50,7 @@ public enum ECommonAlterationKeys implements IKeyEnum {
     private final int keySignatureAccidentalCount;
     private final Optional<EAccidentalSymbols> keySignatureAccidental;
 
-    private ECommonAlterationKeys(EDiatonicPitches diatonicPitch, EAccidentalSymbols pitchAccidentalSymbol, EModes mode, int keySignatureAccidentals, EAccidentalSymbols keySignatureAccidental) {
+    private EConventionalKeys(EDiatonicPitches diatonicPitch, EAccidentalSymbols pitchAccidentalSymbol, EModes mode, int keySignatureAccidentals, EAccidentalSymbols keySignatureAccidental) {
         this.diatonicPitch = diatonicPitch;
         this.pitchAccidentalSymbol = Optional.ofNullable(pitchAccidentalSymbol);
         this.mode = mode;
@@ -55,14 +58,17 @@ public enum ECommonAlterationKeys implements IKeyEnum {
         this.keySignatureAccidental = Optional.ofNullable(keySignatureAccidental);
     }
 
+    @Override
     public EDiatonicPitches getDiatonicPitch() {
         return diatonicPitch;
     }
 
+    @Override
     public Optional<EAccidentalSymbols> getPitchAccidentalSymbol() {
         return pitchAccidentalSymbol;
     }
 
+    @Override
     public EModes getMode() {
         return mode;
     }
@@ -73,5 +79,22 @@ public enum ECommonAlterationKeys implements IKeyEnum {
 
     public Optional<EAccidentalSymbols> getKeySignatureAccidental() {
         return keySignatureAccidental;
+    }
+
+    public static EConventionalKeys findKeyWithAccidentalCount(@NotNull EModes mode, @NotNull Integer keySignatureAccidentalCount, EAccidentalSymbols accidentalSymbol) throws IMException {
+        if (keySignatureAccidentalCount == 0) {
+            if (mode == EModes.major) {
+                return CM;
+            } else {
+                return Am;
+            }
+        } else {
+            for (EConventionalKeys key : EConventionalKeys.values()) {
+                if (key.getKeySignatureAccidentalCount() == keySignatureAccidentalCount && key.getMode() == mode && accidentalSymbol == key.getKeySignatureAccidental().get()) {
+                    return key;
+                }
+            }
+            throw new IMException("Cannot find a key with " + keySignatureAccidentalCount + " "  + accidentalSymbol + "s and mode " + mode);
+        }
     }
 }

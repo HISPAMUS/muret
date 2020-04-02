@@ -1,7 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.io.mei.importer.elements;
 
 import es.ua.dlsi.grfia.moosicae.core.IClef;
-import es.ua.dlsi.grfia.moosicae.core.ICommonAlterationKey;
+import es.ua.dlsi.grfia.moosicae.core.IConventionalKeySignature;
+import es.ua.dlsi.grfia.moosicae.core.IKey;
 import es.ua.dlsi.grfia.moosicae.core.IMeter;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 
@@ -13,18 +14,21 @@ import java.util.Optional;
  * @created 25/03/2020
  */
 public class MEIStaffDef extends MEISystemDef implements IMEIDef {
-    private ICommonAlterationKey commonAlterationKey;
+    private final IKey key;
+    private final IConventionalKeySignature conventionalKeySignature;
     private IMeter meter;
     private IClef clef;
 
     @NotNull
     private Integer n;
 
-    public MEIStaffDef(IId id, IClef clef, ICommonAlterationKey commonAlterationKey, IMeter meter, Integer n) {
+
+    public MEIStaffDef(IId id, @NotNull Integer n, IClef clef, IConventionalKeySignature conventionalKeySignature, IKey key, IMeter meter) {
         super(id);
-        this.clef = clef;
-        this.commonAlterationKey = commonAlterationKey;
+        this.key = key;
+        this.conventionalKeySignature = conventionalKeySignature;
         this.meter = meter;
+        this.clef = clef;
         this.n = n;
     }
 
@@ -37,8 +41,13 @@ public class MEIStaffDef extends MEISystemDef implements IMEIDef {
     }
 
     @Override
-    public Optional<ICommonAlterationKey> getCommonAlterationKey() {
-        return Optional.ofNullable(commonAlterationKey);
+    public Optional<IKey> getKey() {
+        return Optional.ofNullable(key);
+    }
+
+    @Override
+    public Optional<IConventionalKeySignature> getConventionalKeySignature() {
+        return Optional.ofNullable(conventionalKeySignature);
     }
 
     @Override
@@ -46,18 +55,9 @@ public class MEIStaffDef extends MEISystemDef implements IMEIDef {
         return Optional.ofNullable(meter);
     }
 
-    @Override
-    public MEIStaffDef clone() {
-        return new MEIStaffDef(id, clef, commonAlterationKey, meter, n);
-    }
 
     @Override
-    public String toString() {
-        return "MEIStaffDef{" +
-                "commonAlterationKey=" + commonAlterationKey +
-                ", meter=" + meter +
-                ", clef=" + clef +
-                ", n=" + n +
-                "} " + super.toString();
+    public MEIStaffDef clone() {
+        return new MEIStaffDef(null, n, clef, conventionalKeySignature, key, meter);
     }
 }

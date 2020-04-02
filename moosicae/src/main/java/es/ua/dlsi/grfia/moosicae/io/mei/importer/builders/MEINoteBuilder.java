@@ -59,7 +59,8 @@ public class MEINoteBuilder extends INoteBuilder implements IImporterAdapter<INo
                 pitchBuilder.from(octave.get());
             }
 
-            Optional<EAccidentalSymbols> eAccidentalSymbol = MEIAttributesParsers.getInstance().parseAccidentalSymbol(xmlImporterParam);
+            //TODO accid sin .ges
+            Optional<EAccidentalSymbols> eAccidentalSymbol = MEIAttributesParsers.getInstance().parseAccidentalSymbol(xmlImporterParam, "accid.ges");
             if (eAccidentalSymbol.isPresent()) {
                 IAlterationBuilder alterationBuilder = new IAlterationBuilder(coreObjectFactory);
                 alterationBuilder.from(eAccidentalSymbol.get());

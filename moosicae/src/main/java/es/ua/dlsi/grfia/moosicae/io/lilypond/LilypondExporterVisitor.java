@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
+import es.ua.dlsi.grfia.moosicae.core.impl.UnconventionalKeySignature;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 
@@ -168,24 +169,19 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
     }
 
     @Override
-    public void exportKey(IKey key, LilypondExporterVisitorParam inputOutputOutput) throws IMException {
-        if (key instanceof ICommonAlterationKey) {
-            exportCommonAlterationKey((ICommonAlterationKey) key, inputOutputOutput);
-        } else {
-            throw new UnsupportedOperationException("TO-DO");
-        }
+    public void exportKey(IKey key, LilypondExporterVisitorParam inputOutput) throws IMException {
+        inputOutput.startString();
+        inputOutput.append("\\key ");
+        exportPitchClass(key.getPitchClass(), inputOutput);
+        inputOutput.append(' ');
+        inputOutput.append('\\');
+        inputOutput.append(key.getMode().getValue().name().toLowerCase());
+        inputOutput.finishString();
     }
 
     @Override
-    public void exportCommonAlterationKey(ICommonAlterationKey commonAlterationKey, LilypondExporterVisitorParam inputOutput) throws IMException {
-        inputOutput.startString();
-        inputOutput.append("\\key ");
-        exportPitchClass(commonAlterationKey.getPitchClass(), inputOutput);
-        inputOutput.append(' ');
-        inputOutput.append('\\');
-        inputOutput.append(commonAlterationKey.getMode().getValue().name().toLowerCase());
-        inputOutput.finishString();
-
+    public void exportConventionalKeySignature(IConventionalKeySignature commonAlterationKey, LilypondExporterVisitorParam inputOutputOutput) throws IMException {
+        throw new IMException("Cannot export conventional key signature, a key must be added and use it");
     }
 
     @Override
@@ -194,8 +190,30 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
     }
 
     @Override
-    public void exportKeySignature(IKeySignature keySignature, LilypondExporterVisitorParam inputOutputOutput) throws IMException {
+    public void exportUnconventionalKeySignature(IUnconventionalKeySignature unconventionalKeySignature, LilypondExporterVisitorParam inputOutput) throws IMException {
+        // non conventional key signatures
+        inputOutput.startString();
+        inputOutput.append("\\set Staff.keyAlterations = #`(");
 
+        for (IPitchClass pitchClass: unconventionalKeySignature.getPitchClasses()) {
+            inputOutput.append('(');
+
+            inputOutput.append('(');
+            //inputOutput.append(pitch.getOctave().getValue() - 4); // 0 is the 4th ISO scientific pitch octave
+            inputOutput.append(" . ");
+            inputOutput.append(pitchClass.getDiatonicPitch().getValue().getOrder());
+            inputOutput.append(')');
+
+            Optional<IAccidentalSymbol> accidentalSymbol = pitchClass.getAccidental();
+            if (!accidentalSymbol.isPresent()) {
+                throw new IMException("The accidental of the pitch in the key signature must have a value: " + unconventionalKeySignature);
+            }
+
+            inputOutput.append(" . ,");
+            inputOutput.append(accidentalSymbol.get().getValue().name().toUpperCase());
+            inputOutput.append(')');
+        }
+        inputOutput.append(')');
     }
 
     @Override
@@ -333,4 +351,5 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
     public void exportSystemBeginning(ISystemBeginning systemBeginning, LilypondExporterVisitorParam inputOutput) {
 
     }
+
 }

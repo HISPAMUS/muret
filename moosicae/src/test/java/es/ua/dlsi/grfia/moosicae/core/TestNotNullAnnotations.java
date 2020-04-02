@@ -52,12 +52,4 @@ public class TestNotNullAnnotations {
         IClef clef =  coreAbstractFactory.createClef(null, null, null, null);
         fail("It should not arrive here: recompile with Maven and reimport project in IDE");
     }
-
-    @Test (expected = java.lang.IllegalArgumentException.class)
-    public void testNotNullAtICoreAbstractFactory3() throws IMException {
-        ICoreAbstractFactory coreAbstractFactory = new CoreFactory().create();
-        // name element is required
-        ICommonAlterationKey key = coreAbstractFactory.createCommonAlterationKey(coreAbstractFactory.createId(), null, null, coreAbstractFactory.createMode(coreAbstractFactory.createId(), EModes.major));
-        fail("It should not arrive here: recompile with Maven and reimport project in IDE");
-    }
 }

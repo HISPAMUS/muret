@@ -1,12 +1,9 @@
 package es.ua.dlsi.grfia.moosicae.io.mei.importer.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.IClef;
-import es.ua.dlsi.grfia.moosicae.core.ICommonAlterationKey;
-import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
-import es.ua.dlsi.grfia.moosicae.core.IMeter;
+import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.IClefBuilder;
-import es.ua.dlsi.grfia.moosicae.core.builders.IKeyFromAccidentalCountBuilder;
+import es.ua.dlsi.grfia.moosicae.core.builders.IConventionalKeySignatureBuilder;
 import es.ua.dlsi.grfia.moosicae.core.builders.IModeBuilder;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
@@ -14,6 +11,7 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IAccidentalSymbol;
 import es.ua.dlsi.grfia.moosicae.core.properties.IClefLine;
 import es.ua.dlsi.grfia.moosicae.core.properties.IMode;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Optional;
 
@@ -97,8 +95,8 @@ public class MEIAttributesParsers {
         }
     }
 
-    Optional<EAccidentalSymbols> parseAccidentalSymbol(XMLImporterParam xmlImporterParam) throws IMException {
-        Optional<String> value = xmlImporterParam.getAttribute("accid.ges");
+    Optional<EAccidentalSymbols> parseAccidentalSymbol(XMLImporterParam xmlImporterParam, String attrName) throws IMException {
+        Optional<String> value = xmlImporterParam.getAttribute(attrName);
         if (value.isPresent()) {
             EAccidentalSymbols eAccidentalSymbol;
             switch (value.get()) {
@@ -117,6 +115,7 @@ public class MEIAttributesParsers {
                 case "s":
                     eAccidentalSymbol = EAccidentalSymbols.SHARP;
                     break;
+                case "x":
                 case "ss":
                     eAccidentalSymbol = EAccidentalSymbols.DOUBLE_SHARP;
                     break;
@@ -212,37 +211,81 @@ public class MEIAttributesParsers {
         }
     }
 
-    Optional<ICommonAlterationKey> parseCommonAlterationKey(ICoreAbstractFactory coreAbstractFactory, XMLImporterParam xmlImporterParam) throws IMException {
-        Optional<String> keySig = xmlImporterParam.getAttribute("key.sig");
-        if (keySig.isPresent()) {
-            if (keySig.get().length() != 2) {
-                throw new IMException("Expected 2 characters for keySig value: '" + keySig.get() + "'");
-            }
-
-            IKeyFromAccidentalCountBuilder keyFromAccidentalCountBuilder = new IKeyFromAccidentalCountBuilder(coreAbstractFactory);
-
-            int nAccidentals = Integer.parseInt(keySig.get().substring(0, 1));
-            keyFromAccidentalCountBuilder.from(coreAbstractFactory.createKeyAccidentalCount(coreAbstractFactory.createId(), nAccidentals));
-
-            char accidental = keySig.get().charAt(1);
-            IAccidentalSymbol accidentalSymbol;
-            if (accidental == 'f') {
-                accidentalSymbol = coreAbstractFactory.createAccidentalSymbol(coreAbstractFactory.createId(), EAccidentalSymbols.FLAT);
-            } else if (accidental == 's') {
-                accidentalSymbol = coreAbstractFactory.createAccidentalSymbol(coreAbstractFactory.createId(), EAccidentalSymbols.SHARP);
+    public Optional<Pair<Integer, Optional<EAccidentalSymbols>>> parseConventionalKeySignatureAttribute(XMLImporterParam xmlImporterParam, String attrName) throws IMException {
+        Optional<String> keySig = xmlImporterParam.getAttribute(attrName);
+        if (!keySig.isPresent()) {
+            return Optional.empty();
+        } else {
+            Integer nAccidentals;
+            EAccidentalSymbols accidentalSymbol = null;
+            if (keySig.get().equals("0")) {
+                nAccidentals = 0;
             } else {
-                throw new IMException("Unkown accidental: '" + accidental + "'");
-            }
-            keyFromAccidentalCountBuilder.from(accidentalSymbol);
+                if (keySig.get().length() != 2) {
+                    throw new IMException("Expected 2 characters for keySig value: '" + keySig.get() + "'");
+                }
 
-            Optional<String> modeString = xmlImporterParam.getAttribute("key.mode");
-            if (modeString.isPresent()) {
-                IModeBuilder modeBuilder = new IModeBuilder(coreAbstractFactory);
-                modeBuilder.from(EModes.valueOf(modeString.get().toLowerCase()));
-                IMode mode = modeBuilder.build();
-                keyFromAccidentalCountBuilder.from(mode);
+                nAccidentals = Integer.parseInt(keySig.get().substring(0, 1));
+
+                char accidental = keySig.get().charAt(1);
+                if (accidental == 'f') {
+                    accidentalSymbol = EAccidentalSymbols.FLAT;
+                } else if (accidental == 's') {
+                    accidentalSymbol =EAccidentalSymbols.SHARP;
+                } else {
+                    throw new IMException("Unknown accidental: '" + accidental + "'");
+                }
             }
+            return Optional.of(Pair.of(nAccidentals, Optional.ofNullable(accidentalSymbol)));
+        }
+    }
+
+    public Optional<IConventionalKeySignature> parseConventionalKeySignature(ICoreAbstractFactory coreAbstractFactory, XMLImporterParam xmlImporterParam) throws IMException {
+        Optional<Pair<Integer, Optional<EAccidentalSymbols>>> pair = parseConventionalKeySignatureAttribute(xmlImporterParam, "key.sig");
+        if (pair.isPresent()) {
+            IConventionalKeySignatureBuilder keyFromAccidentalCountBuilder = new IConventionalKeySignatureBuilder(coreAbstractFactory);
+
+            int nAccidentals = pair.get().getLeft();
+            keyFromAccidentalCountBuilder.from(coreAbstractFactory.createKeyAccidentalCount(null, nAccidentals));
+
+            if (nAccidentals != 0) {
+                EAccidentalSymbols eaccidentalSymbol = pair.get().getRight().get();
+                IAccidentalSymbol accidentalSymbol = coreAbstractFactory.createAccidentalSymbol(null, eaccidentalSymbol);
+                keyFromAccidentalCountBuilder.from(accidentalSymbol);
+            }
+
             return Optional.of(keyFromAccidentalCountBuilder.build());
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<IMode> parseMode(ICoreAbstractFactory coreAbstractFactory, XMLImporterParam xmlImporterParam, String attrName) throws IMException {
+        Optional<String> modeString = xmlImporterParam.getAttribute(attrName);
+        if (modeString.isPresent()) {
+            IModeBuilder modeBuilder = new IModeBuilder(coreAbstractFactory);
+            modeBuilder.from(EModes.valueOf(modeString.get().toLowerCase()));
+            IMode mode = modeBuilder.build();
+            return Optional.of(mode);
+        } else {
+            return Optional.empty();
+        }
+    }
+    Optional<IKey> parseKey(ICoreAbstractFactory coreAbstractFactory, XMLImporterParam xmlImporterParam) throws IMException {
+        Optional<IMode> optMode = parseMode(coreAbstractFactory, xmlImporterParam, "key.mode");
+        if (optMode.isPresent()) {
+            IMode mode = optMode.get();
+
+            Optional<IConventionalKeySignature> conventionalKeySignature = parseConventionalKeySignature(coreAbstractFactory, xmlImporterParam);
+            if (!conventionalKeySignature.isPresent()) {
+                throw new IMException("If key.mode is specified, key.sig should also be present");
+            }
+            EAccidentalSymbols accidentalSymbol = null;
+            if (conventionalKeySignature.get().getAccidentalSymbol().isPresent()) {
+                accidentalSymbol = conventionalKeySignature.get().getAccidentalSymbol().get().getValue(); 
+            }
+            EConventionalKeys eConventionalKey = EConventionalKeys.findKeyWithAccidentalCount(mode.getValue(), conventionalKeySignature.get().getAccidentalCount().getValue(), accidentalSymbol);
+            return Optional.of(coreAbstractFactory.createConventionalKey(null, eConventionalKey));
         } else {
             return Optional.empty();
         }

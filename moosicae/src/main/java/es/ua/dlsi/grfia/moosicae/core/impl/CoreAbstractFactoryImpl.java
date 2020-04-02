@@ -91,23 +91,25 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
 
         for (T value: values) {
             if (Objects.equals(value.getDiatonicPitch(), diatonicPitch)
-                && Objects.equals(value.getPitchAccidentalSymbol(), accidentalSymbol)) {
+                    && Objects.equals(value.getPitchAccidentalSymbol(), accidentalSymbol)) {
                 return Optional.of(value);
             }
         }
         return Optional.empty();
     }
+
+
     @Override
     public IKey createKey(IId id, IPitchClass pitchClass, IMode mode) throws IMException {
         // find the pitch class among the enums
-        Optional<ECommonAlterationKeys> commonAlterationKey = findKeyEnum(ECommonAlterationKeys.values(), pitchClass);
+        Optional<EConventionalKeys> commonAlterationKey = findKeyEnum(EConventionalKeys.values(), pitchClass);
         if (commonAlterationKey.isPresent()) {
-            return createCommonAlterationKey(id, commonAlterationKey.get());
+            return createConventionalKey(id, commonAlterationKey.get());
         }
 
-        Optional<ECommonAlterationKeys> mixedAlterationKey = findKeyEnum(ECommonAlterationKeys.values(), pitchClass);
-        if (mixedAlterationKey.isPresent()) {
-            return createCommonAlterationKey(id, mixedAlterationKey.get());
+        Optional<ETheoreticalKeys> theoreticalKey = findKeyEnum(ETheoreticalKeys.values(), pitchClass);
+        if (commonAlterationKey.isPresent()) {
+            return createConventionalKey(id, commonAlterationKey.get());
         }
 
         throw new IMException("Cannot find a key for pitch class " + pitchClass + " and mode " + mode);
@@ -119,36 +121,12 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public ICommonAlterationKey createCommonAlterationKey(IId id, IKeyAccidentalCount accidentalCount, IAccidentalSymbol accidentalSymbol, IMode mode) throws IMException {
-        if (accidentalCount == null) {
+    public IConventionalKeySignature createConventionalKeySignature(IId id, @NotNull IKeyAccidentalCount keyAccidentalCount, IAccidentalSymbol accidentalSymbol) {
+        if (keyAccidentalCount == null) {
             throw new IllegalArgumentException("accidentalCount");
         }
-        if (mode == null) {
-            throw new IllegalArgumentException("mode");
-        }
 
-        EModes modeValue = mode.getValue();
-
-        if (accidentalCount != null && accidentalCount.getValue() == 0) {
-            if (mode.getValue() == EModes.major) {
-                return createCommonAlterationKey(id, ECommonAlterationKeys.CM);
-            } else {
-                return createCommonAlterationKey(id, ECommonAlterationKeys.Am);
-            }
-        } else if (accidentalSymbol == null) {
-            throw new IllegalArgumentException("The accidental symbol cannot be null for accidentalCount != 0");
-        } else {
-            EAccidentalSymbols accidentalSymbolValue = accidentalSymbol.getValue();
-            for (ECommonAlterationKeys key : ECommonAlterationKeys.values()) {
-                if (key.getMode().equals(modeValue)
-                        && key.getKeySignatureAccidentalCount() == accidentalCount.getValue()
-                        && key.getKeySignatureAccidental().isPresent()
-                        && key.getKeySignatureAccidental().get().equals(accidentalSymbolValue)) {
-                    return createCommonAlterationKey(id, key);
-                }
-            }
-            throw new IMException("Cannot find a key with " + accidentalCount + " " + accidentalSymbol.getValue().name() + "s and mode " + mode.getValue());
-        }
+        return new ConventionalKeySignature(null, keyAccidentalCount, accidentalSymbol);
     }
 
     @Override
@@ -158,8 +136,8 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
 
 
     @Override
-    public IKeySignature createKeySignature(IId id, IPitchClass[] pitchClasses) {
-        return new KeySignature(id, pitchClasses);
+    public IUnconventionalKeySignature createUnconventionalKeySignature(IId id, IPitchClass[] pitchClasses) {
+        return new UnconventionalKeySignature(id, pitchClasses);
     }
 
     @Override
@@ -425,11 +403,6 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
         return new Mode(id, mode);
     }
 
-    private final EDiatonicPitches [] SHARP_CIRCLE_FIFTHS = {
-            EDiatonicPitches.F, EDiatonicPitches.C, EDiatonicPitches.G, EDiatonicPitches.D, EDiatonicPitches.A,
-            EDiatonicPitches.E, EDiatonicPitches.B
-    };
-
     private IPitchClass createPitchClass(IId id, EDiatonicPitches eDiatonicPitch, Optional<EAccidentalSymbols> eAccidentalSymbol) {
         IDiatonicPitch diatonicPitch = createDiatonicPitch(null, eDiatonicPitch);
         IAccidentalSymbol accidentalSymbol = null;
@@ -441,7 +414,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public ICommonAlterationKey createCommonAlterationKey(IId id, ECommonAlterationKeys commonKeys) {
+    public IKey createConventionalKey(IId id, EConventionalKeys commonKeys) {
         IPitchClass pitchClass = createPitchClass(null, commonKeys.getDiatonicPitch(), commonKeys.getPitchAccidentalSymbol());
         IMode mode = createMode(id, commonKeys.getMode());
 
@@ -450,30 +423,21 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
             keySignatureAccidentalSymbol = createAccidentalSymbol(null, commonKeys.getKeySignatureAccidental().get());
         }
 
-        IPitchClass [] pitchClasses = new IPitchClass[commonKeys.getKeySignatureAccidentalCount()];
-        for (Integer i=0; i<commonKeys.getKeySignatureAccidentalCount(); i++) {
-            IPitchClass pitchClassAccidental;
-            if (commonKeys.getKeySignatureAccidental().get() == EAccidentalSymbols.FLAT) {
-                pitchClassAccidental = createPitchClass(null, SHARP_CIRCLE_FIFTHS[6-i], Optional.of(EAccidentalSymbols.FLAT));
-            } else if (commonKeys.getKeySignatureAccidental().get() == EAccidentalSymbols.SHARP) {
-                pitchClassAccidental = createPitchClass(null, SHARP_CIRCLE_FIFTHS[i], Optional.of(EAccidentalSymbols.SHARP));
-            } else {
-                throw new IMRuntimeException("Invalid accidental in a common key " + commonKeys.getKeySignatureAccidental().get());
-            }
-            pitchClasses[i] = pitchClassAccidental;
-        }
+        IKeyAccidentalCount keyAccidentalCount = new KeyAccidentalCount(null, commonKeys.getKeySignatureAccidentalCount());
+        ConventionalKeySignature conventionalKeySignature = new ConventionalKeySignature(null, keyAccidentalCount, keySignatureAccidentalSymbol);
+        Key key = new Key(null, pitchClass, mode, conventionalKeySignature);
 
-        return new CommonAlterationKey(id, pitchClass,
-                mode,
-                createKeySignature(null, pitchClasses),
-                commonKeys.getKeySignatureAccidentalCount(),
-                keySignatureAccidentalSymbol
-                );
+        return key;
     }
 
+    private final EDiatonicPitches [] SHARP_CIRCLE_FIFTHS = {
+            EDiatonicPitches.F, EDiatonicPitches.C, EDiatonicPitches.G, EDiatonicPitches.D, EDiatonicPitches.A,
+            EDiatonicPitches.E, EDiatonicPitches.B
+    };
+
     @Override
-    public IMixedAlterationsKey createMixedAlterationsKey(IId id, EMixedAlterationKeys mixedAlterationKeys) {
-        IPitchClass pitchClass = createPitchClass(null, mixedAlterationKeys.getDiatonicPitch(), mixedAlterationKeys.getAccidentalSymbol());
+    public ITheoreticalKey createTheoreticalKey(IId id, ETheoreticalKeys mixedAlterationKeys) {
+        IPitchClass pitchClass = createPitchClass(null, mixedAlterationKeys.getDiatonicPitch(), mixedAlterationKeys.getPitchAccidentalSymbol());
         IMode mode = createMode(null, mixedAlterationKeys.getMode());
 
         IPitchClass [] pitchClasses = new IPitchClass[7];
@@ -501,9 +465,9 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
             pitchClasses[i] = pitchClassAccidental;
         }
 
-        return new MixedAlterationsKey(id, pitchClass,
+        return new TheoreticalKey(id, pitchClass,
                 mode,
-                createKeySignature(null, pitchClasses));
+                createUnconventionalKeySignature(null, pitchClasses));
     }
 
 }

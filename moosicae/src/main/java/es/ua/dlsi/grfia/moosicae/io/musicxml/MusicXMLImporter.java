@@ -2,7 +2,6 @@ package es.ua.dlsi.grfia.moosicae.io.musicxml;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.properties.IStaffLineCount;
 import es.ua.dlsi.grfia.moosicae.io.IImporter;
 import es.ua.dlsi.grfia.moosicae.io.musicxml.importer.builders.*;
@@ -37,9 +36,10 @@ public class MusicXMLImporter extends XMLImporter implements IImporter {
         coreObjectBuilderSuppliers.add("line", MxmlClefLineBuilder::new);
         coreObjectBuilderSuppliers.add("clef-octave-change", MxmlClefOctaveTranspositionBuilder::new);
 
-
-        coreObjectBuilderSuppliers.add("key", MxmlKeyBuilder::new);
+        coreObjectBuilderSuppliers.add("key", MusicXMLKeyOrKeySignatureBuilder::new);
         coreObjectBuilderSuppliers.add("fifths", MxmlFifthsBuilder::new);
+        coreObjectBuilderSuppliers.add("key-step", MxmlDiatonicPitchBuilder::new);
+        coreObjectBuilderSuppliers.add("key-alter", MxmAlterationBuilder::new);
 
         coreObjectBuilderSuppliers.add("mode", MxmlModeBuilder::new);
 

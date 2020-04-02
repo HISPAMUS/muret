@@ -134,36 +134,52 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
     }
 
     @Override
-    public void exportKey(IKey key, XMLExporterVisitorParam inputOutputOutput) throws IMException {
-
+    public void exportKey(IKey key, XMLExporterVisitorParam inputOutput) throws IMException {
+        if (key.getKeySignature() instanceof IConventionalKeySignature) {
+            exportConventionalKeySignature((IConventionalKeySignature) key.getKeySignature(), inputOutput);
+            exportMode(key.getMode(), inputOutput);
+        } else if (key.getKeySignature() instanceof IUnconventionalKeySignature) {
+            XMLExporterVisitorParam keySigParam = doExportUnconventionalKeySignature((IUnconventionalKeySignature) key.getKeySignature(), inputOutput);
+            doExportMode(key.getMode(), "mode", keySigParam);
+        }
     }
 
     @Override
-    public void exportCommonAlterationKey(ICommonAlterationKey commonAlterationKey, XMLExporterVisitorParam inputOutput) throws IMException {
+    public void exportConventionalKeySignature(IConventionalKeySignature conventionalKeySignature, XMLExporterVisitorParam inputOutput) throws IMException {
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
-            StringBuilder keySig = new StringBuilder();
-            keySig.append(commonAlterationKey.getAccidentalCount());
-            if (commonAlterationKey.getAccidentalSymbol().isPresent()) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(conventionalKeySignature.getAccidentalCount().getValue());
+            if (conventionalKeySignature.getAccidentalSymbol().isPresent()) {
                 XMLExporterVisitorParam accidentalParam = new XMLExporterVisitorParam(XMLParamExportMode.string);
-                exportAccidentalSymbol(commonAlterationKey.getAccidentalSymbol().get(), accidentalParam);
-                keySig.append(accidentalParam.getStringBuilderValue());
+                exportAccidentalSymbol(conventionalKeySignature.getAccidentalSymbol().get(), accidentalParam);
+                sb.append(accidentalParam.getStringBuilderValue());
             }
-
-            inputOutput.addAttribute("key.sig", keySig.toString());
-            exportMode(commonAlterationKey.getMode(), inputOutput);
+            inputOutput.addAttribute("key.sig", sb.toString());
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }
     }
-    @Override
-    public void exportMode(IMode mode, XMLExporterVisitorParam inputOutput) {
-        inputOutput.addAttribute("key.mode", mode.getValue().name().toLowerCase());
 
+    private XMLExporterVisitorParam doExportUnconventionalKeySignature(IUnconventionalKeySignature unconventionalKeySignature, XMLExporterVisitorParam inputOutput) throws IMException {
+        XMLExporterVisitorParam keySigParam = inputOutput.addChild(XMLParamExportMode.element, "keySig");
+        for (IPitchClass pitchClass: unconventionalKeySignature.getPitchClasses()) {
+            XMLExporterVisitorParam keyAccidParam = keySigParam.addChild(XMLParamExportMode.attribute, "keyAccid");
+            exportPitchClass(pitchClass, keyAccidParam);
+        }
+        return keySigParam;
+    }
+    @Override
+    public void exportUnconventionalKeySignature(IUnconventionalKeySignature unconventionalKeySignature, XMLExporterVisitorParam inputOutput) throws IMException {
+        doExportUnconventionalKeySignature(unconventionalKeySignature, inputOutput);
+    }
+
+    private void doExportMode(IMode mode, String attrName, XMLExporterVisitorParam inputOutput) {
+        inputOutput.addAttribute(attrName, mode.getValue().name().toLowerCase());
     }
 
     @Override
-    public void exportKeySignature(IKeySignature keySignature, XMLExporterVisitorParam inputOutputOutput) throws IMException {
-
+    public void exportMode(IMode mode, XMLExporterVisitorParam inputOutput) {
+        doExportMode(mode, "key.mode", inputOutput);
     }
 
     @Override
@@ -182,29 +198,35 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
 
     @Override
     public void exportAccidentalSymbol(IAccidentalSymbol accidental, XMLExporterVisitorParam inputOutput) throws IMException {
+        String accidStr;
+
+        switch (accidental.getValue()) {
+            case TRIPLE_FLAT:
+                accidStr = "fff";
+                break;
+            case DOUBLE_FLAT:
+                accidStr = "ff";
+                break;
+            case FLAT:
+                accidStr = "f";
+                break;
+            case NATURAL:
+                accidStr = "n";
+                break;
+            case SHARP:
+                accidStr = "s";
+                break;
+            case DOUBLE_SHARP:
+                accidStr = "x";
+                break;
+            default:
+                throw new IMException("Unknown accidental symbol: " + accidental.getValue());
+        }
+
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.string) {
-            switch (accidental.getValue()) {
-                case TRIPLE_FLAT:
-                    inputOutput.append("fff");
-                    break;
-                case DOUBLE_FLAT:
-                    inputOutput.append("ff");
-                    break;
-                case FLAT:
-                    inputOutput.append("f");
-                    break;
-                case NATURAL:
-                    inputOutput.append("n");
-                    break;
-                case SHARP:
-                    inputOutput.append("s");
-                    break;
-                case DOUBLE_SHARP:
-                    inputOutput.append("x");
-                    break;
-                default:
-                    throw new IMException("Unkown accidental symbol: " + accidental.getValue());
-            }
+            inputOutput.append(accidStr);
+        } else if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
+            inputOutput.addAttribute("accid", accidStr);
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }
@@ -228,8 +250,14 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
     }
 
     @Override
-    public void exportPitchClass(IPitchClass pitchClass, XMLExporterVisitorParam inputOutput) {
-        throw new UnsupportedOperationException("TO-DO"); //TODO
+    public void exportPitchClass(IPitchClass pitchClass, XMLExporterVisitorParam inputOutput) throws IMException {
+        if (inputOutput.getXMLParamExportMode() != XMLParamExportMode.attribute) {
+            throw new IMException("Invalid exporting mode in pitch class: " + inputOutput.getXMLParamExportMode());
+        }
+        exportDiatonicPitch(pitchClass.getDiatonicPitch(), inputOutput);
+        if (pitchClass.getAccidental().isPresent()) {
+            exportAccidentalSymbol(pitchClass.getAccidental().get(), inputOutput);
+        }
     }
 
     @Override
@@ -316,6 +344,5 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
     public void exportSystemBeginning(ISystemBeginning systemBeginning, XMLExporterVisitorParam inputOutput) {
 
     }
-
 
 }
