@@ -37,8 +37,8 @@ public class Clefs extends Prototypes<IClef> {
     public static String G2_QUINDICESIMA_BASSA = "G2_15";
     public static String G2_QUINDICESIMA_ALTA = "G2^15";
 
-    public static String F4_QUINDICESIMA_BASSA = "F4_18";
-    public static String F4_QUINDICESIMA_ALTA = "F4^18";
+    public static String F4_QUINDICESIMA_BASSA = "F4_15";
+    public static String F4_QUINDICESIMA_ALTA = "F4^15";
 
 
     private IClef generateClef(EClefSigns eClefSign, int line, Integer octaveTranspositionValue) {
@@ -81,6 +81,9 @@ public class Clefs extends Prototypes<IClef> {
         add(F4, generateClef(EClefSigns.F, 4));
         add(F4_OTTAVA_ALTA, generateClef(EClefSigns.F, 4, 1));
         add(F4_OTTAVA_BASSA, generateClef(EClefSigns.F, 4, -1));
+
+        add(F4_QUINDICESIMA_ALTA, generateClef(EClefSigns.F, 4, -2));
+        add(F4_QUINDICESIMA_BASSA, generateClef(EClefSigns.F, 4, -2));
 
         add(F5, generateClef(EClefSigns.F, 5));
 

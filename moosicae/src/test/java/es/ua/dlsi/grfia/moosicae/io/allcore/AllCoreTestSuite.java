@@ -12,6 +12,7 @@ import es.ua.dlsi.grfia.moosicae.io.musicxml.MusicXMLExporter;
 import es.ua.dlsi.grfia.moosicae.io.musicxml.MusicXMLImporter;
 import es.ua.dlsi.grfia.moosicae.io.skm.SkmExporter;
 import es.ua.dlsi.grfia.moosicae.io.skm.SkmImporter;
+import es.ua.dlsi.grfia.moosicae.utils.TestFileUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,11 +44,27 @@ public class AllCoreTestSuite {
         Files.write(path, strToBytes);
     }
 
-    private void testExportImport(String format, IScore score, IExporter exporter, IImporter importer, File outputTmp, String name, String extension) throws IMException, IOException {
-        String exported = exporter.exportScore(score);
-        File outputfile = new File(outputTmp, name + "." + extension);
-        writeToFile(exported, outputfile);
+    private void testExportImport(String format, IScore score, IExporter exporter, IImporter importer, File outputTmp, String name, String extension, boolean writeToFile) throws IMException, IOException {
+        try {
+            String exported = exporter.exportScore(score);
+            if (writeToFile) {
+                File outputfile = new File(outputTmp, name + "." + extension);
+                writeToFile(exported, outputfile);
+            }
 
+            IScore imported = importer.importScore(exported);
+
+            //TODO evaluate equals - now we export it again and check they are equal
+            String reexported = exporter.exportScore(imported);
+            assertEquals(format, exported, reexported);
+        } catch (UnsupportedOperationException e) {
+            System.err.println(format + ": " + e.getMessage());
+        }
+    }
+
+    private void testExportImport(String format, IScore score, IExporter exporter, IImporter importer) throws IMException, IOException {
+        testExportImport(format, score, exporter, importer, null, null, null, false);
+        String exported = exporter.exportScore(score);
         IScore imported = importer.importScore(exported);
 
         //TODO evaluate equals - now we export it again and check they are equal
@@ -61,19 +78,19 @@ public class AllCoreTestSuite {
 
         coreTest.generateTestScores().forEach((name, score) -> {
             try {
-                testExportImport("MEI", score, new MEIExporter(), new MEIImporter(abstractFactory), outputTmp, name, "mei");
+                testExportImport("MEI", score, new MEIExporter(), new MEIImporter(abstractFactory), outputTmp, name, "mei", true);
             } catch (Exception e) {
                 e.printStackTrace();
                 fail("MEI: " + name + ": " + e.getMessage());
             }
             try {
-                testExportImport("MusicXML", score, new MusicXMLExporter(), new MusicXMLImporter(abstractFactory), outputTmp, name, "musicxml");
+                testExportImport("MusicXML", score, new MusicXMLExporter(), new MusicXMLImporter(abstractFactory), outputTmp, name, "musicxml", true);
             } catch (Exception e) {
                 e.printStackTrace();
                 fail("MusicXML: " + name + ": " + e.getMessage());
             }
             try {
-                testExportImport("SKM", score, new SkmExporter(), new SkmImporter(abstractFactory), outputTmp, name, "skm");
+                testExportImport("SKM", score, new SkmExporter(), new SkmImporter(abstractFactory), outputTmp, name, "skm", true);
             } catch (Exception e) {
                 e.printStackTrace();
                 fail("SKM: " + name + ": " + e.getMessage());
@@ -81,6 +98,8 @@ public class AllCoreTestSuite {
             try {
                 LilypondExporter exporter = new LilypondExporter();
                 writeToFile(exporter.exportScore(score), new File(outputTmp, name + ".ly"));
+            } catch (UnsupportedOperationException e) {
+                System.err.println("Lilypond: " + e.getMessage());
             } catch (Exception e) {
                 e.printStackTrace();
                 fail("Lilypond: " + name + ": " + e.getMessage());
@@ -88,7 +107,7 @@ public class AllCoreTestSuite {
         });
     }
     @Test
-    public void allTests() throws Exception {
+    public void allExportImportTests() throws Exception {
         System.out.println("############## GENERATING ALL CORE ITEMS TESTS TO " + OUTPUT + " #####################");
         File outputTmp = new File(OUTPUT);
         outputTmp.mkdirs();
@@ -96,10 +115,24 @@ public class AllCoreTestSuite {
             new MinimalTest(abstractFactory),
                 new ClefsTest(abstractFactory),
                 new KeysTest(abstractFactory),
-                new KeySignaturesTest(abstractFactory)
+                new KeySignaturesTest(abstractFactory),
+                new MetersTest(abstractFactory)
         };
         for (AbstractCoreTest coreTestScoreBuilder: testScoreBuilders) {
             doTest(coreTestScoreBuilder);
         }
+    }
+
+    //TODO generalizar
+    @Test
+    public void allImport() throws Exception {
+        String [] filenames = {"meter_mixed.mei"};
+        for (String filename: filenames) {
+            File file = TestFileUtils.getFile("/testdata/io/mei/" + filename);
+            MEIImporter meiImporter = new MEIImporter(abstractFactory);
+            IScore score = meiImporter.importScore(file);
+            testExportImport("MEI", score, new MEIExporter(), new MEIImporter(abstractFactory));
+        }
+
     }
 }

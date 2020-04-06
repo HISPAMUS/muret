@@ -141,8 +141,8 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IFractionalTimeSignature createFractionalTimeSignature(IId id, ITimeSignatureNumerator numerator, ITimeSignatureDenominator denominator) {
-        return new FractionalTimeSignature(id, numerator, denominator);
+    public IStandardTimeSignature createStandardTimeSignature(IId id, ITimeSignatureNumerator numerator, ITimeSignatureDenominator denominator) {
+        return new StandardTimeSignature(id, numerator, denominator);
     }
 
     @Override
@@ -189,6 +189,21 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     @Override
     public IMetronomeMarkValue createMetronomeMarkValue(IId id, Integer value) {
         return new MetronomeMarkValue(id, value);
+    }
+
+    @Override
+    public IMixedMeter createMixedMeter(IId id, @NotNull IMeter[] meters) {
+        return new MixedMeter(id, meters);
+    }
+
+    @Override
+    public IAlternatingMeter createAlternatingMeter(IId id, @NotNull IMeter[] meters) {
+        return new AlternatingMeter(id, meters);
+    }
+
+    @Override
+    public IAdditiveMeter createAdditiveMeter(IId id, @NotNull ITimeSignatureNumerator[] numerators, @NotNull ITimeSignatureDenominator denominator) {
+        return new AdditiveMeter(id, numerators, denominator);
     }
 
     @Override
@@ -335,6 +350,11 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
         Voice voice = new Voice(id, name);
         part.add(voice);
         return voice;
+    }
+
+    @Override
+    public IInterchangingMeter createInterchangingMeter(IId id, IMeter left, IMeter right) throws IMException {
+        return new InterchangingMeter(id, left, right);
     }
 
     @Override

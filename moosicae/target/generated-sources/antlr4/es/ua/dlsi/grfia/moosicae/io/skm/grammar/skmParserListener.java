@@ -300,15 +300,15 @@ public interface skmParserListener extends ParseTreeListener {
 	 */
 	void exitMajorKey(skmParser.MajorKeyContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link skmParser#fractionalTimeSignature}.
+	 * Enter a parse tree produced by {@link skmParser#timeSignature}.
 	 * @param ctx the parse tree
 	 */
-	void enterFractionalTimeSignature(skmParser.FractionalTimeSignatureContext ctx);
+	void enterTimeSignature(skmParser.TimeSignatureContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link skmParser#fractionalTimeSignature}.
+	 * Exit a parse tree produced by {@link skmParser#timeSignature}.
 	 * @param ctx the parse tree
 	 */
-	void exitFractionalTimeSignature(skmParser.FractionalTimeSignatureContext ctx);
+	void exitTimeSignature(skmParser.TimeSignatureContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link skmParser#numerator}.
 	 * @param ctx the parse tree
@@ -329,6 +329,66 @@ public interface skmParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDenominator(skmParser.DenominatorContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link skmParser#standardTimeSignature}.
+	 * @param ctx the parse tree
+	 */
+	void enterStandardTimeSignature(skmParser.StandardTimeSignatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link skmParser#standardTimeSignature}.
+	 * @param ctx the parse tree
+	 */
+	void exitStandardTimeSignature(skmParser.StandardTimeSignatureContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link skmParser#additiveTimeSignature}.
+	 * @param ctx the parse tree
+	 */
+	void enterAdditiveTimeSignature(skmParser.AdditiveTimeSignatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link skmParser#additiveTimeSignature}.
+	 * @param ctx the parse tree
+	 */
+	void exitAdditiveTimeSignature(skmParser.AdditiveTimeSignatureContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link skmParser#mixedTimeSignature}.
+	 * @param ctx the parse tree
+	 */
+	void enterMixedTimeSignature(skmParser.MixedTimeSignatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link skmParser#mixedTimeSignature}.
+	 * @param ctx the parse tree
+	 */
+	void exitMixedTimeSignature(skmParser.MixedTimeSignatureContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link skmParser#alternatingTimeSignature}.
+	 * @param ctx the parse tree
+	 */
+	void enterAlternatingTimeSignature(skmParser.AlternatingTimeSignatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link skmParser#alternatingTimeSignature}.
+	 * @param ctx the parse tree
+	 */
+	void exitAlternatingTimeSignature(skmParser.AlternatingTimeSignatureContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link skmParser#alternatingTimeSignatureItem}.
+	 * @param ctx the parse tree
+	 */
+	void enterAlternatingTimeSignatureItem(skmParser.AlternatingTimeSignatureItemContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link skmParser#alternatingTimeSignatureItem}.
+	 * @param ctx the parse tree
+	 */
+	void exitAlternatingTimeSignatureItem(skmParser.AlternatingTimeSignatureItemContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link skmParser#interchangingTimeSignature}.
+	 * @param ctx the parse tree
+	 */
+	void enterInterchangingTimeSignature(skmParser.InterchangingTimeSignatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link skmParser#interchangingTimeSignature}.
+	 * @param ctx the parse tree
+	 */
+	void exitInterchangingTimeSignature(skmParser.InterchangingTimeSignatureContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link skmParser#meterSymbol}.
 	 * @param ctx the parse tree

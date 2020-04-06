@@ -46,6 +46,7 @@ public class MusicXMLImporter extends XMLImporter implements IImporter {
         coreObjectBuilderSuppliers.add("time", MxmTimeSignatureBuilder::new);
         coreObjectBuilderSuppliers.add("beats", MxmlTimeSignatureNumeratorBuilder::new);
         coreObjectBuilderSuppliers.add("beat-type", MxmlTimeSignatureDenominatorBuilder::new);
+        coreObjectBuilderSuppliers.add("interchangeable", MxmTimeSignatureBuilder::new);
 
         coreObjectBuilderSuppliers.add("note", MxmlNoteBuilder::new);
         coreObjectBuilderSuppliers.add("pitch", MxmlPitchBuilder::new);

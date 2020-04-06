@@ -3,18 +3,16 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICutTime;
 import es.ua.dlsi.grfia.moosicae.core.TimeSignatureDenominator;
-import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
 import es.ua.dlsi.grfia.moosicae.utils.Time;
-import javax.validation.constraints.NotNull;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 14/03/2020
  */
-public class CutTime extends FractionalTimeSignature implements ICutTime {
+public class CutTime extends StandardTimeSignature implements ICutTime {
 
     CutTime(IId id) {
         super(id,

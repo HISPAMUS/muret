@@ -15,7 +15,7 @@ public interface IExporterVisitor<InputOutputType>  {
     void exportNote(INote note, InputOutputType inputOutput) throws IMException;
     void exportRest(IRest rest, InputOutputType inputOutput) throws IMException;
     void exportMultimeasureRest(IMultimeasureRest mrest, InputOutputType inputOutput) throws IMException;
-    void exportFractionalTimeSignature(IFractionalTimeSignature meter, InputOutputType inputOutput) throws IMException;
+    void exportStandardTimeSignature(IStandardTimeSignature meter, InputOutputType inputOutput) throws IMException;
     void exportCutTime(ICutTime meter, InputOutputType inputOutputOutput) throws IMException;
     void exportCommonTime(ICommonTime meter, InputOutputType inputOutputOutput) throws IMException;
     void exportChord(IChord chord, InputOutputType inputOutputOutput) throws IMException;
@@ -45,4 +45,10 @@ public interface IExporterVisitor<InputOutputType>  {
     void exportSystemBeginning(ISystemBeginning systemBeginning, InputOutputType inputOutput);
 
     void exportUnconventionalKeySignature(IUnconventionalKeySignature unconventionalKeySignature, InputOutputType inputOutput) throws IMException;
+
+    void exportMixedMeter(IMixedMeter mixedMeter, InputOutputType inputOutput) throws IMException;
+    void exportAlternatingMeter(IAlternatingMeter alternatingMeter, InputOutputType inputOutput) throws IMException;
+    void exportAdditiveMeter(IAdditiveMeter compoundMeter, InputOutputType inputOutput) throws IMException;
+
+    void exportInterchangingMeter(IInterchangingMeter interchangingMeter, InputOutputType inputOutput) throws IMException;
 }

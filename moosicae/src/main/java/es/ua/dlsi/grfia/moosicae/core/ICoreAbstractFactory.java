@@ -17,7 +17,9 @@ import javax.validation.constraints.NotNull;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public interface ICoreAbstractFactory {
+    IAdditiveMeter createAdditiveMeter(IId id, @NotNull ITimeSignatureNumerator[] numerators, @NotNull ITimeSignatureDenominator denominator);
     IAlteration createAlteration(IId id, @NotNull IAccidentalSymbol accidentals, IAlterationDisplayType alterationDisplayType);
+    IAlternatingMeter createAlternatingMeter(IId id, @NotNull IMeter[] meters);
     IAlterationDisplayType createAlterationDisplayType(IId id, @NotNull EAlterationDisplayTypes alterationDisplayType);
     IAccidentalSymbol createAccidentalSymbol(IId id, @NotNull EAccidentalSymbols accidentalSymbol);
     IBarline createBarline(IId id,  INumber barNumber,  IBarlineType barlineType);
@@ -41,11 +43,12 @@ public interface ICoreAbstractFactory {
     IKey createKey(IId id, @NotNull IPitchClass pitchClass, @NotNull IMode mode, @NotNull IKeySignature keySignature);
     IKeyAccidentalCount createKeyAccidentalCount(IId id, @NotNull Integer nAccidentals);
     IUnconventionalKeySignature createUnconventionalKeySignature(IId id, @NotNull IPitchClass [] pitchClasses);
-    IFractionalTimeSignature createFractionalTimeSignature(IId id, @NotNull ITimeSignatureNumerator numerator, @NotNull ITimeSignatureDenominator denominator);
+    IStandardTimeSignature createStandardTimeSignature(IId id, @NotNull ITimeSignatureNumerator numerator, @NotNull ITimeSignatureDenominator denominator);
     IMensuration createMensuration(IId id, @NotNull EMensurations mensuration);
     IMensuration createMensuration(IId id,  EMensuralPerfections modusMaior,  EMensuralPerfections modusMinor, @NotNull EMensuralPerfections tempus, @NotNull EMensuralPerfections prolatio);
     IMetronomeMark createMetronomeMark(IId id, @NotNull IFigure figure,  IDots dots, @NotNull IMetronomeMarkValue value);
-    IMetronomeMarkValue createMetronomeMarkValue(IId id, Integer value);
+    IMetronomeMarkValue createMetronomeMarkValue(IId id, @NotNull Integer value);
+    IMixedMeter createMixedMeter(IId id, @NotNull IMeter[] meters);
     IMode createMode(IId id, EModes mode);
     IMultimeasureRest createMultimeasureRest(IId id, @NotNull IMultimeasureRestCount measureCount);
     IMultimeasureRestCount createMultimeasureRestCount(IId id, Integer value);
@@ -115,4 +118,5 @@ public interface ICoreAbstractFactory {
     ITitle createTitle(IId id, @NotNull String title);
     IVoice createVoice(@NotNull IPart part, IId id,  IName name);
 
+    IInterchangingMeter createInterchangingMeter(IId id, IMeter left, IMeter right) throws IMException;
 }

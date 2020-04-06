@@ -151,8 +151,21 @@ public class MEIAttributesParsers {
                 default:
                     throw new IMException("Unkown meter symbol: " + meterSym.get());
             }
+            //TODO mensurales
         } else {
-            //TODO fracionales y mensurales
+            Optional<String> meterCount = xmlImporterParam.getAttribute("meter.count");
+            Optional<String> meterUnit = xmlImporterParam.getAttribute("meter.unit");
+            if (meterCount.isPresent() || meterUnit.isPresent()) {
+                if (!meterCount.isPresent() || !meterUnit.isPresent()) {
+                    throw new IMException("Either count or unit is missing in meter definition");
+                }
+
+                IStandardTimeSignature standardTimeSignature = abstractFactory.createStandardTimeSignature(null,
+                        abstractFactory.createTimeSignatureNumerator(null, Integer.parseInt(meterCount.get())),
+                        abstractFactory.createTimeSignatureDenominator(null, Integer.parseInt(meterUnit.get()))
+                        );
+                return Optional.of(standardTimeSignature);
+            }
             return Optional.empty();
         }
     }

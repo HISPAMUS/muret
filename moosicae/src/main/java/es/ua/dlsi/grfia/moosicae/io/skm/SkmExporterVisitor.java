@@ -98,12 +98,15 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
         inputOutput.buildAndAddToken(mrest);
     }
 
-    @Override
-    public void exportFractionalTimeSignature(IFractionalTimeSignature meter, SkmExporterVisitorTokenParam inputOutput) throws IMException {
-        inputOutput.append("*M");
-        inputOutput.append(meter.getNumerator().getValue());
+    private void doExport(IStandardTimeSignature standardTimeSignature, SkmExporterVisitorTokenParam inputOutput) {
+        inputOutput.append(standardTimeSignature.getNumerator().getValue());
         inputOutput.append('/');
-        inputOutput.append(meter.getDenominator().getValue());
+        inputOutput.append(standardTimeSignature.getDenominator().getValue());
+    }
+    @Override
+    public void exportStandardTimeSignature(IStandardTimeSignature meter, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+        inputOutput.append("*M");
+        doExport(meter, inputOutput);
         inputOutput.buildAndAddToken(meter);
     }
 
@@ -117,6 +120,97 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     public void exportCommonTime(ICommonTime meter, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         inputOutput.append("*met(c)");
         inputOutput.buildAndAddToken(meter);
+    }
+
+    @Override
+    public void exportMixedMeter(IMixedMeter mixedMeter, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+        inputOutput.append("*M");
+        boolean first = true;
+        for (IMeter submeter: mixedMeter.getSubMeters()) {
+            if (!(submeter instanceof IStandardTimeSignature)) {
+                throw new IMException("Unsupported " + submeter.getClass() + " inside an alternating meter");
+            }
+            IStandardTimeSignature standardSubmeter = (IStandardTimeSignature) submeter;
+            if (first) {
+                first = false;
+            } else {
+                inputOutput.append('+');
+            }
+            doExport(standardSubmeter, inputOutput);
+        }
+    }
+
+    @Override
+    public void exportAlternatingMeter(IAlternatingMeter mixedMeter, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+        inputOutput.append("*M");
+        IStandardTimeSignature previous = null;
+        int countPrevious = 0;
+        boolean needsSeparator = false;
+        for (IMeter submeter: mixedMeter.getSubMeters()) {
+            if (!(submeter instanceof IStandardTimeSignature)) {
+                throw new IMException("Unsupported " + submeter.getClass() + " inside an alternating meter");
+            }
+            IStandardTimeSignature standardSubmeter = (IStandardTimeSignature) submeter;
+            if (previous == null) {
+                previous = standardSubmeter;
+                countPrevious = 1;
+            } else {
+                if (previous.equals(standardSubmeter)) {
+                    countPrevious ++;
+                } else {
+                    doExport(standardSubmeter, inputOutput);
+                    if (countPrevious > 1) {
+                        inputOutput.append(';');
+                        inputOutput.append(countPrevious);
+                    }
+                    needsSeparator = true;
+                    previous = standardSubmeter;
+                    countPrevious = 1;
+                }
+            }
+        }
+
+        if (previous != null) {
+            if (needsSeparator) {
+                inputOutput.append(';');
+            }
+            doExport(previous, inputOutput);
+            if (countPrevious > 1) {
+                inputOutput.append(';');
+                inputOutput.append(countPrevious);
+            }
+        }
+    }
+
+    @Override
+    public void exportAdditiveMeter(IAdditiveMeter additiveMeter, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+        inputOutput.append("*M");
+        boolean first = true;
+        for (ITimeSignatureNumerator numerator: additiveMeter.getNumerators()) {
+            if (first) {
+                first = false;
+            } else {
+                inputOutput.append('+');
+            }
+            inputOutput.append(numerator.getValue());
+        }
+        inputOutput.append('/');
+        inputOutput.append(additiveMeter.getDenominator().getValue());
+    }
+
+    @Override
+    public void exportInterchangingMeter(IInterchangingMeter interchangingMeter, SkmExporterVisitorTokenParam inputOutput) throws IMException {
+        IMeter left = interchangingMeter.getLeft();
+        IMeter right = interchangingMeter.getRight();
+        if (!(left instanceof IStandardTimeSignature && right instanceof IStandardTimeSignature)) {
+            throw new IMException("Unsupported interchanging meters made of other thing that standard time signatures, and found " + left.getClass() + " and " + right.getClass());
+        }
+
+        inputOutput.append("*M");
+        doExport((IStandardTimeSignature) left, inputOutput);
+        inputOutput.append('|');
+        doExport((IStandardTimeSignature) right, inputOutput);
+        inputOutput.buildAndAddToken(interchangingMeter);
     }
 
     @Override
@@ -414,6 +508,7 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     public void exportUnconventionalKeySignature(IUnconventionalKeySignature unconventionalKeySignature, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         exportKeySignature(unconventionalKeySignature, inputOutput);
     }
+
 
 
 }

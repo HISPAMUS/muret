@@ -1,11 +1,12 @@
 package es.ua.dlsi.grfia.moosicae.io;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.ICoreObject;
 import es.ua.dlsi.grfia.moosicae.core.builders.IObjectBuilder;
 
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * Used to handle context organized importers, such as XML tree structures. It allows to add core object builders (method begin),
@@ -17,10 +18,16 @@ import java.util.HashMap;
 public class ImportingContexts<BuiltType> {
     private final ImportedObjectPool objectPool;
     private final HashMap<String, IObjectBuilder<? extends BuiltType>> objectBuilders;
+    /**
+     * Use a list instead of a Stack in order to iterate
+     */
+    private final LinkedList<IObjectBuilder<? extends BuiltType>> objectBuilderStack;
 
     public ImportingContexts() {
-        objectBuilders = new HashMap<>();
+        //objectBuilders = new HashMap<>();
         objectPool = new ImportedObjectPool();
+        objectBuilders = new HashMap<>();
+        objectBuilderStack = new LinkedList<>();
     }
 
     /**
@@ -31,6 +38,8 @@ public class ImportingContexts<BuiltType> {
      */
     public <BuilderType extends IObjectBuilder<? extends BuiltType>> IObjectBuilder<? extends BuiltType> begin(String contextName, BuilderType coreObjectBuilder) {
         objectBuilders.put(contextName, coreObjectBuilder);
+        objectBuilderStack.add(0, coreObjectBuilder);
+
         return coreObjectBuilder;
     }
 
@@ -51,18 +60,33 @@ public class ImportingContexts<BuiltType> {
         if (coreObjectBuilder == null) {
             throw new IMException("Cannot find a core object builder for the context with name '" + contextName + "'");
         }
+
+        // try to assign available objects to build object
         objectPool.populate(coreObjectBuilder);
         BuiltType coreObject = coreObjectBuilder.build();
-        objectPool.add(coreObject);
+        objectBuilderStack.remove(0);
+        objectBuilders.remove(contextName);
+        //objectPool.add(coreObject);
+
+        // try to assign this just created object to other parent context builders
+        addObjectToPool(coreObject);
         return coreObject;
     }
 
     /**
+     * It tries to assign the object to the last inserted active object. If no one can process it, it remains in the pool
      * It just adds an object to the pool to be used by the first active context that can make use of it given the object type
      * @param object
      */
     public void addObjectToPool(Object object) {
-        this.objectPool.add(object);
+        boolean assigned = false;
+        for (Iterator<IObjectBuilder<? extends BuiltType>> it = objectBuilderStack.iterator(); !assigned && it.hasNext(); ) {
+            IObjectBuilder<? extends BuiltType> objectBuilder = it.next();
+            assigned = this.objectPool.assign(object, objectBuilder);
+        }
+        if (!assigned) {
+            this.objectPool.add(object);
+        }
     }
 
     /**

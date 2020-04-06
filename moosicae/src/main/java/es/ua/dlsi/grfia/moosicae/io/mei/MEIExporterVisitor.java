@@ -101,8 +101,15 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
     }
 
     @Override
-    public void exportFractionalTimeSignature(IFractionalTimeSignature meter, XMLExporterVisitorParam inputOutput) throws IMException {
-
+    public void exportStandardTimeSignature(IStandardTimeSignature meter, XMLExporterVisitorParam inputOutput) throws IMException {
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
+            inputOutput.addAttribute("meter.count", Integer.toString(meter.getNumerator().getValue()));
+            inputOutput.addAttribute("meter.unit", Integer.toString(meter.getDenominator().getValue()));
+        } else {
+            XMLElement meterSig = inputOutput.addChild("meterSig");
+            meterSig.addAttribute("count", Integer.toString(meter.getNumerator().getValue()));
+            meterSig.addAttribute("unit", Integer.toString(meter.getDenominator().getValue()));
+        }
     }
 
     @Override
@@ -110,7 +117,8 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
             inputOutput.addAttribute("meter.sym", "cut");
         } else {
-            throw new UnsupportedOperationException("TO-DO"); //TODO
+            XMLElement meterSig = inputOutput.addChild("meterSig");
+            meterSig.addAttribute("sym", "cut");
         }
 
     }
@@ -119,10 +127,59 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
             inputOutput.addAttribute("meter.sym", "common");
         } else {
-            throw new UnsupportedOperationException("TO-DO"); //TODO
+            XMLElement meterSig = inputOutput.addChild("meterSig");
+            meterSig.addAttribute("sym", "common");
         }
     }
 
+    private void doExportComposite(ICompositeMeter compositeMeter, XMLExporterVisitorParam inputOutput, String func) throws IMException {
+        XMLExporterVisitorParam meterSigGrp = inputOutput.addChild(XMLParamExportMode.element, "meterSigGrp");
+        meterSigGrp.addAttribute("func", func);
+        for (IMeter meter: compositeMeter.getSubMeters()) {
+            meter.export(this, meterSigGrp);
+        }
+    }
+
+
+    @Override
+    public void exportMixedMeter(IMixedMeter mixedMeter, XMLExporterVisitorParam inputOutput) throws IMException {
+        doExportComposite(mixedMeter, inputOutput, "mixed");
+    }
+
+    @Override
+    public void exportAlternatingMeter(IAlternatingMeter alternatingMeter, XMLExporterVisitorParam inputOutput) throws IMException {
+        doExportComposite(alternatingMeter, inputOutput, "alternating");
+    }
+
+    @Override
+    public void exportAdditiveMeter(IAdditiveMeter additiveMeter, XMLExporterVisitorParam inputOutput) throws IMException {
+        StringBuilder numerator = new StringBuilder();
+        for (ITimeSignatureNumerator num: additiveMeter.getNumerators()) {
+            if (numerator.length() > 0) {
+                numerator.append('+');
+            }
+            numerator.append(num.getValue());
+        }
+
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
+            inputOutput.addAttribute("meter.count", additiveMeter.toString());
+            inputOutput.addAttribute("meter.unit", Integer.toString(additiveMeter.getDenominator().getValue()));
+        } else {
+            XMLElement meterSig = inputOutput.addChild("meterSig");
+            meterSig.addAttribute("count", additiveMeter.toString());
+            meterSig.addAttribute("unit", Integer.toString(additiveMeter.getDenominator().getValue()));
+        }
+    }
+
+
+    @Override
+    public void exportInterchangingMeter(IInterchangingMeter interchangingMeter, XMLExporterVisitorParam inputOutput) throws IMException {
+        XMLExporterVisitorParam meterSigGrp = inputOutput.addChild(XMLParamExportMode.element, "meterSigGrp");
+        meterSigGrp.addAttribute("func", "interchanging");
+        interchangingMeter.getLeft().export(this, meterSigGrp);
+        interchangingMeter.getRight().export(this, meterSigGrp);
+
+    }
     @Override
     public void exportChord(IChord chord, XMLExporterVisitorParam inputOutputOutput) throws IMException {
 
@@ -156,7 +213,7 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
             }
             inputOutput.addAttribute("key.sig", sb.toString());
         } else {
-            throw new UnsupportedOperationException("TO-DO"); //TODO
+            // throw new UnsupportedOperationException("TO-DO"); //TODO
         }
     }
 
@@ -172,6 +229,8 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
     public void exportUnconventionalKeySignature(IUnconventionalKeySignature unconventionalKeySignature, XMLExporterVisitorParam inputOutput) throws IMException {
         doExportUnconventionalKeySignature(unconventionalKeySignature, inputOutput);
     }
+
+
 
     private void doExportMode(IMode mode, String attrName, XMLExporterVisitorParam inputOutput) {
         inputOutput.addAttribute(attrName, mode.getValue().name().toLowerCase());

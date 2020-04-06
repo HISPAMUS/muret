@@ -73,7 +73,7 @@ tandemInterpretation:
     |
     keySignature
     |
-    fractionalTimeSignature
+    timeSignature
     |
     meterSymbol
     |
@@ -112,9 +112,15 @@ key: ASTERISK keyMode COLON;
 minorKey: lowerCasePitch accidental?;
 majorKey: upperCasePitch accidental?;
 
-fractionalTimeSignature: TANDEM_TIMESIGNATURE numerator SLASH denominator;
+timeSignature: TANDEM_TIMESIGNATURE (standardTimeSignature | additiveTimeSignature | mixedTimeSignature | alternatingTimeSignature | interchangingTimeSignature);
 numerator: number;
 denominator: number;
+standardTimeSignature: numerator SLASH denominator;
+additiveTimeSignature: numerator (PLUS numerator)+ SLASH denominator;
+mixedTimeSignature: standardTimeSignature (PLUS standardTimeSignature)+;
+alternatingTimeSignature: alternatingTimeSignatureItem (COLON alternatingTimeSignatureItem)+;
+alternatingTimeSignatureItem: standardTimeSignature (SEMICOLON number)?;
+interchangingTimeSignature: standardTimeSignature PIPE standardTimeSignature;
 
 meterSymbol: TANDEM_MET LEFT_PARENTHESIS (modernMeterSymbolSign | mensuration) RIGHT_PARENTHESIS;
 modernMeterSymbolSign: CHAR_c | CHAR_c PIPE;

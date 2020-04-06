@@ -366,13 +366,13 @@ public class skmParserBaseListener implements skmParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFractionalTimeSignature(skmParser.FractionalTimeSignatureContext ctx) { }
+	@Override public void enterTimeSignature(skmParser.TimeSignatureContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFractionalTimeSignature(skmParser.FractionalTimeSignatureContext ctx) { }
+	@Override public void exitTimeSignature(skmParser.TimeSignatureContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -397,6 +397,78 @@ public class skmParserBaseListener implements skmParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDenominator(skmParser.DenominatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterStandardTimeSignature(skmParser.StandardTimeSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStandardTimeSignature(skmParser.StandardTimeSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAdditiveTimeSignature(skmParser.AdditiveTimeSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAdditiveTimeSignature(skmParser.AdditiveTimeSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMixedTimeSignature(skmParser.MixedTimeSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMixedTimeSignature(skmParser.MixedTimeSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAlternatingTimeSignature(skmParser.AlternatingTimeSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAlternatingTimeSignature(skmParser.AlternatingTimeSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAlternatingTimeSignatureItem(skmParser.AlternatingTimeSignatureItemContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAlternatingTimeSignatureItem(skmParser.AlternatingTimeSignatureItemContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterInterchangingTimeSignature(skmParser.InterchangingTimeSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitInterchangingTimeSignature(skmParser.InterchangingTimeSignatureContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

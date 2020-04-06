@@ -4,7 +4,6 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
-import es.ua.dlsi.grfia.moosicae.core.impl.UnconventionalKeySignature;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 
@@ -15,8 +14,6 @@ import java.util.Optional;
  * @created 18/03/2020
  */
 public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporterVisitorParam> {
-
-
     @Override
     public void exportClef(IClef clef, LilypondExporterVisitorParam inputOutput) throws IMException {
         inputOutput.startString();
@@ -140,10 +137,73 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
 
     }
 
+    private void encodeTimeSignature(IStandardTimeSignature meter, LilypondExporterVisitorParam inputOutput) {
+        inputOutput.append(meter.getNumerator().getValue() + "/" + meter.getDenominator().getValue());
+    }
+
     @Override
-    public void exportFractionalTimeSignature(IFractionalTimeSignature meter, LilypondExporterVisitorParam inputOutput) throws IMException {
+    public void exportStandardTimeSignature(IStandardTimeSignature meter, LilypondExporterVisitorParam inputOutput) throws IMException {
         inputOutput.addChildLine("\\numericTimeSignature");
-        inputOutput.addChildLine("\\time " + meter.getNumerator() + "/" + meter.getDenominator());
+        inputOutput.startString();
+        inputOutput.append("\\time ");
+        encodeTimeSignature(meter, inputOutput);
+        inputOutput.finishString();
+    }
+
+    private void encodeTimeSignature(ICompositeMeter compositeMeter, LilypondExporterVisitorParam inputOutput) throws IMException {
+        for (IMeter meter: compositeMeter.getSubMeters()) {
+            inputOutput.append('(');
+            if (meter instanceof IStandardTimeSignature) {
+                encodeTimeSignature((IStandardTimeSignature)meter, inputOutput);
+            } else if (meter instanceof IAdditiveMeter) {
+                encodeTimeSignature((IAdditiveMeter)meter, inputOutput);
+            } else if (meter instanceof IMixedMeter) {
+                encodeTimeSignature((ICompositeMeter)meter, inputOutput);
+            } else {
+                throw new IMException("Unsupported meter: " + meter.getClass());
+            }
+            inputOutput.append(')');
+        }
+    }
+    @Override
+    public void exportMixedMeter(IMixedMeter compositeMeter, LilypondExporterVisitorParam inputOutput) throws IMException {
+        inputOutput.startString();
+        inputOutput.append("\\compoundMeter #'(");
+        encodeTimeSignature(compositeMeter, inputOutput);
+        inputOutput.append(")");
+        inputOutput.finishString();
+    }
+
+    @Override
+    public void exportAlternatingMeter(IAlternatingMeter compositeMeter, LilypondExporterVisitorParam inputOutput) {
+        throw new UnsupportedOperationException("Alternating meter not supported by Lilypond");
+    }
+
+    private void encodeTimeSignature(IAdditiveMeter compoundMeter, LilypondExporterVisitorParam inputOutput) {
+        boolean first = true;
+        for (ITimeSignatureNumerator timeSignatureNumerator: compoundMeter.getNumerators()) {
+            if (first) {
+                first = false;
+            } else {
+                inputOutput.append(' ');
+            }
+            inputOutput.append(timeSignatureNumerator.getValue());
+        }
+        inputOutput.append(' ');
+        inputOutput.append(compoundMeter.getDenominator().getValue());
+    }
+    @Override
+    public void exportAdditiveMeter(IAdditiveMeter compoundMeter, LilypondExporterVisitorParam inputOutput) {
+        inputOutput.startString();
+        inputOutput.append("\\compoundMeter #'((");
+        encodeTimeSignature(compoundMeter, inputOutput);
+        inputOutput.append("))");
+        inputOutput.finishString();
+    }
+
+    @Override
+    public void exportInterchangingMeter(IInterchangingMeter iInterchangingMeter, LilypondExporterVisitorParam inputOutput) {
+        throw new UnsupportedOperationException("Interchanging meter not supported by Lilypond");
     }
 
     @Override

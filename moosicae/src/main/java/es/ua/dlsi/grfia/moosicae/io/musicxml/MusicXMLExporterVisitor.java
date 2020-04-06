@@ -5,7 +5,6 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
-import es.ua.dlsi.grfia.moosicae.core.impl.UnconventionalKeySignature;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLExporterVisitorParam;
@@ -87,12 +86,38 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
 
     }
 
+    private void addTimeSignatureElements(IMeter meter, XMLExporterVisitorParam timeXMLParam) throws IMException {
+        if (meter instanceof IStandardTimeSignature) {
+            IStandardTimeSignature fractionalTimeSignature = (IStandardTimeSignature) meter;
+            timeXMLParam.addChild("beats", fractionalTimeSignature.getNumerator().getValue().toString());
+            timeXMLParam.addChild("beat-type", fractionalTimeSignature.getDenominator().getValue().toString());
+        } else if (meter instanceof IAdditiveMeter) {
+            IAdditiveMeter compoundMeter = (IAdditiveMeter) meter;
+            StringBuilder sumNumerators = new StringBuilder();
+            for (ITimeSignatureNumerator numerator : compoundMeter.getNumerators()) {
+                if (sumNumerators.length() > 0) {
+                    sumNumerators.append('+');
+                }
+                sumNumerators.append(numerator.getValue());
+            }
+            timeXMLParam.addChild("beats", sumNumerators.toString());
+            timeXMLParam.addChild("beat-type", compoundMeter.getDenominator().getValue().toString());
+        } else if (meter instanceof ICompositeMeter) {
+            ICompositeMeter compositeMeter = (ICompositeMeter) meter;
+            for (IMeter submeter: compositeMeter.getSubMeters()) {
+                addTimeSignatureElements(submeter, timeXMLParam);
+            }
+        } else {
+            // the cut time and common time cannot be added here because they use an attribute for the time element
+            throw new IMException("Unsupported meter: " + meter.getClass().getName());
+        }
+    }
+
     @Override
-    public void exportFractionalTimeSignature(IFractionalTimeSignature meter, XMLExporterVisitorParam inputOutput) throws IMException {
+    public void exportStandardTimeSignature(IStandardTimeSignature meter, XMLExporterVisitorParam inputOutput) throws IMException {
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
             XMLExporterVisitorParam timeXMLParam = new XMLExporterVisitorParam(XMLParamExportMode.element, inputOutput.addChild("time"));
-            timeXMLParam.addChild("beats", meter.getNumerator().getValue().toString());
-            timeXMLParam.addChild("beat-type", meter.getDenominator().getValue().toString());
+            addTimeSignatureElements(meter, timeXMLParam);
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }
@@ -120,6 +145,44 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }
+    }
+
+    @Override
+    public void exportMixedMeter(IMixedMeter iCompositeMeter, XMLExporterVisitorParam inputOutput) throws IMException {
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
+            XMLExporterVisitorParam timeXMLParam = new XMLExporterVisitorParam(XMLParamExportMode.element, inputOutput.addChild("time"));
+            addTimeSignatureElements(iCompositeMeter, timeXMLParam);
+        } else {
+            throw new UnsupportedOperationException("TO-DO"); //TODO
+        }
+    }
+
+    @Override
+    public void exportAlternatingMeter(IAlternatingMeter mixedMeter, XMLExporterVisitorParam inputOutput) throws IMException {
+        throw new UnsupportedOperationException("Alternating meters are not supported by MusicXML");
+    }
+
+    @Override
+    public void exportAdditiveMeter(IAdditiveMeter compoundMeter, XMLExporterVisitorParam inputOutput) throws IMException {
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
+            XMLExporterVisitorParam timeXMLParam = new XMLExporterVisitorParam(XMLParamExportMode.element, inputOutput.addChild("time"));
+            addTimeSignatureElements(compoundMeter, timeXMLParam);
+        } else {
+            throw new UnsupportedOperationException("TO-DO"); //TODO
+        }
+    }
+
+    @Override
+    public void exportInterchangingMeter(IInterchangingMeter interchangingMeter, XMLExporterVisitorParam inputOutput) throws IMException {
+        if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
+            XMLExporterVisitorParam timeXMLParam = new XMLExporterVisitorParam(XMLParamExportMode.element, inputOutput.addChild("time"));
+            addTimeSignatureElements(interchangingMeter.getLeft(), timeXMLParam);
+            XMLExporterVisitorParam interchangeTimeXMLParam = new XMLExporterVisitorParam(XMLParamExportMode.element, timeXMLParam.addChild("interchangeable"));
+            addTimeSignatureElements(interchangingMeter.getRight(), interchangeTimeXMLParam);
+        } else {
+            throw new UnsupportedOperationException("TO-DO"); //TODO
+        }
+
     }
 
     @Override
@@ -169,6 +232,8 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
     public void exportUnconventionalKeySignature(IUnconventionalKeySignature unconventionalKeySignature, XMLExporterVisitorParam inputOutput) throws IMException {
         doExportUnconventionalKeySignature(unconventionalKeySignature, inputOutput);
     }
+
+
 
     @Override
     public void exportConventionalKeySignature(IConventionalKeySignature conventionalKeySignature, XMLExporterVisitorParam inputOutput) throws IMException {

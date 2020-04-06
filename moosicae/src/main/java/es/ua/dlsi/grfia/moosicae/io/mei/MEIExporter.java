@@ -95,7 +95,6 @@ public class MEIExporter implements IExporter {
         }
     }
 
-
     private void exportScoreDef(XMLElement xmlScore, IScore score) throws IMException {
         XMLElement xmlScoreDef = xmlScore.addChild("scoreDef");
         Optional<IMeter> commonBeginningMeter = getCommonBeginning(score, IMeter.class);

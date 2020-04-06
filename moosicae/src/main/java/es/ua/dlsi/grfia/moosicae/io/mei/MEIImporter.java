@@ -30,6 +30,9 @@ public class MEIImporter extends XMLImporter implements IImporter {
         coreObjectBuilderSuppliers.add("keySig", MEIKeyOrKeySignatureBuilder::new);
         coreObjectBuilderSuppliers.add("keyAccid", MEIKeyAccidBuilder::new);
 
+        coreObjectBuilderSuppliers.add("meterSig", MEIMeterSigBuilder::new);
+        coreObjectBuilderSuppliers.add("meterSigGrp", MEIMeterSigGrpBuilder::new);
+
         coreObjectBuilderSuppliers.add("section", MEISectionBuilder::new);
         coreObjectBuilderSuppliers.add("measure", MEIMeasureBuilder::new);
         coreObjectBuilderSuppliers.add("staff", MEIStaffBuilder::new);

@@ -1,22 +1,47 @@
 package es.ua.dlsi.grfia.moosicae.io.musicxml.importer.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
-import es.ua.dlsi.grfia.moosicae.core.IFractionalTimeSignature;
-import es.ua.dlsi.grfia.moosicae.core.builders.IFractionalTimeSignatureBuilder;
+import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.builders.CoreObjectBuilder;
 import es.ua.dlsi.grfia.moosicae.core.enums.ETimeSignatureSymbols;
 import es.ua.dlsi.grfia.moosicae.io.IImporterAdapter;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 /**
+ * Usually we will find just a pair of elements (beat, beat-type). However, in the case of mixed meters, they are repeated
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 24/03/2020
  */
-public class MxmTimeSignatureBuilder extends IFractionalTimeSignatureBuilder implements IImporterAdapter<IFractionalTimeSignature, XMLImporterParam> {
+public class MxmTimeSignatureBuilder extends CoreObjectBuilder<IMeter> implements IImporterAdapter<IMeter, XMLImporterParam> {
+    private List<ITimeSignatureNumerator> numeratorList;
+    private List<ITimeSignatureDenominator> denominatorList;
+    private ETimeSignatureSymbols timeSignatureSymbol;
+    private IMeter interchangeableRightMeter;
+
     public MxmTimeSignatureBuilder(ICoreAbstractFactory coreObjectFactory) {
         super(coreObjectFactory);
+        numeratorList = new LinkedList<>();
+        denominatorList = new LinkedList<>();
+    }
+
+    public MxmTimeSignatureBuilder add(ITimeSignatureNumerator numerator) {
+        this.numeratorList.add(numerator);
+        return this;
+    }
+
+    public MxmTimeSignatureBuilder add(ITimeSignatureDenominator denominator) {
+        this.denominatorList.add(denominator);
+        return this;
+    }
+
+
+    public MxmTimeSignatureBuilder from(IMeter interchangeableRightMeter) {
+        this.interchangeableRightMeter = interchangeableRightMeter;
+        return this;
     }
 
     @Override
@@ -25,14 +50,67 @@ public class MxmTimeSignatureBuilder extends IFractionalTimeSignatureBuilder imp
         if (symbol.isPresent()) {
             switch (symbol.get()) {
                 case "common":
-                    from(ETimeSignatureSymbols.common);
+                    timeSignatureSymbol = ETimeSignatureSymbols.common;
                     break;
                 case "cut":
-                    from(ETimeSignatureSymbols.cut);
+                    timeSignatureSymbol = ETimeSignatureSymbols.cut;
                     break;
                 default:
-                    throw new IMException("Unkown time signature symbol: '" + symbol.get() + "'");
+                    throw new IMException("Unknown time signature symbol: '" + symbol.get() + "'");
             }
+        }
+    }
+
+    @Override
+    public IMeter build() throws IMException {
+        IMeter meter = null;
+        if (timeSignatureSymbol != null) {
+            switch (timeSignatureSymbol) {
+                case common:
+                    meter = coreObjectFactory.createCommonTime(getId());
+                    break;
+                case cut:
+                    meter = coreObjectFactory.createCutTime(getId());
+                    break;
+                default:
+                    throw new IMException("Unknown time signature symbol: '" + timeSignatureSymbol + "'");
+            }
+        } else {
+            if (numeratorList.size() != denominatorList.size()) {
+                throw new IMException("The number of <beat> (#" + numeratorList.size() + ") is different to those of <beat-type> (#" + denominatorList.size() + ")");
+            }
+            if (numeratorList.isEmpty()) {
+                throw new IMException("At least a symbol or a pair <beat>-<beat-type> is required");
+            }
+
+            if (numeratorList.size() == 1) {
+                meter = coreObjectFactory.createStandardTimeSignature(getId(), numeratorList.get(0), denominatorList.get(0));
+            } else {
+                // check if all denominators are the same
+                boolean isAdditiveMeter = true;
+                ITimeSignatureDenominator last = null;
+                for (ITimeSignatureDenominator denominator: denominatorList) {
+                    if (last != null && !denominator.equals(last)) {
+                        isAdditiveMeter = false;
+                        break;
+                    }
+                    last = denominator;
+                }
+                if (isAdditiveMeter) {
+                    meter = coreObjectFactory.createAdditiveMeter(getId(), numeratorList.toArray(new ITimeSignatureNumerator[0]), denominatorList.get(0));
+                } else {
+                    IMeter [] submeters = new IMeter[numeratorList.size()];
+                    for (int i=0; i<submeters.length; i++) {
+                        submeters[i] = coreObjectFactory.createStandardTimeSignature(null, numeratorList.get(i), denominatorList.get(i));
+                    }
+                    meter = coreObjectFactory.createMixedMeter(getId(), submeters);
+                }
+            }
+        }
+        if (interchangeableRightMeter != null) {
+            return coreObjectFactory.createInterchangingMeter(getId(), meter, interchangeableRightMeter);
+        } else {
+            return meter;
         }
     }
 }

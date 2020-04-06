@@ -3,9 +3,8 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ITimeSignatureDenominator;
 import es.ua.dlsi.grfia.moosicae.core.ITimeSignatureNumerator;
-import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
-import es.ua.dlsi.grfia.moosicae.core.IFractionalTimeSignature;
+import es.ua.dlsi.grfia.moosicae.core.IStandardTimeSignature;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.utils.Time;
 import org.apache.commons.lang3.math.Fraction;
@@ -15,7 +14,7 @@ import javax.validation.constraints.NotNull;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 14/03/2020
  */
-public class FractionalTimeSignature extends Meter implements IFractionalTimeSignature {
+public class StandardTimeSignature extends Meter implements IStandardTimeSignature {
     @NotNull
     private final ITimeSignatureNumerator numerator;
     @NotNull
@@ -23,7 +22,7 @@ public class FractionalTimeSignature extends Meter implements IFractionalTimeSig
     @NotNull
     private final Time barDuration;
 
-    FractionalTimeSignature(IId id, @NotNull ITimeSignatureNumerator numerator, @NotNull ITimeSignatureDenominator denominator) {
+    StandardTimeSignature(IId id, @NotNull ITimeSignatureNumerator numerator, @NotNull ITimeSignatureDenominator denominator) {
         super(id);
         this.numerator = numerator;
         this.denominator = denominator;
@@ -47,20 +46,20 @@ public class FractionalTimeSignature extends Meter implements IFractionalTimeSig
 
     @Override
     public <InputOutputType> void export(IExporterVisitor<InputOutputType> exportVisitor, InputOutputType inputOutput) throws IMException {
-        exportVisitor.exportFractionalTimeSignature(this, inputOutput);
+        exportVisitor.exportStandardTimeSignature(this, inputOutput);
     }
 
     @Override
-    public FractionalTimeSignature clone() {
-        return new FractionalTimeSignature(null, numerator, denominator);
+    public StandardTimeSignature clone() {
+        return new StandardTimeSignature(null, numerator, denominator);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof FractionalTimeSignature)) return false;
+        if (!(o instanceof StandardTimeSignature)) return false;
 
-        FractionalTimeSignature that = (FractionalTimeSignature) o;
+        StandardTimeSignature that = (StandardTimeSignature) o;
 
         if (!numerator.equals(that.numerator)) return false;
         if (!denominator.equals(that.denominator)) return false;

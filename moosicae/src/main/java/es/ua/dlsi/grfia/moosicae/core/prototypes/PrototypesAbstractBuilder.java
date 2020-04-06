@@ -15,12 +15,14 @@ public class PrototypesAbstractBuilder {
 
     private final Clefs clefs;
     private final Keys keys;
+    private final Meters meters;
 
     private PrototypesAbstractBuilder(ICoreAbstractFactory coreAbstractFactory) throws IMException {
         this.coreAbstractFactory = coreAbstractFactory;
 
         this.clefs = new Clefs(coreAbstractFactory);
         this.keys = new Keys(coreAbstractFactory);
+        this.meters = new Meters(coreAbstractFactory);
     }
 
     public static synchronized PrototypesAbstractBuilder getInstance(ICoreAbstractFactory coreAbstractFactory) throws IMException {
@@ -38,5 +40,9 @@ public class PrototypesAbstractBuilder {
 
     public Keys getKeys() {
         return keys;
+    }
+
+    public Meters getMeters() {
+        return meters;
     }
 }

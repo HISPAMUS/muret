@@ -9,6 +9,7 @@ import es.ua.dlsi.grfia.moosicae.core.builders.*;
 import es.ua.dlsi.grfia.moosicae.core.mensural.IMensuration;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.ImportingContexts;
+import es.ua.dlsi.grfia.moosicae.io.skm.grammar.builders.SkmMeterBuilder;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmCoreSymbol;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmHeader;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmPart;
@@ -400,17 +401,107 @@ public class SkmSyntaxDirectedTranslation {
         }
 
         @Override
-        public void enterFractionalTimeSignature(skmParser.FractionalTimeSignatureContext ctx) {
-            super.enterFractionalTimeSignature(ctx);
-            beginContext(ctx, new IFractionalTimeSignatureBuilder(coreAbstractFactory));
+        public void enterAdditiveTimeSignature(skmParser.AdditiveTimeSignatureContext ctx) {
+            super.enterAdditiveTimeSignature(ctx);
+            beginContext(ctx, new IAdditiveMeterBuilder(coreAbstractFactory));
         }
 
         @Override
-        public void exitFractionalTimeSignature(skmParser.FractionalTimeSignatureContext ctx) {
-            super.exitFractionalTimeSignature(ctx);
+        public void exitAdditiveTimeSignature(skmParser.AdditiveTimeSignatureContext ctx) {
+            super.exitAdditiveTimeSignature(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Additive time signature {0}", ctx.getText());
+            endContext(ctx);
+        }
+
+        @Override
+        public void enterMixedTimeSignature(skmParser.MixedTimeSignatureContext ctx) {
+            super.enterMixedTimeSignature(ctx);
+            beginContext(ctx, new IMixedMeterBuilder(coreAbstractFactory));
+        }
+
+        @Override
+        public void exitMixedTimeSignature(skmParser.MixedTimeSignatureContext ctx) {
+            super.exitMixedTimeSignature(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Mixed time signature {0}", ctx.getText());
+            endContext(ctx);
+        }
+
+        @Override
+        public void enterAlternatingTimeSignature(skmParser.AlternatingTimeSignatureContext ctx) {
+            super.enterAlternatingTimeSignature(ctx);
+            beginContext(ctx, new IAlternatingMeterBuilder(coreAbstractFactory));
+        }
+
+        @Override
+        public void exitAlternatingTimeSignature(skmParser.AlternatingTimeSignatureContext ctx) {
+            super.exitAlternatingTimeSignature(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Alternating time signature {0}", ctx.getText());
+            endContext(ctx);
+        }
+
+
+        @Override
+        public void enterInterchangingTimeSignature(skmParser.InterchangingTimeSignatureContext ctx) {
+            super.enterInterchangingTimeSignature(ctx);
+            beginContext(ctx, new IInterchangingMeterBuilder(coreAbstractFactory));
+        }
+
+        @Override
+        public void exitInterchangingTimeSignature(skmParser.InterchangingTimeSignatureContext ctx) {
+            super.exitInterchangingTimeSignature(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Interchanging time signature {0}", ctx.getText());
+            endContext(ctx);
+        }
+
+        @Override
+        public void enterStandardTimeSignature(skmParser.StandardTimeSignatureContext ctx) {
+            super.enterStandardTimeSignature(ctx);
+            beginContext(ctx, new IStandardTimeSignatureBuilder(coreAbstractFactory));
+        }
+
+        @Override
+        public void exitStandardTimeSignature(skmParser.StandardTimeSignatureContext ctx) {
+            super.exitStandardTimeSignature(ctx);
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Time signature {0}", ctx.getText());
 
-            endContextAndAddToSpine(ctx);
+            endContext(ctx);
+        }
+
+        @Override
+        public void enterTimeSignature(skmParser.TimeSignatureContext ctx) {
+            super.enterTimeSignature(ctx);
+            beginContext(ctx, new SkmMeterBuilder(coreAbstractFactory));
+        }
+
+
+        @Override
+        public void exitTimeSignature(skmParser.TimeSignatureContext ctx) {
+            super.exitTimeSignature(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Time signature {0}", ctx.getText());
+            endContextAndAddToSpine(ctx); // it will contain any of the meter types (standard, mixed...)
+        }
+
+        @Override
+        public void exitNumerator(skmParser.NumeratorContext ctx) {
+            super.exitNumerator(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Numerator {0}", ctx.getText());
+
+            this.importingContexts.addObjectToPool(coreAbstractFactory.createTimeSignatureNumerator(null, Integer.parseInt(ctx.getText())));
+        }
+
+        @Override
+        public void exitDenominator(skmParser.DenominatorContext ctx) {
+            super.exitDenominator(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Denominator {0}", ctx.getText());
+
+            this.importingContexts.addObjectToPool(coreAbstractFactory.createTimeSignatureDenominator(null, Integer.parseInt(ctx.getText())));
         }
 
         @Override

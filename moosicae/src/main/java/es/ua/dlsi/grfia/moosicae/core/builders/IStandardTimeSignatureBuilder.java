@@ -8,32 +8,32 @@ import es.ua.dlsi.grfia.moosicae.core.enums.ETimeSignatureSymbols;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class IFractionalTimeSignatureBuilder extends CoreObjectBuilder<IFractionalTimeSignature> {
+public class IStandardTimeSignatureBuilder extends CoreObjectBuilder<IStandardTimeSignature> {
     private ITimeSignatureNumerator numerator;
     private ITimeSignatureDenominator denominator;
     private ETimeSignatureSymbols timeSignatureSymbol;
 
-    public IFractionalTimeSignatureBuilder(ICoreAbstractFactory coreObjectFactory) {
+    public IStandardTimeSignatureBuilder(ICoreAbstractFactory coreObjectFactory) {
         super(coreObjectFactory);
     }
 
-    public IFractionalTimeSignatureBuilder from(ITimeSignatureNumerator numerator) {
+    public IStandardTimeSignatureBuilder from(ITimeSignatureNumerator numerator) {
         this.numerator = numerator;
         return this;
     }
 
-    public IFractionalTimeSignatureBuilder from(ITimeSignatureDenominator denominator) {
+    public IStandardTimeSignatureBuilder from(ITimeSignatureDenominator denominator) {
         this.denominator = denominator;
         return this;
     }
 
-    public IFractionalTimeSignatureBuilder from(ETimeSignatureSymbols timeSignatureSymbol) {
+    public IStandardTimeSignatureBuilder from(ETimeSignatureSymbols timeSignatureSymbol) {
         this.timeSignatureSymbol = timeSignatureSymbol;
         return this;
     }
 
     @Override
-    public IFractionalTimeSignature build() throws IMException {
+    public IStandardTimeSignature build() throws IMException {
         if (timeSignatureSymbol != null) {
             switch (timeSignatureSymbol) {
                 case common:
@@ -44,7 +44,7 @@ public class IFractionalTimeSignatureBuilder extends CoreObjectBuilder<IFraction
                     throw new IMException("Unknown time signature symbol: " + timeSignatureSymbol);
             }
         } else {
-            return coreObjectFactory.createFractionalTimeSignature(getId(), numerator, denominator);
+            return coreObjectFactory.createStandardTimeSignature(getId(), numerator, denominator);
         }
     }
 
