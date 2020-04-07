@@ -6,8 +6,20 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IStaffLineCount;
 import es.ua.dlsi.grfia.moosicae.io.IImporter;
 import es.ua.dlsi.grfia.moosicae.io.musicxml.importer.builders.*;
 import es.ua.dlsi.grfia.moosicae.io.musicxml.importer.elements.*;
+import es.ua.dlsi.grfia.moosicae.io.xml.SimpleErrorHandler;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporter;
+import es.ua.dlsi.grfia.moosicae.io.xml.XMLValidators;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.validation.Validator;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.InputStream;
 import java.util.HashMap;
 
 /**
@@ -55,6 +67,31 @@ public class MusicXMLImporter extends XMLImporter implements IImporter {
         coreObjectBuilderSuppliers.add("alter", MxmAlterationBuilder::new);
 
         coreObjectBuilderSuppliers.add("duration", MxmlFigureBuilder::new);
+
+    }
+
+    @Override
+    public void validate(File fileToBeValidated) throws IMException {
+        try {
+            fileToBeValidated = new File("/private/tmp/allcoretests/meters/meter_1-8.musicxml");
+            InputStream musicXML = this.getClass().getResourceAsStream("/schemata/musicxml/musicxml.xsd");
+            if (musicXML == null) {
+                throw new IMException("Cannot find musicxml xsd");
+            }
+            InputStream xlink = this.getClass().getResourceAsStream("/schemata/musicxml/xlink.xsd");
+            if (xlink == null) {
+                throw new IMException("Cannot find xlink xsd");
+            }
+            InputStream xml = this.getClass().getResourceAsStream("/schemata/musicxml/xml.xsd");
+            if (xml == null) {
+                throw new IMException("Cannot find xml xsd");
+            }
+            XMLValidators.validateAgainstXSD(new InputStream[] {xml, xlink, musicXML}, fileToBeValidated);
+        } catch (Exception e) {
+            throw new IMException("Not valid MusicXML file", e);
+        }
+
+        //
 
     }
 

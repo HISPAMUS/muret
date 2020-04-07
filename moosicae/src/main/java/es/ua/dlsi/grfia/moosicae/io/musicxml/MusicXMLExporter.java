@@ -30,13 +30,14 @@ public class MusicXMLExporter implements IExporter {
     public String exportScore(IScore score) throws IMException {
         mxmlPartIDs = new MxmlPartIDs();
         DTDDeclaration dtdDeclaration = new DTDDeclaration(
-        "score-partwise", "PUBLIC", "-//Recordare//DTD MusicXML Partwise//EN", "http://www.musicxml.org/dtds/partwise.dtd"
+        "score-partwise", "PUBLIC", "-//Recordare//DTD MusicXML 3.1 Partwise//EN", "http://www.musicxml.org/dtds/partwise.dtd"
         );
         XMLTree xmlTree = new XMLTree("score-partwise", dtdDeclaration);
+        xmlTree.getRoot().addAttribute("version", "3.1");
 
         XMLPreambleElement xmlVersion = new XMLPreambleElement("xml");
         xmlVersion.addAttribute("version", "1.0");
-        xmlVersion.addAttribute("standalone", "no");
+        xmlVersion.addAttribute("encoding", "UTF-8");
         xmlTree.addPreamble(xmlVersion);
 
         XMLElement xmlScore = xmlTree.getRoot();

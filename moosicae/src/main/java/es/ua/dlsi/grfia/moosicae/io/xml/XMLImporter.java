@@ -6,7 +6,12 @@ import es.ua.dlsi.grfia.moosicae.core.ICoreObject;
 import es.ua.dlsi.grfia.moosicae.core.IScore;
 import es.ua.dlsi.grfia.moosicae.core.builders.*;
 import es.ua.dlsi.grfia.moosicae.io.*;
+import org.w3c.dom.Document;
+import org.xml.sax.ErrorHandler;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -35,6 +40,8 @@ public abstract class XMLImporter {
         this.coreAbstractFactory = coreAbstractFactory;
         this.coreObjectBuilderSuppliers = new CoreObjectBuilderSuppliers();
     }
+
+    public abstract void validate(File fileToBeValidated) throws IMException;
 
     public IScore importScore(String input) throws IMException {
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
@@ -134,4 +141,5 @@ public abstract class XMLImporter {
     }
 
     protected abstract void onEndElement(String elementName, Object end);
+
 }

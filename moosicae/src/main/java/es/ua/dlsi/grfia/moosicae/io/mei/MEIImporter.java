@@ -6,8 +6,10 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IStaffLineCount;
 import es.ua.dlsi.grfia.moosicae.io.IImporter;
 import es.ua.dlsi.grfia.moosicae.io.mei.importer.builders.*;
 import es.ua.dlsi.grfia.moosicae.io.mei.importer.elements.*;
+import es.ua.dlsi.grfia.moosicae.io.xml.XMLValidators;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporter;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -40,6 +42,12 @@ public class MEIImporter extends XMLImporter implements IImporter {
 
         coreObjectBuilderSuppliers.add("note", MEINoteBuilder::new);
         coreObjectBuilderSuppliers.add("accid", MEIAlterationBuilder::new);
+    }
+
+    @Override
+    public void validate(File fileToBeValidated) throws IMException {
+        //RelaxNG.validate("http://music-encoding.org/schema/4.0.0/mei-all.rng", stream);
+        XMLValidators.validateRelaxNG(this.getClass().getResourceAsStream("/schemata/mei/mei-all.rng"), fileToBeValidated);
     }
 
     private void convert(IScore score, IVoice voice, IStaffGroup parent, MEISystemDef systemDef) {

@@ -8,7 +8,6 @@ import es.ua.dlsi.grfia.moosicae.io.xml.XMLParamExportMode;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLPreambleElement;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLTree;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Optional;
@@ -26,6 +25,7 @@ public class MEIExporter implements IExporter {
     public MEIExporter() {
         meiExporterVisitor = new MEIExporterVisitor();
     }
+
 
     @Override
     public String exportScore(IScore score) throws IMException {
