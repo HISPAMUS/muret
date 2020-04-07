@@ -30,7 +30,9 @@ public class KeySignaturesTest extends MonodicTest {
         HashMap<String, IScore> result = new HashMap<>();
         keys.forEach((name, key) -> {
             prepareScore();
+            addG2Clef();
             score.add(voice, staff, key.getKeySignature());
+            addSmallRest();
             result.put("conventional_keysignature_" + name, score);
         });
 

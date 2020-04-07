@@ -133,6 +133,7 @@ public class AllCoreTestSuite {
             IScore score = meiImporter.importScore(file);
             testExportImport("MEI", score, new MEIExporter(), new MEIImporter(abstractFactory));
         }
-
     }
+
+
 }

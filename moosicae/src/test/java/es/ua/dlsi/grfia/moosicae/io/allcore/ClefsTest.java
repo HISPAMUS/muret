@@ -23,6 +23,7 @@ public class ClefsTest extends MonodicTest {
         clefs.forEach((name, clef) -> {
             prepareScore();
             score.add(voice, staff, clef);
+            addSmallRest();
             result.put("clef_" + name, score);
         });
 

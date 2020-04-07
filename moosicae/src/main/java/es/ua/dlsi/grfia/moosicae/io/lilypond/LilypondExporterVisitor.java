@@ -137,8 +137,8 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
 
     }
 
-    private void encodeTimeSignature(IStandardTimeSignature meter, LilypondExporterVisitorParam inputOutput) {
-        inputOutput.append(meter.getNumerator().getValue() + "/" + meter.getDenominator().getValue());
+    private void encodeTimeSignature(IStandardTimeSignature meter, LilypondExporterVisitorParam inputOutput, String separator) {
+        inputOutput.append(meter.getNumerator().getValue() + separator + meter.getDenominator().getValue());
     }
 
     @Override
@@ -146,7 +146,7 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
         inputOutput.addChildLine("\\numericTimeSignature");
         inputOutput.startString();
         inputOutput.append("\\time ");
-        encodeTimeSignature(meter, inputOutput);
+        encodeTimeSignature(meter, inputOutput, "/");
         inputOutput.finishString();
     }
 
@@ -154,7 +154,7 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
         for (IMeter meter: compositeMeter.getSubMeters()) {
             inputOutput.append('(');
             if (meter instanceof IStandardTimeSignature) {
-                encodeTimeSignature((IStandardTimeSignature)meter, inputOutput);
+                encodeTimeSignature((IStandardTimeSignature)meter, inputOutput, " ");
             } else if (meter instanceof IAdditiveMeter) {
                 encodeTimeSignature((IAdditiveMeter)meter, inputOutput);
             } else if (meter instanceof IMixedMeter) {

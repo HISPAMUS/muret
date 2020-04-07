@@ -47,6 +47,8 @@ public class SkmExporter extends AbstractExporter<SkmExporterVisitor> {
         for (SkmToken header: headers) {
             export(skmDocument, header, stringBuilder);
         }
+        //TODO añado esto a mano
+        stringBuilder.append("*-");
         return stringBuilder.toString();
     }
 

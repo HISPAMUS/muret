@@ -58,20 +58,22 @@ public class MetersTest extends MonodicTest {
 
     @Override
     public Map<String, IScore> generateTestScores() throws Exception {
-        Map<String, IMeter> clefs = PrototypesAbstractBuilder.getInstance(coreAbstractFactory).getMeters().getMap();
+        Map<String, IMeter> meters = PrototypesAbstractBuilder.getInstance(coreAbstractFactory).getMeters().getMap();
 
         // now generate some special meters
-        clefs.put("2_4p7_8", generateMeter(Fraction.getFraction(2, 4), Fraction.getFraction(7, 8)));
-        clefs.put("2_4p3_8p3_16", generateMeter(Fraction.getFraction(2, 4), Fraction.getFraction(3, 8), Fraction.getFraction(3, 16)));
-        clefs.put("2_4p1_8", generateMeter(Fraction.getFraction(2, 4), Fraction.getFraction(1, 8)));
-        clefs.put("3_4p3_16", generateMeter(Fraction.getFraction(3, 4), Fraction.getFraction(3, 16)));
-        clefs.put("M4_4p1_32", generateMeter(Fraction.getFraction(4, 4), Fraction.getFraction(1, 32)));
-        clefs.put("M6_8=3_4", generateInterchanging());
+        meters.put("2_4p7_8", generateMeter(Fraction.getFraction(2, 4), Fraction.getFraction(7, 8)));
+        meters.put("2_4p3_8p3_16", generateMeter(Fraction.getFraction(2, 4), Fraction.getFraction(3, 8), Fraction.getFraction(3, 16)));
+        meters.put("2_4p1_8", generateMeter(Fraction.getFraction(2, 4), Fraction.getFraction(1, 8)));
+        meters.put("3_4p3_16", generateMeter(Fraction.getFraction(3, 4), Fraction.getFraction(3, 16)));
+        meters.put("M4_4p1_32", generateMeter(Fraction.getFraction(4, 4), Fraction.getFraction(1, 32)));
+        meters.put("M6_8=3_4", generateInterchanging());
 
         HashMap<String, IScore> result = new HashMap<>();
-        clefs.forEach((name, clef) -> {
+        meters.forEach((name, meter) -> {
             prepareScore();
-            score.add(voice, staff, clef);
+            addG2Clef();
+            score.add(voice, staff, meter);
+            addSmallRest();
             String validName = name.replace('/', '-');
             result.put("meter_" + validName, score);
         });

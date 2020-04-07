@@ -50,9 +50,9 @@ public class MEIExporter implements IExporter {
         schematron.addAttribute("schematypens", "http://purl.oclc.org/dsdl/schematron");
         xmlTree.addPreamble(schematron);
 
-        exportHeader(score.getMetadata());
+        exportHeader(xmlTree.getRoot(), score.getMetadata());
 
-        XMLElement xmlScore = xmlTree.getRoot().addChild("music").addChild("body").addChild("score");
+        XMLElement xmlScore = xmlTree.getRoot().addChild("music").addChild("body").addChild("mdiv").addChild("score");
 
         exportScoreDef(xmlScore, score);
 
@@ -168,16 +168,19 @@ public class MEIExporter implements IExporter {
         }
     }
 
-    private void exportHeader(IMetadata metadata) {
-        XMLElement xmlMeiHead = new XMLElement("meiHead");
+    private void exportHeader(XMLElement root, IMetadata metadata) {
+        XMLElement xmlMeiHead = root.addChild("meiHead");
         XMLElement xmlFileDesc = new XMLElement("fileDesc");
         xmlMeiHead.addChild(xmlFileDesc);
 
         XMLElement xmlTitleStmt = new XMLElement("titleStmt");
         xmlFileDesc.addChild(xmlTitleStmt);
 
-        XMLElement xmlTitle = new XMLElement("title",  "Prueba"); // david metadata.getTitle().getTitle());
+        //TODO
+        XMLElement xmlTitle = new XMLElement("title",  "Test"); // david metadata.getTitle().getTitle());
         xmlTitleStmt.addChild(xmlTitle);
+
+        xmlFileDesc.addChild("pubStmt");
     }
 
 }

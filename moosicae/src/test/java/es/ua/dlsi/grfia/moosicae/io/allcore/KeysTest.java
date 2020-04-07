@@ -25,7 +25,9 @@ public class KeysTest extends MonodicTest {
         HashMap<String, IScore> result = new HashMap<>();
         keys.forEach((name, key) -> {
             prepareScore();
+            addG2Clef();
             score.add(voice, staff, key);
+            addSmallRest();
             result.put("key_" + name, score);
         });
 
