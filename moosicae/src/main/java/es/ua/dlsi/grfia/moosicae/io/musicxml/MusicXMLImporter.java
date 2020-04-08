@@ -73,7 +73,6 @@ public class MusicXMLImporter extends XMLImporter implements IImporter {
     @Override
     public void validate(File fileToBeValidated) throws IMException {
         try {
-            fileToBeValidated = new File("/private/tmp/allcoretests/meters/meter_1-8.musicxml");
             InputStream musicXML = this.getClass().getResourceAsStream("/schemata/musicxml/musicxml.xsd");
             if (musicXML == null) {
                 throw new IMException("Cannot find musicxml xsd");

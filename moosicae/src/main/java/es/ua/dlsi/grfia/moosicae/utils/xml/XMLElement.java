@@ -3,6 +3,8 @@ package es.ua.dlsi.grfia.moosicae.utils.xml;
 
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 /**
@@ -132,4 +134,25 @@ public class XMLElement {
         return stringBuilder.toString();
     }
 
+
+    /**
+     *
+     * @param childrenOrder The key contains the element name, the value the ascending ordering
+     */
+    public void sortElements(HashMap<String, Integer> childrenOrder) {
+        this.children.sort(new Comparator<XMLElement>() {
+            @Override
+            public int compare(XMLElement o1, XMLElement o2) {
+                Integer o1Order = childrenOrder.get(o1.getName());
+                Integer o2Order = childrenOrder.get(o2.getName());
+                if (o1Order == null) {
+                    o1Order = o1.hashCode();
+                }
+                if (o2Order == null) {
+                    o2Order = o2.hashCode();
+                }
+                return o1Order-o2Order;
+            }
+        });
+    }
 }

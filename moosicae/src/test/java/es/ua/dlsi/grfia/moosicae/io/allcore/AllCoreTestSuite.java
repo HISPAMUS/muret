@@ -52,7 +52,12 @@ public class AllCoreTestSuite {
                 File outputfile = new File(outputTmp, name + "." + extension);
                 writeToFile(exported, outputfile);
                 if (importer instanceof XMLImporter) {
-                    ((XMLImporter) importer).validate(outputfile);
+                    try {
+                        ((XMLImporter) importer).validate(outputfile);
+                    } catch (IMException e) {
+                        System.err.println("Invalid " + format + " xml file " + outputfile.getAbsolutePath());
+                        throw e;
+                    }
                 }
             }
 
@@ -117,10 +122,10 @@ public class AllCoreTestSuite {
         outputTmp.mkdirs();
         AbstractCoreTest [] testScoreBuilders = new AbstractCoreTest[] {
             new MinimalTest(abstractFactory),
-                /*new ClefsTest(abstractFactory),
-                new KeysTest(abstractFactory),
-                new KeySignaturesTest(abstractFactory),
-                new MetersTest(abstractFactory)*/
+               new ClefsTest(abstractFactory),
+               new KeysTest(abstractFactory),
+               new KeySignaturesTest(abstractFactory),
+               new MetersTest(abstractFactory)
         };
         for (AbstractCoreTest coreTestScoreBuilder: testScoreBuilders) {
             doTest(coreTestScoreBuilder);

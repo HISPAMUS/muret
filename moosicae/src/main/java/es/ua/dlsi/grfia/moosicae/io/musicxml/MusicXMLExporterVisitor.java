@@ -200,12 +200,12 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
         XMLExporterVisitorParam keyXMLParam;
         if (key.getKeySignature() instanceof IConventionalKeySignature) {
             keyXMLParam = doExportConventionalKeySignature((IConventionalKeySignature) key.getKeySignature(), inputOutput);
+            exportMode(key.getMode(), keyXMLParam);
         } else if (key.getKeySignature() instanceof IUnconventionalKeySignature) {
             keyXMLParam = doExportUnconventionalKeySignature((IUnconventionalKeySignature) key.getKeySignature(), inputOutput);
         } else {
             throw new IMException("Unsupported key signature class in key: " + key.getKeySignature());
         }
-        exportMode(key.getMode(), keyXMLParam);
     }
 
     private XMLExporterVisitorParam doExportUnconventionalKeySignature(IUnconventionalKeySignature unconventionalKeySignature, XMLExporterVisitorParam inputOutput) throws IMException {
@@ -312,10 +312,10 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.element) {
             XMLExporterVisitorParam pitchXMLElement = new XMLExporterVisitorParam(XMLParamExportMode.element, inputOutput.addChild("pitch"));
             exportDiatonicPitch(pitch.getDiatonicPitch(), pitchXMLElement);
-            exportOctave(pitch.getOctave(), pitchXMLElement);
             if (pitch.getAlteration().isPresent()) {
                 exportAlteration(pitch.getAlteration().get(), pitchXMLElement);
             }
+            exportOctave(pitch.getOctave(), pitchXMLElement);
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }

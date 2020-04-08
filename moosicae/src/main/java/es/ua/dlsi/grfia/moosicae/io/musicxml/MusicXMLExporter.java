@@ -58,6 +58,16 @@ public class MusicXMLExporter implements IExporter {
         }
     }
 
+    // used to sort the elements inside the attributes element to conform MusicXML schema
+    private static HashMap<String, Integer> ATTRIBUTE_ELEMENT_CHILDREN_ORDER;
+    {
+        ATTRIBUTE_ELEMENT_CHILDREN_ORDER = new HashMap<>();
+        ATTRIBUTE_ELEMENT_CHILDREN_ORDER.put("divisions", 0);
+        ATTRIBUTE_ELEMENT_CHILDREN_ORDER.put("key", 1);
+        ATTRIBUTE_ELEMENT_CHILDREN_ORDER.put("time", 2);
+        ATTRIBUTE_ELEMENT_CHILDREN_ORDER.put("clef", 3);
+    }
+
 
     private void exportParts(IScore score, XMLElement xmlScore) throws IMException {
         for (IPart part: score.getParts()) {
@@ -73,7 +83,7 @@ public class MusicXMLExporter implements IExporter {
             // add to the measure <attributes>
             XMLElement xmlAttributes = null;
 
-            //if (primer measure
+            //if (primer measure TODO
             {
                 xmlAttributes = xmlMeasure.addChild("attributes");
                 xmlAttributes.addChild("divisions", Integer.toString(MusicXMLExporterVisitor.MAX_DUR));
@@ -101,6 +111,11 @@ public class MusicXMLExporter implements IExporter {
                     XMLExporterVisitorParam xmlExporterVisitorParam = new XMLExporterVisitorParam(XMLParamExportMode.element, parentElement);
                     staffElement.export(musicXMLExporterVisitor, xmlExporterVisitorParam);
                 }
+            }
+
+            // not sort the xmlAttributes in otder to conform the MusicXML schema
+            if (xmlAttributes != null) {
+                xmlAttributes.sortElements(ATTRIBUTE_ELEMENT_CHILDREN_ORDER);
             }
         }
     }
