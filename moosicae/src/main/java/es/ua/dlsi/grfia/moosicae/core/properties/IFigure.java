@@ -10,6 +10,6 @@ import es.ua.dlsi.grfia.moosicae.utils.Time;
  */
 public interface IFigure extends ICoreObject, IEnumCoreProperty<EFigures> {
     EFigures getValue();
-    Time getDurationWithDots(int dots);
-    int getMeterUnit();
+    Time getDurationWithDots(int dots); //TODO compute o find... en lugar de get
+    int getMeterUnit(); //TODO compute en lugar de get
 }

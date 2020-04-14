@@ -16,12 +16,12 @@ public interface IExporterVisitor<InputOutputType>  {
     void exportRest(IRest rest, InputOutputType inputOutput) throws IMException;
     void exportMultimeasureRest(IMultimeasureRest mrest, InputOutputType inputOutput) throws IMException;
     void exportStandardTimeSignature(IStandardTimeSignature meter, InputOutputType inputOutput) throws IMException;
-    void exportCutTime(ICutTime meter, InputOutputType inputOutputOutput) throws IMException;
-    void exportCommonTime(ICommonTime meter, InputOutputType inputOutputOutput) throws IMException;
-    void exportChord(IChord chord, InputOutputType inputOutputOutput) throws IMException;
-    void exportCustos(ICustos custos, InputOutputType inputOutputOutput) throws IMException;
-    void exportKey(IKey key, InputOutputType inputOutputOutput) throws IMException;
-    void exportConventionalKeySignature(IConventionalKeySignature commonAlterationKey, InputOutputType inputOutputOutput) throws IMException;
+    void exportCutTime(ICutTime meter, InputOutputType inputOutput) throws IMException;
+    void exportCommonTime(ICommonTime meter, InputOutputType inputOutput) throws IMException;
+    void exportChord(IChord chord, InputOutputType inputOutput) throws IMException;
+    void exportCustos(ICustos custos, InputOutputType inputOutput) throws IMException;
+    void exportKey(IKey key, InputOutputType inputOutput) throws IMException;
+    void exportConventionalKeySignature(IConventionalKeySignature commonAlterationKey, InputOutputType inputOutput) throws IMException;
 
     void exportMode(IMode mode, InputOutputType inputOutput);
 

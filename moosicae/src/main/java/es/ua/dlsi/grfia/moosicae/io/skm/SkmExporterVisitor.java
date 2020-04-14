@@ -15,15 +15,19 @@ import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmCoreSymbol;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTokenParam> {
+    private static final String SEP = "·";
 
     @Override
     public void exportClef(IClef clef, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         inputOutput.append("*clef");
+        inputOutput.append(SEP);
         exportClefSign(clef.getSignType(), inputOutput);
         if (clef.getLine().isPresent()) {
+            inputOutput.append(SEP);
             inputOutput.append(clef.getLine().get().getValue());
         }
         if (clef.getOctaveTransposition().isPresent()) {
+            inputOutput.append(SEP);
             exportClefOctaveTransposition(clef.getOctaveTransposition().get(), inputOutput);
         }
         inputOutput.buildAndAddToken(clef);
@@ -106,25 +110,33 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     @Override
     public void exportStandardTimeSignature(IStandardTimeSignature meter, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         inputOutput.append("*M");
+        inputOutput.append(SEP);
         doExport(meter, inputOutput);
         inputOutput.buildAndAddToken(meter);
     }
 
     @Override
     public void exportCutTime(ICutTime meter, SkmExporterVisitorTokenParam inputOutput) throws IMException {
-        inputOutput.append("*met(c|)");
+        //inputOutput.append("*met(c|)");
+        inputOutput.append("*M");
+        inputOutput.append(SEP);
+        inputOutput.append("(c|)");
         inputOutput.buildAndAddToken(meter);
     }
 
     @Override
     public void exportCommonTime(ICommonTime meter, SkmExporterVisitorTokenParam inputOutput) throws IMException {
-        inputOutput.append("*met(c)");
+        //inputOutput.append("*met(c)");
+        inputOutput.append("*M");
+        inputOutput.append(SEP);
+        inputOutput.append("(c)");
         inputOutput.buildAndAddToken(meter);
     }
 
     @Override
     public void exportMixedMeter(IMixedMeter mixedMeter, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         inputOutput.append("*M");
+        inputOutput.append(SEP);
         boolean first = true;
         for (IMeter submeter: mixedMeter.getSubMeters()) {
             if (!(submeter instanceof IStandardTimeSignature)) {
@@ -143,6 +155,7 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     @Override
     public void exportAlternatingMeter(IAlternatingMeter mixedMeter, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         inputOutput.append("*M");
+        inputOutput.append(SEP);
         IStandardTimeSignature previous = null;
         int countPrevious = 0;
         boolean needsSeparator = false;
@@ -185,6 +198,7 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     @Override
     public void exportAdditiveMeter(IAdditiveMeter additiveMeter, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         inputOutput.append("*M");
+        inputOutput.append(SEP);
         boolean first = true;
         for (ITimeSignatureNumerator numerator: additiveMeter.getNumerators()) {
             if (first) {
@@ -207,6 +221,7 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
         }
 
         inputOutput.append("*M");
+        inputOutput.append(SEP);
         doExport((IStandardTimeSignature) left, inputOutput);
         inputOutput.append('|');
         doExport((IStandardTimeSignature) right, inputOutput);
@@ -250,7 +265,9 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
             default:
                 throw new IMException("Unknown mode: " + key.getMode().getValue());
         }
-        inputOutput.append('*');
+        //inputOutput.append('*');
+        inputOutput.append("*K");
+        inputOutput.append(SEP);
         inputOutput.append(diatonicPitch);
         if (key.getPitchClass().getAccidental().isPresent()) {
             exportAccidentalSymbol(key.getPitchClass().getAccidental().get(), inputOutput);
@@ -270,7 +287,9 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     }
 
     public void exportKeySignature(IKeySignature keySignature, SkmExporterVisitorTokenParam inputOutput) throws IMException {
-        inputOutput.append("*k[");
+        inputOutput.append("*k");
+        inputOutput.append(SEP);
+        inputOutput.append('[');
         for (IPitchClass pitchClass: keySignature.getPitchClasses()) {
             exportPitchClass(pitchClass, inputOutput);
         }

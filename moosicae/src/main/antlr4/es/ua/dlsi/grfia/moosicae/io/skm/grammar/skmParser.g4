@@ -98,21 +98,22 @@ part: TANDEM_PART number;
 
 staff: TANDEM_STAFF number;
 
-clef: TANDEM_CLEF clefValue;
-clefValue: clefSign clefLine? clefOctave?;
+clef: TANDEM_CLEF SEP clefValue;
+clefValue: clefSign (SEP clefLine)? (SEP clefOctave)?;
 clefSign: CHAR_C | CHAR_F | CHAR_G | CHAR_P | CHAR_T;
 clefLine: DIGIT_1 | DIGIT_2 | DIGIT_3 | DIGIT_4 | DIGIT_5;
 clefOctave: CHAR_v CHAR_v? DIGIT_2 | CIRCUMFLEX CIRCUMFLEX? DIGIT_2;
 
-keySignature: TANDEM_KEY LEFT_BRACKET keySignaturePitchClass* RIGHT_BRACKET;
+keySignature: TANDEM_KEY_SIGNATURE SEP LEFT_BRACKET keySignaturePitchClass* RIGHT_BRACKET;
 keySignaturePitchClass: pitchClass;
 
 keyMode: (minorKey | majorKey);
-key: ASTERISK keyMode COLON;
+//key: ASTERISK keyMode COLON;
+key: TANDEM_KEY SEP keyMode COLON;
 minorKey: lowerCasePitch accidental?;
 majorKey: upperCasePitch accidental?;
 
-timeSignature: TANDEM_TIMESIGNATURE (standardTimeSignature | additiveTimeSignature | mixedTimeSignature | alternatingTimeSignature | interchangingTimeSignature);
+timeSignature: TANDEM_TIMESIGNATURE SEP (standardTimeSignature | additiveTimeSignature | mixedTimeSignature | alternatingTimeSignature | interchangingTimeSignature);
 numerator: number;
 denominator: number;
 standardTimeSignature: numerator SLASH denominator;
@@ -122,7 +123,8 @@ alternatingTimeSignature: alternatingTimeSignatureItem (COLON alternatingTimeSig
 alternatingTimeSignatureItem: standardTimeSignature (SEMICOLON number)?;
 interchangingTimeSignature: standardTimeSignature PIPE standardTimeSignature;
 
-meterSymbol: TANDEM_MET LEFT_PARENTHESIS (modernMeterSymbolSign | mensuration) RIGHT_PARENTHESIS;
+//meterSymbol: TANDEM_MET LEFT_PARENTHESIS (modernMeterSymbolSign | mensuration) RIGHT_PARENTHESIS;
+meterSymbol: TANDEM_TIMESIGNATURE SEP LEFT_PARENTHESIS (modernMeterSymbolSign | mensuration) RIGHT_PARENTHESIS;
 modernMeterSymbolSign: CHAR_c | CHAR_c PIPE;
 mensuration: CHAR_C | CHAR_C PIPE | CHAR_C DOT | CHAR_O | CHAR_O DOT | CHAR_C DIGIT_3 SLASH DIGIT_2 | CHAR_C PIPE DIGIT_3 SLASH DIGIT_2 | DIGIT_3;
 

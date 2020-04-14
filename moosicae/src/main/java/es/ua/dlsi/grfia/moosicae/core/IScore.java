@@ -6,6 +6,11 @@ public interface IScore extends ICoreObject{
     IMetadata getMetadata();
     IPart[] getParts();
     ISystem[] getSystemElements();
+
+    /**
+     * @deprecated ¿No debería ser el system elements?
+     * @return
+     */
     IStaff[] getAllStaves();
     void add(IPart part);
     void add(ISystem staves);

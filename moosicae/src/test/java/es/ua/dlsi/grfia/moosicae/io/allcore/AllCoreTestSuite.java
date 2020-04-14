@@ -5,6 +5,7 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.impl.CoreAbstractFactoryImpl;
 import es.ua.dlsi.grfia.moosicae.io.IExporter;
 import es.ua.dlsi.grfia.moosicae.io.IImporter;
+import es.ua.dlsi.grfia.moosicae.io.json.JSONExporter;
 import es.ua.dlsi.grfia.moosicae.io.lilypond.LilypondExporter;
 import es.ua.dlsi.grfia.moosicae.io.mei.MEIExporter;
 import es.ua.dlsi.grfia.moosicae.io.mei.MEIImporter;
@@ -112,6 +113,15 @@ public class AllCoreTestSuite {
             } catch (Exception e) {
                 e.printStackTrace();
                 fail("Lilypond: " + name + ": " + e.getMessage());
+            }
+            try {
+                JSONExporter exporter = new JSONExporter();
+                writeToFile(exporter.exportScore(score), new File(outputTmp, name + ".json"));
+            } catch (UnsupportedOperationException e) {
+                System.err.println("JSON: " + e.getMessage());
+            } catch (Exception e) {
+                e.printStackTrace();
+                fail("JSON: " + name + ": " + e.getMessage());
             }
         });
     }
