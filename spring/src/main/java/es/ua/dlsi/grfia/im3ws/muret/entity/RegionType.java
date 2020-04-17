@@ -23,6 +23,9 @@ public class RegionType {
     @Column
     String hexargb;
 
+    @Column
+    String help;
+
     public RegionType() {
     }
 
@@ -48,5 +51,28 @@ public class RegionType {
 
     public void setHexargb(String hexargb) {
         this.hexargb = hexargb;
+    }
+
+    public String getHelp() {
+        return help;
+    }
+
+    public void setHelp(String help) {
+        this.help = help;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RegionType)) return false;
+
+        RegionType that = (RegionType) o;
+
+        return name != null ? name.equals(that.name) : that.name == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return name != null ? name.hashCode() : 0;
     }
 }

@@ -45,12 +45,12 @@
 
 
 /* TODO Radio boxes con texto repetido en Agnostic */
-#regionTypesEdit * {
+.regionTypesEditAdd * {
   color: white;
   font-weight: lighter;
 }
 
-#regionTypesEdit .active {
+.regionTypesEditAdd .active {
   color: #D91E63;
   font-weight: bold;
 }

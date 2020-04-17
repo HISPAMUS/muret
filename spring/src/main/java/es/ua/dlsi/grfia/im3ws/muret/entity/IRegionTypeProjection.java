@@ -15,4 +15,6 @@ public interface IRegionTypeProjection {
     String getName();
 
     String getHexargb();
+
+    String getHelp();
 }

@@ -25,10 +25,11 @@ export class DialogsService {
     });
   }
 
-  public showMessage(title: string, message: string) {
+  public showMessage(title: string, message: string, specificMessage: string) {
     return this.simpleModalService.addModal(AlertComponent, {
       title,
-      message
+      message,
+      specificMessage
     });
   }
 

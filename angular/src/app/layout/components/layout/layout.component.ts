@@ -39,11 +39,11 @@ export class LayoutComponent implements OnInit, OnDestroy {
     this.isAdmin = false;
 
     this.serverStatusSubscription = this.serverStatus$.subscribe((status: string) =>{
-      if(status === "OFF")
+      if(status === 'OFF')
       {
         if(!this.userWarned)
         {
-          dialogservice.showError("This is embarrassing...", "Classification server is down, you will not be able to perform your work. Technicians have been warned, however if it is urgent you can contact them at arios@dlsi.ua.es or drizo@dlsi.ua.es");
+          dialogservice.showError('This is embarrassing...', 'Classification server is down, you will not be able to perform your work. Technicians have been warned, however if it is urgent you can contact them at arios@dlsi.ua.es or drizo@dlsi.ua.es');
           this.userWarned = true;
         }
       }
@@ -55,7 +55,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
       {
         for(let object of roles)
         {
-          this.isAdmin = (object.authority == "ADMIN")
+          this.isAdmin = (object.authority == 'ADMIN')
         }
       }
     })

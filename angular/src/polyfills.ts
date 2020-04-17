@@ -59,5 +59,6 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
 
 
 /***************************************************************************************************
- * APPLICATION IMPORTS
+ * APPLICATION IMPORTS - drizo - Fix i18n error in Angular 9  https://github.com/angular/angular-cli/issues/16890
  */
+import '@angular/localize/init';

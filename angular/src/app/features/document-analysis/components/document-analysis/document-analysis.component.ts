@@ -29,7 +29,7 @@ import {
 } from '../../store/selectors/document-analysis.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbTooltipConfig} from '@ng-bootstrap/ng-bootstrap';
 import {Part} from '../../../../core/model/entities/part';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
@@ -85,8 +85,13 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
               private route: ActivatedRoute,
               private router: Router,
               private dialogsService: DialogsService,
-              private modalService: NgbModal, private showErrorService: ShowErrorService
+              private modalService: NgbModal, private showErrorService: ShowErrorService,
+              tooltipConfig: NgbTooltipConfig
               ) {
+    // customize default values of tooltips used by this component tree
+    tooltipConfig.placement = 'bottom';
+    tooltipConfig.triggers = 'focus';
+
     this.regionTypes$ = store.select(selectRegionTypes);
 
     this.regionTypesSubscription = this.regionTypes$.subscribe((result) => {
@@ -94,7 +99,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     });
 
     this.filename$ = store.select(selectFileName);
-    this.filenameSubscription = this.filename$.subscribe(name => 
+    this.filenameSubscription = this.filename$.subscribe(name =>
       {
         if(name != null)
         setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
@@ -138,6 +143,8 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
       if (next) {
         this.showErrorService.warning(next);
         this.store.dispatch(new ResetDocumentAnalysisServerError());
+        this.processing = false;
+        this.analysisStatus = 'Analyze';
       }
     });
 

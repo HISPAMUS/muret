@@ -24,6 +24,8 @@ export interface LinksModel {
   styleUrls: ['./links-modal-dialog.component.css']
 })
 export class LinksModalDialogComponent extends SimpleModalComponent<LinksModel, void> implements InputModel {
+  // TODO: add explicit constructor
+
   title: string;
   message?: string;
   links?: Map<string, string>;

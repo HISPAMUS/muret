@@ -8,13 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -40,7 +38,7 @@ public class WatchDog {
     public WatchDog(MURETConfiguration muretConfiguration, UserManagerImpl manager) {
         m_SMTPClient = new JavaMailSenderImpl();
         try {
-            m_SMTPClient.setHost("altea.dlsi.ua.es");
+            m_SMTPClient.setHost("altea.dlsi.ua.es"); //TODO parametrizar esta propiedad
             m_SMTPClient.setPort(25);
         }
         catch(Exception e) {
@@ -49,7 +47,7 @@ public class WatchDog {
         m_userManager = manager;
         m_restClient = new ClassifierClient(muretConfiguration.getPythonclassifiers());
         this.muretConfiguration = muretConfiguration;
-        if (muretConfiguration.isEnableWatchDog()) {
+        if (muretConfiguration.isEnableWatchDogNotification()) {
             logger.info("Server watchdog started!!");
             m_serverStatus = false;
             m_mailToWarn = muretConfiguration.getWarningmail();
@@ -62,18 +60,15 @@ public class WatchDog {
 
     @Scheduled(fixedRate = 60*1000)
     public void CheckServerStatus() {
-        if (muretConfiguration.isEnableWatchDog()) {
-            m_serverStatus = m_restClient.PingClassifierServer();
-
-            if (!m_serverStatus) {
-                if (!m_warnSent) {
-                    SendServerDownNotification();
-                    m_warnSent = true;
-                }
-            } else
-                m_warnSent = false;
+        m_serverStatus = m_restClient.PingClassifierServer();
+        if (!m_serverStatus) {
+            if (muretConfiguration.isEnableWatchDogNotification() && !m_warnSent) {
+                SendServerDownNotification();
+                m_warnSent = true;
+            }
+        } else {
+            m_warnSent = false;
         }
-
     }
 
     public boolean GetServerStatus() {
