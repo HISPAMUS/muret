@@ -33,7 +33,7 @@
     "ag-grid-angular": "^21.2.2",
     "ag-grid-community": "^21.2.2",
     "angular-svg": "^2.0.8",
-    "angular-svg-icon": "^8.0.0",
+    "angular-svg-icon": "9.2.0",
     "bootstrap": "^4.3.1",
     "core-js": "^3.3.4",
     "file-saver": "^2.0.2",
