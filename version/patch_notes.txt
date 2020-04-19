@@ -1,7 +1,15 @@
-0.8
+0.9
     MAJOR UPDATES
     - Angular version updated from 0.8 to 0.9
     - Document analysis categories changed: colors improved, help added, new categories created
+
+    MINOR UPDATES
+    - Watchdog property in application.properties changed to affect just the notification, not the watchdog itself
+
+----
+
+0.8
+    MAJOR UPDATES
 
     MINOR UPDATES
     - Chronium input errors fixed
@@ -10,7 +18,6 @@
     - Breadcrumbs show the real path of the document
     - Document name is shown in Document Analysis
     - Semantic music score is cleared when erased the codification for a music excerpt
-    - Watchdog property in application.properties changed to affect just the notification, not the watchdog itself
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 0.7

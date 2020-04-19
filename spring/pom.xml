@@ -94,12 +94,12 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
-        <!-- used by jsonwebtoken for auth -->
-        <dependency>
+        <!-- used by jsonwebtoken for auth (included in IMCore3: just required when using Java 11-->
+        <!--<dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
             <version>2.3.1</version>
-        </dependency>
+        </dependency>-->
 
     </dependencies>
 

@@ -159,14 +159,14 @@ spineOperation:
      spineAdd
      |
      spineSplit
-     |
-     spineJoin
+     //|
+     //spineJoin
      ;
 
 spineTerminator: ASTERISK MINUS;
-spineAdd: ASTERISK PLUS;
-spineSplit: ASTERISK CIRCUMFLEX;
-spineJoin: ASTERISK CHAR_v;
+spineAdd: ASTERISK PLUS+;
+spineSplit: ASTERISK CIRCUMFLEX+;
+// spineJoin: ASTERISK CHAR_v;
 
 rest: duration (CHAR_r) fermata? restLinePosition?;
 

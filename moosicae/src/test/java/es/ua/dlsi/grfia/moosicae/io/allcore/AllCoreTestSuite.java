@@ -153,6 +153,4 @@ public class AllCoreTestSuite {
             testExportImport("MEI", score, new MEIExporter(), new MEIImporter(abstractFactory));
         }
     }
-
-
 }
