@@ -5,18 +5,16 @@ import es.ua.dlsi.grfia.moosicae.io.skm.grammar.SkmToken;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class SkmPart extends SkmToken {
-    static final String SKM = "*part";
-
     private final int number;
 
-    public SkmPart(int number) {
-        super(SKM + number);
+    public SkmPart(String encoding, int number) {
+        super(encoding);
         this.number = number;
     }
 
     @Override
     public SkmPart clone() {
-        return new SkmPart(number);
+        return new SkmPart(getEncoding(), number);
     }
 
     public int getNumber() {

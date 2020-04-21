@@ -10,12 +10,21 @@ import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmCoreSymbol;
+import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmPart;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTokenParam> {
-    private static final String SEP = "·";
+    static final String SEP = "·";
+
+    public String exportPart(int n) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("*part");
+        stringBuilder.append(SEP);
+        stringBuilder.append(n);
+        return stringBuilder.toString();
+    }
 
     @Override
     public void exportClef(IClef clef, SkmExporterVisitorTokenParam inputOutput) throws IMException {
@@ -78,6 +87,7 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     @Override
     public void exportNote(INote note, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         exportFigure(note.getFigure(), inputOutput);
+        inputOutput.append(SEP);
         if (note.getDots().isPresent()) {
             exportDots(note.getDots().get(), inputOutput);
         }
@@ -272,6 +282,11 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
         if (key.getPitchClass().getAccidental().isPresent()) {
             exportAccidentalSymbol(key.getPitchClass().getAccidental().get(), inputOutput);
         }
+
+        if (key.getKeySignature().getCautionaryAccidentals().isPresent()) {
+            inputOutput.append(SEP);
+            inputOutput.append('X');
+        }
         inputOutput.append(':');
         inputOutput.buildAndAddToken(key);
     }
@@ -292,6 +307,10 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
         inputOutput.append('[');
         for (IPitchClass pitchClass: keySignature.getPitchClasses()) {
             exportPitchClass(pitchClass, inputOutput);
+        }
+        if (keySignature.getCautionaryAccidentals().isPresent()) {
+            inputOutput.append(SEP);
+            inputOutput.append('X');
         }
         inputOutput.append(']');
         inputOutput.buildAndAddToken(keySignature);

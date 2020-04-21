@@ -2,34 +2,53 @@ package es.ua.dlsi.grfia.moosicae.io.xml;
 
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
 
+import java.util.Optional;
+import java.util.Properties;
+
 /**
  * Used to add input and output parameters
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 16/03/2020
  */
 public class XMLExporterVisitorParam {
-
     private XMLParamExportMode XMLParamExportMode;
     private XMLElement xmlElement;
     private final StringBuilder stringBuilder;
+    /**
+     * Used to include information about context required to export individual elements, such as the previous keySignature to be cancelled
+     * to export MusicXML
+     */
+    private Properties context;
 
     public XMLExporterVisitorParam(XMLParamExportMode XMLParamExportMode) {
         this.XMLParamExportMode = XMLParamExportMode;
         this.xmlElement = null;
         this.stringBuilder = new StringBuilder();
+        this.context = new Properties();
     }
 
     public XMLExporterVisitorParam(XMLParamExportMode XMLParamExportMode, XMLElement xmlElement) {
         this.XMLParamExportMode = XMLParamExportMode;
         this.xmlElement = xmlElement;
         this.stringBuilder = new StringBuilder();
+        this.context = new Properties();
     }
 
     public XMLExporterVisitorParam(XMLParamExportMode XMLParamExportMode, String childElementName) {
         this.XMLParamExportMode = XMLParamExportMode;
         this.xmlElement = new XMLElement(childElementName);
         this.stringBuilder = new StringBuilder();
+        this.context = new Properties();
     }
+
+    public void addProperty(String name, Object value) {
+        this.context.put(name, value);
+    }
+
+    public Optional getProperty(String name) {
+        return Optional.ofNullable(this.context.getProperty(name));
+    }
+
 
     public XMLParamExportMode getXMLParamExportMode() {
         return XMLParamExportMode;

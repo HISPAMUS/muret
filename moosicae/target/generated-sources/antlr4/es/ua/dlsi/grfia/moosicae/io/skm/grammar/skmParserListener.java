@@ -260,6 +260,16 @@ public interface skmParserListener extends ParseTreeListener {
 	 */
 	void exitKeySignaturePitchClass(skmParser.KeySignaturePitchClassContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link skmParser#keySignatureCancel}.
+	 * @param ctx the parse tree
+	 */
+	void enterKeySignatureCancel(skmParser.KeySignatureCancelContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link skmParser#keySignatureCancel}.
+	 * @param ctx the parse tree
+	 */
+	void exitKeySignatureCancel(skmParser.KeySignatureCancelContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link skmParser#keyMode}.
 	 * @param ctx the parse tree
 	 */
@@ -499,16 +509,6 @@ public interface skmParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitSpineSplit(skmParser.SpineSplitContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link skmParser#spineJoin}.
-	 * @param ctx the parse tree
-	 */
-	void enterSpineJoin(skmParser.SpineJoinContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link skmParser#spineJoin}.
-	 * @param ctx the parse tree
-	 */
-	void exitSpineJoin(skmParser.SpineJoinContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link skmParser#rest}.
 	 * @param ctx the parse tree

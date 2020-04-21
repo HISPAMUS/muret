@@ -1,11 +1,13 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.properties.ICautionaryKeySignatureAccidentals;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.properties.IPitchClass;
 import javax.validation.constraints.NotNull;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -14,18 +16,26 @@ public abstract class KeySignature extends CoreItem implements IKeySignature {
     @NotNull
     private final IPitchClass[] pitchClasses;
 
+    protected final ICautionaryKeySignatureAccidentals cautionaryKeySignatureAccidentals;
+
     /**
      * Created by factories
      * @param pitchClasses
      */
-    KeySignature(IId id, @NotNull IPitchClass[] pitchClasses) {
+    KeySignature(IId id, @NotNull IPitchClass[] pitchClasses, ICautionaryKeySignatureAccidentals cautionaryKeySignatureAccidentals) {
         super(id);
         this.pitchClasses = pitchClasses.clone();
+        this.cautionaryKeySignatureAccidentals = cautionaryKeySignatureAccidentals;
     }
 
     @Override
     public IPitchClass[] getPitchClasses() {
         return pitchClasses;
+    }
+
+    @Override
+    public Optional<ICautionaryKeySignatureAccidentals> getCautionaryAccidentals() {
+        return Optional.ofNullable(cautionaryKeySignatureAccidentals);
     }
 
     @Override

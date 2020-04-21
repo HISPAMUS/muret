@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IUnconventionalKeySignature;
+import es.ua.dlsi.grfia.moosicae.core.properties.ICautionaryKeySignatureAccidentals;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.properties.IPitchClass;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
@@ -19,13 +20,13 @@ public class UnconventionalKeySignature extends KeySignature implements IUnconve
      * @param id
      * @param pitchClasses
      */
-    UnconventionalKeySignature(IId id, @NotNull IPitchClass[] pitchClasses) {
-        super(id, pitchClasses);
+    UnconventionalKeySignature(IId id, @NotNull IPitchClass[] pitchClasses, ICautionaryKeySignatureAccidentals cautionaryKeySignatureAccidentals) {
+        super(id, pitchClasses, cautionaryKeySignatureAccidentals);
     }
 
     @Override
     public UnconventionalKeySignature clone() {
-        return new UnconventionalKeySignature(null, getPitchClasses().clone());
+        return new UnconventionalKeySignature(null, getPitchClasses().clone(), cautionaryKeySignatureAccidentals);
     }
 
     @Override

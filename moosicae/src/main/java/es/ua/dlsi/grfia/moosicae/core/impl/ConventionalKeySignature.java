@@ -7,10 +7,7 @@ import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.core.enums.EDiatonicPitches;
 import es.ua.dlsi.grfia.moosicae.core.impl.properties.DiatonicPitch;
 import es.ua.dlsi.grfia.moosicae.core.impl.properties.PitchClass;
-import es.ua.dlsi.grfia.moosicae.core.properties.IAccidentalSymbol;
-import es.ua.dlsi.grfia.moosicae.core.properties.IId;
-import es.ua.dlsi.grfia.moosicae.core.properties.IKeyAccidentalCount;
-import es.ua.dlsi.grfia.moosicae.core.properties.IPitchClass;
+import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.core.utils.ICircleOfFifths;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import javax.validation.constraints.NotNull;
@@ -28,8 +25,8 @@ public class ConventionalKeySignature extends KeySignature implements IConventio
 
     private final IAccidentalSymbol accidentalSymbol;
 
-    ConventionalKeySignature(IId id, @NotNull IKeyAccidentalCount accidentalCount, IAccidentalSymbol accidentalSymbol) {
-        super(id, buildPitchClasses(accidentalCount, accidentalSymbol));
+    ConventionalKeySignature(IId id, @NotNull IKeyAccidentalCount accidentalCount, IAccidentalSymbol accidentalSymbol, ICautionaryKeySignatureAccidentals cautionaryKeySignatureAccidentals) {
+        super(id, buildPitchClasses(accidentalCount, accidentalSymbol), cautionaryKeySignatureAccidentals);
         this.accidentalCount = accidentalCount;
         this.accidentalSymbol = accidentalSymbol;
     }
@@ -74,7 +71,7 @@ public class ConventionalKeySignature extends KeySignature implements IConventio
 
     @Override
     public ConventionalKeySignature clone() {
-        return new ConventionalKeySignature(null, accidentalCount, accidentalSymbol);
+        return new ConventionalKeySignature(null, accidentalCount, accidentalSymbol, cautionaryKeySignatureAccidentals);
     }
 
 
@@ -103,6 +100,7 @@ public class ConventionalKeySignature extends KeySignature implements IConventio
         return "CommonKey{" +
                 "accidentalCount=" + accidentalCount +
                 ", accidentalSymbol=" + accidentalSymbol +
+                ", cautionary=" + cautionaryKeySignatureAccidentals +
                 "} " + super.toString();
     }
 
@@ -110,4 +108,6 @@ public class ConventionalKeySignature extends KeySignature implements IConventio
     public <InputOutputType> void export(IExporterVisitor<InputOutputType> exportVisitor, InputOutputType inputOutput) throws IMException {
         exportVisitor.exportConventionalKeySignature(this, inputOutput);
     }
+
+
 }

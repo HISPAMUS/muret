@@ -94,9 +94,9 @@ upperCasePitch: (CHAR_A | CHAR_B | CHAR_C | CHAR_D | CHAR_E | CHAR_F | CHAR_G);
 
 pitchClass: lowerCasePitch accidental;
 
-part: TANDEM_PART number;
+part: TANDEM_PART SEP number;
 
-staff: TANDEM_STAFF number;
+staff: TANDEM_STAFF SEP number;
 
 clef: TANDEM_CLEF SEP clefValue;
 clefValue: clefSign (SEP clefLine)? (SEP clefOctave)?;
@@ -104,12 +104,13 @@ clefSign: CHAR_C | CHAR_F | CHAR_G | CHAR_P | CHAR_T;
 clefLine: DIGIT_1 | DIGIT_2 | DIGIT_3 | DIGIT_4 | DIGIT_5;
 clefOctave: CHAR_v CHAR_v? DIGIT_2 | CIRCUMFLEX CIRCUMFLEX? DIGIT_2;
 
-keySignature: TANDEM_KEY_SIGNATURE SEP LEFT_BRACKET keySignaturePitchClass* RIGHT_BRACKET;
+keySignature: TANDEM_KEY_SIGNATURE SEP LEFT_BRACKET keySignaturePitchClass* RIGHT_BRACKET keySignatureCancel?;
 keySignaturePitchClass: pitchClass;
+keySignatureCancel: SEP CHAR_X;
 
 keyMode: (minorKey | majorKey);
 //key: ASTERISK keyMode COLON;
-key: TANDEM_KEY SEP keyMode COLON;
+key: TANDEM_KEY SEP keyMode keySignatureCancel? COLON;
 minorKey: lowerCasePitch accidental?;
 majorKey: upperCasePitch accidental?;
 
@@ -199,7 +200,7 @@ pitch: diatonicPitchAndOctave alteration?;
 alteration: accidental alterationDisplay?;
 
 //note:  beforeNote duration noteName (alteration alterationVisualMode?)? afterNote;
-note:  beforeNote duration pitch afterNote;
+note:  beforeNote duration SEP pitch afterNote;
 
 chord: note (SPACE note)+;
 

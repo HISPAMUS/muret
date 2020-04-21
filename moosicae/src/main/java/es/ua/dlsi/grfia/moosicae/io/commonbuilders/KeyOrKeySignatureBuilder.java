@@ -5,6 +5,7 @@ import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.ICoreItem;
 import es.ua.dlsi.grfia.moosicae.core.IKey;
 import es.ua.dlsi.grfia.moosicae.core.builders.CoreObjectBuilder;
+import es.ua.dlsi.grfia.moosicae.core.builders.IUnconventionalKeySignatureBuilder;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.core.enums.EConventionalKeys;
 import es.ua.dlsi.grfia.moosicae.core.enums.EModes;
@@ -27,6 +28,7 @@ public class KeyOrKeySignatureBuilder extends CoreObjectBuilder<ICoreItem> imple
     protected IMode mode;
     protected EAccidentalSymbols accidentalSymbol;
     protected List<IPitchClass> pitchClassList;
+    private ICautionaryKeySignatureAccidentals cautionaryKeySignatureAccidentals;
 
     public KeyOrKeySignatureBuilder(ICoreAbstractFactory coreObjectFactory) {
         super(coreObjectFactory);
@@ -53,6 +55,10 @@ public class KeyOrKeySignatureBuilder extends CoreObjectBuilder<ICoreItem> imple
         return this;
     }
 
+    public KeyOrKeySignatureBuilder from(ICautionaryKeySignatureAccidentals cautionaryKeySignatureAccidentals) {
+        this.cautionaryKeySignatureAccidentals = cautionaryKeySignatureAccidentals;
+        return this;
+    }
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
@@ -72,7 +78,7 @@ public class KeyOrKeySignatureBuilder extends CoreObjectBuilder<ICoreItem> imple
             }
 
             EConventionalKeys ekey = EConventionalKeys.findKeyWithAccidentalCount(eMode, fifths, accidentalSymbol);
-            IKey key = coreObjectFactory.createConventionalKey(null, ekey);
+            IKey key = coreObjectFactory.createConventionalKey(null, ekey, cautionaryKeySignatureAccidentals);
 
             if (mode == null) {
                 return key.getKeySignature(); // it the mode element was not present, just return the key signature value
@@ -82,15 +88,15 @@ public class KeyOrKeySignatureBuilder extends CoreObjectBuilder<ICoreItem> imple
         } else {
             if (mode == null) {
                 // it's a key signature without mode
-                return coreObjectFactory.createUnconventionalKeySignature(null, pitchClassList.toArray(new IPitchClass[0]));
+                return coreObjectFactory.createUnconventionalKeySignature(null, pitchClassList.toArray(new IPitchClass[0]), cautionaryKeySignatureAccidentals);
             } else {
                 // try to find a theoretical key
                 Optional<ETheoreticalKeys> theoreticalKeys = ETheoreticalKeys.find(mode.getValue(), pitchClassList);
                 if (theoreticalKeys.isPresent()) {
-                    IKey key = coreObjectFactory.createTheoreticalKey(null, theoreticalKeys.get());
+                    IKey key = coreObjectFactory.createTheoreticalKey(null, theoreticalKeys.get(), cautionaryKeySignatureAccidentals);
                     return key;
                 } else {
-                    return coreObjectFactory.createUnconventionalKeySignature(null, pitchClassList.toArray(new IPitchClass[0]));
+                    return coreObjectFactory.createUnconventionalKeySignature(null, pitchClassList.toArray(new IPitchClass[0]), cautionaryKeySignatureAccidentals);
                 }
             }
         }

@@ -3,6 +3,7 @@ package es.ua.dlsi.grfia.moosicae.io.mei.importer.builders;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
+import es.ua.dlsi.grfia.moosicae.core.properties.ICautionaryKeySignatureAccidentals;
 import es.ua.dlsi.grfia.moosicae.core.properties.IKeyAccidentalCount;
 import es.ua.dlsi.grfia.moosicae.core.properties.IMode;
 import es.ua.dlsi.grfia.moosicae.io.commonbuilders.KeyOrKeySignatureBuilder;
@@ -27,6 +28,12 @@ public class MEIKeyOrKeySignatureBuilder extends KeyOrKeySignatureBuilder {
         Optional<IMode> mode = MEIAttributesParsers.getInstance().parseMode(coreObjectFactory, xmlImporterParam, "mode");
         if (mode.isPresent()) {
             from(mode.get());
+        }
+
+        Optional<String> showChange = xmlImporterParam.getAttribute("keysig.showchange");
+        ICautionaryKeySignatureAccidentals cautionaryKeySignatureAccidentals = null;
+        if (showChange.isPresent() && showChange.get().equals("true")) {
+            from(coreObjectFactory.createCautionaryKeySignatureAccidentals(null, true));
         }
 
         Optional<Pair<Integer, Optional<EAccidentalSymbols>>> pairKeySignature = MEIAttributesParsers.getInstance().parseConventionalKeySignatureAttribute(xmlImporterParam, "sig");

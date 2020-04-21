@@ -44,7 +44,7 @@ public class KeySignaturesTest extends MonodicTest {
                 new IPitchClassBuilder(coreAbstractFactory).from(EDiatonicPitches.C).from(coreAbstractFactory.createAccidentalSymbol(null, EAccidentalSymbols.SHARP)).build(),
                 new IPitchClassBuilder(coreAbstractFactory).from(EDiatonicPitches.G).from(coreAbstractFactory.createAccidentalSymbol(null, EAccidentalSymbols.SHARP)).build()
         };
-        IKeySignature keySignature = coreAbstractFactory.createUnconventionalKeySignature(null, pitchClasses);
+        IKeySignature keySignature = coreAbstractFactory.createUnconventionalKeySignature(null, pitchClasses, null);
         score.add(voice, staff, keySignature);
         result.put("unconventional_keysignature_cs_gs", score);
         return result;

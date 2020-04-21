@@ -52,6 +52,7 @@ public class MusicXMLImporter extends XMLImporter implements IImporter {
         coreObjectBuilderSuppliers.add("fifths", MxmlFifthsBuilder::new);
         coreObjectBuilderSuppliers.add("key-step", MxmlDiatonicPitchBuilder::new);
         coreObjectBuilderSuppliers.add("key-alter", MxmAlterationBuilder::new);
+        coreObjectBuilderSuppliers.add("cancel", MxmlKeyCancelBuilder::new);
 
         coreObjectBuilderSuppliers.add("mode", MxmlModeBuilder::new);
 
@@ -85,7 +86,7 @@ public class MusicXMLImporter extends XMLImporter implements IImporter {
             if (xml == null) {
                 throw new IMException("Cannot find xml xsd");
             }
-            XMLValidators.validateAgainstXSD(new InputStream[] {xml, xlink, musicXML}, fileToBeValidated);
+            XMLValidators.validateAgainstXSD(new InputStream[] {xml, xlink, musicXML}, fileToBeValidated, "partwise.dtd");
         } catch (Exception e) {
             throw new IMException("Not valid MusicXML file", e);
         }

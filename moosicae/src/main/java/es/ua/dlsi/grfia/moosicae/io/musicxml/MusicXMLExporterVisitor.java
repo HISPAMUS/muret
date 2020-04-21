@@ -5,11 +5,14 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
+import es.ua.dlsi.grfia.moosicae.core.impl.KeySignature;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLExporterVisitorParam;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLParamExportMode;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
+
+import java.util.Optional;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -238,6 +241,21 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
     @Override
     public void exportConventionalKeySignature(IConventionalKeySignature conventionalKeySignature, XMLExporterVisitorParam inputOutput) throws IMException {
         doExportConventionalKeySignature(conventionalKeySignature, inputOutput);
+    }
+
+    private void exportCautionaryKeySignatureAccidentals(IKeySignature keySignature, String attributeName, XMLExporterVisitorParam inputOutput) throws IMException {
+        if (keySignature.getCautionaryAccidentals().isPresent()) {
+            XMLExporterVisitorParam cancelElement = inputOutput.addChild(XMLParamExportMode.element, "cancel");
+            Optional<KeySignature> previousKeySignature = inputOutput.getProperty(MusicXMLExporter.CONTEXT_LAST_KEY_SIGNATURE);
+            if (!previousKeySignature.isPresent()) {
+                throw new IMException("Previous key signature to be cancelled not found");
+            }
+            if (previousKeySignature.get() instanceof IConventionalKeySignature) {
+                doExportConventionalKeySignature((IConventionalKeySignature) previousKeySignature.get(), cancelElement);
+            } else {
+                // cannot add cancel parameter if previous key signature is not conventional (does not uses fifths)
+            }
+        }
     }
 
     private XMLExporterVisitorParam doExportConventionalKeySignature(IConventionalKeySignature conventionalKeySignature, XMLExporterVisitorParam inputOutput) throws IMException {

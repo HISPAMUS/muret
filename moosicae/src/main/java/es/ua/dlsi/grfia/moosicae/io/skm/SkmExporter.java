@@ -96,14 +96,13 @@ public class SkmExporter extends AbstractExporter<SkmExporterVisitor> {
                 SkmHeader skmHeader = new SkmHeader(ESkmHeaders.skern);  //TODO tipo
                 skmDocument.addHeader(skmHeader);
 
-                SkmPart skmPart = new SkmPart(ipart+1);
+                SkmExporterVisitorTokenParam skmExporterVisitorTokenParam = new SkmExporterVisitorTokenParam(skmDocument, skmHeader);
+                int npart = ipart+1;
+                SkmPart skmPart = new SkmPart(exporterVisitor.exportPart(npart), npart);
                 skmDocument.add(skmHeader, skmPart);
+
                 lastVoiceTokens.put(voice, skmPart);
             }
         }
-    }
-
-    private String exportPartNumber(int n) {
-        return "*part" + n;
     }
 }

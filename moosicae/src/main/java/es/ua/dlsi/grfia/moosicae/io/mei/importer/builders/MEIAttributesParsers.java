@@ -8,6 +8,7 @@ import es.ua.dlsi.grfia.moosicae.core.builders.IModeBuilder;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.properties.IAccidentalSymbol;
+import es.ua.dlsi.grfia.moosicae.core.properties.ICautionaryKeySignatureAccidentals;
 import es.ua.dlsi.grfia.moosicae.core.properties.IClefLine;
 import es.ua.dlsi.grfia.moosicae.core.properties.IMode;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
@@ -298,7 +299,14 @@ public class MEIAttributesParsers {
                 accidentalSymbol = conventionalKeySignature.get().getAccidentalSymbol().get().getValue(); 
             }
             EConventionalKeys eConventionalKey = EConventionalKeys.findKeyWithAccidentalCount(mode.getValue(), conventionalKeySignature.get().getAccidentalCount().getValue(), accidentalSymbol);
-            return Optional.of(coreAbstractFactory.createConventionalKey(null, eConventionalKey));
+
+            Optional<String> showChange = xmlImporterParam.getAttribute("keysig.showchange");
+            ICautionaryKeySignatureAccidentals cautionaryKeySignatureAccidentals = null;
+            if (showChange.isPresent() && showChange.get().equals("true")) {
+                cautionaryKeySignatureAccidentals = coreAbstractFactory.createCautionaryKeySignatureAccidentals(null, true);
+            }
+
+            return Optional.of(coreAbstractFactory.createConventionalKey(null, eConventionalKey, cautionaryKeySignatureAccidentals));
         } else {
             return Optional.empty();
         }

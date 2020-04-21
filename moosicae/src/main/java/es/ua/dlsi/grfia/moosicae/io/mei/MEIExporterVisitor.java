@@ -201,6 +201,12 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
         }
     }
 
+    private void exportCautionaryKeySignatureAccidentals(IKeySignature keySignature, String attributeName, XMLExporterVisitorParam inputOutput) {
+        if (keySignature.getCautionaryAccidentals().isPresent()) {
+            inputOutput.addAttribute(attributeName, "true");
+        }
+    }
+
     @Override
     public void exportConventionalKeySignature(IConventionalKeySignature conventionalKeySignature, XMLExporterVisitorParam inputOutput) throws IMException {
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
@@ -212,6 +218,7 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
                 sb.append(accidentalParam.getStringBuilderValue());
             }
             inputOutput.addAttribute("key.sig", sb.toString());
+            exportCautionaryKeySignatureAccidentals(conventionalKeySignature, "keysig.showchange", inputOutput);
         } else {
             // throw new UnsupportedOperationException("TO-DO"); //TODO
         }
@@ -223,6 +230,7 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
             XMLExporterVisitorParam keyAccidParam = keySigParam.addChild(XMLParamExportMode.attribute, "keyAccid");
             exportPitchClass(pitchClass, keyAccidParam);
         }
+        exportCautionaryKeySignatureAccidentals(unconventionalKeySignature, "sig.showchange", inputOutput);
         return keySigParam;
     }
     @Override

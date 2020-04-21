@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IConventionalKeySignature;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.properties.IAccidentalSymbol;
+import es.ua.dlsi.grfia.moosicae.core.properties.ICautionaryKeySignatureAccidentals;
 import es.ua.dlsi.grfia.moosicae.core.properties.IKeyAccidentalCount;
 
 
@@ -13,6 +14,7 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IKeyAccidentalCount;
 public class IConventionalKeySignatureBuilder extends CoreObjectBuilder<IConventionalKeySignature> {
     private IAccidentalSymbol accidentalSymbol;
     protected IKeyAccidentalCount accidentalCount;
+    private ICautionaryKeySignatureAccidentals cautionaryKeySignatureAccidentals;
 
     public IConventionalKeySignatureBuilder(ICoreAbstractFactory coreObjectFactory) {
         super(coreObjectFactory);
@@ -28,9 +30,13 @@ public class IConventionalKeySignatureBuilder extends CoreObjectBuilder<IConvent
         return this;
     }
 
+    public IConventionalKeySignatureBuilder from(ICautionaryKeySignatureAccidentals cautionaryKeySignatureAccidentals) {
+        this.cautionaryKeySignatureAccidentals = cautionaryKeySignatureAccidentals;
+        return this;
+    }
     @Override
     public IConventionalKeySignature build() throws IMException {
-        return coreObjectFactory.createConventionalKeySignature(getId(), accidentalCount, accidentalSymbol);
+        return coreObjectFactory.createConventionalKeySignature(getId(), accidentalCount, accidentalSymbol, cautionaryKeySignatureAccidentals);
     }
 
 }

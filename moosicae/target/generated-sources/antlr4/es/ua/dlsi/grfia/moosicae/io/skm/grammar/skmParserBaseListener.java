@@ -318,6 +318,18 @@ public class skmParserBaseListener implements skmParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterKeySignatureCancel(skmParser.KeySignatureCancelContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitKeySignatureCancel(skmParser.KeySignatureCancelContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterKeyMode(skmParser.KeyModeContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -601,18 +613,6 @@ public class skmParserBaseListener implements skmParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitSpineSplit(skmParser.SpineSplitContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterSpineJoin(skmParser.SpineJoinContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitSpineJoin(skmParser.SpineJoinContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

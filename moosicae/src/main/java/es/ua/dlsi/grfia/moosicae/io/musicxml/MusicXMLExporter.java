@@ -19,6 +19,8 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class MusicXMLExporter implements IExporter {
+    public static final String CONTEXT_LAST_KEY_SIGNATURE = "lastKeySignature";
+
     private MusicXMLExporterVisitor musicXMLExporterVisitor;
     private MxmlPartIDs mxmlPartIDs;
 
@@ -93,6 +95,7 @@ public class MusicXMLExporter implements IExporter {
             boolean nonAttributesFound = false;
             //TODO ordenar por tiempos - ver qué staves pertenecen a partes
             for (IStaff staff: score.getAllStaves()) {
+                IKeySignature lastKeySignature = null;
                 for (ICoreItem staffElement: staff.getStaffSymbols()) {
                     XMLElement parentElement = xmlMeasure; // by default
                     if (staffElement instanceof INonDurational) {
@@ -109,7 +112,18 @@ public class MusicXMLExporter implements IExporter {
                     }
 
                     XMLExporterVisitorParam xmlExporterVisitorParam = new XMLExporterVisitorParam(XMLParamExportMode.element, parentElement);
+
+                    if (lastKeySignature != null) {
+                        xmlExporterVisitorParam.addProperty(CONTEXT_LAST_KEY_SIGNATURE, lastKeySignature);
+                    }
                     staffElement.export(musicXMLExporterVisitor, xmlExporterVisitorParam);
+
+                    if (staffElement instanceof IKeySignature) {
+                        lastKeySignature = (IKeySignature) staffElement;
+                    } else if (staffElement instanceof IKey) {
+                        lastKeySignature = ((IKey) staffElement).getKeySignature();
+                    }
+
                 }
             }
 

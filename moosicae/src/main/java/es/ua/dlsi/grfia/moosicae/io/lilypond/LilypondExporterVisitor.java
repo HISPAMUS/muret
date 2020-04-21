@@ -232,7 +232,13 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
     public void exportKey(IKey key, LilypondExporterVisitorParam inputOutput) throws IMException {
         inputOutput.startString();
         inputOutput.append("\\key ");
-        exportPitchClass(key.getPitchClass(), inputOutput);
+        // exportPitchClass(key.getPitchClass(), inputOutput); cannot use since LY version 2.20 because of the separation between pitch name and accidental
+        inputOutput.append(key.getPitchClass().getDiatonicPitch().getValue().name().toLowerCase());
+        Optional<IAccidentalSymbol> accidentalSymbol = key.getPitchClass().getAccidental();
+        if (accidentalSymbol.isPresent()) {
+            inputOutput.append('-');
+            exportAccidentalSymbol(accidentalSymbol.get(), inputOutput);
+        }
         inputOutput.append(' ');
         inputOutput.append('\\');
         inputOutput.append(key.getMode().getValue().name().toLowerCase());

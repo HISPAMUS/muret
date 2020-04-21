@@ -113,6 +113,9 @@ public class JSONExporterVisitor implements IExporterVisitor<JSONExportParam> {
         if (commonAlterationKey.getAccidentalSymbol().isPresent()) {
             exportAccidentalSymbol(commonAlterationKey.getAccidentalSymbol().get(), jsonKeySignature);
         }
+        if (commonAlterationKey.getCautionaryAccidentals().isPresent()) {
+            jsonKeySignature.add("cautionaryAccidentals", "true");
+        }
     }
 
     @Override

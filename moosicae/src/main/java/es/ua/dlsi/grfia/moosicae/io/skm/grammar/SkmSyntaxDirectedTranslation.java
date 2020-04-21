@@ -159,7 +159,7 @@ public class SkmSyntaxDirectedTranslation {
             super.exitPart(ctx);
 
             int number = Integer.parseInt(ctx.number().getText());
-            SkmPart partNumber = new SkmPart(number);
+            SkmPart partNumber = new SkmPart(ctx.getText(), number);
             try {
                 addItemToSpine(partNumber);
             } catch (IMException e) {
@@ -197,7 +197,7 @@ public class SkmSyntaxDirectedTranslation {
             super.exitStaff(ctx);
 
             int number = Integer.parseInt(ctx.number().getText());
-            SkmStaff staffNumber = new SkmStaff(number);
+            SkmStaff staffNumber = new SkmStaff(ctx.getText(), number);
             try {
                 addItemToSpine(staffNumber);
             } catch (IMException e) {
@@ -345,6 +345,15 @@ public class SkmSyntaxDirectedTranslation {
 
             //TODO we could check whether the unconventional key signature is not unconventional, but conventional?
             endContextAndAddToSpine(ctx);
+        }
+
+        @Override
+        public void exitKeySignatureCancel(skmParser.KeySignatureCancelContext ctx) {
+            super.exitKeySignatureCancel(ctx);
+            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
+                    "Key signature {0}", ctx.getText());
+
+            importingContexts.addObjectToPool(coreAbstractFactory.createCautionaryKeySignatureAccidentals(null, true));
         }
 
         @Override
@@ -997,15 +1006,6 @@ public class SkmSyntaxDirectedTranslation {
             super.exitSpineSplit(ctx);
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
                     "Spine split {0}", ctx.getText());
-
-            throw new UnsupportedOperationException("TODO"); //TODO operaciones spine
-        }
-
-        @Override
-        public void exitSpineJoin(skmParser.SpineJoinContext ctx) {
-            super.exitSpineJoin(ctx);
-            Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
-                    "Spine join {0}", ctx.getText());
 
             throw new UnsupportedOperationException("TODO"); //TODO operaciones spine
         }

@@ -16,11 +16,11 @@ public class Keys extends Prototypes<IKey> {
         super(coreAbstractFactory);
 
         for (EConventionalKeys conventionalKey: EConventionalKeys.values()) {
-            this.add(conventionalKey.name(), coreAbstractFactory.createConventionalKey(null, conventionalKey));
+            this.add(conventionalKey.name(), coreAbstractFactory.createConventionalKey(null, conventionalKey, null));
         }
 
         for (ETheoreticalKeys theoreticalKey: ETheoreticalKeys.values()) {
-            this.add(theoreticalKey.name(), coreAbstractFactory.createTheoreticalKey(null, theoreticalKey));
+            this.add(theoreticalKey.name(), coreAbstractFactory.createTheoreticalKey(null, theoreticalKey, null));
         }
     }
 }

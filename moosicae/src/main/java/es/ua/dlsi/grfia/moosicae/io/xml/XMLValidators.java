@@ -10,10 +10,7 @@ import com.thaiopensource.xml.sax.ErrorHandlerImpl;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import org.w3c.dom.Document;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
+import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.parsers.*;
@@ -59,7 +56,13 @@ public class XMLValidators {
         }
     }
 
-    public static void validateAgainstXSD(InputStream [] xsds, File fileToBeValidated) throws IMException {
+    /**
+     *
+     * @param xsds
+     * @param fileToBeValidated
+     * @throws IMException
+     */
+    public static void validateAgainstXSD(InputStream [] xsds, File fileToBeValidated, String dtdFileName) throws IMException {
         try {
           /*  SAXParserFactory factory = SAXParserFactory.newInstance();
             factory.setValidating(false); // ignore DTD - it's generating problems
@@ -78,7 +81,7 @@ public class XMLValidators {
             reader.parse(new InputSource(new FileInputStream(fileToBeValidated)));*/
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setValidating(false); // ignore DTD - it's generating problems
+            factory.setValidating(false); // ignore DTD - it's generating problems - rather, the factory.setSchema (XSD) below is being used
             factory.setNamespaceAware(true);
 
             SchemaFactory schemaFactory =
@@ -88,11 +91,22 @@ public class XMLValidators {
             for (int i=0; i<sources.length; i++) {
                 sources[i] = new StreamSource(xsds[i]);
             }
-            factory.setSchema(schemaFactory.newSchema(sources));
+            factory.setSchema(schemaFactory.newSchema(sources)); // use the XSD files given as parameter xsds
 
             DocumentBuilder builder = factory.newDocumentBuilder();
 
             builder.setErrorHandler(new SimpleErrorHandler());
+            builder.setEntityResolver((publicId, systemId) -> {
+                if (publicId.endsWith(dtdFileName) || systemId.endsWith(dtdFileName)) {
+                    InputStream is = XMLValidators.class.getResourceAsStream("/schemata/empty.dtd");
+                    if (is == null) {
+                        throw new IMRuntimeException("Cannot find file /schemata/empty.dtd");
+                    }
+                    return new InputSource(is);
+                } else {
+                    return null;
+                }
+            });
 
             Document document = builder.parse(new FileInputStream(fileToBeValidated));
         } catch (Exception e) {
