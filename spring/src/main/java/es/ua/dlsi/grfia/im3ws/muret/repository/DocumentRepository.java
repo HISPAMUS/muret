@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
+import java.util.Optional;
+
 /**
  * @author drizo
  */
@@ -24,4 +26,6 @@ public interface DocumentRepository extends CrudRepository<Document, Integer> {
 
     @Query(value="SELECT count(*) FROM page p, image i, region r, symbol s WHERE p.image_id = i.id and r.page_id = p.id and r.id = s.region_id and document_id = :id",  nativeQuery = true)
     int getNumberOfAgnosticSymbols(Integer id);
+
+    Optional<Document> findByName(String documentName);
 }

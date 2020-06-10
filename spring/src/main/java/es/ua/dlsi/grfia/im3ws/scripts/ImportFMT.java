@@ -47,6 +47,7 @@ import java.util.stream.Collectors;
  * Used to import the Fondo de Música Tradicional MEI files that have been obtained from Sibelius and Finale and have
  * been processed by adding system breaks as they appear in the manuscripts
  * @author drizo
+ * @deprecated Use ImportMEIFromFMT
  */
 @ComponentScan("es.ua.dlsi.grfia.im3ws")
 @EnableJpaRepositories("es.ua.dlsi.grfia.im3ws.muret.repository")

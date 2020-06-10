@@ -265,4 +265,7 @@ export class DocumentScoreViewerAndExporterComponent implements OnInit, OnDestro
   /*aaa() {
     this.toastr.warning('Hello world!', 'Toastr fun!');
   }*/
+  exportToVHV() {
+    window.open("http://verovio.humdrum.org", "_blank");
+  }
 }

@@ -63,8 +63,13 @@
       <button (click)="exportMusicXML()">
         <span *ngIf="isExportingMusicXML()" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
         Export MusicXML (modern notation)</button>
-      </div>
-  </div>
+
+      &nbsp;
+      <button (click)="exportToVHV()">
+        Export to VHV
+      </button>
+    </div>
+ </div>
 
   <hr>
    <div class="row">

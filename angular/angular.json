@@ -27,7 +27,7 @@
               "src/styles.css"
             ],
             "scripts": [
-              "lib/verovio-toolkit.js"
+              "lib/verovio-toolkit-light.js"
             ],
             "es5BrowserSupport": true
           },
