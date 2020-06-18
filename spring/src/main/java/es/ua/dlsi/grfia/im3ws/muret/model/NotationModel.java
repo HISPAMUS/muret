@@ -95,7 +95,7 @@ public class NotationModel {
                 throw new IM3Exception("Unsupported notation type: " + document.getNotationType());
         }*/
 
-
+        //TODO Da error cuando la codificación no tiene clave
         return semanticImporter.importString(document.getNotationType(), region.getSemanticEncoding());
     }
 
