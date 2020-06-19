@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -30,6 +31,8 @@ public class WatchDog {
     private String m_mailToWarn;
     private String m_mailWarner;
     private UserManagerImpl m_userManager;
+
+    private String timeOfFailure;
 
     private final JavaMailSenderImpl m_SMTPClient;
     private String m_currentVersion;
@@ -58,16 +61,29 @@ public class WatchDog {
         }
     }
 
-    @Scheduled(fixedRate = 60*1000)
+    @Scheduled(fixedRate = 60*1000) //This loop is faster because it has to catch the problem quickly to get a good timestamp
     public void CheckServerStatus() {
         m_serverStatus = m_restClient.PingClassifierServer();
         if (!m_serverStatus) {
             if (muretConfiguration.isEnableWatchDogNotification() && !m_warnSent) {
+                this.timeOfFailure = LocalDateTime.now().toString();
                 SendServerDownNotification();
                 m_warnSent = true;
             }
         } else {
             m_warnSent = false;
+        }
+    }
+
+    @Scheduled(fixedRate = 60*60*1000) //Every hour will be repeating the message
+    public void RepeatMailSending()
+    {
+        //This means that the initial warning was sent
+        if(m_warnSent)
+        {
+            m_serverStatus = m_restClient.PingClassifierServer();
+            if(!m_serverStatus && muretConfiguration.isEnableWatchDogNotification())
+                SendServerDownNotification();
         }
     }
 
@@ -87,7 +103,7 @@ public class WatchDog {
         message.setSubject("[WARNING] - HISPAMUS deep server is down");
 
         message.setText("This is an automated message to tell you that HISPAMUS deep server is no longer answering to Muret service\n" +
-                "Time of failure: " + LocalDate.now().toString());
+                "Time of failure: " + this.timeOfFailure);
 
         m_SMTPClient.send(message);
     }

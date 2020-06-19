@@ -39,7 +39,8 @@
         <ng-template #notauth>
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link">Classificaton server status: <strong>{{serverStatus$ | async}}</strong></a>
+                <a class="nav-link" placement="bottom" ngbTooltip="This item shows the availability of our classification server. When it flags it as down, it means that it will be impossible to perform 
+                recognition tasks for the moment. The technicians are warned every hour about the problem, but you can contact them if you must perform an urgent task">Classificaton server status: <strong>{{serverStatus$ | async}}</strong></a>
             </li>
             <li class="nav-item active">
               <a class="nav-link" href="#">Login <span class="sr-only">Login</span></a>
