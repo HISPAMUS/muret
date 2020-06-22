@@ -40,6 +40,9 @@
       <label *ngFor="let regionType of regionTypes$ | async; trackBy: trackByRegionTypeFn"ngbButtonLabel>
         <input type="checkbox" [checked]="true" [name]="regionType.name" (change)="onLayerVisibilityChanged($event)"> {{beautifyRegionName(regionType.name)}}
       </label>
+      <label ngbButtonLabel>
+        <input type="checkbox" [checked]="true" (change)="selectAllNone($event)"> Select all/none
+      </label>
     </aside>
   </div>
 
