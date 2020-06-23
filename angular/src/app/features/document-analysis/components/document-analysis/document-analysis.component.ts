@@ -44,7 +44,9 @@ import { LinkType } from 'src/app/breadcrumb/components/breadcrumb/breadcrumbTyp
 export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewInit {
   imageID: number;
   filename$: Observable<string>;
+
   regionTypes$: Observable<RegionType[]>;
+
   imagePart$: Observable<Part>;
   documentAnalysisModels$: Observable<ClassifierModel[]>;
   filenameSubscription: Subscription;
@@ -55,6 +57,8 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   mode: 'eIdle' |'eSelecting' | 'eEditing' | 'eAdding';
   selectedRegionTypeID: number | 'page';
   zoomFactor = 1;
+
+  toggleMessage:string;
 
   processing: boolean = false;
 
@@ -91,6 +95,8 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     // customize default values of tooltips used by this component tree
     tooltipConfig.placement = 'bottom';
     tooltipConfig.triggers = 'focus';
+
+    this.toggleMessage = "Deselect all"
 
     this.regionTypes$ = store.select(selectRegionTypes);
 
@@ -509,8 +515,11 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   createPages() {
       this.dialogsService.showInput('Page creation', 'No pages found. How many vertical pages do you wish to create?',
         '1').subscribe(value => {
-        const pagesToCreate = Number(value);
-        this.store.dispatch(new CreatePages(this.imageID, pagesToCreate));
+        if(value != null) //The cancel method returns a null value, so we only have to catch it to avoid the server request
+        {
+          const pagesToCreate = Number(value);
+          this.store.dispatch(new CreatePages(this.imageID, pagesToCreate));
+        }
       });
         /*if (pagesToCreate === 2 || pagesToCreate === 1) {
           const widthStep = this.imageWidth / pagesToCreate
@@ -536,6 +545,27 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   isProcessing() : boolean
   {
     return this.processing;
+  }
+
+  selectAllNone($event)
+  {
+    let elements = document.querySelectorAll('input[type="checkbox"]');
+    if($event.target.checked)
+    {
+      elements.forEach(element => {
+        this.regionTypeFilterOut.delete(element["name"]);
+        element["checked"] = true;
+      });
+    }
+    else
+    {
+      elements.forEach(element => {
+        this.regionTypeFilterOut.add(element["name"]);
+        element["checked"] = false;
+      });
+    }
+   
+    this.applyRegionTypeFilter();
   }
 
 }

@@ -4,13 +4,15 @@ import { RouterModule } from '@angular/router';
 
 import { LayoutComponent } from './components/layout/layout.component';
 import {BreadcrumbModule} from '../breadcrumb/breadcrumb.module';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [LayoutComponent],
   imports: [
     CommonModule,
     RouterModule,
-    BreadcrumbModule
+    BreadcrumbModule,
+    NgbTooltipModule
   ],
   exports: [
     LayoutComponent

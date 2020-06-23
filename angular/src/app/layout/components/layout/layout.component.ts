@@ -1,4 +1,4 @@
-import {Component, isDevMode, OnInit, OnChanges, OnDestroy} from '@angular/core';
+import {Component, isDevMode, OnInit, OnChanges, OnDestroy, Input} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {CoreState} from '../../../core/store/state/core.state';
 import {Store} from '@ngrx/store';
@@ -22,6 +22,8 @@ export class LayoutComponent implements OnInit, OnDestroy {
   userRoles$: Observable<string[]>;
   serverStatus$: Observable<string>;
 
+  @Input() indicator : string = "";
+
   serverStatusSubscription : Subscription;
   adminStatusSubscription: Subscription;
 
@@ -41,6 +43,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
     this.serverStatusSubscription = this.serverStatus$.subscribe((status: string) =>{
       if(status === 'OFF')
       {
+        this.indicator = "error";
         if(!this.userWarned)
         {
           dialogservice.showError('This is embarrassing...', 'Classification server is down, you will not be able to perform your work. Technicians have been warned, however if it is urgent you can contact them at arios@dlsi.ua.es or drizo@dlsi.ua.es');
