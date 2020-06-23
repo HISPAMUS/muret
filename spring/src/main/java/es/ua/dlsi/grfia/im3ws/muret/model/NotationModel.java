@@ -27,28 +27,32 @@ import es.ua.dlsi.im3.core.score.staves.Pentagram;
 import es.ua.dlsi.im3.omr.encoding.semantic.*;
 import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticAtom;
 import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticClef;
-import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticNote;
 import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticTimeSignature;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class NotationModel {
     private static final String SYMBOL_STR = "symbol";
 
+
+    /**
+     *
+     * @param semanticEncoding
+     * @param notationType
+     * @return
+     * @throws IM3WSException
+     * @throws IM3Exception
+     */
     public String getMEINotation(SemanticEncoding semanticEncoding, NotationType notationType) throws IM3WSException, IM3Exception {
         Semantic2IMCore semantic2IMCore = new Semantic2IMCore();
-        //TODO compases y tonalidad anteriores
         //TODO URGENT - esta separación no está bien - puesto para prueba de concepto de ReadSCO
         ScoreSong song = null;
         if (notationType == NotationType.eMensural) {
-            List<Pair<SemanticSymbol, ITimedElementInStaff>> items = semantic2IMCore.convert(notationType, null, null, semanticEncoding);
+            List<Pair<SemanticSymbol, ITimedElementInStaff>> items = semantic2IMCore.convert(notationType, semanticEncoding);
             song = new ScoreSong();
             ScorePart part = song.addPart();
             ScoreLayer layer = part.addScoreLayer();
@@ -78,6 +82,7 @@ public class NotationModel {
         return mei;
     }
 
+
     public SemanticEncoding importSemanticEncoding(Document document, Region region) throws IM3Exception {
         if (region.getSemanticEncoding() == null) {
             throw new IM3Exception("Region has not a semantic encoding yet");
@@ -95,8 +100,33 @@ public class NotationModel {
                 throw new IM3Exception("Unsupported notation type: " + document.getNotationType());
         }*/
 
-        //TODO Da error cuando la codificación no tiene clave
-        return semanticImporter.importString(document.getNotationType(), region.getSemanticEncoding());
+        String skernSMens = region.getSemanticEncoding();
+        skernSMens = fillWithContextInformation(document, region, fillWithContextInformation(document, region, skernSMens));
+        return semanticImporter.importString(document.getNotationType(), skernSMens);
+    }
+
+    private String fillWithContextInformation(Document document, Region region, String kernMens) {
+        //TODO URGENTE - que salga de los compases anteriores
+        List<String> kernMensLines = new LinkedList<>();
+        for (String line: kernMens.split("\n")) {
+            kernMensLines.add(line);
+        }
+        if (!kernMensLines.get(1).startsWith("*clef")) {
+            kernMensLines.add(1, "*clefG2");
+        }
+        if (!kernMensLines.get(2).startsWith("*k")) {
+            kernMensLines.add(2, "*k[]");
+        }
+        if (!kernMensLines.get(3).startsWith("*met") && !kernMensLines.get(3).startsWith("*M")) {
+            kernMensLines.add(3, "*M2/4");
+        }
+        StringBuilder newKernMens = new StringBuilder();
+        for (String line: kernMensLines) {
+            newKernMens.append(line);
+            newKernMens.append('\n');
+        }
+        System.out.println(newKernMens);
+        return newKernMens.toString();
     }
 
     public Notation getNotation(Document document, String partName, Region region, boolean mensustriche, Renderer renderer) throws IM3Exception, IM3WSException {
@@ -231,7 +261,7 @@ public class NotationModel {
                                     SemanticEncoding semantic = importSemanticEncoding(document, region);
                                     Semantic2IMCore semantic2IMCore = new Semantic2IMCore();
                                     //TODO compases y tonalidad anteriores
-                                    List<Pair<SemanticSymbol, ITimedElementInStaff>> items = semantic2IMCore.convert(document.getNotationType(), null, null, semantic);
+                                    List<Pair<SemanticSymbol, ITimedElementInStaff>> items = semantic2IMCore.convert(document.getNotationType(), semantic);
 
                                     Staff staff = staves.get(regionPart);
                                     if (staff == null) {

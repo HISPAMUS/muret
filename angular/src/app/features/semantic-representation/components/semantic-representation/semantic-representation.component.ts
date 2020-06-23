@@ -209,14 +209,13 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   setSelectedRegion($event: Region) {
     setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
       this.selectedRegion = $event;
-
       this.notation = null;
       // this.semanticEncoding = '';
       if (this.gridApi) {
         this.gridApi.setRowData([]);
       }
 
-      if (this.selectedRegion) {
+      if (this.selectedRegion && this.hasPartAssigned()) {
         this.drawSelectedRegionSymbols(this.selectedRegionSymbols);
 
         this.store.dispatch(new GetNotation(this.selectedRegion, false, 'verovio')); // TODO
@@ -591,8 +590,11 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
       });
   }
 
-  isProcessing()
-  {
+  isProcessing() {
     return this.waitingForSemantic;
+  }
+
+  hasPartAssigned() {
+    return this.hasPartAssignedToRegion() || this.hasPartAssignedToImage();
   }
 }

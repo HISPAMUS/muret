@@ -7,10 +7,7 @@ import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Renderer;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Document;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Part;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Region;
-import es.ua.dlsi.grfia.im3ws.muret.model.NotationModel;
-import es.ua.dlsi.grfia.im3ws.muret.model.DocumentModel;
-import es.ua.dlsi.grfia.im3ws.muret.model.PartsModel;
-import es.ua.dlsi.grfia.im3ws.muret.model.SemanticRepresentationModel;
+import es.ua.dlsi.grfia.im3ws.muret.model.*;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.PageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
@@ -81,17 +78,21 @@ public class SemanticRepresentationController extends MuRETBaseController {
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Getting staff notation for region ID {0}", staffID);
 
             Region region = getRegion(staffID);
-            Document document = region.getPage().getImage().getDocument();
-            //TODO Ahora sólo lo guardo en la región
-        /*Part part = partsModel.findPart(region);
-        if (part == null) {
-            throw new IM3WSException("The staff has not an associated part yet");
-        }*/
-            Part part = null;
-            String partName = "";
+            if (region.getSemanticEncoding() == null || region.getSemanticEncoding().trim().isEmpty()) {
+                throw new IM3WSException("Region has not a semantic encoding yet");
+            } else {
+                Document document = region.getPage().getImage().getDocument();
+                //TODO Ahora sólo lo guardo en la región
+                /*Part part = partsModel.findPart(region);
+                if (part == null) {
+                    throw new IM3WSException("The staff has not an associated part yet");
+                }*/
+                Part part = null;
+                String partName = "";
 
-            Notation result = notationModel.getNotation(document, partName, region, mensustriche, renderer);
-            return result;
+                Notation result = notationModel.getNotation(document, partName, region, mensustriche, renderer);
+                return result;
+            }
         } catch (IM3WSException | IM3Exception e) {
             throw ControllerUtils.createServerError(this, "Cannot get notation", e);
         }

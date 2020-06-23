@@ -63,51 +63,43 @@
       </div>
     </section>
 
-    <section class="row">
-      <div class="col">
-            <ng-container *ngIf="hasNotation()">
-              <app-notation [notation]="notation"></app-notation>
-            </ng-container>
-          </div>
-    </section>
-    <!--<section class="row">
-      <div class="col-2">
-        <ng-container *ngIf="(documentParts$ | async) as parts">
-          <app-part-selection [label]="'Region part'" [parts]="parts"
-                              (clearPart)="clearRegionPart()" (selectPart)="updateRegionPart($event)"
-                              (createPart)="createRegionPart($event)"
-          >
-        </app-part-selection>
-        </ng-container>
-      </div>
-      <div class="col-6">
-        <ng-container *ngIf="(regionPart$ | async) as regionPart ">
-          {{regionPart.name}}
-        </ng-container>
-      </div>
-    </section>-->
-    <aside>
-      <button class="btn btn-primary" (click)="convertAgnosticSemantic()">
-        {{semanticLabel}}
-        <span *ngIf="isProcessing()" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-      </button>
-      <button class="btn btn-secondary" (click)="clearSemanticEncoding()">
-        Clear semantic encoding
-      </button>
-      <button class="btn btn-primary" (click)="showManualEntry()"
-              [attr.aria-expanded]="isManualEntrySelected()" aria-controls="manualEntryPanel">
-        Manual entry
-      </button>
-      <button class="btn btn-secondary" (click)="showMEI()"
-              [attr.aria-expanded]="isMEISelected()" aria-controls="meiPanel">
-        Show MEI
-      </button>
-    </aside>
+    <div *ngIf="hasPartAssigned(); else noPartAssigned">
+      <section class="row">
+        <div class="col">
+              <ng-container *ngIf="hasNotation()">
+                <app-notation [notation]="notation"></app-notation>
+              </ng-container>
+            </div>
+      </section>
+      <aside>
+        <button class="btn btn-primary" (click)="convertAgnosticSemantic()">
+          {{semanticLabel}}
+          <span *ngIf="isProcessing()" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        </button>
+        <button class="btn btn-secondary" (click)="clearSemanticEncoding()">
+          Clear semantic encoding
+        </button>
+        <button class="btn btn-primary" (click)="showManualEntry()"
+                [attr.aria-expanded]="isManualEntrySelected()" aria-controls="manualEntryPanel">
+          Manual entry
+        </button>
+        <button class="btn btn-secondary" (click)="showMEI()"
+                [attr.aria-expanded]="isMEISelected()" aria-controls="meiPanel">
+          Show MEI
+        </button>
+      </aside>
+    </div>
   </div>
 
   <ng-template #noRegionSelected>
-    <div class="jumbotron align-content-md-center" id="jumbotronSelectRegion">
+    <div class="jumbotron align-content-md-center" class="semanticJumbotron">
       <p>Select a region</p>
+    </div>
+  </ng-template>
+
+  <ng-template #noPartAssigned>
+    <div class="jumbotron align-content-md-center" class="semanticJumbotron">
+      <p>Link a part to the image or the region to work in semantic mode</p>
     </div>
   </ng-template>
 

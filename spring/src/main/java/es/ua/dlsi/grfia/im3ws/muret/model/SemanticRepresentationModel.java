@@ -16,10 +16,7 @@ import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.HorizontalSeparator;
 import es.ua.dlsi.im3.omr.encoding.semantic.*;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class SemanticRepresentationModel {
 
@@ -84,6 +81,7 @@ public class SemanticRepresentationModel {
     private DocumentScoreSong getScoreSong(Document document) throws IM3WSException {
         return documentModel.getDocumentScoreSong(document);
     }
+
 
     public Notation sendSemanticEncoding(Document document, String partName, Region region, boolean mensustriche, Renderer renderer, String semanticEncoding) throws IM3WSException, IM3Exception {
         //documentModel.addSemanticEncoding(document, partName, region.getId(), region.getBoundingBox(), semanticEncoding);
