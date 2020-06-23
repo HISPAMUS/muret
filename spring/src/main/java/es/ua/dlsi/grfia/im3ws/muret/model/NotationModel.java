@@ -111,7 +111,7 @@ public class NotationModel {
         for (String line: kernMens.split("\n")) {
             kernMensLines.add(line);
         }
-        if (!kernMensLines.get(1).startsWith("*clef")) {
+        /*if (!kernMensLines.get(1).startsWith("*clef")) {
             kernMensLines.add(1, "*clefG2");
         }
         if (!kernMensLines.get(2).startsWith("*k")) {
@@ -119,7 +119,7 @@ public class NotationModel {
         }
         if (!kernMensLines.get(3).startsWith("*met") && !kernMensLines.get(3).startsWith("*M")) {
             kernMensLines.add(3, "*M2/4");
-        }
+        }*/
         StringBuilder newKernMens = new StringBuilder();
         for (String line: kernMensLines) {
             newKernMens.append(line);

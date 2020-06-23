@@ -1,9 +1,5 @@
 <div class="container-fluid">
   <nav class="row">
-    <div class="offset-4 col-4">
-      <br>
-      <button>Semantic end-to-end</button>
-    </div>
     <div class="col-4" id="linksPhases">
       Go to:
       <button (click)="openDocumentAnalysis()">Doc. analysis</button>
@@ -72,6 +68,10 @@
             </div>
       </section>
       <aside>
+        <button class="btn btn-primary" disabled>
+          Semantic end-to-end
+          <!--<span *ngIf="isProcessing()" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>-->
+        </button>
         <button class="btn btn-primary" (click)="convertAgnosticSemantic()">
           {{semanticLabel}}
           <span *ngIf="isProcessing()" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
