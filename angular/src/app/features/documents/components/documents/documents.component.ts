@@ -46,7 +46,12 @@ export class DocumentsComponent implements OnInit, OnDestroy {
     this.collectionSubscription = this.store.select(selectCollection).subscribe(next => {
       this.collection = next;
       setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
-        this.store.dispatch(new ActivateLink(LinkType.Collection ,{title: this.collection.name, routerLink: 'documents/' + this.collectionID}));
+        if (this.collection) {
+          this.store.dispatch(new ActivateLink(LinkType.Collection, {
+            title: this.collection.name,
+            routerLink: 'documents/' + this.collectionID
+          }));
+        }
       });
     });
     this.changedCollectionIDSubscription = this.store.select(selectChangedCollectionID).subscribe(next => {
