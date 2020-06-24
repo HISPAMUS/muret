@@ -21,7 +21,7 @@ import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {DocumentStatistics} from '../../../../core/model/restapi/document-statistics';
 import {GetUsesOfParts} from '../../../parts/store/actions/parts.actions';
 import {selectUsesOfParts} from '../../../parts/store/selectors/parts.selector';
-import {UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
+import {UsesOfAllParts} from '../../../../core/model/restapi/uses-of-all-parts';
 import { AgnosticRepresentationState } from 'src/app/features/agnostic-representation/store/state/agnostic-representation.state';
 import { ResetSelectedRegion } from 'src/app/features/agnostic-representation/store/actions/agnostic-representation.actions';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
@@ -37,7 +37,7 @@ export class DocumentComponent implements OnInit, OnDestroy {
   document$: Observable<Document>;
   images$: Observable<Image[]>;
   statistics$: Observable<DocumentStatistics>;
-  usesOfParts$: Observable<UsesOfParts>;
+  usesOfParts$: Observable<UsesOfAllParts>;
   private documentID: number;
   private serverErrorSubscription: Subscription;
 
@@ -62,7 +62,7 @@ export class DocumentComponent implements OnInit, OnDestroy {
       this.store.dispatch(new GetUsesOfParts(this.documentID));
       this.store.dispatch(new GetImages(this.documentID));
       this.store.dispatch(new GetDocumentStatistics(this.documentID));
-      
+
     });
 
     this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {

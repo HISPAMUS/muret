@@ -186,7 +186,7 @@ public class PartsController extends MuRETBaseController {
                     part = createPart(image.getDocument(), partName);
                     image.setPart(part);
                     imageRepository.save(image);
-                    imageID = image.getId();
+                    imageID = ID = image.getId();
                     break;
                 case page:
                     Page page = getPage(targetID);

@@ -19,7 +19,7 @@ import {Observable, Subscription} from 'rxjs';
 import {saveAs} from 'file-saver';
 import {Document} from '../../../../core/model/entities/document';
 import {selectUsesOfParts} from '../../../parts/store/selectors/parts.selector';
-import {findPartsUsed, UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
+import {findPartsUsed, UsesOfAllParts} from '../../../../core/model/restapi/uses-of-all-parts';
 import {GetUsesOfParts} from '../../../parts/store/actions/parts.actions';
 import {Image} from '../../../../core/model/entities/image';
 import {DocumentExport, DocumentExportType} from '../../../../core/model/restapi/document-export';
@@ -42,7 +42,7 @@ export class DocumentScoreViewerAndExporterComponent implements OnInit, OnDestro
   // private meiSubscription: Subscription;
   document$: Observable<Document>;
 
-  usesOfParts: UsesOfParts;
+  usesOfParts: UsesOfAllParts;
   public selectedImages: SelectedImage[];
   private usesOfPartsSubscription: Subscription;
   private imageSubscription: Subscription;

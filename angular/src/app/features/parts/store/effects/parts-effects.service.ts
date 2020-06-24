@@ -26,7 +26,7 @@ import {
   UnlinkPartToPageSuccess, UnlinkPartToRegion, UnlinkPartToRegionSuccess,
 } from '../actions/parts.actions';
 import {Part} from '../../../../core/model/entities/part';
-import {PartUse, UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
+import {PartUse, UsesOfAllParts} from '../../../../core/model/restapi/uses-of-all-parts';
 
 @Injectable()
 export class PartsEffects {
@@ -207,7 +207,7 @@ export class PartsEffects {
     ofType<GetUsesOfParts>(PartsActionTypes.GetUsesOfParts),
     map((action: GetUsesOfParts) => action.documentID),
     switchMap((partID) => this.partsService.getUsesOfParts$(partID).pipe(
-    switchMap((usesOfParts: UsesOfParts) => of(new GetUsesOfPartsSuccess(usesOfParts))),
+    switchMap((usesOfParts: UsesOfAllParts) => of(new GetUsesOfPartsSuccess(usesOfParts))),
       catchError(err => of(new PartsServerError(err)))
     )));
 

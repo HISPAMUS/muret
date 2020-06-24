@@ -27,7 +27,7 @@ import {
   GetRegion
 } from '../../../agnostic-representation/store/actions/agnostic-representation.actions';
 import {selectUsesOfParts} from '../../../parts/store/selectors/parts.selector';
-import {PartUse, PartUses, UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
+import {PartUse, PartUsedIn, UsesOfAllParts} from '../../../../core/model/restapi/uses-of-all-parts';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {
   CreateImagePart, CreateRegionPart,
@@ -89,7 +89,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
   // usesOfPartsSubscription: Subscription;
   private useOfPartsSubscription: Subscription;
-  private usesOfParts: UsesOfParts;
+  private usesOfParts: UsesOfAllParts;
   private serverErrorSubscription: Subscription;
   private selectedRegionSymbols: AgnosticSymbol[];
 
@@ -470,7 +470,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     return partUses.part;
   }
 
-  getUseOfPartsAssignedToImage(): PartUses {
+  getUseOfPartsAssignedToImage(): PartUsedIn {
     if (this.usesOfParts != null && this.imageID != null) {
       return this.usesOfParts.uses.find(partUses => partUses.images.indexOf(this.imageID) >= 0);
     } else {
@@ -478,7 +478,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     }
   }
 
-  getUseOfPartsAssignedToRegion(): PartUses {
+  getUseOfPartsAssignedToRegion(): PartUsedIn {
     // console.log('Looking for region ' + this.selectedRegion.id + ' in UOP ' + this.usesOfParts);
     if (this.usesOfParts != null && this.selectedRegion != null) {
       return this.usesOfParts.uses.find(

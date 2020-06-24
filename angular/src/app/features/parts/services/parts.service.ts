@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {ApiRestClientService} from '../../../core/services/api-rest-client.service';
 import {Part} from '../../../core/model/entities/part';
 import {Observable} from 'rxjs';
-import {PartUse, UsesOfParts} from '../../../core/model/restapi/uses-of-parts';
+import {PartUse, UsesOfAllParts} from '../../../core/model/restapi/uses-of-all-parts';
 
 
 @Injectable()
@@ -118,9 +118,9 @@ export class PartsService {
   deletePart$(partID: number): Observable<number> {
     return this.apiRestClientService.delete$<number>('parts/delete', partID);
   }
-  getUsesOfParts$(documentID: number): Observable<UsesOfParts> {
+  getUsesOfParts$(documentID: number): Observable<UsesOfAllParts> {
     const url = `parts/uses/${documentID}`;
-    return this.apiRestClientService.get$<UsesOfParts>(url);
+    return this.apiRestClientService.get$<UsesOfAllParts>(url);
   }
 
   linkPartToImage$(partUse: PartUse): Observable<PartUse> {

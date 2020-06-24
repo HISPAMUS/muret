@@ -10,7 +10,13 @@ export interface PartUse {
   imageId: number;
 }
 
-export interface PartUses {
+/**
+ * It contains the places where every part is used, either images, pages, regions or individual symbols.
+ * In the case of images we only record the image id numbers.
+ * For pages, regions, and symbols the PartUse symbol contain information about their parent image
+ *
+ */
+export interface PartUsedIn {
   part: Part;
   images?: number[];
   /**
@@ -27,11 +33,14 @@ export interface PartUses {
   symbols?: PartUse [];
 }
 
-export interface UsesOfParts {
-  uses: PartUses[];
+/**
+ * It contains the information of every use of all parts
+ */
+export interface UsesOfAllParts {
+  uses: PartUsedIn[];
 }
 
-export function findPartsUsed(usesOfParts: UsesOfParts, imageID: number): Array<string> {
+export function findPartsUsed(usesOfParts: UsesOfAllParts, imageID: number): Array<string> {
   const partsUsed: Array<string> = [];
 
   usesOfParts.uses.forEach(usesOfPart => {

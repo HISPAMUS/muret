@@ -6,6 +6,9 @@ public class PartUse implements IPartUse {
     String partName;
     BigInteger partId;
     BigInteger imageId;
+    /**
+     * It corresponds to the ID of the symbol, region or page. If the part is used by an image, id = imageId
+     */
     BigInteger id;
 
     public PartUse() {

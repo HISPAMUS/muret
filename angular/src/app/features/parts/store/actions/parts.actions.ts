@@ -1,6 +1,6 @@
 import {Action} from '@ngrx/store';
 import {Part} from '../../../../core/model/entities/part';
-import {PartUse, UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
+import {PartUse, UsesOfAllParts} from '../../../../core/model/restapi/uses-of-all-parts';
 import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 
 export enum PartsActionTypes {
@@ -260,7 +260,7 @@ export class GetUsesOfParts implements Action {
 
 export class GetUsesOfPartsSuccess implements Action {
   public readonly type = PartsActionTypes.GetUsesOfPartsSuccess;
-  constructor(public usesOfParts: UsesOfParts) {}
+  constructor(public usesOfParts: UsesOfAllParts) {}
 }
 
 export class LinkPartToImage implements Action {

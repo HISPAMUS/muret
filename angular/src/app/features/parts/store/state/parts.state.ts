@@ -1,18 +1,18 @@
-import {UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
+import {UsesOfAllParts} from '../../../../core/model/restapi/uses-of-all-parts';
 import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 
 export interface PartsState {
-  usesOfParts: UsesOfParts;
+  usesOfParts: UsesOfAllParts;
   apiRestServerError: APIRestServerError;
   // partNamesUsedInImage: Set<string>;
 }
 
-export const initialSemanticRepresentationState: PartsState = {
+export const initialPartsState: PartsState = {
   usesOfParts: null,
   apiRestServerError: null
   // partNamesUsedInImage: null
 };
 
 export function getInitialState(): PartsState {
-  return initialSemanticRepresentationState;
+  return initialPartsState;
 }

@@ -7,7 +7,7 @@ import {selectDocument, selectDocumentAPIRestErrorSelector} from '../../store/se
 import {GetDocument, ResetDocumentServerError} from '../../store/actions/document.actions';
 import {Observable, Subscription} from 'rxjs';
 import {Document} from '../../../../core/model/entities/document';
-import {PartUses, UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
+import {PartUsedIn, UsesOfAllParts} from '../../../../core/model/restapi/uses-of-all-parts';
 import {NumberPair} from '../../../../core/model/restapi/number-pair';
 import {Part} from '../../../../core/model/entities/part';
 import {CreatePart, DeletePart, GetUsesOfParts, RenamePart} from '../../../parts/store/actions/parts.actions';
@@ -21,7 +21,7 @@ import {ShowErrorService} from '../../../../core/services/show-error.service';
 })
 export class InstrumentsComponent implements OnInit, OnDestroy {
   document$: Observable<Document>;
-  usesOfParts$: Observable<UsesOfParts>;
+  usesOfParts$: Observable<UsesOfAllParts>;
   private documentID: number;
   private serverErrorSubscription: Subscription;
 
@@ -50,7 +50,7 @@ export class InstrumentsComponent implements OnInit, OnDestroy {
     this.serverErrorSubscription.unsubscribe();
   }
 
-  trackByPartFn(index, item: PartUses) {
+  trackByPartFn(index, item: PartUsedIn) {
     return item.part.id; // unique id corresponding to the item
   }
   trackByNumberFn(index, item: number) {
@@ -74,7 +74,7 @@ export class InstrumentsComponent implements OnInit, OnDestroy {
     // TODO
   }
 
-  isDeleteDisabled(partUses: PartUses): boolean {
+  isDeleteDisabled(partUses: PartUsedIn): boolean {
     return partUses.symbols != null && partUses.symbols.length > 0 ||
       partUses.regions != null && partUses.regions.length > 0 ||
       partUses.pages != null && partUses.pages.length > 0 ||

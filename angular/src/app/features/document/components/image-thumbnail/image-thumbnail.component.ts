@@ -9,7 +9,7 @@ import {Document} from '../../../../core/model/entities/document';
 import {Lightbox, LightboxConfig} from 'ngx-lightbox';
 import {Store} from '@ngrx/store';
 import {PartsState} from '../../../parts/store/state/parts.state';
-import {findPartsUsed, UsesOfParts} from '../../../../core/model/restapi/uses-of-parts';
+import {findPartsUsed, UsesOfAllParts} from '../../../../core/model/restapi/uses-of-all-parts';
 
 /**
  * When entering here the usesOfParts should be loaded by the document
@@ -23,7 +23,7 @@ import {findPartsUsed, UsesOfParts} from '../../../../core/model/restapi/uses-of
 export class ImageThumbnailComponent implements OnInit {
   @Input() document: Document;
   @Input() image: Image;
-  @Input() usesOfParts: UsesOfParts;
+  @Input() usesOfParts: UsesOfAllParts;
   @Input() documentPath: string;
   // loadingImage = 'assets/loading.svg';
   loadedImage$: Observable<SafeResourceUrl>;
