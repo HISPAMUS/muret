@@ -81,6 +81,8 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   analysisStatus: string;
   // end tools
 
+  danalysisModel:string;
+
   // @ViewChild('imageComponent') imageComponent: ImageComponent;
   private pages: Page[];
   private serverErrorSubscription: Subscription;
@@ -405,7 +407,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
                 this.processing = true;
                 this.store.dispatch(new AutomaticDocumentAnalysis({
                   imageID: this.imageID,
-                  modelToUse: 'simple-lan',
+                  modelToUse: this.danalysisModel,
                   numPages: pagesToCreate
                 }));
                 this.mode = 'eEditing';

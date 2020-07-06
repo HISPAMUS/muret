@@ -18,7 +18,7 @@
   </nav>
   <div class="col-2 form-group">
     Automatic document analysis:
-    <select class="form-control" id="agnosticEnd2EndClassifierModel" required>
+    <select class="form-control" id="agnosticEnd2EndClassifierModel" [(ngModel)]="danalysisModel" required>
       <option *ngFor="let model of documentAnalysisModels$ | async" [value]="model.id">{{model.name}}</option>
     </select>
     <button class="btn btn-primary" (click)="attemptDocumentAnalysis()">{{analysisStatus}}
