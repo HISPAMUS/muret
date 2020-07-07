@@ -1,3 +1,18 @@
+0.10
+    MAJOR UPDATES
+    - Password restoring added
+    - Mouse pointer / tablet touch events are corrected
+    - Document analysis filter improved
+    - Server down status better shown
+    - Document analysis models added for printed mensural and handwritten modern manuscripts
+
+    MINOR UPDATES
+    - Part / instrument linking corrected
+    - Semantic clear button works now
+    - Document name is shown in document analysis mode
+    - Slightly improved breadcrumbs
+
+-----
 0.9
     MAJOR UPDATES
     - Angular version updated from 0.8 to 0.9
