@@ -3,6 +3,13 @@ package es.ua.dlsi.grfia.im3ws.configuration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 @Configuration
 @ConfigurationProperties(prefix = "muret")
 public class MURETConfiguration {
@@ -126,5 +133,19 @@ public class MURETConfiguration {
 
     public void setEnableWatchDogNotification(boolean enableWatchDogNotification) {
         this.enableWatchDogNotification = enableWatchDogNotification;
+    }
+
+    public Path getTmpFolder() {
+        String fileNameTmp = getFolder() + "/tmp";
+        Path path = Paths.get(fileNameTmp);
+        if (!Files.exists(path)) {
+            try {
+                Files.createDirectory(path);
+            } catch (IOException e) {
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Cannot create tmp folder in " + fileNameTmp);
+                e.printStackTrace();
+            }
+        }
+        return path;
     }
 }

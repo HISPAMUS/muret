@@ -27,7 +27,7 @@ export class DocumentService {
     return this.apiRestClientService.get$<DocumentStatistics>(url);
   }
   public getDocumentUploadURL(): string {
-    return this.apiRestClientService.url + '/document/uploadDocumentImage';
+    return this.apiRestClientService.url + '/document/uploadDocumentImages';
   }
 
   exportMEIPartsFacsimile$(documentID: number, selectedImages: Array<number>) {

@@ -3,6 +3,13 @@ package es.ua.dlsi.grfia.im3ws.muret.entity;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
 import org.junit.Test;
 
+import javax.activation.MimetypesFileTypeMap;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import static org.junit.Assert.*;
 
 public class AgnosticSymbolConverterTest {

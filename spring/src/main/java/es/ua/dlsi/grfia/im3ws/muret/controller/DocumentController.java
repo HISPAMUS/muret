@@ -20,9 +20,12 @@ import es.ua.dlsi.grfia.im3ws.muret.repository.PartRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.DocumentRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.StateRepository;
 import es.ua.dlsi.grfia.im3ws.service.FileStorageService;
+import es.ua.dlsi.grfia.im3ws.service.Utils;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.utils.FileCompressors;
+import es.ua.dlsi.im3.core.utils.FileUtils;
 import es.ua.dlsi.im3.core.utils.ImageUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +36,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -82,53 +86,70 @@ public class DocumentController {
     // --- TODO usado hasta aquí ----
 
     // angular ng2-file-upload uploads files one by one
-    @PostMapping("uploadDocumentImage")
-    public UploadFileResponse uploadFile(@RequestParam("documentid") Integer documentid, @RequestParam("file") MultipartFile file) {
-
+    @PostMapping("uploadDocumentImages")
+    public UploadFileResponse uploadDocumentImage(@RequestParam("documentid") Integer documentid, @RequestParam("file") MultipartFile file) {
         try {
             //Logger.getLogger(this.getClass().getName()).log(Level.INFO, "User ID: " + AuditorAwareImpl.getCurrentUser().getId().toString());
-
             Optional<Document> document = documentRepository.findById(documentid);
             if (!document.isPresent()) {
                 throw new RuntimeException("Document with id " + documentid + " does not exist");
             }
 
-            Path mastersPath = Paths.get(muretConfiguration.getFolder(), document.get().getPath(),  MURETConfiguration.MASTER_IMAGES);
-
-            String fileName = fileStorageService.storeFile(mastersPath, file);
-
+            Path tmpFolder = muretConfiguration.getTmpFolder();
+            String fileName = fileStorageService.storeFile(tmpFolder, file);
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Uploading file {0} to document with id {1}", new Object[]{fileName, documentid});
 
-        /*String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(document.get().getPath())
-                .path(fileName)
-                .toUriString();*/
+            // check the type of file
+            Path filePath = tmpFolder.resolve(fileName);
+            Utils utils = new Utils();
+            if (utils.isImageFile(filePath.toFile())) {
+                storeImageInDocument(document, fileName, filePath);
+            } else if (utils.isPDF(filePath.toFile())) {
+                Path tempToExtractPDF = Files.createTempDirectory(tmpFolder, FileUtils.getFileWithoutPathOrExtension(fileName));
+                List<File> extractedImages = utils.extractImagesFromPDF(filePath.toFile(), tempToExtractPDF.toFile());
 
-            Path imagePath = mastersPath.resolve(fileName);
-            BufferedImage fullImage = null;
-            try {
-                fullImage = ImageIO.read(imagePath.toFile());
-            } catch (IOException e) {
-                throw new IM3Exception(e);
+                // add leading zeros
+                String baseFileName = FileUtils.getFileWithoutPathOrExtension(fileName);
+                int digits = (int)Math.log10(extractedImages.size());
+                int npage = 1;
+                for (File extractedImage: extractedImages) {
+                    String suffix = StringUtils.leftPad(Integer.toString(npage), digits, '0');
+                    String pageFileName = baseFileName + "_" + suffix + ".jpg";
+                    storeImageInDocument(document, pageFileName, extractedImage.toPath());
+                    npage++;
+                }
             }
-
-            Path thumbnailsPath = Paths.get(muretConfiguration.getFolder(), document.get().getPath(), MURETConfiguration.THUMBNAIL_IMAGES, fileName);
-            createSecondaryImage(imagePath, thumbnailsPath, muretConfiguration.getThumbnailHeight());
-
-            Path previewPath = Paths.get(muretConfiguration.getFolder(), document.get().getPath(), MURETConfiguration.PREVIEW_IMAGES, fileName);
-            createSecondaryImage(imagePath, previewPath, muretConfiguration.getPreviewHeight());
-
-            //TODO Atómico
-            //TODO Ordenación
-            Image image = new Image(fileName, null, fullImage.getWidth(), fullImage.getHeight(), document.get(), null, null);
-            image.setCreatedBy(AuditorAwareImpl.getCurrentUser());
-            imageRepository.save(image);
 
             return new UploadFileResponse(fileName, file.getContentType(), file.getSize());
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot upload file", e);
         }
     }
+
+    private void storeImageInDocument(Optional<Document> document, String fileName, Path filePath) throws IM3Exception {
+        Path mastersPath = Paths.get(muretConfiguration.getFolder(), document.get().getPath(),  MURETConfiguration.MASTER_IMAGES, fileName);
+        Path thumbnailsPath = Paths.get(muretConfiguration.getFolder(), document.get().getPath(), MURETConfiguration.THUMBNAIL_IMAGES, fileName);
+        Path previewPath = Paths.get(muretConfiguration.getFolder(), document.get().getPath(), MURETConfiguration.PREVIEW_IMAGES, fileName);
+
+        BufferedImage fullImage = null;
+        try {
+            fullImage = ImageIO.read(filePath.toFile());
+            createSecondaryImage(filePath, thumbnailsPath, muretConfiguration.getThumbnailHeight());
+            createSecondaryImage(filePath, previewPath, muretConfiguration.getPreviewHeight());
+            // move to master
+            Files.move(filePath, mastersPath);
+        } catch (IOException e) {
+            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Error with file {0}, deleting it. Exception {1}", new Object[]{fileName, e});
+            throw new IM3Exception(e);
+        }
+
+        //TODO Atómico
+        //TODO Ordenación
+        Image image = new Image(fileName, null, fullImage.getWidth(), fullImage.getHeight(), document.get(), null, null);
+        image.setCreatedBy(AuditorAwareImpl.getCurrentUser());
+        imageRepository.save(image);
+    }
+
 
     private void createSecondaryImage(Path inputImagePath, Path outputImagePath, int height) throws IM3Exception {
         ImageUtils.getInstance().scaleToFitHeight(inputImagePath.toFile(), outputImagePath.toFile(), height);

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://music-encoding.org/schema/4.0.0/mei-all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="https://music-encoding.org/schema/4.0.0/mei-all.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<mei xmlns="http://www.music-encoding.org/ns/mei" meiversion="4.0.0">
+   <meiHead>
+      <fileDesc>
+         <titleStmt>
+            <title />
+         </titleStmt>
+         <pubStmt />
+      </fileDesc>
+      <encodingDesc>
+         <appInfo>
+            <application isodate="2020-07-08T10:25:23" version="3.0.0-dev-23c491a">
+               <name>Verovio</name>
+               <p>Transcoded from Humdrum</p>
+            </application>
+         </appInfo>
+      </encodingDesc>
+      <workList>
+         <work>
+            <title />
+         </work>
+      </workList>
+      <extMeta>
+         <frames xmlns="http://www.humdrum.org/ns/humxml">
+            <metaFrame n="0" token="!!!OMD: Allegro [quarter]=160" xml:id="L1">
+               <frameInfo>
+                  <startTime float="0" />
+                  <frameType>reference</frameType>
+                  <referenceKey>OMD</referenceKey>
+                  <referenceValue>Allegro [quarter]=160</referenceValue>
+               </frameInfo>
+            </metaFrame>
+            <metaFrame n="29" token="!!!system-decoration: {(s1,s2)}" xml:id="L30">
+               <frameInfo>
+                  <startTime float="12" />
+                  <frameType>reference</frameType>
+                  <referenceKey>system-decoration</referenceKey>
+                  <referenceValue>{(s1,s2)}</referenceValue>
+               </frameInfo>
+            </metaFrame>
+         </frames>
+      </extMeta>
+   </meiHead>
+   <music>
+      <body>
+         <mdiv xml:id="mdiv-0000000771591308">
+            <score xml:id="score-0000001245151022">
+               <scoreDef xml:id="scoredef-0000001191691570" >
+                  <staffGrp xml:id="staffgrp-0000002101691583" symbol="brace" bar.thru="true">
+                     <staffDef xml:id="staffdef-0000000014943056" n="1" lines="5">
+                        <clef xml:id="clef-L6F3" shape="G" line="2" />
+                        <keySig xml:id="keysig-L7F3" sig="0" />
+                        <meterSig xml:id="metersig-L8F3" count="4" unit="4" />
+                     </staffDef>
+                     <staffDef xml:id="staffdef-0000001123250372" n="2" lines="5">
+                        <clef xml:id="clef-L6F1" shape="F" line="4" />
+                        <keySig xml:id="keysig-L7F1" sig="0" />
+                        <meterSig xml:id="metersig-L8F1" count="4" unit="4" />
+                     </staffDef>
+                  </staffGrp>
+               </scoreDef>
+               <section xml:id="section-L2F1">
+                  <measure xml:id="measure-L1" n="1">
+                     <staff xml:id="staff-0000001824833846" n="1">
+                        <layer xml:id="layer-L2F3N1" n="1">
+                           <note xml:id="note-L12F4" dur="4" oct="4" pname="c" accid.ges="n" />
+                           <note xml:id="note-L13F4" dur="4" oct="4" pname="d" accid.ges="n" />
+                           <note xml:id="note-L14F4" dur="4" oct="4" pname="e" accid.ges="n" />
+                           <note xml:id="note-L15F4" dur="4" oct="4" pname="f" accid.ges="n" />
+                        </layer>
+                     </staff>
+                     <staff xml:id="staff-0000000946447098" n="2">
+                        <layer xml:id="layer-L2F1N1" n="1">
+                           <note xml:id="note-L12F1" dur="2" oct="3" pname="g" stem.len="5.500000" accid.ges="n" />
+                           <note xml:id="note-L14F1" dur="2" oct="3" pname="g" stem.len="5.500000" accid.ges="n" />
+                        </layer>
+                        <layer xml:id="layer-L12F2N2" n="2">
+                           <note xml:id="note-L12F2" dur="1" oct="2" pname="b" accid.ges="n" />
+                        </layer>
+                     </staff>
+                     <tempo xml:id="tempo-L1F1" staff="1" tstamp="1.000000">Allegro <rend xml:id="rend-0000001150687212" fontname="VerovioText"></rend> = 160</tempo>
+                     <dynam xml:id="dynam-L12F5" staff="1" tstamp="1.000000" vgrp="100">ppp</dynam>
+                     <hairpin xml:id="hairpin-L13F5" staff="1" tstamp="2.000000" tstamp2="1m+1.0000" form="cres" vgrp="100" />
+                     <dynam xml:id="dynam-L12F3" place="below" staff="2" tstamp="1.000000" vgrp="100">sfp</dynam>
+                  </measure>
+                  <measure xml:id="measure-L16" n="2">
+                     <staff xml:id="staff-L16F4N1" n="1">
+                        <layer xml:id="layer-L16F4N1" n="1">
+                           <note xml:id="note-L17F4" dur="4" oct="4" pname="g" accid.ges="n" />
+                           <note xml:id="note-L19F4" dur="4" oct="4" pname="a" accid.ges="n" />
+                           <note xml:id="note-L20F4" dur="4" oct="4" pname="b" accid.ges="n" />
+                           <note xml:id="note-L21F4" dur="4" oct="5" pname="c" accid.ges="n" />
+                        </layer>
+                     </staff>
+                     <staff xml:id="staff-L16F1N1" n="2">
+                        <layer xml:id="layer-L16F1N1" n="1">
+                           <note xml:id="note-L17F1" dur="2" oct="3" pname="a" stem.len="5.500000" accid.ges="n" />
+                           <note xml:id="note-L20F1" dur="2" oct="3" pname="a" stem.len="5.500000" accid.ges="n" />
+                        </layer>
+                        <layer xml:id="layer-L16F2N2" n="2">
+                           <note xml:id="note-L17F2" dur="1" oct="2" pname="a" accid.ges="n" />
+                        </layer>
+                     </staff>
+                     <dynam xml:id="dynam-L17F5" staff="1" tstamp="1.000000" vgrp="100">f</dynam>
+                     <dynam xml:id="dynam-L17F3" place="below" staff="2" tstamp="1.000000" vgrp="100">rfz</dynam>
+                  </measure>
+                  <measure xml:id="measure-L22" right="end" n="3">
+                     <staff xml:id="staff-L22F4N1" n="1">
+                        <layer xml:id="layer-L22F4N1" n="1">
+                           <note xml:id="note-L23F4" dur="4" oct="5" pname="d" accid.ges="n" />
+                           <note xml:id="note-L24F4" dur="4" oct="5" pname="e" accid.ges="n" />
+                           <note xml:id="note-L25F4" dur="4" oct="5" pname="f" accid.ges="n" />
+                           <note xml:id="note-L26F4" dur="4" oct="5" pname="g" accid.ges="n" />
+                        </layer>
+                     </staff>
+                     <staff xml:id="staff-L22F1N1" n="2">
+                        <layer xml:id="layer-L22F1N1" n="1">
+                           <note xml:id="note-L23F1" dur="2" oct="3" pname="b" stem.len="5.500000" accid.ges="n" />
+                           <note xml:id="note-L25F1" dur="2" oct="3" pname="b" stem.len="5.500000" accid.ges="n" />
+                        </layer>
+                        <layer xml:id="layer-L22F2N2" n="2">
+                           <note xml:id="note-L23F2" dur="1" oct="2" pname="g" accid.ges="n" />
+                        </layer>
+                     </staff>
+                     <dynam xml:id="dynam-L26F5" staff="1" tstamp="4.000000" vgrp="100">p</dynam>
+                  </measure>
+               </section>
+            </score>
+         </mdiv>
+      </body>
+   </music>
+</mei>
