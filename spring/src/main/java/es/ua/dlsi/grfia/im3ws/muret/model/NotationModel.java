@@ -225,7 +225,7 @@ public class NotationModel {
                             zone.setBoundingBox(getBoundingBox(region.getBoundingBox()));
                             zone.setType("region");
                             imageSurface.addZone(zone);
-
+                            Zone lastSymbolZone = null;
                             for (Symbol symbol : region.getSymbols()) {
                                 Zone symbolZone = new Zone();
                                 symbolZone.setID(generateID(symbol));
@@ -233,16 +233,26 @@ public class NotationModel {
                                 if (symbol.getBoundingBox() != null) {
                                     symbolZone.setBoundingBox(getBoundingBox(symbol.getBoundingBox()));
                                 } else if (symbol.getApproximateX() != null) {
-                                    //TODO 25
                                     symbolZone.setBoundingBox(new BoundingBoxXY(symbol.getApproximateX(),
                                             region.getBoundingBox().getFromY(),
-                                            symbol.getApproximateX() + 25,
+                                            Double.MAX_VALUE, // it will be assigned later (see comment (1))
                                             region.getBoundingBox().getToY()));
                                 }
 
 
                                 symbolZone.setType(SYMBOL_STR);
                                 imageSurface.addZone(symbolZone);
+
+                                if (lastSymbolZone != null && lastSymbolZone.getBoundingBox().getToX() == Double.MAX_VALUE) { // comment (1)
+                                    lastSymbolZone.getBoundingBox().setToX(symbolZone.getBoundingBox().getFromX());
+                                }
+
+                                lastSymbolZone = symbolZone;
+                            }
+
+                            // comment (1')
+                            if (lastSymbolZone != null && lastSymbolZone.getBoundingBox().getToX() == 0) {
+                                lastSymbolZone.getBoundingBox().setToX(region.getBoundingBox().getToX());
                             }
                         }
 
