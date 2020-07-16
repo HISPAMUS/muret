@@ -2,6 +2,7 @@ import {AgnosticRepresentationActions, AgnosticRepresentationActionTypes} from '
 import {AgnosticRepresentationState, initialAgnosticRepresentationState} from '../state/agnostic-representation.state';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
 
+// recall the inmutability of state
 export function agnosticRepresentationReducers(state = initialAgnosticRepresentationState, action: AgnosticRepresentationActions):
   AgnosticRepresentationState {
   switch (action.type) {
@@ -52,13 +53,28 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
         const symbolsWithoutChangedOne: AgnosticSymbol[] =
           state.agnosticSymbols.filter(symbol => symbol.id !== action.agnosticSymbol.id);
         newState.agnosticSymbols = [...symbolsWithoutChangedOne, action.agnosticSymbol];
-        newState.selectedRegion.symbols = newState.agnosticSymbols; // it is the same object
+        // invalid - cannot change immutable object - newState.selectedRegion.symbols = newState.agnosticSymbols; // it is the same object
+        newState.selectedRegion = {
+          id: state.selectedRegion.id,
+          boundingBox: state.selectedRegion.boundingBox,
+          part: state.selectedRegion.part,
+          regionType: state.selectedRegion.regionType,
+          symbols: state.agnosticSymbols
+        };
       }
       return newState;
     }
    case AgnosticRepresentationActionTypes.CreateSymbolSuccess: {
       const newState = {...state, apiRestServerError: null};
-      newState.selectedRegion.symbols = newState.agnosticSymbols; // same object
+      // invalid - cannot change immutable object - newState.selectedRegion.symbols = newState.agnosticSymbols; // same object
+     newState.selectedRegion = {
+       id: state.selectedRegion.id,
+       boundingBox: state.selectedRegion.boundingBox,
+       part: state.selectedRegion.part,
+       regionType: state.selectedRegion.regionType,
+       symbols: state.agnosticSymbols
+     };
+
       if (action.symbolCreationResult) {
         if (newState.agnosticSymbols) {
           newState.agnosticSymbols = [...newState.agnosticSymbols, action.symbolCreationResult.agnosticSymbol];
@@ -88,7 +104,16 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
         // remove the deleted symbol
         newState.agnosticSymbols = newState.agnosticSymbols.filter(symbol => symbol.id !== action.deletedAgnosticSymbolID);
       }
-      newState.selectedRegion.symbols = newState.agnosticSymbols; // same object
+
+      // invalid - cannot change immutable object - newState.selectedRegion.symbols = newState.agnosticSymbols; // same object
+      newState.selectedRegion = {
+        id: state.selectedRegion.id,
+        boundingBox: state.selectedRegion.boundingBox,
+        part: state.selectedRegion.part,
+        regionType: state.selectedRegion.regionType,
+        symbols: state.agnosticSymbols
+      };
+
       return newState;
     }
     case AgnosticRepresentationActionTypes.ClassifyRegionEndToEndSuccess: {
