@@ -304,7 +304,6 @@ public class NotationModel {
                                     for (Pair<SemanticSymbol, ITimedElementInStaff> pair : items) {
                                         SemanticSymbol semanticSymbol = pair.getX();
                                         ITimedElementInStaff timedElementInStaff = pair.getY();
-
                                         if (semanticSymbol.getSymbol().getAgnosticIDs() != null && semanticSymbol.getSymbol().getAgnosticIDs().length > 0) {
                                             //TODO We can only reference to one symbol - maybe, when the semantic symbol corresponds to several agnostic,
                                             // we could export the merged bounding box of all agnostic symbols
