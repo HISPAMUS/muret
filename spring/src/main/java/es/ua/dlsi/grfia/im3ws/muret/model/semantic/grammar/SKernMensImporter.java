@@ -272,7 +272,7 @@ public class SKernMensImporter {
         @Override
         public void exitMeterSign(sKernMensParser.MeterSignContext ctx) {
             Logger.getLogger(SKernMensImporter.class.getName()).log(Level.FINEST, "Meter sign {0}", ctx.getText());
-            TimeSignature ts;
+            TimeSignatureMensural ts;
             try {
                 switch (ctx.meterSignValue().getText()) {
                     case "C":
@@ -302,6 +302,13 @@ public class SKernMensImporter {
                     default:
                         throw new IM3Exception("Unsupported meter sign: '" + ctx.getText() + "'");
                 }
+                if (ctx.maximodus() != null) {
+                    ts.setModusMaior(Perfection.getPerfection(ctx.maximodus().getText()));
+                    ts.setModusMinor(Perfection.getPerfection(ctx.modusMinor().getText()));
+                    ts.setProlatio(Perfection.getPerfection(ctx.prolatio().getText()));
+                    ts.setTempus(Perfection.getPerfection(ctx.tempus().getText()));
+                }
+
                 humdrumMatrix.addItemToCurrentRow(ctx.getText(), ts);
             } catch (IM3Exception e) {
                 Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Invalid meter sign {0}", ctx.getText());

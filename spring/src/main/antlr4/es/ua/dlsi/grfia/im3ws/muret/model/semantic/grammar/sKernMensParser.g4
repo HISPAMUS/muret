@@ -110,8 +110,12 @@ numerator: number;
 
 denominator: number;
 
-meterSign: TANDEM_MET LEFT_PARENTHESIS meterSignValue RIGHT_PARENTHESIS;
+meterSign: TANDEM_MET LEFT_PARENTHESIS meterSignValue RIGHT_PARENTHESIS (UNDERSCORE maximodus modusMinor tempus prolatio)?;
 meterSignValue: CHAR_C | CHAR_C PIPE | CHAR_C DOT | CHAR_O | CHAR_O DOT | CHAR_C DIGIT_3 SLASH DIGIT_2 | CHAR_C PIPE DIGIT_3 SLASH DIGIT_2 | DIGIT_3;
+maximodus: DIGIT_2 | DIGIT_3;
+modusMinor: DIGIT_2 | DIGIT_3;
+tempus: DIGIT_2 | DIGIT_3;
+prolatio: DIGIT_2 | DIGIT_3;
 
 metronome: METRONOME number;
 
