@@ -1,8 +1,13 @@
 0.11
     MAJOR UPDATES
-    - Upload PDF to document that will be split into individual jpg files
+    - Upload PDF to document that will be split into individual jpg files (issue #62)
+    - Mensuration semantic values (issue #162)
+    - MEI facsimile export: now the bounding box of detected agnostic symbols with approximate X spans until next symbol (issue #67)
+    - MEI export: include clefs on each new <pb> when using parts MEI mode (issue #72)
+    - MEI export: Move encoding mensuration into staffDef element (issue #161)
 
     MINOR UPDATES
+    - issues #166, #169, #160, #23
 
 -----
 0.10
