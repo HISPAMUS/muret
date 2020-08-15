@@ -4,7 +4,7 @@
     - New button added for exporting MEI files for the Measuring Polyphony project editor, that does not include rhythmic interpretations (issue #173)
 
     MINOR UPDATES
-    - issues #178, #177, #175, #172
+    - issues #178, #177, #175, #172, #176
 
 -----
 
