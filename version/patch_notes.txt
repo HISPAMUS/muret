@@ -1,3 +1,13 @@
+0.12
+    MAJOR UPDATES
+    - When exporting MEI facsimile, the MEI zone of symbols include as label the agnostic symbol string
+    - New button added for exporting MEI files for the Measuring Polyphony project editor, that does not include rhythmic interpretations (issue #173)
+
+    MINOR UPDATES
+    - issues #178, #177, #175, #172
+
+-----
+
 0.11
     MAJOR UPDATES
     - Upload PDF to document that will be split into individual jpg files (issue #62)

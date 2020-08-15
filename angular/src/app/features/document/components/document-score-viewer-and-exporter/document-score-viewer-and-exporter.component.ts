@@ -158,9 +158,9 @@ export class DocumentScoreViewerAndExporterComponent implements OnInit, OnDestro
     this.store.dispatch(new ExportMEI(this.documentID, null, this.getIDOfSelectedImages()));
   }
 
-  exportPartsAndFacsimile() {
+  exportPartsAndFacsimile(forMeasuringPolyphony: boolean) {
     this.exportingState.set(DocumentExportType.mei_parts_facsimile, true);
-    this.store.dispatch(new ExportMEIPartsFacsimile(this.documentID, this.getIDOfSelectedImages()));
+    this.store.dispatch(new ExportMEIPartsFacsimile(this.documentID, this.getIDOfSelectedImages(), forMeasuringPolyphony));
   }
 
   exportFullMensurstrich() {

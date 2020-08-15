@@ -58,7 +58,7 @@ export class DocumentEffects {
   exportMEIPartsFacsimile$: Observable<Action> = this.actions$.pipe(
     ofType<ExportMEIPartsFacsimile>(DocumentActionTypes.ExportMEIPartsFacsimile),
     switchMap((action: ExportMEIPartsFacsimile) =>
-      this.documentService.exportMEIPartsFacsimile$(action.documentID, action.selectedImages).pipe(
+      this.documentService.exportMEIPartsFacsimile$(action.documentID, action.selectedImages, action.forMeasuringPolyphony).pipe(
         switchMap((mei: StringResponse) => of(new ExportMEIPartsFacsimileSuccess(mei.response))),
       catchError(err => of(new DocumentServerError(err)))
     )));

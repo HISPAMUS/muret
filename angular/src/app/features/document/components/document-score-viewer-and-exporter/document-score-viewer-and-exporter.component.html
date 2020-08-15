@@ -50,9 +50,14 @@
     <div class="col">
       <br> <!--TODO maquetación -->
       <h3>Export of selected images</h3>
-      <button (click)="exportPartsAndFacsimile()">
+      <button (click)="exportPartsAndFacsimile(false)">
         <span *ngIf="isExportingPartsAndFacsimile()" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
         Export to MEI file with parts and facsimile
+      </button>
+
+      <button (click)="exportPartsAndFacsimile(true)">
+        <span *ngIf="isExportingPartsAndFacsimile()" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Export Measuring Polyphony
       </button>
       &nbsp;&nbsp;
       <button (click)="exportFullMensurstrich()">

@@ -74,7 +74,7 @@ export class ExportMEISuccess implements Action {
 
 export class ExportMEIPartsFacsimile implements Action {
   public readonly type = DocumentActionTypes.ExportMEIPartsFacsimile;
-  constructor(public documentID: number, public selectedImages: Array<number>) {}
+  constructor(public documentID: number, public selectedImages: Array<number>, public forMeasuringPolyphony: boolean) {}
 }
 
 export class ExportMEIPartsFacsimileSuccess implements Action {

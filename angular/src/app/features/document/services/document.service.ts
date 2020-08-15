@@ -30,9 +30,14 @@ export class DocumentService {
     return this.apiRestClientService.url + '/document/uploadDocumentImages';
   }
 
-  exportMEIPartsFacsimile$(documentID: number, selectedImages: Array<number>) {
+  exportMEIPartsFacsimile$(documentID: number, selectedImages: Array<number>, forMeasuringPolyphony: boolean) {
     const selectedImagesString = selectedImages.join(',');
-    const url = `document/exportMEIPartsFacsimile/${documentID}/${selectedImagesString}`;
+    let url: string;
+    if (forMeasuringPolyphony) {
+      url = `document/exportMeasuringPolyphony/${documentID}/${selectedImagesString}`;
+    } else {
+      url = `document/exportMEIPartsFacsimile/${documentID}/${selectedImagesString}`;
+    }
     return this.apiRestClientService.get$<StringResponse>(url);
   }
 

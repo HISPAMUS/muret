@@ -228,6 +228,7 @@ public class NotationModel {
                             zone.setID(lastRegionID);
                             zone.setBoundingBox(getBoundingBox(region.getBoundingBox()));
                             zone.setType("region");
+                            zone.setLabel(region.getRegionType().getName());
                             imageSurface.addZone(zone);
                             Zone lastSymbolZone = null;
                             for (Symbol symbol : region.getSortedSymbols()) {
@@ -245,6 +246,7 @@ public class NotationModel {
 
 
                                 symbolZone.setType(SYMBOL_STR);
+                                symbolZone.setLabel(symbol.getAgnosticSymbol().toString());
                                 imageSurface.addZone(symbolZone);
 
                                 if (lastSymbolZone != null && lastSymbolZone.getBoundingBox().getToX() == Double.MAX_VALUE) { // comment (1)
@@ -332,15 +334,17 @@ public class NotationModel {
                                             }
                                         } else {
                                             boolean insert = true;
-                                            if (timedElementInStaff instanceof Clef) {
-                                                if (lastClef == null || !lastClef.equals(timedElementInStaff)) {
-                                                    lastClef = (Clef) timedElementInStaff;
-                                                    lastClefs.put(regionPart, lastClef);
-                                                } else {
-                                                    insert = false;
+                                            if (!partsAndFacsimile) { // just don't add the duplicated clef if using whole score export to preview
+                                                if (timedElementInStaff instanceof Clef) {
+                                                    if (lastClef == null || !lastClef.equals(timedElementInStaff)) {
+                                                        lastClef = (Clef) timedElementInStaff;
+                                                        lastClefs.put(regionPart, lastClef);
+                                                    } else {
+                                                        insert = false;
+                                                    }
+                                                } else if (timedElementInStaff instanceof Custos) {
+                                                    insert = partsAndFacsimile || specificPart != null;
                                                 }
-                                            } else if (timedElementInStaff instanceof Custos) {
-                                                insert = partsAndFacsimile || specificPart != null;
                                             }
 
                                             if (insert) {
@@ -366,7 +370,7 @@ public class NotationModel {
      * @return
      * @throws IM3Exception
      */
-    public String exportMEI(Document document, Part specificPart, boolean partsAndFacsimile, Set<Long> idsOfSelectedImages) throws IM3Exception {
+    public String exportMEI(Document document, Part specificPart, boolean partsAndFacsimile, boolean includeRhythm, Set<Long> idsOfSelectedImages) throws IM3Exception {
 
         Pair<ScoreSong, ScorePart> pair = exportScoreSong(document, specificPart, partsAndFacsimile, idsOfSelectedImages);
         ScoreSong song = pair.getX();
@@ -375,7 +379,7 @@ public class NotationModel {
         MEISongExporter exporter = new MEISongExporter();
         String mei = null;
         if (partsAndFacsimile) {
-            mei = exporter.exportSongAsParts(song);
+            mei = exporter.exportSongAsParts(song, includeRhythm);
         } else {
             if (specificPart == null) {
                 mei = exporter.exportSong(song);

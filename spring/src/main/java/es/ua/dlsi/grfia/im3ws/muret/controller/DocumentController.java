@@ -31,7 +31,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
@@ -295,16 +294,14 @@ public class DocumentController {
 
         Set<Long> idsOfSelectedImages = findSelectedImages(selectedImages);
         try {
-            return new StringResponse(notationModel.exportMEI(document.get(), part, false, idsOfSelectedImages));
+            return new StringResponse(notationModel.exportMEI(document.get(), part, false, true, idsOfSelectedImages));
         } catch (IM3Exception e) {
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Error exporting MEI", e);
             throw new IM3WSException(e);
         }
     }
 
-    @GetMapping(path = {"/exportMEIPartsFacsimile/{documentID}/{selectedImages}"})
-    @Transactional
-    public StringResponse exportMEIPartsFacsimile(@PathVariable("documentID") Integer documentID, @PathVariable("selectedImages") String selectedImages) {
+    private StringResponse exportMEIPartsFacsimile(Integer documentID, String selectedImages, boolean exportMeasuringPolyphony) {
         try {
             Optional<Document> document = documentRepository.findById(documentID);
             if (!document.isPresent()) {
@@ -312,12 +309,22 @@ public class DocumentController {
             }
 
             Set<Long> idsOfSelectedImages = findSelectedImages(selectedImages);
-            return new StringResponse(notationModel.exportMEI(document.get(), null, true, idsOfSelectedImages));
+            return new StringResponse(notationModel.exportMEI(document.get(), null, true, !exportMeasuringPolyphony, idsOfSelectedImages));
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot export MEI with facsimile", e);
         }
     }
+    @GetMapping(path = {"/exportMEIPartsFacsimile/{documentID}/{selectedImages}"})
+    @Transactional
+    public StringResponse exportMEIPartsFacsimile(@PathVariable("documentID") Integer documentID, @PathVariable("selectedImages") String selectedImages) {
+        return exportMEIPartsFacsimile(documentID, selectedImages, false);
+    }
 
+    @GetMapping(path = {"/exportMeasuringPolyphony/{documentID}/{selectedImages}"})
+    @Transactional
+    public StringResponse exportMeasuringPolyphony(@PathVariable("documentID") Integer documentID, @PathVariable("selectedImages") String selectedImages) {
+        return exportMEIPartsFacsimile(documentID, selectedImages, true);
+    }
 
     @RequestMapping(value="/exportMensurstrich/{documentID}/{selectedImages}", method= RequestMethod.GET, produces="application/x-gzip")
     @ResponseBody
