@@ -226,7 +226,7 @@ public class NotationModel {
                             zone.setType("region");
                             imageSurface.addZone(zone);
                             Zone lastSymbolZone = null;
-                            for (Symbol symbol : region.getSymbols()) {
+                            for (Symbol symbol : region.getSortedSymbols()) {
                                 Zone symbolZone = new Zone();
                                 symbolZone.setID(generateID(symbol));
 
@@ -235,7 +235,7 @@ public class NotationModel {
                                 } else if (symbol.getApproximateX() != null) {
                                     symbolZone.setBoundingBox(new BoundingBoxXY(symbol.getApproximateX(),
                                             region.getBoundingBox().getFromY(),
-                                            Double.MAX_VALUE, // it will be assigned later (see comment (1))
+                                            Double.MAX_VALUE, // it will be assigned later (see comment (1)) -
                                             region.getBoundingBox().getToY()));
                                 }
 
@@ -244,6 +244,7 @@ public class NotationModel {
                                 imageSurface.addZone(symbolZone);
 
                                 if (lastSymbolZone != null && lastSymbolZone.getBoundingBox().getToX() == Double.MAX_VALUE) { // comment (1)
+                                    // https://github.com/HISPAMUS/muret/issues/67
                                     lastSymbolZone.getBoundingBox().setToX(symbolZone.getBoundingBox().getFromX());
                                 }
 
@@ -251,7 +252,7 @@ public class NotationModel {
                             }
 
                             // comment (1')
-                            if (lastSymbolZone != null && lastSymbolZone.getBoundingBox().getToX() == 0) {
+                            if (lastSymbolZone != null && (lastSymbolZone.getBoundingBox().getToX() == 0 || lastSymbolZone.getBoundingBox().getToX() == Double.MAX_VALUE)) {
                                 lastSymbolZone.getBoundingBox().setToX(region.getBoundingBox().getToX());
                             }
                         }
