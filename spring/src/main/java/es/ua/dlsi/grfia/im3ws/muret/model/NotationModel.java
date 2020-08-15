@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.im3ws.muret.model;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
+import es.ua.dlsi.grfia.im3ws.muret.auditing.AuditorAwareImpl;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Notation;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.NotationResponseType;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.PreflightCkeckResult;
@@ -11,6 +12,7 @@ import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.adt.Pair;
 import es.ua.dlsi.im3.core.adt.graphics.BoundingBoxXY;
 import es.ua.dlsi.im3.core.conversions.MensuralToModern;
+import es.ua.dlsi.im3.core.metadata.PersonRoles;
 import es.ua.dlsi.im3.core.score.*;
 import es.ua.dlsi.im3.core.score.facsimile.Graphic;
 import es.ua.dlsi.im3.core.score.facsimile.Surface;
@@ -157,6 +159,8 @@ public class NotationModel {
     public Pair<ScoreSong, ScorePart> exportScoreSong(Document document, Part specificPart, boolean partsAndFacsimile, Set<Long> idsOfSelectedImages) throws IM3Exception {
         ScoreSong song = new ScoreSong();
         song.addTitle(document.getName());
+        song.addPerson(PersonRoles.COMPOSER, document.getComposer());
+        song.addPerson(PersonRoles.ENCODER, AuditorAwareImpl.getCurrentUser().getFirstName() + " " + AuditorAwareImpl.getCurrentUser().getLastName());
 
         Facsimile facsimile = new Facsimile();
         if (partsAndFacsimile) {
