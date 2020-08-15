@@ -173,9 +173,11 @@ public class NotationModel {
 
         int cont = 1;
         ScorePart scoreSpecificPart = null;
+        HashMap<Part, Boolean> partPageBeginnings = new HashMap<>(); // see issue https://github.com/HISPAMUS/muret/issues/176
         for (Part part: document.getParts()) {
             if (specificPart == null || part.getId() == specificPart.getId()) {
                 ScorePart scorePart = new ScorePart(song, cont); //TODO Ordenación de partes
+                partPageBeginnings.put(part, true);
                 song.addPart(scorePart);
                 scorePart.setName(part.getName());
                 scorePartHashMap.put(part, scorePart);
@@ -196,7 +198,8 @@ public class NotationModel {
             }
         }
 
-        for (Image image: document.getSortedImages()) {
+        List<Image> sortedImages = document.getSortedImages();
+        for (Image image: sortedImages) {
             if (idsOfSelectedImages.contains(image.getId())) {
                 Part imagePart = image.getPart();
                 int npage = 0;
@@ -218,10 +221,13 @@ public class NotationModel {
 
 
                     boolean newPage = true;
-                    Part pagePart = page.getPart() == null ? imagePart : page.getPart();
                     int nregion = 0;
                     for (Region region : page.getSortedStaves()) {
                         nregion++;
+                        Part regionPart = region.findPart();
+                        if (partsAndFacsimile && regionPart != null) {
+                            newPage = partPageBeginnings.get(regionPart);
+                        }
                         String lastRegionID = "region_" + region.getId();
                         if (imageSurface != null) {
                             Zone zone = new Zone();
@@ -264,7 +270,7 @@ public class NotationModel {
                         }
 
 
-                        Part regionPart = region.getPart() == null ? pagePart : region.getPart();
+                        //Part regionPart = region.getPart() == null ? pagePart : region.getPart();
                         if (regionPart == null) {
                             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Region {0} has not a part assigned", region.getId());
                         } else {
@@ -293,12 +299,15 @@ public class NotationModel {
                                     Time time = staff.getDuration();
                                     if (partsAndFacsimile || specificPart != null) {
                                         if (newPage) {
-                                            newPage = false;
                                             PageBeginning pageBeginning = new PageBeginning(time, true);
                                             if (partsAndFacsimile) {
                                                 pageBeginning.setFacsimileElementID(lastPageID);
                                             }
                                             scorePart.addPageBeginning(pageBeginning);
+                                            newPage = false;
+                                            if (regionPart != null) {
+                                                partPageBeginnings.put(regionPart, false);
+                                            }
                                         }
                                         SystemBeginning systemBeginning = new SystemBeginning(time, true);
                                         if (partsAndFacsimile) {

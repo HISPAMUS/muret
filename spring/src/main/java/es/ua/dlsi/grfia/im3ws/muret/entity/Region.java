@@ -156,6 +156,18 @@ public class Region extends Auditable implements IAssignableToPart {
         return part;
     }
 
+    /**
+     * Returns its part if it has one, if not the page / image one
+     * @return
+     */
+    public Part findPart() {
+        if (part != null) {
+            return part;
+        } else {
+            return page.findPart();
+        }
+    }
+
     @Override
     public void setPart(Part part) {
         this.part = part;

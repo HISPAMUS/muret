@@ -171,4 +171,16 @@ public class Page extends Auditable implements IAssignableToPart {
     public static Comparator<? super Page> getVerticalPositionComparator() {
         return verticalPositionComparator;
     }
+
+    /**
+     * Returns its part if it has one, if not the image one
+     * @return
+     */
+    public Part findPart() {
+        if (part != null) {
+            return part;
+        } else {
+            return image.getPart();
+        }
+    }
 }
