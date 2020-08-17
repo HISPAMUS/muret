@@ -177,7 +177,6 @@ public class NotationModel {
         for (Part part: document.getParts()) {
             if (specificPart == null || part.getId() == specificPart.getId()) {
                 ScorePart scorePart = new ScorePart(song, cont); //TODO Ordenación de partes
-                partPageBeginnings.put(part, true);
                 song.addPart(scorePart);
                 scorePart.setName(part.getName());
                 scorePartHashMap.put(part, scorePart);
@@ -201,7 +200,11 @@ public class NotationModel {
         List<Image> sortedImages = document.getSortedImages();
         for (Image image: sortedImages) {
             if (idsOfSelectedImages.contains(image.getId())) {
-                Part imagePart = image.getPart();
+                for (Part part: document.getParts()) {
+                    partPageBeginnings.put(part, true);
+                }
+
+                //Part imagePart = image.getPart();
                 int npage = 0;
                 for (Page page: image.getSortedPages()) {
                     npage++;
