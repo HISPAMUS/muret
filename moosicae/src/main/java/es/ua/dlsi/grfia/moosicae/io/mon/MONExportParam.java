@@ -1,4 +1,4 @@
-package es.ua.dlsi.grfia.moosicae.io.json;
+package es.ua.dlsi.grfia.moosicae.io.mon;
 
 import org.json.simple.JSONAware;
 import org.json.simple.JSONObject;
@@ -7,10 +7,10 @@ import org.json.simple.JSONObject;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 12/04/2020
  */
-public class JSONExportParam {
+public class MONExportParam {
     private JSONObject jsonObject;
 
-    public JSONExportParam() {
+    public MONExportParam() {
         this.jsonObject = new JSONObject();
     }
 
@@ -29,8 +29,8 @@ public class JSONExportParam {
         jsonObject.put(propertyName, value);
     }
 
-    public JSONExportParam addChild(String propertyName) {
-        JSONExportParam child = new JSONExportParam();
+    public MONExportParam addChild(String propertyName) {
+        MONExportParam child = new MONExportParam();
         jsonObject.put(propertyName, child.getJsonObject());
         return child;
     }

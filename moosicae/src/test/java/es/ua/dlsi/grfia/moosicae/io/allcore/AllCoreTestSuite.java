@@ -5,7 +5,7 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.impl.CoreAbstractFactoryImpl;
 import es.ua.dlsi.grfia.moosicae.io.IExporter;
 import es.ua.dlsi.grfia.moosicae.io.IImporter;
-import es.ua.dlsi.grfia.moosicae.io.json.JSONExporter;
+import es.ua.dlsi.grfia.moosicae.io.mon.MONExporter;
 import es.ua.dlsi.grfia.moosicae.io.lilypond.LilypondExporter;
 import es.ua.dlsi.grfia.moosicae.io.mei.MEIExporter;
 import es.ua.dlsi.grfia.moosicae.io.mei.MEIImporter;
@@ -115,7 +115,7 @@ public class AllCoreTestSuite {
                 fail("Lilypond: " + name + ": " + e.getMessage());
             }
             try {
-                JSONExporter exporter = new JSONExporter();
+                MONExporter exporter = new MONExporter();
                 writeToFile(exporter.exportScore(score), new File(outputTmp, name + ".json"));
             } catch (UnsupportedOperationException e) {
                 System.err.println("JSON: " + e.getMessage());
