@@ -48,7 +48,7 @@ public class MxmlAttributes extends MxmlObject implements IMxmlPartItem {
     }
 
     @Override
-    public ICoreItem[] getItems() {
+    public IVoicedItem[] getItems() {
         return nonDurationalList;
     }
 }

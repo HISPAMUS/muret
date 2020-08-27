@@ -104,7 +104,7 @@ public class MEIImporter extends XMLImporter implements IImporter {
 
 
                 for (MEILayer layer: measureStaff.getLayers()) {
-                    for (ICoreItem coreItem: layer.getItems()) {
+                    for (IVoicedItem coreItem: layer.getItems()) {
                         //TODO insertar los elementos comunes
                         score.add(voice, staff, coreItem);//TODO la voice debería salir de layer
                     }

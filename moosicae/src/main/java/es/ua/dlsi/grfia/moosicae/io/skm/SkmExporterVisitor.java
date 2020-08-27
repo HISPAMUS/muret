@@ -259,11 +259,12 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
 
     @Override
     public void exportKey(IKey key, SkmExporterVisitorTokenParam inputOutput) throws IMException {
-        if (!(inputOutput.getLastToken() instanceof SkmCoreSymbol)
-        || !((SkmCoreSymbol) inputOutput.getLastToken()).getSymbol().equals(key.getKeySignature())) {
-            exportKeySignature(key.getKeySignature(), inputOutput); // do not repeat previous explicit key signature and the key signature of the key
+        if (key.getKeySignature().isPresent()) {
+            if (!(inputOutput.getLastToken() instanceof SkmCoreSymbol)
+                    || !((SkmCoreSymbol) inputOutput.getLastToken()).getSymbol().equals(key.getKeySignature().get())) {
+                exportKeySignature(key.getKeySignature().get(), inputOutput); // do not repeat previous explicit key signature and the key signature of the key
+            }
         }
-
         String diatonicPitch;
         switch (key.getMode().getValue()) {
             case major:
@@ -283,7 +284,7 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
             exportAccidentalSymbol(key.getPitchClass().getAccidental().get(), inputOutput);
         }
 
-        if (key.getKeySignature().getCautionaryAccidentals().isPresent()) {
+        if (key.getKeySignature().isPresent() && key.getKeySignature().get().getCautionaryAccidentals().isPresent()) {
             inputOutput.append(SEP);
             inputOutput.append('X');
         }

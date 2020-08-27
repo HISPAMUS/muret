@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.io.musicxml.importer.elements;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.ICoreItem;
+import es.ua.dlsi.grfia.moosicae.core.IVoicedItem;
 import es.ua.dlsi.grfia.moosicae.core.INote;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
@@ -83,7 +83,7 @@ public class MxmlNote extends MxmlObject implements IMxmlPartItem, INote {
     }
 
     @Override
-    public ICoreItem[] getItems() {
-        return new ICoreItem[] {this.getNote()};
+    public IVoicedItem[] getItems() {
+        return new IVoicedItem[] {this.getNote()};
     }
 }

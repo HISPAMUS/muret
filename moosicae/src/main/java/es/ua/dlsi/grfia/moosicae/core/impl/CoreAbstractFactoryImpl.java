@@ -288,7 +288,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IStaff createStaff(IId id, @NotNull IStaffLineCount staffLineCount, @NotNull @NotNull ICoreItem[] items) {
+    public IStaff createStaff(IId id, @NotNull IStaffLineCount staffLineCount, @NotNull @NotNull IVoicedItem[] items) {
         return new Staff(id, staffLineCount, items);
     }
 

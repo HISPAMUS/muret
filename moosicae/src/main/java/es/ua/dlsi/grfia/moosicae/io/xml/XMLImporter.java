@@ -2,16 +2,11 @@ package es.ua.dlsi.grfia.moosicae.io.xml;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
-import es.ua.dlsi.grfia.moosicae.core.ICoreObject;
+import es.ua.dlsi.grfia.moosicae.core.IMooObject;
 import es.ua.dlsi.grfia.moosicae.core.IScore;
 import es.ua.dlsi.grfia.moosicae.core.builders.*;
 import es.ua.dlsi.grfia.moosicae.io.*;
-import org.w3c.dom.Document;
-import org.xml.sax.ErrorHandler;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -32,7 +27,7 @@ import java.util.logging.Logger;
 public abstract class XMLImporter {
     private Stack<String> elementStack;
     private Stack<IImporterAdapter<?, XMLImporterParam>> builderStack;
-    protected ImportingContexts<ICoreObject> importingContexts;
+    protected ImportingContexts<IMooObject> importingContexts;
     protected final ICoreAbstractFactory coreAbstractFactory;
     protected final CoreObjectBuilderSuppliers coreObjectBuilderSuppliers;
 
@@ -99,7 +94,7 @@ public abstract class XMLImporter {
         // and insert them into the INoteBuilder
         if (coreObjectBuilderSuppliers.contains(elementName)) {
             IImporterAdapter<?, XMLImporterParam> coreObjectBuilder = (IImporterAdapter<?, XMLImporterParam>) importingContexts.begin(elementName,
-                    (IObjectBuilder<ICoreObject>) coreObjectBuilderSuppliers.create(elementName, coreAbstractFactory));
+                    (IObjectBuilder<IMooObject>) coreObjectBuilderSuppliers.create(elementName, coreAbstractFactory));
             builderStack.push(coreObjectBuilder);
             // coreObjectBuilder.doImport(xmlImporterVisitor, new XMLImporterVisitorParam(startElement.getAttributes()));
             XMLImporterParam importerParam = new XMLImporterParam(startElement.getAttributes());

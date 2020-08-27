@@ -2,12 +2,10 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IBarline;
-import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
 import es.ua.dlsi.grfia.moosicae.core.properties.IBarlineType;
 import es.ua.dlsi.grfia.moosicae.core.properties.INumber;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
-import javax.validation.constraints.NotNull;
 
 
 import java.util.Optional;
@@ -16,7 +14,7 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 15/03/2020
  */
-public class Barline extends CoreItem implements IBarline {
+public class Barline extends VoicedItem implements IBarline {
 
     private INumber barNumber;
 

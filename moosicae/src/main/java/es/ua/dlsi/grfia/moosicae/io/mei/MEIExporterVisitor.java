@@ -192,12 +192,15 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
 
     @Override
     public void exportKey(IKey key, XMLExporterVisitorParam inputOutput) throws IMException {
-        if (key.getKeySignature() instanceof IConventionalKeySignature) {
-            exportConventionalKeySignature((IConventionalKeySignature) key.getKeySignature(), inputOutput);
-            exportMode(key.getMode(), inputOutput);
-        } else if (key.getKeySignature() instanceof IUnconventionalKeySignature) {
-            XMLExporterVisitorParam keySigParam = doExportUnconventionalKeySignature((IUnconventionalKeySignature) key.getKeySignature(), inputOutput);
-            doExportMode(key.getMode(), "mode", keySigParam);
+        if (key.getKeySignature().isPresent()) {
+            IKeySignature ks = key.getKeySignature().get();
+            if (ks instanceof IConventionalKeySignature) {
+                exportConventionalKeySignature((IConventionalKeySignature) ks, inputOutput);
+                exportMode(key.getMode(), inputOutput);
+            } else if (ks instanceof IUnconventionalKeySignature) {
+                XMLExporterVisitorParam keySigParam = doExportUnconventionalKeySignature((IUnconventionalKeySignature) ks, inputOutput);
+                doExportMode(key.getMode(), "mode", keySigParam);
+            }
         }
     }
 

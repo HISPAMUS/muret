@@ -302,7 +302,7 @@ public class MONExporterVisitor implements IExporterVisitor<MONExportParam> {
         //TODO
     }
 
-    private void exportCoreObject(ICoreObject coreObject, MONExportParam inputOutput) {
+    private void exportCoreObject(IMooObject coreObject, MONExportParam inputOutput) {
         if (coreObject.getId().isPresent()) {
             inputOutput.add("id", coreObject.getId().get().getValue());
         }

@@ -3,7 +3,7 @@ package es.ua.dlsi.grfia.moosicae.io.lilypond;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IScore;
 import es.ua.dlsi.grfia.moosicae.core.IStaff;
-import es.ua.dlsi.grfia.moosicae.core.ICoreItem;
+import es.ua.dlsi.grfia.moosicae.core.IVoicedItem;
 import es.ua.dlsi.grfia.moosicae.io.IExporter;
 
 import java.util.LinkedList;
@@ -35,7 +35,7 @@ public class LilypondExporter implements IExporter {
         for (IStaff staff: score.getAllStaves()) {
             LilypondContext staffContext = new LilypondContext("Staff", true);
             scoreContext.addChildLine(staffContext);
-            for (ICoreItem staffElement: staff.getStaffSymbols()) {
+            for (IVoicedItem staffElement: staff.getStaffSymbols()) {
                 LilypondExporterVisitorParam lilypondExporterVisitorParam = new LilypondExporterVisitorParam(staffContext);
                 staffElement.export(lilypondExporterVisitor, lilypondExporterVisitorParam);
             }

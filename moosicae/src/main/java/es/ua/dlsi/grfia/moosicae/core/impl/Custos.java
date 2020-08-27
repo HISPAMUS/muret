@@ -2,7 +2,6 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.properties.IPitch;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
@@ -11,7 +10,7 @@ import javax.validation.constraints.NotNull;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class Custos extends CoreItem implements ICustos {
+public class Custos extends VoicedItem implements ICustos {
     @NotNull
     private final IPitch pitch;
 

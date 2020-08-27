@@ -1,9 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.io.musicxml.importer.elements;
 
-import es.ua.dlsi.grfia.moosicae.core.ICoreObject;
+import es.ua.dlsi.grfia.moosicae.core.IMooObject;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
-import es.ua.dlsi.grfia.moosicae.io.skm.SkmExporterVisitor;
-import es.ua.dlsi.grfia.moosicae.io.skm.SkmExporterVisitorTokenParam;
 
 import java.util.Optional;
 
@@ -11,7 +9,7 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 24/03/2020
  */
-public abstract class MxmlObject implements ICoreObject {
+public abstract class MxmlObject implements IMooObject {
     protected final IId id;
 
     protected MxmlObject(IId id) {

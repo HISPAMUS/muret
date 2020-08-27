@@ -89,7 +89,7 @@ public interface ICoreAbstractFactory {
     IScore createScore(IId id);
     IRest createRest(IId id, @NotNull IFigure figure,  IDots dots);
 
-    IStaff createStaff(IId id, @NotNull IStaffLineCount staffLineCount, @NotNull ICoreItem [] items);
+    IStaff createStaff(IId id, @NotNull IStaffLineCount staffLineCount, @NotNull IVoicedItem[] items);
 
     /**
      * For nested staff

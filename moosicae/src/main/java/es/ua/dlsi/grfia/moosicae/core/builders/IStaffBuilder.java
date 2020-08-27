@@ -2,7 +2,7 @@ package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
-import es.ua.dlsi.grfia.moosicae.core.ICoreItem;
+import es.ua.dlsi.grfia.moosicae.core.IVoicedItem;
 import es.ua.dlsi.grfia.moosicae.core.IStaff;
 import es.ua.dlsi.grfia.moosicae.core.properties.IStaffLineCount;
 
@@ -14,7 +14,7 @@ import java.util.List;
  * @created 25/03/2020
  */
 public class IStaffBuilder extends ISystemBuilder<IStaff> {
-    private final List<ICoreItem> staffSymbols;
+    private final List<IVoicedItem> staffSymbols;
     protected IStaffLineCount lineCount;
 
     public IStaffBuilder(ICoreAbstractFactory coreObjectFactory) {
@@ -27,13 +27,13 @@ public class IStaffBuilder extends ISystemBuilder<IStaff> {
         return this;
     }
 
-    public IStaffBuilder add(ICoreItem coreItem) {
+    public IStaffBuilder add(IVoicedItem coreItem) {
         this.staffSymbols.add(coreItem);
         return this;
     }
 
     @Override
     public IStaff build() throws IMException {
-        return coreObjectFactory.createStaff(getId(), lineCount, staffSymbols.toArray(new ICoreItem[0])); // recall the ICoreItem[0] is used to indicate the array type without cast
+        return coreObjectFactory.createStaff(getId(), lineCount, staffSymbols.toArray(new IVoicedItem[0])); // recall the IVoicedItem[0] is used to indicate the array type without cast
     }
 }

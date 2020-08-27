@@ -12,7 +12,7 @@ import java.util.Optional;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public abstract class KeySignature extends CoreItem implements IKeySignature {
+public abstract class KeySignature extends VoicedItem implements IKeySignature {
     @NotNull
     private final IPitchClass[] pitchClasses;
 

@@ -1,16 +1,14 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.IPageBeginning;
-import javax.validation.constraints.NotNull;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class PageBeginning extends CoreItem implements IPageBeginning {
+public class PageBeginning extends VoicedItem implements IPageBeginning {
     public PageBeginning(IId id) {
         super(id);
     }

@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
-import es.ua.dlsi.grfia.moosicae.core.ICoreObject;
+import es.ua.dlsi.grfia.moosicae.core.IMooObject;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 
 
@@ -10,7 +10,7 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IId;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 15/03/2020
  */
-public abstract class CoreObjectBuilder<T extends ICoreObject> implements IObjectBuilder<T> {
+public abstract class CoreObjectBuilder<T extends IMooObject> implements IObjectBuilder<T> {
     protected final ICoreAbstractFactory coreObjectFactory;
     /**
      * Must be private beacuse if it's null, a new ID is generated in getId()

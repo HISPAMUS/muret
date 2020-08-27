@@ -2,25 +2,24 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.properties.IMode;
 import es.ua.dlsi.grfia.moosicae.core.properties.IPitchClass;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import javax.validation.constraints.NotNull;
+import java.util.Optional;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class Key extends CoreItem implements IKey {
+public class Key extends VoicedItem implements IKey {
     @NotNull
     private final IPitchClass pitchClass;
     @NotNull
     private final IMode mode;
-    @NotNull
     private final IKeySignature keySignature;
 
-    Key(IId id, @NotNull IPitchClass pitchClass, @NotNull IMode mode, @NotNull IKeySignature keySignature) {
+    Key(IId id, @NotNull IPitchClass pitchClass, @NotNull IMode mode, IKeySignature keySignature) {
         super(id);
         this.pitchClass = pitchClass;
         this.mode = mode;
@@ -43,8 +42,8 @@ public class Key extends CoreItem implements IKey {
     }
 
     @Override
-    public IKeySignature getKeySignature() {
-        return keySignature;
+    public Optional<IKeySignature> getKeySignature() {
+        return Optional.ofNullable(keySignature);
     }
 
     @Override

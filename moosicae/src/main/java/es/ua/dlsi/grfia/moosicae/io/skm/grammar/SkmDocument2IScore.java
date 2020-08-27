@@ -95,7 +95,7 @@ public class SkmDocument2IScore {
         if (skmCoreSymbol.getSymbol() instanceof IVoiced) {
             voice.addItem((IVoiced) skmCoreSymbol.getSymbol());
             if (voiceStaff != null) {
-                voiceStaff.put((ICoreItem) skmCoreSymbol.getSymbol());
+                voiceStaff.put((IVoicedItem) skmCoreSymbol.getSymbol());
             }
         }
     }

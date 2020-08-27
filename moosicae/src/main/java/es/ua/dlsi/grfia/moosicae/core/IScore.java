@@ -2,7 +2,7 @@ package es.ua.dlsi.grfia.moosicae.core;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public interface IScore extends ICoreObject{
+public interface IScore extends IMooObject {
     IMetadata getMetadata();
     IPart[] getParts();
     ISystem[] getSystemElements();
@@ -23,5 +23,5 @@ public interface IScore extends ICoreObject{
      * @param inStaff
      * @param symbol
      */
-    void add(IVoice toVoice, IStaff inStaff, ICoreItem symbol);
+    void add(IVoice toVoice, IStaff inStaff, IVoicedItem symbol);
 }

@@ -6,19 +6,10 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IStaffLineCount;
 import es.ua.dlsi.grfia.moosicae.io.IImporter;
 import es.ua.dlsi.grfia.moosicae.io.musicxml.importer.builders.*;
 import es.ua.dlsi.grfia.moosicae.io.musicxml.importer.elements.*;
-import es.ua.dlsi.grfia.moosicae.io.xml.SimpleErrorHandler;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporter;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLValidators;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.validation.Validator;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.InputStream;
 import java.util.HashMap;
 
@@ -131,8 +122,8 @@ public class MusicXMLImporter extends XMLImporter implements IImporter {
             IStaff defaultStaff = coreAbstractFactory.createStaff(score, null, staffLineCount);
             for (MxmlMeasure measure : mxmlImportedPart.getMeasures()) {
                 for (IMxmlPartItem item: measure.getItems()) {
-                    ICoreItem[] subitems = item.getItems(); //TODO sacar los datos adicionales del MusicXMLNote como es la staff...
-                    for (ICoreItem coreItem: subitems) {
+                    IVoicedItem[] subitems = item.getItems(); //TODO sacar los datos adicionales del MusicXMLNote como es la staff...
+                    for (IVoicedItem coreItem: subitems) {
                         score.add(defaultVoice, defaultStaff, coreItem);
                     }
                 }

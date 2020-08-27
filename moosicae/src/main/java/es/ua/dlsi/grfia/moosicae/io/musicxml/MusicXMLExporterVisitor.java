@@ -201,13 +201,16 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
     @Override
     public void exportKey(IKey key, XMLExporterVisitorParam inputOutput) throws IMException {
         XMLExporterVisitorParam keyXMLParam;
-        if (key.getKeySignature() instanceof IConventionalKeySignature) {
-            keyXMLParam = doExportConventionalKeySignature((IConventionalKeySignature) key.getKeySignature(), inputOutput);
-            exportMode(key.getMode(), keyXMLParam);
-        } else if (key.getKeySignature() instanceof IUnconventionalKeySignature) {
-            keyXMLParam = doExportUnconventionalKeySignature((IUnconventionalKeySignature) key.getKeySignature(), inputOutput);
-        } else {
-            throw new IMException("Unsupported key signature class in key: " + key.getKeySignature());
+        if (key.getKeySignature().isPresent()) {
+            IKeySignature ks = key.getKeySignature().get();
+            if (ks instanceof IConventionalKeySignature) {
+                keyXMLParam = doExportConventionalKeySignature((IConventionalKeySignature) ks, inputOutput);
+                exportMode(key.getMode(), keyXMLParam);
+            } else if (ks instanceof IUnconventionalKeySignature) {
+                keyXMLParam = doExportUnconventionalKeySignature((IUnconventionalKeySignature) ks, inputOutput);
+            } else {
+                throw new IMException("Unsupported key signature class in key: " + key.getKeySignature());
+            }
         }
     }
 

@@ -2,8 +2,6 @@ package es.ua.dlsi.grfia.moosicae.io.musicxml;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
-import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.io.IExporter;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLExporterVisitorParam;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLParamExportMode;
@@ -13,7 +11,6 @@ import es.ua.dlsi.grfia.moosicae.utils.xml.XMLPreambleElement;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLTree;
 
 import java.util.HashMap;
-import java.util.Optional;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -96,7 +93,7 @@ public class MusicXMLExporter implements IExporter {
             //TODO ordenar por tiempos - ver qué staves pertenecen a partes
             for (IStaff staff: score.getAllStaves()) {
                 IKeySignature lastKeySignature = null;
-                for (ICoreItem staffElement: staff.getStaffSymbols()) {
+                for (IVoicedItem staffElement: staff.getStaffSymbols()) {
                     XMLElement parentElement = xmlMeasure; // by default
                     if (staffElement instanceof INonDurational) {
                         if (!nonAttributesFound) {
@@ -120,8 +117,8 @@ public class MusicXMLExporter implements IExporter {
 
                     if (staffElement instanceof IKeySignature) {
                         lastKeySignature = (IKeySignature) staffElement;
-                    } else if (staffElement instanceof IKey) {
-                        lastKeySignature = ((IKey) staffElement).getKeySignature();
+                    } else if (staffElement instanceof IKey && ((IKey) staffElement).getKeySignature().isPresent()) {
+                        lastKeySignature = ((IKey) staffElement).getKeySignature().get();
                     }
 
                 }

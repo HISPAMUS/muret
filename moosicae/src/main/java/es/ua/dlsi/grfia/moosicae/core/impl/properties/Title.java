@@ -1,4 +1,4 @@
-package es.ua.dlsi.grfia.moosicae.core.impl;
+package es.ua.dlsi.grfia.moosicae.core.impl.properties;
 
 import es.ua.dlsi.grfia.moosicae.core.impl.properties.CoreProperty;
 import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
@@ -19,7 +19,7 @@ public class Title extends CoreProperty implements ITitle {
     }
 
     @Override
-    public String getTitle() {
+    public String getValue() {
         return title;
     }
 

@@ -2,10 +2,9 @@ package es.ua.dlsi.grfia.moosicae.io.commonbuilders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
-import es.ua.dlsi.grfia.moosicae.core.ICoreItem;
+import es.ua.dlsi.grfia.moosicae.core.IVoicedItem;
 import es.ua.dlsi.grfia.moosicae.core.IKey;
 import es.ua.dlsi.grfia.moosicae.core.builders.CoreObjectBuilder;
-import es.ua.dlsi.grfia.moosicae.core.builders.IUnconventionalKeySignatureBuilder;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.core.enums.EConventionalKeys;
 import es.ua.dlsi.grfia.moosicae.core.enums.EModes;
@@ -23,7 +22,7 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 24/03/2020
  */
-public class KeyOrKeySignatureBuilder extends CoreObjectBuilder<ICoreItem> implements IImporterAdapter<ICoreItem, XMLImporterParam> {
+public class KeyOrKeySignatureBuilder extends CoreObjectBuilder<IVoicedItem> implements IImporterAdapter<IVoicedItem, XMLImporterParam> {
     protected IKeyAccidentalCount keyAccidentalCount;
     protected IMode mode;
     protected EAccidentalSymbols accidentalSymbol;
@@ -65,7 +64,7 @@ public class KeyOrKeySignatureBuilder extends CoreObjectBuilder<ICoreItem> imple
     }
 
     @Override
-    public ICoreItem build() throws IMException {
+    public IVoicedItem build() throws IMException {
         if (keyAccidentalCount != null) {
             int fifths = this.keyAccidentalCount.getValue();
 
@@ -80,8 +79,9 @@ public class KeyOrKeySignatureBuilder extends CoreObjectBuilder<ICoreItem> imple
             EConventionalKeys ekey = EConventionalKeys.findKeyWithAccidentalCount(eMode, fifths, accidentalSymbol);
             IKey key = coreObjectFactory.createConventionalKey(null, ekey, cautionaryKeySignatureAccidentals);
 
-            if (mode == null) {
-                return key.getKeySignature(); // it the mode element was not present, just return the key signature value
+            if (mode == null && key.getKeySignature().isPresent()) {
+                // it the mode element was not present, and there is an associated key signature, just return the key signature value
+                return key.getKeySignature().get();
             } else {
                 return key;
             }

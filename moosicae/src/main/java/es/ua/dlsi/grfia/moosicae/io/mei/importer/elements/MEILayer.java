@@ -1,6 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.io.mei.importer.elements;
 
-import es.ua.dlsi.grfia.moosicae.core.ICoreItem;
+import es.ua.dlsi.grfia.moosicae.core.IVoicedItem;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 
 import javax.validation.constraints.NotNull;
@@ -12,17 +12,17 @@ import java.util.Arrays;
  */
 public class MEILayer extends MEIObject {
     @NotNull
-    private final ICoreItem [] items;
+    private final IVoicedItem[] items;
     @NotNull
     private final Integer n;
 
-    public MEILayer(IId id, @NotNull ICoreItem[] items, Integer n) {
+    public MEILayer(IId id, @NotNull IVoicedItem[] items, Integer n) {
         super(id);
         this.items = items;
         this.n = n;
     }
 
-    public ICoreItem[] getItems() {
+    public IVoicedItem[] getItems() {
         return items;
     }
 

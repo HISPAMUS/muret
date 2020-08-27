@@ -11,13 +11,13 @@ import javax.validation.constraints.NotNull;
  * @created 16/03/2020
  */
 public class TheoreticalKey extends Key implements ITheoreticalKey {
-    TheoreticalKey(IId id, @NotNull IPitchClass pitchClass, @NotNull IMode mode, @NotNull IKeySignature keySignature) {
+    TheoreticalKey(IId id, @NotNull IPitchClass pitchClass, @NotNull IMode mode, IKeySignature keySignature) {
         super(id, pitchClass, mode, keySignature);
     }
 
     @Override
     public TheoreticalKey clone() {
-        return new TheoreticalKey(null, getPitchClass(), getMode(), getKeySignature());
+        return new TheoreticalKey(null, getPitchClass(), getMode(), getKeySignature().isPresent()?getKeySignature().get():null);
     }
 
     @Override

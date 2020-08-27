@@ -2,7 +2,7 @@ package es.ua.dlsi.grfia.moosicae.io.musicxml.importer.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
-import es.ua.dlsi.grfia.moosicae.core.ICoreItem;
+import es.ua.dlsi.grfia.moosicae.core.IVoicedItem;
 import es.ua.dlsi.grfia.moosicae.core.properties.IAlteration;
 import es.ua.dlsi.grfia.moosicae.core.properties.IDiatonicPitch;
 import es.ua.dlsi.grfia.moosicae.core.properties.IPitchClass;
@@ -54,7 +54,7 @@ public class MusicXMLKeyOrKeySignatureBuilder extends KeyOrKeySignatureBuilder {
 
 
     @Override
-    public ICoreItem build() throws IMException {
+    public IVoicedItem build() throws IMException {
         if (fifths != null) {
             this.from(coreObjectFactory.createKeyAccidentalCount(null, fifths.getValue()));
             if (fifths.getAccidentalSymbol().isPresent()) {

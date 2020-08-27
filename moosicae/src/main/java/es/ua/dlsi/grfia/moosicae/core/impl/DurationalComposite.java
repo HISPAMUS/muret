@@ -4,13 +4,12 @@ import es.ua.dlsi.grfia.moosicae.core.IDurational;
 import es.ua.dlsi.grfia.moosicae.core.IDurationalComposite;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.utils.Time;
-import javax.validation.constraints.NotNull;
 
 //TODO Durational composite
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public abstract class DurationalComposite extends CoreItem implements IDurationalComposite {
+public abstract class DurationalComposite extends VoicedItem implements IDurationalComposite {
 
     public DurationalComposite(IId id) {
         super(id);

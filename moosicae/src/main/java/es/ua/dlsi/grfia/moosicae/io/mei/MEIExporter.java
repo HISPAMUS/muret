@@ -19,7 +19,7 @@ public class MEIExporter implements IExporter {
     /**
      * Used to avoid exporting twice symbols such as the key signature, meter, clef that are exporte in the scoreDef or staffDef elements as attributes
      */
-    HashSet<ICoreItem> exportedSymbols;
+    HashSet<IVoicedItem> exportedSymbols;
     HashMap<IStaff, Integer> staffNumbers;
 
     public MEIExporter() {
@@ -65,7 +65,7 @@ public class MEIExporter implements IExporter {
     }
 
     private <T> Optional<T> findFirst(IStaff staff, Class<T> type) {
-        for (ICoreItem symbol: staff.getStaffSymbols()) {
+        for (IVoicedItem symbol: staff.getStaffSymbols()) {
             if (type.isAssignableFrom(symbol.getClass())) {
                 return (Optional<T>) Optional.of(symbol);
             }
@@ -132,7 +132,7 @@ public class MEIExporter implements IExporter {
             xmlStaff.addAttribute("n", Integer.toString(nstaff));
             XMLElement xmlLayer = xmlStaff.addChild("layer");
             xmlLayer.addAttribute("n", Integer.toString(nstaff));
-            for (ICoreItem staffElement: staff.getStaffSymbols()) {
+            for (IVoicedItem staffElement: staff.getStaffSymbols()) {
                 if (!exportedSymbols.contains(staffElement)) {
                     XMLExporterVisitorParam XMLExporterVisitorParam = new XMLExporterVisitorParam(XMLParamExportMode.element, xmlLayer);
                     staffElement.export(meiExporterVisitor, XMLExporterVisitorParam);

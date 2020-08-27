@@ -2,7 +2,6 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
 import es.ua.dlsi.grfia.moosicae.core.properties.IDots;
 import es.ua.dlsi.grfia.moosicae.core.properties.IFigure;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
@@ -17,7 +16,7 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 15/03/2020
  */
-public class MetronomeMark extends CoreItem implements IMetronomeMark {
+public class MetronomeMark extends VoicedItem implements IMetronomeMark {
     @NotNull
     private IFigure figure;
 

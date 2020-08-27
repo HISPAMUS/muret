@@ -1,6 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
-import es.ua.dlsi.grfia.moosicae.core.ICoreObject;
+import es.ua.dlsi.grfia.moosicae.core.IMooObject;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
@@ -10,7 +10,7 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 22/03/2020
  */
-public abstract class CoreObject implements ICoreObject {
+public abstract class CoreObject implements IMooObject {
     @NotNull
     protected final IId id;
 

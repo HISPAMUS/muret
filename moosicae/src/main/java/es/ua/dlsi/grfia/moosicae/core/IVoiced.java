@@ -6,6 +6,6 @@ import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public interface IVoiced extends ICoreObject {
+public interface IVoiced extends IMooObject {
     <InputOutputType> void export(IExporterVisitor<InputOutputType> exportVisitor, InputOutputType inputOutput) throws IMException;
 }

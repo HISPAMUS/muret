@@ -52,7 +52,7 @@ public class SkmSyntaxDirectedTranslation {
          */
         private ArrayList<SkmToken> lastSpineInsertedItem;
 
-        protected ImportingContexts<ICoreObject> importingContexts;
+        protected ImportingContexts<IMooObject> importingContexts;
 
         public Loader(Parser parser, boolean debug, ICoreAbstractFactory coreAbstractFactory) {
             this.debug = debug;
@@ -90,11 +90,11 @@ public class SkmSyntaxDirectedTranslation {
             lastSpineInsertedItem.set(this.spineIndex, skmItem);
         }
 
-        private void beginContext(RuleContext ruleContext, IObjectBuilder<? extends ICoreObject> builder) {
+        private void beginContext(RuleContext ruleContext, IObjectBuilder<? extends IMooObject> builder) {
             this.importingContexts.begin(ruleContext.getClass().getName(), builder);
         }
 
-        private void beginEndContext(RuleContext ruleContext, IObjectBuilder<? extends ICoreObject> builder, Object ... objects) {
+        private void beginEndContext(RuleContext ruleContext, IObjectBuilder<? extends IMooObject> builder, Object ... objects) {
             try {
                 this.importingContexts.beginEnd(builder, objects);
             } catch (Throwable e) {
@@ -102,7 +102,7 @@ public class SkmSyntaxDirectedTranslation {
             }
         }
 
-        private ICoreObject endContext(RuleContext ruleContext) {
+        private IMooObject endContext(RuleContext ruleContext) {
             try {
                 return this.importingContexts.end(ruleContext.getClass().getName());
             } catch (Throwable e) {
