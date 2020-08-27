@@ -33,10 +33,18 @@ public class MURETConfiguration {
 
     String pythonclassifiers;
 
+    String folderIIIF;
+
+    String baseIIIFManifestURI;
+
+    String baseIIIFImagesURI;
+
+    String pathSeparatorIIIF;
+
     public MURETConfiguration() {
     }
 
-    public MURETConfiguration(String angularurldev, String angularurlprod, String folder, String pythonclassifiers, int thumbnailHeight, int previewHeight, boolean disableSecurity, String warningmail, String warningsender, boolean enableWatchDogNotification) {
+    public MURETConfiguration(String angularurldev, String angularurlprod, String folder, String pythonclassifiers, int thumbnailHeight, int previewHeight, boolean disableSecurity, String warningmail, String warningsender, boolean enableWatchDogNotification, String folderIIIF, String baseIIIFImagesURI, String baseIIIFManifestURI, String pathSeparatorIIIF) {
         this.folder = folder;
         this.angularurldev = angularurldev;
         this.angularurlprod = angularurlprod;
@@ -49,6 +57,10 @@ public class MURETConfiguration {
         this.warningmail = warningmail;
         this.warningsender = warningsender;
         this.enableWatchDogNotification = enableWatchDogNotification;
+        this.folderIIIF = folderIIIF;
+        this.baseIIIFImagesURI = baseIIIFImagesURI;
+        this.baseIIIFManifestURI = baseIIIFManifestURI;
+        this.pathSeparatorIIIF = pathSeparatorIIIF;
     }
 
     public String getWarningmail() {
@@ -135,6 +147,38 @@ public class MURETConfiguration {
         this.enableWatchDogNotification = enableWatchDogNotification;
     }
 
+    public String getFolderIIIF() {
+        return folderIIIF;
+    }
+
+    public void setFolderIIIF(String folderIIIF) {
+        this.folderIIIF = folderIIIF;
+    }
+
+    public String getBaseIIIFManifestURI() {
+        return baseIIIFManifestURI;
+    }
+
+    public void setBaseIIIFManifestURI(String baseIIIFManifestURI) {
+        this.baseIIIFManifestURI = baseIIIFManifestURI;
+    }
+
+    public String getBaseIIIFImagesURI() {
+        return baseIIIFImagesURI;
+    }
+
+    public void setBaseIIIFImagesURI(String baseIIIFImagesURI) {
+        this.baseIIIFImagesURI = baseIIIFImagesURI;
+    }
+
+    public String getPathSeparatorIIIF() {
+        return pathSeparatorIIIF;
+    }
+
+    public void setPathSeparatorIIIF(String pathSeparatorIIIF) {
+        this.pathSeparatorIIIF = pathSeparatorIIIF;
+    }
+
     public Path getTmpFolder() {
         String fileNameTmp = getFolder() + "/tmp";
         Path path = Paths.get(fileNameTmp);
@@ -148,4 +192,5 @@ public class MURETConfiguration {
         }
         return path;
     }
+
 }

@@ -6,10 +6,14 @@ import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.repository.DocumentRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.UserRepository;
 import es.ua.dlsi.im3.core.utils.FileUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -130,6 +134,89 @@ public class DocumentModel {
         return documentScoreSong;
     }
 
+    /**
+     * It generates the IIIF manifest file and saves it. If it existed, it would replace it keeping always the last copy
+     * @return
+     */
+    public IIIFModel generateIIIFManifestFile(Document document) throws IM3WSException {
+        IIIFModel model = new IIIFModel();
+        JSONObject manifestJSON = new JSONObject();
+        //TODO ¿ponemos también la colección?
+        String baseID = muretConfiguration.getBaseIIIFManifestURI() + "/" + document.getPath();
+        String manifestURL = baseID + "/manifest.json";
+        manifestJSON.put("@id", manifestURL);
+        manifestJSON.put("label", document.getName() + document.getComposer()!=null? " " + document.getComposer() : "");
+        manifestJSON.put("logo", "https://muret.dlsi.ua.es/muret/assets/images/logos/uacolor.jpg");
+        manifestJSON.put("description", "Transcription from " + document.getName() + " using MuRET");
+        JSONArray sequencesJSON = new JSONArray();
+        JSONObject sequenceJSON = new JSONObject();
+        JSONArray canvasesJSON = new JSONArray();
+
+        int canvasN = 1;
+        for (Image image: document.getSortedImages()) {
+            JSONObject canvasJSON = new JSONObject();
+            String canvasID = baseID + "/canvas/f" + canvasN;
+            model.addCanvas(image, canvasID);
+            canvasJSON.put("@id", canvasID);
+            canvasJSON.put("@type", "sc:Canvas");
+            canvasJSON.put("label", image.getFilename());
+            canvasJSON.put("width", image.getWidth());
+            canvasJSON.put("height", image.getHeight());
+
+            JSONArray imagesJSON = new JSONArray();
+            JSONObject jsonImageJSON = new JSONObject();
+            jsonImageJSON.put("motivation", "sc:painting");
+            jsonImageJSON.put("on", canvasID);
+
+            JSONObject resourceJSON = new JSONObject();
+            resourceJSON.put("format", "image/jpeg"); //TODO - ¿tenemos también tiff?
+            JSONObject serviceJSON = new JSONObject();
+            serviceJSON.put("@context", "http://iiif.io/api/image/2/context.json");
+            serviceJSON.put("profile", "http://iiif.io/api/image/2/level2.json");
+            String imageID = muretConfiguration.getBaseIIIFImagesURI() + "/" + document.getPath()
+                    + muretConfiguration.getPathSeparatorIIIF()
+                    + MURETConfiguration.MASTER_IMAGES
+                    + muretConfiguration.getPathSeparatorIIIF()
+                    + image.getFilename();
+            serviceJSON.put("@id", imageID);
+            resourceJSON.put("service", serviceJSON);
+            resourceJSON.put("width", image.getWidth());
+            resourceJSON.put("height", image.getHeight());
+            resourceJSON.put("@id", imageID);
+            resourceJSON.put("@type", "dctypes:Image");
+            jsonImageJSON.put("resource", resourceJSON);
+            jsonImageJSON.put("@type", "oa:Annotation");
+            imagesJSON.add(jsonImageJSON);
+            canvasJSON.put("images", imagesJSON);
+            canvasesJSON.add(canvasJSON);
+            canvasN++;
+        }
+        sequenceJSON.put("canvases", canvasesJSON);
+        sequenceJSON.put("label", "Current Page Order");
+        sequenceJSON.put("@type", "sc:Sequence");
+        sequenceJSON.put("@id", baseID + "/sequence/default");
+        sequencesJSON.add(sequenceJSON);
+        manifestJSON.put("sequences", sequencesJSON);
+        manifestJSON.put("@type", "sc:Manifest");
+        manifestJSON.put("@context", "http://iiif.io/api/presentation/2/context.json");
+
+
+        //Write JSON file
+        String pathIIIF = muretConfiguration.getFolderIIIF();
+        File outputFolder = new File(pathIIIF, document.getPath());
+        outputFolder.mkdir();
+        File outputFile = new File(outputFolder, "manifest.json");
+        try (FileWriter file = new FileWriter(outputFile)) {
+            file.write(manifestJSON.toJSONString().replace("\\/", "/")); // avoid escape characters
+            file.flush();
+
+        } catch (IOException e) {
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Cannot write manifest JSON", e);
+            throw new IM3WSException("Cannot write manifest JSON");
+        }
+        model.setManifestFile(baseID + "/manifest.json");
+        return model;
+    }
     /*public Notation render(ScoreSong scoreSong, NotationType notationType, ManuscriptType manuscriptType, boolean mensustriche, Renderer renderer) throws IM3WSException {
         try {
             if (renderer == Renderer.im3) {

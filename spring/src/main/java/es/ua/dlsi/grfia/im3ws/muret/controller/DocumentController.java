@@ -294,7 +294,7 @@ public class DocumentController {
 
         Set<Long> idsOfSelectedImages = findSelectedImages(selectedImages);
         try {
-            return new StringResponse(notationModel.exportMEI(document.get(), part, false, true, idsOfSelectedImages));
+            return new StringResponse(notationModel.exportMEI(documentModel, document.get(), part, false, true, idsOfSelectedImages));
         } catch (IM3Exception e) {
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Error exporting MEI", e);
             throw new IM3WSException(e);
@@ -309,7 +309,7 @@ public class DocumentController {
             }
 
             Set<Long> idsOfSelectedImages = findSelectedImages(selectedImages);
-            return new StringResponse(notationModel.exportMEI(document.get(), null, true, !exportMeasuringPolyphony, idsOfSelectedImages));
+            return new StringResponse(notationModel.exportMEI(documentModel, document.get(), null, true, !exportMeasuringPolyphony, idsOfSelectedImages));
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot export MEI with facsimile", e);
         }
@@ -349,7 +349,7 @@ public class DocumentController {
             files.add(tmpDirectory);
 
             Set<Long> idsOfSelectedImages = findSelectedImages(selectedImages);
-            notationModel.generateMensurstrich(tmpDirectory, document.get(), idsOfSelectedImages);
+            notationModel.generateMensurstrich(documentModel, tmpDirectory, document.get(), idsOfSelectedImages);
 
             fileCompressors.tgzFolders(tgz, files, prefixes);
 
@@ -386,7 +386,7 @@ public class DocumentController {
             files.add(tmpDirectory);
 
             Set<Long> idsOfSelectedImages = findSelectedImages(selectedImages);
-            notationModel.generateMusicXML(tmpDirectory, document.get(), idsOfSelectedImages);
+            notationModel.generateMusicXML(documentModel, tmpDirectory, document.get(), idsOfSelectedImages);
 
             fileCompressors.tgzFolders(tgz, files, prefixes);
 

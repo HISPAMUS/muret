@@ -156,12 +156,30 @@ public class NotationModel {
         return stringBuilder.toString();
     }
 
-    public Pair<ScoreSong, ScorePart> exportScoreSong(Document document, Part specificPart, boolean partsAndFacsimile, Set<Long> idsOfSelectedImages) throws IM3Exception {
+    /**
+     * @param documentModel
+     * @param document
+     * @param specificPart
+     * @param partsAndFacsimile
+     * @param idsOfSelectedImages
+     * @return
+     * @throws IM3Exception
+     */
+    public Pair<ScoreSong, ScorePart> exportScoreSong(DocumentModel documentModel, Document document, Part specificPart, boolean partsAndFacsimile, Set<Long> idsOfSelectedImages) throws IM3Exception {
+        // This method is aligned with DocumentModel.generateIIIFManifestFile in order to correctly generate
         ScoreSong song = new ScoreSong();
         song.addTitle(document.getName());
         song.addPerson(PersonRoles.COMPOSER, document.getComposer());
         song.addPerson(PersonRoles.ENCODER, AuditorAwareImpl.getCurrentUser().getFirstName() + " " + AuditorAwareImpl.getCurrentUser().getLastName());
+        // generate the manifest
 
+        IIIFModel iiifModel = null;
+        try {
+            iiifModel = documentModel.generateIIIFManifestFile(document);
+            song.getMetadata().setSource(iiifModel.getManifestFile());
+        } catch (IM3WSException e) {
+            throw new IM3Exception(e);
+        }
         Facsimile facsimile = new Facsimile();
         if (partsAndFacsimile) {
             song.setFacsimile(facsimile);
@@ -200,6 +218,18 @@ public class NotationModel {
         List<Image> sortedImages = document.getSortedImages();
         for (Image image: sortedImages) {
             if (idsOfSelectedImages.contains(image.getId())) {
+                Surface imageSurface = null;
+                if (partsAndFacsimile && iiifModel != null) {
+                    imageSurface = new Surface();
+                    imageSurface.setID("image_" + image.getId());
+                    imageSurface.setBoundingBox(new BoundingBoxXY(0, 0, image.getWidth(), image.getHeight()));
+
+                    Graphic graphic = new Graphic();
+                    graphic.setTarget(iiifModel.getCanvas(image));
+                    imageSurface.addGraphic(graphic);
+                    facsimile.addSurface(imageSurface);
+                }
+
                 for (Part part: document.getParts()) {
                     partPageBeginnings.put(part, true);
                 }
@@ -209,20 +239,14 @@ public class NotationModel {
                 for (Page page: image.getSortedPages()) {
                     npage++;
                     String lastPageID = "page_" + page.getId();
-                    Surface imageSurface = null;
-                    if (partsAndFacsimile) {
-                        imageSurface = new Surface();
-                        imageSurface.setID(lastPageID);
-                        imageSurface.setBoundingBox(new BoundingBoxXY(0, 0, image.getWidth(), image.getHeight()));
-
-                        Graphic graphic = new Graphic();
-                        graphic.setTarget(document.getPath() + "/" + image.getFilename());
-                        imageSurface.addGraphic(graphic);
-
-                        facsimile.addSurface(imageSurface);
+                    if (imageSurface != null) {
+                        Zone pageZone = new Zone();
+                        pageZone.setID(lastPageID);
+                        pageZone.setBoundingBox(getBoundingBox(page.getBoundingBox()));
+                        pageZone.setType("page");
+                        pageZone.setLabel("Page #" + npage);
+                        imageSurface.addZone(pageZone);
                     }
-
-
                     boolean newPage = true;
                     int nregion = 0;
                     for (Region region : page.getSortedStaves()) {
@@ -376,15 +400,17 @@ public class NotationModel {
 
     /**
      *
+     *
+     * @param documentModel
      * @param document
      * @param specificPart If null, the full score is rendered
      * @param idsOfSelectedImages
      * @return
      * @throws IM3Exception
      */
-    public String exportMEI(Document document, Part specificPart, boolean partsAndFacsimile, boolean includeRhythm, Set<Long> idsOfSelectedImages) throws IM3Exception {
+    public String exportMEI(DocumentModel documentModel, Document document, Part specificPart, boolean partsAndFacsimile, boolean includeRhythm, Set<Long> idsOfSelectedImages) throws IM3Exception {
 
-        Pair<ScoreSong, ScorePart> pair = exportScoreSong(document, specificPart, partsAndFacsimile, idsOfSelectedImages);
+        Pair<ScoreSong, ScorePart> pair = exportScoreSong(documentModel, document, specificPart, partsAndFacsimile, idsOfSelectedImages);
         ScoreSong song = pair.getX();
         ScorePart scoreSpecificPart = pair.getY();
 
@@ -410,8 +436,8 @@ public class NotationModel {
         );
     }
 
-    public void generateMensurstrich(Path tgz, Document document, Set<Long> idsOfSelectedImages) throws IM3Exception {
-        Pair<ScoreSong, ScorePart> pair = exportScoreSong(document, null, false, idsOfSelectedImages);
+    public void generateMensurstrich(DocumentModel documentModel, Path tgz, Document document, Set<Long> idsOfSelectedImages) throws IM3Exception {
+        Pair<ScoreSong, ScorePart> pair = exportScoreSong(documentModel, document, null, false, idsOfSelectedImages);
         ScoreSong mensural = pair.getX();
 
         HorizontalLayout horizontalLayout = new HorizontalLayout(mensural, new CoordinateComponent(50000), new CoordinateComponent(3000), LayoutFonts.patriarca);
@@ -445,9 +471,9 @@ public class NotationModel {
         svgExporterMerged.exportLayout(svgOutputMerged, horizontalLayoutMerged);
     }
 
-    public void generateMusicXML(Path tgz, Document document, Set<Long> idsOfSelectedImages) throws IM3Exception {
+    public void generateMusicXML(DocumentModel documentModel, Path tgz, Document document, Set<Long> idsOfSelectedImages) throws IM3Exception {
         //TODO ¿Si no es mensural?
-        Pair<ScoreSong, ScorePart> pair = exportScoreSong(document, null, false, idsOfSelectedImages);
+        Pair<ScoreSong, ScorePart> pair = exportScoreSong(documentModel, document, null, false, idsOfSelectedImages);
         ScoreSong mensural = pair.getX();
 
         MensuralToModern mensuralToModern = new MensuralToModern(null);
