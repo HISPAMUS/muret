@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Comparator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -32,7 +33,7 @@ import static org.junit.Assert.fail;
  * @created 27/03/2020
  */
 public class AllCoreTestSuite {
-    private static final String OUTPUT = "/tmp/allcoretests";
+        private static final String OUTPUT = "/tmp/allcoretests";
     private ICoreAbstractFactory abstractFactory = new CoreFactory().create();
 
     @Before
@@ -50,7 +51,11 @@ public class AllCoreTestSuite {
         try {
             String exported = exporter.exportScore(score);
             if (writeToFile) {
-                File outputfile = new File(outputTmp, name + "." + extension);
+                File outputFolder = new File(outputTmp, extension);
+                if (!outputFolder.exists()) {
+                    outputFolder.mkdir();
+                }
+                File outputfile = new File(outputFolder, name + "." + extension);
                 writeToFile(exported, outputfile);
                 if (importer instanceof XMLImporter) {
                     try {
@@ -105,18 +110,22 @@ public class AllCoreTestSuite {
                 e.printStackTrace();
                 fail("SKM: " + name + ": " + e.getMessage());
             }
+            File lyFolder = new File(outputTmp, "ly");
+            lyFolder.mkdir();
             try {
                 LilypondExporter exporter = new LilypondExporter();
-                writeToFile(exporter.exportScore(score), new File(outputTmp, name + ".ly"));
+                writeToFile(exporter.exportScore(score), new File(lyFolder, name + ".ly"));
             } catch (UnsupportedOperationException e) {
                 System.err.println("Lilypond: " + e.getMessage());
             } catch (Exception e) {
                 e.printStackTrace();
                 fail("Lilypond: " + name + ": " + e.getMessage());
             }
+            File monFolder = new File(outputTmp, "mon");
+            monFolder.mkdir();
             try {
                 MONExporter exporter = new MONExporter();
-                writeToFile(exporter.exportScore(score), new File(outputTmp, name + ".json"));
+                writeToFile(exporter.exportScore(score), new File(monFolder, name + ".mon.json"));
             } catch (UnsupportedOperationException e) {
                 System.err.println("JSON: " + e.getMessage());
             } catch (Exception e) {
@@ -129,6 +138,13 @@ public class AllCoreTestSuite {
     public void allExportImportTests() throws Exception {
         System.out.println("############## GENERATING ALL CORE ITEMS TESTS TO " + OUTPUT + " #####################");
         File outputTmp = new File(OUTPUT);
+        if (outputTmp.exists()) {
+            Files.walk(outputTmp.toPath()) // delete all files
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+        }
+
         outputTmp.mkdirs();
         AbstractCoreTest [] testScoreBuilders = new AbstractCoreTest[] {
             new MinimalTest(abstractFactory),
