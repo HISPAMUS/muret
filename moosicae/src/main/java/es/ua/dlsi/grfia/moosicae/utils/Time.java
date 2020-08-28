@@ -174,7 +174,7 @@ public class Time implements Comparable<Time> {
 
 	}
 
-	public boolean isZero() {
+	public boolean computeIsZero() {
 		return exactTime.getNumerator() == 0;
 	}
 
@@ -188,15 +188,15 @@ public class Time implements Comparable<Time> {
 	    return exactTime.intValue();
     }
 
-    public boolean isMaxValue() {
+    public boolean computeIsMaxValue() {
 		return exactTime.getNumerator() == Integer.MAX_VALUE;
     }
 
-    public boolean isNegative() {
+    public boolean computeIsNegative() {
 	    return exactTime.getNumerator() < 0;
     }
 
-    public boolean isOne() {
+    public boolean computeIsOne() {
 	    return exactTime.getNumerator() == 1;
     }
 

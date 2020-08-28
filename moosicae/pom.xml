@@ -77,10 +77,23 @@
             <version>20091111</version>
         </dependency>
         <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1.1</version>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.11.2</version>
         </dependency>
+        <!-- for correctly exporting Optional values: https://www.baeldung.com/jackson-optional -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+            <version>2.11.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <!--<dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+            <version>2.9.8</version>
+            <scope>compile</scope>
+        </dependency>-->
     </dependencies>
 
     <properties>

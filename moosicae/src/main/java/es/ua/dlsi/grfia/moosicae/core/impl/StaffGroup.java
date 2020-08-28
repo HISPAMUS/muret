@@ -1,7 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import javax.validation.constraints.NotNull;
 
@@ -37,10 +36,10 @@ public class StaffGroup extends System implements IStaffGroup {
     }
 
     @Override
-    public IStaff[] getStaves() {
+    public IStaff[] listStaves() {
         LinkedList<IStaff> staves = new LinkedList<>();
         for (ISystem child: children) {
-            for (IStaff staff: child.getStaves()) {
+            for (IStaff staff: child.listStaves()) {
                 staves.add(staff);
             }
         }

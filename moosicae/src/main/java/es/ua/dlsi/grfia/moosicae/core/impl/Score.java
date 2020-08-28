@@ -36,10 +36,10 @@ public class Score extends CoreObject implements IScore {
     }
 
     @Override
-    public IStaff[] getAllStaves() {
+    public IStaff[] listAllStaves() {
         LinkedList<IStaff> staves = new LinkedList<>();
         for (ISystem child: systemElements) {
-            for (IStaff staff: child.getStaves()) {
+            for (IStaff staff: child.listStaves()) {
                 staves.add(staff);
             }
         }

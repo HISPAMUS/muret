@@ -59,7 +59,7 @@ public class Staff extends CoreObject implements IStaff {
 
 
     @Override
-    public IStaff[] getStaves() {
+    public IStaff[] listStaves() {
         return new IStaff[] {this};
     }
 

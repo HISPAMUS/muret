@@ -91,7 +91,7 @@ public class MusicXMLExporter implements IExporter {
 
             boolean nonAttributesFound = false;
             //TODO ordenar por tiempos - ver qué staves pertenecen a partes
-            for (IStaff staff: score.getAllStaves()) {
+            for (IStaff staff: score.listAllStaves()) {
                 IKeySignature lastKeySignature = null;
                 for (IVoicedItem staffElement: staff.getStaffSymbols()) {
                     XMLElement parentElement = xmlMeasure; // by default

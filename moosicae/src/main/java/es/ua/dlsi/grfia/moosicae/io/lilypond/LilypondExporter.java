@@ -32,7 +32,7 @@ public class LilypondExporter implements IExporter {
 
     private void export(LilypondContext scoreContext, IScore score) throws IMException {
         LilypondExporterVisitor lilypondExporterVisitor = new LilypondExporterVisitor();
-        for (IStaff staff: score.getAllStaves()) {
+        for (IStaff staff: score.listAllStaves()) {
             LilypondContext staffContext = new LilypondContext("Staff", true);
             scoreContext.addChildLine(staffContext);
             for (IVoicedItem staffElement: staff.getStaffSymbols()) {

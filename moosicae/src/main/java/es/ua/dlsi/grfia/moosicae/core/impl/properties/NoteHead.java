@@ -36,7 +36,7 @@ public class NoteHead extends CoreProperty implements INoteHead {
 
     @Override
     public Optional<ITie> getStartsTie() {
-        return Optional.of(tiedToNext);
+        return Optional.ofNullable(tiedToNext);
     }
 
     @Override

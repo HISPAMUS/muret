@@ -76,7 +76,7 @@ public class MEIExporter implements IExporter {
     private <T> Optional<T> getCommonBeginning(IScore score, Class<T> type) {
         T last = null;
         //TODO anidado
-        for (IStaff staff: score.getAllStaves()) {
+        for (IStaff staff: score.listAllStaves()) {
             Optional<T> staffFirst = findFirst(staff, type);
             if (!staffFirst.isPresent()) {
                 return Optional.empty();
@@ -122,7 +122,7 @@ public class MEIExporter implements IExporter {
         //TODO hacer lo de los compases - staves - layers !!!!!!!!!!!
         XMLElement xmlSection = xmlScore.addChild("section");
         XMLElement xmlMeasure = xmlSection.addChild("measure");
-        for (IStaff staff: score.getAllStaves()) {
+        for (IStaff staff: score.listAllStaves()) {
             //TODO asociar staves a layers
             Integer nstaff = staffNumbers.get(staff);
             if (nstaff == null) {
@@ -144,7 +144,7 @@ public class MEIExporter implements IExporter {
     private void export(XMLElement xmlScoreDef, ISystem[] systemElements) throws IMException {
         XMLElement xmlStaffGrp = xmlScoreDef.addChild("staffGrp"); // TODO anidado
         for (ISystem staffOurGroup : systemElements) {
-            IStaff [] staves = staffOurGroup.getStaves();
+            IStaff [] staves = staffOurGroup.listStaves();
             for (IStaff staff : staves) {
                 exportDef(xmlStaffGrp, staff);
             }
