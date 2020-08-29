@@ -21,7 +21,6 @@ mkdir -p ${DOCUMENTATIONFOLDER}
 cp -r ${INPUTFOLDER}/* ${DOCUMENTATIONFOLDER}
 
 
-echo "[" > ${MSCORE_JSON}
 
 function processEncoding() {
   extension=$1
@@ -30,6 +29,7 @@ function processEncoding() {
   outputExtension=$4
   parameters=$5
 
+	echo "[" > ${MSCORE_JSON}
   first=true
 
   for sourceFile in $(find $DOCUMENTATIONFOLDER -name "*.${extension}" -print); do
