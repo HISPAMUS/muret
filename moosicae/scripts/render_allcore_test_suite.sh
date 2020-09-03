@@ -1,6 +1,6 @@
 #!/bin/bash
 #It renders the different encodings and logs the errors to a file
-DOCUMENTATIONFOLDER="/Users/drizo/cmg/investigacion/software/github/repositorioHispamus/documentation/mOOsicae/examples/allcoretests"
+DOCUMENTATIONFOLDER="/Users/drizo/cmg/investigacion/software/github/repositorioHispamus/documentation/mOOsicae/generated_examples/allcoretests"
 INPUTFOLDER="/tmp/allcoretests"
 VEROVIO="verovio"
 VEROVIO_OUTPUT=" -o "

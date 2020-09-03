@@ -219,9 +219,11 @@ public class NotationModel {
         for (Image image: sortedImages) {
             if (idsOfSelectedImages.contains(image.getId())) {
                 Surface imageSurface = null;
+                String lastImageSurfaceID = null; //TODO Temporal hasta que funcione bien MPEditor
                 if (partsAndFacsimile && iiifModel != null) {
                     imageSurface = new Surface();
-                    imageSurface.setID("image_" + image.getId());
+                    lastImageSurfaceID = "image_" + image.getId();
+                    imageSurface.setID(lastImageSurfaceID);
                     imageSurface.setBoundingBox(new BoundingBoxXY(0, 0, image.getWidth(), image.getHeight()));
 
                     Graphic graphic = new Graphic();
@@ -328,7 +330,8 @@ public class NotationModel {
                                         if (newPage) {
                                             PageBeginning pageBeginning = new PageBeginning(time, true);
                                             if (partsAndFacsimile) {
-                                                pageBeginning.setFacsimileElementID(lastPageID);
+                                                //pageBeginning.setFacsimileElementID(lastPageID);
+                                                pageBeginning.setFacsimileElementID(lastImageSurfaceID); //TODO Temporal, hasta que funcione bien MPEditor
                                             }
                                             scorePart.addPageBeginning(pageBeginning);
                                             newPage = false;

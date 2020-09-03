@@ -1,6 +1,10 @@
 0.12
     MAJOR UPDATES
-    - When exporting MEI facsimile, the MEI zone of symbols include as label the agnostic symbol string
+    - When exporting MEI facsimile:
+        * the MEI zone of symbols include as label the agnostic symbol string
+        * a IIIF manifest is generated and installed in the site muret.dlsi.ua.es/IIIF, with images served by a new Cantaloupe IIIF server at muret.dlsi.ua.es/images
+        (in current version, for compatibility with MPEditor @ Measuring Polyphony, the page beginning facsimile references are pointing to the surface element
+        instead of the page zone - this will be fixed when MPEditor currently handles this situation that does not allow correctly encoding images that include two pages)
     - New button added for exporting MEI files for the Measuring Polyphony project editor, that does not include rhythmic interpretations (issue #173)
 
     MINOR UPDATES
