@@ -28,6 +28,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.util.*;
+import java.util.logging.Logger;
 
 // Use a different port (as environment variable) when launching it simultaneously to the web server
 // --server.port=8181
@@ -35,10 +36,11 @@ import java.util.*;
 /**
  * Used to import the Fondo de Música Tradicional dataset https://musicatradicional.eu/es/home from files already encoded in Sibelius or Finale.
  * In Sibelius, MEI files are exported to be imported here.
+ * It imports the semantic encoding and the agnostic (deduced from the semantic). It assigns a MuRET part (instrument) named "Voz" to each image.
  * Requirements:
  * - the name of the document must be the same as the name of the folder
  * - the filename of the MEI file must match the image name in MuRET
- * - either the GROUNDTRUTH_PATH or COLLECTION can be used or provided using parameters (first groundtruth, second collection)
+ * - either the GROUNDTRUTH_PATH or COLLECTION can be used or provided using parameters (first ground-truth, second collection)
  * @author drizo
  */
 @ComponentScan("es.ua.dlsi.grfia.im3ws")
@@ -48,7 +50,7 @@ import java.util.*;
 public class ImportMEIFromFMT implements CommandLineRunner {
     private static final String GROUNDTRUTH_PATH = "/Users/drizo/GCLOUDUA/HISPAMUS/repositorios/musicatradicional/misiones/hispamus/sibelius_finale/alineados";
     private static final String [] DOCUMENTS = {"C5", "C14", "M16", "M38"};
-    // private static final String [] DOCUMENTS = {"C5"};
+    //private static final String [] DOCUMENTS = {"M16"};
 
     @Autowired
     RegionRepository regionRepository;
@@ -61,6 +63,9 @@ public class ImportMEIFromFMT implements CommandLineRunner {
 
     @Autowired
     SymbolRepository symbolRepository;
+
+    @Autowired
+    PartRepository partRepository;
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -98,6 +103,8 @@ public class ImportMEIFromFMT implements CommandLineRunner {
                 throw new Exception("Cannot find collection folder " + collectionFolder.getAbsolutePath());
             }
 
+            Part voz = null; // the same part is assigned to each document
+
             ArrayList<File> meiFiles = new ArrayList<>();
             FileUtils.readFiles(collectionFolder, meiFiles, "mei");
             for (File file : meiFiles) {
@@ -132,6 +139,26 @@ public class ImportMEIFromFMT implements CommandLineRunner {
                     if (pageSystemBeginnings == null) {
                         throw new Exception("Cannot find page system beginnings");
                     }
+
+                    // assign a voice / part / instrument
+                    if (image.get().getPart() == null) {
+                        Logger.getLogger(this.getClass().getName()).info("Image " + image.get().getFilename() + " did not contain a part yet");
+                        if (document.get().getParts() != null && document.get().getParts().size() > 0) {
+                            voz = document.get().getParts().get(0);
+                            Logger.getLogger(this.getClass().getName()).info("There were "+ document.get().getParts().size() + " voices in document " + document.get().getName() + ", using the first one namned '" + voz.getName() + "'");
+                        } else {
+                            voz = new Part("Voz", null, document.get());
+                            partRepository.save(voz);
+                            document.get().getParts().add(voz);
+                            documentRepository.save(document.get());
+                            Logger.getLogger(this.getClass().getName()).info("There were no voices for "+ document.get().getName() + ", creating a new one named '" + voz.getName() + "'");
+                        }
+                        image.get().setPart(voz);
+                        imageRepository.save(image.get());
+                    } else {
+                        Logger.getLogger(this.getClass().getName()).info("Image " + image.get().getFilename() + " already contain a voice named '" + image.get().getPart().getName() + "'");
+                    }
+
 
                     // check the number of staves in MuRET matches the number of staves in MEI file
                     TreeMap<Time, SystemBeginning> pageSystemBeginningsMap = pageSystemBeginnings.getSystemBeginnings();
@@ -202,8 +229,12 @@ public class ImportMEIFromFMT implements CommandLineRunner {
             }
         }
 
-        System.err.println("ERRORS FOUND IN FILES");
-        System.err.println(filesWithErrors);
+        if (filesWithErrors.toString().trim().isEmpty()) {
+            System.err.println("NO ERRORS FOUND");
+        } else {
+            System.err.println("ERRORS FOUND IN FILES");
+            System.err.println(filesWithErrors);
+        }
     }
 
     private void importStaffContent(int regionNumber, Region region, Sequence<AgnosticToken> agnosticTokenSequence, SemanticEncoding semanticEncoding) throws Exception {
