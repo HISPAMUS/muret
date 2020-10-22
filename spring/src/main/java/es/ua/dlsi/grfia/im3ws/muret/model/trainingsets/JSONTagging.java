@@ -115,7 +115,7 @@ public class JSONTagging extends AbstractTrainingSetExporter {
         }
     }
 
-    private void putBoundingBox(JSONObject jsonObject, BoundingBox boundingBox) {
+    public static void putBoundingBox(JSONObject jsonObject, BoundingBox boundingBox) {
         JSONObject jsonBB = new JSONObject();
         jsonBB.put("fromX", boundingBox.getFromX());
         jsonBB.put("fromY", boundingBox.getFromY());

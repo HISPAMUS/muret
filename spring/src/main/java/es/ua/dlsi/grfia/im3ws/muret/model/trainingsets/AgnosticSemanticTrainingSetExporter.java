@@ -118,7 +118,10 @@ public class AgnosticSemanticTrainingSetExporter extends AbstractTrainingSetExpo
                         AgnosticExporter agnosticExporter = new AgnosticExporter(AgnosticVersion.v2);
                         String agnosticSequence = agnosticExporter.export(agnostic);
 
+                        systemJSON.put("image_id", region.getPage().getImage().getId());
+                        systemJSON.put("image_name", region.getPage().getImage().getFilename());
                         systemJSON.put("region_id", region.getId());
+                        JSONTagging.putBoundingBox(systemJSON, region.getBoundingBox());
                         systemJSON.put("agnostic", agnosticSequence);
                         systemJSON.put("semantic", removeIDS(region.getSemanticEncoding()));
                         jsonSystems.add(systemJSON);
