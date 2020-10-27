@@ -2,19 +2,24 @@ package es.ua.dlsi.grfia.moosicae.io.mei;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.io.BaseExporter;
 import es.ua.dlsi.grfia.moosicae.io.IExporter;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLExporterVisitorParam;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLParamExportMode;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLPreambleElement;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLTree;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Optional;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class MEIExporter implements IExporter {
+public class MEIExporter extends BaseExporter {
     MEIExporterVisitor meiExporterVisitor;
     /**
      * Used to avoid exporting twice symbols such as the key signature, meter, clef that are exporte in the scoreDef or staffDef elements as attributes
@@ -25,7 +30,6 @@ public class MEIExporter implements IExporter {
     public MEIExporter() {
         meiExporterVisitor = new MEIExporterVisitor();
     }
-
 
     @Override
     public String exportScore(IScore score) throws IMException {

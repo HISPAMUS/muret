@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://music-encoding.org/schema/3.0.0/mei-all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://music-encoding.org/schema/3.0.0/mei-all.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<mei xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.music-encoding.org/ns/mei" meiversion="3.0.0">
+    <meiHead>
+        <fileDesc>
+            <titleStmt>
+                <title></title>
+            </titleStmt>
+            <pubStmt/>
+        </fileDesc>
+        <encodingDesc>
+            <appInfo>
+                <application>
+                    <name>David Rizo</name>
+                </application>
+            </appInfo>
+        </encodingDesc>
+        <workDesc>
+            <work>
+                <titleStmt>
+                    <title></title>
+                    <respStmt>
+                    </respStmt>
+                </titleStmt>
+            </work>
+        </workDesc>
+    </meiHead>
+    <music>
+        <body>
+            <mdiv>
+                <score>
+                    <scoreDef>
+                        <staffGrp>
+                            <staffDef n="1" lines="5" label="Example" notationtype="mensural" meter.sym="common"/>
+                        </staffGrp>
+                    </scoreDef>
+                    <section>
+                        <staff n="1">
+                            <layer n="1">
+                                <ligature form="recta">
+                                    <note dur="brevis" oct="4" pname="a"></note>
+                                    <note dur="longa" oct="4" pname="g"></note>
+                                </ligature>
+                                <ligature form="recta"> <!-- TODO: should be a "stacked" form -->
+                                    <note dur="brevis" oct="4" pname="g"></note>
+                                    <note dur="longa" oct="4" pname="a"></note>
+                                </ligature>
+                                <ligature form="recta">
+                                    <note dur="brevis" oct="4" pname="g"></note>
+                                    <note dur="longa" oct="4" pname="a"></note>
+                                </ligature>
+                                
+                                <ligature form="recta">
+                                    <note dur="longa" oct="4" pname="a"></note>
+                                    <note dur="longa" oct="4" pname="g"></note>
+                                </ligature>
+                                <ligature form="recta"> <!-- TODO: should be a "stacked" form -->
+                                    <note dur="longa" oct="4" pname="g"></note>
+                                    <note dur="longa" oct="4" pname="a"></note>
+                                </ligature>
+                                <ligature form="recta">
+                                    <note dur="longa" oct="4" pname="g"></note>
+                                    <note dur="longa" oct="4" pname="a"></note>
+                                </ligature>		
+                                
+                                <ligature form="obliqua">
+                                    <note dur="brevis" oct="4" pname="a"></note>
+                                    <note dur="brevis" oct="4" pname="g"></note>
+                                </ligature>								
+                                <ligature form="recta">
+                                    <note dur="brevis" oct="4" pname="g"></note>
+                                    <note dur="brevis" oct="4" pname="a"></note>
+                                </ligature>			
+                                <ligature form="obliqua">
+                                    <note dur="brevis" oct="4" pname="g"></note>
+                                    <note dur="brevis" oct="4" pname="a"></note>
+                                </ligature>			
+                                
+                                <ligature form="obliqua">
+                                    <note dur="longa" oct="4" pname="a"></note>
+                                    <note dur="brevis" oct="4" pname="g"></note>
+                                </ligature>								
+                                <ligature form="recta">
+                                    <note dur="longa" oct="4" pname="g"></note>
+                                    <note dur="brevis" oct="4" pname="a"></note>
+                                </ligature>											
+                                <ligature form="obliqua">
+                                    <note dur="longa" oct="4" pname="g"></note>
+                                    <note dur="brevis" oct="4" pname="a"></note>
+                                </ligature>											
+
+                                <ligature form="recta">
+                                    <note dur="semibrevis" oct="4" pname="a"></note>
+                                    <note dur="semibrevis" oct="4" pname="g"></note>
+                                </ligature>											
+                                <ligature form="obliqua">
+                                    <note dur="semibrevis" oct="4" pname="a"></note>
+                                    <note dur="semibrevis" oct="4" pname="g"></note>
+                                </ligature>											
+                                <ligature form="recta">
+                                    <note dur="semibrevis" oct="4" pname="g"></note>
+                                    <note dur="semibrevis" oct="4" pname="a"></note>
+                                </ligature>											
+                                <ligature form="obliqua">
+                                    <note dur="semibrevis" oct="4" pname="g"></note>
+                                    <note dur="semibrevis" oct="4" pname="a"></note>
+                                </ligature>											
+                                
+                            </layer>
+                        </staff>
+                    </section>
+                </score>
+            </mdiv>
+        </body>
+    </music>
+</mei>

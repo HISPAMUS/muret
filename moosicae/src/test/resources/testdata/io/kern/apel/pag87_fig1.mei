@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://music-encoding.org/schema/3.0.0/mei-all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://music-encoding.org/schema/3.0.0/mei-all.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<mei xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.music-encoding.org/ns/mei" meiversion="3.0.0">
+	<meiHead>
+		<fileDesc>
+			<titleStmt>
+				<title></title>
+			</titleStmt>
+			<pubStmt/>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application>
+					<name>IM3 Java Library © David Rizo</name>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<workDesc>
+			<work>
+				<titleStmt>
+					<title></title>
+					<respStmt>
+					</respStmt>
+				</titleStmt>
+			</work>
+		</workDesc>
+	</meiHead>
+	<music>
+		<body>
+			<mdiv>
+				<score>
+					<scoreDef>
+						<staffGrp>
+							<staffDef n="1" lines="5" label="Example" notationtype="mensural" meter.sym="common"/>
+						</staffGrp>
+					</scoreDef>
+					<section>
+						<staff n="1">
+							<layer n="1">								
+								<note dur="maxima" pname="b" oct="4"/>
+								<note dur="longa" pname="b" oct="4"/>
+								<note dur="brevis" pname="b" oct="4"/>
+								<note dur="minima" pname="b" oct="4"/>
+								<note dur="semiminima" pname="b" oct="4"/>
+								<note dur="fusa" pname="b" oct="4"/>
+								<note dur="semifusa" pname="b" oct="4"/>
+								<rest dur="maxima" />
+								<rest dur="maxima" num="3" numbase="2" />
+								<rest dur="longa"/>
+								<rest dur="longa" num="3" numbase="2" />
+								<rest dur="brevis"/>
+								<rest dur="semibrevis"/>
+								<rest dur="minima"/>
+								<rest dur="semiminima"/>
+								<rest dur="fusa"/>
+								<rest dur="semifusa"/>
+							</layer>
+						</staff>
+					</section>
+				</score>
+			</mdiv>
+		</body>
+	</music>
+</mei>

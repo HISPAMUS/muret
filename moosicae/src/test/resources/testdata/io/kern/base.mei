@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://music-encoding.org/schema/4.0.0/mei-all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="https://music-encoding.org/schema/4.0.0/mei-all.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<mei xmlns="http://www.music-encoding.org/ns/mei" meiversion="4.0.0">
+    <meiHead>
+        <fileDesc>
+            <titleStmt>
+                <title />
+            </titleStmt>
+            <pubStmt />
+        </fileDesc>
+        <encodingDesc>
+            <appInfo>
+                <application isodate="2020-10-26T14:45:23" version="3.1.0-dev-c4f2cd7-dirty">
+                    <name>Verovio</name>
+                    <p>Transcoded from Humdrum</p>
+                </application>
+            </appInfo>
+        </encodingDesc>
+        <workList>
+            <work>
+                <title />
+            </work>
+        </workList>
+    </meiHead>
+    <music>
+        <body>
+            <mdiv xml:id="mdiv-0000001668912394">
+                <score xml:id="score-0000001602682213">
+                    <scoreDef xml:id="scoredef-0000000024275648">
+                        <staffGrp xml:id="staffgrp-0000001641513532">
+                            <staffDef xml:id="staffdef-0000000030049739" n="1" lines="5">
+                                <clef xml:id="clef-L2F1" shape="G" line="2" />
+                                <keySig xml:id="keysig-L3F1" sig="1f" />
+                                <meterSig xml:id="metersig-L4F1" count="2" unit="2" />
+                            </staffDef>
+                        </staffGrp>
+                    </scoreDef>
+                    <section xml:id="section-L1F1">
+                        <measure xml:id="measure-L1">
+                            <staff xml:id="staff-0000000940670763" n="1">
+                                <layer xml:id="layer-L1F1N1" n="1">
+                                    <note xml:id="note-L6F1" dur="2" oct="4" pname="d" stem.dir="up" accid.ges="n" />
+                                    <note xml:id="note-L7F1" dur="2" oct="4" pname="a" stem.dir="up" accid.ges="n" />
+                                </layer>
+                            </staff>
+                        </measure>
+                        <measure xml:id="measure-L8">
+                            <staff xml:id="staff-L8F1N1" n="1">
+                                <layer xml:id="layer-L8F1N1" n="1">
+                                    <note xml:id="note-L9F1" dur="2" oct="4" pname="f" stem.dir="up" accid.ges="n" />
+                                    <note xml:id="note-L10F1" dur="2" oct="4" pname="d" stem.dir="up" accid.ges="n" />
+                                </layer>
+                            </staff>
+                        </measure>
+                        <measure xml:id="measure-L11">
+                            <staff xml:id="staff-L11F1N1" n="1">
+                                <layer xml:id="layer-L11F1N1" n="1">
+                                    <note xml:id="note-L12F1" dur="2" oct="4" pname="c" stem.dir="up" accid="s" />
+                                    <note xml:id="note-L13F1" dur="4" oct="4" pname="d" stem.dir="up" accid.ges="n" />
+                                    <note xml:id="note-L14F1" dur="4" oct="4" pname="e" stem.dir="up" accid.ges="n" />
+                                </layer>
+                            </staff>
+                        </measure>
+                        <measure xml:id="measure-L15" right="invis">
+                            <staff xml:id="staff-L15F1N1" n="1">
+                                <layer xml:id="layer-L15F1N1" n="1">
+                                    <note xml:id="note-L16F1" dur="2" oct="4" pname="f" stem.dir="up" accid.ges="n" />
+                                    <rest xml:id="rest-L17F1" dur="2" />
+                                </layer>
+                            </staff>
+                        </measure>
+                    </section>
+                </score>
+            </mdiv>
+        </body>
+    </music>
+</mei>

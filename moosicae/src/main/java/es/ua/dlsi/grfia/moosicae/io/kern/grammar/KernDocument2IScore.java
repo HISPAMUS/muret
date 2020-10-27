@@ -1,9 +1,9 @@
-package es.ua.dlsi.grfia.moosicae.io.skm.grammar;
+package es.ua.dlsi.grfia.moosicae.io.kern.grammar;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.properties.IStaffLineCount;
-import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.*;
+import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.*;
 import es.ua.dlsi.grfia.moosicae.utils.dag.DAGNode;
 
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import java.util.HashMap;
  * It converts the KernDocument obtained when parsing to an IScore object
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class SkmDocument2IScore {
+public class KernDocument2IScore {
     private final ICoreAbstractFactory abstractFactory;
     private final IScore score;
     private final HashMap<Integer, IPart> partNumbers;
@@ -22,7 +22,7 @@ public class SkmDocument2IScore {
     private IPart defaultPart;
     private IStaff defaultStaff;
 
-    public SkmDocument2IScore(ICoreAbstractFactory abstractFactory) {
+    public KernDocument2IScore(ICoreAbstractFactory abstractFactory) {
         this.abstractFactory = abstractFactory;
         this.score = abstractFactory.createScore(null);
         this.partNumbers = new HashMap<>();
@@ -32,24 +32,24 @@ public class SkmDocument2IScore {
     }
 
 
-    public IScore convert(DAGNode<SkmToken> firstNode) throws IMException {
+    public IScore convert(DAGNode<KernToken> firstNode) throws IMException {
         defaultPart = abstractFactory.createPart(score, null, null);
         IStaffLineCount defaultStaffLineCount = abstractFactory.createStaffLineCount(5);
         defaultStaff = abstractFactory.createStaff(score, null, defaultStaffLineCount);
 
         // first create voices, all associated to a default part that will be moved to other part when the **part token is found
-        for (DAGNode<SkmToken> node: firstNode.getNextList()) {
-            SkmToken skmToken = node.getLabel().getContent();
-            if (skmToken instanceof SkmHeader) {
-                ESkmHeaders headerType = ((SkmHeader) skmToken).getSkmHeaderType();
-                if (headerType == ESkmHeaders.skern || headerType == ESkmHeaders.smens) {
+        for (DAGNode<KernToken> node: firstNode.getNextList()) {
+            KernToken skmToken = node.getLabel().getContent();
+            if (skmToken instanceof KernHeader) {
+                EKernHeaders headerType = ((KernHeader) skmToken).getSkmHeaderType();
+                if (headerType == EKernHeaders.skern || headerType == EKernHeaders.smens) {
                     IVoice voice = abstractFactory.createVoice(defaultPart, null, null);
                     voiceParts.put(voice, defaultPart);
                     //TODO staves - cuando se encuentre con *staff1 o *staff1/2
                     IStaff defaultStaff = abstractFactory.createStaff(score, null, defaultStaffLineCount);
                     voiceStaves.put(voice, defaultStaff);
                     // now traverse the spine
-                    for (DAGNode<SkmToken> next: node.getNextList()) {
+                    for (DAGNode<KernToken> next: node.getNextList()) {
                         visit(voice, next);
                     }
                     
@@ -70,27 +70,27 @@ public class SkmDocument2IScore {
         return score;
     }
 
-    private void visit(IVoice voice, DAGNode<SkmToken> node) throws IMException {
+    private void visit(IVoice voice, DAGNode<KernToken> node) throws IMException {
         process(voice, node.getLabel().getContent());
-        for (DAGNode<SkmToken> next: node.getNextList()) {
+        for (DAGNode<KernToken> next: node.getNextList()) {
             visit(voice, next);
         }
     }
 
-    private void process(IVoice voice, SkmToken skmToken) throws IMException {
-        if (skmToken instanceof SkmPart) {
-            SkmPart skmPart = (SkmPart) skmToken;
+    private void process(IVoice voice, KernToken skmToken) throws IMException {
+        if (skmToken instanceof KernPart) {
+            KernPart skmPart = (KernPart) skmToken;
             processPart(voice, skmPart);
-        } else if (skmToken instanceof SkmStaff) {
-            SkmStaff skmStaff = (SkmStaff) skmToken;
+        } else if (skmToken instanceof KernStaff) {
+            KernStaff skmStaff = (KernStaff) skmToken;
             processStaff(voice, skmStaff);
-        } else if (skmToken instanceof SkmCoreSymbol ){
-            SkmCoreSymbol skmCoreSymbol = (SkmCoreSymbol) skmToken;
+        } else if (skmToken instanceof KernCoreSymbol){
+            KernCoreSymbol skmCoreSymbol = (KernCoreSymbol) skmToken;
             processCoreSymbol(voice, skmCoreSymbol);
         } // TODO spine operations
     }
 
-    private void processCoreSymbol(IVoice voice, SkmCoreSymbol skmCoreSymbol) throws IMException {
+    private void processCoreSymbol(IVoice voice, KernCoreSymbol skmCoreSymbol) throws IMException {
         IStaff voiceStaff = voiceStaves.get(voice);
         if (skmCoreSymbol.getSymbol() instanceof IVoiced) {
             voice.addItem((IVoiced) skmCoreSymbol.getSymbol());
@@ -100,7 +100,7 @@ public class SkmDocument2IScore {
         }
     }
 
-    private void processStaff(IVoice voice, SkmStaff skmStaff) {
+    private void processStaff(IVoice voice, KernStaff skmStaff) {
         IStaff staff = staffNumbers.get(skmStaff.getNumber());
 
         if (staff == null) {
@@ -111,7 +111,7 @@ public class SkmDocument2IScore {
         voiceStaves.put(voice, staff);
     }
 
-    private void processPart(IVoice voice, SkmPart skmPart) {
+    private void processPart(IVoice voice, KernPart skmPart) {
         IPart part = partNumbers.get(skmPart.getNumber());
 
         if (part == null) {

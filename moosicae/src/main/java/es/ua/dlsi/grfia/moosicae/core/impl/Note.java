@@ -5,6 +5,7 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 
 /**
@@ -16,6 +17,7 @@ public class Note extends DurationalSingle implements INote {
 
     Note(IId id, @NotNull IFigure figure,  IDots dots, @NotNull INoteHead noteHead) {
         super(id, figure, dots);
+        Objects.requireNonNull(noteHead); // @NotNull is not working?
         this.noteHead = noteHead;
     }
 

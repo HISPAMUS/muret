@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IScore;
 import es.ua.dlsi.grfia.moosicae.core.IStaff;
 import es.ua.dlsi.grfia.moosicae.core.IVoicedItem;
+import es.ua.dlsi.grfia.moosicae.io.BaseExporter;
 import es.ua.dlsi.grfia.moosicae.io.IExporter;
 
 import java.util.LinkedList;
@@ -13,7 +14,7 @@ import java.util.List;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 18/03/2020
  */
-public class LilypondExporter implements IExporter {
+public class LilypondExporter extends BaseExporter {
     @Override
     public String exportScore(IScore score) throws IMException {
         List<ILilypondElement> output = new LinkedList<>();

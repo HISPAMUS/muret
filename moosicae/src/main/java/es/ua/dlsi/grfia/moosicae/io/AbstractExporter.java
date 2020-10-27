@@ -3,7 +3,7 @@ package es.ua.dlsi.grfia.moosicae.io;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public abstract class AbstractExporter<ExporterVisitorType extends IExporterVisitor> implements IExporter {
+public abstract class AbstractExporter<ExporterVisitorType extends IExporterVisitor> extends BaseExporter {
     protected final ExporterVisitorType exporterVisitor;
 
     protected AbstractExporter(ExporterVisitorType exporterVisitor) {

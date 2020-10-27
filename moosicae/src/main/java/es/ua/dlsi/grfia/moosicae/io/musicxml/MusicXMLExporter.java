@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.io.musicxml;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.io.BaseExporter;
 import es.ua.dlsi.grfia.moosicae.io.IExporter;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLExporterVisitorParam;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLParamExportMode;
@@ -15,7 +16,7 @@ import java.util.HashMap;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class MusicXMLExporter implements IExporter {
+public class MusicXMLExporter extends BaseExporter {
     public static final String CONTEXT_LAST_KEY_SIGNATURE = "lastKeySignature";
 
     private MusicXMLExporterVisitor musicXMLExporterVisitor;

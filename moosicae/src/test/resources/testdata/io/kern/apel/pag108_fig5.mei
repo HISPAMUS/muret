@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://music-encoding.org/schema/3.0.0/mei-all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://music-encoding.org/schema/3.0.0/mei-all.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<mei xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.music-encoding.org/ns/mei" meiversion="3.0.0">
+    <meiHead>
+        <fileDesc>
+            <titleStmt>
+                <title></title>
+            </titleStmt>
+            <pubStmt/>
+        </fileDesc>
+        <encodingDesc>
+            <appInfo>
+                <application>
+                    <name>David Rizo</name>
+                </application>
+            </appInfo>
+        </encodingDesc>
+        <workDesc>
+            <work>
+                <titleStmt>
+                    <title>Wili Apel, page 108, Figure 5</title>
+                    <respStmt>
+                    </respStmt>
+                </titleStmt>
+            </work>
+        </workDesc>
+    </meiHead>
+    <music>
+        <body>
+            <mdiv>
+                <score>
+                    <scoreDef>
+                        <staffGrp>
+                            <staffDef n="1" lines="5" label="Example" notationtype="mensural" clef.line="2" clef.shape="C" key.sig="0"/>
+                        </staffGrp>
+                    </scoreDef>
+                    <section>
+                        <staff n="1">
+                            <layer n="1">
+                                <mensur tempus="3" prolatio="2"/> <!-- O -->
+                                <note dur="brevis" oct="4" pname="g"/>
+                                <rest dur="brevis"/>
+                                <note dur="semibrevis" oct="4" pname="e"/>
+                                <note dur="brevis" oct="4" pname="d"/>
+                                <note dur="semibrevis" oct="4" pname="c"/>
+                                <note dur="minima" oct="4" pname="e" stem.dir="up"/>
+                                <note dur="minima" oct="4" pname="d"/>
+                                <note dur="semibrevis" oct="4" pname="c"/>
+                                <note dur="brevis" oct="3" pname="b"/>
+                                <rest dur="semibrevis"/>
+                            </layer>
+                        </staff>
+                    </section>
+                </score>
+            </mdiv>
+        </body>
+    </music>
+</mei>

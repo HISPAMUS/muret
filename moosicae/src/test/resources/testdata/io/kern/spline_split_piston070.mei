@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://music-encoding.org/schema/4.0.0/mei-all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="https://music-encoding.org/schema/4.0.0/mei-all.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<mei xmlns="http://www.music-encoding.org/ns/mei" meiversion="4.0.0">
+    <meiHead>
+        <fileDesc>
+            <titleStmt>
+                <title>Etude, Op. 10, No. 6</title>
+            </titleStmt>
+            <pubStmt />
+        </fileDesc>
+        <encodingDesc>
+            <appInfo>
+                <application isodate="2020-10-26T14:58:00" version="3.1.0-dev-c4f2cd7-dirty">
+                    <name>Verovio</name>
+                    <p>Transcoded from Humdrum</p>
+                </application>
+            </appInfo>
+            <projectDesc>
+                <p>Encoded by: Craig Stuart Sapp</p>
+            </projectDesc>
+        </encodingDesc>
+        <workList>
+            <work>
+                <identifier analog="humdrum:SCT">Piston 70</identifier>
+                <title xml:id="title-L2" analog="humdrum:OTL" type="main">Etude, Op. 10, No. 6</title>
+                <composer analog="humdrum:COM" xml:id="person-L1">Chopin, Frederic</composer>
+            </work>
+        </workList>
+        <extMeta>
+            <frames xmlns="http://www.humdrum.org/ns/humxml">
+                <metaFrame n="0" token="!!!COM: Chopin, Frederic" xml:id="L1">
+                    <frameInfo>
+                        <startTime float="0" />
+                        <frameType>reference</frameType>
+                        <referenceKey>COM</referenceKey>
+                        <referenceValue>Chopin, Frederic</referenceValue>
+                    </frameInfo>
+                </metaFrame>
+                <metaFrame n="1" token="!!!OTL: Etude, Op. 10, No. 6" xml:id="L2">
+                    <frameInfo>
+                        <startTime float="0" />
+                        <frameType>reference</frameType>
+                        <referenceKey>OTL</referenceKey>
+                        <referenceValue>Etude, Op. 10, No. 6</referenceValue>
+                    </frameInfo>
+                </metaFrame>
+                <metaFrame n="2" token="!!!OPS: Op. 10" xml:id="L3">
+                    <frameInfo>
+                        <startTime float="0" />
+                        <frameType>reference</frameType>
+                        <referenceKey>OPS</referenceKey>
+                        <referenceValue>Op. 10</referenceValue>
+                    </frameInfo>
+                </metaFrame>
+                <metaFrame n="3" token="!!!ONM: No. 6" xml:id="L4">
+                    <frameInfo>
+                        <startTime float="0" />
+                        <frameType>reference</frameType>
+                        <referenceKey>ONM</referenceKey>
+                        <referenceValue>No. 6</referenceValue>
+                    </frameInfo>
+                </metaFrame>
+                <metaFrame n="4" token="!!!SCT: Piston 70" xml:id="L5">
+                    <frameInfo>
+                        <startTime float="0" />
+                        <frameType>reference</frameType>
+                        <referenceKey>SCT</referenceKey>
+                        <referenceValue>Piston 70</referenceValue>
+                    </frameInfo>
+                </metaFrame>
+                <metaFrame n="5" token="!!!citation: Harmony by Walter Piston.  W.W.Norton: New York; 1941." xml:id="L6">
+                    <frameInfo>
+                        <startTime float="0" />
+                        <frameType>reference</frameType>
+                        <referenceKey>citation</referenceKey>
+                        <referenceValue>Harmony by Walter Piston.  W.W.Norton: New York; 1941.</referenceValue>
+                    </frameInfo>
+                </metaFrame>
+                <metaFrame n="6" token="!!!label: Ex. 70.  Chopin -- &lt;i>Etude, op. 10, no. 6&lt;/i>" xml:id="L7">
+                    <frameInfo>
+                        <startTime float="0" />
+                        <frameType>reference</frameType>
+                        <referenceKey>label</referenceKey>
+                        <referenceValue>Ex. 70.  Chopin -- &lt;i&gt;Etude, op. 10, no. 6&lt;/i&gt;</referenceValue>
+                    </frameInfo>
+                </metaFrame>
+                <metaFrame n="7" token="!!!chapter: Chapter 4 (Tonality and Modality)" xml:id="L8">
+                    <frameInfo>
+                        <startTime float="0" />
+                        <frameType>reference</frameType>
+                        <referenceKey>chapter</referenceKey>
+                        <referenceValue>Chapter 4 (Tonality and Modality)</referenceValue>
+                    </frameInfo>
+                </metaFrame>
+                <metaFrame n="8" token="!!!page: 37" xml:id="L9">
+                    <frameInfo>
+                        <startTime float="0" />
+                        <frameType>reference</frameType>
+                        <referenceKey>page</referenceKey>
+                        <referenceValue>37</referenceValue>
+                    </frameInfo>
+                </metaFrame>
+                <metaFrame n="9" token="!!!ENC: Craig Stuart Sapp" xml:id="L10">
+                    <frameInfo>
+                        <startTime float="0" />
+                        <frameType>reference</frameType>
+                        <referenceKey>ENC</referenceKey>
+                        <referenceValue>Craig Stuart Sapp</referenceValue>
+                    </frameInfo>
+                </metaFrame>
+            </frames>
+        </extMeta>
+    </meiHead>
+    <music>
+        <body>
+            <mdiv xml:id="mdiv-0000001689823727">
+                <score xml:id="score-0000000374437495">
+                    <scoreDef xml:id="scoredef-0000001239750813" midi.bpm="80">
+                        <pgHead xml:id="pghead-0000000548345166">
+                            <rend xml:id="rend-0000001129063764" halign="center" valign="middle">
+                                <rend xml:id="rend-0000001318064058" fontsize="large">Etude, Op. 10, No. 6</rend>
+                                <lb xml:id="lb-0000001432864943" /> 
+                                <lb xml:id="lb-0000001826682415" /> </rend>
+                            <rend xml:id="rend-0000000651958248" halign="right" valign="bottom" fontsize="small">Frederic Chopin</rend>
+                        </pgHead>
+                        <staffGrp xml:id="staffgrp-0000001680179006" symbol="brace" bar.thru="true">
+                            <staffDef xml:id="staffdef-0000000116798907" n="1" lines="5">
+                                <clef xml:id="clef-L13F2" shape="G" line="2" />
+                                <keySig xml:id="keysig-L16F2" accid="f" pname="e" mode="minor" sig="6f" />
+                                <meterSig xml:id="metersig-L14F2" count="6" unit="8" />
+                            </staffDef>
+                            <staffDef xml:id="staffdef-0000000453697453" n="2" lines="5">
+                                <clef xml:id="clef-L13F1" shape="F" line="4" />
+                                <keySig xml:id="keysig-L16F1" accid="f" pname="e" mode="minor" sig="6f" />
+                                <meterSig xml:id="metersig-L14F1" count="6" unit="8" />
+                            </staffDef>
+                        </staffGrp>
+                    </scoreDef>
+                    <section xml:id="section-L11F1">
+                        <measure xml:id="measure-L1">
+                            <staff xml:id="staff-0000000841684603" n="1">
+                                <layer xml:id="layer-L11F2N1" n="1">
+                                    <note xml:id="note-L19F3" dots="1" dur="4" oct="4" pname="c" accid="n" />
+                                    <note xml:id="note-L25F3" dots="1" dur="4" oct="3" pname="a" accid.ges="f" />
+                                </layer>
+                                <layer xml:id="layer-L13F2N2" n="2">
+                                    <note xml:id="note-L19F4" dots="1" dur="4" oct="4" pname="f" accid="f" />
+                                    <note xml:id="note-L25F4" dur="4" oct="4" pname="d" accid="n" />
+                                    <note xml:id="note-L29F4" dur="16" oct="4" pname="d" accid.ges="n" />
+                                    <note xml:id="note-L30F4" dur="16" oct="4" pname="e" accid.ges="f" />
+                                </layer>
+                            </staff>
+                            <staff xml:id="staff-0000002045130848" n="2">
+                                <layer xml:id="layer-L11F1N1" n="1">
+                                    <note xml:id="note-L19F1" dots="1" dur="4" oct="2" pname="a" accid.ges="f" />
+                                    <note xml:id="note-L25F1" dots="1" dur="4" oct="2" pname="b" accid.ges="f" />
+                                </layer>
+                                <layer xml:id="layer-L13F1N2" n="2">
+                                    <note xml:id="note-L19F2" dur="16" oct="3" pname="a" accid.ges="f" />
+                                    <note xml:id="note-L20F2" dur="16" oct="3" pname="b" accid.ges="f" />
+                                    <note xml:id="note-L21F2" dur="16" oct="3" pname="g" accid="n" />
+                                    <note xml:id="note-L22F2" dur="16" oct="3" pname="b" accid.ges="f" />
+                                    <note xml:id="note-L23F2" dur="16" oct="3" pname="a" accid.ges="f" />
+                                    <note xml:id="note-L24F2" dur="16" oct="3" pname="f" accid="f" />
+                                    <note xml:id="note-L25F2" dur="16" oct="3" pname="f" accid="n" />
+                                    <note xml:id="note-L26F2" dur="16" oct="3" pname="g" accid="f" />
+                                    <note xml:id="note-L27F2" dur="16" oct="3" pname="e" accid="n" />
+                                    <note xml:id="note-L28F2" dur="16" oct="3" pname="g" accid.ges="f" />
+                                    <note xml:id="note-L29F2" dur="16" oct="3" pname="f" accid.ges="n" />
+                                    <note xml:id="note-L30F2" dur="16" oct="2" pname="b" accid.ges="f" />
+                                </layer>
+                            </staff>
+                            <tie xml:id="tie-L25F4-L29F4" startid="#note-L25F4" endid="#note-L29F4" />
+                            <harm xml:id="harm-L19F6" place="below" staff="1" tstamp="1.000000" n="4">ii</harm>
+                            <harm xml:id="harm-L25F6" place="below" staff="1" tstamp="4.000000" n="4">V</harm>
+                            <tie xml:id="tie-L30F2-L32F2" startid="#note-L30F2" endid="#note-L32F2" />
+                        </measure>
+                        <measure xml:id="measure-L31" right="invis">
+                            <staff xml:id="staff-L31F3N1" n="1">
+                                <layer xml:id="layer-L31F3N1" n="1">
+                                    <note xml:id="note-L32F3" dots="1" dur="4" oct="3" pname="g" accid.ges="f" />
+                                </layer>
+                                <layer xml:id="layer-L31F4N2" n="2">
+                                    <note xml:id="note-L32F4" dots="1" dur="4" oct="4" pname="e" accid.ges="f" />
+                                </layer>
+                            </staff>
+                            <staff xml:id="staff-L31F1N1" n="2">
+                                <layer xml:id="layer-L31F1N1" n="1">
+                                    <note xml:id="note-L32F1" dots="1" dur="4" oct="2" pname="e" accid.ges="f" />
+                                </layer>
+                                <layer xml:id="layer-L31F2N2" n="2">
+                                    <note xml:id="note-L32F2" dur="16" oct="2" pname="b" accid.ges="f" />
+                                    <note xml:id="note-L33F2" dur="16" oct="3" pname="c" accid="n" />
+                                    <note xml:id="note-L34F2" dur="16" oct="2" pname="a" accid="n" />
+                                    <note xml:id="note-L35F2" dur="16" oct="3" pname="c" accid.ges="n" />
+                                    <note xml:id="note-L36F2" dur="16" oct="2" pname="b" accid.ges="f" />
+                                    <note xml:id="note-L37F2" dur="16" oct="2" pname="g" accid.ges="f" />
+                                </layer>
+                            </staff>
+                            <harm xml:id="harm-L32F6" place="below" staff="1" tstamp="1.000000" n="4">I</harm>
+                        </measure>
+                    </section>
+                </score>
+            </mdiv>
+        </body>
+    </music>
+</mei>

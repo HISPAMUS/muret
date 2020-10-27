@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IScore;
+import es.ua.dlsi.grfia.moosicae.io.BaseExporter;
 import es.ua.dlsi.grfia.moosicae.io.IExporter;
 
 import java.util.logging.Level;
@@ -16,7 +17,7 @@ import java.util.logging.Logger;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 12/04/2020
  */
-public class MONExporter implements IExporter {
+public class MONExporter extends BaseExporter {
     public MONExporter() {
 
     }

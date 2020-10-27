@@ -1,9 +1,8 @@
 /*
-@author: David Rizo (drizo@dlsi.ua.es) Jan, 2020.
-Semantic encoding for OMR based on **kern and **mens
+@author: David Rizo (drizo@dlsi.ua.es) Oct, 2020.
 */
-parser grammar skmParser;
-options { tokenVocab=skmLexer; } // use tokens from kernLexer.g4
+parser grammar kernParser;
+options { tokenVocab=kernLexer; } // use tokens from kernLexer.g4
 
 @parser::header {
 }
@@ -20,7 +19,7 @@ options { tokenVocab=skmLexer; } // use tokens from kernLexer.g4
 //*staff2	*staff1	*staff1/2 - véase sonata07-1.krn de humdrum-data
 
 // start rule - in this version of **skm we are forcing each column starts with a *part after the **smens or **kern
-start: header (eol record)+ eol? EOF;
+start: (METADATACOMMENT EOL)* header (eol record)+ eol? (METADATACOMMENT EOL?)* EOF;
 
 // anystart: (header eol)? record (eol record)+ eol? EOF;
 
@@ -28,9 +27,12 @@ eol: EOL;
 
 header: headerField (TAB headerField)*;
 
-headerField: SMENS | SKERN | TEXT; //TODO dinámica, armonía ...
+headerField: MENS | KERN | TEXT | HARM | ROOT; //TODO dinámica ...
 
-record: fields;
+record:
+    EXCLAMATION FIELDCCOMMENT // !! record comment
+    |
+    fields;
 
 tab: TAB | FREE_TEXT_TAB;
 fields: field (tab field)*;
@@ -38,8 +40,12 @@ fields: field (tab field)*;
 field
     :
     graphicalToken
-     |
-     placeHolder; // nothing is done, it is just a placeholder
+    |
+    fieldComment // it includes an empty comment
+    |
+    placeHolder; // nothing is done, it is just a placeholder
+
+fieldComment: FIELDCCOMMENT;
 
 associatedIDS: number (COMMA associatedIDS)*; // used for agnostic IDS in semantic mens
 
@@ -73,11 +79,11 @@ tandemInterpretation:
     |
     keySignature
     |
+    key
+    |
     timeSignature
     |
     meterSymbol
-    |
-    key
     |
     metronome
     |
@@ -94,27 +100,30 @@ upperCasePitch: (CHAR_A | CHAR_B | CHAR_C | CHAR_D | CHAR_E | CHAR_F | CHAR_G);
 
 pitchClass: lowerCasePitch accidental;
 
-part: TANDEM_PART SEP number;
+part: TANDEM_PART sep number;
 
-staff: TANDEM_STAFF SEP number;
+//sep: SEP; //TODO Que lo coja sólo si es SKM
+sep: SEP?;
 
-clef: TANDEM_CLEF SEP clefValue;
-clefValue: clefSign (SEP clefLine)? (SEP clefOctave)?;
+staff: TANDEM_STAFF sep number;
+
+clef: TANDEM_CLEF sep clefValue;
+clefValue: clefSign (sep clefLine)? (sep clefOctave)?;
 clefSign: CHAR_C | CHAR_F | CHAR_G | CHAR_P | CHAR_T;
 clefLine: DIGIT_1 | DIGIT_2 | DIGIT_3 | DIGIT_4 | DIGIT_5;
 clefOctave: CHAR_v CHAR_v? DIGIT_2 | CIRCUMFLEX CIRCUMFLEX? DIGIT_2;
 
-keySignature: TANDEM_KEY_SIGNATURE SEP LEFT_BRACKET keySignaturePitchClass* RIGHT_BRACKET keySignatureCancel?;
+keySignature: TANDEM_KEY_SIGNATURE sep LEFT_BRACKET keySignaturePitchClass* RIGHT_BRACKET keySignatureCancel?;
 keySignaturePitchClass: pitchClass;
-keySignatureCancel: SEP CHAR_X;
+keySignatureCancel: sep CHAR_X;
 
 keyMode: (minorKey | majorKey);
 //key: ASTERISK keyMode COLON;
-key: TANDEM_KEY SEP keyMode keySignatureCancel? COLON;
+key: ASTERISK sep keyMode keySignatureCancel? COLON;
 minorKey: lowerCasePitch accidental?;
 majorKey: upperCasePitch accidental?;
 
-timeSignature: TANDEM_TIMESIGNATURE SEP (standardTimeSignature | additiveTimeSignature | mixedTimeSignature | alternatingTimeSignature | interchangingTimeSignature);
+timeSignature: TANDEM_TIMESIGNATURE sep (standardTimeSignature | additiveTimeSignature | mixedTimeSignature | alternatingTimeSignature | interchangingTimeSignature);
 numerator: number;
 denominator: number;
 standardTimeSignature: numerator SLASH denominator;
@@ -125,7 +134,7 @@ alternatingTimeSignatureItem: standardTimeSignature (SEMICOLON number)?;
 interchangingTimeSignature: standardTimeSignature PIPE standardTimeSignature;
 
 //meterSymbol: TANDEM_MET LEFT_PARENTHESIS (modernMeterSymbolSign | mensuration) RIGHT_PARENTHESIS;
-meterSymbol: TANDEM_TIMESIGNATURE SEP LEFT_PARENTHESIS (modernMeterSymbolSign | mensuration) RIGHT_PARENTHESIS;
+meterSymbol: TANDEM_TIMESIGNATURE sep LEFT_PARENTHESIS (modernMeterSymbolSign | mensuration) RIGHT_PARENTHESIS;
 modernMeterSymbolSign: CHAR_c | CHAR_c PIPE;
 mensuration: CHAR_C | CHAR_C PIPE | CHAR_C DOT | CHAR_O | CHAR_O DOT | CHAR_C DIGIT_3 SLASH DIGIT_2 | CHAR_C PIPE DIGIT_3 SLASH DIGIT_2 | DIGIT_3;
 
@@ -160,16 +169,16 @@ spineOperation:
      spineAdd
      |
      spineSplit
-     //|
-     //spineJoin
+     |
+     spineJoin
      ;
 
 spineTerminator: ASTERISK MINUS;
 spineAdd: ASTERISK PLUS+;
 spineSplit: ASTERISK CIRCUMFLEX+;
-// spineJoin: ASTERISK CHAR_v;
+spineJoin: ASTERISK CHAR_v;
 
-rest: duration (CHAR_r) fermata? restLinePosition?;
+rest: duration CHAR_r CHAR_r? fermata? restLinePosition?;
 
 restLinePosition: UNDERSCORE clefLine;
 
@@ -200,7 +209,7 @@ pitch: diatonicPitchAndOctave alteration?;
 alteration: accidental alterationDisplay?;
 
 //note:  beforeNote duration noteName (alteration alterationVisualMode?)? afterNote;
-note:  beforeNote duration SEP pitch afterNote;
+note:  beforeNote duration sep pitch afterNote;
 
 chord: note (SPACE note)+;
 
@@ -227,7 +236,7 @@ accidental: OCTOTHORPE | (OCTOTHORPE OCTOTHORPE) | MINUS | (MINUS MINUS) | CHAR_
 alterationDisplay: (CHAR_y CHAR_y?) | (CHAR_Y CHAR_Y?);
 
 afterNote:
-	     (slurEnd | stem| ligatureEnd | beam | fermata | barLineCrossedNoteEnd)*;
+	     (slurEnd | stem| ligatureEnd | beam | fermata | barLineCrossedNoteEnd | mordent | trill | tenuto )*;
 
 slurStart: LEFT_PARENTHESIS;
 ligatureStart: ANGLE_BRACKET_OPEN | LEFT_BRACKET;
@@ -243,9 +252,15 @@ stem:
     ;
 
 beam:
-    CHAR_L //BEAM_START
+    (CHAR_L+ //BEAM_START
     |
-    CHAR_J; // BEAM_END
+    CHAR_J+) // BEAM_END
+    (
+    CHAR_K+ // partial beam that extends to the right
+    |
+    CHAR_k+ // partial beam that extends to the left
+    )?
+    ;
 
 
 // bottom line = L1, bottom space = S1, first bottom ledger line = L0, space between first ledger line and bottom line = S0, second bottom ledger line = L-1, first top ledger line = L6
@@ -257,4 +272,14 @@ lyricsText: FIELD_TEXT;
 
 plainChant: TANDEM_BEGIN_PLAIN_CHANT | TANDEM_END_PLAIN_CHANT;
 
+mordent:
+    //LETTER_W
+	   CHAR_W // MORDENT_INVERTED_TONE
+	   CHAR_w?; // MORDENT_INVERTED_TONE
 
+trill:
+	 CHAR_T
+     |
+     CHAR_t;
+
+tenuto: TILDE;

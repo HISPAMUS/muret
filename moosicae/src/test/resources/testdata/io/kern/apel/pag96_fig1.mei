@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://music-encoding.org/schema/3.0.0/mei-all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://music-encoding.org/schema/3.0.0/mei-all.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<mei xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.music-encoding.org/ns/mei" meiversion="3.0.0">
+    <meiHead>
+        <fileDesc>
+            <titleStmt>
+                <title></title>
+            </titleStmt>
+            <pubStmt/>
+        </fileDesc>
+        <encodingDesc>
+            <appInfo>
+                <application>
+                    <name>David Rizo</name>
+                </application>
+            </appInfo>
+        </encodingDesc>
+        <workDesc>
+            <work>
+                <titleStmt>
+                    <title>Wili Apel, page 96</title>
+                    <respStmt>
+                    </respStmt>
+                </titleStmt>
+            </work>
+        </workDesc>
+    </meiHead>
+    <music>
+        <body>
+            <mdiv>
+                <score>
+                    <scoreDef>
+                        <staffGrp>
+                            <staffDef n="1" lines="5" label="Long notes" notationtype="mensural"/>
+                            <staffDef n="2" lines="5" label="Equivalences" notationtype="mensural"/>
+                        </staffGrp>
+                    </scoreDef>
+                    <section>
+                        <staff n="1">
+                            <layer n="1">
+                                <mensur tempus="2" prolatio="2"/> <!-- C -->
+                                <note dur="brevis" oct="4" pname="c" num="2" numbase="2"></note>
+                                <barLine/>
+                                <note dur="semibrevis" oct="4" pname="d"  num="2" numbase="2"></note>
+                                <barLine/>
+
+                                <mensur tempus="2" prolatio="3"/> <!-- C· -->
+                                <note dur="brevis" oct="4" pname="e"  num="2" numbase="2"></note>
+                                <barLine/>
+                                <note dur="semibrevis" oct="4" pname="f"  num="3" numbase="2"></note>
+                                <barLine/>
+
+                                <mensur tempus="3" prolatio="2"/> <!-- O -->
+                                <note dur="brevis" oct="4" pname="g"  num="3" numbase="2"></note>
+                                <barLine/>
+                                <note dur="semibrevis" oct="4" pname="a"  num="2" numbase="2"></note>
+                                <barLine/>
+
+                                <mensur tempus="3" prolatio="3"/> <!-- O· -->
+                                <note dur="brevis" oct="4" pname="b"  num="3" numbase="2"></note>
+                                <barLine/>
+                                <note dur="semibrevis" oct="5" pname="c"  num="3" numbase="2"></note>
+                                <barLine/>                                
+                            </layer>
+                        </staff>
+                        <staff n="2">
+                            <layer n="1">
+                                <mensur tempus="2" prolatio="2"/> <!-- C -->
+                                <note dur="semibrevis" oct="4" pname="c"  num="2" numbase="2"></note>
+                                <note dur="semibrevis" oct="4" pname="c"  num="2" numbase="2"></note>
+                                <barLine/>
+                                <note dur="minima" oct="4" pname="d"></note>
+                                <note dur="minima" oct="4" pname="d"></note>
+                                <barLine/>
+                                
+                                <mensur tempus="2" prolatio="3"/> <!-- C· -->
+                                <note dur="semibrevis" oct="4" pname="e" num="2" numbase="2"></note>
+                                <note dur="semibrevis" oct="4" pname="e" num="2" numbase="2"></note>
+                                <barLine/>
+                                <note dur="minima" oct="4" pname="f"></note>
+                                <note dur="minima" oct="4" pname="f"></note>
+                                <note dur="minima" oct="4" pname="f"></note>
+                                <barLine/>
+
+                                <mensur tempus="3" prolatio="2"/> <!-- O -->
+                                <note dur="semibrevis" oct="4" pname="g" num="2" numbase="2"></note>
+                                <note dur="semibrevis" oct="4" pname="g" num="2" numbase="2"></note>
+                                <note dur="semibrevis" oct="4" pname="g" num="2" numbase="2"></note>
+                                <barLine/>
+                                <note dur="minima" oct="4" pname="a"></note>
+                                <note dur="minima" oct="4" pname="a"></note>
+                                <barLine/>
+
+                                <mensur tempus="3" prolatio="3"/> <!-- O· -->
+                                <note dur="semibrevis" oct="4" pname="b" num="2" numbase="2"></note>
+                                <note dur="semibrevis" oct="4" pname="b" num="2" numbase="2"></note>
+                                <note dur="semibrevis" oct="4" pname="b" num="2" numbase="2"></note>
+                                <barLine/>
+                                <note dur="minima" oct="5" pname="c"></note>
+                                <note dur="minima" oct="5" pname="c"></note>
+                                <note dur="minima" oct="5" pname="c"></note>
+                                <barLine/>                                
+                            </layer>
+                        </staff>
+                    </section>
+                </score>
+            </mdiv>
+        </body>
+    </music>
+</mei>

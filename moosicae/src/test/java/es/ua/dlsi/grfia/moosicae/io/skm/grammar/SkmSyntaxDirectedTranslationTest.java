@@ -17,9 +17,9 @@ public class SkmSyntaxDirectedTranslationTest {
         String [] testFileNames = {"base.skm"};
 
         /*for (String testFileName: testFileNames) {
-            SkmSyntaxDirectedTranslation skmSyntaxDirectedTranslation = new SkmSyntaxDirectedTranslation(new CoreFactory().create());
+            KernSyntaxDirectedTranslation skmSyntaxDirectedTranslation = new KernSyntaxDirectedTranslation(new CoreFactory().create());
             File file = TestFileUtils.getFile("/testdata/io/skm/" + testFileName);
-            SkmDocument imported = skmSyntaxDirectedTranslation.importSkm(file);
+            KernDocument imported = skmSyntaxDirectedTranslation.importSkm(file);
             // imported.printGraphDot(new File("/tmp/composition.dot"));
         }*/
     }
