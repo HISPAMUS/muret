@@ -408,11 +408,11 @@ public class KernImporterTest {
     }
 
 
-    @Test
+   /* TODO Tuplets @Test
     public void testGuideExample6_2() throws Exception {
-//        doTest(KernImporterTest::assertGuideExample6_2, importKern(TestFileUtils.getFile("/testdata/io/kern/guide06-example6-2.krn")));
+        doTest(KernImporterTest::assertGuideExample6_2, importKern(TestFileUtils.getFile("/testdata/io/kern/guide06-example6-2.krn")));
         //doTest(KernImporterTest::assertGuideExample6_2, importMusicXML(TestFileUtils.getFile("/testdata/io/kern/guide06-example6-2.xml")));
-    }
+    }*/
 
     // ------------------------------------------------------------------------------------------
    /*TODO private static Void assertChor1(IScore song) {
@@ -559,8 +559,8 @@ public class KernImporterTest {
     @Test
     public void testSimpleSpineSplit() throws Exception {
         testExportImport = false;
-//        IScore kernSong = importKern(TestFileUtils.getFile("/testdata/io/kern/spline_split.krn"));
-//       doTest(KernImporterTest::assertSimpleSpineSplit, kernSong);
+        IScore kernSong = importKern(TestFileUtils.getFile("/testdata/io/kern/spline_split.krn"));
+        doTest(KernImporterTest::assertSimpleSpineSplit, kernSong);
     }
 
 

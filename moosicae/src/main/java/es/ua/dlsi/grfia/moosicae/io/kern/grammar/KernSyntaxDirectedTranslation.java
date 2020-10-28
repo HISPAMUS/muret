@@ -15,13 +15,11 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IFigure;
 import es.ua.dlsi.grfia.moosicae.core.properties.IMetronomeMarkValue;
 import es.ua.dlsi.grfia.moosicae.io.ImportingContexts;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.builders.KernMeterBuilder;
-import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.KernCoreSymbol;
-import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.KernHeader;
-import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.KernPart;
-import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.KernStaff;
+import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.*;
 import es.ua.dlsi.grfia.moosicae.io.kern.kernLexer;
 import es.ua.dlsi.grfia.moosicae.io.kern.kernParser;
 import es.ua.dlsi.grfia.moosicae.io.kern.kernParserBaseListener;
+import es.ua.dlsi.grfia.moosicae.utils.MathUtils;
 import es.ua.dlsi.grfia.moosicae.utils.antlr4.ANTLRUtils;
 import es.ua.dlsi.grfia.moosicae.utils.antlr4.ErrorListener;
 import es.ua.dlsi.grfia.moosicae.utils.antlr4.GrammarParseRuntimeException;
@@ -731,7 +729,11 @@ public class KernSyntaxDirectedTranslation {
 
             // this durationalSingleBuilder will be the pointer to the restBuilder or the noteBuilder (see enterNote, enterRest)
             try {
-                EFigures figure = EFigures.findMeterUnit(Integer.parseInt(ctx.number().getText()), ENotationTypes.eModern);
+                Integer durationValue = Integer.parseInt(ctx.number().getText());
+                if (!MathUtils.isPowerOfTwo(durationValue)) {
+                    throw new UnsupportedOperationException("Tuplets not supported yet"); //TODO Tuplets
+                }
+                EFigures figure = EFigures.findMeterUnit(durationValue, ENotationTypes.eModern);
                 importingContexts.addObjectToPool(figure);
 
                 int augmentationDots = ctx.augmentationDot().size();
@@ -999,7 +1001,11 @@ public class KernSyntaxDirectedTranslation {
             Logger.getLogger(KernSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
                     "Spine terminator {0}", ctx.getText());
 
-            // throw new UnsupportedOperationException("TODO"); //TODO operaciones spine
+            try {
+                addItemToSpine(new KernSpineTerminate(ctx.getText()));
+            } catch (IMException e) {
+                createException(e);
+            }
         }
 
         @Override
@@ -1008,7 +1014,11 @@ public class KernSyntaxDirectedTranslation {
             Logger.getLogger(KernSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
                     "Spine add {0}", ctx.getText());
 
-            throw new UnsupportedOperationException("TODO"); //TODO operaciones spine
+            try {
+                addItemToSpine(new KernSpineAdd(ctx.getText()));
+            } catch (IMException e) {
+                createException(e);
+            }
         }
 
         @Override
@@ -1017,7 +1027,19 @@ public class KernSyntaxDirectedTranslation {
             Logger.getLogger(KernSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
                     "Spine split {0}", ctx.getText());
 
-            throw new UnsupportedOperationException("TODO"); //TODO operaciones spine
+            try {
+                KernSpineSplit spineSplit = new KernSpineSplit(ctx.getText());
+
+                KernToken previous = getLastItemForCurrentSpine();
+                KernSpineBegin spineBegin = this.kernDocument.addSplitSpine(previous, spineSplit);
+
+                // now set two parallel spines - the previous one and a new one
+                lastSpineInsertedItem.set(this.spineIndex, spineSplit);
+                lastSpineInsertedItem.add(spineBegin);
+            } catch (IMException e) {
+                createException(e);
+            }
+
         }
     }
 

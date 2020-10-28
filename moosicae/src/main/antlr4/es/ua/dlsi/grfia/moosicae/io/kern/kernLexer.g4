@@ -8,6 +8,7 @@ import java.util.ArrayList;
 }
 
 // Non context free grammar needs semantic predicates to handle text spines
+// TODO - something similar for HARM
 @lexer::members {
     // record whether each spine is **text
     private ArrayList<Boolean> textSpines = new ArrayList<>();

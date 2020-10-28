@@ -5,6 +5,8 @@ import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.IScore;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.KernHeader;
+import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.KernSpineBegin;
+import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.KernSpineSplit;
 import es.ua.dlsi.grfia.moosicae.utils.dag.DAG;
 import es.ua.dlsi.grfia.moosicae.utils.dag.DAG2DotExporter;
 import es.ua.dlsi.grfia.moosicae.utils.dag.DAGLabel;
@@ -18,7 +20,11 @@ import java.util.List;
 
 /**
  * The main entry point: a musical piece, a musical composition.
- * The spines graph is started from the startToken
+ * The spines graph is started from the startToken.
+ * When a spine is split, added, joint, or terminated, a special token is added:
+ * - all spines are started with a KernSpineBegin token (the KernHeader are descendants of KernSpineBegin)
+ * - when a split is found, two tokens are added as successor of the last item: the KernSpineSplit token itself, and a new KernSpineBegin (sibling of the KernSpineSplit)
+ * TODO - Por aquí
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class KernDocument {
@@ -66,6 +72,20 @@ public class KernDocument {
 
     public void addHeader(KernHeader headerToken) throws IMException {
         add(startToken, headerToken);
+    }
+
+    /**
+     *
+     * @param previousToken
+     * @param spineSplit
+     * @return The new parallel spine created as sibling of the spineSplit
+     * @throws IMException
+     */
+    public KernSpineBegin addSplitSpine(KernToken previousToken, KernSpineSplit spineSplit) throws IMException {
+        KernSpineBegin newSpineBegin = new KernSpineBegin();
+        add(previousToken, spineSplit);
+        add(previousToken, newSpineBegin);
+        return newSpineBegin;
     }
 
     public void printGraphDot(File file) throws FileNotFoundException {

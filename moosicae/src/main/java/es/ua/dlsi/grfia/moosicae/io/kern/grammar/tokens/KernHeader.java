@@ -6,7 +6,7 @@ import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernToken;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class KernHeader extends KernToken {
+public class KernHeader extends KernSpineBegin {
     private final EKernHeaders skmHeaderType;
 
     public KernHeader(EKernHeaders skmHeaderType) {
