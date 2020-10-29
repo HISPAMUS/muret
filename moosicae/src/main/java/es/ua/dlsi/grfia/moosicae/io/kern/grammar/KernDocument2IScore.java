@@ -6,6 +6,7 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.*;
 import es.ua.dlsi.grfia.moosicae.utils.dag.DAGNode;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -22,6 +23,7 @@ public class KernDocument2IScore {
     private final HashMap<IId, IPart> voiceParts;
     private final HashMap<IId, IStaff> voiceStaves;
     private IPart defaultPart;
+    private ArrayList<IStaff> staves;
     //quitar private IStaff defaultStaff;
 
     public KernDocument2IScore(ICoreAbstractFactory abstractFactory) {
@@ -46,6 +48,7 @@ public class KernDocument2IScore {
         /// quitar IStaffLineCount defaultStaffLineCount = abstractFactory.createStaffLineCount(5);
         /// quitar defaultStaff = abstractFactory.createStaff(score, null, defaultStaffLineCount);
 
+        staves = new ArrayList<>();
         // first create voices, all associated to a default part that will be moved to other part when the **part token is found
         for (DAGNode<KernToken> node: firstNode.getNextList()) {
             KernToken kernToken = node.getLabel().getContent();
@@ -58,8 +61,10 @@ public class KernDocument2IScore {
 
                     // Create the staff - hay que cambiarlo, de momento no estoy gestionando los staves?
                     //TODO staves - cuando se encuentre con *staff1 o *staff1/2
-                    IStaff staff = abstractFactory.createStaff(score, null, abstractFactory.createStaffLineCount(5));
-                    voiceStaves.put(voice.getId(), staff);
+                    // don't insert the staff yet into the score yet because their order must be reversed
+                    IStaff defaultVoiceStaff = abstractFactory.createStaff(null, abstractFactory.createStaffLineCount(5), null);
+                    staves.add(0, defaultVoiceStaff); // insert from the beginning
+                    voiceStaves.put(voice.getId(), defaultVoiceStaff);
                     // now traverse the spine
                     for (DAGNode<KernToken> next: node.getNextList()) {
                         visit(voice, next);
@@ -75,9 +80,10 @@ public class KernDocument2IScore {
         if (defaultPart.getVoices().length == 0) {
             score.remove(defaultPart);
         }
-        /*quitar if (defaultStaff.getStaffSymbols().length == 0) {
-            score.remove(defaultStaff);
-        }*/
+
+        for (IStaff staff: staves) {
+            score.add(staff);
+        }
         return score;
     }
 
@@ -111,15 +117,23 @@ public class KernDocument2IScore {
         }
     }
 
-    private void processStaff(IVoice voice, KernStaff kernStaff) {
-        IStaff staff = staffNumbers.get(kernStaff.getNumber());
-
-        if (staff == null) {
-            staff = abstractFactory.createStaff(score, null, abstractFactory.createStaffLineCount(5));
-            staffNumbers.put(kernStaff.getNumber(), staff);
+    private void processStaff(IVoice voice, KernStaff kernStaff) throws IMException {
+        IStaff defaultStaff = voiceStaves.get(voice.getId());
+        if (defaultStaff == null) {
+            throw new RuntimeException("There should exist a default staff created for voice " + voice); // see the beginning of convert method
         }
-
-        voiceStaves.put(voice.getId(), staff);
+        IStaff existingStaffWithNumber = staffNumbers.get(kernStaff.getNumber());
+        // if there was a defined staff with the given number, remove the default staff and substitute that one
+        if (existingStaffWithNumber != null) {
+            voiceStaves.put(voice.getId(), existingStaffWithNumber);
+            if (!defaultStaff.isEmpty()) {
+                throw new IMException("Cannot remove the default staff because it already contains " + defaultStaff.getStaffSymbols().length + " elements");
+            }
+            staves.remove(defaultStaff);
+        } else {
+            // assign the staff number to the default one
+            staffNumbers.put(kernStaff.getNumber(), defaultStaff);
+        }
     }
 
     private void processPart(IVoice voice, KernPart kernPart) {

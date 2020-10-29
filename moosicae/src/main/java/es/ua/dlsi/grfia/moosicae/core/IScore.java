@@ -5,6 +5,11 @@ package es.ua.dlsi.grfia.moosicae.core;
 public interface IScore extends IMooObject {
     IMetadata getMetadata();
     IPart[] getParts();
+
+    /**
+     * Systems in the array are ordered from top to bottom: e.g., in a STAB score, the S = 0, A = 1, T = 2, B = 3
+     * @return
+     */
     ISystem[] getSystemElements();
 
     //TODO

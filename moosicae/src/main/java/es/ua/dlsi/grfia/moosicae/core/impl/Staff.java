@@ -29,7 +29,11 @@ public class Staff extends CoreObject implements IStaff {
     public Staff(IId id, IStaffLineCount staffLineCount, IVoicedItem[] items) {
         super(id);
         this.staffLineCount = staffLineCount;
-        this.items = Arrays.asList(items);
+        if (items != null) {
+            this.items = Arrays.asList(items);
+        } else {
+            this.items = new LinkedList<>();
+        }
     }
 
     @Override
@@ -55,6 +59,11 @@ public class Staff extends CoreObject implements IStaff {
     @Override
     public void remove(IVoicedItem symbol) {
         this.items.remove(symbol);
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return this.items == null || items.isEmpty();
     }
 
 

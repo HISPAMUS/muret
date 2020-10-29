@@ -23,21 +23,21 @@ public class KernImporter implements IImporter {
     @Override
     public IScore importScore(String input) throws IMException {
         KernSyntaxDirectedTranslation kernSyntaxDirectedTranslation = new KernSyntaxDirectedTranslation(coreAbstractFactory);
-        KernDocument skmDocument = kernSyntaxDirectedTranslation.importKern(input);
-        return skmDocument.buildScore(coreAbstractFactory);
+        KernDocument kernDocument = kernSyntaxDirectedTranslation.importKern(input);
+        return kernDocument.buildScore(coreAbstractFactory);
     }
 
     @Override
     public IScore importScore(File file) throws IMException {
         KernSyntaxDirectedTranslation kernSyntaxDirectedTranslation = new KernSyntaxDirectedTranslation(coreAbstractFactory);
-        KernDocument skmDocument = kernSyntaxDirectedTranslation.importKern(file);
-        return skmDocument.buildScore(coreAbstractFactory);
+        KernDocument kernDocument = kernSyntaxDirectedTranslation.importKern(file);
+        return kernDocument.buildScore(coreAbstractFactory);
     }
 
     @Override
     public IScore importScore(InputStream inputStream) throws IMException {
         KernSyntaxDirectedTranslation kernSyntaxDirectedTranslation = new KernSyntaxDirectedTranslation(coreAbstractFactory);
-        KernDocument skmDocument = kernSyntaxDirectedTranslation.importKern(inputStream);
-        return skmDocument.buildScore(coreAbstractFactory);
+        KernDocument kernDocument = kernSyntaxDirectedTranslation.importKern(inputStream);
+        return kernDocument.buildScore(coreAbstractFactory);
     }
 }

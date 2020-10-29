@@ -57,57 +57,34 @@ public class KernImporterTest {
 
     // ------------------------------------------------------------------------------------------
     private static Void assertGuideExample2_1(IScore song) {
-        /*try {
-            Key ks = song.getUniqueKeyWithOnset(Time.TIME_ZERO);
-            assertNotNull("Key signature" , ks);
-            assertEquals(PitchClasses.F.getPitchClass(), ks.getPitchClass());
-            //assertEquals(Mode.MAJOR, ks.getMode()); The krn does not specify it
-
-            assertEquals("Parts", 1, song.getParts().size());
-
-            assertEquals(1, song.getStaves().size());
-            Staff staff = song.getStaves().get(0);
-            assertEquals("Layers", 1, staff.getLayers().size());
-            assertTrue(staff.getClefAtTime(Time.TIME_ZERO) instanceof ClefG2);
-
-            TimeSignature ts = staff.getTimeSignatureWithOnset(Time.TIME_ZERO);
-            assertTrue(ts instanceof FractionalTimeSignature);
-            FractionalTimeSignature meter = (FractionalTimeSignature) ts;
-            assertEquals(2, meter.getNumerator());
-            assertEquals(2, meter.getDenominator());
-            List<Atom> atoms = staff.getAtoms();
-            assertEquals(9, atoms.size());
-            assertEquals("Atoms in layer" , 9, staff.getLayers().get(0).getAtoms().size());
-
-
-            assertEquals(4, song.getMeaureCount());
-
-            assertTrue(atoms.get(8) instanceof SimpleRest);
-
-            SimpleNote n0 = (SimpleNote) atoms.get(0);
-            assertEquals(PitchClasses.D.getPitchClass(), n0.getPitch().getPitchClass());
-            assertEquals(4, n0.getPitch().getOctave());
-            assertEquals(Figures.HALF, n0.getAtomFigure().getFigure());
-            assertEquals(0, n0.getAtomFigure().getDots());
-            assertEquals(0.0, n0.getTime().getComputedTime(), 0.0001);
-
-            assertEquals(2.0, atoms.get(1).getTime().getComputedTime(), 0.0001);
-
-            SimpleNote n4 = (SimpleNote) atoms.get(4);
-            assertEquals(PitchClasses.C_SHARP.getPitchClass(), n4.getPitch().getPitchClass());
-            assertEquals(4, n4.getPitch().getOctave());
-
-            SimpleNote n5 = (SimpleNote) atoms.get(5);
-            assertEquals(PitchClasses.D.getPitchClass(), n5.getPitch().getPitchClass());
-            assertEquals(4, n5.getPitch().getOctave());
-            assertEquals(Figures.QUARTER, n5.getAtomFigure().getFigure());
-            assertEquals(0, n5.getAtomFigure().getDots());
-
-
+        try {
+            assertEquals("Parts", 1, song.getParts().length);
+            assertEquals("System elements", 1, song.getSystemElements().length);
+            IStaff staff = (IStaff) song.getSystemElements()[0];
+            IVoicedItem[] staffSymbols = staff.getStaffSymbols();
+            assertEquals("Staff symbols", 16, staffSymbols.length);
+            // the cast itself checks the expected class. The same is applied to optionals
+            assertEquals("Clef line", 2, ((IClef)staffSymbols[0]).getLine().get().getValue().intValue());
+            assertEquals("Clef note", EClefSigns.G, ((IClef)staffSymbols[0]).getSignType().getValue());
+            assertEquals("Key signature accidentals", 1, ((IKeySignature)staffSymbols[1]).getPitchClasses().length);
+            assertEquals("Key signature pitch", EDiatonicPitches.B, ((IKeySignature)staffSymbols[1]).getPitchClasses()[0].getDiatonicPitch().getValue());
+            assertEquals("Key signature accidental", EAccidentalSymbols.FLAT, ((IKeySignature)staffSymbols[1]).getPitchClasses()[0].getAccidental().get().getValue());
+            assertEquals("Meter numerator", 2, ((IStandardTimeSignature)staffSymbols[2]).getNumerator().getValue().intValue());
+            assertEquals("Meter denominator", 2, ((IStandardTimeSignature)staffSymbols[2]).getDenominator().getValue().intValue());
+            assertTrue("Barline", staffSymbols[3] instanceof IBarline);
+            assertFalse("Note #1, no dots", ((INote)staffSymbols[4]).getDots().isPresent());
+            assertEquals("Note #1, half note", EFigures.HALF, ((INote)staffSymbols[4]).getFigure().getValue());
+            assertEquals("Note #1, d", EDiatonicPitches.D, ((INote)staffSymbols[4]).getNoteHead().getPitch().getDiatonicPitch().getValue());
+            assertEquals("Note #1, d, octave 4", 4, ((INote)staffSymbols[4]).getNoteHead().getPitch().getOctave().getValue().intValue());
+            assertFalse("Note #1, no accidental", ((INote)staffSymbols[4]).getNoteHead().getPitch().getAlteration().isPresent());
+            assertEquals("Note #1, explicit stem up", EStemDirection.up, ((INote)staffSymbols[4]).getStem().get().getStemDirection().getValue());
+            assertEquals("Note #5, c", EDiatonicPitches.C, ((INote)staffSymbols[10]).getNoteHead().getPitch().getDiatonicPitch().getValue());
+            assertEquals("Note #5, accidental sharp", EAccidentalSymbols.SHARP, ((INote)staffSymbols[10]).getNoteHead().getPitch().getAlteration().get().getAccidentalSymbol().getValue());
+            assertEquals("Rest, half note", EFigures.HALF, ((IRest)staffSymbols[15]).getFigure().getValue());
         } catch (Throwable t) {
             t.printStackTrace();
             fail(t.toString());
-        }*/
+        }
         return null;
     }
 
@@ -122,61 +99,18 @@ public class KernImporterTest {
     // ------------------------------------------------------------------------------------------
 
     private static Void assertGuideExample2_2(IScore song) {
-       /* try {
-            assertEquals("Staves", 2, song.getStaves().size());
-            Staff staff1 = song.getStaves().get(0);
-            assertTrue("G2", staff1.getClefAtTime(Time.TIME_ZERO) instanceof ClefG2);
-            TimeSignature ts = staff1.getTimeSignatureWithOnset(Time.TIME_ZERO);
-            assertTrue("Fractional meter", ts instanceof FractionalTimeSignature);
-            FractionalTimeSignature meter = (FractionalTimeSignature) ts;
-            assertEquals( "Numerator", 3, meter.getNumerator());
-            assertEquals("Denominator", 4, meter.getDenominator());
-
-
-            Staff staff2 = song.getStaves().get(1);
-            assertTrue("F4", staff2.getClefAtTime(Time.TIME_ZERO) instanceof ClefF4);
-            TimeSignature ts2 = staff1.getTimeSignatureWithOnset(Time.TIME_ZERO);
-            assertTrue("Fractional meter", ts2 instanceof FractionalTimeSignature);
-            FractionalTimeSignature meter2 = (FractionalTimeSignature) ts2;
-            assertEquals("Numerator", 3, meter2.getNumerator());
-            assertEquals("Denominator", 4, meter2.getDenominator());
-
-            Key ks = song.getUniqueKeyWithOnset(Time.TIME_ZERO);
-            assertEquals(PitchClasses.F.getPitchClass(), ks.getPitchClass());
-
-            List<Atom> atoms1 = staff1.getAtoms();
-            assertEquals(21, atoms1.size());
-
-            List<Atom> atoms2 = staff2.getAtoms();
-            assertEquals(15, atoms2.size());
-
-            assertTrue("Rest 1, staff 1", atoms1.get(0) instanceof SimpleRest);
-            assertEquals("Duration first rest staff 1", 0.5, atoms1.get(0).getQuarterRatioDuration(), 0.001);
-
-            assertTrue("Rest 1, staff 2", atoms1.get(0) instanceof SimpleRest);
-            assertEquals("Duration first rest staff 2", 3, atoms2.get(0).getQuarterRatioDuration(), 0.001);
-
-            //assertEquals(4, song.getMeaureCount()); actually the last measure is empty
-
-            assertTrue("Note 2, staff 1", atoms1.get(1) instanceof SimpleNote);
-            assertEquals("Duration note 2 staff 1", 0.5, atoms1.get(1).getQuarterRatioDuration(), 0.001);
-            assertEquals("Pitch note 2 staff 1", PitchClasses.D.getPitchClass(), ((SimpleNote)atoms1.get(1)).getPitch().getPitchClass());
-
-            assertTrue("Last note, staff 1", atoms1.get(20) instanceof SimpleNote);
-            assertEquals("Duration last note staff 1", 0.5, atoms1.get(20).getQuarterRatioDuration(), 0.001);
-            assertEquals("Pitch last note staff 1", PitchClasses.A_FLAT.getPitchClass(), ((SimpleNote)atoms1.get(20)).getPitch().getPitchClass());
-
-            assertTrue("Last note, staff 2", atoms2.get(14) instanceof SimpleNote);
-            assertEquals("Duration last note staff 2", 1, atoms2.get(14).getQuarterRatioDuration(), 0.001);
-            assertEquals("Pitch last note staff 2", PitchClasses.D.getPitchClass(), ((SimpleNote)atoms2.get(14)).getPitch().getPitchClass());
-            assertEquals("Octave last note staff 2", 3, ((SimpleNote)atoms2.get(14)).getPitch().getOctave());
-
-            //TODO Comprobar mordente en staff 2
+       try {
+           assertEquals("Parts", 1, song.getParts().length);
+           assertEquals("System elements", 2, song.getSystemElements().length);
+           IVoicedItem[] topStaffSymbols = ((IStaff)song.getSystemElements()[0]).getStaffSymbols();
+           IVoicedItem[] bottomStaffSymbols = ((IStaff)song.getSystemElements()[1]).getStaffSymbols();
+           assertEquals("Bottom staff #elements", 23, bottomStaffSymbols.length);
+           assertEquals("Top staff #elements", 29, topStaffSymbols.length);
 
         } catch (Throwable t) {
             t.printStackTrace();
             fail(t.toString());
-        }*/
+        }
         return null;
     }
 
@@ -598,48 +532,5 @@ public class KernImporterTest {
         IScore kernSong = importKern(TestFileUtils.getFile("/testdata/io/kern/spline_split_piston070.krn"));
         doTest(KernImporterTest::assertSpineSplitPiston70, kernSong);
     }*/
-
-    // ------------------------------------------------------------------------------------------
-    private static Void assertBase(IScore song) {
-        try {
-            assertEquals("Parts", 1, song.getParts().length);
-            assertEquals("System elements", 1, song.getSystemElements().length);
-            assertEquals("Staves", 1, song.getSystemElements()[0].listStaves().length);
-            IStaff staff = song.getSystemElements()[0].listStaves()[0];
-            IVoicedItem[] staffSymbols = staff.getStaffSymbols();
-            assertEquals("Staff symbols", 16, staffSymbols.length);
-            // the cast itself checks the expected class. The same is applied to optionals
-            assertEquals("Clef line", 2, ((IClef)staffSymbols[0]).getLine().get().getValue().intValue());
-            assertEquals("Clef note", EClefSigns.G, ((IClef)staffSymbols[0]).getSignType().getValue());
-            assertEquals("Key signature accidentals", 1, ((IKeySignature)staffSymbols[1]).getPitchClasses().length);
-            assertEquals("Key signature pitch", EDiatonicPitches.B, ((IKeySignature)staffSymbols[1]).getPitchClasses()[0].getDiatonicPitch().getValue());
-            assertEquals("Key signature accidental", EAccidentalSymbols.FLAT, ((IKeySignature)staffSymbols[1]).getPitchClasses()[0].getAccidental().get().getValue());
-            assertEquals("Meter numerator", 2, ((IStandardTimeSignature)staffSymbols[2]).getNumerator().getValue().intValue());
-            assertEquals("Meter denominator", 2, ((IStandardTimeSignature)staffSymbols[2]).getDenominator().getValue().intValue());
-            assertTrue("Barline", staffSymbols[3] instanceof IBarline);
-            assertFalse("Note #1, no dots", ((INote)staffSymbols[4]).getDots().isPresent());
-            assertEquals("Note #1, half note", EFigures.HALF, ((INote)staffSymbols[4]).getFigure().getValue());
-            assertEquals("Note #1, d", EDiatonicPitches.D, ((INote)staffSymbols[4]).getNoteHead().getPitch().getDiatonicPitch().getValue());
-            assertEquals("Note #1, d, octave 4", 4, ((INote)staffSymbols[4]).getNoteHead().getPitch().getOctave().getValue().intValue());
-            assertFalse("Note #1, no accidental", ((INote)staffSymbols[4]).getNoteHead().getPitch().getAlteration().isPresent());
-            assertEquals("Note #1, explicit stem up", EStemDirection.up, ((INote)staffSymbols[4]).getStem().get().getStemDirection().getValue());
-
-            //TODO Plica
-            assertEquals("Note #5, c", EDiatonicPitches.C, ((INote)staffSymbols[10]).getNoteHead().getPitch().getDiatonicPitch().getValue());
-            assertEquals("Note #5, accidental sharp", EAccidentalSymbols.SHARP, ((INote)staffSymbols[10]).getNoteHead().getPitch().getAlteration().get().getAccidentalSymbol().getValue());
-            assertEquals("Rest, half note", EFigures.HALF, ((IRest)staffSymbols[15]).getFigure().getValue());
-        } catch (Throwable t) {
-            t.printStackTrace();
-            fail(t.toString());
-        }
-        return null;
-    }
-
-    @Test
-    public void testBase() throws Exception {
-        testExportImport = false;
-        IScore kernSong = importKern(TestFileUtils.getFile("/testdata/io/kern/base.krn"));
-        doTest(KernImporterTest::assertBase, kernSong);
-    }
 
 }

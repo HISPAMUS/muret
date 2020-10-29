@@ -105,7 +105,7 @@ public interface ICoreAbstractFactory {
     IScore createScore(IId id);
     IRest createRest(IId id, @NotNull IFigure figure,  IDots dots);
 
-    IStaff createStaff(IId id, @NotNull IStaffLineCount staffLineCount, @NotNull IVoicedItem[] items);
+    IStaff createStaff(IId id, @NotNull IStaffLineCount staffLineCount, IVoicedItem[] items);
 
     /**
      * For nested staff. It adds the staff to the staff group

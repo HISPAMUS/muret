@@ -19,4 +19,9 @@ public interface IStaff extends ISystem {
     void put(IVoicedItem symbol);
 
     void remove(IVoicedItem symbol);
+
+    /**
+     * @return True if getStaffSymbols has length 0
+     */
+    boolean isEmpty();
 }
