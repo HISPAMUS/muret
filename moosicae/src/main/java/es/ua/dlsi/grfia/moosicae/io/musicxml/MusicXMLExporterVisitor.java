@@ -352,8 +352,8 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
     @Override
     public void exportDots(IDots dots, XMLExporterVisitorParam inputOutput) {
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
-            if (dots.getValue() > 0) {
-                inputOutput.addAttribute("dots", Integer.toString(dots.getValue()));
+            if (dots.getDots().length > 0) {
+                inputOutput.addAttribute("dots", Integer.toString(dots.getDots().length));
             }
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
@@ -393,7 +393,7 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
                 case HUNDRED_TWENTY_EIGHTH: type = "128th"; break;
                 case TWO_HUNDRED_FIFTY_SIX: type = "256th"; break;
                 default:
-                    type = Integer.toString(figures.getMeterUnit());
+                    type = Integer.toString(figures.computeMeterUnit());
             }
             int dur = MAX_DUR / figures.getValue().getMeterUnit();
             inputOutput.addChild("duration", Integer.toString(dur));

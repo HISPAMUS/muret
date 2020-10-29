@@ -21,12 +21,12 @@ public class Figure extends EnumCoreProperty<EFigures> implements IFigure {
     }
 
     @Override
-    public Time getDurationWithDots(int dots) {
+    public Time findDurationWithDots(int dots) {
         return value.getDurationWithDots(dots);
     }
 
     @Override
-    public int getMeterUnit() {
+    public int computeMeterUnit() {
         return value.getMeterUnit();
     }
 }

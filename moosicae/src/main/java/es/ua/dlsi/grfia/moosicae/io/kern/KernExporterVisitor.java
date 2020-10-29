@@ -425,7 +425,7 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
 
     @Override
     public void exportDots(IDots dots, KernExporterVisitorTokenParam inputOutput) {
-        for (int i=0; i<dots.getValue(); i++) {
+        for (int i=0; i<dots.getDots().length; i++) {
             inputOutput.append('.');
         }
     }
@@ -473,7 +473,7 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
                 encoding = "0";
                 break;
             default: // all the other modern notation
-                encoding = Integer.toString(figure.getMeterUnit());
+                encoding = Integer.toString(figure.computeMeterUnit());
         }
         inputOutput.append(encoding);
     }

@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
+import es.ua.dlsi.grfia.moosicae.core.properties.IDot;
 import es.ua.dlsi.grfia.moosicae.core.properties.IDots;
 import es.ua.dlsi.grfia.moosicae.core.IDurationalSingle;
 import es.ua.dlsi.grfia.moosicae.core.properties.IFigure;

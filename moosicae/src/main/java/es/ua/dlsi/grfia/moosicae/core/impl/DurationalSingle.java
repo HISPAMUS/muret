@@ -19,7 +19,7 @@ public abstract class DurationalSingle extends Durational implements IDurational
     protected final IDots dots;
 
     public DurationalSingle(IId id, @NotNull IFigure figure,  IDots dots) {
-        super(id, figure.getDurationWithDots(dots != null ? dots.getValue() : 0));
+        super(id, figure.findDurationWithDots(dots != null ? dots.getDots().length : 0));
         this.figure = figure;
         this.dots = dots;
     }

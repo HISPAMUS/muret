@@ -1,6 +1,5 @@
 package es.ua.dlsi.grfia.moosicae.core.properties;
 
-import es.ua.dlsi.grfia.moosicae.core.IMooObject;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
 import es.ua.dlsi.grfia.moosicae.utils.Time;
 
@@ -10,6 +9,6 @@ import es.ua.dlsi.grfia.moosicae.utils.Time;
  */
 public interface IFigure extends IEnumCoreProperty<EFigures> {
     EFigures getValue();
-    Time getDurationWithDots(int dots); //TODO compute o find... en lugar de get
-    int getMeterUnit(); //TODO compute en lugar de get
+    Time findDurationWithDots(int dots);
+    int computeMeterUnit();
 }

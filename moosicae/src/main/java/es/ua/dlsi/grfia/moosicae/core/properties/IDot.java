@@ -3,9 +3,8 @@ package es.ua.dlsi.grfia.moosicae.core.properties;
 import es.ua.dlsi.grfia.moosicae.core.ICoreProperty;
 
 /**
- * The sequence of dots after a note or rest
+ * Any of the dots after a note or rest. Included as a property of IDots
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public interface IDots extends ICoreProperty {
-    IDot[] getDots();
+public interface IDot extends ICoreProperty {
 }

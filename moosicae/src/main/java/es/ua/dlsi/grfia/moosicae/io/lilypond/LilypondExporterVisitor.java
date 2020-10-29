@@ -372,7 +372,7 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
 
     @Override
     public void exportDots(IDots dots, LilypondExporterVisitorParam inputOutput) throws IMException {
-        for (int i=0; i<dots.getValue(); i++) {
+        for (int i=0; i<dots.getDots().length; i++) {
             inputOutput.append('.');
         }
     }
@@ -392,7 +392,7 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
             case QUADRUPLE_WHOLE: value = "longa"; break;
             case DOUBLE_WHOLE: value = "breve"; break;
             default:
-                value = Integer.toString(figures.getMeterUnit());
+                value = Integer.toString(figures.computeMeterUnit());
         }
         inputOutput.append(value);
     }

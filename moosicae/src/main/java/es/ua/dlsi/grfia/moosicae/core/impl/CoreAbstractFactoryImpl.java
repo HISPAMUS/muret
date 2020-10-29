@@ -67,11 +67,29 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IDots createDots(IId id, Integer ndots) {
-        if (ndots == 0) {
-            throw new IllegalArgumentException("When the number of dots is 0, this object should not be constructed");
+    public IDot createDot(IId id) {
+        return new Dot(id);
+    }
+
+
+    @Override
+    public IDots createDots(IId id, IDot[] dots) {
+        if (dots.length == 0) {
+            throw new IllegalArgumentException("The number of dots should be > 0");
         }
-        return new Dots(id, ndots);
+        return new Dots(id, dots);
+    }
+
+    @Override
+    public IDots createDots(IId id, int ndots) {
+        if (ndots <= 0) {
+            throw new IllegalArgumentException("The number of dots should be > 0, and it is " + ndots);
+        }
+        IDot [] dots = new IDot[ndots];
+        for (int i=0; i<dots.length; i++) {
+            dots[i] = createDot(null);
+        }
+        return new Dots(id, dots);
     }
 
     @Override

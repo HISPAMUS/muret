@@ -35,13 +35,21 @@ public interface ICoreAbstractFactory {
     ICutTime createCutTime(IId id);
     IDiatonicPitch createDiatonicPitch(IId id, @NotNull EDiatonicPitches diatonicPitch);
 
+    IDot createDot(IId id);
     /**
-     * Don't create dots with values = 0
      * @param id
-     * @param ndots Value > 0
+     * @param dots Non empty array
      * @return
      */
-    IDots createDots(IId id, @NotNull Integer ndots);
+    IDots createDots(IId id, @NotNull IDot[] dots);
+
+    /**
+     * Some formats just provide the number of dots
+     * @param id
+     * @param ndots > 0
+     * @return
+     */
+    IDots createDots(IId id, int ndots);
     IFigure createFigure(IId id, @NotNull EFigures figure);
     IId createId();
     IId createId(@NotNull String value);

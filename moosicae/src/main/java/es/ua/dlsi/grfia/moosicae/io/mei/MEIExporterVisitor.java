@@ -353,8 +353,8 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
     @Override
     public void exportDots(IDots dots, XMLExporterVisitorParam inputOutput) {
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {
-            if (dots.getValue() > 0) {
-                inputOutput.addAttribute("dots", Integer.toString(dots.getValue()));
+            if (dots.getDots().length > 0) {
+                inputOutput.addAttribute("dots", Integer.toString(dots.getDots().length));
             }
         } else {
             throw new UnsupportedOperationException("TO-DO"); //TODO
@@ -382,7 +382,7 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
                 case QUADRUPLE_WHOLE: value = "long"; break;
                 case DOUBLE_WHOLE: value = "breve"; break;
                 default:
-                    value = Integer.toString(figures.getMeterUnit());
+                    value = Integer.toString(figures.computeMeterUnit());
             }
             inputOutput.addAttribute("dur", value);
         } else {

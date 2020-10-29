@@ -10,7 +10,6 @@ import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmCoreSymbol;
-import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmPart;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -427,7 +426,7 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
 
     @Override
     public void exportDots(IDots dots, SkmExporterVisitorTokenParam inputOutput) {
-        for (int i=0; i<dots.getValue(); i++) {
+        for (int i=0; i<dots.getDots().length; i++) {
             inputOutput.append('.');
         }
     }
@@ -475,7 +474,7 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
                 encoding = "0";
                 break;
             default: // all the other modern notation
-                encoding = Integer.toString(figure.getMeterUnit());
+                encoding = Integer.toString(figure.computeMeterUnit());
         }
         inputOutput.append(encoding);
     }

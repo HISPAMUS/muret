@@ -632,31 +632,6 @@ public class KernImporterTest {
             assertEquals("Note #5, c", EDiatonicPitches.C, ((INote)staffSymbols[10]).getNoteHead().getPitch().getDiatonicPitch().getValue());
             assertEquals("Note #5, accidental sharp", EAccidentalSymbols.SHARP, ((INote)staffSymbols[10]).getNoteHead().getPitch().getAlteration().get().getAccidentalSymbol().getValue());
             assertEquals("Rest, half note", EFigures.HALF, ((IRest)staffSymbols[15]).getFigure().getValue());
-
-            //MONExporter monExporter = new MONExporter();
-            //monExporter.exportScore(song, new File("/tmp/base.mon"));
-
-
-            /*MEIExporter exporter = new MEIExporter();
-            exporter.exportScore(song, new File("/tmp/base.mei"));
-
-            assertEquals("Staves", 3, song.getStaves().size()); // 2 + analysis
-            ArrayList<Staff> staves = song.getNonAnalysisStaves();
-            assertEquals("Non analysis staves", 2, staves.size());
-
-
-            Staff topStaff = staves.get(0);
-            assertEquals("Layers in top staff", 2, topStaff.getLayers().size());
-
-            Staff bottomStaff = staves.get(1);
-            assertEquals("Layers in bottom staff", 2, bottomStaff.getLayers().size());
-
-            assertEquals("Atoms in top layer of top staff", 3, topStaff.getLayers().get(0).size());
-            assertEquals("Atoms in bottom layer of top staff", 5, topStaff.getLayers().get(1).size());
-
-            assertEquals("Atoms in top layer of bottom staff", 3, bottomStaff.getLayers().get(0).size());
-            assertEquals("Atoms in bottom layer of bottom staff", 18, bottomStaff.getLayers().get(1).size());*/
-
         } catch (Throwable t) {
             t.printStackTrace();
             fail(t.toString());
