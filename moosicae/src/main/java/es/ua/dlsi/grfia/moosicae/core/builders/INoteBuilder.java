@@ -15,7 +15,7 @@ import es.ua.dlsi.grfia.moosicae.core.properties.*;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class INoteBuilder extends IDurationalSingleBuilder<INote> {
+public class INoteBuilder extends IStemmedBuilder<INote> {
     protected INoteHead noteHead;
 
     public INoteBuilder(ICoreAbstractFactory coreObjectFactory) {
@@ -29,7 +29,7 @@ public class INoteBuilder extends IDurationalSingleBuilder<INote> {
 
     @Override
     public INote build() throws IMException {
-        return coreObjectFactory.createNote(getId(), figure, dots, noteHead);
+        return coreObjectFactory.createNote(getId(), figure, dots, stem, noteHead);
     }
 
     /**

@@ -13,6 +13,7 @@ import es.ua.dlsi.grfia.moosicae.core.mensural.IMensuration;
 import es.ua.dlsi.grfia.moosicae.core.properties.IDots;
 import es.ua.dlsi.grfia.moosicae.core.properties.IFigure;
 import es.ua.dlsi.grfia.moosicae.core.properties.IMetronomeMarkValue;
+import es.ua.dlsi.grfia.moosicae.core.properties.IStem;
 import es.ua.dlsi.grfia.moosicae.io.ImportingContexts;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.builders.KernMeterBuilder;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.*;
@@ -120,7 +121,8 @@ public class KernSyntaxDirectedTranslation {
 
         private void endContextAndAddToSpine(RuleContext ruleContext)  {
             try {
-                this.addItemToSpine(new KernCoreSymbol(ruleContext.getText(), endContext(ruleContext)));
+                IMooObject mooObject = endContext(ruleContext);
+                this.addItemToSpine(new KernCoreSymbol(ruleContext.getText(), mooObject));
             } catch (Throwable e) {
                 throw createException("RuleContext " + ruleContext.getClass().getName(), e);
             }
@@ -489,6 +491,25 @@ public class KernSyntaxDirectedTranslation {
         }
 
         @Override
+        public void enterStem(kernParser.StemContext ctx) {
+            super.enterStem(ctx);
+
+            IStem stem = null;
+            if (ctx.SLASH() != null) {
+                stem = coreAbstractFactory.createStem(null, EStemDirection.up);
+            } else if (ctx.BACKSLASH() != null) {
+                stem = coreAbstractFactory.createStem(null, EStemDirection.down);
+            } else {
+                createException("Invalid stem: " + ctx.getText());
+            }
+            importingContexts.addObjectToPool(stem);
+        }
+
+        @Override
+        public void exitStem(kernParser.StemContext ctx) {
+            super.exitStem(ctx);
+        }
+        @Override
         public void enterTimeSignature(kernParser.TimeSignatureContext ctx) {
             super.enterTimeSignature(ctx);
             beginContext(ctx, new KernMeterBuilder(coreAbstractFactory));
@@ -847,18 +868,6 @@ public class KernSyntaxDirectedTranslation {
             }
             endContextAndAddToSpine(ctx);
         }
-
-        @Override
-        public void exitStem(kernParser.StemContext ctx) {
-            super.exitStem(ctx);
-            Logger.getLogger(KernSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Stem {0}", ctx.getText());
-            /*try {
-                lastStemDirection = SkmStemFactory.getInstance().create(ctx.getText());
-            } catch (IM4Exception e) {
-                throw new GrammarParseRuntimeException(e);
-            }*/
-        }
-
 
         @Override
         public void enterChord(kernParser.ChordContext ctx) {

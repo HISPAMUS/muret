@@ -17,7 +17,6 @@ import es.ua.dlsi.grfia.moosicae.core.properties.*;
 
 
 import javax.validation.constraints.NotNull;
-import java.security.InvalidParameterException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -37,8 +36,8 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IChord createChord(IId id, IFigure figure,  IDots dots, INoteHead[] noteHeads) {
-        return new Chord(id, figure, dots, noteHeads);
+    public IChord createChord(IId id, IFigure figure, IDots dots, IStem stem, INoteHead[] noteHeads) {
+        return new Chord(id, figure, dots, stem, noteHeads);
     }
 
     @Override
@@ -249,8 +248,8 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public INote createNote(IId id, IFigure figure,  IDots dots, INoteHead noteHead) {
-        return new Note(id, figure, dots, noteHead);
+    public INote createNote(IId id, IFigure figure, IDots dots, IStem stem, INoteHead noteHead) {
+        return new Note(id, figure, dots, stem, noteHead);
     }
 
     @Override
@@ -350,6 +349,21 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     @Override
     public IStaffLineCount createStaffLineCount(int value) {
         return new StaffLineCount(null, value);
+    }
+
+    @Override
+    public IStem createStem(IId id, @NotNull IStemDirection stemDirection) {
+        return new Stem(id, stemDirection);
+    }
+
+    @Override
+    public IStem createStem(IId id, @NotNull EStemDirection stemDirection) {
+        return new Stem(id, new StemDirection(null, stemDirection));
+    }
+
+    @Override
+    public IStemDirection createStemDirection(IId id, EStemDirection value) {
+        return new StemDirection(id, value);
     }
 
     @Override

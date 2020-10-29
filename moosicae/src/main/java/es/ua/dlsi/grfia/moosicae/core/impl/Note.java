@@ -11,12 +11,18 @@ import java.util.Objects;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class Note extends DurationalSingle implements INote {
+public class Note extends Stemmed implements INote {
     @NotNull
     private final INoteHead noteHead;
 
     Note(IId id, @NotNull IFigure figure,  IDots dots, @NotNull INoteHead noteHead) {
         super(id, figure, dots);
+        Objects.requireNonNull(noteHead); // @NotNull is not working?
+        this.noteHead = noteHead;
+    }
+
+    Note(IId id, @NotNull IFigure figure,  IDots dots, IStem stem, @NotNull INoteHead noteHead) {
+        super(id, figure, dots, stem);
         Objects.requireNonNull(noteHead); // @NotNull is not working?
         this.noteHead = noteHead;
     }

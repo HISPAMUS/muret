@@ -5,6 +5,6 @@ import es.ua.dlsi.grfia.moosicae.core.properties.INoteHead;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public interface IChord extends IDurationalSingle, IPitched {
+public interface IChord extends IStemmed, IPitched {
     INoteHead[] getNoteHeads();
 }

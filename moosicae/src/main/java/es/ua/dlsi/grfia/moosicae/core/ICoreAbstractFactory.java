@@ -25,7 +25,7 @@ public interface ICoreAbstractFactory {
     IBarline createBarline(IId id,  INumber barNumber,  IBarlineType barlineType);
     IBarlineType createBarlineType(IId id, @NotNull EBarlineTypes barlineType);
     ICautionaryKeySignatureAccidentals createCautionaryKeySignatureAccidentals(IId id, @NotNull Boolean value);
-    IChord createChord(IId id, @NotNull IFigure figures,  IDots dots, @NotNull INoteHead [] noteHead);
+    IChord createChord(IId id, @NotNull IFigure figures, IDots dots, IStem stem, @NotNull INoteHead[] noteHead);
     IClef createClef(IId id, @NotNull IClefSign clefSign, IClefLine line, IOctaveTransposition octaveTransposition);
     IClefLine createClefLine(IId id, @NotNull Integer line);
     IClefSign createClefSign(IId id, @NotNull EClefSigns clefSign);
@@ -53,6 +53,7 @@ public interface ICoreAbstractFactory {
     IFigure createFigure(IId id, @NotNull EFigures figure);
     IId createId();
     IId createId(@NotNull String value);
+    IInterchangingMeter createInterchangingMeter(IId id, IMeter left, IMeter right) throws IMException;
     IKey createConventionalKey(IId id, @NotNull EConventionalKeys commonAlterationKeys, ICautionaryKeySignatureAccidentals cautionaryKeySignatureAccidentals);
     ITheoreticalKey createTheoreticalKey(IId id, @NotNull ETheoreticalKeys mixedAlterationKeys, ICautionaryKeySignatureAccidentals cautionaryKeySignatureAccidentals);
     IKey createKey(IId id, @NotNull IPitchClass pitchClass, @NotNull IMode mode, ICautionaryKeySignatureAccidentals cautionaryKeySignatureAccidentals) throws IMException;
@@ -72,7 +73,7 @@ public interface ICoreAbstractFactory {
     IName createName(IId id, @NotNull String value);
     INotationType createNotationType(IId id, @NotNull ENotationTypes notationType);
     INumber createNumber(IId id, @NotNull Integer value);
-    INote createNote(IId id, IFigure figures,  IDots dots, @NotNull INoteHead noteHead);
+    INote createNote(IId id, IFigure figures, IDots dots, IStem stem, @NotNull INoteHead noteHead);
 
     /**
      *
@@ -134,12 +135,14 @@ public interface ICoreAbstractFactory {
      */
     IStaffGroup createStaffGroup(@NotNull IStaffGroup staffGroup, IId id);
     IStaffLineCount createStaffLineCount(int value);
-
+    IStem createStem(IId id, @NotNull IStemDirection stemDirection);
+    IStem createStem(IId id, @NotNull EStemDirection stemDirection);
+    IStemDirection createStemDirection(IId id, EStemDirection value);
     ITie createTie(IId  id, ITieOrientation tieOrientation);
     ITimeSignatureNumerator createTimeSignatureNumerator(IId id, @NotNull Integer value);
     ITimeSignatureDenominator createTimeSignatureDenominator(IId id, @NotNull Integer value);
     ITitle createTitle(IId id, @NotNull String title);
     IVoice createVoice(@NotNull IPart part, IId id,  IName name);
 
-    IInterchangingMeter createInterchangingMeter(IId id, IMeter left, IMeter right) throws IMException;
+
 }

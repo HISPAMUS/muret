@@ -6,15 +6,9 @@ import static org.junit.Assert.*;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
-import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
-import es.ua.dlsi.grfia.moosicae.core.enums.EDiatonicPitches;
-import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
-import es.ua.dlsi.grfia.moosicae.io.kern.KernExporter;
+import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.io.kern.KernImporter;
-import es.ua.dlsi.grfia.moosicae.io.mei.MEIExporter;
 import es.ua.dlsi.grfia.moosicae.io.mei.MEIImporter;
-import es.ua.dlsi.grfia.moosicae.io.mon.MONExporter;
 import es.ua.dlsi.grfia.moosicae.io.musicxml.MusicXMLImporter;
 import es.ua.dlsi.grfia.moosicae.utils.TestFileUtils;
 import org.junit.Test;
@@ -628,6 +622,8 @@ public class KernImporterTest {
             assertEquals("Note #1, d", EDiatonicPitches.D, ((INote)staffSymbols[4]).getNoteHead().getPitch().getDiatonicPitch().getValue());
             assertEquals("Note #1, d, octave 4", 4, ((INote)staffSymbols[4]).getNoteHead().getPitch().getOctave().getValue().intValue());
             assertFalse("Note #1, no accidental", ((INote)staffSymbols[4]).getNoteHead().getPitch().getAlteration().isPresent());
+            assertEquals("Note #1, explicit stem up", EStemDirection.up, ((INote)staffSymbols[4]).getStem().get().getStemDirection().getValue());
+
             //TODO Plica
             assertEquals("Note #5, c", EDiatonicPitches.C, ((INote)staffSymbols[10]).getNoteHead().getPitch().getDiatonicPitch().getValue());
             assertEquals("Note #5, accidental sharp", EAccidentalSymbols.SHARP, ((INote)staffSymbols[10]).getNoteHead().getPitch().getAlteration().get().getAccidentalSymbol().getValue());
