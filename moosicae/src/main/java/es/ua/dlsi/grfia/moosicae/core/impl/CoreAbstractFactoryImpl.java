@@ -17,6 +17,7 @@ import es.ua.dlsi.grfia.moosicae.core.properties.*;
 
 
 import javax.validation.constraints.NotNull;
+import java.security.InvalidParameterException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -67,6 +68,9 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
 
     @Override
     public IDots createDots(IId id, Integer ndots) {
+        if (ndots == 0) {
+            throw new IllegalArgumentException("When the number of dots is 0, this object should not be constructed");
+        }
         return new Dots(id, ndots);
     }
 
@@ -77,7 +81,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
 
     @Override
     public IId createId(String value) {
-        return new ID(value);
+        return new ID(value, false);
     }
 
     private <T extends IKeyEnum> Optional<T> findKeyEnum(T[] values, IPitchClass pitchClass) {

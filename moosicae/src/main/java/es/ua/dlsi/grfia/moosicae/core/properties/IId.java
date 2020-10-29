@@ -6,4 +6,9 @@ package es.ua.dlsi.grfia.moosicae.core.properties;
  */
 public interface IId {
     String getValue();
+
+    /**
+     * @return True If it is generated automatically, false if set from a file import or similar
+     */
+    boolean isGenerated();
 }

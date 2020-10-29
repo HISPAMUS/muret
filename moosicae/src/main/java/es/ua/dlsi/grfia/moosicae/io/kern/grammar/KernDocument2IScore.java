@@ -2,7 +2,7 @@ package es.ua.dlsi.grfia.moosicae.io.kern.grammar;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.core.properties.IStaffLineCount;
+import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.*;
 import es.ua.dlsi.grfia.moosicae.utils.dag.DAGNode;
 
@@ -10,6 +10,8 @@ import java.util.HashMap;
 
 /**
  * It converts the KernDocument obtained when parsing to an IScore object
+ * The KernDocument contains spines in the form of a directed acyclic graph with KernTokens. A KernToken can be a part definition, a staff definition, a clef.
+ * a note, or any spine operation, including the beginning of a spine. See the convert method documentation.
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class KernDocument2IScore {
@@ -17,10 +19,10 @@ public class KernDocument2IScore {
     private final IScore score;
     private final HashMap<Integer, IPart> partNumbers;
     private final HashMap<Integer, IStaff> staffNumbers;
-    private final HashMap<IVoice, IPart> voiceParts;
-    private final HashMap<IVoice, IStaff> voiceStaves;
+    private final HashMap<IId, IPart> voiceParts;
+    private final HashMap<IId, IStaff> voiceStaves;
     private IPart defaultPart;
-    private IStaff defaultStaff;
+    //quitar private IStaff defaultStaff;
 
     public KernDocument2IScore(ICoreAbstractFactory abstractFactory) {
         this.abstractFactory = abstractFactory;
@@ -31,23 +33,33 @@ public class KernDocument2IScore {
         this.voiceStaves = new HashMap<>();
     }
 
-
+    /**
+     * It traverses the directed acyclic graph and takes decisions on the visit method for each token found.
+     * partNumbers is used as a map to known which part belongs each part number belongs to. Note that several spines may have the same part number header
+     * staffNumbers is used as a map to known which staff belongs each staff number belongs to. Note that several spines may have the same staff number header
+     * @param firstNode
+     * @return
+     * @throws IMException
+     */
     public IScore convert(DAGNode<KernToken> firstNode) throws IMException {
         defaultPart = abstractFactory.createPart(score, null, null);
-        IStaffLineCount defaultStaffLineCount = abstractFactory.createStaffLineCount(5);
-        defaultStaff = abstractFactory.createStaff(score, null, defaultStaffLineCount);
+        /// quitar IStaffLineCount defaultStaffLineCount = abstractFactory.createStaffLineCount(5);
+        /// quitar defaultStaff = abstractFactory.createStaff(score, null, defaultStaffLineCount);
 
         // first create voices, all associated to a default part that will be moved to other part when the **part token is found
         for (DAGNode<KernToken> node: firstNode.getNextList()) {
-            KernToken skmToken = node.getLabel().getContent();
-            if (skmToken instanceof KernHeader) {
-                EKernHeaders headerType = ((KernHeader) skmToken).getSkmHeaderType();
-                if (headerType == EKernHeaders.skern || headerType == EKernHeaders.smens) {
+            KernToken kernToken = node.getLabel().getContent();
+            if (kernToken instanceof KernHeader) {
+                EKernHeaders headerType = ((KernHeader) kernToken).getSkmHeaderType();
+                if (headerType == EKernHeaders.kern || headerType == EKernHeaders.mens) { //TODO tambuén smens y skern ??? - o emens / ekern
+                    // Create the voice for this spine - it may be moved to another part when the *part signifier is found
                     IVoice voice = abstractFactory.createVoice(defaultPart, null, null);
-                    voiceParts.put(voice, defaultPart);
+                    voiceParts.put(voice.getId(), defaultPart);
+
+                    // Create the staff - hay que cambiarlo, de momento no estoy gestionando los staves?
                     //TODO staves - cuando se encuentre con *staff1 o *staff1/2
-                    IStaff defaultStaff = abstractFactory.createStaff(score, null, defaultStaffLineCount);
-                    voiceStaves.put(voice, defaultStaff);
+                    IStaff staff = abstractFactory.createStaff(score, null, abstractFactory.createStaffLineCount(5));
+                    voiceStaves.put(voice.getId(), staff);
                     // now traverse the spine
                     for (DAGNode<KernToken> next: node.getNextList()) {
                         visit(voice, next);
@@ -55,7 +67,7 @@ public class KernDocument2IScore {
                     
                 } // else TODO harm, text...
             } else {
-                throw new IMException("The first nodes after the start node should be header ones, and there is a " + skmToken.getEncoding());
+                throw new IMException("The first nodes after the start node should be header ones, and there is a " + kernToken.getEncoding());
             }
         }
 
@@ -63,8 +75,7 @@ public class KernDocument2IScore {
         if (defaultPart.getVoices().length == 0) {
             score.remove(defaultPart);
         }
-        //TODO
-        /*if (defaultStaff.getStaffSymbols().length == 0) {
+        /*quitar if (defaultStaff.getStaffSymbols().length == 0) {
             score.remove(defaultStaff);
         }*/
         return score;
@@ -77,50 +88,50 @@ public class KernDocument2IScore {
         }
     }
 
-    private void process(IVoice voice, KernToken skmToken) throws IMException {
-        if (skmToken instanceof KernPart) {
-            KernPart skmPart = (KernPart) skmToken;
-            processPart(voice, skmPart);
-        } else if (skmToken instanceof KernStaff) {
-            KernStaff skmStaff = (KernStaff) skmToken;
-            processStaff(voice, skmStaff);
-        } else if (skmToken instanceof KernCoreSymbol){
-            KernCoreSymbol skmCoreSymbol = (KernCoreSymbol) skmToken;
-            processCoreSymbol(voice, skmCoreSymbol);
+    private void process(IVoice voice, KernToken kernToken) throws IMException {
+        if (kernToken instanceof KernPart) {
+            KernPart kernPart = (KernPart) kernToken;
+            processPart(voice, kernPart);
+        } else if (kernToken instanceof KernStaff) {
+            KernStaff kernStaff = (KernStaff) kernToken;
+            processStaff(voice, kernStaff);
+        } else if (kernToken instanceof KernCoreSymbol){
+            KernCoreSymbol kernCoreSymbol = (KernCoreSymbol) kernToken;
+            processCoreSymbol(voice, kernCoreSymbol);
         } // TODO spine operations
     }
 
-    private void processCoreSymbol(IVoice voice, KernCoreSymbol skmCoreSymbol) throws IMException {
-        IStaff voiceStaff = voiceStaves.get(voice);
-        if (skmCoreSymbol.getSymbol() instanceof IVoiced) {
-            voice.addItem((IVoiced) skmCoreSymbol.getSymbol());
+    private void processCoreSymbol(IVoice voice, KernCoreSymbol kernCoreSymbol) throws IMException {
+        IStaff voiceStaff = voiceStaves.get(voice.getId());
+        if (kernCoreSymbol.getSymbol() instanceof IVoiced) {
+            voice.addItem((IVoiced) kernCoreSymbol.getSymbol());
             if (voiceStaff != null) {
-                voiceStaff.put((IVoicedItem) skmCoreSymbol.getSymbol());
+                voiceStaff.put((IVoicedItem) kernCoreSymbol.getSymbol());
             }
         }
     }
 
-    private void processStaff(IVoice voice, KernStaff skmStaff) {
-        IStaff staff = staffNumbers.get(skmStaff.getNumber());
+    private void processStaff(IVoice voice, KernStaff kernStaff) {
+        IStaff staff = staffNumbers.get(kernStaff.getNumber());
 
         if (staff == null) {
             staff = abstractFactory.createStaff(score, null, abstractFactory.createStaffLineCount(5));
-            staffNumbers.put(skmStaff.getNumber(), staff);
+            staffNumbers.put(kernStaff.getNumber(), staff);
         }
 
-        voiceStaves.put(voice, staff);
+        voiceStaves.put(voice.getId(), staff);
     }
 
-    private void processPart(IVoice voice, KernPart skmPart) {
-        IPart part = partNumbers.get(skmPart.getNumber());
+    private void processPart(IVoice voice, KernPart kernPart) {
+        IPart part = partNumbers.get(kernPart.getNumber());
 
         if (part == null) {
             part = abstractFactory.createPart(score, null, null);
-            partNumbers.put(skmPart.getNumber(), part);
+            partNumbers.put(kernPart.getNumber(), part);
         }
 
         // move the voice (already inserted to a default part) to this one
         score.moveVoice(voice, defaultPart, part);
-        voiceParts.put(voice, part);
+        voiceParts.put(voice.getId(), part);
     }
 }

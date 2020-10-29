@@ -111,7 +111,7 @@ public class MusicXMLImporter extends XMLImporter implements IImporter {
         }
 
         for (MxmlPartContents mxmlImportedPart : mxmlScorePartWise.getMxmlPartsContents()) {
-            IPart part = partHashMap.get(mxmlImportedPart.getId().get().getValue());
+            IPart part = partHashMap.get(mxmlImportedPart.getId().getValue());
             if (part == null) {
                 throw new IMException("There is a <part> with id='" + mxmlImportedPart.getId() + "' not defined in part-list");
             }

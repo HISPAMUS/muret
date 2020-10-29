@@ -11,13 +11,21 @@ public class ID implements IId {
     @NotNull
     private final String id;
 
-    public ID(@NotNull String id) {
+    private boolean generated;
+
+    public ID(@NotNull String id, boolean generated) {
         this.id = id;
+        this.generated = generated;
     }
 
     @Override
     public String getValue() {
         return id;
+    }
+
+    @Override
+    public boolean isGenerated() {
+        return generated;
     }
 
     @Override

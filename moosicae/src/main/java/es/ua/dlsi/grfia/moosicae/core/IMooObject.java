@@ -10,7 +10,11 @@ import java.util.Optional;
  * @created 14/03/2020
  */
 public interface IMooObject extends Cloneable {
-    Optional<IId> getId();
+    /**
+     * All objects have a non empty ID
+     * @return
+     */
+    IId getId();
     IMooObject clone();
     int hashCode();
     boolean equals(Object o);

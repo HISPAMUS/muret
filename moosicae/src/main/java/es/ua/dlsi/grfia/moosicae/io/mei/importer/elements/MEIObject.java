@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.io.mei.importer.elements;
 
 import es.ua.dlsi.grfia.moosicae.core.IMooObject;
+import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 
 import java.util.Optional;
@@ -13,12 +14,16 @@ public abstract class MEIObject implements IMooObject {
     protected final IId id;
 
     protected MEIObject(IId id) {
-        this.id = id;
+        if (id == null) {
+            this.id = IdGenerator.getInstance().generateUniqueId();
+        } else {
+            this.id = id;
+        }
     }
 
     @Override
-    public Optional<IId> getId() {
-        return Optional.ofNullable(id);
+    public IId getId() {
+        return id;
     }
 
     @Override

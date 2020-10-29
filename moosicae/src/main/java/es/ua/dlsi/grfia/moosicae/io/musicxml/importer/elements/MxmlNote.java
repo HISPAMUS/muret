@@ -28,7 +28,7 @@ public class MxmlNote extends MxmlObject implements IMxmlPartItem, INote {
 
 
     public MxmlNote(@NotNull INote note, StaffNumber staffNumber, VoiceNumber voiceNumber, MxmlChord chord) {
-        super(note.getId().isPresent()?note.getId().get():null);
+        super(note.getId());
         this.note = note;
         this.staffNumber = staffNumber;
         this.voiceNumber = voiceNumber;
@@ -73,7 +73,7 @@ public class MxmlNote extends MxmlObject implements IMxmlPartItem, INote {
     }
 
     @Override
-    public Optional<IId> getId() {
+    public IId getId() {
         return note.getId();
     }
 

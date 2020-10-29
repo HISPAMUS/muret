@@ -737,8 +737,10 @@ public class KernSyntaxDirectedTranslation {
                 importingContexts.addObjectToPool(figure);
 
                 int augmentationDots = ctx.augmentationDot().size();
-                IDots dots = coreAbstractFactory.createDots(null, augmentationDots);
-                importingContexts.addObjectToPool(dots);
+                if (augmentationDots > 0) {
+                    IDots dots = coreAbstractFactory.createDots(null, augmentationDots);
+                    importingContexts.addObjectToPool(dots);
+                }
             } catch (IMException e) {
                 throw createException(e);
             }

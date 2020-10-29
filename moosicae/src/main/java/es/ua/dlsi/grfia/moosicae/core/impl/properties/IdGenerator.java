@@ -25,6 +25,6 @@ public class IdGenerator implements IIdGenerator {
     @Override
     public IId generateUniqueId() {
         UUID uuid = UUID.randomUUID();
-        return new ID(uuid.toString());
+        return new ID(uuid.toString(), true);
     }
 }

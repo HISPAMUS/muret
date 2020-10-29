@@ -34,6 +34,13 @@ public interface ICoreAbstractFactory {
     ICustos createCustos(IId id, @NotNull IPitch pitch);
     ICutTime createCutTime(IId id);
     IDiatonicPitch createDiatonicPitch(IId id, @NotNull EDiatonicPitches diatonicPitch);
+
+    /**
+     * Don't create dots with values = 0
+     * @param id
+     * @param ndots Value > 0
+     * @return
+     */
     IDots createDots(IId id, @NotNull Integer ndots);
     IFigure createFigure(IId id, @NotNull EFigures figure);
     IId createId();
@@ -92,21 +99,28 @@ public interface ICoreAbstractFactory {
     IStaff createStaff(IId id, @NotNull IStaffLineCount staffLineCount, @NotNull IVoicedItem[] items);
 
     /**
-     * For nested staff
+     * For nested staff. It adds the staff to the staff group
      * @param staffGroup
      * @return
      */
     IStaff createStaff(@NotNull IStaffGroup staffGroup, IId id, @NotNull IStaffLineCount staffLineCount);
     /**
-     * For ungrouped staves
+     * For ungrouped staves. It adds the staff to the score
      * @param score
      * @return
      */
     IStaff createStaff(@NotNull IScore score, IId id, @NotNull IStaffLineCount staffLineCount);
     IStaffGroup createStaffGroup(IId id, ISystem[] children);
+
+    /**
+     * It adds the staff group to the score
+     * @param score
+     * @param id
+     * @return
+     */
     IStaffGroup createStaffGroup(@NotNull IScore score, IId id);
     /**
-     * For nested groups
+     * For nested groups. It adds the staff group to the parent staff group
      * @param staffGroup
      * @return
      */

@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.io.musicxml.importer.elements;
 
 import es.ua.dlsi.grfia.moosicae.core.IMooObject;
+import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 
 import java.util.Optional;
@@ -12,13 +13,20 @@ import java.util.Optional;
 public abstract class MxmlObject implements IMooObject {
     protected final IId id;
 
+    /**
+     * @param id If id is null, a new id is generated. If not null, the value is assigned
+     */
     protected MxmlObject(IId id) {
-        this.id = id;
+        if (id == null) {
+            this.id = IdGenerator.getInstance().generateUniqueId();
+        } else {
+            this.id = id;
+        }
     }
 
     @Override
-    public Optional<IId> getId() {
-        return Optional.ofNullable(id);
+    public IId getId() {
+        return id;
     }
 
     @Override

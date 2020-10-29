@@ -7,13 +7,15 @@ public interface IScore extends IMooObject {
     IPart[] getParts();
     ISystem[] getSystemElements();
 
+    //TODO
     /**
      * @deprecated ¿No debería ser el system elements?
      * @return
      */
     IStaff[] listAllStaves();
     void add(IPart part);
-    void add(ISystem staves);
+    void add(ISystem systemElement);
+    void remove(ISystem systemElement);
     void moveVoice(IVoice voice, IPart fromPart, IPart toPart);
     void remove(IPart part);
 

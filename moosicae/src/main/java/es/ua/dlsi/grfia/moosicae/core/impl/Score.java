@@ -36,6 +36,7 @@ public class Score extends CoreObject implements IScore {
     }
 
     @Override
+    @Deprecated
     public IStaff[] listAllStaves() {
         LinkedList<IStaff> staves = new LinkedList<>();
         for (ISystem child: systemElements) {
@@ -54,6 +55,11 @@ public class Score extends CoreObject implements IScore {
     @Override
     public void add(ISystem systemElement) {
         this.systemElements.add(systemElement);
+    }
+
+    @Override
+    public void remove(ISystem systemElement) {
+        this.systemElements.remove(systemElement);
     }
 
     @Override

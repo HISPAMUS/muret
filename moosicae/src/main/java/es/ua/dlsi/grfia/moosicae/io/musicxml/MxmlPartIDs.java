@@ -23,13 +23,7 @@ public class MxmlPartIDs {
         if (id != null) {
             return id;
         } else {
-            Optional<IId> iid = part.getId();
-            String value;
-            if (iid.isPresent()) {
-                value = part.getId().get().getValue();
-            } else {
-                value = "P" + (partIDs.size() + 1);
-            }
+            String value = part.getId().getValue();
             partIDs.put(part, value);
             return value;
         }

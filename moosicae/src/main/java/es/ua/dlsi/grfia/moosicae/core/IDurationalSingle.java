@@ -11,5 +11,10 @@ import java.util.Optional;
  */
 public interface IDurationalSingle extends IDurational {
     IFigure getFigure();
+
+    /**
+     * It the number of dots is 0, the value will be empty (i.e. optional not present)
+     * @return
+     */
     Optional<IDots> getDots();
 }

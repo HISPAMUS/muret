@@ -5,13 +5,16 @@ package es.ua.dlsi.grfia.moosicae.io;
 import static org.junit.Assert.*;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.CoreFactory;
-import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
-import es.ua.dlsi.grfia.moosicae.core.IScore;
+import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
+import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
+import es.ua.dlsi.grfia.moosicae.core.enums.EDiatonicPitches;
+import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
 import es.ua.dlsi.grfia.moosicae.io.kern.KernExporter;
 import es.ua.dlsi.grfia.moosicae.io.kern.KernImporter;
 import es.ua.dlsi.grfia.moosicae.io.mei.MEIExporter;
 import es.ua.dlsi.grfia.moosicae.io.mei.MEIImporter;
+import es.ua.dlsi.grfia.moosicae.io.mon.MONExporter;
 import es.ua.dlsi.grfia.moosicae.io.musicxml.MusicXMLImporter;
 import es.ua.dlsi.grfia.moosicae.utils.TestFileUtils;
 import org.junit.Test;
@@ -45,8 +48,8 @@ public class KernImporterTest {
     }
 
     private void doTest(Function<IScore, Void> validationFunction, IScore song) throws Exception {
-        /*validationFunction.apply(song);
-        KernExporter exporter = new KernExporter();
+        validationFunction.apply(song);
+        /*TODO KernExporter exporter = new KernExporter();
         File file = TestFileUtils.createTempFile("aa.krn");
         //File file = File.createTempFile("export", "mei");
         //File file = new File("/tmp/aa.krn");
@@ -605,6 +608,35 @@ public class KernImporterTest {
     // ------------------------------------------------------------------------------------------
     private static Void assertBase(IScore song) {
         try {
+            assertEquals("Parts", 1, song.getParts().length);
+            assertEquals("System elements", 1, song.getSystemElements().length);
+            assertEquals("Staves", 1, song.getSystemElements()[0].listStaves().length);
+            IStaff staff = song.getSystemElements()[0].listStaves()[0];
+            IVoicedItem[] staffSymbols = staff.getStaffSymbols();
+            assertEquals("Staff symbols", 16, staffSymbols.length);
+            // the cast itself checks the expected class. The same is applied to optionals
+            assertEquals("Clef line", 2, ((IClef)staffSymbols[0]).getLine().get().getValue().intValue());
+            assertEquals("Clef note", EClefSigns.G, ((IClef)staffSymbols[0]).getSignType().getValue());
+            assertEquals("Key signature accidentals", 1, ((IKeySignature)staffSymbols[1]).getPitchClasses().length);
+            assertEquals("Key signature pitch", EDiatonicPitches.B, ((IKeySignature)staffSymbols[1]).getPitchClasses()[0].getDiatonicPitch().getValue());
+            assertEquals("Key signature accidental", EAccidentalSymbols.FLAT, ((IKeySignature)staffSymbols[1]).getPitchClasses()[0].getAccidental().get().getValue());
+            assertEquals("Meter numerator", 2, ((IStandardTimeSignature)staffSymbols[2]).getNumerator().getValue().intValue());
+            assertEquals("Meter denominator", 2, ((IStandardTimeSignature)staffSymbols[2]).getDenominator().getValue().intValue());
+            assertTrue("Barline", staffSymbols[3] instanceof IBarline);
+            assertFalse("Note #1, no dots", ((INote)staffSymbols[4]).getDots().isPresent());
+            assertEquals("Note #1, half note", EFigures.HALF, ((INote)staffSymbols[4]).getFigure().getValue());
+            assertEquals("Note #1, d", EDiatonicPitches.D, ((INote)staffSymbols[4]).getNoteHead().getPitch().getDiatonicPitch().getValue());
+            assertEquals("Note #1, d, octave 4", 4, ((INote)staffSymbols[4]).getNoteHead().getPitch().getOctave().getValue().intValue());
+            assertFalse("Note #1, no accidental", ((INote)staffSymbols[4]).getNoteHead().getPitch().getAlteration().isPresent());
+            //TODO Plica
+            assertEquals("Note #5, c", EDiatonicPitches.C, ((INote)staffSymbols[10]).getNoteHead().getPitch().getDiatonicPitch().getValue());
+            assertEquals("Note #5, accidental sharp", EAccidentalSymbols.SHARP, ((INote)staffSymbols[10]).getNoteHead().getPitch().getAlteration().get().getAccidentalSymbol().getValue());
+            assertEquals("Rest, half note", EFigures.HALF, ((IRest)staffSymbols[15]).getFigure().getValue());
+
+            //MONExporter monExporter = new MONExporter();
+            //monExporter.exportScore(song, new File("/tmp/base.mon"));
+
+
             /*MEIExporter exporter = new MEIExporter();
             exporter.exportScore(song, new File("/tmp/base.mei"));
 
