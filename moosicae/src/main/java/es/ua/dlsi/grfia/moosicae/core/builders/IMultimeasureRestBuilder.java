@@ -9,7 +9,7 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IMultimeasureRestCount;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class IMultimeasureRestBuilder extends CoreObjectBuilder<IMultimeasureRest> {
+public class IMultimeasureRestBuilder extends IDurationalCompositeBuilder<IMultimeasureRest> {
     private IMultimeasureRestCount count;
 
     public IMultimeasureRestBuilder(ICoreAbstractFactory coreObjectFactory) {
@@ -23,7 +23,7 @@ public class IMultimeasureRestBuilder extends CoreObjectBuilder<IMultimeasureRes
 
     @Override
     public IMultimeasureRest build() throws IMException {
-        return coreObjectFactory.createMultimeasureRest(getId(), count);
+        return coreObjectFactory.createMultimeasureRest(getId(), children.toArray(new IDurational[0]), count);
     }
 
 }

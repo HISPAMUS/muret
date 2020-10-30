@@ -5,6 +5,7 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
+import es.ua.dlsi.grfia.moosicae.core.impl.BeamGroup;
 import es.ua.dlsi.grfia.moosicae.core.impl.KeySignature;
 import es.ua.dlsi.grfia.moosicae.core.impl.WholeMeasureRest;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
@@ -21,6 +22,11 @@ import java.util.Optional;
  */
 public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisitorParam> {
     public static final int MAX_DUR = 256;
+
+    @Override
+    public void exportBeamGroup(BeamGroup beamGroup, XMLExporterVisitorParam inputOutput) {
+        throw new UnsupportedOperationException("TODO");
+    }
 
     @Override
     public void exportClef(IClef clef, XMLExporterVisitorParam inputOutput) {

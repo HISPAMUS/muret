@@ -7,6 +7,7 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
+import es.ua.dlsi.grfia.moosicae.core.impl.BeamGroup;
 import es.ua.dlsi.grfia.moosicae.core.impl.WholeMeasureRest;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
@@ -24,6 +25,11 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
         stringBuilder.append(SEP);
         stringBuilder.append(n);
         return stringBuilder.toString();
+    }
+
+    @Override
+    public void exportBeamGroup(BeamGroup beamGroup, SkmExporterVisitorTokenParam inputOutput) {
+        throw new UnsupportedOperationException("TODO");
     }
 
     @Override

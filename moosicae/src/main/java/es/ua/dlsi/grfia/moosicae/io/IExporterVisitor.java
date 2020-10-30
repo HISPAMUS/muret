@@ -3,6 +3,7 @@ package es.ua.dlsi.grfia.moosicae.io;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
+import es.ua.dlsi.grfia.moosicae.core.impl.BeamGroup;
 import es.ua.dlsi.grfia.moosicae.core.impl.WholeMeasureRest;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 
@@ -10,6 +11,7 @@ import es.ua.dlsi.grfia.moosicae.core.properties.*;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public interface IExporterVisitor<InputOutputType>  {
+    void exportBeamGroup(BeamGroup beamGroup, InputOutputType inputOutput);
     void exportClef(IClef clef, InputOutputType inputOutput) throws IMException;
     void exportClefSign(IClefSign clefSign, InputOutputType inputOutput) throws IMException;
     void exportClefOctaveTransposition(IOctaveTransposition octaveTransposition, InputOutputType inputOutput) throws IMException;
@@ -54,4 +56,5 @@ public interface IExporterVisitor<InputOutputType>  {
     void exportInterchangingMeter(IInterchangingMeter interchangingMeter, InputOutputType inputOutput) throws IMException;
 
     void exportWholeMeasureRest(WholeMeasureRest wholeMeasureRest, InputOutputType inputOutput);
+
 }

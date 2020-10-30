@@ -24,6 +24,7 @@ public interface ICoreAbstractFactory {
     IAccidentalSymbol createAccidentalSymbol(IId id, @NotNull EAccidentalSymbols accidentalSymbol);
     IBarline createBarline(IId id,  INumber barNumber,  IBarlineType barlineType);
     IBarlineType createBarlineType(IId id, @NotNull EBarlineTypes barlineType);
+    IBeamGroup createBeamGroup(IId id, @NotNull IDurational[] toArray);
     ICautionaryKeySignatureAccidentals createCautionaryKeySignatureAccidentals(IId id, @NotNull Boolean value);
     IChord createChord(IId id, @NotNull IFigure figures, IDots dots, IStem stem, @NotNull INoteHead[] noteHead);
     IClef createClef(IId id, @NotNull IClefSign clefSign, IClefLine line, IOctaveTransposition octaveTransposition);
@@ -67,7 +68,7 @@ public interface ICoreAbstractFactory {
     IMetronomeMarkValue createMetronomeMarkValue(IId id, @NotNull Integer value);
     IMixedMeter createMixedMeter(IId id, @NotNull IMeter[] meters);
     IMode createMode(IId id, EModes mode);
-    IMultimeasureRest createMultimeasureRest(IId id, @NotNull IMultimeasureRestCount measureCount);
+    IMultimeasureRest createMultimeasureRest(IId id, @NotNull IDurational[] children, @NotNull IMultimeasureRestCount measureCount);
     IMultimeasureRestCount createMultimeasureRestCount(IId id, Integer value);
 
     IName createName(IId id, @NotNull String value);
@@ -143,6 +144,6 @@ public interface ICoreAbstractFactory {
     ITimeSignatureDenominator createTimeSignatureDenominator(IId id, @NotNull Integer value);
     ITitle createTitle(IId id, @NotNull String title);
     IVoice createVoice(@NotNull IPart part, IId id,  IName name);
-    IWholeMeasureRest createWholeMeasureRest(IId id);
+    IWholeMeasureRest createWholeMeasureRest(IId id, @NotNull IRest rest);
 
 }

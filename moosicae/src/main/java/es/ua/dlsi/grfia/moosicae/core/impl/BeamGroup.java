@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.core.IBeamGroup;
+import es.ua.dlsi.grfia.moosicae.core.IDurational;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import javax.validation.constraints.NotNull;
@@ -10,18 +11,17 @@ import javax.validation.constraints.NotNull;
  */
 public class BeamGroup extends DurationalComposite implements IBeamGroup {
 
-    BeamGroup(IId id) {
-        super(id);
+    BeamGroup(IId id, @NotNull IDurational[] children) {
+        super(id, children);
     }
 
     @Override
     public <InputOutputType> void export(IExporterVisitor<InputOutputType> exportVisitor, InputOutputType inputOutput) {
-        //TODO
+        exportVisitor.exportBeamGroup(this, inputOutput);
     }
 
-    //TODO
     @Override
     public DurationalComposite clone() {
-        return null;
+        return new BeamGroup(null, children);
     }
 }

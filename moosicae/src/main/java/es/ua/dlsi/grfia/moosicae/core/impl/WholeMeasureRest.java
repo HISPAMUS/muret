@@ -1,7 +1,9 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
+import es.ua.dlsi.grfia.moosicae.core.IDurational;
 import es.ua.dlsi.grfia.moosicae.core.IMultimeasureRest;
+import es.ua.dlsi.grfia.moosicae.core.IRest;
 import es.ua.dlsi.grfia.moosicae.core.IWholeMeasureRest;
 import es.ua.dlsi.grfia.moosicae.core.impl.properties.MultimeasureRestCount;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
@@ -14,13 +16,13 @@ import javax.validation.constraints.NotNull;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class WholeMeasureRest extends MultimeasureRest implements IWholeMeasureRest {
-    WholeMeasureRest(IId id) {
-        super(id, new MultimeasureRestCount(null, 1));
+    WholeMeasureRest(IId id, IRest rest) {
+        super(id, new IDurational[]{rest}, new MultimeasureRestCount(null, 1));
     }
 
     @Override
     public WholeMeasureRest clone() {
-        return new WholeMeasureRest(null);
+        return new WholeMeasureRest(null, (IRest)children[0]);
     }
 
     @Override

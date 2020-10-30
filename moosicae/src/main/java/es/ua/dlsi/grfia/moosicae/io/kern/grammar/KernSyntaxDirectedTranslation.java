@@ -103,6 +103,10 @@ public class KernSyntaxDirectedTranslation {
             this.importingContexts.begin(ruleContext.getClass().getName(), builder);
         }
 
+        private void beginContext(String name, IObjectBuilder<? extends IMooObject> builder) {
+            this.importingContexts.begin(name, builder);
+        }
+
         private void beginEndContext(RuleContext ruleContext, IObjectBuilder<? extends IMooObject> builder, Object ... objects) {
             try {
                 this.importingContexts.beginEnd(builder, objects);
@@ -119,6 +123,13 @@ public class KernSyntaxDirectedTranslation {
             }
         }
 
+        private IMooObject endContext(String name) {
+            try {
+                return this.importingContexts.end(name);
+            } catch (Throwable e) {
+                throw createException("RuleContext " + name, e);
+            }
+        }
         private IMooObject endContextAndAddToSpine(RuleContext ruleContext)  {
             try {
                 IMooObject mooObject = endContext(ruleContext);
@@ -128,6 +139,17 @@ public class KernSyntaxDirectedTranslation {
                 throw createException("RuleContext " + ruleContext.getClass().getName(), e);
             }
         }
+
+        private IMooObject endContextAndAddToSpine(String contextName, String encoding) {
+            try {
+                IMooObject mooObject = this.importingContexts.end(contextName);
+                this.addItemToSpine(new KernCoreSymbol(encoding, mooObject));
+                return mooObject;
+            } catch (Throwable e) {
+                throw createException("RuleContext " + contextName, e);
+            }
+        }
+
 
 
         @Override
@@ -372,17 +394,13 @@ public class KernSyntaxDirectedTranslation {
         public void enterKeyMode(kernParser.KeyModeContext ctx) {
             super.exitKeyMode(ctx);
             beginContext(ctx, new IModeBuilder(coreAbstractFactory));
-            importingContexts.begin("pitchClass", new IPitchClassBuilder(coreAbstractFactory));
+            this.beginContext("pitchClass", new IPitchClassBuilder(coreAbstractFactory));
         }
 
         @Override
         public void exitKeyMode(kernParser.KeyModeContext ctx) {
             super.exitKeyMode(ctx);
-            try {
-                importingContexts.end("pitchClass");
-            } catch (IMException e) {
-                throw createException(e);
-            }
+            endContext("pitchClass");
             endContext(ctx);
         }
 
@@ -773,10 +791,10 @@ public class KernSyntaxDirectedTranslation {
         public void enterRest(kernParser.RestContext ctx) {
             super.enterRest(ctx);
             if (ctx.CHAR_r(1) != null) { // if second r --> whole measure rest
-                beginContext(ctx, new IWholeMeasureRestBuilder(coreAbstractFactory));
-            } else { // normal rest
-                beginContext(ctx, new IRestBuilder(coreAbstractFactory));
+                this.beginContext("wholeMeasureRest", new IWholeMeasureRestBuilder(coreAbstractFactory));
+                // the rest will be embedded inside the whole note rest
             }
+            this.beginContext("rest", new IRestBuilder(coreAbstractFactory));
         }
 
 
@@ -784,7 +802,16 @@ public class KernSyntaxDirectedTranslation {
         public void exitRest(kernParser.RestContext ctx) {
             super.exitRest(ctx);
             Logger.getLogger(KernSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Rest {0}", ctx.getText());
-            endContextAndAddToSpine(ctx);
+            try {
+                if (ctx.CHAR_r(1) != null) { // if second r --> whole measure rest
+                    endContext("rest");
+                    this.endContextAndAddToSpine("wholeMeasureRest", ctx.getText());
+                } else {
+                    endContextAndAddToSpine("rest", ctx.getText());
+                }
+            } catch (Exception e) {
+                createException(e);
+            }
         }
 
         @Override
@@ -856,7 +883,7 @@ public class KernSyntaxDirectedTranslation {
         @Override
         public void enterNote(kernParser.NoteContext ctx) {
             beginContext(ctx, new INoteBuilder(coreAbstractFactory));
-            this.importingContexts.begin("noteHead", new INoteHeadBuilder(coreAbstractFactory));
+            beginContext("noteHead", new INoteHeadBuilder(coreAbstractFactory));
         }
 
 
@@ -866,11 +893,7 @@ public class KernSyntaxDirectedTranslation {
             super.exitNote(ctx);
             Logger.getLogger(KernSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Note {0}", ctx.getText());
 
-            try {
-                this.importingContexts.end("noteHead");
-            } catch (IMException e) {
-                throw createException(e);
-            }
+            this.endContext("noteHead");
             endContextAndAddToSpine(ctx);
         }
 

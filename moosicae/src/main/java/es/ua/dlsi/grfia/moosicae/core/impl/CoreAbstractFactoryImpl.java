@@ -228,8 +228,8 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IMultimeasureRest createMultimeasureRest(IId id, IMultimeasureRestCount measureCount) {
-        return new MultimeasureRest(id, measureCount);
+    public IMultimeasureRest createMultimeasureRest(IId id, IDurational[] children, IMultimeasureRestCount measureCount) {
+        return new MultimeasureRest(id, children, measureCount);
     }
 
     @Override
@@ -389,8 +389,8 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IWholeMeasureRest createWholeMeasureRest(IId id) {
-        return new WholeMeasureRest(id);
+    public IWholeMeasureRest createWholeMeasureRest(IId id, IRest rest) {
+        return new WholeMeasureRest(id, rest);
     }
 
     @Override
@@ -401,6 +401,11 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     @Override
     public IBarlineType createBarlineType(IId id, EBarlineTypes barlineType) {
         return new BarlineType(id, barlineType);
+    }
+
+    @Override
+    public IBeamGroup createBeamGroup(IId id,@NotNull IDurational[] children) {
+        return new BeamGroup(id, children);
     }
 
     @Override

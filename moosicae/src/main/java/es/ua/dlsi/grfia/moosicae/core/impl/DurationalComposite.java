@@ -5,25 +5,32 @@ import es.ua.dlsi.grfia.moosicae.core.IDurationalComposite;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.utils.Time;
 
-//TODO Durational composite
+import javax.validation.constraints.NotNull;
+
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public abstract class DurationalComposite extends VoicedItem implements IDurationalComposite {
+    @NotNull
+    protected IDurational[] children;
 
-    public DurationalComposite(IId id) {
+    public DurationalComposite(IId id, @NotNull IDurational[] children) {
         super(id);
+        this.children = children.clone();
     }
 
     @Override
     public IDurational[] getChildren() {
-        return new IDurational[0];
+        return children;
     }
 
     @Override
     public Time getDuration() {
-
-        return null;
+        Time result = Time.TIME_ZERO;
+        for (IDurational child: children) {
+            result = result.add(child.getDuration());
+        }
+        return result;
     }
 
     public abstract DurationalComposite clone();

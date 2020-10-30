@@ -125,7 +125,17 @@ public class KernImporterTest {
            }
 
            assertTrue("Whole measure rest", bottomStaffSymbols[4] instanceof IWholeMeasureRest);
+           assertEquals("Whole measure rest figure", EFigures.HALF, ((IWholeMeasureRest)bottomStaffSymbols[4]).getRest().getFigure().getValue());
+           assertEquals("Whole measure rest #dots", 1, ((IWholeMeasureRest)bottomStaffSymbols[4]).getRest().getDots().get().getDots().length);
 
+           assertEquals("Bottom voice, line #15, 8GG/L, pitch", EDiatonicPitches.G, ((INote)bottomStaffSymbols[7]).getNoteHead().getPitch().getDiatonicPitch().getValue());
+           assertEquals("Bottom voice, line #15, 8GG/L, octave", 2, ((INote)bottomStaffSymbols[7]).getNoteHead().getPitch().getOctave().getValue().intValue());
+
+           assertEquals("Top voice, line #23, 8b-\\, figure", EFigures.EIGHTH, ((INote)topStaffSymbols[17]).getFigure().getValue());
+           assertEquals("Top voice, line #23, 8b-\\, pitch", EDiatonicPitches.B, ((INote)topStaffSymbols[17]).getNoteHead().getPitch().getDiatonicPitch().getValue());
+           assertEquals("Top voice, line #23, 8b-\\, accidental", EAccidentalSymbols.FLAT, ((INote)topStaffSymbols[17]).getNoteHead().getPitch().getAlteration().get().getAccidentalSymbol().getValue());
+
+           assertEquals("Top voice, line #23, 8b-\\, explicit stem down", EStemDirection.down, ((INote)topStaffSymbols[17]).getStem().get().getStemDirection().getValue());
         } catch (Throwable t) {
             t.printStackTrace();
             fail(t.toString());

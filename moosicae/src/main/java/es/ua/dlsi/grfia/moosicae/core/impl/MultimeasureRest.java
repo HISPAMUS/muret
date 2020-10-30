@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
+import es.ua.dlsi.grfia.moosicae.core.IDurational;
 import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
 import es.ua.dlsi.grfia.moosicae.core.properties.IMultimeasureRestCount;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
@@ -15,8 +16,8 @@ public class MultimeasureRest extends DurationalComposite implements IMultimeasu
     @NotNull
     private final IMultimeasureRestCount measureCount;
 
-    MultimeasureRest(IId id, @NotNull IMultimeasureRestCount measureCount) {
-        super(id);
+    MultimeasureRest(IId id, @NotNull IDurational[] children, @NotNull IMultimeasureRestCount measureCount) {
+        super(id, children);
         this.measureCount = measureCount;
     }
 
@@ -27,7 +28,7 @@ public class MultimeasureRest extends DurationalComposite implements IMultimeasu
 
     @Override
     public MultimeasureRest clone() {
-        return new MultimeasureRest(null, measureCount);
+        return new MultimeasureRest(null, children, measureCount);
     }
 
     @Override

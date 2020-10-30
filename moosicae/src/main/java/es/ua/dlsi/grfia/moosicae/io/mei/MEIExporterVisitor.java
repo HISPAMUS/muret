@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
+import es.ua.dlsi.grfia.moosicae.core.impl.BeamGroup;
 import es.ua.dlsi.grfia.moosicae.core.impl.WholeMeasureRest;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
@@ -16,6 +17,11 @@ import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
  * @created 16/03/2020
  */
 public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorParam> {
+    @Override
+    public void exportBeamGroup(BeamGroup beamGroup, XMLExporterVisitorParam inputOutput) {
+        throw new UnsupportedOperationException("TODO");
+    }
+
     @Override
     public void exportClef(IClef clef, XMLExporterVisitorParam inputOutput) throws IMException {
         if (inputOutput.getXMLParamExportMode() == XMLParamExportMode.attribute) {

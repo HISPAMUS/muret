@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
+import es.ua.dlsi.grfia.moosicae.core.impl.BeamGroup;
 import es.ua.dlsi.grfia.moosicae.core.impl.WholeMeasureRest;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
@@ -15,6 +16,11 @@ import java.util.Optional;
  * @created 18/03/2020
  */
 public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporterVisitorParam> {
+    @Override
+    public void exportBeamGroup(BeamGroup beamGroup, LilypondExporterVisitorParam inputOutput) {
+        throw new UnsupportedOperationException("TODO");
+    }
+
     @Override
     public void exportClef(IClef clef, LilypondExporterVisitorParam inputOutput) throws IMException {
         inputOutput.startString();
