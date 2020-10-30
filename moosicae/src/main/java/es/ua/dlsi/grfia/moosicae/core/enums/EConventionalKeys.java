@@ -50,7 +50,7 @@ public enum EConventionalKeys implements IKeyEnum {
     private final int keySignatureAccidentalCount;
     private final Optional<EAccidentalSymbols> keySignatureAccidental;
 
-    private EConventionalKeys(EDiatonicPitches diatonicPitch, EAccidentalSymbols pitchAccidentalSymbol, EModes mode, int keySignatureAccidentals, EAccidentalSymbols keySignatureAccidental) {
+    EConventionalKeys(EDiatonicPitches diatonicPitch, EAccidentalSymbols pitchAccidentalSymbol, EModes mode, int keySignatureAccidentals, EAccidentalSymbols keySignatureAccidental) {
         this.diatonicPitch = diatonicPitch;
         this.pitchAccidentalSymbol = Optional.ofNullable(pitchAccidentalSymbol);
         this.mode = mode;

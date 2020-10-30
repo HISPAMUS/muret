@@ -3,11 +3,13 @@ package es.ua.dlsi.grfia.moosicae.io.kern.grammar;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
+import es.ua.dlsi.grfia.moosicae.core.prototypes.PrototypesAbstractBuilder;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.*;
 import es.ua.dlsi.grfia.moosicae.utils.dag.DAGNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 
 /**
  * It converts the KernDocument obtained when parsing to an IScore object
@@ -16,7 +18,7 @@ import java.util.HashMap;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class KernDocument2IScore {
-    private final ICoreAbstractFactory abstractFactory;
+    private final ICoreAbstractFactory coreAbstractFactory;
     private final IScore score;
     private final HashMap<Integer, IPart> partNumbers;
     private final HashMap<Integer, IStaff> staffNumbers;
@@ -26,9 +28,9 @@ public class KernDocument2IScore {
     private ArrayList<IStaff> staves;
     //quitar private IStaff defaultStaff;
 
-    public KernDocument2IScore(ICoreAbstractFactory abstractFactory) {
-        this.abstractFactory = abstractFactory;
-        this.score = abstractFactory.createScore(null);
+    public KernDocument2IScore(ICoreAbstractFactory coreAbstractFactory) {
+        this.coreAbstractFactory = coreAbstractFactory;
+        this.score = coreAbstractFactory.createScore(null);
         this.partNumbers = new HashMap<>();
         this.voiceParts = new HashMap<>();
         this.staffNumbers = new HashMap<>();
@@ -44,7 +46,7 @@ public class KernDocument2IScore {
      * @throws IMException
      */
     public IScore convert(DAGNode<KernToken> firstNode) throws IMException {
-        defaultPart = abstractFactory.createPart(score, null, null);
+        defaultPart = coreAbstractFactory.createPart(score, null, null);
         /// quitar IStaffLineCount defaultStaffLineCount = abstractFactory.createStaffLineCount(5);
         /// quitar defaultStaff = abstractFactory.createStaff(score, null, defaultStaffLineCount);
 
@@ -56,13 +58,13 @@ public class KernDocument2IScore {
                 EKernHeaders headerType = ((KernHeader) kernToken).getSkmHeaderType();
                 if (headerType == EKernHeaders.kern || headerType == EKernHeaders.mens) { //TODO tambuén smens y skern ??? - o emens / ekern
                     // Create the voice for this spine - it may be moved to another part when the *part signifier is found
-                    IVoice voice = abstractFactory.createVoice(defaultPart, null, null);
+                    IVoice voice = coreAbstractFactory.createVoice(defaultPart, null, null);
                     voiceParts.put(voice.getId(), defaultPart);
 
                     // Create the staff - hay que cambiarlo, de momento no estoy gestionando los staves?
                     //TODO staves - cuando se encuentre con *staff1 o *staff1/2
                     // don't insert the staff yet into the score yet because their order must be reversed
-                    IStaff defaultVoiceStaff = abstractFactory.createStaff(null, abstractFactory.createStaffLineCount(5), null);
+                    IStaff defaultVoiceStaff = coreAbstractFactory.createStaff(null, coreAbstractFactory.createStaffLineCount(5), null);
                     staves.add(0, defaultVoiceStaff); // insert from the beginning
                     voiceStaves.put(voice.getId(), defaultVoiceStaff);
                     // now traverse the spine
@@ -101,7 +103,7 @@ public class KernDocument2IScore {
         } else if (kernToken instanceof KernStaff) {
             KernStaff kernStaff = (KernStaff) kernToken;
             processStaff(voice, kernStaff);
-        } else if (kernToken instanceof KernCoreSymbol){
+        } else if (kernToken instanceof KernCoreSymbol) {
             KernCoreSymbol kernCoreSymbol = (KernCoreSymbol) kernToken;
             processCoreSymbol(voice, kernCoreSymbol);
         } // TODO spine operations
@@ -109,10 +111,19 @@ public class KernDocument2IScore {
 
     private void processCoreSymbol(IVoice voice, KernCoreSymbol kernCoreSymbol) throws IMException {
         IStaff voiceStaff = voiceStaves.get(voice.getId());
-        if (kernCoreSymbol.getSymbol() instanceof IVoiced) {
-            voice.addItem((IVoiced) kernCoreSymbol.getSymbol());
+        IMooObject symbol = kernCoreSymbol.getSymbol();
+        if (symbol instanceof IVoiced) {
+            if (symbol instanceof IUnconventionalKeySignature) {
+                // if it is a conventional or theoretical key, we take its key signature
+                IUnconventionalKeySignature uks = (IUnconventionalKeySignature) kernCoreSymbol.getSymbol();
+                Optional<IKeySignature> ks = PrototypesAbstractBuilder.getInstance(coreAbstractFactory).getKeys().findExistingKeySignature(uks.getPitchClasses());
+                if (ks.isPresent()) {
+                    symbol = ks.get();
+                }  // else use the unconventionalKeySignature
+            }
+            voice.addItem((IVoiced) symbol);
             if (voiceStaff != null) {
-                voiceStaff.put((IVoicedItem) kernCoreSymbol.getSymbol());
+                voiceStaff.put((IVoicedItem) symbol);
             }
         }
     }
@@ -140,7 +151,7 @@ public class KernDocument2IScore {
         IPart part = partNumbers.get(kernPart.getNumber());
 
         if (part == null) {
-            part = abstractFactory.createPart(score, null, null);
+            part = coreAbstractFactory.createPart(score, null, null);
             partNumbers.put(kernPart.getNumber(), part);
         }
 

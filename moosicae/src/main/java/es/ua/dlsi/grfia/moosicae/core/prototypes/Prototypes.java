@@ -10,10 +10,12 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * It contains named examples of a series of known objects. Use generateInstance method or at least a defensive copy of the prototypes
+ * The derived classes of Prototypes should be instantiated using the PrototypesAbstractBuilder class
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 27/03/2020
  */
-public class Prototypes<Type extends IVoicedItem> {
+public abstract class Prototypes<Type extends IVoicedItem> {
     protected final ICoreAbstractFactory coreAbstractFactory;
     protected HashMap<String, Type> prototypes;
 
@@ -26,6 +28,11 @@ public class Prototypes<Type extends IVoicedItem> {
         prototypes.put(name, prototype);
     }
 
+    /**
+     * It creates a copy of the given prototype for the specified name
+     * @param name
+     * @return
+     */
     public Type generateInstance(String name) {
         Type type = prototypes.get(name);
         if (type == null) {
@@ -34,10 +41,18 @@ public class Prototypes<Type extends IVoicedItem> {
         return (Type) type.clone();
     }
 
+    /**
+     * Use only on tests
+     * @return
+     */
     public Collection<Type> getPrototypes() {
         return prototypes.values();
     }
 
+    /**
+     * Use only on tests
+     * @return
+     */
     public Map<String, Type> getMap() {
         return prototypes;
     }

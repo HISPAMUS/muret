@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
+import es.ua.dlsi.grfia.moosicae.core.impl.ConventionalKeySignature;
 import es.ua.dlsi.grfia.moosicae.io.kern.KernImporter;
 import es.ua.dlsi.grfia.moosicae.io.mei.MEIImporter;
 import es.ua.dlsi.grfia.moosicae.io.musicxml.MusicXMLImporter;
@@ -66,6 +67,7 @@ public class KernImporterTest {
             // the cast itself checks the expected class. The same is applied to optionals
             assertEquals("Clef line", 2, ((IClef)staffSymbols[0]).getLine().get().getValue().intValue());
             assertEquals("Clef note", EClefSigns.G, ((IClef)staffSymbols[0]).getSignType().getValue());
+            assertEquals("Conventional key signature", 1, staffSymbols[1] instanceof ConventionalKeySignature); // internal/impl test
             assertEquals("Key signature accidentals", 1, ((IKeySignature)staffSymbols[1]).getPitchClasses().length);
             assertEquals("Key signature pitch", EDiatonicPitches.B, ((IKeySignature)staffSymbols[1]).getPitchClasses()[0].getDiatonicPitch().getValue());
             assertEquals("Key signature accidental", EAccidentalSymbols.FLAT, ((IKeySignature)staffSymbols[1]).getPitchClasses()[0].getAccidental().get().getValue());
@@ -106,6 +108,20 @@ public class KernImporterTest {
            IVoicedItem[] bottomStaffSymbols = ((IStaff)song.getSystemElements()[1]).getStaffSymbols();
            assertEquals("Bottom staff #elements", 23, bottomStaffSymbols.length);
            assertEquals("Top staff #elements", 29, topStaffSymbols.length);
+           assertEquals("Clef line", 2, ((IClef)topStaffSymbols[0]).getLine().get().getValue().intValue());
+           assertEquals("Clef note", EClefSigns.G, ((IClef)topStaffSymbols[0]).getSignType().getValue());
+           assertEquals("Clef line", 4, ((IClef)bottomStaffSymbols[0]).getLine().get().getValue().intValue());
+           assertEquals("Clef note", EClefSigns.F, ((IClef)bottomStaffSymbols[0]).getSignType().getValue());
+
+           for (int i=0; i<2; i++) {
+               IVoicedItem[] staffSymbols = ((IStaff)song.getSystemElements()[i]).getStaffSymbols();
+               assertTrue("Conventional key signature", staffSymbols[1] instanceof ConventionalKeySignature); // internal/impl test
+               assertEquals("Key signature accidentals", 1, ((IKeySignature)staffSymbols[1]).getPitchClasses().length);
+               assertEquals("Key signature pitch", EDiatonicPitches.B, ((IKeySignature)staffSymbols[1]).getPitchClasses()[0].getDiatonicPitch().getValue());
+               assertEquals("Key signature accidental", EAccidentalSymbols.FLAT, ((IKeySignature)staffSymbols[1]).getPitchClasses()[0].getAccidental().get().getValue());
+               assertEquals("Meter numerator", 3, ((IStandardTimeSignature)staffSymbols[2]).getNumerator().getValue().intValue());
+               assertEquals("Meter denominator", 4, ((IStandardTimeSignature)staffSymbols[2]).getDenominator().getValue().intValue());
+           }
 
         } catch (Throwable t) {
             t.printStackTrace();

@@ -71,7 +71,11 @@ public class Meters extends Prototypes<IMeter> {
         return meter;
     }
 
-    public Meters(ICoreAbstractFactory coreAbstractFactory) {
+    /**
+     * Instantiate it using PrototypesAbstractBuilder
+     * @param coreAbstractFactory
+     */
+    Meters(ICoreAbstractFactory coreAbstractFactory) {
         super(coreAbstractFactory);
 
         add(M1_1, generateMeter(1, 1));

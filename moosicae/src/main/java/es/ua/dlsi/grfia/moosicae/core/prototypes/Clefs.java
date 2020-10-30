@@ -63,7 +63,11 @@ public class Clefs extends Prototypes<IClef> {
         return clef;
     }
 
-    public Clefs(ICoreAbstractFactory coreAbstractFactory) {
+    /**
+     * Instantiate it using PrototypesAbstractBuilder
+     * @param coreAbstractFactory
+     */
+    Clefs(ICoreAbstractFactory coreAbstractFactory) {
         super(coreAbstractFactory);
         add(G2, generateClef(EClefSigns.G, 2));
         add(G2_OTTAVA_ALTA, generateClef(EClefSigns.G, 2, 1));

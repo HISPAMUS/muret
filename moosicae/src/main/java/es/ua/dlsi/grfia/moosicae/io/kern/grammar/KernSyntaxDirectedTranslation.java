@@ -353,7 +353,7 @@ public class KernSyntaxDirectedTranslation {
             Logger.getLogger(KernSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
                     "Key signature {0}", ctx.getText());
 
-            //TODO we could check whether the unconventional key signature is not unconventional, but conventional?
+            // if it is conventional, it is converted in the KernDocument2IScore
             endContextAndAddToSpine(ctx);
         }
 
