@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
+import es.ua.dlsi.grfia.moosicae.core.impl.WholeMeasureRest;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLExporterVisitorParam;
@@ -180,6 +181,12 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
         interchangingMeter.getRight().export(this, meterSigGrp);
 
     }
+
+    @Override
+    public void exportWholeMeasureRest(WholeMeasureRest wholeMeasureRest, XMLExporterVisitorParam inputOutput) {
+        throw new UnsupportedOperationException("Whole measure rest");
+    }
+
     @Override
     public void exportChord(IChord chord, XMLExporterVisitorParam inputOutputOutput) throws IMException {
 

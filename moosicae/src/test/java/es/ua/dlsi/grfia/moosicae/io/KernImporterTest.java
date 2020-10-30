@@ -121,7 +121,10 @@ public class KernImporterTest {
                assertEquals("Key signature accidental", EAccidentalSymbols.FLAT, ((IKeySignature)staffSymbols[1]).getPitchClasses()[0].getAccidental().get().getValue());
                assertEquals("Meter numerator", 3, ((IStandardTimeSignature)staffSymbols[2]).getNumerator().getValue().intValue());
                assertEquals("Meter denominator", 4, ((IStandardTimeSignature)staffSymbols[2]).getDenominator().getValue().intValue());
+               assertTrue("Bar line", staffSymbols[3] instanceof IBarline);
            }
+
+           assertTrue("Whole measure rest", bottomStaffSymbols[4] instanceof IWholeMeasureRest);
 
         } catch (Throwable t) {
             t.printStackTrace();

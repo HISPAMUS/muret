@@ -6,6 +6,7 @@ import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.impl.KeySignature;
+import es.ua.dlsi.grfia.moosicae.core.impl.WholeMeasureRest;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLExporterVisitorParam;
@@ -186,6 +187,11 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
             throw new UnsupportedOperationException("TO-DO"); //TODO
         }
 
+    }
+
+    @Override
+    public void exportWholeMeasureRest(WholeMeasureRest wholeMeasureRest, XMLExporterVisitorParam inputOutput) {
+        throw new UnsupportedOperationException("Whole measure rest");
     }
 
     @Override

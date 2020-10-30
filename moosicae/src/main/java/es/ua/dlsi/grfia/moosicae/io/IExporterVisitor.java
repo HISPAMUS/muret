@@ -3,6 +3,7 @@ package es.ua.dlsi.grfia.moosicae.io;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
+import es.ua.dlsi.grfia.moosicae.core.impl.WholeMeasureRest;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 
 /**
@@ -51,4 +52,6 @@ public interface IExporterVisitor<InputOutputType>  {
     void exportAdditiveMeter(IAdditiveMeter compoundMeter, InputOutputType inputOutput) throws IMException;
 
     void exportInterchangingMeter(IInterchangingMeter interchangingMeter, InputOutputType inputOutput) throws IMException;
+
+    void exportWholeMeasureRest(WholeMeasureRest wholeMeasureRest, InputOutputType inputOutput);
 }

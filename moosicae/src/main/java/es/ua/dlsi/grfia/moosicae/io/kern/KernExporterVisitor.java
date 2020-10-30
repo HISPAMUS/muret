@@ -6,6 +6,7 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
+import es.ua.dlsi.grfia.moosicae.core.impl.WholeMeasureRest;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.KernCoreSymbol;
@@ -234,6 +235,11 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
         inputOutput.append('|');
         doExport((IStandardTimeSignature) right, inputOutput);
         inputOutput.buildAndAddToken(interchangingMeter);
+    }
+
+    @Override
+    public void exportWholeMeasureRest(WholeMeasureRest wholeMeasureRest, KernExporterVisitorTokenParam inputOutput) {
+        throw new UnsupportedOperationException("Whole measure rest");
     }
 
     @Override

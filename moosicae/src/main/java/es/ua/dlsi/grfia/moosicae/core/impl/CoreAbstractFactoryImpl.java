@@ -389,6 +389,11 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
+    public IWholeMeasureRest createWholeMeasureRest(IId id) {
+        return new WholeMeasureRest(id);
+    }
+
+    @Override
     public IInterchangingMeter createInterchangingMeter(IId id, IMeter left, IMeter right) throws IMException {
         return new InterchangingMeter(id, left, right);
     }

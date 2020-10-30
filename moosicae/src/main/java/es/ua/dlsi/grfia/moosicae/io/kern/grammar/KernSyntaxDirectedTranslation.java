@@ -119,14 +119,16 @@ public class KernSyntaxDirectedTranslation {
             }
         }
 
-        private void endContextAndAddToSpine(RuleContext ruleContext)  {
+        private IMooObject endContextAndAddToSpine(RuleContext ruleContext)  {
             try {
                 IMooObject mooObject = endContext(ruleContext);
                 this.addItemToSpine(new KernCoreSymbol(ruleContext.getText(), mooObject));
+                return mooObject;
             } catch (Throwable e) {
                 throw createException("RuleContext " + ruleContext.getClass().getName(), e);
             }
         }
+
 
         @Override
         public void enterEveryRule(ParserRuleContext ctx) {
@@ -770,7 +772,11 @@ public class KernSyntaxDirectedTranslation {
         @Override
         public void enterRest(kernParser.RestContext ctx) {
             super.enterRest(ctx);
-            beginContext(ctx, new IRestBuilder(coreAbstractFactory));
+            if (ctx.CHAR_r(1) != null) { // if second r --> whole measure rest
+                beginContext(ctx, new IWholeMeasureRestBuilder(coreAbstractFactory));
+            } else { // normal rest
+                beginContext(ctx, new IRestBuilder(coreAbstractFactory));
+            }
         }
 
 
@@ -778,7 +784,6 @@ public class KernSyntaxDirectedTranslation {
         public void exitRest(kernParser.RestContext ctx) {
             super.exitRest(ctx);
             Logger.getLogger(KernSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Rest {0}", ctx.getText());
-            //TODO rr - enn la gramática sí está
             endContextAndAddToSpine(ctx);
         }
 

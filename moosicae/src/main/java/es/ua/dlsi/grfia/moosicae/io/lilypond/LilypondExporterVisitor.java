@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
+import es.ua.dlsi.grfia.moosicae.core.impl.WholeMeasureRest;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 
@@ -204,6 +205,11 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
     @Override
     public void exportInterchangingMeter(IInterchangingMeter iInterchangingMeter, LilypondExporterVisitorParam inputOutput) {
         throw new UnsupportedOperationException("Interchanging meter not supported by Lilypond");
+    }
+
+    @Override
+    public void exportWholeMeasureRest(WholeMeasureRest wholeMeasureRest, LilypondExporterVisitorParam inputOutput) {
+        throw new UnsupportedOperationException("Whole measure rest");
     }
 
     @Override

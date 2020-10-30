@@ -143,6 +143,6 @@ public interface ICoreAbstractFactory {
     ITimeSignatureDenominator createTimeSignatureDenominator(IId id, @NotNull Integer value);
     ITitle createTitle(IId id, @NotNull String title);
     IVoice createVoice(@NotNull IPart part, IId id,  IName name);
-
+    IWholeMeasureRest createWholeMeasureRest(IId id);
 
 }
