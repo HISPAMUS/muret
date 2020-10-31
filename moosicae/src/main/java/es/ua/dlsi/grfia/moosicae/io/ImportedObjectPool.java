@@ -33,6 +33,9 @@ public class ImportedObjectPool {
     public void add(Object object) {
         availableObjects.add(object);
     }
+    public void remove(Object object) {
+        availableObjects.remove(object);
+    }
 
     /**
      * It tries to assign (either with "add" or with "set") the source object to the target builder
@@ -97,6 +100,7 @@ public class ImportedObjectPool {
             throw new IMException(e);
         }*/
     }
+
 
     /*public static void main(String[] args) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, IMException {
         ICoreAbstractFactory coreFactory = new CoreFactory().create();

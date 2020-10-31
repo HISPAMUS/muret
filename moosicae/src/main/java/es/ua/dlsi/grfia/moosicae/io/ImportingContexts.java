@@ -89,6 +89,10 @@ public class ImportingContexts<BuiltType> {
         }
     }
 
+    public void removeObjectFromPool(Object object) {
+        this.objectPool.remove(object);
+    }
+
     /**
      * This is a collapsed version of begin, addObjectToPool and end methods for very simple builders that do not have children
      * @param coreObjectBuilder

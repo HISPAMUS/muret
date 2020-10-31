@@ -2,19 +2,19 @@ package es.ua.dlsi.grfia.moosicae.io.kern.grammar;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.builders.IBeamGroupBuilder;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.prototypes.PrototypesAbstractBuilder;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.*;
 import es.ua.dlsi.grfia.moosicae.utils.dag.DAGNode;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * It converts the KernDocument obtained when parsing to an IScore object
  * The KernDocument contains spines in the form of a directed acyclic graph with KernTokens. A KernToken can be a part definition, a staff definition, a clef.
  * a note, or any spine operation, including the beginning of a spine. See the convert method documentation.
+ * Beam groups are expanded in spines, i.e., they are encoded in the graph using a "begin group" note, regular notes, and a "end group" note.
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class KernDocument2IScore {
@@ -26,7 +26,7 @@ public class KernDocument2IScore {
     private final HashMap<IId, IStaff> voiceStaves;
     private IPart defaultPart;
     private ArrayList<IStaff> staves;
-    //quitar private IStaff defaultStaff;
+    private IBeamGroupBuilder currentBeamGroupBuilder; // for creating a beam group
 
     public KernDocument2IScore(ICoreAbstractFactory coreAbstractFactory) {
         this.coreAbstractFactory = coreAbstractFactory;
@@ -35,10 +35,12 @@ public class KernDocument2IScore {
         this.voiceParts = new HashMap<>();
         this.staffNumbers = new HashMap<>();
         this.voiceStaves = new HashMap<>();
+        this.currentBeamGroupBuilder = null;
     }
 
     /**
      * It traverses the directed acyclic graph and takes decisions on the visit method for each token found.
+     * The traversal is depth-first, so the sequence of notes in each voice is followed.
      * partNumbers is used as a map to known which part belongs each part number belongs to. Note that several spines may have the same part number header
      * staffNumbers is used as a map to known which staff belongs each staff number belongs to. Note that several spines may have the same staff number header
      * @param firstNode
@@ -47,8 +49,6 @@ public class KernDocument2IScore {
      */
     public IScore convert(DAGNode<KernToken> firstNode) throws IMException {
         defaultPart = coreAbstractFactory.createPart(score, null, null);
-        /// quitar IStaffLineCount defaultStaffLineCount = abstractFactory.createStaffLineCount(5);
-        /// quitar defaultStaff = abstractFactory.createStaff(score, null, defaultStaffLineCount);
 
         staves = new ArrayList<>();
         // first create voices, all associated to a default part that will be moved to other part when the **part token is found
@@ -61,7 +61,6 @@ public class KernDocument2IScore {
                     IVoice voice = coreAbstractFactory.createVoice(defaultPart, null, null);
                     voiceParts.put(voice.getId(), defaultPart);
 
-                    // Create the staff - hay que cambiarlo, de momento no estoy gestionando los staves?
                     //TODO staves - cuando se encuentre con *staff1 o *staff1/2
                     // don't insert the staff yet into the score yet because their order must be reversed
                     IStaff defaultVoiceStaff = coreAbstractFactory.createStaff(null, coreAbstractFactory.createStaffLineCount(5), null);
@@ -112,6 +111,7 @@ public class KernDocument2IScore {
     private void processCoreSymbol(IVoice voice, KernCoreSymbol kernCoreSymbol) throws IMException {
         IStaff voiceStaff = voiceStaves.get(voice.getId());
         IMooObject symbol = kernCoreSymbol.getSymbol();
+
         if (symbol instanceof IVoiced) {
             if (symbol instanceof IUnconventionalKeySignature) {
                 // if it is a conventional or theoretical key, we take its key signature
@@ -120,10 +120,36 @@ public class KernDocument2IScore {
                 if (ks.isPresent()) {
                     symbol = ks.get();
                 }  // else use the unconventionalKeySignature
+            } else if (kernCoreSymbol instanceof KernBeamedNote) {
+                KernBeamedNote beamedNote = (KernBeamedNote) kernCoreSymbol;
+                if (beamedNote.getCount() != 1) {
+                    //TODO Non lazy beaming
+                    throw new IMException("Unsupported non lazy beaming, with explicit beam count = " + beamedNote.getCount());
+                }
+                switch (beamedNote.getBeamType()) {
+                    case beamStart:
+                        if (currentBeamGroupBuilder != null) {
+                            throw new UnsupportedOperationException("Unsupported nested beams"); //TODO nested beams
+                        }
+                        currentBeamGroupBuilder = new IBeamGroupBuilder(coreAbstractFactory);
+                        break;
+                    case beamEnd:
+                        currentBeamGroupBuilder.add((IDurational) symbol);
+                        symbol = currentBeamGroupBuilder.build();
+                        currentBeamGroupBuilder = null;
+                        break;
+                    default:
+                        throw new IMException("Unsupported partial beams: " + beamedNote.getBeamType());
+                }
             }
-            voice.addItem((IVoiced) symbol);
-            if (voiceStaff != null) {
-                voiceStaff.put((IVoicedItem) symbol);
+
+            if (symbol instanceof IDurational && currentBeamGroupBuilder != null) {
+                currentBeamGroupBuilder.add((IDurational) symbol);
+            } else {
+                voice.addItem((IVoiced) symbol);
+                if (voiceStaff != null) {
+                    voiceStaff.put((IVoicedItem) symbol);
+                }
             }
         }
     }

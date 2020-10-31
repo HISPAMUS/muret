@@ -93,11 +93,29 @@ public class KernSyntaxDirectedTranslation {
             return this.lastSpineInsertedItem.get(this.spineIndex);
         }
 
-        private void addItemToSpine(KernToken kernItem) throws IMException {
-            KernToken previous = getLastItemForCurrentSpine();
-            this.kernDocument.add(previous, kernItem);
-            lastSpineInsertedItem.set(this.spineIndex, kernItem);
+        private void addItemToSpine(KernToken kernToken) {
+            try {
+                KernToken previous = getLastItemForCurrentSpine();
+                this.kernDocument.add(previous, kernToken);
+                this.lastSpineInsertedItem.set(this.spineIndex, kernToken);
+            } catch (IMException e) {
+                createException(e);
+            }
         }
+
+
+        private void addItemToSpineAndRemoveFromContext(IMooObject symbol, String encoding) {
+            try {
+                KernToken previous = getLastItemForCurrentSpine();
+                KernCoreSymbol coreSymbolToken = new KernCoreSymbol(encoding, symbol);
+                this.kernDocument.add(previous, coreSymbolToken);
+                this.lastSpineInsertedItem.set(this.spineIndex, coreSymbolToken);
+                this.importingContexts.removeObjectFromPool(symbol); // it has already been used
+            } catch (IMException e) {
+                createException(e);
+            }
+        }
+
 
         private void beginContext(RuleContext ruleContext, IObjectBuilder<? extends IMooObject> builder) {
             this.importingContexts.begin(ruleContext.getClass().getName(), builder);
@@ -133,7 +151,7 @@ public class KernSyntaxDirectedTranslation {
         private IMooObject endContextAndAddToSpine(RuleContext ruleContext)  {
             try {
                 IMooObject mooObject = endContext(ruleContext);
-                this.addItemToSpine(new KernCoreSymbol(ruleContext.getText(), mooObject));
+                this.addItemToSpineAndRemoveFromContext(mooObject, ruleContext.getText());
                 return mooObject;
             } catch (Throwable e) {
                 throw createException("RuleContext " + ruleContext.getClass().getName(), e);
@@ -143,7 +161,7 @@ public class KernSyntaxDirectedTranslation {
         private IMooObject endContextAndAddToSpine(String contextName, String encoding) {
             try {
                 IMooObject mooObject = this.importingContexts.end(contextName);
-                this.addItemToSpine(new KernCoreSymbol(encoding, mooObject));
+                this.addItemToSpineAndRemoveFromContext(mooObject, encoding);
                 return mooObject;
             } catch (Throwable e) {
                 throw createException("RuleContext " + contextName, e);
@@ -194,11 +212,7 @@ public class KernSyntaxDirectedTranslation {
 
             int number = Integer.parseInt(ctx.number().getText());
             KernPart partNumber = new KernPart(ctx.getText(), number);
-            try {
-                addItemToSpine(partNumber);
-            } catch (IMException e) {
-                throw createException(e);
-            }
+            addItemToSpine(partNumber);
         }
 
 
@@ -232,11 +246,7 @@ public class KernSyntaxDirectedTranslation {
 
             int number = Integer.parseInt(ctx.number().getText());
             KernStaff staffNumber = new KernStaff(ctx.getText(), number);
-            try {
-                addItemToSpine(staffNumber);
-            } catch (IMException e) {
-                throw createException(e);
-            }
+            addItemToSpine(staffNumber);
         }
 
 
@@ -579,11 +589,7 @@ public class KernSyntaxDirectedTranslation {
                 default:
                     throw createException("Unkown meter symbol: " + ctx.getText());
             }
-            try {
-                this.addItemToSpine(new KernCoreSymbol(ctx.getText(), meter));
-            } catch (IMException e) {
-                throw createException(e);
-            }
+            this.addItemToSpineAndRemoveFromContext(meter, ctx.getText());
         }
 
         @Override
@@ -626,11 +632,7 @@ public class KernSyntaxDirectedTranslation {
 
             }
             IMensuration mensurationObject = coreAbstractFactory.createMensuration(null, mensuration);
-            try {
-                addItemToSpine(new KernCoreSymbol(ctx.getText(), mensurationObject));
-            } catch (IMException e) {
-                throw createException(e);
-            }
+            addItemToSpineAndRemoveFromContext(mensurationObject, ctx.getText());
         }
 
         @Override
@@ -645,14 +647,10 @@ public class KernSyntaxDirectedTranslation {
             super.exitMetronome(ctx);
             Logger.getLogger(KernSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Metronome {0}", ctx.getText());
 
-            try {
-                IFigure figure = coreAbstractFactory.createFigure(null, EFigures.QUARTER);
-                IMetronomeMarkValue metronomeMarkValue = coreAbstractFactory.createMetronomeMarkValue(null, Integer.parseInt(ctx.number().getText()));
-                IMetronomeMark metronomeMark = coreAbstractFactory.createMetronomeMark(null, figure, null, metronomeMarkValue);
-                addItemToSpine(new KernCoreSymbol(ctx.getText(), metronomeMark));
-            } catch (IMException e) {
-                throw createException(e);
-            }
+            IFigure figure = coreAbstractFactory.createFigure(null, EFigures.QUARTER);
+            IMetronomeMarkValue metronomeMarkValue = coreAbstractFactory.createMetronomeMarkValue(null, Integer.parseInt(ctx.number().getText()));
+            IMetronomeMark metronomeMark = coreAbstractFactory.createMetronomeMark(null, figure, null, metronomeMarkValue);
+            addItemToSpineAndRemoveFromContext(metronomeMark, ctx.getText());
         }
 
         @Override
@@ -887,15 +885,49 @@ public class KernSyntaxDirectedTranslation {
         }
 
 
-
+        /**
+         * Notes are explicitly added to the spine. The KernDocument2IScore will group them.
+         * For a 4 notes beam group, the KernDocument graph will contain:
+         * - beamgroup start token containing the note #1
+         * - note #2
+         * - note #3
+         * - beamgroup end token containing the note #4
+         */
         @Override
         public void exitNote(kernParser.NoteContext ctx) {
             super.exitNote(ctx);
             Logger.getLogger(KernSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Note {0}", ctx.getText());
 
             this.endContext("noteHead");
-            endContextAndAddToSpine(ctx);
+
+            IMooObject note = endContext(ctx);
+
+            EKernBeamType beamType = null;
+            Integer beamCount = null;
+            if (ctx.afterNote().beam() != null && !ctx.afterNote().beam().isEmpty()) {
+                kernParser.BeamContext beam = ctx.afterNote().beam().get(0);
+                if (beam.CHAR_L() != null && !beam.CHAR_L().isEmpty()) {
+                    beamType = EKernBeamType.beamStart;
+                    beamCount = ctx.afterNote().beam().get(0).CHAR_L().size();
+                } else if (beam.CHAR_J() != null && !beam.CHAR_J().isEmpty()) {
+                    beamType = EKernBeamType.beamEnd;
+                    beamCount = ctx.afterNote().beam().get(0).CHAR_J().size();
+                } else if (beam.CHAR_K() != null && !beam.CHAR_K().isEmpty()) {
+                    beamType = EKernBeamType.partialBeamExtendingRight;
+                    beamCount = ctx.afterNote().beam().get(0).CHAR_K().size();
+                } else if (beam.CHAR_k() != null && !beam.CHAR_k().isEmpty()) {
+                    beamType = EKernBeamType.partialBeamExtendingLeft;
+                    beamCount = ctx.afterNote().beam().get(0).CHAR_k().size();
+                }
+            }
+
+            if (beamType != null) {
+                addItemToSpine(new KernBeamedNote(ctx.getText(), note, beamType, beamCount));
+            } else {
+                addItemToSpineAndRemoveFromContext(note, ctx.getText());
+            }
         }
+
 
         @Override
         public void enterChord(kernParser.ChordContext ctx) {
@@ -1040,11 +1072,7 @@ public class KernSyntaxDirectedTranslation {
             Logger.getLogger(KernSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
                     "Spine terminator {0}", ctx.getText());
 
-            try {
-                addItemToSpine(new KernSpineTerminate(ctx.getText()));
-            } catch (IMException e) {
-                createException(e);
-            }
+            addItemToSpine(new KernSpineTerminate(ctx.getText()));
         }
 
         @Override
@@ -1053,11 +1081,7 @@ public class KernSyntaxDirectedTranslation {
             Logger.getLogger(KernSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
                     "Spine add {0}", ctx.getText());
 
-            try {
-                addItemToSpine(new KernSpineAdd(ctx.getText()));
-            } catch (IMException e) {
-                createException(e);
-            }
+            addItemToSpine(new KernSpineAdd(ctx.getText()));
         }
 
         @Override
@@ -1080,6 +1104,8 @@ public class KernSyntaxDirectedTranslation {
             }
 
         }
+
+
     }
 
     private KernDocument importKern(CharStream input, String inputDescription) throws IMException {
