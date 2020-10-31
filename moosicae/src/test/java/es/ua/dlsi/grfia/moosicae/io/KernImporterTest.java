@@ -128,16 +128,18 @@ public class KernImporterTest {
            assertEquals("Whole measure rest figure", EFigures.HALF, ((IWholeMeasureRest)bottomStaffSymbols[4]).getRest().getFigure().getValue());
            assertEquals("Whole measure rest #dots", 1, ((IWholeMeasureRest)bottomStaffSymbols[4]).getRest().getDots().get().getDots().length);
 
-           assertEquals("Bottom voice, line #15, 8GG/L, beam with 5 notes", 5, ((IBeamGroup)bottomStaffSymbols[7]).getChildren().length);
+           IDurational[] bvL15BeamGroup = ((IBeamGroup)bottomStaffSymbols[7]).getChildren();
+           assertEquals("Bottom voice, line #15, 8GG/L starts beam with 5 notes", 5, bvL15BeamGroup.length);
 
-           //assertEquals("Bottom voice, line #15, 8GG/L, pitch", EDiatonicPitches.G, ((INote)bottomStaffSymbols[7]).getNoteHead().getPitch().getDiatonicPitch().getValue());
-           //assertEquals("Bottom voice, line #15, 8GG/L, octave", 2, ((INote)bottomStaffSymbols[7]).getNoteHead().getPitch().getOctave().getValue().intValue());
+           assertEquals("Bottom voice, line #15, 8GG/L, pitch", EDiatonicPitches.G, ((INote)bvL15BeamGroup[0]).getNoteHead().getPitch().getDiatonicPitch().getValue());
+           assertEquals("Bottom voice, line #15, 8GG/L, octave", 2, ((INote)bvL15BeamGroup[0]).getNoteHead().getPitch().getOctave().getValue().intValue());
 
-           //assertEquals("Top voice, line #23, 8b-\\, figure", EFigures.EIGHTH, ((INote)topStaffSymbols[17]).getFigure().getValue());
-           //assertEquals("Top voice, line #23, 8b-\\, pitch", EDiatonicPitches.B, ((INote)topStaffSymbols[17]).getNoteHead().getPitch().getDiatonicPitch().getValue());
-           //assertEquals("Top voice, line #23, 8b-\\, accidental", EAccidentalSymbols.FLAT, ((INote)topStaffSymbols[17]).getNoteHead().getPitch().getAlteration().get().getAccidentalSymbol().getValue());
-
-           //assertEquals("Top voice, line #23, 8b-\\, explicit stem down", EStemDirection.down, ((INote)topStaffSymbols[17]).getStem().get().getStemDirection().getValue());
+           IDurational[] tvL22BeamGroup = ((IBeamGroup)topStaffSymbols[12]).getChildren();
+           assertEquals("Bottom voice, line #22, 8dd\\L starts beam with 5 notes", 5, tvL22BeamGroup.length);
+           assertEquals("Top voice, line #23, 8b-\\, figure", EFigures.EIGHTH, ((INote)tvL22BeamGroup[1]).getFigure().getValue());
+           assertEquals("Top voice, line #23, 8b-\\, pitch", EDiatonicPitches.B, ((INote)tvL22BeamGroup[1]).getNoteHead().getPitch().getDiatonicPitch().getValue());
+           assertEquals("Top voice, line #23, 8b-\\, accidental", EAccidentalSymbols.FLAT, ((INote)tvL22BeamGroup[1]).getNoteHead().getPitch().getAlteration().get().getAccidentalSymbol().getValue());
+           assertEquals("Top voice, line #23, 8b-\\, explicit stem down", EStemDirection.down, ((INote)tvL22BeamGroup[1]).getStem().get().getStemDirection().getValue());
         } catch (Throwable t) {
             t.printStackTrace();
             fail(t.toString());
