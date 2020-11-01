@@ -7,8 +7,12 @@ public enum EKernHeaders {
     mens ("**mens"),
     skern ("**skern"),
     smens ("**smens"),
-    dynamics ("**dyn"),
+    ekern ("**ekern"),
+    edynam ("**edynam"),
+    dyn ("**dyn"), // old dynamics type, not supperted by VHV
+    dynam ("**dynam"), // new dynamics type, supported by VHV
     harmonies ("**harm"),
+    root ("**root"),
     text ("**text"),
     id ("**id");
 

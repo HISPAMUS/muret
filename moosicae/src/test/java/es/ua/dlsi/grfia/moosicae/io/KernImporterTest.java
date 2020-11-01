@@ -9,12 +9,17 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.impl.ConventionalKeySignature;
 import es.ua.dlsi.grfia.moosicae.io.kern.KernImporter;
+import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernSyntaxDirectedTranslation;
+import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernSyntaxDirectedTranslation2EKern;
 import es.ua.dlsi.grfia.moosicae.io.mei.MEIImporter;
 import es.ua.dlsi.grfia.moosicae.io.musicxml.MusicXMLImporter;
 import es.ua.dlsi.grfia.moosicae.utils.TestFileUtils;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -566,4 +571,29 @@ public class KernImporterTest {
         doTest(KernImporterTest::assertSpineSplitPiston70, kernSong);
     }*/
 
+    /**
+     * It exports the given **kern file to **ekern and checks the output against the manually created **ekern file
+     * @param filename
+     */
+    private void testEKernExport(String filename) throws IMException, IOException {
+        File kern = TestFileUtils.getFile("/testdata/io/kern/" + filename + ".krn");
+        File expectedEKern = TestFileUtils.getFile("/testdata/io/kern/" + filename + ".ekrn");
+        File generatedEKern = TestFileUtils.createTempFile(filename + ".ekrn");
+        KernSyntaxDirectedTranslation2EKern kernSyntaxDirectedTranslation2EKern = new KernSyntaxDirectedTranslation2EKern();
+        kernSyntaxDirectedTranslation2EKern.translateKern(kern, generatedEKern);
+        List<String> ekernExpectedLines = Files.readAllLines(expectedEKern.toPath());
+        List<String> ekernGeneratedLines = Files.readAllLines(generatedEKern.toPath());
+        assertEquals("ekern translation for " + filename, ekernExpectedLines, ekernGeneratedLines);
+    }
+
+    @Test
+    public void testEKernExport() throws IOException, IMException {
+        testEKernExport("guide02-example2-1");
+        testEKernExport("guide02-example2-2");
+        testEKernExport("guide02-example2-3");
+        testEKernExport("guide02-example2-4");
+        testEKernExport("guide06-example6-1");
+        testEKernExport("guide06-example6-2");
+        //TODO testEKernExport("spline_split_piston070");
+    }
 }

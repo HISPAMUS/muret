@@ -27,7 +27,7 @@ eol: EOL;
 
 header: headerField (TAB headerField)*;
 
-headerField: MENS | KERN | TEXT | HARM | ROOT; //TODO dinámica ...
+headerField: MENS | KERN | TEXT | HARM | ROOT | DYN | DYNAM;
 
 record:
     EXCLAMATION FIELDCCOMMENT // !! record comment
@@ -58,15 +58,15 @@ graphicalToken:
     |
     barline
     |
+    spineOperation
+    |
+    lyricsText
+    |
     rest
     |
     note
     |
     chord
-    |
-    spineOperation
-    |
-    lyricsText
     )
      (AT associatedIDS)?
     ;
@@ -211,7 +211,9 @@ alteration: accidental alterationDisplay?;
 //note:  beforeNote duration noteName (alteration alterationVisualMode?)? afterNote;
 note:  beforeNote duration sep pitch afterNote;
 
-chord: note (SPACE note)+;
+chord: note (chordSpace note)+;
+
+chordSpace: SPACE; // required for ekern translation
 
 beforeNote:  //TODO Regla semantica (boolean) para que no se repitan
     (slurStart
