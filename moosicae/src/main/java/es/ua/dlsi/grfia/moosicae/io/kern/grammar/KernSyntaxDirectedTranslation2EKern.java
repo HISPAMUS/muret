@@ -273,6 +273,10 @@ public class KernSyntaxDirectedTranslation2EKern {
                 stringBuilder.append(SEPARATOR);
             }
             outputDuration(ctx.duration(), stringBuilder);
+            if (ctx.graceNote() != null) {
+                stringBuilder.append(ctx.graceNote().getText());
+                stringBuilder.append(SEPARATOR);
+            }
             outputPitch(ctx.pitch(), stringBuilder);
             for (int i=0; i < ctx.afterNote().getChildCount(); i++) {
                 stringBuilder.append(SEPARATOR);
@@ -306,6 +310,18 @@ public class KernSyntaxDirectedTranslation2EKern {
             currentChordStringBuilder = null;
         }
 
+
+        @Override
+        public void exitDynamics(kernParser.DynamicsContext ctx) {
+            super.exitDynamics(ctx);
+            this.output(ctx.getText());
+        }
+
+        @Override
+        public void exitOctaveShift(kernParser.OctaveShiftContext ctx) {
+            super.exitOctaveShift(ctx);
+            this.output(ctx.getText());
+        }
     }
 
     private String translateKern(CharStream input, String inputDescription) throws IMException {

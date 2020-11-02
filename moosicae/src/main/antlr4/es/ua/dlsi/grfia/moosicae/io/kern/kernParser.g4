@@ -14,28 +14,21 @@ options { tokenVocab=kernLexer; } // use tokens from kernLexer.g4
     }
 }
 
+// The rule .*? is used as a non-greedy lexer rule (see the ? is used to set the non greedy mode (https://github.com/antlr/antlr4/blob/master/doc/wildcard.md)
 //TODO - cuidado porque hay veces que puede aparecer esto
 //**kern	**kern	**dynam
 //*staff2	*staff1	*staff1/2 - véase sonata07-1.krn de humdrum-data
 
 // start rule - in this version of **skm we are forcing each column starts with a *part after the **smens or **kern
-start: (METADATACOMMENT EOL)* header (eol record)+ eol? (METADATACOMMENT EOL?)* EOF;
-
-// anystart: (header eol)? record (eol record)+ eol? EOF;
-
-eol: EOL;
+start: (METACOMMENT EOL)* header (EOL (record | METACOMMENT))* EOF;
 
 header: headerField (TAB headerField)*;
 
+record: fields;
+
 headerField: MENS | KERN | TEXT | HARM | ROOT | DYN | DYNAM;
 
-record:
-    EXCLAMATION FIELDCCOMMENT // !! record comment
-    |
-    fields;
-
-tab: TAB | FREE_TEXT_TAB;
-fields: field (tab field)*;
+fields: field (TAB field)*;
 
 field
     :
@@ -43,9 +36,13 @@ field
     |
     fieldComment // it includes an empty comment
     |
-    placeHolder; // nothing is done, it is just a placeholder
+    placeHolder
+    |
+    dynamics;
 
-fieldComment: FIELDCCOMMENT;
+
+fieldComment: FIELDCOMMENT
+    | EXCLAMATION; // empty comment
 
 associatedIDS: number (COMMA associatedIDS)*; // used for agnostic IDS in semantic mens
 
@@ -60,7 +57,9 @@ graphicalToken:
     |
     spineOperation
     |
-    lyricsText
+    octaveShift
+    |
+    //// 2021 lyricsText
     |
     rest
     |
@@ -71,8 +70,13 @@ graphicalToken:
      (AT associatedIDS)?
     ;
 
+octaveShift:
+    ASTERISK (OCTAVE_UP_START | OCTAVE_UP_END); //TODO Todos los cambios posibles
+
 
 tandemInterpretation:
+    instrument
+    |
     staff
     |
     clef
@@ -93,6 +97,8 @@ tandemInterpretation:
     |
     plainChant
     ;
+
+instrument: INSTRUMENT;
 
 number: (DIGIT_0 | DIGIT_1 | DIGIT_2 | DIGIT_3 | DIGIT_4 | DIGIT_5 | DIGIT_6 | DIGIT_7 | DIGIT_8 | DIGIT_9)+;
 lowerCasePitch: (CHAR_a | CHAR_b | CHAR_c | CHAR_d | CHAR_e | CHAR_f | CHAR_g); // we cannot use a generic rule because c is used both pitch and as common time symbol
@@ -171,18 +177,23 @@ spineOperation:
      spineSplit
      |
      spineJoin
+     |
+     spinePlaceholder
      ;
+
 
 spineTerminator: ASTERISK MINUS;
 spineAdd: ASTERISK PLUS+;
 spineSplit: ASTERISK CIRCUMFLEX+;
 spineJoin: ASTERISK CHAR_v;
+spinePlaceholder: ASTERISK; // when no operation is done in this spine but there are operations on other spines
 
 rest: duration CHAR_r CHAR_r? fermata? restLinePosition?;
 
 restLinePosition: UNDERSCORE clefLine;
 
-duration: mensuralDuration | modernDuration;
+//duration: mensuralDuration | modernDuration;
+duration: modernDuration; //TODO Cambiar de modo cuando estemos en mensural, no aparecerán dynamics y no se confundirá con la dinámica sf
 // dot: separationDot | augmentationDot;
 
 fermata: SEMICOLON; // pause
@@ -209,18 +220,22 @@ pitch: diatonicPitchAndOctave alteration?;
 alteration: accidental alterationDisplay?;
 
 //note:  beforeNote duration noteName (alteration alterationVisualMode?)? afterNote;
-note:  beforeNote duration sep pitch afterNote;
+note:  beforeNote duration graceNote? sep pitch afterNote;
 
 chord: note (chordSpace note)+;
 
 chordSpace: SPACE; // required for ekern translation
 
+graceNote: CHAR_q CHAR_q?;
+
 beforeNote:  //TODO Regla semantica (boolean) para que no se repitan
-    (slurStart
-    | ligatureStart
+    (
+    slurStart
+    | ligatureTieStart
     | barLineCrossedNoteStart
     )*
     ;
+
 
 diatonicPitchAndOctave:
     bassNotes // BASS
@@ -238,11 +253,33 @@ accidental: OCTOTHORPE | (OCTOTHORPE OCTOTHORPE) | MINUS | (MINUS MINUS) | CHAR_
 alterationDisplay: (CHAR_y CHAR_y?) | (CHAR_Y CHAR_Y?);
 
 afterNote:
-	     (slurEnd | stem| ligatureEnd | beam | fermata | barLineCrossedNoteEnd | mordent | trill | tenuto )*;
+	     (slurEnd | stem| ligatureTieEnd | tieContinue | beam | fermata | barLineCrossedNoteEnd | mordent | trill | editorialIntervention | articulation | glissando)*;
+
+glissando: COLON;
+
+
+articulation:
+    staccato | spiccato | pizzicato | staccatissimo | tenuto | accent
+    ;
+
+accent: CIRCUMFLEX;
+
+tenuto: TILDE;
+
+staccatissimo: GRAVE_ACCENT;
+
+pizzicato: QUOTATION_MARK;
+
+spiccato: CHAR_s;
+
+staccato: APOSTROPHE;
+
+editorialIntervention: CHAR_X;
 
 slurStart: LEFT_PARENTHESIS;
-ligatureStart: ANGLE_BRACKET_OPEN | LEFT_BRACKET;
-ligatureEnd: ANGLE_BRACKET_CLOSE | RIGHT_BRACKET;
+ligatureTieStart: ANGLE_BRACKET_OPEN | LEFT_BRACKET;
+tieContinue: UNDERSCORE;
+ligatureTieEnd: ANGLE_BRACKET_CLOSE | RIGHT_BRACKET;
 slurEnd: RIGHT_PARENTHESIS;
 barLineCrossedNoteStart: CHAR_T;
 barLineCrossedNoteEnd: CHAR_t;
@@ -270,7 +307,7 @@ staffPosition: lineSpace number;
 
 lineSpace: CHAR_L | CHAR_S; // l = line, s = space
 
-lyricsText: FIELD_TEXT;
+////2021 lyricsText: .*?;
 
 plainChant: TANDEM_BEGIN_PLAIN_CHANT | TANDEM_END_PLAIN_CHANT;
 
@@ -284,4 +321,50 @@ trill:
      |
      CHAR_t;
 
-tenuto: TILDE;
+dynamics:
+    dynamics_symbol (SPACE dynamics_symbol)*;
+
+dynamics_symbol:
+    subito? (crescendoBegin | crescendoEnd | diminuendoBegin | diminuendoEnd | crescendoContinue | diminuendoContinue |
+    piano | pianissimo | triplePiano | quadruplePiano | forte |  fortissimo | tripleForte | quadrupleForte |
+    mezzoPiano | mezzoForte | sforzando | fortePiano | footnote);
+
+footnote: QUESTION_MARK+; //TODO -- ???
+
+crescendoBegin: ANGLE_BRACKET_OPEN;
+
+diminuendoBegin: ANGLE_BRACKET_CLOSE;
+
+crescendoEnd: LEFT_BRACKET;
+
+diminuendoEnd: RIGHT_BRACKET;
+
+crescendoContinue: LEFT_PARENTHESIS;
+
+diminuendoContinue: RIGHT_PARENTHESIS;
+
+piano: CHAR_p;
+
+pianissimo: CHAR_p CHAR_p;
+
+triplePiano: CHAR_p CHAR_p CHAR_p;
+
+quadruplePiano: CHAR_p CHAR_p CHAR_p CHAR_p;
+
+forte: CHAR_f;
+
+fortissimo: CHAR_f CHAR_f;
+
+tripleForte: CHAR_f CHAR_f CHAR_f;
+
+quadrupleForte: CHAR_f CHAR_f CHAR_f CHAR_f;
+
+mezzoPiano: CHAR_m CHAR_p;
+
+mezzoForte: CHAR_m CHAR_f;
+
+sforzando: CHAR_s CHAR_f;
+
+fortePiano: CHAR_f CHAR_p;
+
+subito: CHAR_s;

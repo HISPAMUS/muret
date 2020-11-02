@@ -583,7 +583,7 @@ public class KernImporterTest {
         kernSyntaxDirectedTranslation2EKern.translateKern(kern, generatedEKern);
         List<String> ekernExpectedLines = Files.readAllLines(expectedEKern.toPath());
         List<String> ekernGeneratedLines = Files.readAllLines(generatedEKern.toPath());
-        assertEquals("ekern translation for " + filename, ekernExpectedLines, ekernGeneratedLines);
+        assertEquals("ekern translation for " + filename + ".krn", ekernExpectedLines, ekernGeneratedLines);
     }
 
     @Test
@@ -594,6 +594,7 @@ public class KernImporterTest {
         testEKernExport("guide02-example2-4");
         testEKernExport("guide06-example6-1");
         testEKernExport("guide06-example6-2");
+        testEKernExport("kern2ekern");
         //TODO testEKernExport("spline_split_piston070");
     }
 }

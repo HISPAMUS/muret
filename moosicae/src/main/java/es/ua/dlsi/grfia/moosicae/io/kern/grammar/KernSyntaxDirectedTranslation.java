@@ -1019,14 +1019,14 @@ public class KernSyntaxDirectedTranslation {
         }
 
 
-        @Override
+        /*2021 @Override
         public void exitLyricsText(kernParser.LyricsTextContext ctx) {
             super.exitLyricsText(ctx);
             Logger.getLogger(KernSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
                     "Lyrics {0}", ctx.getText());
 
             //addItemToSpine(new SkmLyrics(ctx.getText()));
-        }
+        }*/
 
         @Override
         public void enterGraphicalToken(kernParser.GraphicalTokenContext ctx) {
@@ -1104,7 +1104,6 @@ public class KernSyntaxDirectedTranslation {
             }
 
         }
-
 
     }
 
