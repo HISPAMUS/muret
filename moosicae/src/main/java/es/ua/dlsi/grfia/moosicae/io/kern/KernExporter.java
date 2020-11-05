@@ -7,9 +7,9 @@ import es.ua.dlsi.grfia.moosicae.core.IScore;
 import es.ua.dlsi.grfia.moosicae.core.IVoice;
 import es.ua.dlsi.grfia.moosicae.core.IVoiced;
 import es.ua.dlsi.grfia.moosicae.io.AbstractExporter;
+import es.ua.dlsi.grfia.moosicae.io.kern.grammar.EKernHeaders;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernDocument;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernToken;
-import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.EKernHeaders;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.KernHeader;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.KernPart;
 

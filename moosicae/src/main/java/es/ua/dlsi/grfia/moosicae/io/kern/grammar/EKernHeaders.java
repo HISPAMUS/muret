@@ -1,4 +1,4 @@
-package es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens;
+package es.ua.dlsi.grfia.moosicae.io.kern.grammar;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
@@ -11,7 +11,8 @@ public enum EKernHeaders {
     edynam ("**edynam"),
     dyn ("**dyn"), // old dynamics type, not supperted by VHV
     dynam ("**dynam"), // new dynamics type, supported by VHV
-    harmonies ("**harm"),
+    harm ("**harm"),
+    mxhm("**mxhm"),
     root ("**root"),
     text ("**text"),
     id ("**id");

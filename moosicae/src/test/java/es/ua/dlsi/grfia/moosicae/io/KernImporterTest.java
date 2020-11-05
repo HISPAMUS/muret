@@ -588,13 +588,14 @@ public class KernImporterTest {
 
     @Test
     public void testEKernExport() throws IOException, IMException {
+        testEKernExport("kern2ekern");
+        testEKernExport("spines_lexer");
         testEKernExport("guide02-example2-1");
         testEKernExport("guide02-example2-2");
         testEKernExport("guide02-example2-3");
         testEKernExport("guide02-example2-4");
         testEKernExport("guide06-example6-1");
         testEKernExport("guide06-example6-2");
-        testEKernExport("kern2ekern");
-        //TODO testEKernExport("spline_split_piston070");
+        testEKernExport("spline_split_piston070");
     }
 }

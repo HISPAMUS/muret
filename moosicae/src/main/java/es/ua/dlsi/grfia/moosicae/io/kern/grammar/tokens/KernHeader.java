@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens;
 
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
+import es.ua.dlsi.grfia.moosicae.io.kern.grammar.EKernHeaders;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernToken;
 
 /**

@@ -768,7 +768,7 @@ public class KernSyntaxDirectedTranslation {
 
             // this durationalSingleBuilder will be the pointer to the restBuilder or the noteBuilder (see enterNote, enterRest)
             try {
-                Integer durationValue = Integer.parseInt(ctx.number().getText());
+                Integer durationValue = Integer.parseInt(ctx.number(0).getText()); //TODO segundo nº (p.ej. 40%3)
                 if (!MathUtils.isPowerOfTwo(durationValue)) {
                     throw new UnsupportedOperationException("Tuplets not supported yet"); //TODO Tuplets
                 }
@@ -812,13 +812,13 @@ public class KernSyntaxDirectedTranslation {
             }
         }
 
-        @Override
+        /*2020 @Override
         public void exitRestLinePosition(kernParser.RestLinePositionContext ctx) {
             Logger.getLogger(KernSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
                     "Rest line position {0}", ctx.getText());
 
             //  this.lastRestLinePosition = Integer.parseInt(ctx.getChild(1).getText());
-        }
+        }*/
 
         @Override
         public void exitFermata(kernParser.FermataContext ctx) {

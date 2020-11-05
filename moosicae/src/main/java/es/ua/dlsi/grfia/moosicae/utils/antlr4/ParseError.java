@@ -12,11 +12,11 @@ public class ParseError {
     String msg;
     RecognitionException exception;
     public ParseError(Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException exception) {
-	this.offendingSymbol = offendingSymbol;
-	this.line = line;
-	this.charPositionInLine = charPositionInLine;
-	this.msg = msg;
-	this.exception = exception;
+	    this.offendingSymbol = offendingSymbol;
+	    this.line = line;
+	    this.charPositionInLine = charPositionInLine;
+	    this.msg = msg;
+	    this.exception = exception;
     }
 
     @Override

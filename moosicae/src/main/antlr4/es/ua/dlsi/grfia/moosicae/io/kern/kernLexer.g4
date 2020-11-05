@@ -4,74 +4,92 @@
 lexer grammar kernLexer;
 
 @lexer::header {
-import java.util.ArrayList;
+    import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernSpines;
+    import es.ua.dlsi.grfia.moosicae.io.kern.grammar.EKernHeaders;
 }
 
-//TODO Non context free grammar needs semantic predicates to handle text and harm spines
+
+//Non context free grammar needs semantic predicates to handle text and harm spines
 @lexer::members {
-    //2020 record whether each spine is **text
-    /*2020private ArrayList<Boolean> textSpines = new ArrayList<>();
-    private int currentSpine;
+    KernSpines kernSpines = new KernSpines(false);
+    int currentSpine = -1;
+    boolean debugLexer = false;
+    boolean headersDefined = false;
+    int lexerLine = 1;
 
-    public boolean inTextSpine() {
-        if (currentSpine >= textSpines.size()) {
-            return false;
-        } else {
-            return textSpines.get(currentSpine);
+    public boolean inTextSpine(String rule) {
+        if (debugLexer) {
+            System.err.println("Line " + lexerLine + ", inTextSpine: " + rule + ", currentSpine = " + currentSpine + ", spines=" + kernSpines);
         }
+        EKernHeaders spineType = kernSpines.getSpineType(currentSpine);
+        return spineType != EKernHeaders.kern && spineType != EKernHeaders.mens && spineType != EKernHeaders.dynam;
     }
-    private void incSpine() {
+
+    private void incSpine(String rule) {
+        if (debugLexer) {
+            System.err.println("Line " + lexerLine + ", incSpine: " + rule + ", currentSpine = " + currentSpine+ ", spines=" + kernSpines);
+        }
+
         currentSpine++;
-        if (inTextSpine()) {
-            mode(FREE_TEXT);
-        } else {
-            mode(0);
+        if (headersDefined) {
+            if (inTextSpine(rule)) {
+                changeMode(FREE_TEXT);
+            } else {
+                changeMode(0);
+            }
         }
     }
-    private void splitSpine() {
-        textSpines.add(currentSpine, inTextSpine());
-    }
-    private void joinSpine() {
-        textSpines.remove(currentSpine);
+
+    private void changeMode(int modeNumber) {
+        if (debugLexer) {
+            System.err.println("Line " + lexerLine + ", Setting mode " + modeNumber);
+        }
+        mode(modeNumber);
     }
 
-    private void resetMode() {
-        mode(0);
+    private void resetMode(String rule) {
+        if (debugLexer) {
+            System.err.println("Line " + lexerLine + ", resetMode: " + rule + ", currentSpine = " + currentSpine+ ", spines=" + kernSpines);
+        }
+
+        changeMode(0);
     }
 
-    private void resetSpineAndMode() {
-        resetMode();
-        currentSpine=-1; // incSpine increments it
-        incSpine();
+    private void onEOL(String rule) {
+        if (debugLexer) {
+            System.err.println("Line " + lexerLine + ", resetSpineAndMode: " + rule + ", currentSpine = " + currentSpine+ ", spines=" + kernSpines);
+        }
+
+        kernSpines.recordEnd();
+
+        resetMode(rule);
+        currentSpine=-1;
+
+        // after EOL, check whether there are spines defined
+        headersDefined = kernSpines.getSpineCount() > 0;
+
+        incSpine(rule);
+        lexerLine ++;
     }
-    public void addMusicSpine() {
-        textSpines.add(false);
-    }
-    public void addTextSpine() {
-        textSpines.add(true);
-    }*/
 
 }
+
+SPACE: ' ';
+TAB: '\t' {incSpine("tab");}; // incSpine changes mode depending on the spine type
+EOL : '\r'?'\n' {onEOL("eol");};
 
 
 fragment ASTERISK_FRAGMENT : '*';
-
 EXCLAMATION : '!';
-/*2020 MENS: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'mens' {addMusicSpine();};
-KERN: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'kern' {addMusicSpine();};
-TEXT: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'text' {addTextSpine();};
-HARM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'harm' {addTextSpine();};
-ROOT: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'root' {addTextSpine();};
-DYN: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'dyn' {addTextSpine();};
-DYNAM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'dynam' {addTextSpine();};
-*/
-MENS: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'mens';
-KERN: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'kern';
-TEXT: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'text';
-HARM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'harm';
-ROOT: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'root';
-DYN: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'dyn';
-DYNAM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'dynam';
+
+MENS: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'mens' {kernSpines.addSpine("**mens");};
+KERN: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'kern' {kernSpines.addSpine("**kern");};
+TEXT: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'text' {kernSpines.addSpine("**text");};
+HARM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'harm' {kernSpines.addSpine("**harm");};
+MXHM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'mxhm' {kernSpines.addSpine("**mxhm");};
+ROOT: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'root' {kernSpines.addSpine("**root");};
+DYN: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'dyn' {kernSpines.addSpine("**dyn");};
+DYNAM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'dynam'{kernSpines.addSpine("**dynam");};
 
 TANDEM_PART: ASTERISK_FRAGMENT 'part';
 //2020 fragment TANDEM_INSTRUMENT: ASTERISK_FRAGMENT CHAR_I;
@@ -86,10 +104,11 @@ METRONOME: ASTERISK_FRAGMENT 'MM';
 TANDEM_TIMESIGNATURE: ASTERISK_FRAGMENT 'M';
 TANDEM_BEGIN_PLAIN_CHANT: ASTERISK_FRAGMENT 'bpc';
 TANDEM_END_PLAIN_CHANT: ASTERISK_FRAGMENT 'epc';
+LAYOUT: EXCLAMATION 'LO:' RAW_TEXT;
 
-OCTAVE_UP_START: '8va';
-OCTAVE_UP_END: 'X8va';
+OCTAVE_SHIFT: ASTERISK_FRAGMENT 'X'?'8'[vb]+'a';
 
+PERCENT: '%';
 AT: '@';
 CHAR_A: 'A';
 CHAR_B: 'B';
@@ -157,7 +176,11 @@ DIGIT_7: '7';
 DIGIT_8: '8';
 DIGIT_9: '9';
 
-ASTERISK: ASTERISK_FRAGMENT;
+SPINE_TERMINATOR: ASTERISK_FRAGMENT MINUS {kernSpines.addOperator("*-");};
+SPINE_ADD: ASTERISK_FRAGMENT PLUS {kernSpines.addOperator("*+");};
+SPINE_SPLIT: ASTERISK_FRAGMENT CIRCUMFLEX {kernSpines.addOperator("*^");};
+SPINE_JOIN: ASTERISK_FRAGMENT CHAR_v {kernSpines.addOperator("*v");};
+ASTERISK: ASTERISK_FRAGMENT {kernSpines.addOperator("*");};
 
 QUOTATION_MARK: '"';
 APOSTROPHE: '\'';
@@ -189,15 +212,11 @@ QUESTION_MARK: '?';
 
 
 // with pushMode, the lexer uses the rules below FREE_TEXT
-SPACE: ' ';
-/*2020 TAB: '\t' {incSpine();}; // incSpine changes mode depending on the spine type
-EOL : '\r'?'\n' {resetSpineAndMode();};*/
-TAB: '\t';
-EOL : '\r'?'\n' ;
 INSTRUMENT: '*I' '"'? RAW_TEXT;
 METACOMMENT: '!!' '!'?  RAW_TEXT?;
-FIELDCOMMENT: '!' RAW_TEXT;
-fragment RAW_TEXT: (~[\t\n\r])+;
+FIELDCOMMENT: '!' RAW_TEXT_NOT_BARLINE;
+fragment RAW_TEXT: ~([\t\n\r])+; // !: or !| belong to bar lines
+fragment RAW_TEXT_NOT_BARLINE: (~[!|\t\n\r])~([\t\n\r])*; // !: or !| belong to bar lines
 
 ANY: . ;
 
@@ -213,8 +232,14 @@ ANY: . ;
 //fragment RAW_TEXT: .*?;
 
 // FIELD_TEXT: RAW_TEXT;
-/*2020mode FREE_TEXT;
-FIELD_TEXT: ~[\t\n\r]+ -> mode(0); // must reset mode here to let lexer recognize the tab or newline
-FREE_TEXT_TAB: '\t' {incSpine();}; // incSpine changes mode depending on the spine type
-FREE_TEXT_EOL : '\r'?'\n' {resetSpineAndMode();};
-*/
+
+
+mode FREE_TEXT;
+    FIELD_TEXT: ~[\t\n\r]+ {
+            // always add the * operator //TODO ¿Se pueden doblar las líneas de texto?
+            kernSpines.addOperator("*");
+            resetMode("free_text mode field text");
+        }; // must reset mode here to let lexer recognize the tab or newline
+//FREE_TEXT_TAB: '\t' {incSpine("free_text mode tab");}; // incSpine changes mode depending on the spine type
+//FREE_TEXT_EOL : '\r'?'\n' {onEOL("free_text mode eol");};
+
