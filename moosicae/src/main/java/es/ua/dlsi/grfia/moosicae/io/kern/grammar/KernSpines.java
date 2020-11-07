@@ -1,5 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.io.kern.grammar;
 
+import es.ua.dlsi.grfia.moosicae.IMException;
+
 import java.util.ArrayList;
 
 /**
@@ -51,7 +53,7 @@ public class KernSpines {
     /**
      * Line is ended, try to apply spine operators
      */
-    public void recordEnd() {
+    public void recordEnd() throws IMException {
         if (currentRecordOperators != null) {
             boolean onlyPlaceHolder = true;
             for (String operator : currentRecordOperators) {
@@ -63,7 +65,7 @@ public class KernSpines {
 
             if (!onlyPlaceHolder) {
                 if (currentRecordOperators.size() != spineTypes.size()) {
-                    throw new RuntimeException(generateExceptionMessageFrom() + "The number of operators " + currentRecordOperators.toString()
+                    throw new IMException(generateExceptionMessageFrom() + "The number of operators " + currentRecordOperators.toString()
                             + " is different from the number of spines " + spineTypes.toString());
                 }
                 int spine = 0;
@@ -88,7 +90,7 @@ public class KernSpines {
                             spine++;
                             break;
                         default:
-                            throw new RuntimeException(generateExceptionMessageFrom() + "Invalid spine operation '" + operator + "'");
+                            throw new IMException(generateExceptionMessageFrom() + "Invalid spine operation '" + operator + "'");
                     }
                     lastOperator = operator;
                 }
@@ -97,9 +99,9 @@ public class KernSpines {
         currentRecordOperators = null;
     }
 
-    public EKernHeaders getSpineType(int index)  {
+    public EKernHeaders getSpineType(int index) throws IMException {
         if (index < 0 || index >= spineTypes.size()) {
-            throw new RuntimeException(generateExceptionMessageFrom() + "Invalid spine index: " + index + " for types " + spineTypes.toString());
+            throw new IMException(generateExceptionMessageFrom() + "Invalid spine index: " + index + " for types " + spineTypes.toString());
         }
         return spineTypes.get(index);
     }

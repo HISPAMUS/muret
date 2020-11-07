@@ -6,6 +6,7 @@ lexer grammar kernLexer;
 @lexer::header {
     import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernSpines;
     import es.ua.dlsi.grfia.moosicae.io.kern.grammar.EKernHeaders;
+    import es.ua.dlsi.grfia.moosicae.IMException;
 }
 
 
@@ -17,12 +18,21 @@ lexer grammar kernLexer;
     boolean headersDefined = false;
     int lexerLine = 1;
 
+    public void setDebug(boolean debug) {
+        this.debugLexer = debug;
+    }
+
     public boolean inTextSpine(String rule) {
         if (debugLexer) {
             System.err.println("Line " + lexerLine + ", inTextSpine: " + rule + ", currentSpine = " + currentSpine + ", spines=" + kernSpines);
         }
-        EKernHeaders spineType = kernSpines.getSpineType(currentSpine);
-        return spineType != EKernHeaders.kern && spineType != EKernHeaders.mens && spineType != EKernHeaders.dynam;
+        try {
+            EKernHeaders spineType = kernSpines.getSpineType(currentSpine);
+            return spineType != EKernHeaders.kern && spineType != EKernHeaders.mens && spineType != EKernHeaders.dynam;
+        } catch (IMException e) {
+            System.err.println("Line #" + this.currentSpine + ": " + e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 
     private void incSpine(String rule) {
@@ -60,8 +70,12 @@ lexer grammar kernLexer;
             System.err.println("Line " + lexerLine + ", resetSpineAndMode: " + rule + ", currentSpine = " + currentSpine+ ", spines=" + kernSpines);
         }
 
-        kernSpines.recordEnd();
-
+         try {
+            kernSpines.recordEnd();
+        } catch (IMException e) {
+            System.err.println("Line #" + lexerLine + ": " + e.getMessage());
+       	    throw new RuntimeException(e);
+       	}
         resetMode(rule);
         currentSpine=-1;
 
@@ -236,8 +250,16 @@ ANY: . ;
 
 mode FREE_TEXT;
     FIELD_TEXT: ~[\t\n\r]+ {
-            // always add the * operator //TODO ¿Se pueden doblar las líneas de texto?
-            kernSpines.addOperator("*");
+            switch (this.getText()) {
+                case "*":
+                case "*-":
+                case "*^":
+                case "*v":
+                case "*+":
+                    kernSpines.addOperator(this.getText());
+                    break;
+                // else nothing
+            }
             resetMode("free_text mode field text");
         }; // must reset mode here to let lexer recognize the tab or newline
 //FREE_TEXT_TAB: '\t' {incSpine("free_text mode tab");}; // incSpine changes mode depending on the spine type

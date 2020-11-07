@@ -347,7 +347,7 @@ trill:
      CHAR_t;
 
 dynamics:
-    dynamics_symbol (SPACE dynamics_symbol)*;
+    dynamics_symbol (SPACE? dynamics_symbol)*;
 
 dynamics_symbol:
     subito? (crescendoBegin | crescendoEnd | diminuendoBegin | diminuendoEnd | crescendoContinue | diminuendoContinue |

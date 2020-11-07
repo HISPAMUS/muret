@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class KernSyntaxDirectedTranslation2EKern {
-    private boolean debug;
+    private boolean debug = false;
 
     public KernSyntaxDirectedTranslation2EKern() {
     }
@@ -368,6 +368,7 @@ public class KernSyntaxDirectedTranslation2EKern {
             kernLexer lexer = new kernLexer(input);
 
             if (debug) {
+                lexer.setDebug(debug);
                 new ANTLRUtils().printLexer(lexer);
             }
 
