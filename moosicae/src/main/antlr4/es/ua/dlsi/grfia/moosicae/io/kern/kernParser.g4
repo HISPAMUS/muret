@@ -79,7 +79,37 @@ octaveShift: OCTAVE_SHIFT;
 
 
 tandemInterpretation:
+    visualTandemInterpretation
+    |
+    nonVisualTandemInterpretation;
+
+// those ones that are not engraved
+nonVisualTandemInterpretation:
     instrument
+    |
+    transposition
+    |
+    tandemTuplet // sometimes found
+    |
+    sections;
+
+tandemTuplet: TANDEM_TUPLET_START | TANDEM_TUPLET_END;
+
+tandemCue: TANDEM_CUE_START | TANDEM_CUE_END;
+
+tandemTremolo: TANDEM_TREMOLO_START | TANDEM_TREMOLO_END;
+
+// those ones that are engraved
+visualTandemInterpretation:
+    dynamics_position // TODO: what is it for?
+    |
+    tandemCue
+    |
+    tandemTremolo
+    |
+    rscale
+    |
+    pedal
     |
     staff
     |
@@ -95,12 +125,39 @@ tandemInterpretation:
     |
     metronome
     |
-    nullInterpretation
+    nullInterpretation // it is not engraved, but required to correctly engrave the score
     |
     custos
     |
     plainChant
     ;
+
+rscale: TANDEM_RSCALE COLON number (SLASH number)?;
+
+pedal: TANDEM_PEDAL_START | TANDEM_PEDAL_END;
+
+dynamics_position: TANDEM_ABOVE | TANDEM_BELOW | TANDEM_CENTERED; //TODO It is not rendered in VHV
+
+
+sections: TANDEM_SECTION
+    (
+        (NO_REPEAT? LEFT_BRACKET sectionNames RIGHT_BRACKET)
+        |
+        (sectionName)
+    );
+
+sectionNames: sectionName (COMMA sectionName)*;
+
+// TODO
+sectionName: (CHAR_A | CHAR_B | CHAR_C | CHAR_D | CHAR_E | CHAR_F | CHAR_G | CHAR_H | CHAR_I | CHAR_J | CHAR_K | CHAR_L |
+    CHAR_M | CHAR_N | CHAR_O | CHAR_P | CHAR_Q | CHAR_R | CHAR_S | CHAR_T |
+    CHAR_U | CHAR_V | CHAR_W | CHAR_X | CHAR_Y | CHAR_Z |
+    CHAR_a | CHAR_b | CHAR_c | CHAR_d | CHAR_e | CHAR_f | CHAR_g | CHAR_h | CHAR_i | CHAR_j | CHAR_k | CHAR_l |
+    CHAR_m | CHAR_n | CHAR_o | CHAR_p | CHAR_q | CHAR_r | CHAR_s | CHAR_t |
+    CHAR_u | CHAR_v | CHAR_w | CHAR_x | CHAR_y | CHAR_z |
+    number)+;
+
+transposition: TANDEM_TRANSPOSITION CHAR_d MINUS? number CHAR_c MINUS? number;
 
 instrument: INSTRUMENT;
 
@@ -110,29 +167,26 @@ upperCasePitch: (CHAR_A | CHAR_B | CHAR_C | CHAR_D | CHAR_E | CHAR_F | CHAR_G);
 
 pitchClass: lowerCasePitch accidental;
 
-part: TANDEM_PART sep number;
+part: TANDEM_PART  number;
 
-//sep: SEP; //TODO Que lo coja sólo si es SKM
-sep: SEP?;
+staff: TANDEM_STAFF  number (SLASH number)?;
 
-staff: TANDEM_STAFF sep number;
-
-clef: TANDEM_CLEF sep clefValue;
-clefValue: clefSign (sep clefLine)? (sep clefOctave)?;
+clef: TANDEM_CLEF  clefValue;
+clefValue: clefSign ( clefLine)? ( clefOctave)?;
 clefSign: CHAR_C | CHAR_F | CHAR_G | CHAR_P | CHAR_T;
 clefLine: DIGIT_1 | DIGIT_2 | DIGIT_3 | DIGIT_4 | DIGIT_5;
 clefOctave: CHAR_v CHAR_v? DIGIT_2 | CIRCUMFLEX CIRCUMFLEX? DIGIT_2;
 
-keySignature: TANDEM_KEY_SIGNATURE sep LEFT_BRACKET keySignaturePitchClass* RIGHT_BRACKET keySignatureCancel?;
+keySignature: TANDEM_KEY_SIGNATURE  LEFT_BRACKET keySignaturePitchClass* RIGHT_BRACKET keySignatureCancel?;
 keySignaturePitchClass: pitchClass;
-keySignatureCancel: sep CHAR_X;
+keySignatureCancel:  CHAR_X;
 
 keyMode: (minorKey | majorKey);
-key: ASTERISK sep keyMode keySignatureCancel? COLON;
+key: ASTERISK  keyMode keySignatureCancel? COLON;
 minorKey: lowerCasePitch accidental?;
 majorKey: upperCasePitch accidental?;
 
-timeSignature: TANDEM_TIMESIGNATURE sep (standardTimeSignature | additiveTimeSignature | mixedTimeSignature | alternatingTimeSignature | interchangingTimeSignature);
+timeSignature: TANDEM_TIMESIGNATURE  (standardTimeSignature | additiveTimeSignature | mixedTimeSignature | alternatingTimeSignature | interchangingTimeSignature);
 numerator: number;
 denominator: number;
 standardTimeSignature: numerator SLASH denominator;
@@ -143,7 +197,7 @@ alternatingTimeSignatureItem: standardTimeSignature (SEMICOLON number)?;
 interchangingTimeSignature: standardTimeSignature PIPE standardTimeSignature;
 
 //meterSymbol: TANDEM_MET LEFT_PARENTHESIS (modernMeterSymbolSign | mensuration) RIGHT_PARENTHESIS;
-meterSymbol: (TANDEM_TIMESIGNATURE | TANDEM_MET) sep LEFT_PARENTHESIS (modernMeterSymbolSign | mensuration) RIGHT_PARENTHESIS;
+meterSymbol: (TANDEM_TIMESIGNATURE | TANDEM_MET)  LEFT_PARENTHESIS (modernMeterSymbolSign | mensuration) RIGHT_PARENTHESIS;
 modernMeterSymbolSign: CHAR_c | CHAR_c PIPE;
 mensuration: CHAR_C | CHAR_C PIPE | CHAR_C DOT | CHAR_O | CHAR_O DOT | CHAR_C DIGIT_3 SLASH DIGIT_2 | CHAR_C PIPE DIGIT_3 SLASH DIGIT_2 | DIGIT_3;
 
@@ -162,13 +216,15 @@ barline: EQUAL
 barLineType:
     PIPE PIPE // double thin bar line
     |
-    EQUAL // end bar line (the first equal is encoded in the skmBarLine rule)
+    PIPE EXCLAMATION // found sometimes
     |
     EXCLAMATION PIPE COLON // left-repeat
     |
-    COLON PIPE EXCLAMATION // right-repeat
+    EQUAL? COLON PIPE EXCLAMATION // right-repeat -- sometimes we've found the structure ==:|!
     |
     COLON PIPE EXCLAMATION PIPE COLON // left-right repeat
+    |
+    EQUAL // end bar line (the first equal is encoded in the skmBarLine rule)
     ;
 
 
@@ -193,20 +249,22 @@ spineJoin: SPINE_JOIN;
 spinePlaceholder: ASTERISK | FIELD_TEXT; // when no operation is done in this spine but there are operations on other spines
 
 //rest: duration CHAR_r CHAR_r? fermata? restLinePosition?;
-rest: duration CHAR_r CHAR_r?  restPosition? fermata? editorialIntervention?;
+rest: slurStart? duration CHAR_r CHAR_r?  staffChange? restPosition? fermata? editorialIntervention?
+    CHAR_j?; // sometimes found - user assignable?;
 
 restPosition: diatonicPitchAndOctave;
 //restLinePosition: UNDERSCORE clefLine;
 
 //duration: mensuralDuration | modernDuration;
-duration: modernDuration; //TODO Cambiar de modo cuando estemos en mensural, no aparecerán dynamics y no se confundirá con la dinámica sf
-// dot: separationDot | augmentationDot;
+duration: modernDuration graceNote?; // sometimes we've found a grace note between the duration and the pitch
+//TODO Cambiar de modo cuando estemos en mensural, no aparecerán dynamics y no se confundirá con la dinámica sf
+// dot: arationDot | augmentationDot;
 
 fermata: SEMICOLON; // pause
 
 mensuralDuration: mensuralFigure coloured? mensuralPerfection? mensuralDot;
 
-mensuralDot: (augmentationDot | separationDot)?;
+mensuralDot: (augmentationDot | arationDot)?;
 
 modernDuration: number (PERCENT number)? augmentationDot*; //TODO 40%3...
 
@@ -219,28 +277,66 @@ mensuralPerfection: CHAR_p | CHAR_i | CHAR_I;
 
 augmentationDot: DOT;
 
-separationDot: COLON;
+arationDot: COLON;
 
 custos: TANDEM_CUSTOS pitch;
-pitch: diatonicPitchAndOctave alteration?;
+pitch: diatonicPitchAndOctave
+    graceNote? // sometimes found here
+    staffChange? // sometimes found here
+    alteration?
+    CHAR_x?; // sometimes found
 alteration: accidental alterationDisplay?;
 
-//note:  beforeNote duration noteName (alteration alterationVisualMode?)? afterNote;
-note:  beforeNote duration graceNote? sep pitch afterNote;
+// The correct order of notes is: beforeNote duration pitch staffChange afterNote, however, if changes in some encodings
+
+note:
+    beforeNote
+    duration? // grace notes can be specified without durations
+    staffChange? // not correct here, but sometimes found
+    slurStart? // sometimes found here
+    pitch
+    staffChange? // it must be placed immediately after the pitch+accidental tokens. This is because they also can modify the beam, as well as articulation, slur and tie positions
+    afterNote;
+
+staffChange: ANGLE_BRACKET_OPEN | ANGLE_BRACKET_CLOSE;
 
 chord: note (chordSpace note)+;
 
 chordSpace: SPACE; // required for ekern translation
 
-graceNote: CHAR_q CHAR_q?;
+// it may appear after or before the note
+// sometimes the duration is found before or after the note
+graceNote:
+    duration? CHAR_q CHAR_q? duration?;
 
 beforeNote:  //TODO Regla semantica (boolean) para que no se repitan
     (
-    slurStart
-    | ligatureTieStart
+    accent // sometimes found here
+    | beam // sometimes found here
+    | slurStart staffChange?
+    | slurEnd  // sometimes found here
+    | ligatureTieStart staffChange?
     | barLineCrossedNoteStart
+    | graceNote
+    | stem
+    | staffChange // sometimes found here
+    | articulation // sometimes found here
+    | CHAR_N // sometimes found - user assignable?
+    | CHAR_j // sometimes found - user assignable?
     )*
     ;
+
+
+afterNote:
+	     (slurEnd | stem| ligatureTieEnd | tieContinue | beam | fermata | barLineCrossedNoteEnd | mordent | turn | trill | articulation | glissando | editorialIntervention | userAssignable |
+	     graceNote duration? // sometimes we've found the duration of the graceNote after it
+	     |
+	     sforzando // sforzando should be in a dynanics spine, but it is sometimes found here
+	     | staffChange // it should never be here, but we've found in some files
+	     | CHAR_N // sometimes found - user assignable?
+	     | CHAR_j // sometimes found - user assignable?
+	     | CHAR_Z // sometimes found - user assignable?
+	     )*;
 
 
 diatonicPitchAndOctave:
@@ -257,6 +353,8 @@ accidental: OCTOTHORPE (OCTOTHORPE OCTOTHORPE?)? | MINUS MINUS? | CHAR_n;
 // x is show, xx is shows editorial
 //alterationVisualMode: CHAR_x CHAR_x?;
 alterationDisplay:
+        CHAR_x // sometimes found - TODO for?
+        |
         CHAR_X // cautionary accidental
         |
         CHAR_i // editorial accidental, it does not imply position
@@ -269,8 +367,11 @@ alterationDisplay:
         |
         (CHAR_y CHAR_y?) | (CHAR_Y CHAR_Y?); // X = editorial intervention
 
-afterNote:
-	     (slurEnd | stem| ligatureTieEnd | tieContinue | beam | fermata | barLineCrossedNoteEnd | mordent | trill | articulation | glissando | editorialIntervention | userAssignable)*;
+
+turn: CHAR_S // regular turn
+    |
+    DOLLAR // wagnerian turn
+    ;
 
 userAssignable: CHAR_i;
 
@@ -294,18 +395,19 @@ spiccato: CHAR_s;
 staccato: APOSTROPHE;
 
 editorialIntervention:
-    (CHAR_y CHAR_y? AT?) // hidden //@ footnote comment?
+    (CHAR_y CHAR_y* AT?) // hidden //@ footnote comment? // if yy --> hidden, we've found even yyy
     |
     CHAR_X; // associated no a note
 
-slurStart: LEFT_PARENTHESIS;
+slurStart: AMPERSAND? LEFT_PARENTHESIS; // ampersand for ellision
 ligatureTieStart: ANGLE_BRACKET_OPEN | LEFT_BRACKET;
 tieContinue: UNDERSCORE;
 ligatureTieEnd: ANGLE_BRACKET_CLOSE | RIGHT_BRACKET;
-slurEnd: RIGHT_PARENTHESIS;
+slurEnd: AMPERSAND? RIGHT_PARENTHESIS; // ampersand for ellision
 barLineCrossedNoteStart: CHAR_T;
 barLineCrossedNoteEnd: CHAR_t;
 
+// it can be found before or after the note with the same meaning
 stem:
     SLASH  // STEM_UP
     |
@@ -313,13 +415,15 @@ stem:
     ;
 
 beam:
-    (CHAR_L //BEAM_START
-    |
-    CHAR_J// BEAM_END
-    |
-    CHAR_K // partial beam that extends to the right
-    |
-    CHAR_k // partial beam that extends to the left
+    (
+        (CHAR_L //BEAM_START
+        |
+        CHAR_J// BEAM_END
+        |
+        CHAR_K // partial beam that extends to the right
+        |
+        CHAR_k // partial beam that extends to the left
+        ) staffChange?
     )+
     ;
 
@@ -350,9 +454,12 @@ dynamics:
     dynamics_symbol (SPACE? dynamics_symbol)*;
 
 dynamics_symbol:
-    subito? (crescendoBegin | crescendoEnd | diminuendoBegin | diminuendoEnd | crescendoContinue | diminuendoContinue |
+    subito? (
+    staffChange // sometimes found here
+    | crescendoBegin | crescendoEnd | diminuendoBegin | diminuendoEnd | crescendoContinue | diminuendoContinue |
     piano | pianissimo | triplePiano | quadruplePiano | forte |  fortissimo | tripleForte | quadrupleForte |
-    mezzoPiano | mezzoForte | sforzando | fortePiano | footnote | rinforzando);
+    mezzoPiano | mezzoForte | sforzando | fortePiano | footnote | rinforzando)
+    CHAR_y? CHAR_y?; // sometimes found here
 
 footnote: QUESTION_MARK+; //TODO -- ???
 
@@ -388,11 +495,11 @@ mezzoPiano: CHAR_m CHAR_p;
 
 mezzoForte: CHAR_m CHAR_f;
 
-sforzando: CHAR_s CHAR_f | CHAR_f CHAR_z | CHAR_s CHAR_f CHAR_z;
+sforzando: CHAR_s CHAR_f | CHAR_f CHAR_z | CHAR_s CHAR_f CHAR_z | CHAR_z;
 
 fortePiano: CHAR_f CHAR_p;
 
-rinforzando: CHAR_r CHAR_f CHAR_z;
+rinforzando: CHAR_r CHAR_f? CHAR_z?;
 
 subito: CHAR_s;
 

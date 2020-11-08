@@ -225,8 +225,8 @@ public class KernSyntaxDirectedTranslation2EKern {
 
 
         @Override
-        public void exitTandemInterpretation(kernParser.TandemInterpretationContext ctx) {
-            super.exitTandemInterpretation(ctx);
+        public void exitVisualTandemInterpretation(kernParser.VisualTandemInterpretationContext ctx) {
+            super.exitVisualTandemInterpretation(ctx);
             output(ctx.getText());
         }
 
@@ -292,20 +292,23 @@ public class KernSyntaxDirectedTranslation2EKern {
         public void exitNote(kernParser.NoteContext ctx) {
             super.exitNote(ctx);
             StringBuilder stringBuilder = new StringBuilder();
-            for (int i=0; i < ctx.beforeNote().getChildCount(); i++) {
-                stringBuilder.append(ctx.beforeNote().getChild(i).getText());
-                stringBuilder.append(SEPARATOR);
-            }
-            outputDuration(ctx.duration(), stringBuilder);
-            if (ctx.graceNote() != null) {
-                stringBuilder.append(ctx.graceNote().getText());
-                stringBuilder.append(SEPARATOR);
-            }
-            outputPitch(ctx.pitch(), stringBuilder);
-            for (int i=0; i < ctx.afterNote().getChildCount(); i++) {
-                if (!ctx.afterNote().getChild(i).getText().equals("i")) { // if not userAssignable
+            if (ctx.beforeNote() != null) {
+                for (int i = 0; i < ctx.beforeNote().getChildCount(); i++) {
+                    stringBuilder.append(ctx.beforeNote().getChild(i).getText());
                     stringBuilder.append(SEPARATOR);
-                    stringBuilder.append(ctx.afterNote().getChild(i).getText());
+                }
+            }
+            if (ctx.duration() != null) {
+                outputDuration(ctx.duration(), stringBuilder);
+            }
+
+            outputPitch(ctx.pitch(), stringBuilder);
+            if (ctx.afterNote() != null) {
+                for (int i = 0; i < ctx.afterNote().getChildCount(); i++) {
+                    if (!ctx.afterNote().getChild(i).getText().equals("i")) { // if not userAssignable
+                        stringBuilder.append(SEPARATOR);
+                        stringBuilder.append(ctx.afterNote().getChild(i).getText());
+                    }
                 }
             }
             if (this.currentChordStringBuilder != null) {

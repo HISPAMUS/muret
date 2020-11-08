@@ -244,7 +244,7 @@ public class KernSyntaxDirectedTranslation {
             Logger.getLogger(KernSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Staff {0}", ctx.getText());
             super.exitStaff(ctx);
 
-            int number = Integer.parseInt(ctx.number().getText());
+            int number = Integer.parseInt(ctx.number(0).getText()); // TODO - cuando encontramos staff1/2
             KernStaff staffNumber = new KernStaff(ctx.getText(), number);
             addItemToSpine(staffNumber);
         }
