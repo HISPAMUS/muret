@@ -648,7 +648,8 @@ public class KernSyntaxDirectedTranslation {
             Logger.getLogger(KernSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Metronome {0}", ctx.getText());
 
             IFigure figure = coreAbstractFactory.createFigure(null, EFigures.QUARTER);
-            IMetronomeMarkValue metronomeMarkValue = coreAbstractFactory.createMetronomeMarkValue(null, Integer.parseInt(ctx.number().getText()));
+            // TO-DO ¿Cogemos números reales?
+            IMetronomeMarkValue metronomeMarkValue = coreAbstractFactory.createMetronomeMarkValue(null, Integer.parseInt(ctx.number(0).getText()));
             IMetronomeMark metronomeMark = coreAbstractFactory.createMetronomeMark(null, figure, null, metronomeMarkValue);
             addItemToSpineAndRemoveFromContext(metronomeMark, ctx.getText());
         }

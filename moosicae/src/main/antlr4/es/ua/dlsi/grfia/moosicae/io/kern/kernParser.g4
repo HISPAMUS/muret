@@ -91,7 +91,12 @@ nonVisualTandemInterpretation:
     |
     tandemTuplet // sometimes found
     |
-    sections;
+    sections
+    |
+    pianoHand
+    ;
+
+pianoHand: TANDEM_LEFT_HAND | TANDEM_RIGHT_HAND;
 
 tandemTuplet: TANDEM_TUPLET_START | TANDEM_TUPLET_END;
 
@@ -201,7 +206,7 @@ meterSymbol: (TANDEM_TIMESIGNATURE | TANDEM_MET)  LEFT_PARENTHESIS (modernMeterS
 modernMeterSymbolSign: CHAR_c | CHAR_c PIPE;
 mensuration: CHAR_C | CHAR_C PIPE | CHAR_C DOT | CHAR_O | CHAR_O DOT | CHAR_C DIGIT_3 SLASH DIGIT_2 | CHAR_C PIPE DIGIT_3 SLASH DIGIT_2 | DIGIT_3;
 
-metronome: METRONOME number;
+metronome: METRONOME number (DOT number)?;
 
 nullInterpretation: ASTERISK; // a null interpretation (placeholder) will have just an ASTERISK_FRAGMENT
 
@@ -209,7 +214,9 @@ nullInterpretation: ASTERISK; // a null interpretation (placeholder) will have j
 barline: EQUAL
     number?
     MINUS? // hidden
-    barLineType?;
+    barLineType?
+    fermata?
+    CHAR_j?; // sometimes found
 
 //barlineWidth: (EXCLAMATION? PIPE EXCLAMATION?);
 
@@ -283,6 +290,9 @@ custos: TANDEM_CUSTOS pitch;
 pitch: diatonicPitchAndOctave
     graceNote? // sometimes found here
     staffChange? // sometimes found here
+    accent? // sometimes found here
+    fermata? // sometimes found here
+    trill? // sometimes found here
     alteration?
     CHAR_x?; // sometimes found
 alteration: accidental alterationDisplay?;
@@ -336,6 +346,7 @@ afterNote:
 	     | CHAR_N // sometimes found - user assignable?
 	     | CHAR_j // sometimes found - user assignable?
 	     | CHAR_Z // sometimes found - user assignable?
+	     | CHAR_O // sometimes found - generic ornament
 	     )*;
 
 
@@ -400,7 +411,7 @@ editorialIntervention:
     CHAR_X; // associated no a note
 
 slurStart: AMPERSAND? LEFT_PARENTHESIS; // ampersand for ellision
-ligatureTieStart: ANGLE_BRACKET_OPEN | LEFT_BRACKET;
+ligatureTieStart: ANGLE_BRACKET_OPEN | LEFT_BRACKET CHAR_y?; // y for hidden;
 tieContinue: UNDERSCORE;
 ligatureTieEnd: ANGLE_BRACKET_CLOSE | RIGHT_BRACKET;
 slurEnd: AMPERSAND? RIGHT_PARENTHESIS; // ampersand for ellision
@@ -446,7 +457,7 @@ mordent:
 	   |
        CHAR_w;
 trill:
-	 CHAR_T
+	 CHAR_T CHAR_T? // the second T denotes an extended trill (horizontal twisting line)
      |
      CHAR_t;
 

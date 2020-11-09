@@ -195,6 +195,10 @@ public class KernSyntaxDirectedTranslation2EKern {
             if (ctx.barLineType() != null) {
                 stringBuilder.append(ctx.barLineType().getText());
             }
+            if (ctx.fermata() != null) {
+                stringBuilder.append(SEPARATOR);
+                stringBuilder.append(ctx.fermata().getText());
+            }
             output(stringBuilder.toString());
         }
 
