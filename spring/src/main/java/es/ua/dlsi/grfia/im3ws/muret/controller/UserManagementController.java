@@ -10,7 +10,12 @@ import es.ua.dlsi.grfia.im3ws.muret.repository.PermissionsRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.UserRepository;
 import es.ua.dlsi.grfia.im3ws.muret.exceptions.UserManagerException;
 import es.ua.dlsi.grfia.im3ws.muret.model.UserManagerImpl;
+import es.ua.dlsi.grfia.im3ws.muret.watchdog.WatchDog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,10 +30,16 @@ import java.util.Map;
 @RequestMapping("/users")
 public class UserManagementController
 {
+    private static final Logger logger = LoggerFactory.getLogger(WatchDog.class);
     private final UserManagerImpl m_userManager;
+    private final WatchDog m_watchdog;
 
     @Autowired
-    public UserManagementController(UserRepository repository, CollectionRepository colRep, PermissionsRepository permissionsrepo){ m_userManager = new UserManagerImpl(repository, colRep, permissionsrepo);}
+    public UserManagementController(UserRepository repository, CollectionRepository colRep, PermissionsRepository permissionsrepo, WatchDog watchDog)
+    {
+        m_userManager = new UserManagerImpl(repository, colRep, permissionsrepo);
+        m_watchdog = watchDog;
+    }
 
     @PostMapping("/register")
     public User createUser(@Valid @RequestBody RegisterForm c_newUserData) throws UserManagerException
@@ -41,6 +52,8 @@ public class UserManagementController
                                         c_newUserData.getAdministrator());
 
         m_userManager.createUser( userToRegister, c_newUserData.getAdminCreator() );
+
+        m_watchdog.sendConfirmationEmail(userToRegister);
 
         return userToRegister;
     }

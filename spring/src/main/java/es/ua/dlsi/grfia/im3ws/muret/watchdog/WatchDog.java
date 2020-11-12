@@ -108,6 +108,26 @@ public class WatchDog {
         m_SMTPClient.send(message);
     }
 
+    public void sendConfirmationEmail(User userToNotify)
+    {
+        SimpleMailMessage message = new SimpleMailMessage();
+
+        message.setFrom("muretNotifications@dlsi.ua.es");
+
+        message.setTo(userToNotify.getEmail());
+        message.setSubject("Welcome to MuRet - Register confirmation");
+
+        message.setText("Hello " + userToNotify.getFirstName() + "\n"+
+                "We are sending you this message because you have registered successfully into MuRet"
+                + "The data which you have registered with is: "
+                + "\n Username: " + userToNotify.getUsername()
+                + "\n Password: " + userToNotify.getPassword()
+                + "If you have obtained a random password, please reset it inmediatelly once logged in into the application \n"
+                + "----- Please, do not answer to this email, as this is an automatic notification -----\n");
+
+        m_SMTPClient.send(message);
+    }
+
     private void CheckUpdates(String c_versionFile, String c_patchFile)
     {
         try
