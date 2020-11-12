@@ -135,6 +135,8 @@ visualTandemInterpretation:
     custos
     |
     plainChant
+    |
+    TANDEM_TSTART | TANDEM_TEND // sometimes found
     ;
 
 rscale: TANDEM_RSCALE COLON number (SLASH number)?;
@@ -174,7 +176,9 @@ pitchClass: lowerCasePitch accidental;
 
 part: TANDEM_PART  number;
 
-staff: TANDEM_STAFF  number (SLASH number)?;
+staff: TANDEM_STAFF
+    PLUS? // sometimes found
+    number (SLASH number)?;
 
 clef: TANDEM_CLEF  clefValue;
 clefValue: clefSign ( clefLine)? ( clefOctave)?;
@@ -206,12 +210,12 @@ meterSymbol: (TANDEM_TIMESIGNATURE | TANDEM_MET)  LEFT_PARENTHESIS (modernMeterS
 modernMeterSymbolSign: CHAR_c | CHAR_c PIPE;
 mensuration: CHAR_C | CHAR_C PIPE | CHAR_C DOT | CHAR_O | CHAR_O DOT | CHAR_C DIGIT_3 SLASH DIGIT_2 | CHAR_C PIPE DIGIT_3 SLASH DIGIT_2 | DIGIT_3;
 
-metronome: METRONOME number (DOT number)?;
+metronome: METRONOME number ((DOT | MINUS) number)?;
 
 nullInterpretation: ASTERISK; // a null interpretation (placeholder) will have just an ASTERISK_FRAGMENT
 
 //barline: EQUAL+ (NUMBER)? (COLON? barlineWidth? partialBarLine? COLON?) ; // COLON = repetition mark
-barline: EQUAL
+barline: EQUAL EQUAL? // sometimes found == to denote system break
     number?
     MINUS? // hidden
     barLineType?
@@ -223,17 +227,16 @@ barline: EQUAL
 barLineType:
     PIPE PIPE // double thin bar line
     |
-    PIPE EXCLAMATION // found sometimes
+    PIPE EXCLAMATION COLON? // sometimes found
     |
     EXCLAMATION PIPE COLON // left-repeat
     |
     EQUAL? COLON PIPE EXCLAMATION // right-repeat -- sometimes we've found the structure ==:|!
     |
-    COLON PIPE EXCLAMATION PIPE COLON // left-right repeat
+    COLON PIPE EXCLAMATION? PIPE COLON // left-right repeat
     |
     EQUAL // end bar line (the first equal is encoded in the skmBarLine rule)
     ;
-
 
 
 spineOperation:
@@ -256,7 +259,7 @@ spineJoin: SPINE_JOIN;
 spinePlaceholder: ASTERISK | FIELD_TEXT; // when no operation is done in this spine but there are operations on other spines
 
 //rest: duration CHAR_r CHAR_r? fermata? restLinePosition?;
-rest: slurStart? duration CHAR_r CHAR_r?  staffChange? restPosition? fermata? editorialIntervention?
+rest: slurStart? duration CHAR_r CHAR_r?  staffChange? restPosition? fermata? editorialIntervention? slurEnd? // slur end sometimes found
     CHAR_j?; // sometimes found - user assignable?;
 
 restPosition: diatonicPitchAndOctave;
@@ -304,6 +307,8 @@ note:
     duration? // grace notes can be specified without durations
     staffChange? // not correct here, but sometimes found
     slurStart? // sometimes found here
+    stem? // sometimes found here
+    ligatureTie? // sometimes found here
     pitch
     staffChange? // it must be placed immediately after the pitch+accidental tokens. This is because they also can modify the beam, as well as articulation, slur and tie positions
     afterNote;
@@ -323,9 +328,11 @@ beforeNote:  //TODO Regla semantica (boolean) para que no se repitan
     (
     accent // sometimes found here
     | beam // sometimes found here
+    | fermata  // sometimes found here
     | slurStart staffChange?
+    | ligatureTie
     | slurEnd  // sometimes found here
-    | ligatureTieStart staffChange?
+    | glissando   // sometimes found here
     | barLineCrossedNoteStart
     | graceNote
     | stem
@@ -333,12 +340,15 @@ beforeNote:  //TODO Regla semantica (boolean) para que no se repitan
     | articulation // sometimes found here
     | CHAR_N // sometimes found - user assignable?
     | CHAR_j // sometimes found - user assignable?
+    | CHAR_X // sometimes found - it does nothing
     )*
     ;
 
+ligatureTie:
+    (ligatureTieStart | ligatureTieEnd | tieContinue) staffChange?;
 
 afterNote:
-	     (slurEnd | stem| ligatureTieEnd | tieContinue | beam | fermata | barLineCrossedNoteEnd | mordent | turn | trill | articulation | glissando | editorialIntervention | userAssignable |
+	     (slurEnd | stem| ligatureTie | beam | fermata | barLineCrossedNoteEnd | mordent | turn | trill | articulation | glissando | editorialIntervention | userAssignable |
 	     graceNote duration? // sometimes we've found the duration of the graceNote after it
 	     |
 	     sforzando // sforzando should be in a dynanics spine, but it is sometimes found here
@@ -410,7 +420,7 @@ editorialIntervention:
     |
     CHAR_X; // associated no a note
 
-slurStart: AMPERSAND? LEFT_PARENTHESIS; // ampersand for ellision
+slurStart: AMPERSAND? LEFT_PARENTHESIS staffChange?; // ampersand for ellision - staffChange sometimes found
 ligatureTieStart: ANGLE_BRACKET_OPEN | LEFT_BRACKET CHAR_y?; // y for hidden;
 tieContinue: UNDERSCORE;
 ligatureTieEnd: ANGLE_BRACKET_CLOSE | RIGHT_BRACKET;
@@ -470,7 +480,7 @@ dynamics_symbol:
     | crescendoBegin | crescendoEnd | diminuendoBegin | diminuendoEnd | crescendoContinue | diminuendoContinue |
     piano | pianissimo | triplePiano | quadruplePiano | forte |  fortissimo | tripleForte | quadrupleForte |
     mezzoPiano | mezzoForte | sforzando | fortePiano | footnote | rinforzando)
-    CHAR_y? CHAR_y?; // sometimes found here
+    ((CHAR_y CHAR_y?) | CHAR_X)?; // sometimes found here
 
 footnote: QUESTION_MARK+; //TODO -- ???
 

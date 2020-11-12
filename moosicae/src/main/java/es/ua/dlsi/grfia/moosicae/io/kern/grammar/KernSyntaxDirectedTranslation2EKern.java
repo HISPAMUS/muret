@@ -188,7 +188,10 @@ public class KernSyntaxDirectedTranslation2EKern {
             super.exitBarline(ctx);
             // remove the number
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(ctx.EQUAL().getText());
+            stringBuilder.append(ctx.EQUAL(0).getText());
+            if (ctx.EQUAL().size() > 1) {
+                stringBuilder.append(ctx.EQUAL(1).getText());
+            }
             if (ctx.MINUS() != null) {
                 stringBuilder.append(ctx.MINUS().getText());
             }
