@@ -10,7 +10,9 @@ import es.ua.dlsi.im3.core.utils.FileCompressors;
 import es.ua.dlsi.im3.omr.encoding.Encoder;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticEncoding;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticExporter;
+import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticToken;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
+import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Clef;
 import es.ua.dlsi.im3.omr.encoding.semantic.KernSemanticExporter;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticExporter;
 import org.json.simple.JSONArray;
@@ -31,10 +33,18 @@ import java.util.logging.Logger;
  */
 public class AgnosticSemanticTrainingSetExporter extends AbstractTrainingSetExporter {
     private final DocumentModel documentModel;
+    protected boolean includeAgnosticContext = false;
+
+    public AgnosticSemanticTrainingSetExporter(int id, DocumentModel documentModel, boolean includeAgnosticContext) {
+        super(id,includeAgnosticContext?"Agnostic with context-semantic":"Agnostic-semantic",
+                "Exports pairs agnostic-semantic in JSON files (one for each document) "
+                + (includeAgnosticContext ? " including context in agnostic": ""), false);
+        this.documentModel = documentModel;
+        this.includeAgnosticContext = includeAgnosticContext;
+    }
 
     public AgnosticSemanticTrainingSetExporter(int id, DocumentModel documentModel) {
-        super(id, "Agnostic-semantic", "Exports pairs agnostic-semantic in JSON files (one for each document)", false);
-        this.documentModel = documentModel;
+        this(id, documentModel, false);
     }
 
     @Override
@@ -62,12 +72,12 @@ public class AgnosticSemanticTrainingSetExporter extends AbstractTrainingSetExpo
 
     /**
      * @deprecated
-     * @param documentScoreSong
+     * @param
      * @param outputJSonFile
      * @throws IOException
      * @throws IM3Exception
      */
-    private void export(DocumentScoreSong documentScoreSong, File outputJSonFile) throws IOException, IM3Exception {
+    /*private void export(DocumentScoreSong documentScoreSong, File outputJSonFile) throws IOException, IM3Exception {
         JSONObject documentJSON = new JSONObject();
         JSONArray jsonSystems = new JSONArray();
 
@@ -87,7 +97,7 @@ public class AgnosticSemanticTrainingSetExporter extends AbstractTrainingSetExpo
 
                     systemJSON.put("region_id", documentScoreSongSystem.getSystemBeginning().getFacsimileElementID());
                     systemJSON.put("agnostic", agnosticExporter.export(encoder.getAgnosticEncoding()));
-                    systemJSON.put("semantic", agnosticExporter.export(encoder.getAgnosticEncoding()));
+                    systemJSON.put("semantic", semanticExporter.export(encoder.getSemanticEncoding()));
                     jsonSystems.add(systemJSON);
                 }
             }
@@ -99,15 +109,23 @@ public class AgnosticSemanticTrainingSetExporter extends AbstractTrainingSetExpo
         String jsonString = documentJSON.toJSONString();
         file.write(jsonString);
         file.close();
-    }
+    }*/
 
-    private void export(Document document, File outputJSonFile) throws IOException, IM3Exception {
+    /**
+     *
+     * @param document
+     * @param outputJSonFile
+     * @throws IOException
+     * @throws IM3Exception
+     */
+    public void export(Document document, File outputJSonFile) throws IOException, IM3Exception {
         JSONObject documentJSON = new JSONObject();
         JSONArray jsonSystems = new JSONArray();
 
-        for (Image image: document.getImages()) {
-            for (Page page: image.getPages()) {
-                for (Region region: page.getRegions()) {
+        for (Image image: document.getSortedImages()) {
+            for (Page page: image.getSortedPages()) {
+                AgnosticToken lastAgnosticClef = null; // used for the agnostic format including the context
+                for (Region region: page.getSortedStaves()) {
                     if (region.getSymbols() != null && !region.getSymbols().isEmpty() && region.getSemanticEncoding() != null) {
                         JSONObject systemJSON = new JSONObject();
 
@@ -115,6 +133,10 @@ public class AgnosticSemanticTrainingSetExporter extends AbstractTrainingSetExpo
                         symbolArrayList.sort(Symbol.getHorizontalPositionComparator());
 
                         AgnosticEncoding agnostic = SemanticRepresentationModel.region2Agnostic(region, true);
+                        if (includeAgnosticContext) {
+                            lastAgnosticClef = agnostic.insertContextInSequence(lastAgnosticClef);
+                        }
+
                         AgnosticExporter agnosticExporter = new AgnosticExporter(AgnosticVersion.v2);
                         String agnosticSequence = agnosticExporter.export(agnostic);
 

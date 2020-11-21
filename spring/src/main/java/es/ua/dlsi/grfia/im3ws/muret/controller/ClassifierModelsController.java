@@ -33,8 +33,12 @@ import java.util.logging.Logger;
 @RequestMapping("classifierModels")
 @RestController
 public class ClassifierModelsController {
-    private final ClassifierClient classifierClient;
+    @Autowired
     private final ImageRepository imageRepository;
+
+    private final ClassifierClient classifierClient;
+
+
     private final FileStorageService fileStorageService;
     private final MURETConfiguration muretconfig;
 

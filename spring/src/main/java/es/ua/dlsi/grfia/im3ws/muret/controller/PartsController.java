@@ -7,9 +7,9 @@ import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.model.PartsModel;
 import es.ua.dlsi.grfia.im3ws.muret.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import java.math.BigInteger;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -35,7 +35,7 @@ public class PartsController extends MuRETBaseController {
     }
 
     @GetMapping(path = {"uses/{documentID}"})
-    @Transactional
+    @Transactional(readOnly = true)
     public UsesOfParts getUsesOfParts(@PathVariable(name="documentID") Integer documentID){
         try {
             UsesOfParts usesOfParts = new UsesOfParts();

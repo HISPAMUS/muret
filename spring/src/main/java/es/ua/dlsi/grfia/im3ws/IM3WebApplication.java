@@ -16,11 +16,10 @@ import javax.sql.DataSource;
 @EnableScheduling
 public class IM3WebApplication {
     @Autowired
-    DataSource dataSource;
+    DataSource dataSource; //TODO ver si puedo quitar esto
 
-    //TODO A muret
     @Autowired
-    UserRepository userRepository;
+    UserRepository userRepository; //TODO ver si puedo quitar esto
 
     public static final void main(String[] args) {
         SpringApplication.run(IM3WebApplication.class, args);
@@ -28,3 +27,4 @@ public class IM3WebApplication {
 
 
 }
+//TODO A muret

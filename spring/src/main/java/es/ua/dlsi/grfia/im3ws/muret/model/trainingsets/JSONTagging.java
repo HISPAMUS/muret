@@ -63,7 +63,7 @@ public class JSONTagging extends AbstractTrainingSetExporter {
             for (Document document : documentCollection) {
                 Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Exporting document " + document.getName());
 
-                generateDictionary(document, outputJSonDiccFile);
+                generateDictionary(document);
 
                 File documentFolder = new File(directory.toFile(), document.getPath());
                 documentFolder.mkdirs();
@@ -87,7 +87,7 @@ public class JSONTagging extends AbstractTrainingSetExporter {
     }
 
     // see AgnosticRepresentationController.getAgnosticSymbolSVGSet
-    private void generateDictionary(Document document, File outputJSonDiccFile) throws IM3WSException, IM3Exception {
+    private void generateDictionary(Document document) throws IM3WSException, IM3Exception {
         AgnosticSymbolFont agnosticSymbolFont = AgnosticSymbolFontSingleton.getInstance().getLayoutFont(document.getNotationType(), document.getManuscriptType());
 
         try {
