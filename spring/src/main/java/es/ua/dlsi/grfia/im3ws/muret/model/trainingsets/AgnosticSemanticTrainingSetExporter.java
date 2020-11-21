@@ -112,7 +112,6 @@ public class AgnosticSemanticTrainingSetExporter extends AbstractTrainingSetExpo
     }*/
 
     /**
-     *
      * @param document
      * @param outputJSonFile
      * @throws IOException
@@ -124,42 +123,44 @@ public class AgnosticSemanticTrainingSetExporter extends AbstractTrainingSetExpo
 
         for (Image image: document.getSortedImages()) {
             for (Page page: image.getSortedPages()) {
-                AgnosticToken lastAgnosticClef = null; // used for the agnostic format including the context
-                for (Region region: page.getSortedStaves()) {
-                    if (region.getSymbols() != null && !region.getSymbols().isEmpty() && region.getSemanticEncoding() != null) {
-                        JSONObject systemJSON = new JSONObject();
-
-                        ArrayList<Symbol> symbolArrayList = new ArrayList<>(region.getSymbols());
-                        symbolArrayList.sort(Symbol.getHorizontalPositionComparator());
-
-                        AgnosticEncoding agnostic = SemanticRepresentationModel.region2Agnostic(region, true);
-                        if (includeAgnosticContext) {
-                            lastAgnosticClef = agnostic.insertContextInSequence(lastAgnosticClef);
-                        }
-
-                        AgnosticExporter agnosticExporter = new AgnosticExporter(AgnosticVersion.v2);
-                        String agnosticSequence = agnosticExporter.export(agnostic);
-
-                        systemJSON.put("image_id", region.getPage().getImage().getId());
-                        systemJSON.put("image_name", region.getPage().getImage().getFilename());
-                        systemJSON.put("region_id", region.getId());
-                        JSONTagging.putBoundingBox(systemJSON, region.getBoundingBox());
-                        systemJSON.put("agnostic", agnosticSequence);
-                        systemJSON.put("semantic", removeIDS(region.getSemanticEncoding()));
-                        jsonSystems.add(systemJSON);
-
-                    }
-                }
+                exportPage(jsonSystems, page);
             }
         }
-
         documentJSON.put("regions", jsonSystems);
-
 
         FileWriter file = new FileWriter(outputJSonFile);
         String jsonString = documentJSON.toJSONString();
         file.write(jsonString);
         file.close();
+    }
+
+    public void exportPage(JSONArray jsonSystems, Page page) throws IM3Exception {
+        AgnosticToken lastAgnosticClef = null; // used for the agnostic format including the context
+        for (Region region: page.getSortedStaves()) {
+            if (region.getSymbols() != null && !region.getSymbols().isEmpty() && region.getSemanticEncoding() != null) {
+                JSONObject systemJSON = new JSONObject();
+
+                ArrayList<Symbol> symbolArrayList = new ArrayList<>(region.getSymbols());
+                symbolArrayList.sort(Symbol.getHorizontalPositionComparator());
+
+                AgnosticEncoding agnostic = SemanticRepresentationModel.region2Agnostic(region, true);
+                if (includeAgnosticContext) {
+                    lastAgnosticClef = agnostic.insertContextInSequence(lastAgnosticClef);
+                }
+
+                AgnosticExporter agnosticExporter = new AgnosticExporter(AgnosticVersion.v2);
+                String agnosticSequence = agnosticExporter.export(agnostic);
+
+                systemJSON.put("image_id", region.getPage().getImage().getId());
+                systemJSON.put("image_name", region.getPage().getImage().getFilename());
+                systemJSON.put("region_id", region.getId());
+                JSONTagging.putBoundingBox(systemJSON, region.getBoundingBox());
+                systemJSON.put("agnostic", agnosticSequence);
+                systemJSON.put("semantic", removeIDS(region.getSemanticEncoding()));
+                jsonSystems.add(systemJSON);
+
+            }
+        }
     }
 
     private String removeIDS(String semanticWithIDS) {

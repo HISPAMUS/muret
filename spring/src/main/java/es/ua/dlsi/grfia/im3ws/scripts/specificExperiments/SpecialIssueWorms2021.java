@@ -2,6 +2,8 @@ package es.ua.dlsi.grfia.im3ws.scripts.specificExperiments;
 
 import es.ua.dlsi.grfia.im3ws.muret.entity.Collection;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Document;
+import es.ua.dlsi.grfia.im3ws.muret.entity.Image;
+import es.ua.dlsi.grfia.im3ws.muret.entity.Page;
 import es.ua.dlsi.grfia.im3ws.muret.model.DocumentModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.trainingsets.AgnosticSemanticTrainingSetExporter;
 import es.ua.dlsi.grfia.im3ws.muret.model.trainingsets.AgnosticWithContextSemanticTrainingSetExporter;
@@ -9,6 +11,8 @@ import es.ua.dlsi.grfia.im3ws.muret.repository.CollectionRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.DocumentRepository;
 import es.ua.dlsi.grfia.im3ws.scripts.AuthenticateForScripts;
 import es.ua.dlsi.im3.core.IM3Exception;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -21,12 +25,17 @@ import org.springframework.security.authentication.AuthenticationManager;
 // import javax.transaction.Transactional; it does not support readOnly
 import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 /**
  * Training sets are generated for the corpora FMT and Zaragoza. The training set contains JSON files with agnostic and semantic encoding.
- * JSON 10-folds are generated assigning randomly each image to a fold.
+ * 10-folds are generated assigning randomly each image to a fold: all the documents are shuffled randomly, then they are assigned to each fold
+ * using a Round Robin scheme.
  * It creates a folder named spIssueWORMS2021 with the data
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 20/11/20
@@ -36,6 +45,8 @@ import java.util.Optional;
 @EntityScan("es.ua.dlsi.grfia.im3ws.muret.entity")
 @Transactional(readOnly = true)
 public class SpecialIssueWorms2021 implements CommandLineRunner {
+    private static final int FOLDS = 10;
+
     @Autowired
     CollectionRepository collectionRepository;
 
@@ -56,24 +67,77 @@ public class SpecialIssueWorms2021 implements CommandLineRunner {
         }
 
         doExportCollection(collection.get(), outputFolder);
-        for (Collection subcollection: collection.get().getSubcollections()) {
-            doExportCollection(subcollection, outputFolder);
+        if (collection.get().getSubcollections() != null && !collection.get().getSubcollections().isEmpty()) {
+            throw new UnsupportedOperationException("Subcollections in " + collectionName);
         }
+        /*for (Collection subcollection: collection.get().getSubcollections()) {
+            doExportCollection(subcollection, outputFolder); // We should create folds here as well
+        }*/
     }
 
-    protected void doExportCollection(AgnosticSemanticTrainingSetExporter exporter, String prefix, File outputFolder, Collection collection) throws IOException, IM3Exception {
+    protected void doExportCollection(AgnosticSemanticTrainingSetExporter exporter, String prefix, File outputFolder, List<Page>[] folds) throws IOException, IM3Exception {
         outputFolder.mkdirs();
-        for (Document document: collection.getDocuments()) {
+
+        for (int fold = 0; fold < folds.length; fold ++) {
+            System.out.println("Generating " + prefix + ", fold #" + fold);
+            File outputJSonFile = new File(outputFolder, "fold_" + fold + ".json");
+            JSONObject documentJSON = new JSONObject();
+            JSONArray jsonSystems = new JSONArray();
+
+            for (Page page: folds[fold]) {
+                exporter.exportPage(jsonSystems, page);
+            }
+            documentJSON.put("regions", jsonSystems);
+            FileWriter file = new FileWriter(outputJSonFile);
+            String jsonString = documentJSON.toJSONString();
+            file.write(jsonString);
+            file.close();
+        }
+
+        /*for (Document document: collection.getDocuments()) {
             File outputFile = new File(outputFolder, prefix + "_" + document.getPath()  + ".json");
             System.out.println("Generating " + outputFile + "...");
             exporter.export(document, outputFile);
+        }*/
+    }
+
+    private List<Page>[] createFolds(Collection collection) {
+        ArrayList<Page> allPages = new ArrayList<>();
+        List<Page> [] folds = new List[FOLDS];
+        for (int i=0; i<folds.length; i++) {
+            folds[i] = new ArrayList<>();
         }
+        for (Document document: collection.getDocuments()) {
+            if (!document.getName().equals("mision02")) { // skip it because it's not complete
+                for (Image image : document.getSortedImages()) {
+                    for (Page page : image.getSortedPages()) {
+                        allPages.add(page);
+                    }
+                }
+            }
+        }
+
+        Collections.shuffle(allPages);
+        for (int i=0; i<allPages.size(); i++) {
+            folds[i % FOLDS].add(allPages.get(i));
+        }
+
+        System.out.println("\nCollection: " + collection.getName());
+        for (int i=0; i<folds.length; i++) {
+            System.out.println("Fold #" + folds[i].size());
+        }
+        System.out.println("-----------");
+
+        return folds;
+
     }
 
     private void doExportCollection(Collection collection, File outputFolder) throws IOException, IM3Exception {
-        doExportCollection(new AgnosticSemanticTrainingSetExporter(0, documentModel), "agnostic_semantic", new File(outputFolder, "agnostic_semantic"), collection);
+        List<Page>[] folds = createFolds(collection);
+
+        doExportCollection(new AgnosticSemanticTrainingSetExporter(0, documentModel), "agnostic_semantic", new File(outputFolder, "agnostic_semantic"), folds);
         // important this order (first without context, then with context) because we are working with @Transactional, and the notes are modified with the context
-        doExportCollection(new AgnosticWithContextSemanticTrainingSetExporter(0, documentModel), "contextual-agnostic_semantic", new File(outputFolder, "contextual-agnostic_semantic"), collection);
+        doExportCollection(new AgnosticWithContextSemanticTrainingSetExporter(0, documentModel), "contextual-agnostic_semantic", new File(outputFolder, "contextual-agnostic_semantic"), folds);
     }
 
     @Override
