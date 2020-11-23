@@ -1,9 +1,6 @@
 package es.ua.dlsi.grfia.im3ws.scripts.specificExperiments;
 
-import es.ua.dlsi.grfia.im3ws.muret.entity.Collection;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Document;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Image;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Page;
+import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.model.DocumentModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.trainingsets.AgnosticSemanticTrainingSetExporter;
 import es.ua.dlsi.grfia.im3ws.muret.model.trainingsets.AgnosticWithContextSemanticTrainingSetExporter;
@@ -87,6 +84,8 @@ public class SpecialIssueWorms2021 implements CommandLineRunner {
             for (Page page: folds[fold]) {
                 exporter.exportPage(jsonSystems, page);
             }
+            documentJSON.put("regions", jsonSystems);
+
             System.out.println("\t#" + jsonSystems.size() + " regions");
             FileWriter file = new FileWriter(outputJSonFile);
             String jsonString = documentJSON.toJSONString();
@@ -111,8 +110,20 @@ public class SpecialIssueWorms2021 implements CommandLineRunner {
             if (!document.getName().equals("mision02")) { // skip it because it's not complete
                 for (Image image : document.getSortedImages()) {
                     for (Page page : image.getSortedPages()) {
-                        if (page.getSortedStaves().size() > 0) {
-                            allPages.add(page);
+                        List<Region> staves = page.getSortedStaves();
+                        if (!staves.isEmpty()) {
+                            boolean empty = true;
+                            for (Region region: staves) {
+                                if (region.getSemanticEncoding() != null && !region.getSymbols().isEmpty()) {
+                                    empty = false;
+                                    break;
+                                }
+                            }
+                            if (empty) {
+                                System.out.println("Discarding " + document.getName() + " " + image.getFilename() + ", it's empty (semantic or no regions)");
+                            } else {
+                                allPages.add(page);
+                            }
                         }
                     }
                 }
@@ -126,7 +137,7 @@ public class SpecialIssueWorms2021 implements CommandLineRunner {
 
         System.out.println("\nCollection: " + collection.getName());
         for (int i=0; i<folds.length; i++) {
-            System.out.println("\nFold #" + folds[i].size());
+            System.out.println("\nFold #" + i + " of size " + folds[i].size());
             int nstavesTotal = 0;
             for (Page page: folds[i]) {
                 int nstaves = page.getSortedStaves().size();
