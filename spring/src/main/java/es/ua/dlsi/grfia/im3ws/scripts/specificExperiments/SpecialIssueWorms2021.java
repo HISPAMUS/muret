@@ -87,7 +87,7 @@ public class SpecialIssueWorms2021 implements CommandLineRunner {
             for (Page page: folds[fold]) {
                 exporter.exportPage(jsonSystems, page);
             }
-            documentJSON.put("regions", jsonSystems);
+            System.out.println("\t#" + jsonSystems.size() + " regions");
             FileWriter file = new FileWriter(outputJSonFile);
             String jsonString = documentJSON.toJSONString();
             file.write(jsonString);
@@ -111,7 +111,9 @@ public class SpecialIssueWorms2021 implements CommandLineRunner {
             if (!document.getName().equals("mision02")) { // skip it because it's not complete
                 for (Image image : document.getSortedImages()) {
                     for (Page page : image.getSortedPages()) {
-                        allPages.add(page);
+                        if (page.getSortedStaves().size() > 0) {
+                            allPages.add(page);
+                        }
                     }
                 }
             }
@@ -124,7 +126,14 @@ public class SpecialIssueWorms2021 implements CommandLineRunner {
 
         System.out.println("\nCollection: " + collection.getName());
         for (int i=0; i<folds.length; i++) {
-            System.out.println("Fold #" + folds[i].size());
+            System.out.println("\nFold #" + folds[i].size());
+            int nstavesTotal = 0;
+            for (Page page: folds[i]) {
+                int nstaves = page.getSortedStaves().size();
+                System.out.println("\t\tPage in " + page.getImage().getFilename() + " " + page.getImage().getDocument().getName() + ": #" + nstaves + " staves");
+                nstavesTotal += nstaves;
+            }
+            System.out.println("\tTotal staves: #" + nstavesTotal);
         }
         System.out.println("-----------");
 
