@@ -1,4 +1,4 @@
-package es.ua.dlsi.grfia.im3ws.scripts.specificExperiments;
+package es.ua.dlsi.grfia.im3ws.scripts.specificExperiments.specialIssueWorms2021;
 
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.model.DocumentModel;
@@ -41,8 +41,10 @@ import java.util.Optional;
 @EnableJpaRepositories("es.ua.dlsi.grfia.im3ws.muret.repository")
 @EntityScan("es.ua.dlsi.grfia.im3ws.muret.entity")
 @Transactional(readOnly = true)
-public class SpecialIssueWorms2021 implements CommandLineRunner {
-    private static final int FOLDS = 10;
+public class Worms2021MuRETDatasets implements CommandLineRunner {
+    public static final int FOLDS = 10;
+    public static final String AGNOSTIC_SEMANTIC = "agnostic_semantic";
+    public static final String CONTEXTUAL_AGNOSTIC_SEMANTIC = "contextual-agnostic_semantic";
 
     @Autowired
     CollectionRepository collectionRepository;
@@ -72,11 +74,11 @@ public class SpecialIssueWorms2021 implements CommandLineRunner {
         }*/
     }
 
-    protected void doExportCollection(AgnosticSemanticTrainingSetExporter exporter, String prefix, File outputFolder, List<Page>[] folds) throws IOException, IM3Exception {
+    protected void doExportCollection(AgnosticSemanticTrainingSetExporter exporter, File outputFolder, List<Page>[] folds) throws IOException, IM3Exception {
         outputFolder.mkdirs();
 
         for (int fold = 0; fold < folds.length; fold ++) {
-            System.out.println("Generating " + prefix + ", fold #" + fold);
+            System.out.println("Generating " + outputFolder.getName() + ", fold #" + fold);
             File outputJSonFile = new File(outputFolder, "fold_" + fold + ".json");
             JSONObject documentJSON = new JSONObject();
             JSONArray jsonSystems = new JSONArray();
@@ -155,9 +157,9 @@ public class SpecialIssueWorms2021 implements CommandLineRunner {
     private void doExportCollection(Collection collection, File outputFolder) throws IOException, IM3Exception {
         List<Page>[] folds = createFolds(collection);
 
-        doExportCollection(new AgnosticSemanticTrainingSetExporter(0, documentModel), "agnostic_semantic", new File(outputFolder, "agnostic_semantic"), folds);
+        doExportCollection(new AgnosticSemanticTrainingSetExporter(0, documentModel), new File(outputFolder, AGNOSTIC_SEMANTIC), folds);
         // important this order (first without context, then with context) because we are working with @Transactional, and the notes are modified with the context
-        doExportCollection(new AgnosticWithContextSemanticTrainingSetExporter(0, documentModel), "contextual-agnostic_semantic", new File(outputFolder, "contextual-agnostic_semantic"), folds);
+        doExportCollection(new AgnosticWithContextSemanticTrainingSetExporter(0, documentModel), new File(outputFolder, CONTEXTUAL_AGNOSTIC_SEMANTIC), folds);
     }
 
     @Override
@@ -173,7 +175,7 @@ public class SpecialIssueWorms2021 implements CommandLineRunner {
     }
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext ctx = SpringApplication.run(SpecialIssueWorms2021.class, args);
+        ConfigurableApplicationContext ctx = SpringApplication.run(Worms2021MuRETDatasets.class, args);
         SpringApplication.exit(ctx);
     }
 
