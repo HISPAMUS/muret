@@ -40,7 +40,7 @@ public class Worms2021PrIMUS {
         List<File> files = (List<File>) FileUtils.listFiles(new File(args[0]), new String [] {"mei"}, true);
 
         // now they are shuffled
-        System.out.println("Reordering ....");
+        System.out.println("Reordering # " + files.size() + "....");
         Collections.shuffle(files);
 
         System.out.println("Assigning to folds ....");
@@ -121,6 +121,7 @@ public class Worms2021PrIMUS {
     private static Encoder importFile(File file) throws IM3Exception {
         try {
             MEISongImporter importer = new MEISongImporter();
+            importer.setAllowErrors(true);
 
             ScoreSong scoreSong = importer.importSong(file);
             Encoder encoder = new Encoder(true);
