@@ -50,11 +50,27 @@ public class Worms2021PrIMUS {
             folds[i] = new LinkedList<>();
         }
         long idx=0;
+        //StringBuilder errors = new StringBuilder();
         for (File file: files) {
             int fold = (int) (idx % Worms2021MuRETDatasets.FOLDS);
             folds[fold].add(file);
             idx++;
+
+            /*try {
+                importFile(file);
+            } catch (Throwable t) {
+                errors.append(file.getAbsolutePath());
+                errors.append('\n');
+            }*/
         }
+
+        /*if (errors.length() > 0) {
+            System.out.println("ERRORS on files ");
+            System.out.println(errors.toString());
+            return;
+        }*/
+
+
 
         for (int i=0; i<folds.length; i++) {
             System.out.println("Fold #" + i + " with #" + folds[i].size() + " files");
