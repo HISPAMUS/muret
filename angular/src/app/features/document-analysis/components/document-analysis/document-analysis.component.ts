@@ -463,9 +463,13 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     this.regionTypeCSelected = regionType;
   }
 
-  beautifyRegionName(name: string): string {
-    const result = name.replace(/_/g, ' ');
-    return result.charAt(0).toUpperCase() + result.slice(1); // first char uppercase
+  beautifyRegionName(regionType: RegionType): string {
+    if (regionType && regionType.name) {
+      const result = regionType.name.replace(/_/g, ' ');
+      return result.charAt(0).toUpperCase() + result.slice(1); // first char uppercase
+    } else {
+      return '';
+    }
   }
 
   inIdleMode() {
@@ -566,7 +570,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
         element["checked"] = false;
       });
     }
-   
+
     this.applyRegionTypeFilter();
   }
 

@@ -26,6 +26,11 @@ public class RegionType {
     @Column
     String help;
 
+    @ManyToOne
+    @JoinColumn(name="region_interaction_type_id")
+    RegionInteractionType regionInteractionType;
+
+
     public RegionType() {
     }
 
@@ -61,6 +66,15 @@ public class RegionType {
         this.help = help;
     }
 
+    public RegionInteractionType getRegionInteractionType() {
+        return regionInteractionType;
+    }
+
+    public void setRegionInteractionType(RegionInteractionType regionInteractionType) {
+        this.regionInteractionType = regionInteractionType;
+        System.out.println(">>>" + this.toString());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -74,5 +88,16 @@ public class RegionType {
     @Override
     public int hashCode() {
         return name != null ? name.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "RegionType{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", hexargb='" + hexargb + '\'' +
+                ", help='" + help + '\'' +
+                ", regionInteractionType=" + regionInteractionType +
+                '}';
     }
 }
