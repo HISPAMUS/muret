@@ -26,7 +26,7 @@ public class TranslationModel {
         SemanticTransduction semantic = agnostic2SemanticTransducer.transduce(agnosticEncoding);
 
         if (semantic.getSemanticEncoding().getSymbols().isEmpty()) {
-            throw new IM3WSException("Cannot translate from agnostic");
+            throw new IM3WSException("Cannot translate from agnostic: the semantic transduction returns an empty list of symbols");
         }
 
         return semantic;
