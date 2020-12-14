@@ -1,6 +1,8 @@
 import {initialDocumentsState, DocumentsState} from '../state/documents.state';
 import {DocumentsActions, DocumentsActionTypes} from '../actions/documents.actions';
 
+// recall the inmutability of state -- see as example DocumentsActionTypes.CreateSubcollectionSuccess
+// https://medium.com/swlh/few-ways-to-update-a-state-array-in-redux-reducer-f2621ae8061
 export function documentsReducers(state = initialDocumentsState, action: DocumentsActions): DocumentsState {
   switch (action.type) {
     case DocumentsActionTypes.ResetDocumentsServerError:
@@ -21,17 +23,28 @@ export function documentsReducers(state = initialDocumentsState, action: Documen
       };
     }
     case DocumentsActionTypes.CreateSubcollectionSuccess: {
-      const newState = {...state,
-        apiRestServerError: null};
-      newState.collection.subcollections = [...newState.collection.subcollections, action.collection];
-      return newState;
+      return { // returning a copy of original state
+        ...state, //copying the original state
+        collection: {
+          ... state.collection,
+          subcollections: [...state.collection.subcollections, action.collection]
+        } //new todos array
+      };
     }
     case DocumentsActionTypes.DeleteSubcollectionSuccess: {
+      return { // returning a copy of original state
+        ...state, //copying the original state
+        collection: {
+          ... state.collection,
+          subcollections: state.collection.subcollections.filter(subcollection => subcollection.id !== action.deletedSubcollectionID)
+        } //new todos array
+      };
+/*
       const newState = {...state,
         apiRestServerError: null};
       newState.collection.subcollections =
         newState.collection.subcollections.filter(subcollection => subcollection.id !== action.deletedSubcollectionID);
-      return newState;
+      return newState;*/
     }
     case DocumentsActionTypes.MoveDocumentsToSubcollectionSuccess:
     case DocumentsActionTypes.MoveDocumentsToNewSubcollectionSuccess: {
