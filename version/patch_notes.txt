@@ -1,10 +1,10 @@
 0.13
     MAJOR UPDATES
-    - Training set with agnostic and semantic information now includes the image and the region bounding box
+    - Training set with agnostic and semantic information now includes the image and the region bounding box (issue #182)
     - FMT MEI MEI import script
 
     MINOR UPDATES
-    - Issues #141, #170, #155
+    - Issues #141, #170, #155, #157
 
 -----
 
