@@ -15,6 +15,7 @@ public interface IVoice extends IVoiced {
     Optional<IName> getName();
     IVoiced[] getItems();
     void addItem(IVoiced voiced);
+    //TODO Add another interface in charge of tied notes
     void tie(INoteHead prev, INoteHead next) throws IMException;
     void untie(INoteHead prev, INoteHead next) throws IMException;
 
