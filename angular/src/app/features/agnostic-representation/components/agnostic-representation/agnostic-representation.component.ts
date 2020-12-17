@@ -19,14 +19,14 @@ import {
   ChangeSymbolBoundingBox, ChangeSymbolComments, ClassifyRegionEndToEnd, ClearRegionSymbols,
   CreateSymbolFromBoundingBox, CreateSymbolFromStrokes,
   DeleteSymbol, DeselectSymbol, GetAgnosticEnd2EndClassifierModels,
-  GetSVGSet, GetSymbolClassifierModels, InitRegion, ResetAgnosticRepresentationServerError,
+  GetSymbolClassifierModels, InitRegion, ResetAgnosticRepresentationServerError,
   SelectSymbol
 } from '../../store/actions/agnostic-representation.actions';
 import {
   selectAgnosticEnd2EndClassifierModels,
   selectAgnosticSymbolClassifierModels,
   selectAgnosticSymbols, selectAgnosticSymbolServerError, selectClassifiedSymbols,
-  selectSelectedSymbol, selectSVGAgnosticSymbolSet
+  selectSelectedSymbol
 } from '../../store/selectors/agnostic-representation.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {Polylines} from '../../../../svg/model/polylines';
@@ -36,12 +36,14 @@ import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.act
 import {SVGSet} from '../../model/svgset';
 import {AgnosticSymbolAndPosition} from '../../model/agnostic-symbol-and-position';
 import {Point} from '../../../../core/model/entities/point';
-import {AgnosticTypeSVGPath} from '../../model/agnostic-type-svgpath';
+import {AgnosticOrSemanticTypeSVGPath} from '../../model/agnostic-or-semantic-type-s-v-g-path';
 import {PositionInStaffService} from '../../services/position-in-staff.service';
 import {Line} from '../../../../svg/model/line';
 import {ClassifierModel} from '../../../../core/model/entities/classifier-model';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
 import { LinkType } from 'src/app/breadcrumb/components/breadcrumb/breadcrumbType';
+import {GetSVGSet} from "../../../../core/store/actions/fonts.actions";
+import {selectSVGAgnosticSymbolSet} from "../../../../core/store/selectors/core.selector";
 
 @Component({
   selector: 'app-agnostic-representation',
@@ -460,15 +462,15 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   }
 
 
-  onAgnosticSymbolTypeSelected(agnosticTypeSVGPath: AgnosticTypeSVGPath) {
-    this.incrementFrequency(agnosticTypeSVGPath.agnosticTypeString);
+  onAgnosticSymbolTypeSelected(agnosticTypeSVGPath: AgnosticOrSemanticTypeSVGPath) {
+    this.incrementFrequency(agnosticTypeSVGPath.agnosticOrSemanticTypeString);
 
     let agnosticSymbolTypeAndPosition = null;
     if (this.classifiedSymbols) {
-      agnosticSymbolTypeAndPosition = this.classifiedSymbols.find(cs => cs.agnosticSymbolType === agnosticTypeSVGPath.agnosticTypeString);
+      agnosticSymbolTypeAndPosition = this.classifiedSymbols.find(cs => cs.agnosticSymbolType === agnosticTypeSVGPath.agnosticOrSemanticTypeString);
     }
 
-    const agnosticType = agnosticTypeSVGPath.agnosticTypeString;
+    const agnosticType = agnosticTypeSVGPath.agnosticOrSemanticTypeString;
     let positionInStaff: string;
     /* this resets the position to the default symbol one if (agnosticSymbolTypeAndPosition) {
       positionInStaff = agnosticSymbolTypeAndPosition.positionInStaff;

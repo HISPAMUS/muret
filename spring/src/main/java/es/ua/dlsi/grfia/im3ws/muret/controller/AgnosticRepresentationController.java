@@ -8,17 +8,12 @@ import es.ua.dlsi.grfia.im3ws.muret.controller.payload.SymbolCreationFromStrokes
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.SymbolCreationResult;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticRepresentationModel;
-import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticSymbolFont;
-import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticSymbolFontSingleton;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.PageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.SymbolRepository;
-import es.ua.dlsi.im3.core.score.NotationType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -40,32 +35,6 @@ public class AgnosticRepresentationController extends MuRETBaseController {
     public AgnosticRepresentationController(MURETConfiguration muretConfiguration, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository, AgnosticRepresentationModel agnosticRepresentationModel) {
         super(muretConfiguration, imageRepository, pageRepository, regionRepository, symbolRepository);
         this.agnosticRepresentationModel = agnosticRepresentationModel;
-    }
-
-
-    // see JSONTagging.generateDictionary
-    /**
-     *
-     * @param notationType Mensural, modern
-     * @param manuscriptType Handwritten, printed
-     * @return Map<symbolType, svg>
-     * @throws IM3WSException On SVG constructrion
-     */
-    @GetMapping(path = {"svgset"})
-    public SVGSet getAgnosticSymbolSVGSet(@RequestParam(name="notationType") NotationType notationType, @RequestParam(name="manuscriptType") ManuscriptType manuscriptType) {
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Getting AgnosticSymbolSVGSet");
-        try {
-            Objects.requireNonNull(notationType, "notationType cannot be null");
-            Objects.requireNonNull(manuscriptType, "manuscriptType cannot be null");
-            AgnosticSymbolFont agnosticSymbolFont = AgnosticSymbolFontSingleton.getInstance().getLayoutFont(notationType, manuscriptType);
-            SVGSet result = new SVGSet(agnosticSymbolFont.getLayoutFont().getSVGFont().getAscent(),
-                    agnosticSymbolFont.getLayoutFont().getSVGFont().getDescent(),
-                    agnosticSymbolFont.getLayoutFont().getSVGFont().getUnitsPerEM(),
-                    agnosticSymbolFont.getFullSVGSetPathd());
-            return result;
-        } catch (Throwable e) {
-            throw ControllerUtils.createServerError(this, "Cannot export", e);
-        }
     }
 
     @Transactional

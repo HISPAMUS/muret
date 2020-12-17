@@ -3,8 +3,8 @@ package es.ua.dlsi.grfia.im3ws.muret.model.trainingsets;
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
-import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticSymbolFont;
-import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticSymbolFontSingleton;
+import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticOrSemanticSymbolFont;
+import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticOrSemanticSymbolFontSingleton;
 import es.ua.dlsi.grfia.im3ws.muret.model.DocumentModel;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.io.ExportException;
@@ -88,14 +88,14 @@ public class JSONTagging extends AbstractTrainingSetExporter {
 
     // see AgnosticRepresentationController.getAgnosticSymbolSVGSet
     private void generateDictionary(Document document) throws IM3WSException, IM3Exception {
-        AgnosticSymbolFont agnosticSymbolFont = AgnosticSymbolFontSingleton.getInstance().getLayoutFont(document.getNotationType(), document.getManuscriptType());
+        AgnosticOrSemanticSymbolFont agnosticOrSemanticSymbolFont = AgnosticOrSemanticSymbolFontSingleton.getInstance().getLayoutFont(document.getNotationType(), document.getManuscriptType());
 
         try {
-            SVGSet result = new SVGSet(agnosticSymbolFont.getLayoutFont().getSVGFont().getAscent(),
-                    agnosticSymbolFont.getLayoutFont().getSVGFont().getDescent(),
-                    agnosticSymbolFont.getLayoutFont().getSVGFont().getUnitsPerEM(),
-                    agnosticSymbolFont.getFullSVGSetPathd());
-            List<AgnosticTypeSVGPath> paths = result.getPaths();
+            SVGSet result = new SVGSet(agnosticOrSemanticSymbolFont.getLayoutFont().getSVGFont().getAscent(),
+                    agnosticOrSemanticSymbolFont.getLayoutFont().getSVGFont().getDescent(),
+                    agnosticOrSemanticSymbolFont.getLayoutFont().getSVGFont().getUnitsPerEM(),
+                    agnosticOrSemanticSymbolFont.getFullSVGSetPathd());
+            List<AgnosticOrSemanticSymbolTypeSVGPath> paths = result.getPaths();
             List<PositionInStaff> positions = new ArrayList<>();
             for (int i=PositionsInStaff.FOURTH_BOTTOM_LEDGER_LINE.getLineSpace(); i<=PositionsInStaff.FOURTH_TOP_LEDGER_LINE.getLineSpace(); i++) {
                 positions.add(new PositionInStaff(i));
@@ -103,9 +103,9 @@ public class JSONTagging extends AbstractTrainingSetExporter {
             JSONObject jsonDictionary = new JSONObject();
 
             JSONArray jsonArray = new JSONArray();
-            for (AgnosticTypeSVGPath agnosticTypeSVGPath: paths) {
+            for (AgnosticOrSemanticSymbolTypeSVGPath agnosticOrSemanticSymbolTypeSVGPath : paths) {
                 for (PositionInStaff position : positions) {
-                    String item = agnosticTypeSVGPath.getAgnosticTypeString() + ":" + position.toString();
+                    String item = agnosticOrSemanticSymbolTypeSVGPath.getAgnosticOrSemanticTypeString() + ":" + position.toString();
                     jsonArray.add(item);
                 }
             }

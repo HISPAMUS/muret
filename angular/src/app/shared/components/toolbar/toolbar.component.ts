@@ -1,17 +1,20 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {AgnosticRepresentationState} from '../../store/state/agnostic-representation.state';
-import {SVGSet} from '../../model/svgset';
-import {AgnosticOrSemanticTypeSVGPath} from '../../model/agnostic-or-semantic-type-s-v-g-path';
-import {AgnosticSymbolAndPosition} from '../../model/agnostic-symbol-and-position';
 import {Subscription} from 'rxjs';
+import {SVGSet} from "../../../features/agnostic-representation/model/svgset";
+import {AgnosticSymbolAndPosition} from "../../../features/agnostic-representation/model/agnostic-symbol-and-position";
+import {AgnosticOrSemanticTypeSVGPath} from "../../../features/agnostic-representation/model/agnostic-or-semantic-type-s-v-g-path";
+import {AgnosticRepresentationState} from "../../../features/agnostic-representation/store/state/agnostic-representation.state";
+import {State} from "../../../core/model/entities/state";
 
 @Component({
-  selector: 'app-agnostic-toolbar',
-  templateUrl: './agnostic-toolbar.component.html',
-  styleUrls: ['./agnostic-toolbar.component.css']
+  selector: 'app-toolbar',
+  templateUrl: './toolbar.component.html',
+  styleUrls: ['./toolbar.component.css']
 })
-export class AgnosticToolbarComponent implements OnInit, OnDestroy {
+export class ToolbarComponent implements OnInit, OnDestroy {
+  @Input() filters: Map<string, string>; // map<values, titles>
+
   @Input() svgAgnosticSymbolSet: SVGSet;
   @Input() mode: 'eIdle' | 'eAdding' | 'eSelecting' | 'eEditing';
   @Input() filter: AgnosticSymbolAndPosition[];

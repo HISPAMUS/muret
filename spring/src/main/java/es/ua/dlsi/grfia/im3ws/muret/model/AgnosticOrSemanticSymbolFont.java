@@ -1,23 +1,22 @@
 package es.ua.dlsi.grfia.im3ws.muret.model;
 
-import es.ua.dlsi.grfia.im3ws.muret.entity.AgnosticTypeSVGPath;
+import es.ua.dlsi.grfia.im3ws.muret.entity.AgnosticOrSemanticSymbolTypeSVGPath;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.score.layout.LayoutFont;
 import es.ua.dlsi.im3.core.score.layout.svg.Glyph;
-import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbolType;
 
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * It returns the font symbol associated to an agnostic symbol depending on the notation type
+ * It returns the font symbol associated to an agnostic or semantic symbol depending on the notation type
  * @autor drizo
  */
-public class AgnosticSymbolFont {
+public class AgnosticOrSemanticSymbolFont {
     private LayoutFont layoutFont;
 
-    public AgnosticSymbolFont(LayoutFont layoutFont) {
+    public AgnosticOrSemanticSymbolFont(LayoutFont layoutFont) {
         this.layoutFont = layoutFont;
     }
 
@@ -28,12 +27,12 @@ public class AgnosticSymbolFont {
     /**
      * @return Map<AgnosticTypeString, SVG d param of SVG path element>
      */
-    public List<AgnosticTypeSVGPath> getFullSVGSetPathd() throws IM3Exception {
+    public List<AgnosticOrSemanticSymbolTypeSVGPath> getFullSVGSetPathd() throws IM3Exception {
         HashMap<String, String> codePointGrlyphMap = this.layoutFont.getCodepointGlyphMap();
 
         int em = this.layoutFont.getSVGFont().getUnitsPerEM();
         int descent = this.layoutFont.getSVGFont().getDescent();
-        List<AgnosticTypeSVGPath> result = new LinkedList<>();
+        List<AgnosticOrSemanticSymbolTypeSVGPath> result = new LinkedList<>();
         for (Map.Entry<String, String> entry: codePointGrlyphMap.entrySet()) {
             String agnosticSymbolType = entry.getValue();
             try {
@@ -57,7 +56,7 @@ public class AgnosticSymbolFont {
                 //return `0 ${-(svgSet.em - svgSet.descent)} ${svgSet.em + svgSymbol.horizAdvX} ${svgSet.em}`;
                 //[attr.transform]="'scale(1, -1) translate(0, ' + computeSVGSymbolTranslateY(svgAgnosticSymbolSet)+ ')' "
                 String symbolTransform = "scale(1, -1) translate(0, " + (em - descent) + ")";
-                result.add(new AgnosticTypeSVGPath(agnosticSymbolType, glyph.getPath(), glyph.getDefaultHorizontalAdvance(),
+                result.add(new AgnosticOrSemanticSymbolTypeSVGPath(agnosticSymbolType, glyph.getPath(), glyph.getDefaultHorizontalAdvance(),
                         viewBox.toString(), symbolTransform, layoutFont.getDefaultPositionInStaff(agnosticSymbolType)));
             } catch (Throwable t) {
                 // TODO

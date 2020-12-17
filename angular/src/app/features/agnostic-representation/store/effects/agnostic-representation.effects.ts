@@ -14,8 +14,6 @@ import {
   DeleteSymbolSuccess,
   GetRegion,
   GetRegionSuccess,
-  GetSVGSet,
-  GetSVGSetSucccess,
   ClassifyRegionEndToEnd,
   ClassifyRegionEndToEndSuccess,
   ClearRegionSymbols,
@@ -47,23 +45,6 @@ export class AgnosticRepresentationEffects {
       switchMap((region: Region) => of (new GetRegionSuccess(region))),
       catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
     )));
-
-  @Effect()
-  getSVGSet$ = this.actions$.pipe(
-    ofType<GetSVGSet>(AgnosticRepresentationActionTypes.GetSVGSet),
-    switchMap((action: GetSVGSet) => this.agnosticRepresentationService.getSVGSet$(action.notationType, action.manuscriptType).pipe(
-      switchMap((svgSet: SVGSet) => of(new GetSVGSetSucccess(svgSet))),
-      catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
-    )));
-
-  @Effect()
-  changeSymbol$ = this.actions$.pipe(
-    ofType<ChangeSymbol>(AgnosticRepresentationActionTypes.ChangeSymbol),
-    switchMap((action: ChangeSymbol) =>
-      this.agnosticRepresentationService.changeSymbol$(action.agnosticSymbol, action.agnosticSymbolType, action.positionInStaff).pipe(
-        switchMap((agnosticSymbol: AgnosticSymbol) => of(new ChangeSymbolSuccess(agnosticSymbol))),
-        catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
-      )));
 
   @Effect()
   changeSymbolBoundingBox$ = this.actions$.pipe(

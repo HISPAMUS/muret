@@ -11,9 +11,9 @@ public class SVGSet {
      * key = AgnosticTypeString
      * value = SVG d param of SVG path element
      */
-    List<AgnosticTypeSVGPath> paths;
+    List<AgnosticOrSemanticSymbolTypeSVGPath> paths;
 
-    public SVGSet(double ascent, double descent, double em, List<AgnosticTypeSVGPath> paths) {
+    public SVGSet(double ascent, double descent, double em, List<AgnosticOrSemanticSymbolTypeSVGPath> paths) {
         this.em = em;
         this.paths = paths;
         this.ascent = ascent;
@@ -32,7 +32,7 @@ public class SVGSet {
         return descent;
     }
 
-    public List<AgnosticTypeSVGPath> getPaths() {
+    public List<AgnosticOrSemanticSymbolTypeSVGPath> getPaths() {
         return paths;
     }
 }

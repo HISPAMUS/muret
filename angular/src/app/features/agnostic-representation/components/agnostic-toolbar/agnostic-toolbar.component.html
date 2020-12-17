@@ -63,11 +63,11 @@
       >
 
         <label *ngFor="let svgSymbol of getFilteredSymbols(); trackBy: trackSVGSymbolFn"
-               ngbButtonLabel [title]="svgSymbol.agnosticTypeString"
-               placement="bottom" ngbTooltip="{{svgSymbol.agnosticTypeString}}"
+               ngbButtonLabel [title]="svgSymbol.agnosticOrSemanticTypeString"
+               placement="bottom" ngbTooltip="{{svgSymbol.agnosticOrSemanticTypeString}}"
         >
-          <input name="symbolTypeRadioButton" ngbButton type="radio" [value]="svgSymbol.agnosticTypeString" (click)="onRadioButtonClick(svgSymbol)"/>
-          <app-agnostic-toolbar-icon [buttonWidth]="buttonWidth" [buttonHeight]="buttonWidth" [symbolID]="svgSymbol.agnosticTypeString"
+          <input name="symbolTypeRadioButton" ngbButton type="radio" [value]="svgSymbol.agnosticOrSemanticTypeString" (click)="onRadioButtonClick(svgSymbol)"/>
+          <app-agnostic-toolbar-icon [buttonWidth]="buttonWidth" [buttonHeight]="buttonWidth" [symbolID]="svgSymbol.agnosticOrSemanticTypeString"
                                      [symbolPathD]="svgSymbol.svgPathD" [symbolTransform]="svgSymbol.symbolTransform"
                                      [symbolViewBox]="svgSymbol.viewBox" [positionInStaff]="svgSymbol.defaultPositionInStaff"
           >

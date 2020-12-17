@@ -1,8 +1,8 @@
-import {AgnosticTypeSVGPath} from './agnostic-type-svgpath';
+import {AgnosticOrSemanticTypeSVGPath} from './agnostic-or-semantic-type-s-v-g-path';
 
 export interface SVGSet {
   ascent: number;
   descent: number;
   em: number;
-  paths: Array<AgnosticTypeSVGPath>;
+  paths: Array<AgnosticOrSemanticTypeSVGPath>;
 }

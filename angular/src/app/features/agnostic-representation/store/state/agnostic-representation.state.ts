@@ -9,7 +9,6 @@ export interface AgnosticRepresentationState {
   selectedRegion: Region;
   agnosticSymbols: AgnosticSymbol[];
   selectedSymbolID: number;
-  svgAgnosticSymbolsSet: SVGSet;
   classifiedSymbols: AgnosticSymbolAndPosition[];
   end2endClassifierModels: ClassifierModel[];
   symbolClassifierModels: ClassifierModel[];
@@ -20,7 +19,6 @@ export const initialAgnosticRepresentationState: AgnosticRepresentationState = {
   selectedRegion: null,
   agnosticSymbols: null,
   selectedSymbolID: null,
-  svgAgnosticSymbolsSet: null,
   classifiedSymbols: null,
   end2endClassifierModels: null,
   symbolClassifierModels: null,

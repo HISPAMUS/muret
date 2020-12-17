@@ -6,7 +6,6 @@ import {SVGSet} from '../model/svgset';
 import {AgnosticSymbol} from '../../../core/model/entities/agnosticSymbol';
 import {BoundingBox} from '../../../core/model/entities/bounding-box';
 import {Point} from '../../../core/model/entities/point';
-import {AgnosticSymbolAndPosition} from '../model/agnostic-symbol-and-position';
 import {SymbolCreationResult} from '../model/symbol-creation-result';
 import {ClassifierModel} from '../../../core/model/entities/classifier-model';
 
@@ -20,17 +19,6 @@ export class AgnosticRepresentationService {
 
   getRegion$(regionID: number): Observable<Region> {
     return this.apiRestClientService.getProjectionOf$<Region>(regionID, 'regions', 'regionWithSymbols');
-  }
-
-  getSVGSet$(notationType: string, manuscriptType: string): Observable<SVGSet> {
-    const key = notationType + manuscriptType;
-    let result = this.svgSets.get(key);
-    if (!result) {
-      const url = `agnostic/svgset?notationType=${notationType}&manuscriptType=${manuscriptType}`;
-      result = this.apiRestClientService.get$<SVGSet>(url);
-      this.svgSets.set(key, result);
-    }
-    return result;
   }
 
   changeSymbol$(agnosticSymbol: AgnosticSymbol, agnosticSymbolType: string, positionInStaff: string): Observable<AgnosticSymbol> {

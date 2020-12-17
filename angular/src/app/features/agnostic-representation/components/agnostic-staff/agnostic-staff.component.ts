@@ -21,7 +21,7 @@ import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {SVGSet} from '../../model/svgset';
 import {SelectSymbol} from '../../store/actions/agnostic-representation.actions';
-import {AgnosticTypeSVGPath} from '../../model/agnostic-type-svgpath';
+import {AgnosticOrSemanticTypeSVGPath} from '../../model/agnostic-or-semantic-type-s-v-g-path';
 import {PositionInStaffService} from '../../services/position-in-staff.service';
 
 interface StaffLine {
@@ -130,7 +130,7 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
     return item.index;
   }
 
-  trackByAgnosticSymbolTypeFn(index, item: AgnosticTypeSVGPath) {
+  trackByAgnosticSymbolTypeFn(index, item: AgnosticOrSemanticTypeSVGPath) {
     return index;
   }
 

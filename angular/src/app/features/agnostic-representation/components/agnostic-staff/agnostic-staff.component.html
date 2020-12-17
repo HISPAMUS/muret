@@ -6,8 +6,8 @@
   >
     <ng-container *ngIf="svgAgnosticSymbolSet">
       <svg:symbol *ngFor="let path of svgAgnosticSymbolSet.paths; trackBy: trackByAgnosticSymbolTypeFn"
-              [attr.id]="path.agnosticTypeString" [attr.viewBox]="path.viewBox"
-              preserveAspectRatio="xMinYMid" overflow="visible"
+                  [attr.id]="path.agnosticOrSemanticTypeString" [attr.viewBox]="path.viewBox"
+                  preserveAspectRatio="xMinYMid" overflow="visible"
       >
         <svg:path [attr.d]="path.svgPathD" [attr.transform]="path.symbolTransform">
         </svg:path>

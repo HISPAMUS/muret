@@ -1,0 +1,39 @@
+<div *ngIf="showFilter()" id="agnosticSymbolFilter" class="btn-group btn-group-toggle" ngbRadioGroup
+     name="modeRadioButtonGroup" [(ngModel)]="symbolsFilter">
+
+  <label ngbButtonLabel *ngFor="let item of filters | keyvalue">
+    <input name="modeRadioButton" ngbButton type="radio" [value]="item.key" ><span>{{item.value}}</span>
+    Key: <b>{{item.key}}</b> and Value: <b>{{item.value}}</b>
+  </label>
+</div>
+
+<div class="btn-toolbar" role="toolbar" aria-label="Agnostic toolbar" id="agnosticToolbarEditButtons">
+  <div class="btn-group-toggle mr-2" role="group" aria-label="Symbol edition" ngbRadioGroup>
+    <ng-container *ngIf="svgAgnosticSymbolSet; else loadingSymbols"
+                    ngbRadioGroup name="symbolTypesRadioGroup" [(ngModel)]="selectedAgnosticSymbolType"
+      >
+
+        <label *ngFor="let svgSymbol of getFilteredSymbols(); trackBy: trackSVGSymbolFn"
+               ngbButtonLabel [title]="svgSymbol.agnosticOrSemanticTypeString"
+               placement="bottom" ngbTooltip="{{svgSymbol.agnosticOrSemanticTypeString}}"
+        >
+          <input name="symbolTypeRadioButton" ngbButton type="radio" [value]="svgSymbol.agnosticOrSemanticTypeString" (click)="onRadioButtonClick(svgSymbol)"/>
+          <app-agnostic-toolbar-icon [buttonWidth]="buttonWidth" [buttonHeight]="buttonWidth" [symbolID]="svgSymbol.agnosticOrSemanticTypeString"
+                                     [symbolPathD]="svgSymbol.svgPathD" [symbolTransform]="svgSymbol.symbolTransform"
+                                     [symbolViewBox]="svgSymbol.viewBox" [positionInStaff]="svgSymbol.defaultPositionInStaff"
+          >
+          </app-agnostic-toolbar-icon>
+        </label>
+      </ng-container>
+      <ng-template #loadingSymbols>
+        <div class="row">
+          <div class="col-10 offset-1">
+            <div class="d-flex align-items-center">
+              <div class="spinner-grow" role="status" aria-hidden="true"></div>
+              <strong>Loading symbols, wait... </strong>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+  </div>
+</div>

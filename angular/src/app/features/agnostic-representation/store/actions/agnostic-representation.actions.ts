@@ -1,6 +1,5 @@
 import {Action} from '@ngrx/store';
 import {Region} from '../../../../core/model/entities/region';
-import {SVGSet} from '../../model/svgset';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {Point} from '../../../../core/model/entities/point';
@@ -16,8 +15,6 @@ export enum AgnosticRepresentationActionTypes {
   GetRegionSuccess = '[AgnosticRepresentation] Get region success',
   SelectSymbol = '[AgnosticRepresentation] Select symbol',
   DeselectSymbol = '[AgnosticRepresentation] Deselect symbol',
-  GetSVGSet = '[AgnosticRepresentation] Get SVG set',
-  GetSVGSetSucccess = '[AgnosticRepresentation] Get SVG set success',
   ChangeSymbol = '[AgnosticRepresentation] Change symbol',
   ChangeSymbolBoundingBox = '[AgnosticRepresentation] Change symbol bounding box',
   ChangeSymbolComments = '[AgnosticRepresentation] Change symbol comments',
@@ -78,15 +75,6 @@ export class DeselectSymbol implements Action {
   constructor() {}
 }
 
-export class GetSVGSet implements Action {
-  public readonly type = AgnosticRepresentationActionTypes.GetSVGSet;
-  constructor(public notationType: string, public manuscriptType: string) {}
-}
-
-export class GetSVGSetSucccess implements Action {
-  public readonly type = AgnosticRepresentationActionTypes.GetSVGSetSucccess;
-  constructor(public svgSet: SVGSet) {}
-}
 
 export class ChangeSymbol implements Action {
   public readonly type = AgnosticRepresentationActionTypes.ChangeSymbol;
@@ -204,7 +192,7 @@ export class ResetSelectedRegion implements Action {
 
 export type AgnosticRepresentationActions =
   ResetAgnosticRepresentationServerError | AgnosticRepresentationServerError |
-  InitRegion | GetRegion | GetRegionSuccess | GetSVGSet | GetSVGSetSucccess | SelectSymbol | DeselectSymbol |
+  InitRegion | GetRegion | GetRegionSuccess | SelectSymbol | DeselectSymbol |
   ChangeSymbol | ChangeSymbolComments | ChangeSymbolBoundingBox | ChangeSymbolSuccess |
   // ClassifySymbolFromBoundingBox | ClassifySymbolFromStrokes | ClassifySymbolSuccess |
   CreateSymbolFromBoundingBox | CreateSymbolFromStrokes | CreateSymbolSuccess | DeleteSymbol | DeleteSymbolSuccess |

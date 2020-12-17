@@ -1,6 +1,6 @@
 package es.ua.dlsi.grfia.im3ws.muret.entity;
 
-public class AgnosticTypeSVGPath {
+public class AgnosticOrSemanticSymbolTypeSVGPath {
     String agnosticTypeString;
     String svgPathD;
     int horizAdvX;
@@ -8,7 +8,7 @@ public class AgnosticTypeSVGPath {
     String symbolTransform;
     String defaultPositionInStaff;
 
-    public AgnosticTypeSVGPath(String agnosticTypeString, String svgPathD, int horizAdvX, String viewBox, String symbolTransform, String defaultLineSpace) {
+    public AgnosticOrSemanticSymbolTypeSVGPath(String agnosticTypeString, String svgPathD, int horizAdvX, String viewBox, String symbolTransform, String defaultLineSpace) {
         this.agnosticTypeString = agnosticTypeString;
         this.svgPathD = svgPathD;
         this.horizAdvX = horizAdvX;
@@ -17,7 +17,7 @@ public class AgnosticTypeSVGPath {
         this.defaultPositionInStaff = defaultLineSpace;
     }
 
-    public String getAgnosticTypeString() {
+    public String getAgnosticOrSemanticTypeString() {
         return agnosticTypeString;
     }
 

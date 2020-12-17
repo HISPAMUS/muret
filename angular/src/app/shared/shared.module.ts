@@ -13,6 +13,7 @@ import { SafePipe } from './pipes/safe.pipe';
 import { ConfirmDialogWarningComponent } from './components/confirm-dialog-warning/confirm-dialog-warning.component';
 import { OptionsDialogComponent } from './components/options-dialog/options-dialog.component';
 import { LinksModalDialogComponent } from './components/links-modal-dialog/links-modal-dialog.component';
+import {ToolbarComponent} from "./components/toolbar/toolbar.component";
 
 @NgModule({
   imports: [
@@ -33,7 +34,8 @@ import { LinksModalDialogComponent } from './components/links-modal-dialog/links
     SafePipe,
     ConfirmDialogWarningComponent,
     OptionsDialogComponent,
-    LinksModalDialogComponent
+    LinksModalDialogComponent,
+    ToolbarComponent
   ],
   exports: [
     StateComponent,
@@ -44,7 +46,8 @@ import { LinksModalDialogComponent } from './components/links-modal-dialog/links
     ConfirmDialogWarningComponent,
     OptionsDialogComponent,
     LinksModalDialogComponent,
-    SafePipe
+    SafePipe,
+    ToolbarComponent
   ],
   entryComponents: [
     AlertComponent,
@@ -53,7 +56,8 @@ import { LinksModalDialogComponent } from './components/links-modal-dialog/links
     OptionsDialogComponent,
     InputDialogComponent,
     LinksModalDialogComponent,
-    CrudToolbarComponent
+    CrudToolbarComponent,
+    ToolbarComponent
   ],
   providers: []
 })

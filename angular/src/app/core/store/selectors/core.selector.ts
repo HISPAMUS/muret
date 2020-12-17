@@ -1,10 +1,10 @@
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {CoreState} from '../state/core.state';
-import { UserState } from '../state/user.state';
 
 
 export const selectCoreState = createFeatureSelector<CoreState>('core');
-export const selectUser = createFeatureSelector<UserState>('user')
+//export const selectUser = createFeatureSelector<UserState>('user')
+//export const selectFonts = createFeatureSelector<FontsState>('fonts')
 
 export const selectLoggedInUser = createSelector(
   selectCoreState,
@@ -25,5 +25,10 @@ export const selectUserList = createSelector(
   selectCoreState,
   (state: CoreState) => state.user.userList
 )
+
+export const selectSVGAgnosticSymbolSet = createSelector(
+  selectCoreState,
+  (state: CoreState) => state.fonts.svgAgnosticOrSemanticSymbolsSet
+);
 
 

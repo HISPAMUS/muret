@@ -31,11 +31,6 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
       newState.agnosticSymbols = action.region.symbols;
       return newState;
     }
-    case AgnosticRepresentationActionTypes.GetSVGSetSucccess: {
-      const newState = {...state, apiRestServerError: null};
-      newState.svgAgnosticSymbolsSet = action.svgSet;
-      return newState;
-    }
     case AgnosticRepresentationActionTypes.SelectSymbol: {
       const newState = {...state, apiRestServerError: null};
       newState.selectedSymbolID = action.agnosticSymbolID;
