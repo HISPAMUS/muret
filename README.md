@@ -3,6 +3,8 @@ Built using Angular for the frontend, and Spring Boot for the backend.
 
 The Java Spring backend, uses the IM3 library (https://github.com/davidrizo/im3).
 
+Technical documentation is being maintained [here](documentation/readme.md).
+
 #Bibliography
 Rizo, D.; Calvo-Zaragoza, J.; Iñesta, J.M.<br/>
 <strong>"MuRET: a music recognition, encoding, and transcription tool"</strong><br/>
