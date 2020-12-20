@@ -150,7 +150,7 @@
     <div class="col-7">
       <hr *ngIf="selectedSymbol">
       <app-agnostic-or-semantic-toolbar *ngIf="selectedSymbol"
-                            [filters]="agnosticFilters"
+                            [filters]="agnosticToolbarFilters"
                             [mode]="mode" [classifier]="classifier" (classifierChanged)="onClassifierChanged($event)"
                             [svgAgnosticOrSemanticSymbolSet]="svgSet$ | async"
                             (agnosticOrSemanticSymbolSelected)="onAgnosticSymbolTypeSelected($event)"

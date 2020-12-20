@@ -36,11 +36,18 @@ import {
   LinkPartToRegion,
   UnlinkPartToImage, UnlinkPartToRegion
 } from '../../../parts/store/actions/parts.actions';
-import {selectImageDocumentID, selectFileName} from '../../../document-analysis/store/selectors/document-analysis.selector';
+import {
+  selectImageDocumentID,
+  selectFileName,
+  selectDocumentType
+} from '../../../document-analysis/store/selectors/document-analysis.selector';
 import {ModalOptions} from '../../../../dialogs/options-dialog/options-dialog.component';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
 import { LinkType } from 'src/app/layout/components/breadcrumb/breadcrumbType';
+import {SVGSet} from "../../../agnostic-representation/model/svgset";
+import {selectSVGAgnosticOrSemanticSymbolSet} from "../../../../core/store/selectors/core.selector";
+import {GetSVGSet} from "../../../../core/store/actions/fonts.actions";
 
 @Component({
   selector: 'app-semantic-representation',
@@ -56,7 +63,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   notationSubscription: Subscription;
   selectedRegionZoomFactor = 1;
   selectedRegion: Region;
-  encodingPaneType: 'none' | 'manual' | 'mei';
+  encodingPaneType: 'none' | 'manual' | 'mei' | 'toolbar';
   // semanticEncoding = '';
   // private semanticEncodingTextAreaContent: string;
   notation: Notation;
@@ -91,6 +98,18 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   private serverErrorSubscription: Subscription;
   private selectedRegionSymbols: AgnosticSymbol[];
 
+  svgSet$: Observable<SVGSet>;
+  semanticToolbarFilters: Map<string, string> = // map<values, titles> - initialized in constructor
+    new Map([
+      ["clefsmeters", "Clefs Meters"],
+      ["note.", "Notes"],
+      ["note.beam", "Beamed notes"],
+      ["rest", "Rests"],
+      ["accidental.", "Accidentals"],
+      ["other", "Other"]
+    ]);
+  private documentTypeSubscription: Subscription;
+
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>,
               private dialogsService: DialogsService, private showErrorService: ShowErrorService
   ) {
@@ -98,6 +117,18 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
       editable: true,
       resizable: true
     };
+
+    // -- TODO -- From here it is repeated in Semantic
+    this.documentTypeSubscription  = store.select(selectDocumentType).subscribe(next => {
+      if (next) {
+        this.store.dispatch(new GetSVGSet(next.notationType, next.manuscriptType));
+        // this.store.dispatch(new GetAgnosticEnd2EndClassifierModels(0, 0, next.notationType, next.manuscriptType));
+        // moved to ngOnInit with region ID rather than these values
+        // this.store.dispatch(new GetSymbolClassifierModels(0, 0, next.notationType, next.manuscriptType));
+      }
+    });
+    this.svgSet$ = this.store.select(selectSVGAgnosticOrSemanticSymbolSet);
+    // -- TODO -- To here it is repeated in Semantic
   }
 
   ngOnInit() {
@@ -177,7 +208,6 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
         this.store.dispatch(new ResetSemanticRepresentationServerError());
       }
     });
-
   }
 
   ngOnDestroy(): void {
@@ -188,6 +218,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     this.serverErrorSubscription.unsubscribe();
     this.filenamesubscription.unsubscribe();
     // this.usesOfPartsSubscription.unsubscribe();
+    this.documentTypeSubscription.unsubscribe();
   }
 
   openDocumentAnalysis() {
@@ -241,12 +272,20 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     return this.encodingPaneType !== 'mei';
   }
 
+  isToolbarCollapsed() {
+    return this.encodingPaneType !== 'toolbar';
+  }
+
   isManualEntrySelected() {
     return this.encodingPaneType === 'manual';
   }
 
   isMEISelected() {
     return this.encodingPaneType === 'mei';
+  }
+
+  isToolbarSelected() {
+    return this.encodingPaneType === 'toolbar';
   }
 
   showManualEntry() {
@@ -256,6 +295,10 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
   showMEI() {
     this.encodingPaneType = 'mei';
+  }
+
+  showToolbar() {
+    this.encodingPaneType = 'toolbar';
   }
 
   private drawSelectedRegionSymbols(next: AgnosticSymbol[]) {

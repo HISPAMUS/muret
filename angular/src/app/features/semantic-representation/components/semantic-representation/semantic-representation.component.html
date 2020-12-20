@@ -87,6 +87,11 @@
                 [attr.aria-expanded]="isMEISelected()" aria-controls="meiPanel">
           Show MEI
         </button>
+        <button class="btn btn-primary" (click)="showToolbar()"
+                [attr.aria-expanded]="isToolbarSelected()" aria-controls="toolbarPanel">
+          Show Toolbar
+        </button>
+
       </aside>
     </div>
   </div>
@@ -142,6 +147,26 @@
             <textarea cols="80" rows="20">{{notation.content}}</textarea>
           </div>
         </div>
+
+        <div id="toolbarPanel" class="card" [ngbCollapse]="isToolbarCollapsed()">
+          <h2>Prueba</h2>
+          <!--<hr *ngIf="selectedSymbol">
+          <app-agnostic-or-semantic-toolbar *ngIf="selectedSymbol"
+                                            [filters]="semanticToolbarFilters"
+                                            [mode]="mode" [classifier]="classifier" (classifierChanged)="onClassifierChanged($event)"
+                                            [svgAgnosticOrSemanticSymbolSet]="svgSet$ | async"
+                                            (agnosticOrSemanticSymbolSelected)="onAgnosticSymbolTypeSelected($event)"
+                                            (pitchDown)="movePitchDownSelectedSymbol()"
+                                            (pitchUp)="movePitchUpSelectedSymbol()"
+                                            [frequentSymbols]="frequentSymbols"
+          >
+          </app-agnostic-or-semantic-toolbar>-->
+          <app-agnostic-or-semantic-toolbar [filters]="semanticToolbarFilters"
+                                            [svgAgnosticOrSemanticSymbolSet]="svgSet$ | async"
+          >
+          </app-agnostic-or-semantic-toolbar>
+        </div>
+
     </div>
 
     <div class="col-4">

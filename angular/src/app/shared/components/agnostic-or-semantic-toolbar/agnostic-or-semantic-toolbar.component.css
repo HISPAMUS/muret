@@ -3,11 +3,14 @@
 }
 */
 
-#agnosticSymbolFilter * {
+#toolbarPanel {
+  background-color: #103339;
+}
+
+#agnosticOrSemanticSymbolFilter * {
   color: white;
 }
 
-
-#agnosticSymbolFilter .active * {
+#agnosticOrSemanticSymbolFilter .active * {
   color: #D91E63;
 }

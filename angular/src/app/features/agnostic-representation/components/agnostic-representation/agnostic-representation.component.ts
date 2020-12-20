@@ -43,7 +43,7 @@ import {ClassifierModel} from '../../../../core/model/entities/classifier-model'
 import {ShowErrorService} from '../../../../core/services/show-error.service';
 import { LinkType } from 'src/app/layout/components/breadcrumb/breadcrumbType';
 import {GetSVGSet} from "../../../../core/store/actions/fonts.actions";
-import {selectSVGAgnosticSymbolSet} from "../../../../core/store/selectors/core.selector";
+import {selectSVGAgnosticOrSemanticSymbolSet} from "../../../../core/store/selectors/core.selector";
 
 @Component({
   selector: 'app-agnostic-representation',
@@ -68,7 +68,6 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   selectedAgnosticSymbolTypeValue: string;
   addMethodTypeValue: 'boundingbox' | 'strokes' ;
   classifier = true;
-  svgSet$: Observable<SVGSet>;
   filename$: Observable<string>;
   private documentTypeSubscription: Subscription;
   classifiedSymbols: AgnosticOrSemanticSymbolAndPosition[];
@@ -90,12 +89,14 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
   agnosticBoolean = true;
 
-  agnosticFilters: Map<string, string> = // map<values, titles> - initialized in constructor
+  svgSet$: Observable<SVGSet>;
+
+  agnosticToolbarFilters: Map<string, string> = // map<values, titles> - initialized in constructor
     new Map([
       ["clefsmeters", "Clefs Meters"],
       ["note.", "Notes"],
       ["note.beam", "Beamed notes"],
-      ["rest.", "Rests"],
+      ["rest", "Rests"],
       ["accidental.", "Accidentals"],
       ["other", "Other"]
     ]);
@@ -110,6 +111,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
       this.store.dispatch(new ActivateLink(LinkType.File, {title: name + ' /Agnostic', routerLink: 'agnosticrepresentation/' + this.imageID}));
     })
 
+    // -- TODO -- From here it is repeated in Semantic
     this.documentTypeSubscription  = store.select(selectDocumentType).subscribe(next => {
       if (next) {
         this.store.dispatch(new GetSVGSet(next.notationType, next.manuscriptType));
@@ -118,7 +120,9 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
         // this.store.dispatch(new GetSymbolClassifierModels(0, 0, next.notationType, next.manuscriptType));
       }
     });
-    this.svgSet$ = store.select(selectSVGAgnosticSymbolSet);
+    this.svgSet$ = store.select(selectSVGAgnosticOrSemanticSymbolSet);
+    // -- TODO -- To here it is repeated in Semantic
+
     this.symbolsClassifierModels$ = store.select(selectAgnosticSymbolClassifierModels);
     this.end2endClassifierModels$ = store.select(selectAgnosticEnd2EndClassifierModels);
 

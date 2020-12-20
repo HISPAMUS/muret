@@ -26,7 +26,7 @@ export const selectUserList = createSelector(
   (state: CoreState) => state.user.userList
 )
 
-export const selectSVGAgnosticSymbolSet = createSelector(
+export const selectSVGAgnosticOrSemanticSymbolSet = createSelector(
   selectCoreState,
   (state: CoreState) => state.fonts.svgAgnosticOrSemanticSymbolsSet
 );

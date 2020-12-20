@@ -106,8 +106,11 @@ export class AgnosticOrSemanticToolbarComponent implements OnInit, OnDestroy {
           return this.svgAgnosticOrSemanticSymbolSet.paths.filter(value => value.agnosticOrSemanticTypeString.includes('clef') ||
             value.agnosticOrSemanticTypeString.includes('metersign'));
         case 'frequent':
-          return this.svgAgnosticOrSemanticSymbolSet.paths.filter(value => this.frequentSymbols.has(value.agnosticOrSemanticTypeString)).
-            sort((a, b) => this.frequentSymbols.get(b.agnosticOrSemanticTypeString) - this.frequentSymbols.get(a.agnosticOrSemanticTypeString));
+          if (this.frequentSymbols) {
+            return this.svgAgnosticOrSemanticSymbolSet.paths.filter(value => this.frequentSymbols.has(value.agnosticOrSemanticTypeString)).sort((a, b) => this.frequentSymbols.get(b.agnosticOrSemanticTypeString) - this.frequentSymbols.get(a.agnosticOrSemanticTypeString));
+          } else {
+            return null;
+          }
           // sort decreasing order
         default:
           return this.svgAgnosticOrSemanticSymbolSet.paths.filter(value => value.agnosticOrSemanticTypeString.includes(this.symbolsFilter));
