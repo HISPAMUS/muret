@@ -28,8 +28,7 @@
             ],
             "scripts": [
               "lib/verovio-toolkit-light.js"
-            ],
-            "es5BrowserSupport": true
+            ]
           },
           "configurations": {
             "production": {
