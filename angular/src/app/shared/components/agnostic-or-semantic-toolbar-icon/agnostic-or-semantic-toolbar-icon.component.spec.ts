@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AgnosticToolbarIconComponent } from './agnostic-toolbar-icon.component';
+import { AgnosticOrSemanticToolbarIconComponent } from './agnostic-or-semantic-toolbar-icon.component';
 
 describe('AgnosticToolbarIconComponent', () => {
-  let component: AgnosticToolbarIconComponent;
-  let fixture: ComponentFixture<AgnosticToolbarIconComponent>;
+  let component: AgnosticOrSemanticToolbarIconComponent;
+  let fixture: ComponentFixture<AgnosticOrSemanticToolbarIconComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AgnosticToolbarIconComponent ]
+      declarations: [ AgnosticOrSemanticToolbarIconComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AgnosticToolbarIconComponent);
+    fixture = TestBed.createComponent(AgnosticOrSemanticToolbarIconComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

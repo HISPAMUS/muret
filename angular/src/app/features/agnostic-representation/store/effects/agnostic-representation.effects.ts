@@ -26,7 +26,6 @@ import {
 } from '../actions/agnostic-representation.actions';
 import {AgnosticRepresentationService} from '../../services/agnostic-representation.service';
 import {Region} from '../../../../core/model/entities/region';
-import {SVGSet} from '../../model/svgset';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
 import {SymbolCreationResult} from '../../model/symbol-creation-result';
 import {ClassifierModel} from '../../../../core/model/entities/classifier-model';
@@ -45,6 +44,15 @@ export class AgnosticRepresentationEffects {
       switchMap((region: Region) => of (new GetRegionSuccess(region))),
       catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
     )));
+
+  @Effect()
+  changeSymbol$ = this.actions$.pipe(
+    ofType<ChangeSymbol>(AgnosticRepresentationActionTypes.ChangeSymbol),
+    switchMap((action: ChangeSymbol) =>
+      this.agnosticRepresentationService.changeSymbol$(action.agnosticSymbol, action.agnosticSymbolType, action.positionInStaff).pipe(
+        switchMap((agnosticSymbol: AgnosticSymbol) => of(new ChangeSymbolSuccess(agnosticSymbol))),
+        catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
+      )));
 
   @Effect()
   changeSymbolBoundingBox$ = this.actions$.pipe(
@@ -91,8 +99,8 @@ export class AgnosticRepresentationEffects {
   classifySymbolFromBoundingBox$ = this.actions$.pipe(
     ofType<CreateSymbolFromBoundingBox>(AgnosticRepresentationActionTypes.ClassifySymbolFromBoundingBox),
     switchMap((action: CreateSymbolFromBoundingBox) =>
-      this.agnosticRepresentationService.classifySymbolFromBoundingBox$(action.regionID, action.boundingBox, action.agnosticSymbolType)),
-    switchMap((classifiedSymbols: AgnosticSymbolAndPosition[]) => {
+      this.agnosticRepresentationService.classifySymbolFromBoundingBox$(action.regionID, action.boundingBox, action.agnosticOrSemanticSymbolType)),
+    switchMap((classifiedSymbols: AgnosticOrSemanticSymbolAndPosition[]) => {
       return of(new ClassifySymbolSuccess(classifiedSymbols));
     })
   );
@@ -100,8 +108,8 @@ export class AgnosticRepresentationEffects {
   classifySymbolFromStrokes$ = this.actions$.pipe(
     ofType<CreateSymbolFromStrokes>(AgnosticRepresentationActionTypes.ClassifySymbolFromStrokes),
     switchMap((action: CreateSymbolFromStrokes) =>
-      this.agnosticRepresentationService.classifySymbolFromStrokes$(action.regionID, action.points, action.agnosticSymbolType)),
-    switchMap((classifiedSymbols: AgnosticSymbolAndPosition[]) => {
+      this.agnosticRepresentationService.classifySymbolFromStrokes$(action.regionID, action.points, action.agnosticOrSemanticSymbolType)),
+    switchMap((classifiedSymbols: AgnosticOrSemanticSymbolAndPosition[]) => {
       return of(new ClassifySymbolSuccess(classifiedSymbols));
     })
   );*/

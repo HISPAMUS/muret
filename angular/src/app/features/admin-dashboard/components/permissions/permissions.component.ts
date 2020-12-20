@@ -10,7 +10,7 @@ import { DialogsService } from 'src/app/shared/services/dialogs.service';
 import { AdminDashboardState } from '../../store/state/admindb.state';
 import { RevokePermissions, GrantPermissions } from '../../store/actions/admindb.actions';
 import { selectRevokedFlag, selectGrantedFlag } from '../../store/selectors/admindb.selector';
-import { ModalOptions } from 'src/app/shared/components/options-dialog/options-dialog.component';
+import { ModalOptions } from 'src/app/dialogs/options-dialog/options-dialog.component';
 
 @Component({
   selector: 'app-permissions',

@@ -22,7 +22,7 @@ import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {SVGSet} from '../../model/svgset';
 import {SelectSymbol} from '../../store/actions/agnostic-representation.actions';
 import {AgnosticOrSemanticTypeSVGPath} from '../../model/agnostic-or-semantic-type-s-v-g-path';
-import {PositionInStaffService} from '../../services/position-in-staff.service';
+import {PositionInStaffService} from '../../../../shared/services/position-in-staff.service';
 
 interface StaffLine {
   index: number;

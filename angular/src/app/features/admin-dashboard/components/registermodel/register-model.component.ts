@@ -12,11 +12,11 @@ import { Document } from 'src/app/core/model/entities/document';
 import { DialogsService } from 'src/app/shared/services/dialogs.service';
 
 @Component({
-  selector: 'app-registermodel',
-  templateUrl: './registermodel.component.html',
-  styleUrls: ['./registermodel.component.css']
+  selector: 'app-register-model',
+  templateUrl: './register-model.component.html',
+  styleUrls: ['./register-model.component.css']
 })
-export class RegistermodelComponent implements OnInit {
+export class RegisterModelComponent implements OnInit {
 
   public uploader: FileUploader;
   private url: string;

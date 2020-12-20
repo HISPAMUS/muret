@@ -7,12 +7,12 @@ import {
   Output
 } from '@angular/core';
 import {Observable} from 'rxjs';
-import {Shape} from '../../../../svg/model/shape';
+import {Shape} from '../../../svg/model/shape';
 import {Store} from '@ngrx/store';
-import {DocumentAnalysisState} from '../../store/state/document-analysis.state';
-import {selectImageHeight, selectImageURL, selectImageWidth} from '../../store/selectors/document-analysis.selector';
-import {GetImageURL} from '../../store/actions/document-analysis.actions';
-import {BoundingBox} from '../../../../core/model/entities/bounding-box';
+import {DocumentAnalysisState} from '../../../features/document-analysis/store/state/document-analysis.state';
+import {selectImageHeight, selectImageURL, selectImageWidth} from '../../../features/document-analysis/store/selectors/document-analysis.selector';
+import {GetImageURL} from '../../../features/document-analysis/store/actions/document-analysis.actions';
+import {BoundingBox} from '../../../core/model/entities/bounding-box';
 
 @Component({
   selector: 'app-image',

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {SimpleModalComponent} from 'ngx-simple-modal';
 import {InputModel} from '../input-dialog/input-dialog.component';
-import {AlignmentPreviewStaff} from '../../../core/model/restapi/alignment-preview';
+import {AlignmentPreviewStaff} from '../../core/model/restapi/alignment-preview';
 
 export type onLinkClickType = () => void;
 

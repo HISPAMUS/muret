@@ -8,30 +8,22 @@ import {EffectsModule} from '@ngrx/effects';
 import {semanticRepresentationReducers} from './store/reducers/semantic-representation.reducers';
 import {SemanticRepresentationEffects} from './store/effects/semantic-representation.effects';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import {BreadcrumbModule} from '../../breadcrumb/breadcrumb.module';
-import {AgnosticRepresentationModule} from '../agnostic-representation/agnostic-representation.module';
 import {SemanticRepresentationRoutingModule} from './semantic-representation-routing.module';
 import { NotationComponent } from './components/notation/notation.component';
 import {SharedModule} from '../../shared/shared.module';
 import {NotationService} from './services/notation.service';
-import {DocumentAnalysisModule} from '../document-analysis/document-analysis.module';
 import {NgbCollapseModule} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule} from '@angular/forms';
 import {AgGridModule} from 'ag-grid-angular';
-import {PartsModule} from '../parts/parts.module';
 
 @NgModule({
   declarations: [SemanticRepresentationComponent, NotationComponent],
   imports: [
     CommonModule,
     FontAwesomeModule,
-    BreadcrumbModule,
     FormsModule,
     SharedModule,
     SemanticRepresentationRoutingModule,
-    AgnosticRepresentationModule,
-    DocumentAnalysisModule,
-    PartsModule,
     StoreModule.forFeature('semantic-representation', semanticRepresentationReducers),
     EffectsModule.forFeature([SemanticRepresentationEffects]),
     NgbCollapseModule,

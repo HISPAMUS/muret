@@ -3,17 +3,15 @@ import { CommonModule } from '@angular/common';
 import {StateComponent} from './components/state/state.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {SimpleModalModule} from 'ngx-simple-modal';
-import { AlertComponent } from './components/error-modal-message/alert.component';
-import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { CrudToolbarComponent } from './components/crud-toolbar/crud-toolbar.component';
 import {NgbButtonsModule, NgbTooltipModule} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {InputDialogComponent} from './components/input-dialog/input-dialog.component';
 import { SafePipe } from './pipes/safe.pipe';
-import { ConfirmDialogWarningComponent } from './components/confirm-dialog-warning/confirm-dialog-warning.component';
-import { OptionsDialogComponent } from './components/options-dialog/options-dialog.component';
-import { LinksModalDialogComponent } from './components/links-modal-dialog/links-modal-dialog.component';
-import {ToolbarComponent} from "./components/toolbar/toolbar.component";
+import {AgnosticOrSemanticToolbarComponent} from "./components/agnostic-or-semantic-toolbar/agnostic-or-semantic-toolbar.component";
+import {ImagePreviewComponent} from "./components/image-preview/image-preview.component";
+import {ImageComponent} from "./components/image/image.component";
+import {SvgModule} from "../svg/svg.module";
+import {AgnosticOrSemanticToolbarIconComponent} from "./components/agnostic-or-semantic-toolbar-icon/agnostic-or-semantic-toolbar-icon.component";
 
 @NgModule({
   imports: [
@@ -23,41 +21,31 @@ import {ToolbarComponent} from "./components/toolbar/toolbar.component";
     FormsModule,
     ReactiveFormsModule,
     NgbButtonsModule,
-    NgbTooltipModule
+    NgbTooltipModule,
+    SvgModule
   ],
   declarations: [
     StateComponent,
-    AlertComponent,
-    ConfirmDialogComponent,
-    InputDialogComponent,
     CrudToolbarComponent,
     SafePipe,
-    ConfirmDialogWarningComponent,
-    OptionsDialogComponent,
-    LinksModalDialogComponent,
-    ToolbarComponent
+    AgnosticOrSemanticToolbarComponent,
+    AgnosticOrSemanticToolbarIconComponent,
+    ImagePreviewComponent,
+    ImageComponent
   ],
   exports: [
     StateComponent,
-    AlertComponent,
-    ConfirmDialogComponent,
-    InputDialogComponent,
     CrudToolbarComponent,
-    ConfirmDialogWarningComponent,
-    OptionsDialogComponent,
-    LinksModalDialogComponent,
     SafePipe,
-    ToolbarComponent
+    AgnosticOrSemanticToolbarComponent,
+    ImagePreviewComponent,
+    ImageComponent
   ],
   entryComponents: [
-    AlertComponent,
-    ConfirmDialogComponent,
-    ConfirmDialogWarningComponent,
-    OptionsDialogComponent,
-    InputDialogComponent,
-    LinksModalDialogComponent,
     CrudToolbarComponent,
-    ToolbarComponent
+    AgnosticOrSemanticToolbarComponent,
+    ImagePreviewComponent,
+    ImageComponent
   ],
   providers: []
 })

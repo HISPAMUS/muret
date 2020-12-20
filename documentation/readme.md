@@ -1,211 +1,153 @@
 #MuRET technical documentation
 
 ## Angular
-```puml
-@startuml
-left to right direction
-'top to bottom direction
+The following structure has been used inside the `app` module:
 
-package "auth" {
-    [LoginComponent]
-    [ResetPasswordComponent]
-}
-
-package "breadcrumb" {
-    [BreadcrumbComponent]
-}
-
-package "core" {
-}
-
-package "Layout" {
-    [LayoutComponent]
-    indicator )-- [LayoutComponent]
-}
-
-@enduml
-```
-
-```puml
-@startuml
-left to right direction
-'top to bottom direction
-package "Shared" {
-[CrudToolbarComponent]
- onDelete -- [CrudToolbarComponent]
- onClear -- [CrudToolbarComponent]
- modeChange -- [CrudToolbarComponent]
- onZoomIn -- [CrudToolbarComponent]
- onZoomOut -- [CrudToolbarComponent]
- onZoomFit -- [CrudToolbarComponent]
- onAddComment -- [CrudToolbarComponent]
- onDeleteAll -- [CrudToolbarComponent]
- 
- [StateComponent]
- state )-- [StateComponent]
- 
- [AgnosticOrSemanticToolbarComponent]
- filters )-- [AgnosticOrSemanticToolbarComponent]
- filter )-- [AgnosticOrSemanticToolbarComponent]
- svgAgnosticSemanticSymbolSet )-- [AgnosticOrSemanticToolbarComponent]
- mode )-- [AgnosticOrSemanticToolbarComponent]
- frequentSymbols )-- [AgnosticOrSemanticToolbarComponent]
- agnosticOrSemanticSymbolSelected -- [AgnosticOrSemanticToolbarComponent]
- pitchUp -- [AgnosticOrSemanticToolbarComponent]
- pitchDown -- [AgnosticOrSemanticToolbarComponent]
- classifierChanged -- [AgnosticOrSemanticToolbarComponent]
- 
- [ConfirmDialogComponent]
- [ConfirmDialogWarningComponent]
- [AlertComponent]
- [InputDialogComponent]
- [LinksModalDialogComponent]
- [OptionsDialogComponent]
- 
-}
-@enduml
-```
-
-```puml
-@startuml
-left to right direction
-'top to bottom direction
-package "SVG" {
-    [ShapeComponent]
-    selected )-- [ShapeComponent]
-    editing )-- [ShapeComponent]
-    shape )-- [ShapeComponent]
-
-    [ShapeComponent] <|-- [LineComponent]   
-    appLine )-- [LineComponent]
+* auth
+    + LoginComponent
+    + ResetPasswordComponent
+* core
+* features
+    + about
+      * AboutComponent
+    + admin-dashboard
+      * AdminDashboadComponent
+      * PermissionComponent
+      * RegisterComponent
+      * RegisterModelComponent
+    + agnostic-representation
+      * AgnosticRepresentationComponent
+      * AgnosticStaffComponent
+      * AgnosticToolbarComponent
+      * AgnosticToolbarIconComponent
+      * ImagePreviewComponent
+    + document
+      * AlignmentPreviewComponent
+      * DocumentComponent
+      * DocumentScoreViewerAndExporterComponent
+      * ImageThumbnailComponent
+      * InstrumentsComponent
+      * MeiScoreViewerComponent
+      * UploadImagesComponent
+    + document-analysis
+      * DocumentAnalysisComponent
+      * ImageComponent
+    + documents
+      * CollectionsComponent
+      * DocumentsComponent
+    + export
+        * TrainingSetsComponent
+    + home
+        * HomeComponent
+    + new-document
+        * NewDocumentComponent
+    + parts
+        * PartSelectionComponent
+    + semantic-representation
+        * NotationComponent
+        * SemanticRepresentationComponent
+* layout
+  + LayoutComponent
+  + BreadcrumbComponent
+* shared
+    + CrudToolBarComponent
+    + StateComponent
+    + AgnosticOrSemanticToolBarComponent
+* dialogs
+    * ConfirmDialogComponent
+    * ConfirmDialogWarningComponent
+    * ErrorModalMessageComponent
+    * InputDialogComponent
+    * LinksModalDialogComponent
+    * OptionsDialogComponent
+* svg
+    + LineComponent
+    + PolylinesComponent
+    + RectangleComponent
+    + ShapeComponent
+    + SvgCanvasComponent
+    + TextComponent
     
-    [ShapeComponent] <|-- [PolylinesComponent]
-    appPolylines )-- [PolylinesComponent]
-    
-    [ShapeComponent] <|-- [RectangleComponent]
-    appRectangle )-- [RectangleComponent]
-            
-    [ShapeComponent] <|-- [TextComponent]
-    appText )-- [TextComponent]
-   
-    [SvgCanvasComponent]
-    backgroundImage )-- [SvgCanvasComponent]
-    shapes )-- [SvgCanvasComponent]
-    zoomFactor )-- [SvgCanvasComponent]
-    crop )-- [SvgCanvasComponent]
-    nextShapeToAdd )-- [SvgCanvasComponent]
-    viewPortHeight )-- [SvgCanvasComponent]
-    viewPortWidth )-- [SvgCanvasComponent]
-    isAgnostic )-- [SvgCanvasComponent]
-    
-    
-    
-}
+In the following diagrams, only dependencies are represented. In order to easily layout
+the diagram, packages are not drawn but replaced for the following colors:
+* `SVG`: blue  
+* `shared`: green
+* `features`: pink
+* `layout`: gray
 
-@enduml
-```
 
 ```puml
 @startuml
-left to right direction
-'top to bottom direction
 
-package "features" {
-    package "about" {
-        [AboutComponent]
-    }
-    package "admin-dashboard" {
-        [AdminDashboardComponent]
-        [PermissionsComponent]
-        [RegisterComponent]
-        [RegisterModelComponent]
-    }
-    package "agnostic-representation" {
-        [AgnosticRepresentationComponent]
-        [AgnosticStaffComponent]
-        regionCropped )-- [AgnosticStaffComponent]
-        svgAgnosticSymbolSet )-- [AgnosticStaffComponent]
-        modeChange -- [AgnosticStaffComponent]
-        commentClicked -- [AgnosticStaffComponent]
+[SvgCanvasComponent] #LightBlue       
+
+[CrudToolbarComponent] #LightGreen
+ 
+[StateComponent] #LightGreen
+ 
+[AgnosticOrSemanticToolbarIconComponent] #LightGreen
+
+[AgnosticOrSemanticToolbarComponent] #LightGreen
+    [AgnosticOrSemanticToolbarComponent] ....> [AgnosticOrSemanticToolbarIconComponent]
+    
+[ImageComponent] #LightGreen
+        [ImageComponent] ....> [SvgCanvasComponent]
+    
+[ImagePreviewComponent] #LightGreen
+    [ImagePreviewComponent] ....> [ImageComponent] 
+    
+
+package "agnostic-representation" #LightPink {
+    [AgnosticStaffComponent]
+
+    [AgnosticRepresentationComponent]
+        [CrudToolbarComponent] <..... [AgnosticRepresentationComponent] 
+        [AgnosticStaffComponent] <..... [AgnosticRepresentationComponent] 
+        [AgnosticOrSemanticToolbarComponent] <..... [AgnosticRepresentationComponent] 
+        [ImagePreviewComponent] <..... [AgnosticRepresentationComponent] 
+        [ImageComponent] <..... [AgnosticRepresentationComponent]
         
-        [AgnosticToolbarComponent]
-        note left of [AgnosticToolbarComponent] : TODO -- merge with AgnosticOrSemanticToolBarComponent
-        [AgnosticToolbarIconComponent]
-        buttonWidth )-- [AgnosticToolbarIconComponent]
-        buttonHeight )-- [AgnosticToolbarIconComponent]
-        symbolViewBox )-- [AgnosticToolbarIconComponent]
-        symbolPathD )-- [AgnosticToolbarIconComponent]
-        symbolTransform )-- [AgnosticToolbarIconComponent]
-        symbolID )-- [AgnosticToolbarIconComponent]
-        positionInStaff )-- [AgnosticToolbarIconComponent]
-        note left of [AgnosticToolbarIconComponent] : TODO -- move to AgnosticOrSemanticToolBarComponent
+}    
+package "document" #LightPink {
+    [AlignmentPreviewComponent]
+        [AlignmentPreviewComponent] ....> [SvgCanvasComponent]
         
-        [ImagePreviewComponent]
-        imageID )-- [ImagePreviewComponent]
-        selectedRegion -- [ImagePreviewComponent]
-    }    
-    package "document" {
-        [AlignmentPreviewComponent]
-        [DocumentComponent]
-        [DocumentScoreViewerAndExporterComponent]
+    [ImageThumbnailComponent]
 
-        [ImageThumbnailComponent]
-        document )-- [ImageThumbnailComponent]
-        image )-- [ImageThumbnailComponent]
-        usesOfParts )-- [ImageThumbnailComponent]
-        documentPath )-- [ImageThumbnailComponent]
-                
-        [InstrumentsComponent]
-        [MEIScoreViewerComponent]
-        [UploadImagesComponent]
-    }       
-    package "document-analysis" {
-        [DocumentAnalysisComponent]
-        [ImageDocument]
-        imageID )-- [ImageDocument]
-        shapes )-- [ImageDocument]
-        zoomFactor )-- [ImageDocument]
-        crop )-- [ImageDocument]
-        nextShapeToDraw )-- [ImageDocument]
-        isAgnostic )-- [ImageDocument]
-        note left of [ImageDocument] : TODO - view relation ImageDocument and ImagePreviewDocument - see wrong line to imageID
-        svgShapeCreated -- [ImageDocument]
-        svgShapeChanged -- [ImageDocument]
-        selectedShapeIDChange -- [ImageDocument]
-        modeChange -- [ImageDocument]
-        mode )-- [ImageDocument]
-        selectedShapeID )-- [ImageDocument]
-    }         
-    package "documents" {
-        [CollectionsComponent]
-        [DocumentsComponent]
-    }     
-    package "export" {
-        [TrainingSetsComponent]
-    }      
-    package "home" {
-        [HomeComponent]
-    }       
-    package "new-document" {
-        [NewDocumentComponent]
-    }    
-    package "parts" {
-        [PartSelectionComponent]
-        label )-- [PartSelectionComponent]
-        parts )-- [PartSelectionComponent]
-        clearPart -- [PartSelectionComponent]
-        selectPart -- [PartSelectionComponent]
-        createPart -- [PartSelectionComponent]
-    }  
+    [DocumentComponent]
+        [DocumentComponent] ....> [ImageThumbnailComponent]        
+}       
+package "document-analysis" #LightPink {
+    [DocumentAnalysisComponent]
+        [DocumentAnalysisComponent] ....> [CrudToolbarComponent]
+        [DocumentAnalysisComponent] ....> [ImageComponent]
+
+}         
+package "documents" #LightPink {
+    [DocumentsComponent]
+        [DocumentsComponent] ....> [StateComponent]
+}     
+
+package "semantic-representation" #LightPink {
+    [NotationComponent]
     
-    package "semantic-representation" {
-        [NotationComponent]
-        notation )-- [NotationComponent]
-        
-        [SemanticRepresentationComponent]
-    }                               
-}
+    [SemanticRepresentationComponent] 
+        [SemanticRepresentationComponent] ....> [ImagePreviewComponent]
+        [SemanticRepresentationComponent] ....> [ImageComponent]
+        [SemanticRepresentationComponent] ....> [NotationComponent]
+}                               
 
+[BreadcrumbComponent] #LightGray
+
+[LayoutComponent] #LightGray    
+    () "Indicator" as layout.Indicator
+    layout.Indicator )-- [LayoutComponent]
+    [LayoutComponent] .down.> BreadcrumbComponent
+
+[AppComponent] #White
+[AppComponent] .left.> [LayoutComponent]
+
+note right of layout.Indicator : TODO - not used
 @enduml
 ```
 

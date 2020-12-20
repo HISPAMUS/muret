@@ -56,7 +56,7 @@
       </label>
       <br>
       <label *ngFor="let regionType of regionTypes$ | async; trackBy: trackByRegionTypeFn" class="btn-toolbar creationtools" [class.active]="regionType.id == regionTypeINselected"  [id]="regionType.id" ngbButtonLabel>
-        <input ngbTooltip="{{regionType.help}}" ngbButton type="radio" name="regionTypeRadioButton" [value]="regionType.id" (click)="setRegionCreated(regionType.id)"> {{beautifyRegionName(regionType.name)}}
+        <input ngbTooltip="{{regionType.help}}" ngbButton type="radio" name="regionTypeRadioButton" [value]="regionType.id" (click)="setRegionCreated(regionType.id)"> {{beautifyRegionName(regionType)}}
       </label>
     </div>
   </form>
@@ -70,7 +70,7 @@
       </label>
       <br>
       <label *ngFor="let regionType of regionTypes$ | async; trackBy: trackByRegionTypeFn" class="btn-toolbar creationtools" ngbButtonLabel>
-        <input ngbTooltip="{{regionType.help}}" ngbButton type="radio" name="regionTypeRadioButton" [value]="regionType.id" (click)="setRegionType(regionType)"> {{beautifyRegionName(regionType.name)}}
+        <input ngbTooltip="{{regionType.help}}" ngbButton type="radio" name="regionTypeRadioButton" [value]="regionType.id" (click)="setRegionType(regionType)"> {{beautifyRegionName(regionType)}}
       </label>
     </div>
   </form>

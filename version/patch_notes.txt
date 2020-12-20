@@ -2,6 +2,7 @@
     MAJOR UPDATES
     - Training set with agnostic and semantic information now includes the image and the region bounding box (issue #182)
     - FMT MEI MEI import script
+    - Refactoring of modules in order to prepare the semantic visual toolbar
 
     MINOR UPDATES
     - Issues #141, #170, #155, #157

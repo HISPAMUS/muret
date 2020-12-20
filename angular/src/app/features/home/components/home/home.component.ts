@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {ClearLinks} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
+import {ClearLinks} from '../../../../layout/store/actions/breadcrumbs.actions';
 
 @Component({
   selector: 'app-home',

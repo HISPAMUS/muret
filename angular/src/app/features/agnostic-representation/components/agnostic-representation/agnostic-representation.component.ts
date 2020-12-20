@@ -32,16 +32,16 @@ import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {Polylines} from '../../../../svg/model/polylines';
 import {Strokes} from '../../../../core/model/entities/strokes';
 import {Polyline} from '../../../../svg/model/polyline';
-import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
+import {ActivateLink} from '../../../../layout/store/actions/breadcrumbs.actions';
 import {SVGSet} from '../../model/svgset';
-import {AgnosticSymbolAndPosition} from '../../model/agnostic-symbol-and-position';
+import {AgnosticOrSemanticSymbolAndPosition} from '../../model/agnostic-or-semantic-symbol-and-position';
 import {Point} from '../../../../core/model/entities/point';
 import {AgnosticOrSemanticTypeSVGPath} from '../../model/agnostic-or-semantic-type-s-v-g-path';
-import {PositionInStaffService} from '../../services/position-in-staff.service';
+import {PositionInStaffService} from '../../../../shared/services/position-in-staff.service';
 import {Line} from '../../../../svg/model/line';
 import {ClassifierModel} from '../../../../core/model/entities/classifier-model';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
-import { LinkType } from 'src/app/breadcrumb/components/breadcrumb/breadcrumbType';
+import { LinkType } from 'src/app/layout/components/breadcrumb/breadcrumbType';
 import {GetSVGSet} from "../../../../core/store/actions/fonts.actions";
 import {selectSVGAgnosticSymbolSet} from "../../../../core/store/selectors/core.selector";
 
@@ -71,7 +71,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   svgSet$: Observable<SVGSet>;
   filename$: Observable<string>;
   private documentTypeSubscription: Subscription;
-  classifiedSymbols: AgnosticSymbolAndPosition[];
+  classifiedSymbols: AgnosticOrSemanticSymbolAndPosition[];
   classifiedSymbolsSubscription: Subscription;
   private creatingBoundingBox: BoundingBox;
   private creatingStrokes: Point[][];
@@ -90,7 +90,15 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
   agnosticBoolean = true;
 
-
+  agnosticFilters: Map<string, string> = // map<values, titles> - initialized in constructor
+    new Map([
+      ["clefsmeters", "Clefs Meters"],
+      ["note.", "Notes"],
+      ["note.beam", "Beamed notes"],
+      ["rest.", "Rests"],
+      ["accidental.", "Accidentals"],
+      ["other", "Other"]
+    ]);
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>,
               private dialogsService: DialogsService, private positionInStaffService: PositionInStaffService,
               private showErrorService: ShowErrorService) {
@@ -135,6 +143,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     });
 
     this.addMethodType = 'boundingbox';
+
   }
 
   ngOnInit() {
@@ -457,7 +466,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   }
 
 
-  trackClassifiedSymbol(index, item: AgnosticSymbolAndPosition) {
+  trackClassifiedSymbol(index, item: AgnosticOrSemanticSymbolAndPosition) {
     return index;
   }
 
@@ -467,7 +476,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
     let agnosticSymbolTypeAndPosition = null;
     if (this.classifiedSymbols) {
-      agnosticSymbolTypeAndPosition = this.classifiedSymbols.find(cs => cs.agnosticSymbolType === agnosticTypeSVGPath.agnosticOrSemanticTypeString);
+      agnosticSymbolTypeAndPosition = this.classifiedSymbols.find(cs => cs.agnosticOrSemanticSymbolType === agnosticTypeSVGPath.agnosticOrSemanticTypeString);
     }
 
     const agnosticType = agnosticTypeSVGPath.agnosticOrSemanticTypeString;

@@ -1,5 +1,4 @@
 import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
-import {DeselectSymbol} from '../../../features/agnostic-representation/store/actions/agnostic-representation.actions';
 
 
 @Component({

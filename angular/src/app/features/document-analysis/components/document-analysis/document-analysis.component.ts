@@ -28,12 +28,12 @@ import {
   selectDocumentAnalysisClassifierModels, selectDocumentAnalysisServerError
 } from '../../store/selectors/document-analysis.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
-import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
+import {ActivateLink} from '../../../../layout/store/actions/breadcrumbs.actions';
 import {NgbModal, NgbTooltipConfig} from '@ng-bootstrap/ng-bootstrap';
 import {Part} from '../../../../core/model/entities/part';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
-import { LinkType } from 'src/app/breadcrumb/components/breadcrumb/breadcrumbType';
+import { LinkType } from 'src/app/layout/components/breadcrumb/breadcrumbType';
 
 @Component({
   selector: 'app-document-analysis',

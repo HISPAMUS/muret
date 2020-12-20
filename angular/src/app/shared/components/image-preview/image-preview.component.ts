@@ -1,14 +1,14 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {selectPages} from '../../../document-analysis/store/selectors/document-analysis.selector';
+import {selectPages} from '../../../features/document-analysis/store/selectors/document-analysis.selector';
 import {Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
-import {Page} from '../../../../core/model/entities/page';
-import {Shape} from '../../../../svg/model/shape';
-import {GetRegion} from '../../store/actions/agnostic-representation.actions';
-import {Region} from '../../../../core/model/entities/region';
-import {BoundingBox} from '../../../../core/model/entities/bounding-box';
-import {Rectangle} from '../../../../svg/model/rectangle';
-import {selectSelectedRegion} from '../../store/selectors/agnostic-representation.selector';
+import {Page} from '../../../core/model/entities/page';
+import {Shape} from '../../../svg/model/shape';
+import {GetRegion} from '../../../features/agnostic-representation/store/actions/agnostic-representation.actions';
+import {Region} from '../../../core/model/entities/region';
+import {BoundingBox} from '../../../core/model/entities/bounding-box';
+import {Rectangle} from '../../../svg/model/rectangle';
+import {selectSelectedRegion} from '../../../features/agnostic-representation/store/selectors/agnostic-representation.selector';
 
 const regionRectangleStrokeWidth = 5;
 const selectedRegionRectangleStrokeWidth = 25;
@@ -43,7 +43,7 @@ export class ImagePreviewComponent implements OnInit, OnDestroy {
     });
 
     this.toggleImagePreview();
-    
+
     this.selectedRegionSubscription = this.store.select(selectSelectedRegion).subscribe(next => {
       this.selectedRegion.emit(next);
       this.highlightSelectedRegion(next);

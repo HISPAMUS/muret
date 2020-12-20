@@ -108,7 +108,7 @@ export class ClassifySymbolFromStrokes implements Action {
 
 export class ClassifySymbolSuccess implements Action {
   public readonly type = AgnosticRepresentationActionTypes.ClassifySymbolSuccess
-  constructor(public classifiedSymbols: AgnosticSymbolAndPosition[]) {}
+  constructor(public classifiedSymbols: AgnosticOrSemanticSymbolAndPosition[]) {}
 }*/
 
 export class CreateSymbolFromBoundingBox implements Action {

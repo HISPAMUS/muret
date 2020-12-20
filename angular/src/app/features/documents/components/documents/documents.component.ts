@@ -13,10 +13,10 @@ import {
 } from '../../store/actions/documents.actions';
 import {selectChangedCollectionID, selectCollection, selectDocumentsServerError} from '../../store/selectors/documents.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
-import {ModalOptions} from '../../../../shared/components/options-dialog/options-dialog.component';
+import {ModalOptions} from '../../../../dialogs/options-dialog/options-dialog.component';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
-import { ActivateLink } from 'src/app/breadcrumb/store/actions/breadcrumbs.actions';
-import { LinkType } from 'src/app/breadcrumb/components/breadcrumb/breadcrumbType';
+import { ActivateLink } from 'src/app/layout/store/actions/breadcrumbs.actions';
+import { LinkType } from 'src/app/layout/components/breadcrumb/breadcrumbType';
 
 
 @Component({

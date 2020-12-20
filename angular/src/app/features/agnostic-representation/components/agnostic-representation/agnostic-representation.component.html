@@ -117,13 +117,13 @@
       <p>Select a symbol type:</p>
     </div>
     <div class="col-7">
-      <app-agnostic-toolbar [mode]="mode"
-                            [svgAgnosticSymbolSet]="svgSet$ | async"
-                            (agnosticSymbolSelected)="onAgnosticSymbolTypeSelected($event)"
-                            [selectedAgnosticSymbolType]="selectedAgnosticSymbolType"
+      <app-agnostic-or-semantic-toolbar [mode]="mode"
+                            [svgAgnosticOrSemanticSymbolSet]="svgSet$ | async"
+                            (agnosticOrSemanticSymbolSelected)="onAgnosticSymbolTypeSelected($event)"
+                                        [selectedAgnosticOrSemanticSymbolType]="selectedAgnosticSymbolType"
                             [filter]="classifiedSymbols"
       >
-      </app-agnostic-toolbar>
+      </app-agnostic-or-semantic-toolbar>
     </div>
   </section>
 
@@ -149,15 +149,16 @@
     </div>
     <div class="col-7">
       <hr *ngIf="selectedSymbol">
-      <app-agnostic-toolbar *ngIf="selectedSymbol"
+      <app-agnostic-or-semantic-toolbar *ngIf="selectedSymbol"
+                            [filters]="agnosticFilters"
                             [mode]="mode" [classifier]="classifier" (classifierChanged)="onClassifierChanged($event)"
-                            [svgAgnosticSymbolSet]="svgSet$ | async"
-                            (agnosticSymbolSelected)="onAgnosticSymbolTypeSelected($event)"
+                            [svgAgnosticOrSemanticSymbolSet]="svgSet$ | async"
+                            (agnosticOrSemanticSymbolSelected)="onAgnosticSymbolTypeSelected($event)"
                             (pitchDown)="movePitchDownSelectedSymbol()"
                             (pitchUp)="movePitchUpSelectedSymbol()"
                             [frequentSymbols]="frequentSymbols"
       >
-      </app-agnostic-toolbar>
+      </app-agnostic-or-semantic-toolbar>
       <!-- [agnosticSymbolToolbarCategories]="agnosticSymbolToolbarCategories"-->
     </div>
 

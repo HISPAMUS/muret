@@ -5,7 +5,7 @@ import {UploadImagesComponent} from './components/upload-images/upload-images.co
 import {DocumentScoreViewerAndExporterComponent} from './components/document-score-viewer-and-exporter/document-score-viewer-and-exporter.component';
 import {InstrumentsComponent} from './components/instruments/instruments.component';
 import {AlignmentPreviewComponent} from './components/alignment-preview/alignment-preview.component';
-import {MEIScoreViewerComponent} from './components/meiscore-viewer/meiscore-viewer.component';
+import {MEIScoreViewerComponent} from './components/mei-score-viewer/meiscore-viewer.component';
 
 const routes: Routes = [
   { path: ':id', component: DocumentComponent },

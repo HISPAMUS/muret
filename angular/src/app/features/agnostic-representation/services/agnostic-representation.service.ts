@@ -74,25 +74,25 @@ export class AgnosticRepresentationService {
     return this.apiRestClientService.post$<SymbolCreationResult>('agnostic/createSymbolFromStrokes', symbolCreation);
   }
 
-  /*classifySymbolFromBoundingBox$(regionID: number, boundingBox: BoundingBox, agnosticSymbolType: string):
-  Observable<AgnosticSymbolAndPosition[]> {
+  /*classifySymbolFromBoundingBox$(regionID: number, boundingBox: BoundingBox, agnosticOrSemanticSymbolType: string):
+  Observable<AgnosticOrSemanticSymbolAndPosition[]> {
     const symbolCreation = {
       regionID,
-      agnosticSymbolType,
+      agnosticOrSemanticSymbolType,
       boundingBox
     };
 
-    return this.apiRestClientService.post$<AgnosticSymbolAndPosition[]>('agnostic/classifySymbolFromBoundingBox', symbolCreation);
+    return this.apiRestClientService.post$<AgnosticOrSemanticSymbolAndPosition[]>('agnostic/classifySymbolFromBoundingBox', symbolCreation);
   }
 
-  classifySymbolFromStrokes$(regionID: number, points: Point[][], agnosticSymbolType: string): Observable<AgnosticSymbolAndPosition[]> {
+  classifySymbolFromStrokes$(regionID: number, points: Point[][], agnosticOrSemanticSymbolType: string): Observable<AgnosticOrSemanticSymbolAndPosition[]> {
     const symbolCreation = {
       regionID,
-      agnosticSymbolType,
+      agnosticOrSemanticSymbolType,
       points
     };
 
-    return this.apiRestClientService.post$<AgnosticSymbolAndPosition[]>('agnostic/classifySymbolFromStrokes', symbolCreation);
+    return this.apiRestClientService.post$<AgnosticOrSemanticSymbolAndPosition[]>('agnostic/classifySymbolFromStrokes', symbolCreation);
   }*/
 
 

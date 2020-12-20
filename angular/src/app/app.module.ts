@@ -53,6 +53,7 @@ import { AdminDashboardModule } from './features/admin-dashboard/admin-dashboard
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import {DialogsModule} from "./dialogs/dialogs.module";
 
 @NgModule({
   declarations: [
@@ -82,6 +83,7 @@ import { ToastrModule } from 'ngx-toastr';
     AgnosticRepresentationModule,
     SemanticRepresentationModule,
     AdminDashboardModule,
+    DialogsModule,
     StoreModule.forRoot({
       /* an empty object here  */
     }),

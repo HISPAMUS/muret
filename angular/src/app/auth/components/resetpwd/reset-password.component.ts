@@ -9,11 +9,11 @@ import { Subscription } from 'rxjs';
 import { selectResetPWDStatus } from '../../store/selectors/auth.selector';
 
 @Component({
-  selector: 'app-resetpwd',
-  templateUrl: './resetpwd.component.html',
-  styleUrls: ['./resetpwd.component.css']
+  selector: 'app-reset-password',
+  templateUrl: './reset-password.component.html',
+  styleUrls: ['./reset-password.component.css']
 })
-export class ResetpwdComponent implements OnInit {
+export class ResetPasswordComponent implements OnInit {
 
   resetpwd: ResetPWD = {}
   repeatpwd: string

@@ -10,7 +10,6 @@ import {EffectsModule} from '@ngrx/effects';
 import {DocumentService} from './services/document.service';
 import {DocumentEffects} from './store/effects/document.effects';
 import {documentReducers} from './store/reducers/document.reducers';
-import {BreadcrumbModule} from '../../breadcrumb/breadcrumb.module';
 import { UploadImagesComponent } from './components/upload-images/upload-images.component';
 import {FileUploadModule} from 'ng2-file-upload';
 import { DocumentScoreViewerAndExporterComponent } from './components/document-score-viewer-and-exporter/document-score-viewer-and-exporter.component';
@@ -20,8 +19,7 @@ import { InstrumentsComponent } from './components/instruments/instruments.compo
 import {FormsModule} from '@angular/forms';
 import { AlignmentPreviewComponent } from './components/alignment-preview/alignment-preview.component';
 import {SvgModule} from '../../svg/svg.module';
-import {DocumentAnalysisModule} from '../document-analysis/document-analysis.module';
-import { MEIScoreViewerComponent } from './components/meiscore-viewer/meiscore-viewer.component';
+import { MEIScoreViewerComponent } from './components/mei-score-viewer/meiscore-viewer.component';
 
 @NgModule({
   declarations: [DocumentComponent, ImageThumbnailComponent, UploadImagesComponent, DocumentScoreViewerAndExporterComponent, InstrumentsComponent, AlignmentPreviewComponent, MEIScoreViewerComponent],
@@ -33,11 +31,8 @@ import { MEIScoreViewerComponent } from './components/meiscore-viewer/meiscore-v
         NgbDropdownModule,
         StoreModule.forFeature('document', documentReducers),
         EffectsModule.forFeature([DocumentEffects]),
-        BreadcrumbModule,
-        SharedModule,
         FormsModule,
-        SvgModule,
-        DocumentAnalysisModule,
+        SvgModule
     ],
   providers: [
     DocumentService

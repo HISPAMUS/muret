@@ -1,7 +1,7 @@
 import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {GetImageProjection} from '../../../document-analysis/store/actions/document-analysis.actions';
-import {ActivateLink} from '../../../../breadcrumb/store/actions/breadcrumbs.actions';
+import {ActivateLink} from '../../../../layout/store/actions/breadcrumbs.actions';
 import {Store} from '@ngrx/store';
 import {Subscription, Observable} from 'rxjs';
 import {Region} from '../../../../core/model/entities/region';
@@ -37,12 +37,10 @@ import {
   UnlinkPartToImage, UnlinkPartToRegion
 } from '../../../parts/store/actions/parts.actions';
 import {selectImageDocumentID, selectFileName} from '../../../document-analysis/store/selectors/document-analysis.selector';
-import {ModalOptions} from '../../../../shared/components/options-dialog/options-dialog.component';
+import {ModalOptions} from '../../../../dialogs/options-dialog/options-dialog.component';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
-import {selectDocumentsServerError} from '../../../documents/store/selectors/documents.selector';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
-import { LinkType } from 'src/app/breadcrumb/components/breadcrumb/breadcrumbType';
-import { toBase64String } from '@angular/compiler/src/output/source_map';
+import { LinkType } from 'src/app/layout/components/breadcrumb/breadcrumbType';
 
 @Component({
   selector: 'app-semantic-representation',

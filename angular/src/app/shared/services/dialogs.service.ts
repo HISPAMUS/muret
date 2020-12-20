@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import {ConfirmDialogComponent} from '../components/confirm-dialog/confirm-dialog.component';
+import {ConfirmDialogComponent} from '../../dialogs/confirm-dialog/confirm-dialog.component';
 import {SimpleModalService} from 'ngx-simple-modal';
 import {Observable, of} from 'rxjs';
-import {AlertComponent} from '../components/error-modal-message/alert.component';
-import {InputDialogComponent} from '../components/input-dialog/input-dialog.component';
-import { ConfirmDialogWarningComponent } from '../components/confirm-dialog-warning/confirm-dialog-warning.component';
-import { OptionsDialogComponent, ModalOptions } from '../components/options-dialog/options-dialog.component';
-import {LinksModalDialogComponent, onLinkClickType} from '../components/links-modal-dialog/links-modal-dialog.component';
+import {AlertComponent} from '../../dialogs/error-modal-message/alert.component';
+import {InputDialogComponent} from '../../dialogs/input-dialog/input-dialog.component';
+import { ConfirmDialogWarningComponent } from '../../dialogs/confirm-dialog-warning/confirm-dialog-warning.component';
+import { OptionsDialogComponent, ModalOptions } from '../../dialogs/options-dialog/options-dialog.component';
+import {LinksModalDialogComponent, onLinkClickType} from '../../dialogs/links-modal-dialog/links-modal-dialog.component';
 
 
 @Injectable({

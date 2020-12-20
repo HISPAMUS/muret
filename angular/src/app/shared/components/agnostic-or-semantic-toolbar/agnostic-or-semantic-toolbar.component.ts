@@ -1,28 +1,30 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {AgnosticRepresentationState} from '../../store/state/agnostic-representation.state';
-import {SVGSet} from '../../model/svgset';
-import {AgnosticOrSemanticTypeSVGPath} from '../../model/agnostic-or-semantic-type-s-v-g-path';
-import {AgnosticSymbolAndPosition} from '../../model/agnostic-symbol-and-position';
 import {Subscription} from 'rxjs';
+import {SVGSet} from "../../../features/agnostic-representation/model/svgset";
+import {AgnosticOrSemanticSymbolAndPosition} from "../../../features/agnostic-representation/model/agnostic-or-semantic-symbol-and-position";
+import {AgnosticOrSemanticTypeSVGPath} from "../../../features/agnostic-representation/model/agnostic-or-semantic-type-s-v-g-path";
+import {AgnosticRepresentationState} from "../../../features/agnostic-representation/store/state/agnostic-representation.state";
 
 @Component({
-  selector: 'app-agnostic-toolbar',
-  templateUrl: './agnostic-toolbar.component.html',
-  styleUrls: ['./agnostic-toolbar.component.css']
+  selector: 'app-agnostic-or-semantic-toolbar',
+  templateUrl: './agnostic-or-semantic-toolbar.component.html',
+  styleUrls: ['./agnostic-or-semantic-toolbar.component.css']
 })
-export class AgnosticToolbarComponent implements OnInit, OnDestroy {
-  @Input() svgAgnosticSymbolSet: SVGSet;
+export class AgnosticOrSemanticToolbarComponent implements OnInit, OnDestroy {
+  @Input() filters: Map<string, string>; // map<values, titles>
+  @Input() filter: AgnosticOrSemanticSymbolAndPosition[];
+
+  @Input() svgAgnosticOrSemanticSymbolSet: SVGSet;
   @Input() mode: 'eIdle' | 'eAdding' | 'eSelecting' | 'eEditing';
-  @Input() filter: AgnosticSymbolAndPosition[];
   @Input() frequentSymbols: Map<string, number>; // key = agnostic key value, value = frequency
 
-  @Output() agnosticSymbolSelected = new EventEmitter<AgnosticOrSemanticTypeSVGPath>();
+  @Output() agnosticOrSemanticSymbolSelected = new EventEmitter<AgnosticOrSemanticTypeSVGPath>();
   @Output() pitchUp = new EventEmitter();
   @Output() pitchDown = new EventEmitter();
   @Output() classifierChanged = new EventEmitter<boolean>();
 
-  private selectedAgnosticSymbolTypeValue: string;
+  private selectedAgnosticOrSemanticSymbolTypeValue: string;
 
   classifierValue = true;
   symbolsFilter = 'frequent'; // default value
@@ -40,13 +42,13 @@ export class AgnosticToolbarComponent implements OnInit, OnDestroy {
   }
 
   @Input()
-  get selectedAgnosticSymbolType() {
-    return this.selectedAgnosticSymbolTypeValue;
+  get selectedAgnosticOrSemanticSymbolType() {
+    return this.selectedAgnosticOrSemanticSymbolTypeValue;
   }
 
-  set selectedAgnosticSymbolType(val) {
-    if (this.selectedAgnosticSymbolTypeValue !== val) {
-      this.selectedAgnosticSymbolTypeValue = val;
+  set selectedAgnosticOrSemanticSymbolType(val) {
+    if (this.selectedAgnosticOrSemanticSymbolTypeValue !== val) {
+      this.selectedAgnosticOrSemanticSymbolTypeValue = val;
     }
   }
 
@@ -81,8 +83,8 @@ export class AgnosticToolbarComponent implements OnInit, OnDestroy {
   getFilteredSymbols() {
     this.buttonWidth = 70;
     if (this.filter) { // from input
-      const filterAgnosticTypes = this.filter.map(agnosticTypePosition => agnosticTypePosition.agnosticSymbolType);
-      const result = this.svgAgnosticSymbolSet.paths.filter(
+      const filterAgnosticTypes = this.filter.map(agnosticTypePosition => agnosticTypePosition.agnosticOrSemanticSymbolType);
+      const result = this.svgAgnosticOrSemanticSymbolSet.paths.filter(
         value => filterAgnosticTypes.includes(value.agnosticOrSemanticTypeString)
       );
       return result;
@@ -90,25 +92,25 @@ export class AgnosticToolbarComponent implements OnInit, OnDestroy {
       switch (this.symbolsFilter) {
         case 'rest.':
           this.buttonWidth = 100;
-          return this.svgAgnosticSymbolSet.paths.filter(value => value.agnosticOrSemanticTypeString.includes(this.symbolsFilter));
+          return this.svgAgnosticOrSemanticSymbolSet.paths.filter(value => value.agnosticOrSemanticTypeString.includes(this.symbolsFilter));
         case 'note.':
           this.buttonWidth = 55;
-          return this.svgAgnosticSymbolSet.paths.filter(value => value.agnosticOrSemanticTypeString.includes(this.symbolsFilter)
+          return this.svgAgnosticOrSemanticSymbolSet.paths.filter(value => value.agnosticOrSemanticTypeString.includes(this.symbolsFilter)
             && !value.agnosticOrSemanticTypeString.includes('beam'));
         case 'other':
-          return this.svgAgnosticSymbolSet.paths.filter(value => value.agnosticOrSemanticTypeString.includes('defect') ||
+          return this.svgAgnosticOrSemanticSymbolSet.paths.filter(value => value.agnosticOrSemanticTypeString.includes('defect') ||
             value.agnosticOrSemanticTypeString.includes('fermata') || value.agnosticOrSemanticTypeString.includes('digit') ||
             value.agnosticOrSemanticTypeString.includes('slur') || !value.agnosticOrSemanticTypeString.includes('.') ||
             value.agnosticOrSemanticTypeString.includes('breath'));
         case 'clefsmeters':
-          return this.svgAgnosticSymbolSet.paths.filter(value => value.agnosticOrSemanticTypeString.includes('clef') ||
+          return this.svgAgnosticOrSemanticSymbolSet.paths.filter(value => value.agnosticOrSemanticTypeString.includes('clef') ||
             value.agnosticOrSemanticTypeString.includes('metersign'));
         case 'frequent':
-          return this.svgAgnosticSymbolSet.paths.filter(value => this.frequentSymbols.has(value.agnosticOrSemanticTypeString)).
+          return this.svgAgnosticOrSemanticSymbolSet.paths.filter(value => this.frequentSymbols.has(value.agnosticOrSemanticTypeString)).
             sort((a, b) => this.frequentSymbols.get(b.agnosticOrSemanticTypeString) - this.frequentSymbols.get(a.agnosticOrSemanticTypeString));
           // sort decreasing order
         default:
-          return this.svgAgnosticSymbolSet.paths.filter(value => value.agnosticOrSemanticTypeString.includes(this.symbolsFilter));
+          return this.svgAgnosticOrSemanticSymbolSet.paths.filter(value => value.agnosticOrSemanticTypeString.includes(this.symbolsFilter));
       }
     }
   }
@@ -118,6 +120,6 @@ export class AgnosticToolbarComponent implements OnInit, OnDestroy {
   }
 
   onRadioButtonClick(svgSymbol: AgnosticOrSemanticTypeSVGPath) {
-    this.agnosticSymbolSelected.emit(svgSymbol);
+    this.agnosticOrSemanticSymbolSelected.emit(svgSymbol);
   }
 }

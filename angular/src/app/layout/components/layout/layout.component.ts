@@ -6,7 +6,6 @@ import {selectIsAuthenticated, selectUsername, selectRole} from '../../../auth/s
 import {selectServerStatus } from 'src/app/core/store/selectors/core.selector';
 import { GetServerStatus } from 'src/app/core/store/actions/serverStatus.actions';
 import { DialogsService} from 'src/app/shared/services/dialogs.service';
-import { ModalOptions } from 'src/app/shared/components/options-dialog/options-dialog.component';
 
 @Component({
   selector: 'app-layout',

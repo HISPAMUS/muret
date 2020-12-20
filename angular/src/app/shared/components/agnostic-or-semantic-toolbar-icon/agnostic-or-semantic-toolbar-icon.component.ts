@@ -2,11 +2,11 @@ import {Component, Input, OnInit} from '@angular/core';
 import {PositionInStaffService} from '../../services/position-in-staff.service';
 
 @Component({
-  selector: 'app-agnostic-toolbar-icon',
-  templateUrl: './agnostic-toolbar-icon.component.html',
-  styleUrls: ['./agnostic-toolbar-icon.component.css']
+  selector: 'app-agnostic-or-semantic-toolbar-icon',
+  templateUrl: './agnostic-or-semantic-toolbar-icon.component.html',
+  styleUrls: ['./agnostic-or-semantic-toolbar-icon.component.css']
 })
-export class AgnosticToolbarIconComponent implements OnInit {
+export class AgnosticOrSemanticToolbarIconComponent implements OnInit {
   @Input() buttonWidth: number;
   @Input() buttonHeight: number;
   @Input() symbolViewBox: string;
