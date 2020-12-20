@@ -16,7 +16,6 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     DragDropModule,
   ], exports: [
     SvgCanvasComponent
-  ],
-  entryComponents: [ RectangleComponent, LineComponent, TextComponent, PolylinesComponent ]
+  ]
 })
 export class SvgModule { }

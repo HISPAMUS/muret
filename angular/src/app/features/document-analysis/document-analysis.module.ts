@@ -28,8 +28,6 @@ import {DocumentAnalysisService} from './services/document-analysis.service';
         EffectsModule.forFeature([DocumentAnalysisEffects]),
         NgbTooltipModule,
     ],
-  entryComponents: [
-  ],
   exports: [
   ],
   providers: [

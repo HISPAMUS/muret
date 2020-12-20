@@ -19,9 +19,6 @@ import {breadcrumbsReducers} from "./store/reducers/breadcrumbs.reducers";
   exports: [
     LayoutComponent,
     BreadcrumbComponent
-  ],
-  entryComponents: [
-    BreadcrumbComponent
   ]
 })
 export class LayoutModule { }

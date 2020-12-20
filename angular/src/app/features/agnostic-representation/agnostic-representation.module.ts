@@ -36,9 +36,6 @@ import {PositionInStaffService} from '../../shared/services/position-in-staff.se
   exports: [
     AgnosticStaffComponent
   ],
-  entryComponents: [
-    AgnosticStaffComponent
-  ],
   providers: [
     AgnosticRepresentationService, PositionInStaffService
   ]

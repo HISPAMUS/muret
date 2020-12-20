@@ -41,12 +41,6 @@ import {AgnosticOrSemanticToolbarIconComponent} from "./components/agnostic-or-s
     ImagePreviewComponent,
     ImageComponent
   ],
-  entryComponents: [
-    CrudToolbarComponent,
-    AgnosticOrSemanticToolbarComponent,
-    ImagePreviewComponent,
-    ImageComponent
-  ],
   providers: []
 })
 export class SharedModule {

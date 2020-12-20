@@ -34,8 +34,6 @@ import { PermissionsComponent } from './components/permissions/permissions.compo
   ],
   exports: [
   ],
-  entryComponents: [
-  ],
   providers: [
   ]
 })

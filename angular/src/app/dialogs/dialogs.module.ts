@@ -33,14 +33,6 @@ import {SimpleModalModule} from "ngx-simple-modal";
     ConfirmDialogWarningComponent,
     OptionsDialogComponent,
     LinksModalDialogComponent
-  ],
-  entryComponents: [
-    AlertComponent,
-    ConfirmDialogComponent,
-    InputDialogComponent,
-    ConfirmDialogWarningComponent,
-    OptionsDialogComponent,
-    LinksModalDialogComponent
   ]
 })
 export class DialogsModule { }
