@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import {BrowserModule, HammerModule} from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
@@ -17,7 +17,7 @@ import {DocumentAnalysisModule} from './features/document-analysis/document-anal
 import {AgnosticRepresentationModule} from './features/agnostic-representation/agnostic-representation.module';
 import {SemanticRepresentationModule} from './features/semantic-representation/semantic-representation.module';
 import {SharedModule} from './shared/shared.module';
-import {intersectionObserverPreset, LazyLoadImageModule} from 'ng-lazyload-image';
+import {LazyLoadImageModule} from 'ng-lazyload-image';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import {FontAwesomeModule, FaIconLibrary} from '@fortawesome/angular-fontawesome';
@@ -60,7 +60,9 @@ import {DialogsModule} from "./dialogs/dialogs.module";
     AppComponent,
   ],
   imports: [
-    BrowserModule,
+   // removed dependency and added this module "hammerjs": "^2.0.8",
+    HammerModule,
+  BrowserModule,
     AgGridModule.withComponents([]),
     RouterModule,
     FormsModule,
@@ -88,9 +90,10 @@ import {DialogsModule} from "./dialogs/dialogs.module";
       /* an empty object here  */
     }),
     EffectsModule.forRoot([]),
-    LazyLoadImageModule.forRoot({
+    /*LazyLoadImageModule.forRoot({ // in Angular 9
       preset: intersectionObserverPreset
-    }),
+    }),*/
+    LazyLoadImageModule,
     LoggerModule.forRoot({level: NgxLoggerLevel.DEBUG, serverLogLevel: NgxLoggerLevel.ERROR}),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     NgbModule,

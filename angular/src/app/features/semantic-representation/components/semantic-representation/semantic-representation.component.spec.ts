@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SemanticRepresentationComponent } from './semantic-representation.component';
 
@@ -6,7 +6,7 @@ describe('SemanticRepresentationComponent', () => {
   let component: SemanticRepresentationComponent;
   let fixture: ComponentFixture<SemanticRepresentationComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SemanticRepresentationComponent ]
     })

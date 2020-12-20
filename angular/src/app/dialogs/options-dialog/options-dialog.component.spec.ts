@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { OptionsDialogComponent } from './options-dialog.component';
 
@@ -6,7 +6,7 @@ describe('OptionsDialogComponent', () => {
   let component: OptionsDialogComponent;
   let fixture: ComponentFixture<OptionsDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ OptionsDialogComponent ]
     })

@@ -23,17 +23,18 @@ import { MEIScoreViewerComponent } from './components/mei-score-viewer/meiscore-
 
 @NgModule({
   declarations: [DocumentComponent, ImageThumbnailComponent, UploadImagesComponent, DocumentScoreViewerAndExporterComponent, InstrumentsComponent, AlignmentPreviewComponent, MEIScoreViewerComponent],
-    imports: [
-        CommonModule,
-        DocumentRoutingModule,
-        LightboxModule,
-        FileUploadModule,
-        NgbDropdownModule,
-        StoreModule.forFeature('document', documentReducers),
-        EffectsModule.forFeature([DocumentEffects]),
-        FormsModule,
-        SvgModule
-    ],
+  imports: [
+    CommonModule,
+    DocumentRoutingModule,
+    LightboxModule,
+    FileUploadModule,
+    NgbDropdownModule,
+    StoreModule.forFeature('document', documentReducers),
+    EffectsModule.forFeature([DocumentEffects]),
+    FormsModule,
+    SvgModule,
+    SharedModule
+  ],
   providers: [
     DocumentService
   ]

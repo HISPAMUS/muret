@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DocumentScoreViewerAndExporterComponent } from './document-score-viewer-and-exporter.component';
 
@@ -6,7 +6,7 @@ describe('DocumentScoreViewerComponent', () => {
   let component: DocumentScoreViewerAndExporterComponent;
   let fixture: ComponentFixture<DocumentScoreViewerAndExporterComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ DocumentScoreViewerAndExporterComponent ]
     })
