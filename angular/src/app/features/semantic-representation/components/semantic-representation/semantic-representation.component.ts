@@ -76,7 +76,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   documentIDSubscription: Subscription;
 
   agnosticIDs: number[];
-  filenamesubscription : Subscription;
+  fileNameSubscription : Subscription;
   agnosticIDMap: Map<number, number>;
   columnDefs = [
     {headerName: '**smens/**skern', field: 'smens' },
@@ -88,9 +88,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   private gridColumnApi;
 
   defaultColDef: { resizable: boolean; editable: boolean };
-  private string: string;
 
-  private drawSymbolsPending = true;
 
   // usesOfPartsSubscription: Subscription;
   private useOfPartsSubscription: Subscription;
@@ -136,7 +134,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     this.semanticLabel = "Convert from agnostic";
     this.waitingForSemantic = false;
 
-    this.filenamesubscription = this.store.select(selectFileName).subscribe(name => {
+    this.fileNameSubscription = this.store.select(selectFileName).subscribe(name => {
       if(name!=null)
         setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
           this.store.dispatch(new ActivateLink(LinkType.File ,{title: name + ' /Semantic', routerLink: 'semanticrepresentation/' + this.imageID}));
@@ -216,7 +214,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     this.documentIDSubscription.unsubscribe();
     this.useOfPartsSubscription.unsubscribe();
     this.serverErrorSubscription.unsubscribe();
-    this.filenamesubscription.unsubscribe();
+    this.fileNameSubscription.unsubscribe();
     // this.usesOfPartsSubscription.unsubscribe();
     this.documentTypeSubscription.unsubscribe();
   }
