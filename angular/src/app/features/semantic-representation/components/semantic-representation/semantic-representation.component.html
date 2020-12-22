@@ -63,7 +63,7 @@
       <section class="row">
         <div class="col">
               <ng-container *ngIf="hasNotation()">
-                <app-notation [notation]="notation" [selectedItem]="selectedSemanticSymbolID"></app-notation>
+                <app-notation [notation]="notation" [selectedItem]="selectedSemanticSymbolID" (onItemSelected)="onNotationSymbolSelected($event)"></app-notation>
               </ng-container>
             </div>
       </section>

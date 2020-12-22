@@ -1,11 +1,11 @@
 import {
   AfterViewInit,
   Component,
-  ElementRef,
+  ElementRef, EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
-  OnInit,
+  OnInit, Output,
   SimpleChanges,
   ViewChild
 } from '@angular/core';
@@ -26,6 +26,7 @@ import {ShowErrorService} from '../../../../core/services/show-error.service';
 export class NotationComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
   @Input() notation: Notation;
   @Input() selectedItem: string;
+  @Output() onItemSelected = new EventEmitter<string>();
 
   notationAsSVG: any;
   private serverErrorSubscription: Subscription;
@@ -41,14 +42,6 @@ export class NotationComponent implements OnInit, OnChanges, OnDestroy, AfterVie
         this.store.dispatch(new ResetSemanticRepresentationServerError());
       }
     });
-  }
-
-
-  ngAfterViewInit(): void {
-    // until here the querySelector cannot be used
-    //const element2: HTMLElement = this.verovioDiv.nativeElement.querySelector('#L3') as HTMLElement;
-    //element2.classList.add('selectedVerovioItem');
-    //console.log(element2);
   }
 
 
@@ -72,14 +65,34 @@ export class NotationComponent implements OnInit, OnChanges, OnDestroy, AfterVie
   }
 
   private changeSelectedItem(id: string, add: boolean) {
-    const selectedItem: HTMLElement = this.verovioDiv.nativeElement.querySelector('#L' + id) as HTMLElement;
+    const selectedItem: HTMLElement = this.verovioDiv.nativeElement.querySelector('#' + id) as HTMLElement;
     if (selectedItem) {
       if (add) {
-        selectedItem.classList.add('selectedVerovioItem');
+        if (!selectedItem.classList.contains('selectedVerovioItem')) {
+          selectedItem.classList.add('selectedVerovioItem');
+        }
       } else {
         selectedItem.classList.remove('selectedVerovioItem');
       }
     }
+  }
+
+
+  ngAfterViewInit(): void {
+    // until here the querySelector cannot be used
+    //const groups: HTMLElement = this.verovioDiv.nativeElement.querySelectorAll('g') as HTMLElement;
+
+    // we use the lambda notation to maintain the this value, if the function() {} notation is used,
+    // the this accesibility is lost
+    this.verovioDiv.nativeElement.querySelectorAll('g').forEach( (item) => {
+      if (item.id && item.id.startsWith('L')) { // the ID of elements starts with an L
+        item.addEventListener('mouseover', (event) => {
+          if (item.id) {
+            this.onItemSelected.emit(item.id);
+          }
+        });
+      }
+    });
   }
 
 }

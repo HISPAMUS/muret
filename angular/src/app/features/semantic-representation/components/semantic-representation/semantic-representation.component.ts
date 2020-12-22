@@ -88,7 +88,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   private gridColumnApi;
 
   defaultColDef: { resizable: boolean; editable: boolean };
-  selectedSemanticSymbolID: null;
+  selectedSemanticSymbolID: string;
 
 
   // usesOfPartsSubscription: Subscription;
@@ -639,8 +639,15 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   onGridRowSelected($event: any) {
-    if ($event) {
-      this.selectedSemanticSymbolID = $event.rowIndex;
+    if ($event && $event.node.selected) {
+      this.selectedSemanticSymbolID = 'L' + $event.rowIndex;
+    }
+  }
+
+  onNotationSymbolSelected($event: string) {
+    if (this.gridApi) {
+      const selectedLine = $event.substr(1);
+      this.gridApi.getRowNode(selectedLine).setSelected(true);
     }
   }
 }
