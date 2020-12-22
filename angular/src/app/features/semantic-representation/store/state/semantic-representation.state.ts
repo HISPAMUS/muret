@@ -5,12 +5,14 @@ import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-
 export interface SemanticRepresentationState {
   notation: Notation;
   models: ClassifierModel[];
+  selectedSymbolID: number;
   apiRestServerError: APIRestServerError;
 }
 
 export const initialSemanticRepresentationState: SemanticRepresentationState = {
   notation: null,
   models: null,
+  selectedSymbolID: null,
   apiRestServerError: null
 };
 

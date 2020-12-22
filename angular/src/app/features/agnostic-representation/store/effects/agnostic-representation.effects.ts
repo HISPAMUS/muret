@@ -26,7 +26,7 @@ import {
 } from '../actions/agnostic-representation.actions';
 import {AgnosticRepresentationService} from '../../services/agnostic-representation.service';
 import {Region} from '../../../../core/model/entities/region';
-import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
+import {AgnosticSymbol} from '../../../../core/model/entities/agnostic-symbol';
 import {SymbolCreationResult} from '../../model/symbol-creation-result';
 import {ClassifierModel} from '../../../../core/model/entities/classifier-model';
 

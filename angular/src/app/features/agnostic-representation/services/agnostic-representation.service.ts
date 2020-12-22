@@ -3,7 +3,7 @@ import {ApiRestClientService} from '../../../core/services/api-rest-client.servi
 import {Observable} from 'rxjs';
 import {Region} from '../../../core/model/entities/region';
 import {SVGSet} from '../model/svgset';
-import {AgnosticSymbol} from '../../../core/model/entities/agnosticSymbol';
+import {AgnosticSymbol} from '../../../core/model/entities/agnostic-symbol';
 import {BoundingBox} from '../../../core/model/entities/bounding-box';
 import {Point} from '../../../core/model/entities/point';
 import {SymbolCreationResult} from '../model/symbol-creation-result';

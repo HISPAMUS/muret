@@ -1,6 +1,6 @@
 import {AgnosticRepresentationActions, AgnosticRepresentationActionTypes} from '../actions/agnostic-representation.actions';
 import {AgnosticRepresentationState, initialAgnosticRepresentationState} from '../state/agnostic-representation.state';
-import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
+import {AgnosticSymbol} from '../../../../core/model/entities/agnostic-symbol';
 
 // recall the inmutability of state
 export function agnosticRepresentationReducers(state = initialAgnosticRepresentationState, action: AgnosticRepresentationActions):

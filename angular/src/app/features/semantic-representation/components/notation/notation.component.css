@@ -10,13 +10,18 @@
   display: none;
 }
 
+/*
 >>> g.note {
-  /*fill: #000;*/
-  -webkit-transition: fill 0.3s; /* Safari */
+  -webkit-transition: fill 0.3s;
   transition: fill 0.3s;
 }
 
 >>> g.note:hover {
+  fill: #ff9800;
+  cursor: pointer;
+}*/
+
+>>> .selectedVerovioItem {
   fill: #ff9800;
   cursor: pointer;
 }

@@ -1,5 +1,5 @@
 import {BoundingBox} from './bounding-box';
-import {AgnosticSymbol} from './agnosticSymbol';
+import {AgnosticSymbol} from './agnostic-symbol';
 import {RegionType} from './region-type';
 import {Entity} from './entity';
 import {Part} from './part';

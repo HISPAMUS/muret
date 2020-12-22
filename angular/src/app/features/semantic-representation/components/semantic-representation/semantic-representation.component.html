@@ -63,7 +63,7 @@
       <section class="row">
         <div class="col">
               <ng-container *ngIf="hasNotation()">
-                <app-notation [notation]="notation"></app-notation>
+                <app-notation [notation]="notation" [selectedItem]="selectedSemanticSymbolID"></app-notation>
               </ng-container>
             </div>
       </section>
@@ -126,6 +126,7 @@
               [rowData]="rowData"
               [columnDefs]="columnDefs"
               (gridReady)="onGridReady($event)"
+              (rowSelected)="onGridRowSelected($event)"
             >
             </ag-grid-angular>
 

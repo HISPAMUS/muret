@@ -69,6 +69,16 @@ export function semanticRepresentationReducers(state = initialSemanticRepresenta
         apiRestServerError: null
       };
     }
+    case SemanticRepresentationActionTypes.SelectSymbol: {
+      const newState = {...state, apiRestServerError: null};
+      newState.selectedSymbolID = action.semanticSymbolID;
+      return newState;
+    }
+    case SemanticRepresentationActionTypes.DeselectSymbol: {
+      const newState = {...state, apiRestServerError: null};
+      newState.selectedSymbolID = null;
+      return newState;
+    }
     default: {
       return state;
     }

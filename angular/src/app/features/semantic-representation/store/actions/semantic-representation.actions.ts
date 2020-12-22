@@ -15,7 +15,9 @@ export enum SemanticRepresentationActionTypes {
   SendSemanticEncoding = '[SemanticRepresentation] Send semantic encoding',
   SendSemanticEncodingSuccess = '[SemanticRepresentation] Send semantic encoding success',
   GetTranslationModels = '[SemanticRepresentation] Get translation models',
-  GetTranslationModelsSuccess = '[SemanticRepresentation] Get translation models success'
+  GetTranslationModelsSuccess = '[SemanticRepresentation] Get translation models success',
+  SelectSymbol = '[SemanticRepresentation] Select symbol',
+  DeselectSymbol = '[SemanticRepresentation] Deselect symbol',
 }
 
 export class ResetSemanticRepresentationServerError implements Action {
@@ -73,7 +75,18 @@ export class GetTranslationModelsSuccess implements Action {
   constructor(public response: ClassifierModel[]) {}
 }
 
+export class SelectSymbol implements Action {
+  public readonly type = SemanticRepresentationActionTypes.SelectSymbol;
+  constructor(public semanticSymbolID: number) {}
+}
+
+export class DeselectSymbol implements Action {
+  public readonly type = SemanticRepresentationActionTypes.DeselectSymbol;
+  constructor() {}
+}
+
 export type SemanticRepresentationActions =
   ResetSemanticRepresentationServerError | SemanticRepresentationServerError |
   ConvertAgnostic2Semantic | ConvertAgnostic2SemanticSuccess | GetNotation | GetNotationSuccess | ClearNotation |
-  SendSemanticEncoding | SendSemanticEncodingSuccess | GetTranslationModels | GetTranslationModelsSuccess;
+  SendSemanticEncoding | SendSemanticEncodingSuccess | GetTranslationModels | GetTranslationModelsSuccess |
+  SelectSymbol | DeselectSymbol;

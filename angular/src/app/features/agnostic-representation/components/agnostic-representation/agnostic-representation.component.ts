@@ -5,7 +5,7 @@ import {Shape} from '../../../../svg/model/shape';
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {Rectangle} from '../../../../svg/model/rectangle';
 import {Region} from '../../../../core/model/entities/region';
-import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
+import {AgnosticSymbol} from '../../../../core/model/entities/agnostic-symbol';
 import {
   selectFileName,
   selectDocumentType,

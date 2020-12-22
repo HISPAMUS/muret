@@ -17,7 +17,7 @@ import {
   selectAgnosticSymbols,
   selectSelectedSymbol,
 } from '../../store/selectors/agnostic-representation.selector';
-import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
+import {AgnosticSymbol} from '../../../../core/model/entities/agnostic-symbol';
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {SVGSet} from '../../model/svgset';
 import {SelectSymbol} from '../../store/actions/agnostic-representation.actions';

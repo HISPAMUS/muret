@@ -20,7 +20,7 @@ import {
 import {Notation} from '../../services/notation';
 import {Shape} from '../../../../svg/model/shape';
 import {selectAgnosticSymbols} from '../../../agnostic-representation/store/selectors/agnostic-representation.selector';
-import {AgnosticSymbol} from '../../../../core/model/entities/agnosticSymbol';
+import {AgnosticSymbol} from '../../../../core/model/entities/agnostic-symbol';
 import {Rectangle} from '../../../../svg/model/rectangle';
 import {Part} from '../../../../core/model/entities/part';
 import {
@@ -88,6 +88,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   private gridColumnApi;
 
   defaultColDef: { resizable: boolean; editable: boolean };
+  selectedSemanticSymbolID: null;
 
 
   // usesOfPartsSubscription: Subscription;
@@ -635,5 +636,11 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
   hasPartAssigned() {
     return this.hasPartAssignedToRegion() || this.hasPartAssignedToImage();
+  }
+
+  onGridRowSelected($event: any) {
+    if ($event) {
+      this.selectedSemanticSymbolID = $event.rowIndex;
+    }
   }
 }
