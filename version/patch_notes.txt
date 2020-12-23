@@ -4,6 +4,8 @@
     - FMT MEI MEI import script
     - Refactoring of modules in order to prepare the semantic visual toolbar
     - Migration to Angular 11
+    - In semantic mode, the selected item in the **skern/**smens grid is bidirectionally highlighted in the score
+    - When the agnostic symbol is selected, the associated semantic symbol in the grid and in the notation is highlighted
 
     MINOR UPDATES
     - Issues #141, #170, #155, #157
