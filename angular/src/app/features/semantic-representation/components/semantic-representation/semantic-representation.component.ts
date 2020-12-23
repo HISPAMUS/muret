@@ -77,7 +77,8 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
   agnosticIDs: number[];
   fileNameSubscription : Subscription;
-  agnosticIDMap: Map<number, number>;
+  agnosticIDMap: Map<number, number>; // key = agnostic ID, value = usable ID (the one drawn in the agnostic view to identify the object visually)
+  agnosticGridRow: Map<string, number>; // key = agnostic ID, value = row in the grid
   columnDefs = [
     {headerName: '**smens/**skern', field: 'smens' },
     {headerName: 'Agnostic symbols', field: 'agnosticSymbols' }
@@ -363,15 +364,24 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   private drawSemanticEncoding(semanticEncoding: string) {
+    this.agnosticGridRow = new Map<string, number>();
     const newItems = [];
     const lines = semanticEncoding.split('\n');
+    let rowNumber = 0;
     lines.forEach(line => {
       if (line.length > 0) {
         const columns = line.split('@');
+        const agnosticIDS = columns[1];
         newItems.push({
           smens: columns[0],
-          agnosticSymbols: this.findAgnosticID(columns[1]) // replaces the actual symbol ID for a more usable one
+          agnosticSymbols: this.findAgnosticID(agnosticIDS) // replaces the actual symbol ID for a more usable one
         });
+
+        const IDS: string[] = agnosticIDS.split(',');
+        IDS.forEach(id => {
+          this.agnosticGridRow.set(id, rowNumber);
+        });
+        rowNumber++;
       }
     });
     if (this.gridApi) {
@@ -647,7 +657,21 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   onNotationSymbolSelected($event: string) {
     if (this.gridApi) {
       const selectedLine = $event.substr(1);
-      this.gridApi.getRowNode(selectedLine).setSelected(true);
+      this.selectGridRow(+selectedLine);
     }
+  }
+
+  onAgnosticSymbolSelected($event: string) {
+    if ($event) {
+      const line = this.agnosticGridRow.get($event);
+      if (line) {
+        console.log('R:' + line);
+        this.selectGridRow(line);
+      }
+    }
+  }
+
+  private selectGridRow(selectedLine: number) {
+    this.gridApi.getRowNode(selectedLine).setSelected(true);
   }
 }

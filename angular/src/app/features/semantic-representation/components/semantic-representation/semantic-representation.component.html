@@ -54,7 +54,8 @@
                    [zoomFactor]="selectedRegionZoomFactor"
                    [crop]="selectedRegion.boundingBox"
                    [mode]="'eSelecting'"
-        ></app-image> <!-- [(selectedShapeID)]="selectedAgnosticShapeID" -->
+                   (selectedShapeIDChange)="onAgnosticSymbolSelected($event)"
+        ></app-image>
 
       </div>
     </section>
