@@ -5,6 +5,7 @@ import {SVGSet} from "../../../features/agnostic-representation/model/svgset";
 import {AgnosticOrSemanticSymbolAndPosition} from "../../../features/agnostic-representation/model/agnostic-or-semantic-symbol-and-position";
 import {AgnosticOrSemanticTypeSVGPath} from "../../../features/agnostic-representation/model/agnostic-or-semantic-type-s-v-g-path";
 import {AgnosticRepresentationState} from "../../../features/agnostic-representation/store/state/agnostic-representation.state";
+import {KeyValue} from "@angular/common";
 
 @Component({
   selector: 'app-agnostic-or-semantic-toolbar',
@@ -12,7 +13,7 @@ import {AgnosticRepresentationState} from "../../../features/agnostic-representa
   styleUrls: ['./agnostic-or-semantic-toolbar.component.css']
 })
 export class AgnosticOrSemanticToolbarComponent implements OnInit, OnDestroy {
-  @Input() filters: Map<string, string>; // map<values, titles>
+  @Input() filters: Array<KeyValue<string, string>>; // map<values, titles>
   @Input() filter: AgnosticOrSemanticSymbolAndPosition[];
 
   @Input() svgAgnosticOrSemanticSymbolSet: SVGSet;
@@ -29,8 +30,6 @@ export class AgnosticOrSemanticToolbarComponent implements OnInit, OnDestroy {
   classifierValue = true;
   symbolsFilter = 'frequent'; // default value
   buttonWidth: number;
-
-  private serverErrorSubscription: Subscription;
 
   constructor(public store: Store<AgnosticRepresentationState>) {
   }
@@ -79,7 +78,7 @@ export class AgnosticOrSemanticToolbarComponent implements OnInit, OnDestroy {
   trackSVGSymbolFn(index, item: AgnosticOrSemanticTypeSVGPath) {
     return index;
   }
-
+  //TODO Esto debe ser genérico o venir como parámetro !!!!!
   getFilteredSymbols() {
     this.buttonWidth = 70;
     if (this.filter) { // from input

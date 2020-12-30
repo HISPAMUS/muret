@@ -1,7 +1,7 @@
 <div *ngIf="showFilter()" id="agnosticOrSemanticSymbolFilter" class="btn-group btn-group-toggle" ngbRadioGroup
      name="modeRadioButtonGroup" [(ngModel)]="symbolsFilter">
 
-  <label ngbButtonLabel *ngFor="let item of filters | keyvalue">
+  <label ngbButtonLabel *ngFor="let item of filters">
     <input name="modeRadioButton" ngbButton type="radio" [value]="item.key" ><span>{{item.value}}</span>
   </label>
 </div>

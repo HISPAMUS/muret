@@ -48,6 +48,7 @@ import { LinkType } from 'src/app/layout/components/breadcrumb/breadcrumbType';
 import {SVGSet} from "../../../agnostic-representation/model/svgset";
 import {selectSVGAgnosticOrSemanticSymbolSet} from "../../../../core/store/selectors/core.selector";
 import {GetSVGSet} from "../../../../core/store/actions/fonts.actions";
+import {KeyValue} from "@angular/common";
 
 @Component({
   selector: 'app-semantic-representation',
@@ -99,15 +100,15 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   private selectedRegionSymbols: AgnosticSymbol[];
 
   svgSet$: Observable<SVGSet>;
-  semanticToolbarFilters: Map<string, string> = // map<values, titles> - initialized in constructor
-    new Map([
-      ["clefsmeters", "Clefs Meters"],
-      ["note.", "Notes"],
-      ["note.beam", "Beamed notes"],
-      ["rest", "Rests"],
-      ["accidental.", "Accidentals"],
-      ["other", "Other"]
-    ]);
+  semanticToolbarFilters: Array<KeyValue<string, string>> = // map<values, titles> - initialized in constructor
+    [
+      {key: "clefsmeters", value: "Clefs Meters"},
+      {key: "note.", value: "Notes"},
+      {key: "note.beam", value: "Beamed notes"},
+      {key: "rest", value: "Rests"},
+      {key: "accidental.", value: "Accidentals"},
+      {key: "other", value: "Other"}
+    ];
   private documentTypeSubscription: Subscription;
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>,
