@@ -5,10 +5,6 @@
 }
 
 /* >>> is alias for /deep/ which will force style down through the child component tree. */
-/* match all ids that start with rest and hide them*/
->>> [id^="rest"] {
-  display: none;
-}
 
 /* The mouse over event is sent that will select the manual entry table,
 that in turn will add the .selectedVerovioItem class */
