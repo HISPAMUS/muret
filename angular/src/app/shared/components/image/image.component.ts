@@ -29,6 +29,7 @@ export class ImageComponent implements OnInit, OnDestroy {
   @Input() crop: BoundingBox;
   @Input() nextShapeToDraw: 'Rectangle' | 'Line' | 'Text' | 'Path';
   @Input() isAgnostic : boolean;
+  @Input() selectedShapeFillColor: string;
   selectedShapeIDValue: string;
 
 

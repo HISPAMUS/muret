@@ -46,7 +46,7 @@ export class ImagePreviewComponent implements OnInit, OnDestroy {
 
     this.selectedRegionSubscription = this.store.select(selectSelectedRegion).subscribe(next => {
       this.selectedRegion.emit(next);
-      this.highlightSelectedRegion(next);
+      //see comment below this.highlightSelectedRegion(next);
     });
   }
 
@@ -123,6 +123,7 @@ export class ImagePreviewComponent implements OnInit, OnDestroy {
     return rect;
   }
 
+  /*Replaced by the property selectedShapeFillColor of ImageComponent
   private highlightSelectedRegion(next: Region) {
     if (this.imagePreviewShapes) {
       this.imagePreviewShapes.forEach(shape => {
@@ -133,5 +134,5 @@ export class ImagePreviewComponent implements OnInit, OnDestroy {
         }
       });
     }
-  }
+  }*/
 }

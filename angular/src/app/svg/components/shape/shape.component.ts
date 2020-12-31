@@ -55,4 +55,6 @@ export class ShapeComponent implements OnInit {
     // it will be overriden by specific shapes
     this.drawStarted = true;
   }
+
+
 }

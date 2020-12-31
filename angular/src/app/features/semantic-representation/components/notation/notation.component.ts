@@ -85,7 +85,7 @@ export class NotationComponent implements OnInit, OnChanges, OnDestroy, AfterVie
     // we use the lambda notation to maintain the this value, if the function() {} notation is used,
     // the this accesibility is lost
     this.verovioDiv.nativeElement.querySelectorAll('g').forEach( (item) => {
-      if (item.id && item.id.startsWith('L')) { // the ID of elements starts with an L
+      if (item.id && item.id.startsWith('L')) { // the ID of elements starts with an L (see Semantic2IMCore) convert method
         item.addEventListener('mouseover', (event) => {
           if (item.id) {
             this.onItemSelected.emit(item.id);

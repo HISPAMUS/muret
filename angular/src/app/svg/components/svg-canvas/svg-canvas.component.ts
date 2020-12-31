@@ -59,6 +59,9 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
 
   @Input() isAgnostic: boolean;
 
+  @Input() selectedShapeFillColor: string;
+
+
   selectedShapeIDValue: string;
 
   private modeValue: 'eIdle' | 'eAdding' | 'eEditing' | 'eSelecting';
@@ -96,6 +99,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   // Variables to check if user is going backside
   private originX = 0;
   private originY = 0;
+
+  private lastSelectedElement: SVGGraphicsElement;
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver,
               private sanitizer: DomSanitizer) {
@@ -141,6 +146,16 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   set selectedShapeID(id: string) {
     if (this.selectedShapeIDValue !== id) {
       this.selectedShapeIDValue = id;
+      if (this.shapes) {
+        this.shapes.forEach(shape => {
+          if (shape.id === id) {
+            const target = this.canvas.nativeElement.getElementById(id);
+            if (target) {
+              this.highlightSelectedSVGElement(target);
+            }
+          }
+        });
+      }
     }
   }
 
@@ -231,6 +246,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
         }
         break;
       case 'eSelecting':
+        const selectedElement = (target as SVGGraphicsElement);
+        this.highlightSelectedSVGElement(selectedElement);
         this.selectedShapeID = target.id;
         this.selectedShapeIDChange.emit(this.selectedShapeID);
         break;
@@ -409,6 +426,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
     }
     else
     {
+      //TODO Document this
       if(this.isChrome() && navigator.appVersion.indexOf("Linux")!=-1)
         this.handleMouse($event);
     }
@@ -420,10 +438,16 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
     this.onDrawStart(event.target, event.timeStamp, event.offsetX, event.offsetY);
   }
 
+  //TODO This method should be in a shared service
   isChrome()
   {
       const agent = window.navigator.userAgent.toLowerCase()
       return (agent.indexOf('chrome') > -1 && !!(<any>window).chrome)
+  }
+
+  //TODO This method should be in a shared service
+  isTouchDevice() {
+    return 'ontouchstart' in document.documentElement;
   }
 
   // https://stackoverflow.com/questions/17130940/retrieve-the-same-offsetx-on-touch-like-mouse-event/33756703
@@ -466,10 +490,6 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
     this.onDrawEnd();
   }
 
-  isTouchDevice() {
-    return 'ontouchstart' in document.documentElement;
-  }
-
   onDblClickOnShape(shape: Shape) {
     if (this.mode === 'eIdle') {
       this.mode = 'eEditing';
@@ -477,6 +497,16 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
       this.selectedShapeIDChange.emit(this.selectedShapeID);
     }
   }
+
+  private highlightSelectedSVGElement(selectedElement: SVGGraphicsElement) {
+    if (this.selectedShapeFillColor) {
+      if (this.lastSelectedElement) {
+        this.lastSelectedElement.setAttribute("fill", "transparent");
+      }
+      selectedElement.setAttribute("fill", this.selectedShapeFillColor);
+      selectedElement.setAttribute("fill-opacity", '0.2');
+      this.lastSelectedElement = selectedElement;
+    }
+  }
 }
 
-// Llevar todo lo de touch a servicio

@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Subscription} from 'rxjs';
 import {SVGSet} from "../../../features/agnostic-representation/model/svgset";
 import {AgnosticOrSemanticSymbolAndPosition} from "../../../features/agnostic-representation/model/agnostic-or-semantic-symbol-and-position";
 import {AgnosticOrSemanticTypeSVGPath} from "../../../features/agnostic-representation/model/agnostic-or-semantic-type-s-v-g-path";

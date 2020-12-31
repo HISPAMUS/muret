@@ -55,6 +55,8 @@
                    [crop]="selectedRegion.boundingBox"
                    [mode]="'eSelecting'"
                    (selectedShapeIDChange)="onAgnosticSymbolSelected($event)"
+                   [selectedShapeFillColor]="'red'"
+                   [selectedShapeID]="selectedAgnosticSymbolID"
         ></app-image>
 
       </div>

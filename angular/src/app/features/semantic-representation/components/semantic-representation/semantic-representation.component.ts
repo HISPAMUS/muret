@@ -91,7 +91,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
   defaultColDef: { resizable: boolean; editable: boolean };
   selectedSemanticSymbolID: string;
-
+  selectedAgnosticSymbolID: string;
 
   // usesOfPartsSubscription: Subscription;
   private useOfPartsSubscription: Subscription;
@@ -649,9 +649,14 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     return this.hasPartAssignedToRegion() || this.hasPartAssignedToImage();
   }
 
+  //TODO The selection behaviour should be refactored to another object
+  // The notation component takes the selected element from the binded this.selectedSemanticSymbolID
+  // The **skern / **smens grid / matrix is selected using the selectGridRow method
+  // In order to select the agnostic element, the this.selectedAgnosticSymbolID field is used, but the
   onGridRowSelected($event: any) {
     if ($event && $event.node.selected) {
       this.selectedSemanticSymbolID = 'L' + $event.rowIndex;
+      this.selectAgnosticSymbolRelatedToLine($event.rowIndex);
     }
   }
 
@@ -659,6 +664,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     if (this.gridApi) {
       const selectedLine = $event.substr(1);
       this.selectGridRow(+selectedLine);
+      this.selectAgnosticSymbolRelatedToLine(+selectedLine);
     }
   }
 
@@ -666,7 +672,6 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     if ($event) {
       const line = this.agnosticGridRow.get($event);
       if (line) {
-        console.log('R:' + line);
         this.selectGridRow(line);
       }
     }
@@ -674,5 +679,14 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
   private selectGridRow(selectedLine: number) {
     this.gridApi.getRowNode(selectedLine).setSelected(true);
+  }
+
+  private selectAgnosticSymbolRelatedToLine(rowIndex: number) {
+    this.agnosticGridRow.forEach((rowNumber, agnosticID) => {
+      if (rowIndex === rowNumber) {
+        this.selectedAgnosticSymbolID = agnosticID + '';
+        return;
+      }
+    });
   }
 }
