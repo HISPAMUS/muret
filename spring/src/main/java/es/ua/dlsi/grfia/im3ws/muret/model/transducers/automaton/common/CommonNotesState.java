@@ -145,6 +145,12 @@ public abstract class CommonNotesState extends TransducerState {
             if (lastSymbol.getSymbol().getCoreSymbol() instanceof SingleFigureAtom) {
                 SingleFigureAtom sfa = (SingleFigureAtom) lastSymbol.getSymbol().getCoreSymbol();
                 sfa.getAtomFigure().addDot(); // TODO podría ser de puntillo de división
+            } else if (lastSymbol.getSymbol() instanceof SemanticLigature) {
+                Atom lastAtom = ((SemanticLigature) lastSymbol.getSymbol()).getCoreSymbol().getLastAtom();
+                if (!(lastAtom instanceof SingleFigureAtom)) {
+                    throw new ImportException("Last atom should be a single figure atom");
+                }
+                ((SingleFigureAtom)lastAtom).getAtomFigure().addDot();
             } else {
                 throw new ImportException("Last symbol should be a single figure atom"); // TODO y los acordes
             }

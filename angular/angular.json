@@ -27,7 +27,7 @@
               "src/styles.css"
             ],
             "scripts": [
-              "lib/verovio-toolkit-light.js"
+              "lib/verovio-toolkit.js"
             ]
           },
           "configurations": {

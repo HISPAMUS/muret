@@ -452,7 +452,8 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   keyEvent(event: KeyboardEvent) {
     if (this.mode === 'eEditing' || this.mode === 'eAdding') {
       switch (event.code) {
-        case 'Delete':
+        case 'Backspace':
+        case 'Delete': //TODO Check this code
           setTimeout( () => {
             this.deleteSelectedSymbol();
           }, 1000 ); // patch to avoid calling twice the delete symbol method

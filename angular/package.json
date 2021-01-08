@@ -1,6 +1,6 @@
 {
   "name": "muret",
-  "version": "2020.12.20",
+  "version": "0.0.14",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
