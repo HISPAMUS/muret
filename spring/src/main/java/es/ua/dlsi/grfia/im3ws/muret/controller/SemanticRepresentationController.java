@@ -7,12 +7,14 @@ import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Renderer;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Document;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Part;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Region;
+import es.ua.dlsi.grfia.im3ws.muret.entity.Symbol;
 import es.ua.dlsi.grfia.im3ws.muret.model.*;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.PageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.SymbolRepository;
 import es.ua.dlsi.im3.core.IM3Exception;
+import es.ua.dlsi.im3.core.score.NotationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -134,6 +136,35 @@ public class SemanticRepresentationController extends MuRETBaseController {
             regionRepository.save(region);
         } catch (IM3WSException e) {
             throw ControllerUtils.createServerError(this, "Cannot clear semantic encoding", e);
+        }
+    }
+
+    @Transactional
+    @GetMapping(path = {"changeNotationType/{regionID}/{notationTypeString}"})
+    public Region changeNotationType(@PathVariable("regionID") Long regionID,
+                                       @PathVariable("notationTypeString") NotationType notationType
+    )  {
+        try {
+            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Changing notation type of region {0} to {1}", new Object[]{regionID, notationType});
+            Region region = getRegion(regionID);
+            region.setNotationType(notationType);
+            regionRepository.save(region);
+            return region;
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this,"Cannot update region notation type ", e);
+        }
+    }
+
+    @DeleteMapping(path = {"clearNotationType/{regionID}"})
+    @Transactional
+    public void clearNotationType(@PathVariable(name="regionID") Long regionID)  {
+        try {
+            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Clearing notation type for region ID {0}", regionID);
+            Region region = getRegion(regionID);
+            region.setNotationType(null);
+            regionRepository.save(region);
+        } catch (IM3WSException e) {
+            throw ControllerUtils.createServerError(this, "Cannot clear notation type", e);
         }
     }
 }

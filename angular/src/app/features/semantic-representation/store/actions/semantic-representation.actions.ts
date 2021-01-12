@@ -18,6 +18,8 @@ export enum SemanticRepresentationActionTypes {
   GetTranslationModelsSuccess = '[SemanticRepresentation] Get translation models success',
   SelectSymbol = '[SemanticRepresentation] Select symbol',
   DeselectSymbol = '[SemanticRepresentation] Deselect symbol',
+  ChangeNotationType = '[SemanticRepresentation] Change notation type',
+  ChangeNotationTypeSuccess = '[SemanticRepresentation] Change notation type success'
 }
 
 export class ResetSemanticRepresentationServerError implements Action {
@@ -85,8 +87,19 @@ export class DeselectSymbol implements Action {
   constructor() {}
 }
 
+export class ChangeNotationType implements Action {
+  public readonly type = SemanticRepresentationActionTypes.ChangeNotationType;
+  constructor(public region: Region, public notationType: string) {}
+}
+
+export class ChangeNotationTypeSuccess implements Action {
+  public readonly type = SemanticRepresentationActionTypes.ChangeNotationTypeSuccess;
+  constructor(public region: Region) {}
+}
+
 export type SemanticRepresentationActions =
   ResetSemanticRepresentationServerError | SemanticRepresentationServerError |
   ConvertAgnostic2Semantic | ConvertAgnostic2SemanticSuccess | GetNotation | GetNotationSuccess | ClearNotation |
   SendSemanticEncoding | SendSemanticEncodingSuccess | GetTranslationModels | GetTranslationModelsSuccess |
-  SelectSymbol | DeselectSymbol;
+  SelectSymbol | DeselectSymbol |
+  ChangeNotationType | ChangeNotationTypeSuccess;

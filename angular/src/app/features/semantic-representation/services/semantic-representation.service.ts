@@ -40,9 +40,21 @@ export class SemanticRepresentationService {
     }
   }
 
-  getTranslationModels(imageID: number) {
+  //TODO Add result type to this method
+  getTranslationModels$(imageID: number) {
     const url = `classifierModels/translator/${imageID}`;
     return this.apiRestClientService.get$(url);
   }
+
+  changeNotationType$(regionID: number, notationType: string): Observable<Region> {
+    if (notationType) {
+      const url = `semantic/changeNotationType/${regionID}/${notationType}`;
+      return this.apiRestClientService.get$(url);
+    } else {
+      const url = `semantic/clearNotationType`;
+      return this.apiRestClientService.delete$(url, regionID);
+    }
+  }
+
 
 }

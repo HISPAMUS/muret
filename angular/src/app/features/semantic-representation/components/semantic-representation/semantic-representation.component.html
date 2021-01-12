@@ -38,6 +38,12 @@
         </div>
       </div>
     </ng-template>
+    <div class="col">
+      Notation type:
+      <select name="specialNotation" [(ngModel)]="specialNotationType" (ngModelChange)="changeSpecialNotationType($event)">
+        <option [ngValue]="notationType" *ngFor="let notationType of notationTypes">{{notationType}}</option>
+      </select>
+    </div>
   </section>
 
   <div *ngIf="selectedRegion as selectedRegion; else noRegionSelected">
@@ -153,7 +159,6 @@
         </div>
 
         <div id="toolbarPanel" class="card" [ngbCollapse]="isToolbarCollapsed()">
-          <h2>Prueba</h2>
           <!--<hr *ngIf="selectedSymbol">
           <app-agnostic-or-semantic-toolbar *ngIf="selectedSymbol"
                                             [filters]="semanticToolbarFilters"

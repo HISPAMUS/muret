@@ -1,5 +1,6 @@
 package es.ua.dlsi.grfia.im3ws.muret.entity;
 
+import es.ua.dlsi.im3.core.score.NotationType;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
@@ -19,6 +20,7 @@ public interface IRegionWithSymbolsProjection {
     BoundingBox getBoundingBox();
     IRegionTypeProjection getRegionType();
     List<ISymbolProjection> getSymbols();
+    NotationType getNotationType();
 
     Part getPart();
 }

@@ -13,10 +13,11 @@ import {
   SendSemanticEncodingSuccess,
   GetTranslationModels,
   GetTranslationModelsSuccess,
-  SemanticRepresentationServerError
+  SemanticRepresentationServerError, ChangeNotationType, ChangeNotationTypeSuccess
 } from '../actions/semantic-representation.actions';
 import {Notation} from '../../services/notation';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
+import {Region} from "../../../../core/model/entities/region";
 
 @Injectable()
 export class SemanticRepresentationEffects {
@@ -58,8 +59,18 @@ export class SemanticRepresentationEffects {
   getTranslationModels$ = this.actions$.pipe(
     ofType<GetTranslationModels>(SemanticRepresentationActionTypes.GetTranslationModels),
     switchMap((action: GetTranslationModels) =>
-      this.semanticRepresentationService.getTranslationModels(action.imageID).pipe(
+      this.semanticRepresentationService.getTranslationModels$(action.imageID).pipe(
       switchMap((translationModels: ClassifierModel[]) => of(new GetTranslationModelsSuccess(translationModels))),
         catchError(err => of(new SemanticRepresentationServerError(err)))
       )));
+
+  @Effect()
+  changeNotationType$ = this.actions$.pipe(
+    ofType<ChangeNotationType>(SemanticRepresentationActionTypes.ChangeNotationType),
+    switchMap((action: ChangeNotationType) =>
+      this.semanticRepresentationService.changeNotationType$(action.region.id, action.notationType).pipe(
+        switchMap((region: Region) => of(new ChangeNotationTypeSuccess(region))),
+        catchError(err => of(new SemanticRepresentationServerError(err)))
+      )));
+
 }

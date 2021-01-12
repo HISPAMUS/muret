@@ -79,6 +79,13 @@ export function semanticRepresentationReducers(state = initialSemanticRepresenta
       newState.selectedSymbolID = null;
       return newState;
     }
+    case SemanticRepresentationActionTypes.ChangeNotationType: {
+      const newState = {
+        apiRestServerError: null,
+        ...state
+      };
+      return newState;
+    }
     default: {
       return state;
     }

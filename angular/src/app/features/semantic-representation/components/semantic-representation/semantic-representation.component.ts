@@ -10,7 +10,7 @@ import {
   ConvertAgnostic2Semantic,
   GetNotation,
   SendSemanticEncoding,
-  GetTranslationModels, ResetSemanticRepresentationServerError
+  GetTranslationModels, ResetSemanticRepresentationServerError, ChangeNotationType
 } from '../../store/actions/semantic-representation.actions';
 import {
   selectNotation,
@@ -110,6 +110,9 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
       {key: "other", value: "Other"}
     ];
   private documentTypeSubscription: Subscription;
+
+  notationTypes: string[] = ['Same as whole document', 'ePlainChant', 'eMensural', 'eModern']; //TODO Get from server;
+  specialNotationType: any;
 
   constructor(private route: ActivatedRoute, private router: Router, private store: Store<any>,
               private dialogsService: DialogsService, private showErrorService: ShowErrorService
@@ -253,7 +256,24 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
       } else {
         this.store.dispatch(new ClearNotation());
       }
+
+      if (this.selectedRegion && this.selectedRegion.notationType) {
+        this.specialNotationType = this.selectedRegion.notationType;
+      } else {
+        this.specialNotationType = this.notationTypes[0]; // same as document
+      }
     });
+  }
+
+  changeSpecialNotationType($event: any) {
+    let notationType: string;
+    if ($event === this.notationTypes[0]) {
+      notationType = null;
+    } else {
+      notationType = $event;
+    }
+
+    this.store.dispatch(new ChangeNotationType(this.selectedRegion, notationType));
   }
 
   /*manualInputChanged($event: any) {
@@ -653,6 +673,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   // The notation component takes the selected element from the binded this.selectedSemanticSymbolID
   // The **skern / **smens grid / matrix is selected using the selectGridRow method
   // In order to select the agnostic element, the this.selectedAgnosticSymbolID field is used, but the
+
   onGridRowSelected($event: any) {
     if ($event && $event.node.selected) {
       this.selectedSemanticSymbolID = 'L' + $event.rowIndex;
@@ -689,4 +710,5 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
       }
     });
   }
+
 }

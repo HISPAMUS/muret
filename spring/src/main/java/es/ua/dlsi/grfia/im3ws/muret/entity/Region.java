@@ -3,6 +3,7 @@ package es.ua.dlsi.grfia.im3ws.muret.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import es.ua.dlsi.im3.core.score.NotationType;
 
 import javax.persistence.*;
 import java.util.Comparator;
@@ -78,10 +79,17 @@ public class Region extends Auditable implements IAssignableToPart {
     @Column (name = "semantic_encoding")
     private String semanticEncoding;
 
+    /**
+     * When it's different from the document type, e.g. PlainChant in mensural
+     */
+    @Column (name="notation_type")
+    @Enumerated(EnumType.STRING)
+    private NotationType notationType;
+
     public Region() {
     }
 
-    public Region(Page page, BoundingBox boundingBox, String comments, RegionType regionType, List<Symbol> symbols, Part part, String semanticEncoding) {
+    public Region(Page page, BoundingBox boundingBox, String comments, RegionType regionType, List<Symbol> symbols, Part part, String semanticEncoding, NotationType notationType) {
         this.boundingBox = boundingBox;
         this.page = page;
         this.regionType = regionType;
@@ -89,6 +97,7 @@ public class Region extends Auditable implements IAssignableToPart {
         this.comments = comments;
         this.part = part;
         this.semanticEncoding = semanticEncoding;
+        this.notationType = notationType;
     }
 
     public Region(Page page, RegionType regionType, int fromX, int fromY, int toX, int toY, Part part) {
@@ -179,6 +188,14 @@ public class Region extends Auditable implements IAssignableToPart {
 
     public void setSemanticEncoding(String semanticEncoding) {
         this.semanticEncoding = semanticEncoding;
+    }
+
+    public NotationType getNotationType() {
+        return notationType;
+    }
+
+    public void setNotationType(NotationType notationType) {
+        this.notationType = notationType;
     }
 
     @Override
