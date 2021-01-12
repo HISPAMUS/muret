@@ -27,6 +27,7 @@ import java.util.logging.Logger;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class KernSyntaxDirectedTranslation2EKern {
+    private static final String ASTERISK = "*";
     private boolean debug = false;
 
     public KernSyntaxDirectedTranslation2EKern() {
@@ -293,6 +294,10 @@ public class KernSyntaxDirectedTranslation2EKern {
                     stringBuilder.append(pitch.alteration().alterationDisplay().getText());
                 }
             }
+            if (pitch.fermata() != null) {
+                stringBuilder.append(SEPARATOR);
+                stringBuilder.append(pitch.fermata().getText());
+            }
         }
 
         @Override
@@ -318,13 +323,13 @@ public class KernSyntaxDirectedTranslation2EKern {
                     }
                 }
             }
+
             if (this.currentChordStringBuilder != null) {
                 // inside a chord
                 this.currentChordStringBuilder.append(stringBuilder);
             } else {
                 output(stringBuilder.toString());
             }
-
         }
 
         @Override
@@ -400,17 +405,25 @@ public class KernSyntaxDirectedTranslation2EKern {
             StringBuilder stringBuilder = new StringBuilder();
             for (LinkedList<String> row: loader.getTranslatedEKernMatrix()) {
                 boolean first = true;
+                boolean notAsterisk = false;
+                StringBuilder line = new StringBuilder();
                 for (String col: row) {
+                    if (!col.equals(ASTERISK)) {
+                        notAsterisk = true;
+                    }
                     if (first) {
                         first = false;
                     } else {
-                        stringBuilder.append('\t');
+                        line.append('\t');
                     }
-                    stringBuilder.append(col);
+                    line.append(col);
                 }
-                if (!first) {
-                    // if not empty
-                    stringBuilder.append('\n');
+                if (notAsterisk) { // do not add lines with only asterisks
+                    if (!first) {
+                        // if not empty
+                        line.append('\n');
+                    }
+                    stringBuilder.append(line);
                 }
             }
 
