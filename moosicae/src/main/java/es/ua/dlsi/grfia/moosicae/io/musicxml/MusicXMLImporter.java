@@ -81,9 +81,6 @@ public class MusicXMLImporter extends XMLImporter implements IImporter {
         } catch (Exception e) {
             throw new IMException("Not valid MusicXML file", e);
         }
-
-        //
-
     }
 
     @Override

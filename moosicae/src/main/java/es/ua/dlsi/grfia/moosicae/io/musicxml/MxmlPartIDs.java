@@ -12,6 +12,7 @@ import java.util.Optional;
  * @created 25/03/2020
  */
 public class MxmlPartIDs {
+    private static final String PREFIX = "P";
     private HashMap<IPart, String> partIDs;
 
     public MxmlPartIDs() {
@@ -23,7 +24,8 @@ public class MxmlPartIDs {
         if (id != null) {
             return id;
         } else {
-            String value = part.getId().getValue();
+            // String value = part.getId().getValue(); Cannot use the UUID ID, use a count
+            String value = PREFIX + Integer.toString(partIDs.size()+1);
             partIDs.put(part, value);
             return value;
         }
