@@ -99,6 +99,14 @@ public class KernDocument2IScore {
         if (kernToken instanceof KernPart) {
             KernPart kernPart = (KernPart) kernToken;
             processPart(voice, kernPart);
+        } else if (kernToken instanceof KernInstrument) {
+            KernInstrument kernInstrument = (KernInstrument) kernToken;
+            IPart part = voiceParts.get(voice.getId());
+            if (part == null) {
+                throw new IMException("Cannot find a part for voice " + voice.getId()); //TODO ¿Podríamos tener una *I sin una *Part --> creamos una part
+            }
+            part.setName(kernInstrument.getName());
+
         } else if (kernToken instanceof KernStaff) {
             KernStaff kernStaff = (KernStaff) kernToken;
             processStaff(voice, kernStaff);

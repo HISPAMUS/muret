@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
+import es.ua.dlsi.grfia.moosicae.core.impl.properties.Name;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.properties.IName;
 import javax.validation.constraints.NotNull;
@@ -14,7 +15,7 @@ import java.util.Optional;
  */
 public class Part extends CoreObject implements IPart {
 
-    private final IName name;
+    private IName name;
     @NotNull
     private final LinkedList<IVoice> voices;
 
@@ -27,6 +28,11 @@ public class Part extends CoreObject implements IPart {
     @Override
     public Optional<IName> getName() {
         return Optional.ofNullable(name);
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = new Name(IdGenerator.getInstance().generateUniqueId(), name);
     }
 
     @Override

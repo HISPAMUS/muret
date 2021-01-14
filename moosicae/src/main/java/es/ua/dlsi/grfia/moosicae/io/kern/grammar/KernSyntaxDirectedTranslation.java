@@ -215,7 +215,6 @@ public class KernSyntaxDirectedTranslation {
             addItemToSpine(partNumber);
         }
 
-
         @Override
         public void enterRecord(kernParser.RecordContext ctx) {
             super.enterRecord(ctx);
@@ -237,6 +236,21 @@ public class KernSyntaxDirectedTranslation {
         public void exitField(kernParser.FieldContext ctx) {
             super.exitField(ctx);
             this.spineIndex ++;
+        }
+
+        @Override
+        public void exitInstrument(kernParser.InstrumentContext ctx) {
+            Logger.getLogger(KernSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Instrument {0}", ctx.getText());
+            super.exitInstrument(ctx);
+
+            String name;
+            if (ctx.getText().startsWith("I\"")) { // I"name
+                name = ctx.getText().substring(3);
+            } else { // Iname
+                name = ctx.getText().substring(2);
+            }
+            KernInstrument kernInstrument = new KernInstrument(ctx.getText(), name);
+            addItemToSpine(kernInstrument);
         }
 
         @Override

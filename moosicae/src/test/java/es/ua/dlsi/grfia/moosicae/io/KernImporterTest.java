@@ -162,108 +162,66 @@ public class KernImporterTest {
     // ------------------------------------------------------------------------------------------
 
     private static Void assertGuideExample2_3(IScore song) {
-       /* try {
-            assertEquals("Staves", 2, song.getStaves().size());
-            Staff staff1 = song.getStaves().get(0);
-            assertTrue("G2", staff1.getClefAtTime(Time.TIME_ZERO) instanceof ClefG2);
-            TimeSignature ts = staff1.getTimeSignatureWithOnset(Time.TIME_ZERO);
+       try {
+           assertEquals("Parts", 4, song.getParts().length);
+           // see https://github.com/humdrum-tools/verovio-humdrum-viewer/issues/293
+           // In **mOOsicae** the use of filters is avoided, so two spines with the same staff number use the same staff.
 
-            Staff staff2 = song.getStaves().get(1);
-            assertTrue("F4", staff2.getClefAtTime(Time.TIME_ZERO) instanceof ClefF4);
-            TimeSignature ts2 = staff1.getTimeSignatureWithOnset(Time.TIME_ZERO);
+           IPart sopranoPart = song.getParts()[3];
+           IPart altoPart = song.getParts()[2];
+           IPart tenorPart = song.getParts()[1];
+           IPart bassPart = song.getParts()[0];
 
-            Key ks = song.getUniqueKeyWithOnset(Time.TIME_ZERO);
-            assertEquals(PitchClasses.A.getPitchClass(), ks.getPitchClass());
+           assertTrue("Soprano instrument present", sopranoPart.getName().isPresent());
+           assertTrue("Alto instrument present", altoPart.getName().isPresent());
+           assertTrue("Tenor instrument present", tenorPart.getName().isPresent());
+           assertTrue("Bass instrument present", bassPart.getName().isPresent());
 
-            assertEquals("First staff layers", 2, staff1.getLayers().size());
-            assertEquals("Second staff layers", 2, staff1.getLayers().size());
+           assertEquals("Soprano", "Soprano", sopranoPart.getName().get().getValue());
+           assertEquals("Alto", "Alto", altoPart.getName().get().getValue());
+           assertEquals("Tenor", "Tenor", tenorPart.getName().get().getValue());
+           assertEquals("Bass", "Bass", bassPart.getName().get().getValue());
 
-            for (Staff staff: song.getStaves()) {
-                for (ScoreLayer layer: staff.getLayers()) {
-                    assertTrue("First element in " + layer + " is a note", layer.getAtom(0) instanceof SimpleNote);
-                }
-            }
+           assertEquals("Soprano #1 voice", 1, sopranoPart.getVoices().length);
+           assertEquals("Alto #1 voice", 1, altoPart.getVoices().length);
+           assertEquals("Tenor #1 voice", 1, tenorPart.getVoices().length);
+           assertEquals("Bass #1 voice", 1, bassPart.getVoices().length);
 
-            List<Atom> atoms1_top = staff1.getLayers().get(0).getAtoms();
-            List<Atom> atoms1_bottom = staff1.getLayers().get(1).getAtoms();
-            SimpleNote n1_1 = (SimpleNote) atoms1_top.get(0);
-            SimpleNote n1_2 = (SimpleNote) atoms1_bottom.get(0);
-            if (n1_1.getPitch().getPitchClass().equals(PitchClasses.E.getPitchClass())) {
-                assertEquals("First note of first staff, bottom layer", PitchClasses.A.getPitchClass(), n1_2.getPitch().getPitchClass());
-            } else if (n1_1.getPitch().getPitchClass().equals(PitchClasses.A.getPitchClass())) {
-                assertEquals("First note of first staff, bottom layer", PitchClasses.E.getPitchClass(), n1_2.getPitch().getPitchClass());
-                // switch layers
-                List<Atom> aux = atoms1_top;
-                atoms1_top = atoms1_bottom;
-                atoms1_bottom = aux;
-            } else {
-                fail("Staff 1, first note is not A or E");
-            }
+           IVoice soprano = sopranoPart.getVoices()[0];
+           IVoice alto = altoPart.getVoices()[0];
+           IVoice tenor = tenorPart.getVoices()[0];
+           IVoice bass = bassPart.getVoices()[0];
 
+           assertEquals("Soprano voice #elements", 24, soprano.getItems().length);
+           assertEquals("Alto voice #elements", 25, alto.getItems().length);
+           assertEquals("Tenor voice #elements", 26, tenor.getItems().length);
+           assertEquals("Bass voice #elements", 29, bass.getItems().length);
 
-            List<Atom> atoms2_top = staff2.getLayers().get(0).getAtoms();
-            List<Atom> atoms2_bottom = staff2.getLayers().get(1).getAtoms();
+           assertEquals("System elements", 2, song.getSystemElements().length);
 
-            SimpleNote n2_1 = (SimpleNote) atoms2_top.get(0);
-            SimpleNote n2_2 = (SimpleNote) atoms2_bottom.get(0);
-            if (n2_1.getPitch().getPitchClass().equals(PitchClasses.C_SHARP.getPitchClass())) {
-                assertEquals("First note of second staff, bottom layer", PitchClasses.A.getPitchClass(), n2_2.getPitch().getPitchClass());
-            } else if (n2_1.getPitch().getPitchClass().equals(PitchClasses.A.getPitchClass())) {
-                assertEquals("First note of second staff, bottom layer", PitchClasses.C_SHARP.getPitchClass(), n2_2.getPitch().getPitchClass());
-                // switch layers
-                List<Atom> aux = atoms2_top;
-                atoms2_top = atoms2_bottom;
-                atoms2_bottom = aux;
-            } else {
-                fail("Staff 2, first note is not A or C#");
-            }
+           assertEquals("Soprano clef line", 2, ((IClef)soprano.getItems()[0]).getLine().get().getValue().intValue());
+           assertEquals("Soprano clef note", EClefSigns.G, ((IClef)soprano.getItems()[0]).getSignType().getValue());
 
+           assertEquals("Tenor clef line", 4, ((IClef)tenor.getItems()[0]).getLine().get().getValue().intValue());
+           assertEquals("Tenor clef note", EClefSigns.F, ((IClef)tenor.getItems()[0]).getSignType().getValue());
 
-            assertEquals("Staff 1, top layer", 16, atoms1_top.size());
-            assertEquals("Staff 1, bottom layer", 17, atoms1_bottom.size());
-            assertTrue("Staff 1, bottom layer, 7th element is rest", atoms1_bottom.get(6) instanceof SimpleRest);
-            assertEquals("Staff 2, top layer", 18, atoms2_top.size());
-            assertEquals("Staff 2, bottom layer", 21, atoms2_bottom.size());
+           assertEquals("Key signature accidentals", 3, ((IKeySignature)soprano.getItems()[1]).getPitchClasses().length);
+           assertEquals("Key signature first pitch", EDiatonicPitches.F, ((IKeySignature)soprano.getItems()[1]).getPitchClasses()[0].getDiatonicPitch().getValue());
+           assertEquals("Key signature first accidental", EAccidentalSymbols.SHARP, ((IKeySignature)soprano.getItems()[1]).getPitchClasses()[0].getAccidental().get().getValue());
+           assertEquals("Meter numerator", 4, ((IStandardTimeSignature)soprano.getItems()[2]).getNumerator().getValue().intValue());
+           assertEquals("Meter denominator", 4, ((IStandardTimeSignature)soprano.getItems()[2]).getDenominator().getValue().intValue());
 
-            SimpleNote n12 = (SimpleNote) atoms1_bottom.get(11);
-            assertEquals("Staff 1, bottom layer, 12th note pitch class", PitchClasses.A.getPitchClass(), n12.getPitch().getPitchClass());
-            assertEquals("Staff 1, bottom layer, 12th note octave", 4, n12.getPitch().getOctave());
-            assertTrue("Staff 1, bottom layer, 12th note is tied to next", n12.getAtomPitch().isTiedToNext());
+           assertEquals("Soprano voice, first note, 4ee\\, figure", EFigures.QUARTER, ((INote)soprano.getItems()[3]).getFigure().getValue());
+           assertEquals("Soprano voice, first note, 4ee\\, pitch", EDiatonicPitches.E, ((INote)soprano.getItems()[3]).getNoteHead().getPitch().getDiatonicPitch().getValue());
 
-            SimpleNote n13 = (SimpleNote) atoms1_bottom.get(12);
-            assertEquals("Staff 1, bottom layer, 13th note pitch class", PitchClasses.A.getPitchClass(), n13.getPitch().getPitchClass());
-            assertEquals("Staff 1, bottom layer, 13th note octave", 4, n13.getPitch().getOctave());
-            assertTrue("Staff 1, bottom layer, 13th note is tied from previous", n13.getAtomPitch().isTiedFromPrevious());
+           assertTrue("Bar line", soprano.getItems()[4] instanceof IBarline);
 
-            SimpleNote tn12 = (SimpleNote) atoms1_top.get(11);
-            assertEquals("Staff 1, top layer, 12th note pitch class", PitchClasses.C_SHARP.getPitchClass(), tn12.getPitch().getPitchClass());
-            assertEquals("Staff 1, top layer, 12th note octave", 5, tn12.getPitch().getOctave());
-            assertEquals("Staff 1, top layer, 12th note dots", 1, tn12.getAtomFigure().getDots());
-            assertEquals("Staff 1, top layer, 12th note duration", Figures.EIGHTH, tn12.getAtomFigure().getFigure());
-
-            SimpleNote tn13 = (SimpleNote) atoms1_top.get(12);
-            assertEquals("Staff 1, top layer, 13th note pitch class", PitchClasses.D.getPitchClass(), tn13.getPitch().getPitchClass());
-            assertEquals("Staff 1, top layer, 13th note octave", 5, tn13.getPitch().getOctave());
-            assertEquals("Staff 1, top layer, 13th note dots", 0, tn13.getAtomFigure().getDots());
-            assertEquals("Staff 1, top layer, 13th note duration", Figures.SIXTEENTH, tn13.getAtomFigure().getFigure());
-
-
-            assertTrue("Anacrusis" , song.isAnacrusis());
-            assertEquals("Anacrusis offset", new Time(3, 1), song.getAnacrusisOffset());
-
-            assertNotNull("Staff 1, top layer, first fermata", atoms1_top.get(5).getAtomFigures().get(0).getFermata());
-            assertNotNull("Staff 1, top layer, second fermata", atoms1_top.get(14).getAtomFigures().get(0).getFermata());
-            //Not in MusicXML example assertNotNull("Staff 1, bottom layer, first fermata", atoms1_bottom.get(5).getAtomFigures().get(0).getFermata());
-            //Not in MusicXML example assertNotNull("Staff 1, bottom layer, second fermata", atoms1_bottom.get(15).getAtomFigures().get(0).getFermata());
-            //Not in MusicXML example assertNotNull("Staff 2, top layer, first fermata", atoms2_top.get(5).getAtomFigures().get(0).getFermata());
-            //Not in MusicXML example assertNotNull("Staff 2, top layer, second fermata", atoms2_top.get(16).getAtomFigures().get(0).getFermata());
-            assertNotNull("Staff 2, bottom layer, first fermata", atoms2_bottom.get(9).getAtomFigures().get(0).getFermata());
-            assertNotNull("Staff 2, bottom layer, second fermata", atoms2_bottom.get(19).getAtomFigures().get(0).getFermata());
+           assertEquals("Soprano voice, first note with pause, 2ee;", ((INote)soprano.getItems()[10]).getNoteHead());
 
         } catch (Throwable t) {
             t.printStackTrace();
             fail(t.toString());
-        }*/
+        }
         return null;
     }
 

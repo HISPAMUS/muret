@@ -9,6 +9,7 @@ import java.util.Optional;
  */
 public interface IPart extends IMooObject {
     Optional<IName> getName();
+    void setName(String name);
 
     void add(IVoice voice);
 
