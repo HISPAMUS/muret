@@ -11,13 +11,10 @@ import java.util.*;
  */
 public class ClefsTest extends MonodicTest {
 
-    public ClefsTest(ICoreAbstractFactory coreAbstractFactory) {
-        super(coreAbstractFactory);
-    }
 
     @Override
     public Map<String, IScore> generateTestScores() throws Exception {
-        Map<String, IClef> clefs = PrototypesAbstractBuilder.getInstance(coreAbstractFactory).getClefs().getMap();
+        Map<String, IClef> clefs = PrototypesAbstractBuilder.getInstance().getClefs().getMap();
 
         HashMap<String, IScore> result = new HashMap<>();
         clefs.forEach((name, clef) -> {

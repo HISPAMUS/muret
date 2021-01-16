@@ -10,28 +10,23 @@ import java.util.HashMap;
  * @created 27/03/2020
  */
 public class PrototypesAbstractBuilder {
-    private static final HashMap<ICoreAbstractFactory, PrototypesAbstractBuilder> prototypes = new HashMap<>();
-    private final ICoreAbstractFactory coreAbstractFactory;
+    private static PrototypesAbstractBuilder instance;
 
     private final Clefs clefs;
     private final Keys keys;
     private final Meters meters;
 
-    private PrototypesAbstractBuilder(ICoreAbstractFactory coreAbstractFactory) throws IMException {
-        this.coreAbstractFactory = coreAbstractFactory;
-
-        this.clefs = new Clefs(coreAbstractFactory);
-        this.keys = new Keys(coreAbstractFactory);
-        this.meters = new Meters(coreAbstractFactory);
+    private PrototypesAbstractBuilder() throws IMException {
+        this.clefs = new Clefs();
+        this.keys = new Keys();
+        this.meters = new Meters();
     }
 
-    public static synchronized PrototypesAbstractBuilder getInstance(ICoreAbstractFactory coreAbstractFactory) throws IMException {
-        PrototypesAbstractBuilder p = prototypes.get(coreAbstractFactory);
-        if (p == null) {
-            p = new PrototypesAbstractBuilder(coreAbstractFactory);
-            prototypes.put(coreAbstractFactory, p);
+    public static PrototypesAbstractBuilder getInstance() throws IMException {
+        if (instance == null) {
+            instance = new PrototypesAbstractBuilder();
         }
-        return p;
+        return instance;
     }
 
     public Clefs getClefs() {

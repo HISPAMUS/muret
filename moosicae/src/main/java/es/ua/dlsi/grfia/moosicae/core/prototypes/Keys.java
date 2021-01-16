@@ -18,17 +18,14 @@ import java.util.Optional;
 public class Keys extends Prototypes<IKey> {
     /**
      * Instantiate it using PrototypesAbstractBuilder
-     * @param coreAbstractFactory
      */
-    Keys(ICoreAbstractFactory coreAbstractFactory) {
-        super(coreAbstractFactory);
-
+    Keys() {
         for (EConventionalKeys conventionalKey: EConventionalKeys.values()) {
-            this.add(conventionalKey.name(), coreAbstractFactory.createConventionalKey(null, conventionalKey, null));
+            this.add(conventionalKey.name(), ICoreAbstractFactory.getInstance().createConventionalKey(null, conventionalKey, null));
         }
 
         for (ETheoreticalKeys theoreticalKey: ETheoreticalKeys.values()) {
-            this.add(theoreticalKey.name(), coreAbstractFactory.createTheoreticalKey(null, theoreticalKey, null));
+            this.add(theoreticalKey.name(), ICoreAbstractFactory.getInstance().createTheoreticalKey(null, theoreticalKey, null));
         }
     }
 

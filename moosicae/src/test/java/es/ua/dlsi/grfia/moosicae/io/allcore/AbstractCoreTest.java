@@ -9,13 +9,6 @@ import java.util.Map;
  * @created 27/03/2020
  */
 public abstract class AbstractCoreTest {
-    protected final ICoreAbstractFactory coreAbstractFactory;
-
-
-    public AbstractCoreTest(ICoreAbstractFactory coreAbstractFactory) {
-        this.coreAbstractFactory = coreAbstractFactory;
-    }
-
     /**
      * Name, score
      * @return

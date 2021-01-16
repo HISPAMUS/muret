@@ -29,8 +29,7 @@ public class KeyOrKeySignatureBuilder extends CoreObjectBuilder<IVoicedItem> imp
     protected List<IPitchClass> pitchClassList;
     private ICautionaryKeySignatureAccidentals cautionaryKeySignatureAccidentals;
 
-    public KeyOrKeySignatureBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public KeyOrKeySignatureBuilder() {
         this.pitchClassList = new LinkedList<>();
     }
 
@@ -77,7 +76,7 @@ public class KeyOrKeySignatureBuilder extends CoreObjectBuilder<IVoicedItem> imp
             }
 
             EConventionalKeys ekey = EConventionalKeys.findKeyWithAccidentalCount(eMode, fifths, accidentalSymbol);
-            IKey key = coreObjectFactory.createConventionalKey(null, ekey, cautionaryKeySignatureAccidentals);
+            IKey key = ICoreAbstractFactory.getInstance().createConventionalKey(null, ekey, cautionaryKeySignatureAccidentals);
 
             if (mode == null && key.getKeySignature().isPresent()) {
                 // it the mode element was not present, and there is an associated key signature, just return the key signature value
@@ -88,15 +87,15 @@ public class KeyOrKeySignatureBuilder extends CoreObjectBuilder<IVoicedItem> imp
         } else {
             if (mode == null) {
                 // it's a key signature without mode
-                return coreObjectFactory.createUnconventionalKeySignature(null, pitchClassList.toArray(new IPitchClass[0]), cautionaryKeySignatureAccidentals);
+                return ICoreAbstractFactory.getInstance().createUnconventionalKeySignature(null, pitchClassList.toArray(new IPitchClass[0]), cautionaryKeySignatureAccidentals);
             } else {
                 // try to find a theoretical key
                 Optional<ETheoreticalKeys> theoreticalKeys = ETheoreticalKeys.find(mode.getValue(), pitchClassList);
                 if (theoreticalKeys.isPresent()) {
-                    IKey key = coreObjectFactory.createTheoreticalKey(null, theoreticalKeys.get(), cautionaryKeySignatureAccidentals);
+                    IKey key = ICoreAbstractFactory.getInstance().createTheoreticalKey(null, theoreticalKeys.get(), cautionaryKeySignatureAccidentals);
                     return key;
                 } else {
-                    return coreObjectFactory.createUnconventionalKeySignature(null, pitchClassList.toArray(new IPitchClass[0]), cautionaryKeySignatureAccidentals);
+                    return ICoreAbstractFactory.getInstance().createUnconventionalKeySignature(null, pitchClassList.toArray(new IPitchClass[0]), cautionaryKeySignatureAccidentals);
                 }
             }
         }

@@ -17,8 +17,7 @@ import java.util.List;
 public class MEIStaffGroupBuilder extends MEIObjectBuilder<MEIStaffGroupDef> {
     private final List<MEISystemDef> systemDefList;
 
-    public MEIStaffGroupBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public MEIStaffGroupBuilder() {
         systemDefList = new LinkedList<>();
     }
 

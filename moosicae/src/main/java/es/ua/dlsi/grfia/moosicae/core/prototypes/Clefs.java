@@ -42,13 +42,13 @@ public class Clefs extends Prototypes<IClef> {
 
 
     private IClef generateClef(EClefSigns eClefSign, int line, Integer octaveTranspositionValue) {
-        IClefLine clefLine = coreAbstractFactory.createClefLine(null, line);
-        IClefSign clefSign = coreAbstractFactory.createClefSign(null, eClefSign);
+        IClefLine clefLine = ICoreAbstractFactory.getInstance().createClefLine(null, line);
+        IClefSign clefSign = ICoreAbstractFactory.getInstance().createClefSign(null, eClefSign);
         IOctaveTransposition octaveTransposition = null;
         if (octaveTranspositionValue != null) {
-            octaveTransposition = coreAbstractFactory.createOctaveTransposition(null, octaveTranspositionValue);
+            octaveTransposition = ICoreAbstractFactory.getInstance().createOctaveTransposition(null, octaveTranspositionValue);
         }
-        IClef clef = coreAbstractFactory.createClef(null, clefSign, clefLine, octaveTransposition);
+        IClef clef = ICoreAbstractFactory.getInstance().createClef(null, clefSign, clefLine, octaveTransposition);
         return clef;
     }
 
@@ -58,17 +58,15 @@ public class Clefs extends Prototypes<IClef> {
     }
 
     private IClef generateClef(EClefSigns eClefSign) {
-        IClefSign clefSign = coreAbstractFactory.createClefSign(null, eClefSign);
-        IClef clef = coreAbstractFactory.createClef(null, clefSign, null, null);
+        IClefSign clefSign = ICoreAbstractFactory.getInstance().createClefSign(null, eClefSign);
+        IClef clef = ICoreAbstractFactory.getInstance().createClef(null, clefSign, null, null);
         return clef;
     }
 
     /**
      * Instantiate it using PrototypesAbstractBuilder
-     * @param coreAbstractFactory
      */
-    Clefs(ICoreAbstractFactory coreAbstractFactory) {
-        super(coreAbstractFactory);
+    Clefs() {
         add(G2, generateClef(EClefSigns.G, 2));
         add(G2_OTTAVA_ALTA, generateClef(EClefSigns.G, 2, 1));
         add(G2_OTTAVA_BASSA, generateClef(EClefSigns.G, 2, -1));

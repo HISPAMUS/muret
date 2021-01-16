@@ -4,13 +4,12 @@ package es.ua.dlsi.grfia.moosicae.core.impl.mensural.mensurations;
 
 //TODO Duraciones
 
+import es.ua.dlsi.grfia.moosicae.core.adt.ITime;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.mensural.EMensuralPerfections;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.Mensuration;
 import es.ua.dlsi.grfia.moosicae.core.mensural.ITempusImperfectumCumProlationeImperfectaDiminutum;
-import es.ua.dlsi.grfia.moosicae.utils.Time;
-import javax.validation.constraints.NotNull;
 
 /**
  * Visually rendered as cut time (see https://en.wikipedia.org/wiki/Mensural_notation, unicode U+1D1CD)
@@ -22,7 +21,7 @@ public class TempusImperfectumCumProlationeImperfectaDiminutum extends Mensurati
     }
 
     @Override
-    public Time getBarDuration() {
+    public ITime getBarDuration() {
         return getBreveDuration();
     }
 

@@ -1,6 +1,5 @@
 package es.ua.dlsi.grfia.moosicae.core.builders.properties;
 
-import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.builders.CoreObjectBuilder;
 import es.ua.dlsi.grfia.moosicae.core.properties.IStringCoreProperty;
 
@@ -9,10 +8,6 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IStringCoreProperty;
  */
 public abstract class IStringPropertyBuilder<T extends IStringCoreProperty> extends CoreObjectBuilder<T> {
     protected String value;
-
-    public IStringPropertyBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
 
     public IStringPropertyBuilder<T> from(String value) {
         this.value = value;

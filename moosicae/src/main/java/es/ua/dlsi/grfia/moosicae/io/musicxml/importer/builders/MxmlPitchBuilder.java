@@ -12,9 +12,6 @@ import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
  * @created 24/03/2020
  */
 public class MxmlPitchBuilder extends IPitchBuilder implements IImporterAdapter<IPitch, XMLImporterParam> {
-    public MxmlPitchBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {

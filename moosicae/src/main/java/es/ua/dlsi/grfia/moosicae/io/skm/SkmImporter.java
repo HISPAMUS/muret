@@ -14,17 +14,11 @@ import java.io.InputStream;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class SkmImporter implements IImporter {
-    private final ICoreAbstractFactory coreAbstractFactory;
-
-    public SkmImporter(ICoreAbstractFactory coreAbstractFactory) {
-        this.coreAbstractFactory = coreAbstractFactory;
-    }
-
     @Override
     public IScore importScore(String input) throws IMException {
-        SkmSyntaxDirectedTranslation skmSyntaxDirectedTranslation = new SkmSyntaxDirectedTranslation(coreAbstractFactory);
+        SkmSyntaxDirectedTranslation skmSyntaxDirectedTranslation = new SkmSyntaxDirectedTranslation();
         SkmDocument skmDocument = skmSyntaxDirectedTranslation.importSkm(input);
-        return skmDocument.buildScore(coreAbstractFactory);
+        return skmDocument.buildScore();
     }
 
     @Override

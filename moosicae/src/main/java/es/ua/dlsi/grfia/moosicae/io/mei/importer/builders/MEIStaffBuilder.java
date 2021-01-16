@@ -18,8 +18,7 @@ public class MEIStaffBuilder extends MEIObjectBuilder<MEIStaff> {
     private Integer n;
     private final List<MEILayer> layers;
 
-    public MEIStaffBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public MEIStaffBuilder() {
         layers = new LinkedList<>();
     }
 

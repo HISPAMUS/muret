@@ -2,8 +2,9 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.core.IDurational;
 import es.ua.dlsi.grfia.moosicae.core.IDurationalComposite;
+import es.ua.dlsi.grfia.moosicae.core.adt.ITimeBuilder;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
-import es.ua.dlsi.grfia.moosicae.utils.Time;
+import es.ua.dlsi.grfia.moosicae.core.adt.ITime;
 
 import javax.validation.constraints.NotNull;
 
@@ -25,8 +26,8 @@ public abstract class DurationalComposite extends VoicedItem implements IDuratio
     }
 
     @Override
-    public Time getDuration() {
-        Time result = Time.TIME_ZERO;
+    public ITime getDuration() {
+        ITime result = ITimeBuilder.getInstance().timeZero();
         for (IDurational child: children) {
             result = result.add(child.getDuration());
         }

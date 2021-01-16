@@ -14,9 +14,7 @@ import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 public class IFigureBuilder extends CoreObjectBuilder<IFigure> {
     private EFigures value;
 
-    public IFigureBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
+    public IFigureBuilder() {}
 
     public IFigureBuilder from(EFigures value) {
         this.value = value;
@@ -25,7 +23,7 @@ public class IFigureBuilder extends CoreObjectBuilder<IFigure> {
 
     @Override
     public IFigure build() throws IMException {
-        return coreObjectFactory.createFigure(getId(), value);
+        return ICoreAbstractFactory.getInstance().createFigure(getId(), value);
     }
 
 

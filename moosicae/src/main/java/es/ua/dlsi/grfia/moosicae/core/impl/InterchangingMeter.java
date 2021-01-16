@@ -4,9 +4,10 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.IInterchangingMeter;
 import es.ua.dlsi.grfia.moosicae.core.IMeter;
+import es.ua.dlsi.grfia.moosicae.core.adt.ITime;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
-import es.ua.dlsi.grfia.moosicae.utils.Time;
+import es.ua.dlsi.grfia.moosicae.core.impl.adt.Time;
 
 import javax.validation.constraints.NotNull;
 
@@ -40,7 +41,7 @@ public class InterchangingMeter extends Meter implements IInterchangingMeter {
     }
 
     @Override
-    public Time getBarDuration() {
+    public ITime getBarDuration() {
         return left.getBarDuration();
     }
 

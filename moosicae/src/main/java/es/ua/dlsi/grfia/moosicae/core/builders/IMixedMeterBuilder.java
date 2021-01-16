@@ -13,8 +13,7 @@ import java.util.List;
 public class IMixedMeterBuilder extends CoreObjectBuilder<IMixedMeter> {
     private List<IMeter> meters;
 
-    public IMixedMeterBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public IMixedMeterBuilder() {
         meters = new LinkedList<>();
     }
 
@@ -27,7 +26,7 @@ public class IMixedMeterBuilder extends CoreObjectBuilder<IMixedMeter> {
 
     @Override
     public IMixedMeter build() throws IMException {
-        return coreObjectFactory.createMixedMeter(getId(), meters.toArray(new IMeter[0]));
+        return ICoreAbstractFactory.getInstance().createMixedMeter(getId(), meters.toArray(new IMeter[0]));
     }
 
 }

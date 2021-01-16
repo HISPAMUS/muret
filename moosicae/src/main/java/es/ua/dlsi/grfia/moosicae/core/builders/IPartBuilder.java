@@ -13,9 +13,7 @@ import es.ua.dlsi.grfia.moosicae.core.IPart;
 public class IPartBuilder extends CoreObjectBuilder<IPart>  {
     private IName name;
 
-    public IPartBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
+    public IPartBuilder() {}
 
     public IPartBuilder from(IName name) {
         this.name = name;
@@ -24,7 +22,7 @@ public class IPartBuilder extends CoreObjectBuilder<IPart>  {
 
     @Override
     public IPart build() throws IMException {
-        return coreObjectFactory.createPart(getId(), name);
+        return ICoreAbstractFactory.getInstance().createPart(getId(), name);
     }
 
 }

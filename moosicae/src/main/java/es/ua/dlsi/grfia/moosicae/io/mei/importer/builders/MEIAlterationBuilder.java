@@ -15,10 +15,6 @@ import java.util.Optional;
  * @created 25/03/2020
  */
 public class MEIAlterationBuilder extends IAlterationBuilder implements IImporterAdapter<IAlteration, XMLImporterParam> {
-    public MEIAlterationBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
-
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
         Optional<String> accidGes = xmlImporterParam.getAttribute("accid.ges"); //TODO resto de parámetros

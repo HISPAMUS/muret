@@ -2,8 +2,12 @@ package es.ua.dlsi.grfia.moosicae.core.enums;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
-import es.ua.dlsi.grfia.moosicae.utils.Time;
-import org.apache.commons.lang3.math.Fraction;
+import es.ua.dlsi.grfia.moosicae.core.adt.IFraction;
+import es.ua.dlsi.grfia.moosicae.core.adt.IFractionBuilder;
+import es.ua.dlsi.grfia.moosicae.core.adt.ITime;
+import es.ua.dlsi.grfia.moosicae.core.adt.ITimeBuilder;
+import es.ua.dlsi.grfia.moosicae.core.impl.adt.FractionBuilder;
+import es.ua.dlsi.grfia.moosicae.core.impl.adt.TimeBuilder;
 
 // TODO: 22/9/17 Que tenga plica o no depende de la tipografía?
 // TODO: revisar lo de la plica - no lo quito porque ya lo tengo metido...
@@ -40,7 +44,7 @@ public enum EFigures implements Comparable<EFigures> {
             QUADRUPLE_WHOLE, DOUBLE_WHOLE, WHOLE, HALF, QUARTER, EIGHTH, SIXTEENTH, THIRTY_SECOND, SIXTY_FOURTH, HUNDRED_TWENTY_EIGHTH, TWO_HUNDRED_FIFTY_SIX
     };
 
-    final Time duration;
+    final ITime duration;
     /**
      * Classical interpretation (the one used in denominators of meters)
      */
@@ -49,18 +53,18 @@ public enum EFigures implements Comparable<EFigures> {
 
     final EFigureVisualDecorations decoration;
     final int numFlags;
-    private final Time ratio;
+    private final ITime ratio;
 
     EFigures(int quarters, int quarterSubdivisions, int meterUnit, ENotationTypes notationType, EFigureVisualDecorations decoration, int flags) {
-        duration = new Time(Fraction.getFraction(quarters, quarterSubdivisions));
+        duration = ITimeBuilder.getInstance().build(quarters, quarterSubdivisions);
         this.meterUnit = meterUnit;
         this.notationType = notationType;
         this.decoration = decoration;
         this.numFlags = flags;
-        this.ratio = new Time(Fraction.getFraction(quarters, quarterSubdivisions));
+        this.ratio = ITimeBuilder.getInstance().build(quarters, quarterSubdivisions);
     }
 
-    public Time getDuration() {
+    public ITime getDuration() {
         return duration;
     }
 
@@ -85,7 +89,7 @@ public enum EFigures implements Comparable<EFigures> {
     }
 
 
-    public Time getRatio() {
+    public ITime getRatio() {
         return ratio;
     }
 
@@ -95,19 +99,19 @@ public enum EFigures implements Comparable<EFigures> {
      * @param dots
      * @return
      */
-    public Time getDurationWithDots(int dots) {
-        Fraction sumDurations = duration.getExactTime();
-        Fraction lastDur = sumDurations;
+    public ITime getDurationWithDots(int dots) {
+        IFraction sumDurations = duration.getExactTime();
+        IFraction lastDur = sumDurations;
 
         for (int i = 0; i < dots; i++) {
-            lastDur = lastDur.multiplyBy(Fraction.ONE_HALF);
+            lastDur = lastDur.multiplyBy(IFractionBuilder.getInstance().getOneHalf());
             sumDurations = sumDurations.add(lastDur);
         }
 
-        return new Time(sumDurations);
+        return ITimeBuilder.getInstance().build(sumDurations);
     }
 
-    public static EFigures findDuration(Time duration, ENotationTypes notationType) throws IMException {
+    public static EFigures findDuration(ITime duration, ENotationTypes notationType) throws IMException {
         if (notationType == null) {
             throw new IMException("Cannot search a duration if notationType is null");
         }

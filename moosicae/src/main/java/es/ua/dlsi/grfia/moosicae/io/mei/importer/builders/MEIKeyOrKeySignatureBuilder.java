@@ -17,15 +17,12 @@ import java.util.Optional;
  * @created 02/04/2020
  */
 public class MEIKeyOrKeySignatureBuilder extends KeyOrKeySignatureBuilder {
-    public MEIKeyOrKeySignatureBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
         super.read(xmlImporterParam);
 
-        Optional<IMode> mode = MEIAttributesParsers.getInstance().parseMode(coreObjectFactory, xmlImporterParam, "mode");
+        Optional<IMode> mode = MEIAttributesParsers.getInstance().parseMode(xmlImporterParam, "mode");
         if (mode.isPresent()) {
             from(mode.get());
         }
@@ -33,13 +30,13 @@ public class MEIKeyOrKeySignatureBuilder extends KeyOrKeySignatureBuilder {
         Optional<String> showChange = xmlImporterParam.getAttribute("keysig.showchange");
         ICautionaryKeySignatureAccidentals cautionaryKeySignatureAccidentals = null;
         if (showChange.isPresent() && showChange.get().equals("true")) {
-            from(coreObjectFactory.createCautionaryKeySignatureAccidentals(null, true));
+            from(ICoreAbstractFactory.getInstance().createCautionaryKeySignatureAccidentals(null, true));
         }
 
         Optional<Pair<Integer, Optional<EAccidentalSymbols>>> pairKeySignature = MEIAttributesParsers.getInstance().parseConventionalKeySignatureAttribute(xmlImporterParam, "sig");
         if (pairKeySignature.isPresent()) {
             int naccidentals = pairKeySignature.get().getLeft();
-            IKeyAccidentalCount keyAccidentalCount = coreObjectFactory.createKeyAccidentalCount(null, naccidentals);
+            IKeyAccidentalCount keyAccidentalCount = ICoreAbstractFactory.getInstance().createKeyAccidentalCount(null, naccidentals);
             from(keyAccidentalCount);
 
             EAccidentalSymbols eaccidentalSymbol = pairKeySignature.get().getRight().get();

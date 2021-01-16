@@ -1,7 +1,5 @@
 package es.ua.dlsi.grfia.moosicae.core.builders;
 
-import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.IStemmed;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 
@@ -12,8 +10,7 @@ import es.ua.dlsi.grfia.moosicae.core.properties.*;
 public abstract class IStemmedBuilder<T extends IStemmed> extends IDurationalSingleBuilder<T> {
     protected IStem stem;
 
-    public IStemmedBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public IStemmedBuilder(){
     }
 
     public IStemmedBuilder from(IStem stem) {

@@ -2,7 +2,7 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.core.IDurational;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
-import es.ua.dlsi.grfia.moosicae.utils.Time;
+import es.ua.dlsi.grfia.moosicae.core.adt.ITime;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -10,15 +10,15 @@ import javax.validation.constraints.NotNull;
  */
 public abstract class Durational extends VoicedItem implements IDurational {
     @NotNull
-    private final Time duration;
+    private final ITime duration;
 
-    protected Durational(IId id, @NotNull Time duration) {
+    protected Durational(IId id, @NotNull ITime duration) {
         super(id);
         this.duration = duration;
     }
 
     @Override
-    public Time getDuration() {
+    public ITime getDuration() {
         return duration;
     }
 

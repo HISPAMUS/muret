@@ -14,14 +14,11 @@ import java.util.Map;
  */
 public class MetersTest extends MonodicTest {
 
-    public MetersTest(ICoreAbstractFactory coreAbstractFactory) {
-        super(coreAbstractFactory);
-    }
 
     private IMeter generateMeter(int num, int den) {
-        IMeter meter = coreAbstractFactory.createStandardTimeSignature(null,
-                coreAbstractFactory.createTimeSignatureNumerator(null, num),
-                coreAbstractFactory.createTimeSignatureDenominator(null, den)
+        IMeter meter = ICoreAbstractFactory.getInstance().createStandardTimeSignature(null,
+                ICoreAbstractFactory.getInstance().createTimeSignatureNumerator(null, num),
+                ICoreAbstractFactory.getInstance().createTimeSignatureDenominator(null, den)
         );
         return meter;
     }
@@ -29,13 +26,13 @@ public class MetersTest extends MonodicTest {
     private IAdditiveMeter generateMeter(int [] nums, int den) {
         ITimeSignatureNumerator[] numerators = new ITimeSignatureNumerator[nums.length];
         for (int i=0; i<nums.length; i++) {
-            numerators[i] = coreAbstractFactory.createTimeSignatureNumerator(null, nums[i]);
+            numerators[i] = ICoreAbstractFactory.getInstance().createTimeSignatureNumerator(null, nums[i]);
         }
 
-        IAdditiveMeter compoundMeter = coreAbstractFactory.createAdditiveMeter(
+        IAdditiveMeter compoundMeter = ICoreAbstractFactory.getInstance().createAdditiveMeter(
                 null,
                 numerators,
-                coreAbstractFactory.createTimeSignatureDenominator(null, den)
+                ICoreAbstractFactory.getInstance().createTimeSignatureDenominator(null, den)
         );
         return compoundMeter;
     }
@@ -46,19 +43,19 @@ public class MetersTest extends MonodicTest {
             meters[i] = generateMeter(fractions[i].getNumerator(), fractions[i].getDenominator());
         }
 
-        IMixedMeter mixedMeter = coreAbstractFactory.createMixedMeter(null, meters);
+        IMixedMeter mixedMeter = ICoreAbstractFactory.getInstance().createMixedMeter(null, meters);
         return mixedMeter;
     }
 
     private IInterchangingMeter generateInterchanging() throws IMException {
         IMeter left = generateMeter(6, 8);
         IMeter right = generateMeter(3, 4);
-        return coreAbstractFactory.createInterchangingMeter(null, left, right);
+        return ICoreAbstractFactory.getInstance().createInterchangingMeter(null, left, right);
     }
 
     @Override
     public Map<String, IScore> generateTestScores() throws Exception {
-        Map<String, IMeter> meters = PrototypesAbstractBuilder.getInstance(coreAbstractFactory).getMeters().getMap();
+        Map<String, IMeter> meters = PrototypesAbstractBuilder.getInstance().getMeters().getMap();
 
         // now generate some special meters
         meters.put("2_4p7_8", generateMeter(Fraction.getFraction(2, 4), Fraction.getFraction(7, 8)));

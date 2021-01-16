@@ -1,20 +1,18 @@
-package es.ua.dlsi.grfia.moosicae.utils;
+package es.ua.dlsi.grfia.moosicae.core.impl.adt;
 
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
-import org.apache.commons.lang3.math.Fraction;
+import es.ua.dlsi.grfia.moosicae.core.adt.IFraction;
+import es.ua.dlsi.grfia.moosicae.core.adt.ITime;
 
 /**
  * This is an inmutable object in order to be able to speed up the time computing as a double 
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class Time implements Comparable<Time> {
-	public static final Time TIME_ZERO = new Time(Fraction.ZERO);
-	public static final Time TIME_MAX = new Time(Fraction.getFraction(Integer.MAX_VALUE, 1));
-	
+public class Time implements ITime {
 	final double computedTime;
-	final Fraction exactTime;
+	final IFraction exactTime;
 	
-	public Time(Fraction exactTime) {
+	public Time(IFraction exactTime) {
 		this.exactTime = exactTime.reduce();
  		computedTime = this.exactTime.doubleValue();
 	}
@@ -40,69 +38,80 @@ public class Time implements Comparable<Time> {
 	    this(numerator, 1);
     }
 
-    public double getComputedTime() {
+    @Override
+	public double getComputedTime() {
 		return computedTime;
 	}
-	public Fraction getExactTime() {
+
+	@Override
+	public IFraction getExactTime() {
 		return exactTime;
 	}
 	
 	//TODO Test unitario
-	public Time add(Time time) {
+	@Override
+	public ITime add(ITime time) {
 		if (time == null) {
 			throw new IMRuntimeException("Parameter time is null");
 		}
-		return new Time(exactTime.add(time.exactTime));
+		return new Time(exactTime.add(time.getExactTime()));
 	}
 
 	//TODO Test unitario
-	public Time substract(Time time) {
+	@Override
+	public ITime substract(ITime time) {
 		if (time == null) {
 			throw new IMRuntimeException("Parameter time is null");
 		}
-		return new Time(exactTime.subtract(time.exactTime));
+		return new Time(exactTime.subtract(time.getExactTime()));
 	}
-	
 
-	public Time divide(double divisor) {
-		return new Time(exactTime.divideBy(Fraction.getFraction(divisor)));
+	@Override
+	public ITime divide(double divisor) {
+		return new Time(exactTime.divideBy(new Fraction(divisor)));
 	}	
 	
-	public Time multiply(double multiplier) {
-		return new Time(exactTime.multiplyBy(Fraction.getFraction(multiplier)));
+	@Override
+	public ITime multiply(double multiplier) {
+		return new Time(exactTime.multiplyBy(new Fraction(multiplier)));
 	}
 
-    public Time multiplyBy(Time m) {
-        return new Time(this.exactTime.multiplyBy(m.exactTime));
+    @Override
+	public ITime multiplyBy(ITime m) {
+        return new Time(this.exactTime.multiplyBy(m.getExactTime()));
     }
 
-	public Time multiplyBy(Fraction fraction) {
+	@Override
+	public ITime multiplyBy(IFraction fraction) {
 		return new Time(this.exactTime.multiplyBy(fraction));
 	}
-    public Time divideBy(Time d) {
-        return new Time(this.exactTime.divideBy(d.exactTime));
+    @Override
+	public ITime divideBy(ITime d) {
+        return new Time(this.exactTime.divideBy(d.getExactTime()));
     }
-
-    public Time divideBy(Fraction fraction) {
+    @Override
+	public Time divideBy(IFraction fraction) {
         return new Time(this.exactTime.divideBy(fraction));
     }
-    public Time add(Fraction fraction) {
+    @Override
+	public ITime add(IFraction fraction) {
         return new Time(this.exactTime.add(fraction));
     }
-    public Time substract(Fraction fraction) {
+    @Override
+	public ITime substract(IFraction fraction) {
         return new Time(this.exactTime.subtract(fraction));
     }
-    public double mod(Time d) {
+    @Override
+	public double mod(ITime d) {
 	    return computedTime % d.getComputedTime();
     }
 
-
 	@Override
-	public int compareTo(Time o) {
+	public int compareTo(ITime o) {
 		if (o == null) {
 			throw new IMRuntimeException("Parameter time is null");
 		}
-		return exactTime.compareTo(o.exactTime);
+		return exactTime.compareTo(o.getExactTime());
 	}
 
 	@Override
@@ -131,49 +140,7 @@ public class Time implements Comparable<Time> {
 		return true;
 	}
 
-
-	public static Time max(Time a, Time b) {
-		if (a.compareTo(b) >= 0) {
-			return a;
-		} else {
-			return b;
-		}
-	}
-
-	public static Time min(Time a, Time b) {
-		if (a.compareTo(b) <= 0) {
-			return a;
-		} else {
-			return b;
-		}
-	}
-
-	//TODO Test unitario
-	/**
-	 * @param fromTime Included
-	 * @param toTime Not included
-	 * @return
-	 */
-	public boolean isContainedIn(Time fromTime, Time toTime) {
-		return this.compareTo(fromTime) >= 0 && this.compareTo(toTime) < 0;
-	}
-
-	/**
-	 * 
-	 * @param fromTimeA
-	 * @param toTimeA
-	 * @param fromTimeB
-	 * @param toTimeB
-	 * @return
-	 */
-	public static boolean overlaps(Time fromTimeA, Time toTimeA, Time fromTimeB, Time toTimeB) {
-		return fromTimeA.compareTo(toTimeB) < 0 && fromTimeB.compareTo(toTimeA) < 0
-				||
-				fromTimeB.compareTo(toTimeA) < 0 && fromTimeA.compareTo(toTimeB) < 0;
-		//return (this.low <= other.high && other.low <= this.high);
-
-	}
-
+	@Override
 	public boolean computeIsZero() {
 		return exactTime.getNumerator() == 0;
 	}
@@ -184,19 +151,23 @@ public class Time implements Comparable<Time> {
 	}
 
 
-    public int intValue() {
+    @Override
+	public int intValue() {
 	    return exactTime.intValue();
     }
 
-    public boolean computeIsMaxValue() {
+    @Override
+	public boolean computeIsMaxValue() {
 		return exactTime.getNumerator() == Integer.MAX_VALUE;
     }
 
-    public boolean computeIsNegative() {
+    @Override
+	public boolean computeIsNegative() {
 	    return exactTime.getNumerator() < 0;
     }
 
-    public boolean computeIsOne() {
+    @Override
+	public boolean computeIsOne() {
 	    return exactTime.getNumerator() == 1;
     }
 

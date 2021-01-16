@@ -1,11 +1,9 @@
 package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
+import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.IMetronomeMark;
-import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.core.properties.IDots;
-import es.ua.dlsi.grfia.moosicae.core.properties.IFigure;
-import es.ua.dlsi.grfia.moosicae.core.properties.IMetronomeMarkValue;
+import es.ua.dlsi.grfia.moosicae.core.properties.*;
 
 
 /**
@@ -15,10 +13,9 @@ public class IMetronomeMarkBuilder extends CoreObjectBuilder<IMetronomeMark> {
     private IFigure figure;
     private IDots dots;
     private IMetronomeMarkValue value;
+    private IHorizontalAnchor start;
 
-    public IMetronomeMarkBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
+    public IMetronomeMarkBuilder() {}
 
     public IMetronomeMarkBuilder from(IFigure figure) {
         this.figure = figure;
@@ -30,6 +27,12 @@ public class IMetronomeMarkBuilder extends CoreObjectBuilder<IMetronomeMark> {
         return this;
     }
 
+    public IMetronomeMarkBuilder from(IHorizontalAnchor start) {
+        this.start = start;
+        return this;
+    }
+
+
     public IMetronomeMarkBuilder from(IMetronomeMarkValue value) {
         this.value = value;
         return this;
@@ -37,7 +40,7 @@ public class IMetronomeMarkBuilder extends CoreObjectBuilder<IMetronomeMark> {
 
     @Override
     public IMetronomeMark build() throws IMException {
-        return coreObjectFactory.createMetronomeMark(getId(), figure, dots, value);
+        return ICoreAbstractFactory.getInstance().createMetronomeMark(getId(), start, figure, dots, value);
     }
 
 

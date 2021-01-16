@@ -23,8 +23,7 @@ public class MusicXMLImporter extends XMLImporter implements IImporter {
     private MxmlScorePartWise mxmlScorePartWise;
     private MxmlPartIDs mxmlPartIDs;
 
-    public MusicXMLImporter(ICoreAbstractFactory abstractFactory) {
-        super(abstractFactory);
+    public MusicXMLImporter() {
         coreObjectBuilderSuppliers.add("score-partwise", MxmlScorePartWiseBuilder::new);
         coreObjectBuilderSuppliers.add("score-part", MxmlPartDefinitionBuilder::new);
         coreObjectBuilderSuppliers.add("part-name", MxmlNameBuilder::new);
@@ -94,7 +93,7 @@ public class MusicXMLImporter extends XMLImporter implements IImporter {
 
     @Override
     protected IScore buildScore() throws IMException {
-        IScore score = coreAbstractFactory.createScore(null);
+        IScore score = ICoreAbstractFactory.getInstance().createScore(null);
         mxmlPartIDs = new MxmlPartIDs();
         // now build the score from all parts
         if (mxmlScorePartWise == null) {
@@ -114,9 +113,9 @@ public class MusicXMLImporter extends XMLImporter implements IImporter {
             }
 
             //TODO voices, staves
-            IStaffLineCount staffLineCount = coreAbstractFactory.createStaffLineCount(5);
-            IVoice defaultVoice = coreAbstractFactory.createVoice(part, null, null);
-            IStaff defaultStaff = coreAbstractFactory.createStaff(score, null, staffLineCount);
+            IStaffLineCount staffLineCount = ICoreAbstractFactory.getInstance().createStaffLineCount(5);
+            IVoice defaultVoice = ICoreAbstractFactory.getInstance().createVoice(part, null, null);
+            IStaff defaultStaff = ICoreAbstractFactory.getInstance().createStaff(score, null, staffLineCount);
             for (MxmlMeasure measure : mxmlImportedPart.getMeasures()) {
                 for (IMxmlPartItem item: measure.getItems()) {
                     IVoicedItem[] subitems = item.getItems(); //TODO sacar los datos adicionales del MusicXMLNote como es la staff...
@@ -125,7 +124,7 @@ public class MusicXMLImporter extends XMLImporter implements IImporter {
                     }
                 }
                 //TODO parámetros barline
-                IBarline barline = coreAbstractFactory.createBarline(null, null, null);
+                IBarline barline = ICoreAbstractFactory.getInstance().createBarline(null, null, null);
                 score.add(defaultVoice, defaultStaff, barline);
             }
 

@@ -13,10 +13,6 @@ import es.ua.dlsi.grfia.moosicae.core.properties.INumber;
 public class INumberBuilder extends CoreObjectBuilder<INumber> {
     protected Integer value;
 
-    public INumberBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
-
     public INumberBuilder from(Integer value) {
         this.value = value;
         return this;
@@ -24,7 +20,7 @@ public class INumberBuilder extends CoreObjectBuilder<INumber> {
 
     @Override
     public INumber build() throws IMException {
-        return coreObjectFactory.createNumber(getId(), value);
+        return ICoreAbstractFactory.getInstance().createNumber(getId(), value);
     }
 
 

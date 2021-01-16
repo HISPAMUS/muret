@@ -13,9 +13,7 @@ import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 public class IModeBuilder extends CoreObjectBuilder<IMode> {
     private EModes value;
 
-    public IModeBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
+    public IModeBuilder() {}
 
     public IModeBuilder from(EModes value) {
         this.value = value;
@@ -24,7 +22,7 @@ public class IModeBuilder extends CoreObjectBuilder<IMode> {
 
     @Override
     public IMode build() throws IMException {
-        return coreObjectFactory.createMode(getId(), value);
+        return ICoreAbstractFactory.getInstance().createMode(getId(), value);
     }
 
 }

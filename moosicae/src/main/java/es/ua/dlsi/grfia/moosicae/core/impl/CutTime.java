@@ -3,10 +3,11 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICutTime;
 import es.ua.dlsi.grfia.moosicae.core.TimeSignatureDenominator;
+import es.ua.dlsi.grfia.moosicae.core.adt.ITime;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
-import es.ua.dlsi.grfia.moosicae.utils.Time;
+import es.ua.dlsi.grfia.moosicae.core.impl.adt.Time;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -26,7 +27,7 @@ public class CutTime extends StandardTimeSignature implements ICutTime {
     }
 
     @Override
-    public Time getBarDuration() {
+    public ITime getBarDuration() {
         return EFigures.WHOLE.getDuration();
     }
 

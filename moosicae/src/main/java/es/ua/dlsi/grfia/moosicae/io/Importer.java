@@ -23,9 +23,9 @@ public class Importer {
     public IImporter create(Encodings encoding) throws IMException {
         switch (encoding) {
             case MEI:
-                return new MEIImporter(coreAbstractFactory);
+                return new MEIImporter();
             case MUSICXML:
-                return new MusicXMLImporter(coreAbstractFactory);
+                return new MusicXMLImporter();
             case MON:
                 return new MONImporter(coreAbstractFactory);
             default:

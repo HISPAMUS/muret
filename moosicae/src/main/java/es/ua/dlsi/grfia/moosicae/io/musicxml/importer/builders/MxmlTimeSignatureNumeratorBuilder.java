@@ -14,9 +14,6 @@ import java.util.Optional;
  * @created 24/03/2020
  */
 public class MxmlTimeSignatureNumeratorBuilder extends ITimeSignatureNumeratorBuilder implements IImporterAdapter<ITimeSignatureNumerator, XMLImporterParam> {
-    public MxmlTimeSignatureNumeratorBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {

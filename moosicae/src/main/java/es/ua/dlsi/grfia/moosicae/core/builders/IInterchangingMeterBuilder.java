@@ -15,8 +15,7 @@ import java.util.List;
 public class IInterchangingMeterBuilder extends CoreObjectBuilder<IInterchangingMeter> {
     private List<IMeter> meters;
 
-    public IInterchangingMeterBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public IInterchangingMeterBuilder() {
         meters = new LinkedList<>();
     }
 
@@ -32,7 +31,7 @@ public class IInterchangingMeterBuilder extends CoreObjectBuilder<IInterchanging
         if (meters.size() != 2) {
             throw new IMException("Cannot build an interchanging meter with " + meters.size() + " meters");
         }
-        return coreObjectFactory.createInterchangingMeter(getId(), meters.get(0), meters.get(1));
+        return ICoreAbstractFactory.getInstance().createInterchangingMeter(getId(), meters.get(0), meters.get(1));
     }
 
 }

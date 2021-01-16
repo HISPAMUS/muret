@@ -1,12 +1,13 @@
 package es.ua.dlsi.grfia.moosicae.core.impl.mensural;
 
+import es.ua.dlsi.grfia.moosicae.core.adt.IFractionBuilder;
+import es.ua.dlsi.grfia.moosicae.core.adt.ITime;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
 import es.ua.dlsi.grfia.moosicae.core.impl.Meter;
 import es.ua.dlsi.grfia.moosicae.core.mensural.EMensuralPerfections;
 import es.ua.dlsi.grfia.moosicae.core.mensural.IMensuration;
-import es.ua.dlsi.grfia.moosicae.utils.Time;
-import org.apache.commons.lang3.math.Fraction;
+
 import javax.validation.constraints.NotNull;
 
 
@@ -23,12 +24,13 @@ public abstract class Mensuration extends Meter implements IMensuration {
 	private EMensuralPerfections modusMinor;
 	private EMensuralPerfections prolatio;
 	private EMensuralPerfections tempus;
-    Time breveDuration;
-	Time maximaDuration;
-    Time longaDuration;
-    Time semibreveDuration;
+    ITime breveDuration;
+	ITime maximaDuration;
+	ITime longaDuration;
+	ITime semibreveDuration;
 
-    Time barDuration;
+	ITime barDuration;
+
 	/**
 	 *
 	 * @param modusMaior When null it is taken as imperfect
@@ -47,23 +49,23 @@ public abstract class Mensuration extends Meter implements IMensuration {
     }
 
     private void initDurations() {
-        semibreveDuration = EFigures.MINIM.getDuration().multiplyBy(Fraction.getFraction(
+        semibreveDuration = EFigures.MINIM.getDuration().multiplyBy(IFractionBuilder.getInstance().build(
                 prolatio == null ? 2 : prolatio.getDivisions(),
                 1)
         );
 
-        breveDuration = semibreveDuration.multiplyBy(Fraction.getFraction(
+        breveDuration = semibreveDuration.multiplyBy(IFractionBuilder.getInstance().build(
                 tempus == null? 2: tempus.getDivisions(),
                 1)
         );
 
 
-        longaDuration = breveDuration.multiplyBy(Fraction.getFraction(
+        longaDuration = breveDuration.multiplyBy(IFractionBuilder.getInstance().build(
                 modusMinor == null? 2: modusMinor.getDivisions(),
                 1)
         );
 
-        maximaDuration = longaDuration.multiplyBy(Fraction.getFraction(
+        maximaDuration = longaDuration.multiplyBy(IFractionBuilder.getInstance().build(
                 modusMaior == null? 2: modusMaior.getDivisions(),
                 1)
         );
@@ -93,11 +95,11 @@ public abstract class Mensuration extends Meter implements IMensuration {
 		return longaDuration;
 	}*/
 
-	public final Time getBreveDuration() {
+	public final ITime getBreveDuration() {
 		return breveDuration;
 	}
 
-	public final Time getSemibreveDuration() {
+	public final ITime getSemibreveDuration() {
 		return semibreveDuration;
 	}
 

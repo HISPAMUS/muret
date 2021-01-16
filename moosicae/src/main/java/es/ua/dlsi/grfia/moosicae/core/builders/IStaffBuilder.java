@@ -17,9 +17,8 @@ public class IStaffBuilder extends ISystemBuilder<IStaff> {
     private final List<IVoicedItem> staffSymbols;
     protected IStaffLineCount lineCount;
 
-    public IStaffBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-        staffSymbols = new LinkedList<>();
+    public IStaffBuilder() {
+        this.staffSymbols = new LinkedList<>();
     }
 
     public IStaffBuilder from(IStaffLineCount staffLineCount) {
@@ -34,6 +33,6 @@ public class IStaffBuilder extends ISystemBuilder<IStaff> {
 
     @Override
     public IStaff build() throws IMException {
-        return coreObjectFactory.createStaff(getId(), lineCount, staffSymbols.toArray(new IVoicedItem[0])); // recall the IVoicedItem[0] is used to indicate the array type without cast
+        return ICoreAbstractFactory.getInstance().createStaff(getId(), lineCount, staffSymbols.toArray(new IVoicedItem[0])); // recall the IVoicedItem[0] is used to indicate the array type without cast
     }
 }

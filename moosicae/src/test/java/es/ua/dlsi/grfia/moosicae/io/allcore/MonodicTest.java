@@ -18,21 +18,20 @@ public abstract class MonodicTest extends AbstractCoreTest {
     protected IStaff staff;
     protected IPart part;
 
-    public MonodicTest(ICoreAbstractFactory coreAbstractFactory) {
-        super(coreAbstractFactory);
-    }
+
+
 
     protected void prepareScore() {
-        score = coreAbstractFactory.createScore(coreAbstractFactory.createId());
-        part = coreAbstractFactory.createPart(score, coreAbstractFactory.createId(), coreAbstractFactory.createName(coreAbstractFactory.createId(), "Violin"));
-        voice = coreAbstractFactory.createVoice(part, coreAbstractFactory.createId(), null);
-        staff = coreAbstractFactory.createStaff(score, coreAbstractFactory.createId(), coreAbstractFactory.createStaffLineCount(5));
+        score = ICoreAbstractFactory.getInstance().createScore(ICoreAbstractFactory.getInstance().createId());
+        part = ICoreAbstractFactory.getInstance().createPart(score, ICoreAbstractFactory.getInstance().createId(), ICoreAbstractFactory.getInstance().createName(ICoreAbstractFactory.getInstance().createId(), "Violin"));
+        voice = ICoreAbstractFactory.getInstance().createVoice(part, ICoreAbstractFactory.getInstance().createId(), null);
+        staff = ICoreAbstractFactory.getInstance().createStaff(score, ICoreAbstractFactory.getInstance().createId(), ICoreAbstractFactory.getInstance().createStaffLineCount(5));
     }
 
     protected void addSmallRest()  {
         IRest rest = null;
         try {
-            rest = new IRestBuilder(coreAbstractFactory).from(EFigures.SIXTEENTH).build();
+            rest = new IRestBuilder().from(EFigures.SIXTEENTH).build();
         } catch (IMException e) {
             throw new IMRuntimeException(e);
         }
@@ -40,7 +39,7 @@ public abstract class MonodicTest extends AbstractCoreTest {
     }
 
     protected void addG2Clef() {
-        IClef clef = coreAbstractFactory.createClef(coreAbstractFactory.createId(), coreAbstractFactory.createClefSign(coreAbstractFactory.createId(), EClefSigns.G), coreAbstractFactory.createClefLine(coreAbstractFactory.createId(), 2), null);
+        IClef clef = ICoreAbstractFactory.getInstance().createClef(ICoreAbstractFactory.getInstance().createId(), ICoreAbstractFactory.getInstance().createClefSign(ICoreAbstractFactory.getInstance().createId(), EClefSigns.G), ICoreAbstractFactory.getInstance().createClefLine(ICoreAbstractFactory.getInstance().createId(), 2), null);
         score.add(voice, staff, clef);
     }
 }

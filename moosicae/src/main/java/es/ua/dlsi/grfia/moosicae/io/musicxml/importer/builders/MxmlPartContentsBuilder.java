@@ -19,8 +19,7 @@ import java.util.Optional;
 public class MxmlPartContentsBuilder extends CoreObjectBuilder<MxmlPartContents> implements IImporterAdapter<MxmlPartContents, XMLImporterParam>  {
     private final List<MxmlMeasure> items;
 
-    public MxmlPartContentsBuilder(ICoreAbstractFactory coreAbstractFactory) {
-        super(coreAbstractFactory);
+    public MxmlPartContentsBuilder() {
         this.items = new LinkedList<>();
     }
 
@@ -32,7 +31,7 @@ public class MxmlPartContentsBuilder extends CoreObjectBuilder<MxmlPartContents>
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
         Optional<String> id = xmlImporterParam.getAttribute("id");
         if (id.isPresent()) {
-            from(coreObjectFactory.createId(id.get()));
+            from(ICoreAbstractFactory.getInstance().createId(id.get()));
         }
     }
 

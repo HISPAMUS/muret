@@ -5,7 +5,8 @@ import es.ua.dlsi.grfia.moosicae.core.IVoicedItem;
 import es.ua.dlsi.grfia.moosicae.core.INote;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
-import es.ua.dlsi.grfia.moosicae.utils.Time;
+import es.ua.dlsi.grfia.moosicae.core.adt.ITime;
+
 import javax.validation.constraints.NotNull;
 
 
@@ -67,7 +68,7 @@ public class MxmlNote extends MxmlObject implements IMxmlPartItem, INote {
         return note.getStem();
     }
     @Override
-    public Time getDuration() {
+    public ITime getDuration() {
         return note.getDuration();
     }
 

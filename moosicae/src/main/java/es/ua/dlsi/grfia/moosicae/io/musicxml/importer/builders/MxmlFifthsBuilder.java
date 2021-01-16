@@ -16,10 +16,7 @@ import java.util.Optional;
 public class MxmlFifthsBuilder extends CoreObjectBuilder<MxmlFifths> implements IImporterAdapter<MxmlFifths, XMLImporterParam> {
     private Integer value;
 
-    public MxmlFifthsBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
-    
+
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {

@@ -10,8 +10,7 @@ import es.ua.dlsi.grfia.moosicae.core.IDurational;
  * @created 30/10/2020
  */
 public class IBeamGroupBuilder extends IDurationalCompositeBuilder {
-    public IBeamGroupBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public IBeamGroupBuilder(){
     }
 
     @Override
@@ -19,6 +18,6 @@ public class IBeamGroupBuilder extends IDurationalCompositeBuilder {
         if (children.isEmpty()) {
             throw new IMException("The children cannot be empty");
         }
-        return coreObjectFactory.createBeamGroup(getId(), (IDurational[])children.toArray(new IDurational[0]));
+        return ICoreAbstractFactory.getInstance().createBeamGroup(getId(), (IDurational[])children.toArray(new IDurational[0]));
     }
 }

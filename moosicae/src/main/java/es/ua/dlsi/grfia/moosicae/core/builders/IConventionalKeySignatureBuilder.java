@@ -16,9 +16,7 @@ public class IConventionalKeySignatureBuilder extends CoreObjectBuilder<IConvent
     protected IKeyAccidentalCount accidentalCount;
     private ICautionaryKeySignatureAccidentals cautionaryKeySignatureAccidentals;
 
-    public IConventionalKeySignatureBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
+    public IConventionalKeySignatureBuilder() {}
 
     public IConventionalKeySignatureBuilder from(IAccidentalSymbol accidentalSymbol) {
         this.accidentalSymbol = accidentalSymbol;
@@ -36,7 +34,7 @@ public class IConventionalKeySignatureBuilder extends CoreObjectBuilder<IConvent
     }
     @Override
     public IConventionalKeySignature build() throws IMException {
-        return coreObjectFactory.createConventionalKeySignature(getId(), accidentalCount, accidentalSymbol, cautionaryKeySignatureAccidentals);
+        return ICoreAbstractFactory.getInstance().createConventionalKeySignature(getId(), accidentalCount, accidentalSymbol, cautionaryKeySignatureAccidentals);
     }
 
 }

@@ -10,9 +10,7 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IIntegerCoreProperty;
 public abstract class IIntegerPropertyBuilder<T extends IIntegerCoreProperty> extends CoreObjectBuilder<T> {
     protected Integer value;
 
-    public IIntegerPropertyBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
+    public IIntegerPropertyBuilder() {}
 
     public IIntegerPropertyBuilder<T> from(Integer value) {
         this.value = value;

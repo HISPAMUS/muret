@@ -1,10 +1,10 @@
 package es.ua.dlsi.grfia.moosicae.core.builders.properties;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
+import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.builders.CoreObjectBuilder;
 import es.ua.dlsi.grfia.moosicae.core.enums.EBarlineTypes;
 import es.ua.dlsi.grfia.moosicae.core.properties.IBarlineType;
-import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 
 
 /**
@@ -14,10 +14,6 @@ import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 public class IBarlineTypeBuilder extends CoreObjectBuilder<IBarlineType> {
     private EBarlineTypes value;
 
-    public IBarlineTypeBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
-
     public IBarlineTypeBuilder from(EBarlineTypes value) {
         this.value = value;
         return this;
@@ -25,7 +21,7 @@ public class IBarlineTypeBuilder extends CoreObjectBuilder<IBarlineType> {
 
     @Override
     public IBarlineType build() throws IMException {
-        return coreObjectFactory.createBarlineType(getId(), value);
+        return ICoreAbstractFactory.getInstance().createBarlineType(getId(), value);
     }
 
 }

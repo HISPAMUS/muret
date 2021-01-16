@@ -15,9 +15,7 @@ public class IBarlineBuilder extends CoreObjectBuilder<IBarline>  {
     private IBarlineType barlineType;
     private INumber barNumber;
 
-    public IBarlineBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
+    public IBarlineBuilder() {}
 
 
     public IBarlineBuilder from(IBarlineType barlineType) {
@@ -32,7 +30,7 @@ public class IBarlineBuilder extends CoreObjectBuilder<IBarline>  {
 
     @Override
     public IBarline build() throws IMException {
-        return coreObjectFactory.createBarline(getId(), barNumber, barlineType);
+        return ICoreAbstractFactory.getInstance().createBarline(getId(), barNumber, barlineType);
     }
 
 }

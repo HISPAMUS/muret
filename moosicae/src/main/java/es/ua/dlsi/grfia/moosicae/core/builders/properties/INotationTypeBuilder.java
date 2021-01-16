@@ -13,10 +13,6 @@ import es.ua.dlsi.grfia.moosicae.core.properties.INotationType;
 public class INotationTypeBuilder extends CoreObjectBuilder<INotationType> {
     private ENotationTypes value;
 
-    public INotationTypeBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
-
     public INotationTypeBuilder from(ENotationTypes value) {
         this.value = value;
         return this;
@@ -24,7 +20,7 @@ public class INotationTypeBuilder extends CoreObjectBuilder<INotationType> {
 
     @Override
     public INotationType build() throws IMException {
-        return coreObjectFactory.createNotationType(getId(), value);
+        return ICoreAbstractFactory.getInstance().createNotationType(getId(), value);
     }
 
 

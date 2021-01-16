@@ -14,10 +14,6 @@ import es.ua.dlsi.grfia.moosicae.core.properties.ITieOrientation;
 public class ITieBuilder extends CoreObjectBuilder<ITie> {
     private ITieOrientation tieOrientation;
 
-    public ITieBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
-
     public ITieBuilder from(ITieOrientation value) {
         this.tieOrientation = value;
         return this;
@@ -25,7 +21,7 @@ public class ITieBuilder extends CoreObjectBuilder<ITie> {
 
     @Override
     public ITie build() throws IMException {
-        return coreObjectFactory.createTie(getId(), tieOrientation);
+        return ICoreAbstractFactory.getInstance().createTie(getId(), tieOrientation);
     }
 
 }

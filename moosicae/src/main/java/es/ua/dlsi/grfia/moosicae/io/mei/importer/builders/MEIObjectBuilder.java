@@ -14,9 +14,6 @@ import java.util.Optional;
  * @created 24/03/2020
  */
 public abstract class MEIObjectBuilder<ObjectType extends IMooObject> extends CoreObjectBuilder<ObjectType> implements IImporterAdapter<ObjectType, XMLImporterParam> {
-    public MEIObjectBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
 
     /**
      * This element is static because not all elements will derive from MEIObjectBuilder but from others such as INoteBuilder
@@ -29,7 +26,7 @@ public abstract class MEIObjectBuilder<ObjectType extends IMooObject> extends Co
         if (xmlImporterParam.hasAttributes()) {
             Optional<String> xmlID = xmlImporterParam.getAttribute("xml:id");
             if (xmlID.isPresent()) {
-                meiObjectBuilder.from(meiObjectBuilder.coreObjectFactory.createId(xmlID.get()));
+                meiObjectBuilder.from(ICoreAbstractFactory.getInstance().createId(xmlID.get()));
             }
         }
     }

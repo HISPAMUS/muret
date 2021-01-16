@@ -1,11 +1,11 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
-import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
+import es.ua.dlsi.grfia.moosicae.core.adt.ITime;
+import es.ua.dlsi.grfia.moosicae.core.adt.ITimeBuilder;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.IMeter;
 import es.ua.dlsi.grfia.moosicae.core.ICompositeMeter;
-import es.ua.dlsi.grfia.moosicae.utils.Time;
+
 import javax.validation.constraints.NotNull;
 
 import java.util.Arrays;
@@ -29,8 +29,8 @@ public abstract class CompositeMeter extends Meter implements ICompositeMeter {
     }
 
     @Override
-    public Time getBarDuration() {
-        Time sum = Time.TIME_ZERO;
+    public ITime getBarDuration() {
+        ITime sum = ITimeBuilder.getInstance().timeZero();
         for (IMeter sm: submeters) {
             sum = sum.add(sm.getBarDuration());
         }

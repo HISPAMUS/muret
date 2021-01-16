@@ -8,8 +8,6 @@ import es.ua.dlsi.grfia.moosicae.core.ITimeSignatureNumerator;
 import es.ua.dlsi.grfia.moosicae.io.IImporterAdapter;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -21,9 +19,6 @@ public class MEIMeterSigBuilder extends MEIObjectBuilder<IMeter> implements IImp
     private String unit;
     private String sym;
 
-    public MEIMeterSigBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
@@ -48,27 +43,27 @@ public class MEIMeterSigBuilder extends MEIObjectBuilder<IMeter> implements IImp
         if (sym != null) {
             switch (sym) {
                 case "common":
-                    return coreObjectFactory.createCommonTime(getId());
+                    return ICoreAbstractFactory.getInstance().createCommonTime(getId());
                 case "cut":
-                    return coreObjectFactory.createCutTime(getId());
+                    return ICoreAbstractFactory.getInstance().createCutTime(getId());
                 default:
                     throw new IMException("Unsupported meter sym: '" + sym);
             }
         } else if (count == null || unit == null) {
             throw new IMException("If sym is not present, both count and unit should be specified");
         } else {
-            ITimeSignatureDenominator denominator = coreObjectFactory.createTimeSignatureDenominator(null, Integer.parseInt(unit));
+            ITimeSignatureDenominator denominator = ICoreAbstractFactory.getInstance().createTimeSignatureDenominator(null, Integer.parseInt(unit));
 
             String [] numeratorsStr = count.split("\\+");
             if (numeratorsStr.length == 1) {
-                ITimeSignatureNumerator numerator = coreObjectFactory.createTimeSignatureNumerator(null, Integer.parseInt(count));
-                return coreObjectFactory.createStandardTimeSignature(null, numerator, denominator);
+                ITimeSignatureNumerator numerator = ICoreAbstractFactory.getInstance().createTimeSignatureNumerator(null, Integer.parseInt(count));
+                return ICoreAbstractFactory.getInstance().createStandardTimeSignature(null, numerator, denominator);
             } else {
                 ITimeSignatureNumerator [] numerators = new ITimeSignatureNumerator[numeratorsStr.length];
                 for (int i=0; i<numerators.length; i++) {
-                    numerators[i] = coreObjectFactory.createTimeSignatureNumerator(null, Integer.parseInt(numeratorsStr[i]));
+                    numerators[i] = ICoreAbstractFactory.getInstance().createTimeSignatureNumerator(null, Integer.parseInt(numeratorsStr[i]));
                 }
-                return coreObjectFactory.createAdditiveMeter(null, numerators, denominator);
+                return ICoreAbstractFactory.getInstance().createAdditiveMeter(null, numerators, denominator);
             }
         }
     }

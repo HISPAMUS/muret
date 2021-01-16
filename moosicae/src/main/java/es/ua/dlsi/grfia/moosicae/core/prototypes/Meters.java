@@ -64,26 +64,23 @@ public class Meters extends Prototypes<IMeter> {
 
 
     private IMeter generateMeter(int num, int den) {
-        IMeter meter = coreAbstractFactory.createStandardTimeSignature(null,
-                coreAbstractFactory.createTimeSignatureNumerator(null, num),
-                coreAbstractFactory.createTimeSignatureDenominator(null, den)
+        IMeter meter = ICoreAbstractFactory.getInstance().createStandardTimeSignature(null,
+                ICoreAbstractFactory.getInstance().createTimeSignatureNumerator(null, num),
+                ICoreAbstractFactory.getInstance().createTimeSignatureDenominator(null, den)
         );
         return meter;
     }
 
     /**
      * Instantiate it using PrototypesAbstractBuilder
-     * @param coreAbstractFactory
      */
-    Meters(ICoreAbstractFactory coreAbstractFactory) {
-        super(coreAbstractFactory);
-
+    Meters() {
         add(M1_1, generateMeter(1, 1));
         add(M2_1, generateMeter(2, 1));
 
         add(M1_2, generateMeter(1, 2));
         add(M3_2, generateMeter(2, 2));
-        add(CUT_TIME, coreAbstractFactory.createCutTime(null));
+        add(CUT_TIME, ICoreAbstractFactory.getInstance().createCutTime(null));
         add(M4_2, generateMeter(4, 2));
 
         add(M4_3, generateMeter(4, 3));
@@ -92,7 +89,7 @@ public class Meters extends Prototypes<IMeter> {
         add(M2_4, generateMeter(2, 4));
         add(M3_4, generateMeter(3, 4));
         add(M4_4, generateMeter(4, 4));
-        add(COMMON_TIME, coreAbstractFactory.createCommonTime(null));
+        add(COMMON_TIME, ICoreAbstractFactory.getInstance().createCommonTime(null));
         add(M5_4, generateMeter(5, 4));
         add(M6_4, generateMeter(6, 4));
         add(M7_4, generateMeter(7, 4));

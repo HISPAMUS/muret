@@ -14,9 +14,7 @@ public class IKeyBuilder extends CoreObjectBuilder<IKey> {
     private IMode mode;
     private IKeySignature keySignature;
 
-    public IKeyBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
+    public IKeyBuilder() {}
 
     public IKeyBuilder from(IPitchClass pitchClass) {
         this.pitchClass = pitchClass;
@@ -35,7 +33,7 @@ public class IKeyBuilder extends CoreObjectBuilder<IKey> {
 
     @Override
     public IKey build() throws IMException {
-        return coreObjectFactory.createKey(getId(), pitchClass, mode, keySignature);
+        return ICoreAbstractFactory.getInstance().createKey(getId(), pitchClass, mode, keySignature);
     }
 
 

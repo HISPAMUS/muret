@@ -6,7 +6,6 @@ import es.ua.dlsi.grfia.moosicae.core.IPart;
 import es.ua.dlsi.grfia.moosicae.core.IScore;
 
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -15,11 +14,6 @@ import java.util.List;
  */
 public class IScoreBuilder extends CoreObjectBuilder<IScore> {
     private List<IPart> partList;
-
-    public IScoreBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-        this.partList = new LinkedList<>();
-    }
 
     public IScoreBuilder add(IPart part) {
         this.partList.add(part);
@@ -32,7 +26,7 @@ public class IScoreBuilder extends CoreObjectBuilder<IScore> {
             throw new IMException("Missing at least one part");
         }
 
-        IScore score = coreObjectFactory.createScore(getId());
+        IScore score = ICoreAbstractFactory.getInstance().createScore(getId());
         for (IPart part: partList) {
             score.add(part);
         }

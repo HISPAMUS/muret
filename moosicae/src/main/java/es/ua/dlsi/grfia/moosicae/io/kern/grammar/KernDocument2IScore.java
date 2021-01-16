@@ -18,7 +18,6 @@ import java.util.*;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class KernDocument2IScore {
-    private final ICoreAbstractFactory coreAbstractFactory;
     private final IScore score;
     private final HashMap<Integer, IPart> partNumbers;
     private final HashMap<Integer, IStaff> staffNumbers;
@@ -28,9 +27,8 @@ public class KernDocument2IScore {
     private ArrayList<IStaff> staves;
     private IBeamGroupBuilder currentBeamGroupBuilder; // for creating a beam group
 
-    public KernDocument2IScore(ICoreAbstractFactory coreAbstractFactory) {
-        this.coreAbstractFactory = coreAbstractFactory;
-        this.score = coreAbstractFactory.createScore(null);
+    public KernDocument2IScore() {
+        this.score = ICoreAbstractFactory.getInstance().createScore(null);
         this.partNumbers = new HashMap<>();
         this.voiceParts = new HashMap<>();
         this.staffNumbers = new HashMap<>();
@@ -48,7 +46,7 @@ public class KernDocument2IScore {
      * @throws IMException
      */
     public IScore convert(DAGNode<KernToken> firstNode) throws IMException {
-        defaultPart = coreAbstractFactory.createPart(score, null, null);
+        defaultPart = ICoreAbstractFactory.getInstance().createPart(score, null, null);
 
         staves = new ArrayList<>();
         // first create voices, all associated to a default part that will be moved to other part when the **part token is found
@@ -58,12 +56,12 @@ public class KernDocument2IScore {
                 EKernHeaders headerType = ((KernHeader) kernToken).getSkmHeaderType();
                 if (headerType == EKernHeaders.kern || headerType == EKernHeaders.mens) { //TODO tambuén smens y skern ??? - o emens / ekern
                     // Create the voice for this spine - it may be moved to another part when the *part signifier is found
-                    IVoice voice = coreAbstractFactory.createVoice(defaultPart, null, null);
+                    IVoice voice = ICoreAbstractFactory.getInstance().createVoice(defaultPart, null, null);
                     voiceParts.put(voice.getId(), defaultPart);
 
                     //TODO staves - cuando se encuentre con *staff1 o *staff1/2
                     // don't insert the staff yet into the score yet because their order must be reversed
-                    IStaff defaultVoiceStaff = coreAbstractFactory.createStaff(null, coreAbstractFactory.createStaffLineCount(5), null);
+                    IStaff defaultVoiceStaff = ICoreAbstractFactory.getInstance().createStaff(null, ICoreAbstractFactory.getInstance().createStaffLineCount(5), null);
                     staves.add(0, defaultVoiceStaff); // insert from the beginning
                     voiceStaves.put(voice.getId(), defaultVoiceStaff);
                     // now traverse the spine
@@ -124,7 +122,7 @@ public class KernDocument2IScore {
             if (symbol instanceof IUnconventionalKeySignature) {
                 // if it is a conventional or theoretical key, we take its key signature
                 IUnconventionalKeySignature uks = (IUnconventionalKeySignature) kernCoreSymbol.getSymbol();
-                Optional<IKeySignature> ks = PrototypesAbstractBuilder.getInstance(coreAbstractFactory).getKeys().findExistingKeySignature(uks.getPitchClasses());
+                Optional<IKeySignature> ks = PrototypesAbstractBuilder.getInstance().getKeys().findExistingKeySignature(uks.getPitchClasses());
                 if (ks.isPresent()) {
                     symbol = ks.get();
                 }  // else use the unconventionalKeySignature
@@ -139,7 +137,7 @@ public class KernDocument2IScore {
                         if (currentBeamGroupBuilder != null) {
                             throw new UnsupportedOperationException("Unsupported nested beams"); //TODO nested beams
                         }
-                        currentBeamGroupBuilder = new IBeamGroupBuilder(coreAbstractFactory);
+                        currentBeamGroupBuilder = new IBeamGroupBuilder();
                         break;
                     case beamEnd:
                         currentBeamGroupBuilder.add((IDurational) symbol);
@@ -185,7 +183,7 @@ public class KernDocument2IScore {
         IPart part = partNumbers.get(kernPart.getNumber());
 
         if (part == null) {
-            part = coreAbstractFactory.createPart(score, null, null);
+            part = ICoreAbstractFactory.getInstance().createPart(score, null, null);
             partNumbers.put(kernPart.getNumber(), part);
         }
 

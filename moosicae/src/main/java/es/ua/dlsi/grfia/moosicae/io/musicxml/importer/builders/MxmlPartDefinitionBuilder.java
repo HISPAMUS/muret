@@ -14,15 +14,11 @@ import java.util.Optional;
  * @created 25/03/2020
  */
 public class MxmlPartDefinitionBuilder extends IPartBuilder implements IImporterAdapter<IPart, XMLImporterParam> {
-    public MxmlPartDefinitionBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
-
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
         Optional<String> id = xmlImporterParam.getAttribute("id");
         if (id.isPresent()) {
-            from(coreObjectFactory.createId(id.get()));
+            from(ICoreAbstractFactory.getInstance().createId(id.get()));
         }
     }
 }

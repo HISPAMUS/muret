@@ -13,9 +13,6 @@ import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
  * @created 24/03/2020
  */
 public class MxmAlterationBuilder extends IAlterationBuilder implements IImporterAdapter<IAlteration, XMLImporterParam> {
-    public MxmAlterationBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {

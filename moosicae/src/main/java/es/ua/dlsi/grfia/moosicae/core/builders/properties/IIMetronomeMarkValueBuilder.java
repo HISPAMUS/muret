@@ -10,13 +10,10 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IMetronomeMarkValue;
  * @created 22/03/2020
  */
 public class IIMetronomeMarkValueBuilder extends IIntegerPropertyBuilder<IMetronomeMarkValue>  {
-    public IIMetronomeMarkValueBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
 
     @Override
     public IMetronomeMarkValue build() throws IMException {
-        return coreObjectFactory.createMetronomeMarkValue(getId(), value);
+        return ICoreAbstractFactory.getInstance().createMetronomeMarkValue(getId(), value);
     }
 
 }

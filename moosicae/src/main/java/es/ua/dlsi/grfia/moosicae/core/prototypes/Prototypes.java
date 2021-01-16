@@ -16,11 +16,9 @@ import java.util.Set;
  * @created 27/03/2020
  */
 public abstract class Prototypes<Type extends IVoicedItem> {
-    protected final ICoreAbstractFactory coreAbstractFactory;
     protected HashMap<String, Type> prototypes;
 
-    public Prototypes(ICoreAbstractFactory coreAbstractFactory) {
-        this.coreAbstractFactory = coreAbstractFactory;
+    public Prototypes() {
         this.prototypes = new HashMap<>();
     }
 

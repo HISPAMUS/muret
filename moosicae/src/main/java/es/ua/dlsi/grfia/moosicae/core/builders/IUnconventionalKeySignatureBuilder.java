@@ -16,8 +16,7 @@ public class IUnconventionalKeySignatureBuilder extends CoreObjectBuilder<IUncon
     private List<IPitchClass> pitchClassList;
     private ICautionaryKeySignatureAccidentals cautionaryKeySignatureAccidentals;
 
-    public IUnconventionalKeySignatureBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public IUnconventionalKeySignatureBuilder() {
         this.pitchClassList = new LinkedList<>();
     }
 
@@ -35,7 +34,7 @@ public class IUnconventionalKeySignatureBuilder extends CoreObjectBuilder<IUncon
     @Override
     public IUnconventionalKeySignature build() {
         // the key signature can have no pitch class (CM or Am)
-        return coreObjectFactory.createUnconventionalKeySignature(getId(), pitchClassList.toArray(new IPitchClass[0]), cautionaryKeySignatureAccidentals);
+        return ICoreAbstractFactory.getInstance().createUnconventionalKeySignature(getId(), pitchClassList.toArray(new IPitchClass[0]), cautionaryKeySignatureAccidentals);
     }
 
 

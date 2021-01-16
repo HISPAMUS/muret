@@ -1,13 +1,12 @@
 package es.ua.dlsi.grfia.moosicae.core.impl.mensural.mensurations;
 
 
+import es.ua.dlsi.grfia.moosicae.core.adt.ITime;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.mensural.EMensuralPerfections;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.mensural.IProportioChangeTripla;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.Mensuration;
-import es.ua.dlsi.grfia.moosicae.utils.Time;
-import javax.validation.constraints.NotNull;
 
 public class ProportioChangeTripla extends Mensuration implements IProportioChangeTripla  {
     public ProportioChangeTripla(IId id) {
@@ -20,7 +19,7 @@ public class ProportioChangeTripla extends Mensuration implements IProportioChan
     }
 
     @Override
-    public Time getBarDuration() {
+    public ITime getBarDuration() {
         return getSemibreveDuration(); //TODO Comprobar
     }
 

@@ -22,8 +22,7 @@ public class MxmTimeSignatureBuilder extends CoreObjectBuilder<IMeter> implement
     private ETimeSignatureSymbols timeSignatureSymbol;
     private IMeter interchangeableRightMeter;
 
-    public MxmTimeSignatureBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public MxmTimeSignatureBuilder() {
         numeratorList = new LinkedList<>();
         denominatorList = new LinkedList<>();
     }
@@ -67,10 +66,10 @@ public class MxmTimeSignatureBuilder extends CoreObjectBuilder<IMeter> implement
         if (timeSignatureSymbol != null) {
             switch (timeSignatureSymbol) {
                 case common:
-                    meter = coreObjectFactory.createCommonTime(getId());
+                    meter = ICoreAbstractFactory.getInstance().createCommonTime(getId());
                     break;
                 case cut:
-                    meter = coreObjectFactory.createCutTime(getId());
+                    meter = ICoreAbstractFactory.getInstance().createCutTime(getId());
                     break;
                 default:
                     throw new IMException("Unknown time signature symbol: '" + timeSignatureSymbol + "'");
@@ -84,7 +83,7 @@ public class MxmTimeSignatureBuilder extends CoreObjectBuilder<IMeter> implement
             }
 
             if (numeratorList.size() == 1) {
-                meter = coreObjectFactory.createStandardTimeSignature(getId(), numeratorList.get(0), denominatorList.get(0));
+                meter = ICoreAbstractFactory.getInstance().createStandardTimeSignature(getId(), numeratorList.get(0), denominatorList.get(0));
             } else {
                 // check if all denominators are the same
                 boolean isAdditiveMeter = true;
@@ -97,18 +96,18 @@ public class MxmTimeSignatureBuilder extends CoreObjectBuilder<IMeter> implement
                     last = denominator;
                 }
                 if (isAdditiveMeter) {
-                    meter = coreObjectFactory.createAdditiveMeter(getId(), numeratorList.toArray(new ITimeSignatureNumerator[0]), denominatorList.get(0));
+                    meter = ICoreAbstractFactory.getInstance().createAdditiveMeter(getId(), numeratorList.toArray(new ITimeSignatureNumerator[0]), denominatorList.get(0));
                 } else {
                     IMeter [] submeters = new IMeter[numeratorList.size()];
                     for (int i=0; i<submeters.length; i++) {
-                        submeters[i] = coreObjectFactory.createStandardTimeSignature(null, numeratorList.get(i), denominatorList.get(i));
+                        submeters[i] = ICoreAbstractFactory.getInstance().createStandardTimeSignature(null, numeratorList.get(i), denominatorList.get(i));
                     }
-                    meter = coreObjectFactory.createMixedMeter(getId(), submeters);
+                    meter = ICoreAbstractFactory.getInstance().createMixedMeter(getId(), submeters);
                 }
             }
         }
         if (interchangeableRightMeter != null) {
-            return coreObjectFactory.createInterchangingMeter(getId(), meter, interchangeableRightMeter);
+            return ICoreAbstractFactory.getInstance().createInterchangingMeter(getId(), meter, interchangeableRightMeter);
         } else {
             return meter;
         }

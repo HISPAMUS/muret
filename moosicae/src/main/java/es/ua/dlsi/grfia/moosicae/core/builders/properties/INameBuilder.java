@@ -11,13 +11,9 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IName;
  */
 public class INameBuilder extends IStringPropertyBuilder<IName> {
 
-    public INameBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
-
     @Override
     public IName build() throws IMException {
-        return coreObjectFactory.createName(getId(), value);
+        return ICoreAbstractFactory.getInstance().createName(getId(), value);
     }
 
 }

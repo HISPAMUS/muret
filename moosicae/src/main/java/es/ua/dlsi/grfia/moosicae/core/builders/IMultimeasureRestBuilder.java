@@ -1,8 +1,9 @@
 package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.core.builders.properties.IMultimeasureRestCountBuilder;
+import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
+import es.ua.dlsi.grfia.moosicae.core.IDurational;
+import es.ua.dlsi.grfia.moosicae.core.IMultimeasureRest;
 import es.ua.dlsi.grfia.moosicae.core.properties.IMultimeasureRestCount;
 
 
@@ -12,8 +13,7 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IMultimeasureRestCount;
 public class IMultimeasureRestBuilder extends IDurationalCompositeBuilder<IMultimeasureRest> {
     private IMultimeasureRestCount count;
 
-    public IMultimeasureRestBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public IMultimeasureRestBuilder(){
     }
 
     public IMultimeasureRestBuilder from(IMultimeasureRestCount count) {
@@ -23,7 +23,7 @@ public class IMultimeasureRestBuilder extends IDurationalCompositeBuilder<IMulti
 
     @Override
     public IMultimeasureRest build() throws IMException {
-        return coreObjectFactory.createMultimeasureRest(getId(), children.toArray(new IDurational[0]), count);
+        return ICoreAbstractFactory.getInstance().createMultimeasureRest(getId(), children.toArray(new IDurational[0]), count);
     }
 
 }

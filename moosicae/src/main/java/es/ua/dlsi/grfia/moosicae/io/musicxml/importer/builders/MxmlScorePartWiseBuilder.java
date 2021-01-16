@@ -20,8 +20,7 @@ public class MxmlScorePartWiseBuilder extends CoreObjectBuilder<MxmlScorePartWis
     private List<IPart> coreParts;
     private List<MxmlPartContents> mxmlPartContentsList;
 
-    public MxmlScorePartWiseBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public MxmlScorePartWiseBuilder() {
         mxmlPartContentsList = new LinkedList<>();
         coreParts = new LinkedList<>();
     }

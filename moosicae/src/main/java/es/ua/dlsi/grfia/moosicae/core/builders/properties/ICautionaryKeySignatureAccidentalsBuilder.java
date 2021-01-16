@@ -10,13 +10,12 @@ import es.ua.dlsi.grfia.moosicae.core.properties.ICautionaryKeySignatureAccident
  * @created 22/03/2020
  */
 public class ICautionaryKeySignatureAccidentalsBuilder extends IBooleanPropertyBuilder<ICautionaryKeySignatureAccidentals>  {
-    public ICautionaryKeySignatureAccidentalsBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public ICautionaryKeySignatureAccidentalsBuilder() {
     }
 
     @Override
     public ICautionaryKeySignatureAccidentals build() throws IMException {
-        return coreObjectFactory.createCautionaryKeySignatureAccidentals(getId(), value);
+        return ICoreAbstractFactory.getInstance().createCautionaryKeySignatureAccidentals(getId(), value);
     }
 
 

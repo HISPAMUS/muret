@@ -1,12 +1,11 @@
 package es.ua.dlsi.grfia.moosicae.core.impl.mensural.mensurations;
 
+import es.ua.dlsi.grfia.moosicae.core.adt.ITime;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.mensural.EMensuralPerfections;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.Mensuration;
 import es.ua.dlsi.grfia.moosicae.core.mensural.ITempusPerfectumCumProlationeImperfecta;
-import es.ua.dlsi.grfia.moosicae.utils.Time;
-import javax.validation.constraints.NotNull;
 
 /**
  * Visually rendered as O
@@ -18,7 +17,7 @@ public class TempusPerfectumCumProlationeImperfecta extends Mensuration implemen
     }
 
     @Override
-    public Time getBarDuration() {
+    public ITime getBarDuration() {
         return getBreveDuration();
     }
 

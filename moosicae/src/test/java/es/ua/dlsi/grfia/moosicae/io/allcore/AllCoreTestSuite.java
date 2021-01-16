@@ -34,11 +34,9 @@ import static org.junit.Assert.fail;
  */
 public class AllCoreTestSuite {
         private static final String OUTPUT = "/tmp/allcoretests";
-    private ICoreAbstractFactory abstractFactory = new CoreFactory().create();
-
     @Before
     public void init() {
-        abstractFactory = new CoreAbstractFactoryImpl();
+
     }
 
     private void writeToFile(String contents, File file) throws IOException {
@@ -93,19 +91,19 @@ public class AllCoreTestSuite {
 
         coreTest.generateTestScores().forEach((name, score) -> {
             try {
-                testExportImport("MEI", score, new MEIExporter(), new MEIImporter(abstractFactory), outputTmp, name, "mei", true);
+                testExportImport("MEI", score, new MEIExporter(), new MEIImporter(), outputTmp, name, "mei", true);
             } catch (Exception e) {
                 e.printStackTrace();
                 fail("MEI: " + name + ": " + e.getMessage());
             }
             try {
-                testExportImport("MusicXML", score, new MusicXMLExporter(), new MusicXMLImporter(abstractFactory), outputTmp, name, "musicxml", true);
+                testExportImport("MusicXML", score, new MusicXMLExporter(), new MusicXMLImporter(), outputTmp, name, "musicxml", true);
             } catch (Exception e) {
                 e.printStackTrace();
                 fail("MusicXML: " + name + ": " + e.getMessage());
             }
             try {
-                testExportImport("SKM", score, new SkmExporter(), new SkmImporter(abstractFactory), outputTmp, name, "skm", true);
+                testExportImport("SKM", score, new SkmExporter(), new SkmImporter(), outputTmp, name, "skm", true);
             } catch (Exception e) {
                 e.printStackTrace();
                 fail("SKM: " + name + ": " + e.getMessage());
@@ -147,11 +145,11 @@ public class AllCoreTestSuite {
 
         outputTmp.mkdirs();
         AbstractCoreTest [] testScoreBuilders = new AbstractCoreTest[] {
-            new MinimalTest(abstractFactory),
-               new ClefsTest(abstractFactory),
-               new KeysTest(abstractFactory),
-               new KeySignaturesTest(abstractFactory),
-               new MetersTest(abstractFactory)
+            new MinimalTest(),
+               new ClefsTest(),
+               new KeysTest(),
+               new KeySignaturesTest(),
+               new MetersTest()
         };
         for (AbstractCoreTest coreTestScoreBuilder: testScoreBuilders) {
             doTest(coreTestScoreBuilder);
@@ -164,9 +162,9 @@ public class AllCoreTestSuite {
         String [] filenames = {"meter_mixed.mei"};
         for (String filename: filenames) {
             File file = TestFileUtils.getFile("/testdata/io/mei/" + filename);
-            MEIImporter meiImporter = new MEIImporter(abstractFactory);
+            MEIImporter meiImporter = new MEIImporter();
             IScore score = meiImporter.importScore(file);
-            testExportImport("MEI", score, new MEIExporter(), new MEIImporter(abstractFactory));
+            testExportImport("MEI", score, new MEIExporter(), new MEIImporter());
         }
     }
 }

@@ -13,9 +13,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class IClefBuilder extends CoreObjectBuilder<IClef> {
-    public IClefBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
+    public IClefBuilder() {}
     protected IClefLine line;
     protected IClefSign clefSign;
     protected IOctaveTransposition octaveTransposition;
@@ -36,12 +34,12 @@ public class IClefBuilder extends CoreObjectBuilder<IClef> {
     }
 
     public void from(EClefSigns clefSign) {
-        this.clefSign = coreObjectFactory.createClefSign(null, clefSign);
+        this.clefSign = ICoreAbstractFactory.getInstance().createClefSign(null, clefSign);
     }
 
     @Override
     public IClef build() throws IMException {
-        return coreObjectFactory.createClef(getId(), clefSign, line, octaveTransposition);
+        return ICoreAbstractFactory.getInstance().createClef(getId(), clefSign, line, octaveTransposition);
     }
 
 }

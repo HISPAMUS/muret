@@ -14,9 +14,7 @@ import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 public class IClefSignBuilder extends CoreObjectBuilder<IClefSign> {
     private EClefSigns value;
 
-    public IClefSignBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
+    public IClefSignBuilder() {}
 
     public IClefSignBuilder from(EClefSigns value) {
         this.value = value;
@@ -26,7 +24,7 @@ public class IClefSignBuilder extends CoreObjectBuilder<IClefSign> {
 
     @Override
     public IClefSign build() throws IMException {
-        return coreObjectFactory.createClefSign(getId(), value);
+        return ICoreAbstractFactory.getInstance().createClefSign(getId(), value);
     }
 
 

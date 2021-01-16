@@ -13,9 +13,6 @@ import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
  * @created 24/03/2020
  */
 public class MxmlClefBuilder extends IClefBuilder implements IImporterAdapter<IClef, XMLImporterParam> {
-    public MxmlClefBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {

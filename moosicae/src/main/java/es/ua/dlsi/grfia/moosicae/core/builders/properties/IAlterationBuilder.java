@@ -18,9 +18,7 @@ public class IAlterationBuilder extends CoreObjectBuilder<IAlteration> {
     private IAccidentalSymbol accidentalSymbol;
     private IAlterationDisplayType alterationDisplayType;
 
-    public IAlterationBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
+    public IAlterationBuilder() {}
 
     public IAlterationBuilder from(IAccidentalSymbol accidentalSymbol) {
         this.accidentalSymbol = accidentalSymbol;
@@ -28,7 +26,7 @@ public class IAlterationBuilder extends CoreObjectBuilder<IAlteration> {
     }
 
     public IAlterationBuilder from(EAccidentalSymbols accidentalSymbol) {
-        this.accidentalSymbol = coreObjectFactory.createAccidentalSymbol(getId(), accidentalSymbol);
+        this.accidentalSymbol = ICoreAbstractFactory.getInstance().createAccidentalSymbol(getId(), accidentalSymbol);
         return this;
     }
 
@@ -38,14 +36,14 @@ public class IAlterationBuilder extends CoreObjectBuilder<IAlteration> {
     }
 
     public IAlterationBuilder from(EAlterationDisplayTypes alterationDisplayType) {
-        this.alterationDisplayType = coreObjectFactory.createAlterationDisplayType(getId(), alterationDisplayType);
+        this.alterationDisplayType = ICoreAbstractFactory.getInstance().createAlterationDisplayType(getId(), alterationDisplayType);
         return this;
     }
 
 
     @Override
     public IAlteration build() throws IMException {
-        return coreObjectFactory.createAlteration(getId(), accidentalSymbol, alterationDisplayType);
+        return ICoreAbstractFactory.getInstance().createAlteration(getId(), accidentalSymbol, alterationDisplayType);
     }
 
 }

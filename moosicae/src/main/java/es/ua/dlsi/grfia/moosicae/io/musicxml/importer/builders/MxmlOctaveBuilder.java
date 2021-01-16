@@ -14,9 +14,6 @@ import java.util.Optional;
  * @created 24/03/2020
  */
 public class MxmlOctaveBuilder extends IOctaveBuilder implements IImporterAdapter<IOctave, XMLImporterParam> {
-    public MxmlOctaveBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {

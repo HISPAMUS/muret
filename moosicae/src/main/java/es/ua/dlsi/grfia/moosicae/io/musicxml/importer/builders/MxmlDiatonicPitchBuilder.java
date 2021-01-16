@@ -14,9 +14,6 @@ import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
  * @created 24/03/2020
  */
 public class MxmlDiatonicPitchBuilder extends IDiatonicPitchBuilder implements IImporterAdapter<IDiatonicPitch, XMLImporterParam> {
-    public MxmlDiatonicPitchBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {

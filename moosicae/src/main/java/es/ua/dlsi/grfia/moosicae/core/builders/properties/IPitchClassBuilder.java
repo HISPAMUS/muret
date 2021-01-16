@@ -16,9 +16,7 @@ public class IPitchClassBuilder extends CoreObjectBuilder<IPitchClass> {
     IDiatonicPitch diatonicPitch;
     IAccidentalSymbol accidentalSymbol;
 
-    public IPitchClassBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
+    public IPitchClassBuilder() {}
 
     public IPitchClassBuilder from(IDiatonicPitch diatonicPitch) {
         this.diatonicPitch = diatonicPitch;
@@ -26,7 +24,7 @@ public class IPitchClassBuilder extends CoreObjectBuilder<IPitchClass> {
     }
 
     public IPitchClassBuilder from(EDiatonicPitches diatonicPitch) {
-        this.diatonicPitch = coreObjectFactory.createDiatonicPitch(null, diatonicPitch);
+        this.diatonicPitch = ICoreAbstractFactory.getInstance().createDiatonicPitch(null, diatonicPitch);
         return this;
     }
 
@@ -37,7 +35,7 @@ public class IPitchClassBuilder extends CoreObjectBuilder<IPitchClass> {
 
     @Override
     public IPitchClass build() throws IMException {
-        return coreObjectFactory.createPitchClass(getId(), diatonicPitch, accidentalSymbol);
+        return ICoreAbstractFactory.getInstance().createPitchClass(getId(), diatonicPitch, accidentalSymbol);
     }
 
 

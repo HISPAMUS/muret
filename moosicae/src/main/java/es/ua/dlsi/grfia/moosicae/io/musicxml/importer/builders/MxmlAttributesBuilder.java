@@ -20,8 +20,7 @@ public class MxmlAttributesBuilder extends CoreObjectBuilder<MxmlAttributes> imp
     private List<INonDurational> nonDurationals;
     private MxmlDivisions divisions;
 
-    public MxmlAttributesBuilder(ICoreAbstractFactory coreAbstractFactory) {
-        super(coreAbstractFactory);
+    public MxmlAttributesBuilder() {
         this.nonDurationals = new LinkedList<>();
     }
 

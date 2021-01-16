@@ -3,11 +3,13 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ITimeSignatureDenominator;
 import es.ua.dlsi.grfia.moosicae.core.ITimeSignatureNumerator;
+import es.ua.dlsi.grfia.moosicae.core.adt.IFractionBuilder;
+import es.ua.dlsi.grfia.moosicae.core.adt.ITime;
+import es.ua.dlsi.grfia.moosicae.core.adt.ITimeBuilder;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.IStandardTimeSignature;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
-import es.ua.dlsi.grfia.moosicae.utils.Time;
-import org.apache.commons.lang3.math.Fraction;
+
 import javax.validation.constraints.NotNull;
 
 /**
@@ -20,13 +22,14 @@ public class StandardTimeSignature extends Meter implements IStandardTimeSignatu
     @NotNull
     private final ITimeSignatureDenominator denominator;
     @NotNull
-    private final Time barDuration;
+    private final ITime barDuration;
+
 
     StandardTimeSignature(IId id, @NotNull ITimeSignatureNumerator numerator, @NotNull ITimeSignatureDenominator denominator) {
         super(id);
         this.numerator = numerator;
         this.denominator = denominator;
-        this.barDuration = new Time(Fraction.getFraction(numerator.getValue(), 1).multiplyBy(Fraction.getFraction(4, denominator.getValue())));
+        this.barDuration = ITimeBuilder.getInstance().build(IFractionBuilder.getInstance().build(numerator.getValue()).multiplyBy(IFractionBuilder.getInstance().build(4, denominator.getValue())));
     }
 
     @Override
@@ -40,7 +43,7 @@ public class StandardTimeSignature extends Meter implements IStandardTimeSignatu
     }
 
     @Override
-    public Time getBarDuration() {
+    public ITime getBarDuration() {
         return barDuration;
     }
 

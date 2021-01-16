@@ -1,9 +1,10 @@
 package es.ua.dlsi.grfia.moosicae.core.impl.properties;
 
+import es.ua.dlsi.grfia.moosicae.core.adt.ITime;
 import es.ua.dlsi.grfia.moosicae.core.properties.IFigure;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
-import es.ua.dlsi.grfia.moosicae.utils.Time;
+import es.ua.dlsi.grfia.moosicae.core.impl.adt.Time;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -21,7 +22,7 @@ public class Figure extends EnumCoreProperty<EFigures> implements IFigure {
     }
 
     @Override
-    public Time findDurationWithDots(int dots) {
+    public ITime findDurationWithDots(int dots) {
         return value.getDurationWithDots(dots);
     }
 

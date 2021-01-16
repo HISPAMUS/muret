@@ -16,9 +16,7 @@ public class INoteHeadBuilder extends CoreObjectBuilder<INoteHead> {
     private ITie tieToNext;
 
 
-    public INoteHeadBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
+    public INoteHeadBuilder() {}
 
     public INoteHeadBuilder from(IPitch pitch) {
         this.pitch = pitch;
@@ -32,6 +30,6 @@ public class INoteHeadBuilder extends CoreObjectBuilder<INoteHead> {
     @Override
     public INoteHead build() throws IMException {
         //TODO ties
-        return coreObjectFactory.createNoteHead(null, pitch, tieToNext);
+        return ICoreAbstractFactory.getInstance().createNoteHead(null, pitch, tieToNext);
     }
 }

@@ -1,11 +1,10 @@
 package es.ua.dlsi.grfia.moosicae.core.builders.properties;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
+import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.builders.CoreObjectBuilder;
-import es.ua.dlsi.grfia.moosicae.core.builders.IObjectBuilder;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.core.properties.IAccidentalSymbol;
-import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -14,9 +13,7 @@ import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 public class IAccidentalSymbolBuilder extends CoreObjectBuilder<IAccidentalSymbol> {
     private EAccidentalSymbols value;
 
-    public IAccidentalSymbolBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
+    public IAccidentalSymbolBuilder() {}
 
     public IAccidentalSymbolBuilder from(EAccidentalSymbols value) {
         this.value = value;
@@ -25,7 +22,7 @@ public class IAccidentalSymbolBuilder extends CoreObjectBuilder<IAccidentalSymbo
 
     @Override
     public IAccidentalSymbol build() throws IMException {
-        return coreObjectFactory.createAccidentalSymbol(getId(), value);
+        return ICoreAbstractFactory.getInstance().createAccidentalSymbol(getId(), value);
     }
 
 }

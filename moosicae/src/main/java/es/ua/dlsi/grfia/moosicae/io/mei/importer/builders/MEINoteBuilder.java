@@ -27,9 +27,6 @@ public class MEINoteBuilder extends INoteBuilder implements IImporterAdapter<INo
     private IAlteration alteration;
     private IPitchBuilder pitchBuilder;
 
-    public MEINoteBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
 
     public MEINoteBuilder from(IAlteration alteration) {
         this.alteration = alteration;
@@ -48,7 +45,7 @@ public class MEINoteBuilder extends INoteBuilder implements IImporterAdapter<INo
         }
 
         if (xmlImporterParam.hasAttributes()) { // pname... are included as parameters
-            pitchBuilder = new IPitchBuilder(coreObjectFactory);
+            pitchBuilder = new IPitchBuilder();
             Optional<EDiatonicPitches> diatonicPitch = MEIAttributesParsers.getInstance().parseDiatonicPitch(xmlImporterParam);
             if (diatonicPitch.isPresent()) {
                 pitchBuilder.from(diatonicPitch.get());
@@ -62,12 +59,12 @@ public class MEINoteBuilder extends INoteBuilder implements IImporterAdapter<INo
             //TODO accid sin .ges
             Optional<EAccidentalSymbols> eAccidentalSymbol = MEIAttributesParsers.getInstance().parseAccidentalSymbol(xmlImporterParam, "accid.ges");
             if (eAccidentalSymbol.isPresent()) {
-                IAlterationBuilder alterationBuilder = new IAlterationBuilder(coreObjectFactory);
+                IAlterationBuilder alterationBuilder = new IAlterationBuilder();
                 alterationBuilder.from(eAccidentalSymbol.get());
                 pitchBuilder.from(alterationBuilder.build());
             }
 
-            INoteHead noteHead = coreObjectFactory.createNoteHead(null, pitchBuilder.build(), null); //TODO ties
+            INoteHead noteHead = ICoreAbstractFactory.getInstance().createNoteHead(null, pitchBuilder.build(), null); //TODO ties
             from(noteHead);
         }
     }
@@ -77,7 +74,7 @@ public class MEINoteBuilder extends INoteBuilder implements IImporterAdapter<INo
         if (this.pitchBuilder != null) {
             if (alteration != null) {
                 this.pitchBuilder.from(alteration);
-                INoteHead noteHead = coreObjectFactory.createNoteHead(null, pitchBuilder.build(), null); //TODO ties;
+                INoteHead noteHead = ICoreAbstractFactory.getInstance().createNoteHead(null, pitchBuilder.build(), null); //TODO ties;
                 this.from(noteHead);
             }
         } else {

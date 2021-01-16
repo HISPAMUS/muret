@@ -3,7 +3,6 @@ package es.ua.dlsi.grfia.moosicae.core.builders;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.IDurational;
 import es.ua.dlsi.grfia.moosicae.core.IDurationalComposite;
-import es.ua.dlsi.grfia.moosicae.core.IMixedMeter;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -15,8 +14,7 @@ import java.util.List;
 public abstract class IDurationalCompositeBuilder<T extends IDurationalComposite> extends CoreObjectBuilder<T> {
     protected List<IDurational> children;
 
-    public IDurationalCompositeBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public IDurationalCompositeBuilder() {
         children = new LinkedList<>();
     }
 

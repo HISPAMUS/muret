@@ -2,7 +2,6 @@ package es.ua.dlsi.grfia.moosicae.io.mei.importer.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IConventionalKeySignature;
-import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.IKey;
 import es.ua.dlsi.grfia.moosicae.core.IMeter;
 import es.ua.dlsi.grfia.moosicae.io.mei.importer.elements.MEIScoreDef;
@@ -21,8 +20,7 @@ public class MEIScoreDefBuilder extends MEIObjectBuilder<MEIScoreDef> {
     protected IMeter meter;
     private MEIStaffGroupDef staffGroupDef;
 
-    public MEIScoreDefBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public MEIScoreDefBuilder() {
     }
 
     public MEIScoreDefBuilder from(MEIStaffGroupDef staffGroupDef) {
@@ -37,16 +35,16 @@ public class MEIScoreDefBuilder extends MEIObjectBuilder<MEIScoreDef> {
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
-        Optional<IMeter> meter = MEIAttributesParsers.getInstance().parseMeter(coreObjectFactory, xmlImporterParam);
+        Optional<IMeter> meter = MEIAttributesParsers.getInstance().parseMeter(xmlImporterParam);
         if (meter.isPresent()) {
             this.meter = meter.get();
         }
 
-        Optional<IKey> key = MEIAttributesParsers.getInstance().parseKey(coreObjectFactory, xmlImporterParam);
+        Optional<IKey> key = MEIAttributesParsers.getInstance().parseKey(xmlImporterParam);
         if (key.isPresent()) {
             this.key = key.get();
         } else {
-            Optional<IConventionalKeySignature> conventionalKeySignature = MEIAttributesParsers.getInstance().parseConventionalKeySignature(coreObjectFactory, xmlImporterParam);
+            Optional<IConventionalKeySignature> conventionalKeySignature = MEIAttributesParsers.getInstance().parseConventionalKeySignature(xmlImporterParam);
             if (conventionalKeySignature.isPresent()) {
                 this.conventionalKeySignature = conventionalKeySignature.get();
             }

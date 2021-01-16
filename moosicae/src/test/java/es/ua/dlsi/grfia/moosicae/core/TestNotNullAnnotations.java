@@ -42,7 +42,7 @@ public class TestNotNullAnnotations {
     public void testNotNullAtICoreAbstractFactory1() {
         ICoreAbstractFactory coreAbstractFactory = new CoreFactory().create();
         // name element is required
-        IName name = coreAbstractFactory.createName(coreAbstractFactory.createId(), null);
+        IName name = ICoreAbstractFactory.getInstance().createName(ICoreAbstractFactory.getInstance().createId(), null);
         fail("It should not arrive here: recompile with Maven and reimport project in IDE");
     }
 
@@ -50,7 +50,7 @@ public class TestNotNullAnnotations {
     public void testNotNullAtICoreAbstractFactory2() {
         ICoreAbstractFactory coreAbstractFactory = new CoreFactory().create();
         // name element is required
-        IClef clef =  coreAbstractFactory.createClef(null, null, null, null);
+        IClef clef =  ICoreAbstractFactory.getInstance().createClef(null, null, null, null);
         fail("It should not arrive here: recompile with Maven and reimport project in IDE");
     }*/
 }

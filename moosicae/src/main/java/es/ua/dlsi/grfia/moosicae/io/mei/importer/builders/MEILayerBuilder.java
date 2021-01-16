@@ -19,8 +19,7 @@ public class MEILayerBuilder extends MEIObjectBuilder<MEILayer> {
     private final List<IVoicedItem> coreItemList;
 
 
-    public MEILayerBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public MEILayerBuilder() {
         coreItemList = new LinkedList<>();
     }
 

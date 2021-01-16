@@ -13,9 +13,7 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IDots;
 public class IDotsBuilder extends CoreObjectBuilder<IDots> {
     protected Integer value;
 
-    public IDotsBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
+    public IDotsBuilder() {}
 
     public IDotsBuilder from(Integer value) {
         this.value = value;
@@ -24,6 +22,6 @@ public class IDotsBuilder extends CoreObjectBuilder<IDots> {
 
     @Override
     public IDots build() throws IMException {
-        return coreObjectFactory.createDots(getId(), value);
+        return ICoreAbstractFactory.getInstance().createDots(getId(), value);
     }
 }

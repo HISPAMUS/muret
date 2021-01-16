@@ -13,10 +13,10 @@ import java.util.List;
 public class IStaffGroupBuilder extends ISystemBuilder<IStaffGroup> {
     private final List<ISystem> children;
 
-    public IStaffGroupBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public IStaffGroupBuilder() {
         children = new LinkedList<>();
     }
+
     public IStaffGroupBuilder add(ISystem child) {
         this.children.add(child);
         return this;
@@ -24,6 +24,6 @@ public class IStaffGroupBuilder extends ISystemBuilder<IStaffGroup> {
 
     @Override
     public IStaffGroup build() throws IMException {
-        return coreObjectFactory.createStaffGroup(getId(), children.toArray(new ISystem[0]));
+        return ICoreAbstractFactory.getInstance().createStaffGroup(getId(), children.toArray(new ISystem[0]));
     }
 }

@@ -5,6 +5,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
+import es.ua.dlsi.grfia.moosicae.core.impl.CoreAbstractFactoryImpl;
 import es.ua.dlsi.grfia.moosicae.core.mensural.*;
 import es.ua.dlsi.grfia.moosicae.core.metadata.ITitle;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
@@ -17,6 +18,14 @@ import javax.validation.constraints.NotNull;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public interface ICoreAbstractFactory {
+    /**
+     * Static by default
+     */
+    ICoreAbstractFactory instance = new CoreAbstractFactoryImpl();
+    static ICoreAbstractFactory getInstance() {
+        return instance;
+    }
+
     IAdditiveMeter createAdditiveMeter(IId id, @NotNull ITimeSignatureNumerator[] numerators, @NotNull ITimeSignatureDenominator denominator);
     IAlteration createAlteration(IId id, @NotNull IAccidentalSymbol accidentals, IAlterationDisplayType alterationDisplayType);
     IAlternatingMeter createAlternatingMeter(IId id, @NotNull IMeter[] meters);
@@ -64,7 +73,7 @@ public interface ICoreAbstractFactory {
     IStandardTimeSignature createStandardTimeSignature(IId id, @NotNull ITimeSignatureNumerator numerator, @NotNull ITimeSignatureDenominator denominator);
     IMensuration createMensuration(IId id, @NotNull EMensurations mensuration);
     IMensuration createMensuration(IId id,  EMensuralPerfections modusMaior,  EMensuralPerfections modusMinor, @NotNull EMensuralPerfections tempus, @NotNull EMensuralPerfections prolatio);
-    IMetronomeMark createMetronomeMark(IId id, @NotNull IFigure figure,  IDots dots, @NotNull IMetronomeMarkValue value);
+    IMetronomeMark createMetronomeMark(IId id, @NotNull IHorizontalAnchor start, @NotNull IFigure figure,  IDots dots, @NotNull IMetronomeMarkValue value);
     IMetronomeMarkValue createMetronomeMarkValue(IId id, @NotNull Integer value);
     IMixedMeter createMixedMeter(IId id, @NotNull IMeter[] meters);
     IMode createMode(IId id, EModes mode);

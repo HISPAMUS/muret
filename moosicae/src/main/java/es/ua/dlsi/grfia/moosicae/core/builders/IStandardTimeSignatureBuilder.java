@@ -13,8 +13,8 @@ public class IStandardTimeSignatureBuilder extends CoreObjectBuilder<IStandardTi
     private ITimeSignatureDenominator denominator;
     private ETimeSignatureSymbols timeSignatureSymbol;
 
-    public IStandardTimeSignatureBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public IStandardTimeSignatureBuilder() {
+
     }
 
     public IStandardTimeSignatureBuilder from(ITimeSignatureNumerator numerator) {
@@ -37,14 +37,14 @@ public class IStandardTimeSignatureBuilder extends CoreObjectBuilder<IStandardTi
         if (timeSignatureSymbol != null) {
             switch (timeSignatureSymbol) {
                 case common:
-                    return coreObjectFactory.createCommonTime(getId());
+                    return ICoreAbstractFactory.getInstance().createCommonTime(getId());
                 case cut:
-                    return coreObjectFactory.createCutTime(getId());
+                    return ICoreAbstractFactory.getInstance().createCutTime(getId());
                 default:
                     throw new IMException("Unknown time signature symbol: " + timeSignatureSymbol);
             }
         } else {
-            return coreObjectFactory.createStandardTimeSignature(getId(), numerator, denominator);
+            return ICoreAbstractFactory.getInstance().createStandardTimeSignature(getId(), numerator, denominator);
         }
     }
 

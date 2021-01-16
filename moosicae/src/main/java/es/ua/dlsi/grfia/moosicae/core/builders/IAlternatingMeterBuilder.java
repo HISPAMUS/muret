@@ -15,8 +15,7 @@ import java.util.List;
 public class IAlternatingMeterBuilder extends CoreObjectBuilder<IAlternatingMeter> {
     private List<IMeter> meters;
 
-    public IAlternatingMeterBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public IAlternatingMeterBuilder() {
         meters = new LinkedList<>();
     }
 
@@ -29,7 +28,7 @@ public class IAlternatingMeterBuilder extends CoreObjectBuilder<IAlternatingMete
 
     @Override
     public IAlternatingMeter build() throws IMException {
-        return coreObjectFactory.createAlternatingMeter(getId(), meters.toArray(new IMeter[0]));
+        return ICoreAbstractFactory.getInstance().createAlternatingMeter(getId(), meters.toArray(new IMeter[0]));
     }
 
 }

@@ -1,7 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.io;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.CoreFactory;
 import es.ua.dlsi.grfia.moosicae.core.IChord;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.builders.IChordBuilder;
@@ -12,6 +11,7 @@ import es.ua.dlsi.grfia.moosicae.core.builders.properties.INoteHeadBuilder;
 import es.ua.dlsi.grfia.moosicae.core.enums.EDiatonicPitches;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
 import org.junit.Test;
+
 
 import static org.junit.Assert.assertEquals;
 
@@ -26,27 +26,25 @@ public class ImportingContextsTest {
     public void test() throws IMException {
         ImportingContexts importingContexts = new ImportingContexts();
 
-        ICoreAbstractFactory coreFactory = new CoreFactory().create();
+        importingContexts.begin("chord", new IChordBuilder());
 
-        importingContexts.begin("chord", new IChordBuilder(coreFactory));
-
-        importingContexts.begin("figure", new IFigureBuilder(coreFactory));
+        importingContexts.begin("figure", new IFigureBuilder());
         importingContexts.addObjectToPool(EFigures.WHOLE);
         importingContexts.end("figure");
 
-        importingContexts.begin("noteHead", new INoteHeadBuilder(coreFactory));
-        importingContexts.begin("pitch", new IPitchBuilder(coreFactory));
-        importingContexts.addObjectToPool(coreFactory.createOctave(coreFactory.createId(), 4));
-        importingContexts.begin("diatonicPitch", new IDiatonicPitchBuilder(coreFactory));
+        importingContexts.begin("noteHead", new INoteHeadBuilder());
+        importingContexts.begin("pitch", new IPitchBuilder());
+        importingContexts.addObjectToPool(ICoreAbstractFactory.getInstance().createOctave(ICoreAbstractFactory.getInstance().createId(), 4));
+        importingContexts.begin("diatonicPitch", new IDiatonicPitchBuilder());
         importingContexts.addObjectToPool(EDiatonicPitches.B);
         importingContexts.end("diatonicPitch");
         importingContexts.end("pitch");
         importingContexts.end("noteHead");
 
-        importingContexts.begin("noteHead", new INoteHeadBuilder(coreFactory));
-        importingContexts.begin("pitch", new IPitchBuilder(coreFactory));
-        importingContexts.addObjectToPool(coreFactory.createOctave(coreFactory.createId(), 5));
-        importingContexts.begin("diatonicPitch", new IDiatonicPitchBuilder(coreFactory));
+        importingContexts.begin("noteHead", new INoteHeadBuilder());
+        importingContexts.begin("pitch", new IPitchBuilder());
+        importingContexts.addObjectToPool(ICoreAbstractFactory.getInstance().createOctave(ICoreAbstractFactory.getInstance().createId(), 5));
+        importingContexts.begin("diatonicPitch", new IDiatonicPitchBuilder());
         importingContexts.addObjectToPool(EDiatonicPitches.D);
         importingContexts.end("diatonicPitch");
         importingContexts.end("pitch");

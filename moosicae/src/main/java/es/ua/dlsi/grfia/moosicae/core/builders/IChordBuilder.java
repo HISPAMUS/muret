@@ -14,8 +14,7 @@ import java.util.List;
 public class IChordBuilder extends IStemmedBuilder<IChord> {
     private List<INoteHead> noteHeads;
 
-    public IChordBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public IChordBuilder() {
         noteHeads = new LinkedList<>();
     }
 
@@ -26,7 +25,7 @@ public class IChordBuilder extends IStemmedBuilder<IChord> {
 
     @Override
     public IChord build() throws IMException {
-        return coreObjectFactory.createChord(getId(), figure, dots, stem, noteHeads.toArray(new INoteHead[0]));
+        return ICoreAbstractFactory.getInstance().createChord(getId(), figure, dots, stem, noteHeads.toArray(new INoteHead[0]));
     }
 
 

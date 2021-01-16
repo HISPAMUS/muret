@@ -19,13 +19,10 @@ import java.util.Map;
  */
 public class KeySignaturesTest extends MonodicTest {
 
-    public KeySignaturesTest(ICoreAbstractFactory coreAbstractFactory) {
-        super(coreAbstractFactory);
-    }
 
     @Override
     public Map<String, IScore> generateTestScores() throws Exception {
-        Map<String, IKey> keys = PrototypesAbstractBuilder.getInstance(coreAbstractFactory).getKeys().getMap();
+        Map<String, IKey> keys = PrototypesAbstractBuilder.getInstance().getKeys().getMap();
 
         HashMap<String, IScore> result = new HashMap<>();
         keys.forEach((name, key) -> {
@@ -41,10 +38,10 @@ public class KeySignaturesTest extends MonodicTest {
         prepareScore();
 
         IPitchClass [] pitchClasses = {
-                new IPitchClassBuilder(coreAbstractFactory).from(EDiatonicPitches.C).from(coreAbstractFactory.createAccidentalSymbol(null, EAccidentalSymbols.SHARP)).build(),
-                new IPitchClassBuilder(coreAbstractFactory).from(EDiatonicPitches.G).from(coreAbstractFactory.createAccidentalSymbol(null, EAccidentalSymbols.SHARP)).build()
+                new IPitchClassBuilder().from(EDiatonicPitches.C).from(ICoreAbstractFactory.getInstance().createAccidentalSymbol(null, EAccidentalSymbols.SHARP)).build(),
+                new IPitchClassBuilder().from(EDiatonicPitches.G).from(ICoreAbstractFactory.getInstance().createAccidentalSymbol(null, EAccidentalSymbols.SHARP)).build()
         };
-        IKeySignature keySignature = coreAbstractFactory.createUnconventionalKeySignature(null, pitchClasses, null);
+        IKeySignature keySignature = ICoreAbstractFactory.getInstance().createUnconventionalKeySignature(null, pitchClasses, null);
         score.add(voice, staff, keySignature);
         result.put("unconventional_keysignature_cs_gs", score);
         return result;

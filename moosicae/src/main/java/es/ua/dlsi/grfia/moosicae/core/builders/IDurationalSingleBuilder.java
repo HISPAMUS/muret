@@ -14,9 +14,7 @@ public abstract class IDurationalSingleBuilder<T extends IDurationalSingle> exte
     protected IFigure figure;
     protected IDots dots;
 
-    public IDurationalSingleBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
+    public IDurationalSingleBuilder() {}
 
     public IDurationalSingleBuilder<T> from(IFigure figure) {
         this.figure = figure;
@@ -29,13 +27,13 @@ public abstract class IDurationalSingleBuilder<T extends IDurationalSingle> exte
     }
 
     public IDurationalSingleBuilder<T> from(EFigures figure) {
-        this.figure = coreObjectFactory.createFigure(getId(), figure);
+        this.figure = ICoreAbstractFactory.getInstance().createFigure(getId(), figure);
         return this;
     }
 
     public IDurationalSingleBuilder<T> from(int ndots) {
         if (ndots > 0) {
-            this.dots = coreObjectFactory.createDots(getId(), ndots);
+            this.dots = ICoreAbstractFactory.getInstance().createDots(getId(), ndots);
         }
         return this;
     }

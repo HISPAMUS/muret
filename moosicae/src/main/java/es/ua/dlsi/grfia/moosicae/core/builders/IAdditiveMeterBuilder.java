@@ -14,8 +14,7 @@ public class IAdditiveMeterBuilder extends CoreObjectBuilder<IAdditiveMeter> {
     private List<ITimeSignatureNumerator> numerators;
     private ITimeSignatureDenominator denominator;
 
-    public IAdditiveMeterBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public IAdditiveMeterBuilder() {
         numerators = new LinkedList<>();
     }
 
@@ -32,7 +31,7 @@ public class IAdditiveMeterBuilder extends CoreObjectBuilder<IAdditiveMeter> {
 
     @Override
     public IAdditiveMeter build() throws IMException {
-        return coreObjectFactory.createAdditiveMeter(getId(), numerators.toArray(new ITimeSignatureNumerator[0]), denominator);
+        return ICoreAbstractFactory.getInstance().createAdditiveMeter(getId(), numerators.toArray(new ITimeSignatureNumerator[0]), denominator);
     }
 
 }

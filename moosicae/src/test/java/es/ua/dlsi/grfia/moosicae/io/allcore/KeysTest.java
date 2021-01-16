@@ -14,13 +14,10 @@ import java.util.Map;
  */
 public class KeysTest extends MonodicTest {
 
-    public KeysTest(ICoreAbstractFactory coreAbstractFactory) {
-        super(coreAbstractFactory);
-    }
 
     @Override
     public Map<String, IScore> generateTestScores() throws Exception {
-        Map<String, IKey> keys = PrototypesAbstractBuilder.getInstance(coreAbstractFactory).getKeys().getMap();
+        Map<String, IKey> keys = PrototypesAbstractBuilder.getInstance().getKeys().getMap();
 
         HashMap<String, IScore> result = new HashMap<>();
         keys.forEach((name, key) -> {

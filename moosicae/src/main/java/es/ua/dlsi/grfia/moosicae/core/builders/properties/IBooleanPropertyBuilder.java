@@ -10,9 +10,7 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IBooleanCoreProperty;
 public abstract class IBooleanPropertyBuilder<T extends IBooleanCoreProperty> extends CoreObjectBuilder<T> {
     protected Boolean value;
 
-    public IBooleanPropertyBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
+    public IBooleanPropertyBuilder() {}
 
     public IBooleanPropertyBuilder<T> from(Boolean value) {
         this.value = value;

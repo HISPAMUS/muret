@@ -13,8 +13,7 @@ import es.ua.dlsi.grfia.moosicae.core.builders.CoreObjectBuilder;
 public class SkmMeterBuilder extends CoreObjectBuilder<IMeter> {
     private IMeter meter;
 
-    public SkmMeterBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public SkmMeterBuilder() {
     }
 
     public SkmMeterBuilder from(IMeter meter) {

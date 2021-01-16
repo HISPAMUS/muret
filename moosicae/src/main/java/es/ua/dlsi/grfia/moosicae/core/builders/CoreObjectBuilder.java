@@ -1,9 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core.builders;
 
-import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.IMooObject;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
-
 
 /**
  * Use the fluent API to create children. Individual properties must be added with a method "from", and lists with a method "add"
@@ -11,15 +9,10 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IId;
  * @created 15/03/2020
  */
 public abstract class CoreObjectBuilder<T extends IMooObject> implements IObjectBuilder<T> {
-    protected final ICoreAbstractFactory coreObjectFactory;
     /**
      * Must be private beacuse if it's null, a new ID is generated in getId()
      */
     private IId id;
-
-    public CoreObjectBuilder(ICoreAbstractFactory coreObjectFactory) {
-        this.coreObjectFactory = coreObjectFactory; 
-    }
 
     public CoreObjectBuilder<T> from(IId id) {
         this.id = id;
@@ -35,7 +28,7 @@ public abstract class CoreObjectBuilder<T extends IMooObject> implements IObject
         /*if (this.id != null) {
             return id;
         } else {
-            return coreObjectFactory.createId();
+            return ICoreAbstractFactory.getInstance().createId();
         }*/
     }
 

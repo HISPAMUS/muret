@@ -25,8 +25,7 @@ public class MusicXMLKeyOrKeySignatureBuilder extends KeyOrKeySignatureBuilder {
     private List<IAlteration> alterations;
     protected List<IDiatonicPitch> diatonicPitches;
 
-    public MusicXMLKeyOrKeySignatureBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public MusicXMLKeyOrKeySignatureBuilder() {
         this.diatonicPitches = new ArrayList<>();
         this.alterations = new ArrayList<>();
     }
@@ -56,7 +55,7 @@ public class MusicXMLKeyOrKeySignatureBuilder extends KeyOrKeySignatureBuilder {
     @Override
     public IVoicedItem build() throws IMException {
         if (fifths != null) {
-            this.from(coreObjectFactory.createKeyAccidentalCount(null, fifths.getValue()));
+            this.from(ICoreAbstractFactory.getInstance().createKeyAccidentalCount(null, fifths.getValue()));
             if (fifths.getAccidentalSymbol().isPresent()) {
                 this.from(fifths.getAccidentalSymbol().get());
             }
@@ -66,7 +65,7 @@ public class MusicXMLKeyOrKeySignatureBuilder extends KeyOrKeySignatureBuilder {
             }
 
             for (int i=0; i<alterations.size(); i++) {
-                IPitchClass pitchClass = coreObjectFactory.createPitchClass(null, diatonicPitches.get(i), alterations.get(i).getAccidentalSymbol());
+                IPitchClass pitchClass = ICoreAbstractFactory.getInstance().createPitchClass(null, diatonicPitches.get(i), alterations.get(i).getAccidentalSymbol());
                 add(pitchClass);
             }
         }

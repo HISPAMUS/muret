@@ -24,8 +24,7 @@ public class MEIImporter extends XMLImporter implements IImporter {
     private HashMap<Integer, IStaff> staffNumbers;
     private HashMap<Integer, MEIStaffDef> staffDefs;
 
-    public MEIImporter(ICoreAbstractFactory abstractFactory) {
-        super(abstractFactory);
+    public MEIImporter() {
         coreObjectBuilderSuppliers.add("scoreDef", MEIScoreDefBuilder::new);
         coreObjectBuilderSuppliers.add("staffGrp", MEIStaffGroupBuilder::new);
         coreObjectBuilderSuppliers.add("staffDef", MEIStaffDefBuilder::new);
@@ -54,12 +53,12 @@ public class MEIImporter extends XMLImporter implements IImporter {
         if (systemDef instanceof MEIStaffDef) {
             MEIStaffDef meiStaffDef = (MEIStaffDef) systemDef;
             //TODO line count parameter in MEI
-            IStaffLineCount staffLineCount = coreAbstractFactory.createStaffLineCount(5);
+            IStaffLineCount staffLineCount = ICoreAbstractFactory.getInstance().createStaffLineCount(5);
             IStaff staff;
             if (parent == null) {
-                staff = coreAbstractFactory.createStaff(score, null, staffLineCount);
+                staff = ICoreAbstractFactory.getInstance().createStaff(score, null, staffLineCount);
             } else {
-                staff = coreAbstractFactory.createStaff(parent, null, staffLineCount);
+                staff = ICoreAbstractFactory.getInstance().createStaff(parent, null, staffLineCount);
             }
             staffNumbers.put(meiStaffDef.getN(), staff);
             staffDefs.put(meiStaffDef.getN(), meiStaffDef);
@@ -67,9 +66,9 @@ public class MEIImporter extends XMLImporter implements IImporter {
             MEIStaffGroupDef meiStaffGroupDef = (MEIStaffGroupDef) systemDef;
             IStaffGroup staffGroup;
             if (parent == null) {
-                staffGroup = coreAbstractFactory.createStaffGroup(score, null);
+                staffGroup = ICoreAbstractFactory.getInstance().createStaffGroup(score, null);
             } else {
-                staffGroup = coreAbstractFactory.createStaffGroup(parent, null);
+                staffGroup = ICoreAbstractFactory.getInstance().createStaffGroup(parent, null);
             }
             for (MEISystemDef child: meiStaffGroupDef.getChildren()) {
                 convert(score, voice, staffGroup, child);
@@ -142,9 +141,9 @@ public class MEIImporter extends XMLImporter implements IImporter {
         // TODO everything goes to a part
         staffNumbers = new HashMap<>();
         staffDefs = new HashMap<>();
-        IScore score = coreAbstractFactory.createScore(null);
-        IPart part = coreAbstractFactory.createPart(score, null,null);
-        IVoice voice = coreAbstractFactory.createVoice(part, null, null);
+        IScore score = ICoreAbstractFactory.getInstance().createScore(null);
+        IPart part = ICoreAbstractFactory.getInstance().createPart(score, null,null);
+        IVoice voice = ICoreAbstractFactory.getInstance().createVoice(part, null, null);
         convert(score, voice, null, meiScoreDef.getMeiStaffGroupDef());
         insertContents(meiScoreDef, section, score, part, voice);
         return score;

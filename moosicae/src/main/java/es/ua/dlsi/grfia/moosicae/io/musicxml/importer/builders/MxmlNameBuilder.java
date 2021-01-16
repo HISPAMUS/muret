@@ -16,13 +16,10 @@ import java.util.Optional;
 public class MxmlNameBuilder extends CoreObjectBuilder<IName> implements IImporterAdapter<IName, XMLImporterParam> {
     private String value;
 
-    public MxmlNameBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
 
     @Override
     public IName build() throws IMException {
-        return coreObjectFactory.createName(getId(), value);
+        return ICoreAbstractFactory.getInstance().createName(getId(), value);
     }
 
     @Override

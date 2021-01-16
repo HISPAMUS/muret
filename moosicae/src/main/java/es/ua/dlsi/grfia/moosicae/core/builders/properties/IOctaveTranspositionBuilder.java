@@ -9,13 +9,12 @@ import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
  * @created 22/03/2020
  */
 public class IOctaveTranspositionBuilder extends IIntegerPropertyBuilder<IOctaveTransposition>  {
-    public IOctaveTranspositionBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public IOctaveTranspositionBuilder(){
     }
 
     @Override
     public IOctaveTransposition build() throws IMException {
-        return coreObjectFactory.createOctaveTransposition(getId(), value);
+        return ICoreAbstractFactory.getInstance().createOctaveTransposition(getId(), value);
     }
 
 

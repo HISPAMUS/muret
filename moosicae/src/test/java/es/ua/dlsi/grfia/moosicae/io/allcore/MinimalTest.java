@@ -14,20 +14,16 @@ import java.util.Map;
 public class MinimalTest extends MonodicTest {
 
 
-    public MinimalTest(ICoreAbstractFactory coreAbstractFactory) {
-        super(coreAbstractFactory);
-    }
-
     @Override
     public Map<String, IScore> generateTestScores() throws Exception {
         prepareScore();
-        IClef clef = coreAbstractFactory.createClef(coreAbstractFactory.createId(), coreAbstractFactory.createClefSign(coreAbstractFactory.createId(), EClefSigns.G), coreAbstractFactory.createClefLine(coreAbstractFactory.createId(), 2), null);
+        IClef clef = ICoreAbstractFactory.getInstance().createClef(ICoreAbstractFactory.getInstance().createId(), ICoreAbstractFactory.getInstance().createClefSign(ICoreAbstractFactory.getInstance().createId(), EClefSigns.G), ICoreAbstractFactory.getInstance().createClefLine(ICoreAbstractFactory.getInstance().createId(), 2), null);
         score.add(voice, staff, clef);
-        IKey key = coreAbstractFactory.createConventionalKey(coreAbstractFactory.createId(), EConventionalKeys.DM, null);
+        IKey key = ICoreAbstractFactory.getInstance().createConventionalKey(ICoreAbstractFactory.getInstance().createId(), EConventionalKeys.DM, null);
         score.add(voice, staff, key);
-        IMeter meterSymbol = coreAbstractFactory.createCommonTime(coreAbstractFactory.createId());
+        IMeter meterSymbol = ICoreAbstractFactory.getInstance().createCommonTime(ICoreAbstractFactory.getInstance().createId());
         score.add(voice, staff, meterSymbol);
-        INote note1 = new INoteBuilder(coreAbstractFactory).build(EDiatonicPitches.F, EAccidentalSymbols.SHARP, 4, EFigures.WHOLE, 0);
+        INote note1 = new INoteBuilder().build(EDiatonicPitches.F, EAccidentalSymbols.SHARP, 4, EFigures.WHOLE, 0);
         score.add(voice, staff, note1);
         HashMap<String, IScore> result = new HashMap<>();
         result.put("minimal", score);

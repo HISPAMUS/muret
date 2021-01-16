@@ -2,14 +2,11 @@ package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.core.enums.EDiatonicPitches;
 import es.ua.dlsi.grfia.moosicae.core.properties.IAlteration;
 import es.ua.dlsi.grfia.moosicae.core.properties.IDiatonicPitch;
 import es.ua.dlsi.grfia.moosicae.core.properties.IOctave;
 import es.ua.dlsi.grfia.moosicae.core.properties.IPitch;
-
-import javax.validation.constraints.NotNull;
 
 
 /**
@@ -20,9 +17,7 @@ public class IPitchBuilder extends CoreObjectBuilder<IPitch> {
     private IAlteration alteration;
     private IDiatonicPitch diatonicPitch;
 
-    public IPitchBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
+    public IPitchBuilder() {}
 
     public IPitchBuilder from(IOctave octave) {
         this.octave = octave;
@@ -40,18 +35,18 @@ public class IPitchBuilder extends CoreObjectBuilder<IPitch> {
     }
 
     public IPitchBuilder from(EDiatonicPitches diatonicPitch) {
-        this.diatonicPitch = coreObjectFactory.createDiatonicPitch(null, diatonicPitch);
+        this.diatonicPitch = ICoreAbstractFactory.getInstance().createDiatonicPitch(null, diatonicPitch);
         return this;
     }
 
     public IPitchBuilder from(int octave) {
-        this.octave = coreObjectFactory.createOctave(getId(), octave);
+        this.octave = ICoreAbstractFactory.getInstance().createOctave(getId(), octave);
         return this;
     }
 
     @Override
     public IPitch build() throws IMException {
-        return coreObjectFactory.createPitch(getId(), octave, alteration, diatonicPitch);
+        return ICoreAbstractFactory.getInstance().createPitch(getId(), octave, alteration, diatonicPitch);
     }
 
 

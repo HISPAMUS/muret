@@ -18,8 +18,7 @@ public class MEIMeasureBuilder extends MEIObjectBuilder<MEIMeasure> {
     private final List<MEIStaff> layers;
     private MEIMeasureRightProperty right;
 
-    public MEIMeasureBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public MEIMeasureBuilder() {
         layers = new LinkedList<>();
     }
 

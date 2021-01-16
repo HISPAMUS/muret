@@ -14,23 +14,19 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IStemDirection;
 public class IStemBuilder extends CoreObjectBuilder<IStem> {
     private IStemDirection stemDirection;
 
-    public IStemBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
-
     public IStemBuilder from(IStemDirection value) {
         this.stemDirection = value;
         return this;
     }
 
     public IStemBuilder from(EStemDirection value) {
-        this.stemDirection = coreObjectFactory.createStemDirection(null, value);
+        this.stemDirection = ICoreAbstractFactory.getInstance().createStemDirection(null, value);
         return this;
     }
 
     @Override
     public IStem build() throws IMException {
-        return coreObjectFactory.createStem(getId(), stemDirection);
+        return ICoreAbstractFactory.getInstance().createStem(getId(), stemDirection);
     }
 
 }

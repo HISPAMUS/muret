@@ -14,9 +14,6 @@ import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
  * @created 24/03/2020
  */
 public class MxmlModeBuilder extends IModeBuilder implements IImporterAdapter<IMode, XMLImporterParam> {
-    public MxmlModeBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {

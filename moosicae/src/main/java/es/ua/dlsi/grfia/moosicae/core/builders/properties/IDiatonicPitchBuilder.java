@@ -13,9 +13,7 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IDiatonicPitch;
 public class IDiatonicPitchBuilder extends CoreObjectBuilder<IDiatonicPitch> {
     private EDiatonicPitches value;
 
-    public IDiatonicPitchBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
+    public IDiatonicPitchBuilder() {}
 
     public IDiatonicPitchBuilder from(EDiatonicPitches value) {
         this.value = value;
@@ -24,7 +22,7 @@ public class IDiatonicPitchBuilder extends CoreObjectBuilder<IDiatonicPitch> {
 
     @Override
     public IDiatonicPitch build() throws IMException {
-        return coreObjectFactory.createDiatonicPitch(getId(), value);
+        return ICoreAbstractFactory.getInstance().createDiatonicPitch(getId(), value);
     }
 
 

@@ -72,8 +72,8 @@ public class SkmDocument {
         dag2DotExporter.export(file, dag);
     }
 
-    public IScore buildScore(ICoreAbstractFactory abstractFactory) throws IMException {
-        return new SkmDocument2IScore(abstractFactory).convert(dag.getFirstNode());
+    public IScore buildScore() throws IMException {
+        return new SkmDocument2IScore().convert(dag.getFirstNode());
     }
 
     public List<SkmToken> getHeaderTokens() {

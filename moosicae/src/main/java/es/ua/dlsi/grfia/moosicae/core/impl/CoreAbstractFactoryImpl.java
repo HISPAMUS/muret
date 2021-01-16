@@ -4,9 +4,11 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.IMetronomeMark;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.adt.IFractionBuilder;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
+import es.ua.dlsi.grfia.moosicae.core.impl.adt.FractionBuilder;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.Mensuration;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.mensurations.*;
 import es.ua.dlsi.grfia.moosicae.core.impl.properties.*;
@@ -19,12 +21,18 @@ import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Note the @NotNull from interfaces are not actually checked by the hibernate validator
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
+    public CoreAbstractFactoryImpl() {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Initializing dependency injection for ICoreAbstractFactory");
+    }
+
     @Override
     public IAlteration createAlteration(IId id, IAccidentalSymbol accidentalSymbol,  IAlterationDisplayType alterationDisplayType) {
         return new Alteration(id, accidentalSymbol, alterationDisplayType);
@@ -203,8 +211,8 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IMetronomeMark createMetronomeMark(IId id, IFigure figure,  IDots dots, IMetronomeMarkValue value) {
-        return new MetronomeMark(id, figure, dots, value);
+    public IMetronomeMark createMetronomeMark(IId id, @NotNull IHorizontalAnchor start, IFigure figure,  IDots dots, IMetronomeMarkValue value) {
+        return new MetronomeMark(id, start, figure, dots, value);
     }
 
     @Override
@@ -221,6 +229,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     public IAlternatingMeter createAlternatingMeter(IId id, @NotNull IMeter[] meters) {
         return new AlternatingMeter(id, meters);
     }
+
 
     @Override
     public IAdditiveMeter createAdditiveMeter(IId id, @NotNull ITimeSignatureNumerator[] numerators, @NotNull ITimeSignatureDenominator denominator) {

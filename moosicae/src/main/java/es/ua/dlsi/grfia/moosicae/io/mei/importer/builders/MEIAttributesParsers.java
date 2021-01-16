@@ -23,7 +23,7 @@ import java.util.Optional;
  */
 public class MEIAttributesParsers {
     private static MEIAttributesParsers instance;
-
+    
     private MEIAttributesParsers() {
     }
 
@@ -141,16 +141,16 @@ public class MEIAttributesParsers {
         //TODO hidden, editorial...
     }
 
-    Optional<IMeter> parseMeter(ICoreAbstractFactory abstractFactory, XMLImporterParam xmlImporterParam) throws IMException {
+    Optional<IMeter> parseMeter(XMLImporterParam xmlImporterParam) throws IMException {
         Optional<String> meterSym = xmlImporterParam.getAttribute("meter.sym");
         if (meterSym.isPresent()) {
             switch (meterSym.get()) {
                 case "common":
-                    return Optional.of(abstractFactory.createCommonTime(null));
+                    return Optional.of(ICoreAbstractFactory.getInstance().createCommonTime(null));
                 case "cut":
-                    return Optional.of(abstractFactory.createCutTime(null));
+                    return Optional.of(ICoreAbstractFactory.getInstance().createCutTime(null));
                 default:
-                    throw new IMException("Unkown meter symbol: " + meterSym.get());
+                    throw new IMException("Unknown meter symbol: " + meterSym.get());
             }
             //TODO mensurales
         } else {
@@ -161,9 +161,9 @@ public class MEIAttributesParsers {
                     throw new IMException("Either count or unit is missing in meter definition");
                 }
 
-                IStandardTimeSignature standardTimeSignature = abstractFactory.createStandardTimeSignature(null,
-                        abstractFactory.createTimeSignatureNumerator(null, Integer.parseInt(meterCount.get())),
-                        abstractFactory.createTimeSignatureDenominator(null, Integer.parseInt(meterUnit.get()))
+                IStandardTimeSignature standardTimeSignature = ICoreAbstractFactory.getInstance().createStandardTimeSignature(null,
+                        ICoreAbstractFactory.getInstance().createTimeSignatureNumerator(null, Integer.parseInt(meterCount.get())),
+                        ICoreAbstractFactory.getInstance().createTimeSignatureDenominator(null, Integer.parseInt(meterUnit.get()))
                         );
                 return Optional.of(standardTimeSignature);
             }
@@ -171,10 +171,10 @@ public class MEIAttributesParsers {
         }
     }
 
-    Optional<IClef> parseClef(ICoreAbstractFactory abstractFactory, XMLImporterParam xmlImporterParam) throws IMException {
+    Optional<IClef> parseClef(XMLImporterParam xmlImporterParam) throws IMException {
         Optional<String> shape = xmlImporterParam.getAttribute("clef.shape");
         if (shape.isPresent()) {
-            IClefBuilder clefBuilder = new IClefBuilder(abstractFactory);
+            IClefBuilder clefBuilder = new IClefBuilder();
             EClefSigns clefSign;
             switch (shape.get()) {
                 case "perc":
@@ -190,7 +190,7 @@ public class MEIAttributesParsers {
 
             Optional<String> line = xmlImporterParam.getAttribute("clef.line");
             if (line.isPresent()) {
-                IClefLine clefLine = abstractFactory.createClefLine(null, Integer.parseInt(line.get()));
+                IClefLine clefLine = ICoreAbstractFactory.getInstance().createClefLine(null, Integer.parseInt(line.get()));
                 clefBuilder.from(clefLine);
             }
 
@@ -215,7 +215,7 @@ public class MEIAttributesParsers {
                 if (clefDisPlace.get().equals("below")) {
                     octaves = -octaves;
                 }
-                IOctaveTransposition octaveTransposition = abstractFactory.createOctaveTransposition(null, octaves);
+                IOctaveTransposition octaveTransposition = ICoreAbstractFactory.getInstance().createOctaveTransposition(null, octaves);
                 clefBuilder.from(octaveTransposition);
             }
 
@@ -254,17 +254,17 @@ public class MEIAttributesParsers {
         }
     }
 
-    public Optional<IConventionalKeySignature> parseConventionalKeySignature(ICoreAbstractFactory coreAbstractFactory, XMLImporterParam xmlImporterParam) throws IMException {
+    public Optional<IConventionalKeySignature> parseConventionalKeySignature(XMLImporterParam xmlImporterParam) throws IMException {
         Optional<Pair<Integer, Optional<EAccidentalSymbols>>> pair = parseConventionalKeySignatureAttribute(xmlImporterParam, "key.sig");
         if (pair.isPresent()) {
-            IConventionalKeySignatureBuilder keyFromAccidentalCountBuilder = new IConventionalKeySignatureBuilder(coreAbstractFactory);
+            IConventionalKeySignatureBuilder keyFromAccidentalCountBuilder = new IConventionalKeySignatureBuilder();
 
             int nAccidentals = pair.get().getLeft();
-            keyFromAccidentalCountBuilder.from(coreAbstractFactory.createKeyAccidentalCount(null, nAccidentals));
+            keyFromAccidentalCountBuilder.from(ICoreAbstractFactory.getInstance().createKeyAccidentalCount(null, nAccidentals));
 
             if (nAccidentals != 0) {
                 EAccidentalSymbols eaccidentalSymbol = pair.get().getRight().get();
-                IAccidentalSymbol accidentalSymbol = coreAbstractFactory.createAccidentalSymbol(null, eaccidentalSymbol);
+                IAccidentalSymbol accidentalSymbol = ICoreAbstractFactory.getInstance().createAccidentalSymbol(null, eaccidentalSymbol);
                 keyFromAccidentalCountBuilder.from(accidentalSymbol);
             }
 
@@ -274,10 +274,10 @@ public class MEIAttributesParsers {
         }
     }
 
-    public Optional<IMode> parseMode(ICoreAbstractFactory coreAbstractFactory, XMLImporterParam xmlImporterParam, String attrName) throws IMException {
+    public Optional<IMode> parseMode(XMLImporterParam xmlImporterParam, String attrName) throws IMException {
         Optional<String> modeString = xmlImporterParam.getAttribute(attrName);
         if (modeString.isPresent()) {
-            IModeBuilder modeBuilder = new IModeBuilder(coreAbstractFactory);
+            IModeBuilder modeBuilder = new IModeBuilder();
             modeBuilder.from(EModes.valueOf(modeString.get().toLowerCase()));
             IMode mode = modeBuilder.build();
             return Optional.of(mode);
@@ -285,12 +285,12 @@ public class MEIAttributesParsers {
             return Optional.empty();
         }
     }
-    Optional<IKey> parseKey(ICoreAbstractFactory coreAbstractFactory, XMLImporterParam xmlImporterParam) throws IMException {
-        Optional<IMode> optMode = parseMode(coreAbstractFactory, xmlImporterParam, "key.mode");
+    Optional<IKey> parseKey(XMLImporterParam xmlImporterParam) throws IMException {
+        Optional<IMode> optMode = parseMode(xmlImporterParam, "key.mode");
         if (optMode.isPresent()) {
             IMode mode = optMode.get();
 
-            Optional<IConventionalKeySignature> conventionalKeySignature = parseConventionalKeySignature(coreAbstractFactory, xmlImporterParam);
+            Optional<IConventionalKeySignature> conventionalKeySignature = parseConventionalKeySignature(xmlImporterParam);
             if (!conventionalKeySignature.isPresent()) {
                 throw new IMException("If key.mode is specified, key.sig should also be present");
             }
@@ -303,10 +303,10 @@ public class MEIAttributesParsers {
             Optional<String> showChange = xmlImporterParam.getAttribute("keysig.showchange");
             ICautionaryKeySignatureAccidentals cautionaryKeySignatureAccidentals = null;
             if (showChange.isPresent() && showChange.get().equals("true")) {
-                cautionaryKeySignatureAccidentals = coreAbstractFactory.createCautionaryKeySignatureAccidentals(null, true);
+                cautionaryKeySignatureAccidentals = ICoreAbstractFactory.getInstance().createCautionaryKeySignatureAccidentals(null, true);
             }
 
-            return Optional.of(coreAbstractFactory.createConventionalKey(null, eConventionalKey, cautionaryKeySignatureAccidentals));
+            return Optional.of(ICoreAbstractFactory.getInstance().createConventionalKey(null, eConventionalKey, cautionaryKeySignatureAccidentals));
         } else {
             return Optional.empty();
         }

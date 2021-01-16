@@ -2,10 +2,7 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.core.properties.IDots;
-import es.ua.dlsi.grfia.moosicae.core.properties.IFigure;
-import es.ua.dlsi.grfia.moosicae.core.properties.IId;
-import es.ua.dlsi.grfia.moosicae.core.properties.IMetronomeMarkValue;
+import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import javax.validation.constraints.NotNull;
 
@@ -24,11 +21,15 @@ public class MetronomeMark extends VoicedItem implements IMetronomeMark {
     @NotNull
     private IMetronomeMarkValue value;
 
-    MetronomeMark(IId id, @NotNull IFigure figure,  IDots dots, IMetronomeMarkValue value) {
+    @NotNull
+    private final IHorizontalAnchor start;
+
+    MetronomeMark(IId id, @NotNull IHorizontalAnchor start, @NotNull IFigure figure,  IDots dots, IMetronomeMarkValue value) {
         super(id);
         this.figure = figure;
         this.dots = dots;
         this.value = value;
+        this.start = start;
     }
 
     @Override
@@ -53,7 +54,7 @@ public class MetronomeMark extends VoicedItem implements IMetronomeMark {
 
     @Override
     public MetronomeMark clone() {
-        return new MetronomeMark(null, figure, dots, value);
+        return new MetronomeMark(null, start, figure, dots, value);
     }
 
     @Override
@@ -74,5 +75,10 @@ public class MetronomeMark extends VoicedItem implements IMetronomeMark {
         result = 31 * result + (dots != null ? dots.hashCode() : 0);
         result = 31 * result + value.hashCode();
         return result;
+    }
+
+    @Override
+    public IHorizontalAnchor getStart() {
+        return null;
     }
 }

@@ -16,10 +16,6 @@ import java.util.Optional;
  * @created 02/04/2020
  */
 public class MEIKeyAccidBuilder extends IPitchClassBuilder implements IImporterAdapter<IPitchClass, XMLImporterParam> {
-    public MEIKeyAccidBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
-
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
         Optional<EDiatonicPitches> diatonicPitch = MEIAttributesParsers.getInstance().parseDiatonicPitch(xmlImporterParam);
@@ -29,8 +25,8 @@ public class MEIKeyAccidBuilder extends IPitchClassBuilder implements IImporterA
                 throw new IMException("Both pname and accid must be present in keyAccid");
             }
 
-            from(coreObjectFactory.createDiatonicPitch(null, diatonicPitch.get()));
-            from(coreObjectFactory.createAccidentalSymbol(null, accidentalSymbol.get()));
+            from(ICoreAbstractFactory.getInstance().createDiatonicPitch(null, diatonicPitch.get()));
+            from(ICoreAbstractFactory.getInstance().createAccidentalSymbol(null, accidentalSymbol.get()));
         }
     }
 }

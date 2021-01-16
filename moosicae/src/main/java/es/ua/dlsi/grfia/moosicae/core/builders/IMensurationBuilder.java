@@ -13,10 +13,6 @@ import es.ua.dlsi.grfia.moosicae.core.mensural.IMensuration;
 public class IMensurationBuilder extends CoreObjectBuilder<IMensuration> {
     private EMensurations mensurations;
 
-    public IMensurationBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
-
     public IMensurationBuilder from(EMensurations mensurations) {
         this.mensurations = mensurations;
         return this;
@@ -24,7 +20,7 @@ public class IMensurationBuilder extends CoreObjectBuilder<IMensuration> {
 
     @Override
     public IMensuration build() throws IMException {
-        return coreObjectFactory.createMensuration(getId(), mensurations);
+        return ICoreAbstractFactory.getInstance().createMensuration(getId(), mensurations);
     }
 
 }

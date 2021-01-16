@@ -33,18 +33,15 @@ import java.util.logging.Logger;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class SkmSyntaxDirectedTranslation {
-    private final ICoreAbstractFactory coreAbstractFactory;
     private boolean debug;
 
-    public SkmSyntaxDirectedTranslation(ICoreAbstractFactory coreAbstractFactory) {
-        this.coreAbstractFactory = coreAbstractFactory;
+    public SkmSyntaxDirectedTranslation() {
     }
 
     public static class Loader extends skmParserBaseListener {
         private boolean debug;
         private final Parser parser;
         private SkmDocument skmDocument;
-        private final ICoreAbstractFactory coreAbstractFactory;
         private int spineIndex;
         private int row;
         /**
@@ -54,12 +51,11 @@ public class SkmSyntaxDirectedTranslation {
 
         protected ImportingContexts<IMooObject> importingContexts;
 
-        public Loader(Parser parser, boolean debug, ICoreAbstractFactory coreAbstractFactory) {
+        public Loader(Parser parser, boolean debug) {
             this.debug = debug;
             this.parser = parser;
             this.skmDocument = new SkmDocument();
             this.row = 0;
-            this.coreAbstractFactory = coreAbstractFactory;
             this.lastSpineInsertedItem = new ArrayList<>();
             this.importingContexts = new ImportingContexts();
         }
@@ -209,7 +205,7 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void enterClef(skmParser.ClefContext ctx) {
             super.enterClef(ctx);
-            beginContext(ctx, new IClefBuilder(coreAbstractFactory));
+            beginContext(ctx, new IClefBuilder());
         }
 
         @Override
@@ -240,7 +236,7 @@ public class SkmSyntaxDirectedTranslation {
             }
 
 
-            beginEndContext(ctx, new IClefSignBuilder(coreAbstractFactory), clefSigns);
+            beginEndContext(ctx, new IClefSignBuilder(), clefSigns);
         }
 
         @Override
@@ -249,7 +245,7 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
                     "Clef line {0}", ctx.getText());
 
-            beginEndContext(ctx, new IClefLineBuilder(coreAbstractFactory), Integer.parseInt(ctx.getText()));
+            beginEndContext(ctx, new IClefLineBuilder(), Integer.parseInt(ctx.getText()));
         }
 
         @Override
@@ -275,7 +271,7 @@ public class SkmSyntaxDirectedTranslation {
                 default:
                     createException("Clef octave not valid: " + ctx.getText());
             }
-            beginEndContext(ctx, new IOctaveTranspositionBuilder(coreAbstractFactory), octave);
+            beginEndContext(ctx, new IOctaveTranspositionBuilder(), octave);
         }
 
 
@@ -309,13 +305,13 @@ public class SkmSyntaxDirectedTranslation {
                     throw createException("Unknown accidental symbol: " + ctx.getText());
             }
 
-            beginEndContext(ctx, new IAccidentalSymbolBuilder(coreAbstractFactory), accidentalSymbol);
+            beginEndContext(ctx, new IAccidentalSymbolBuilder(), accidentalSymbol);
         }
 
         @Override
         public void enterPitchClass(skmParser.PitchClassContext ctx) {
             super.enterPitchClass(ctx);
-            beginContext(ctx, new IPitchClassBuilder(coreAbstractFactory));
+            beginContext(ctx, new IPitchClassBuilder());
         }
 
 
@@ -324,7 +320,7 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
                     "Pitch class {0}", ctx.getText());
 
-            importingContexts.addObjectToPool(coreAbstractFactory.createDiatonicPitch(null, EDiatonicPitches.valueOf(ctx.lowerCasePitch().getText().toUpperCase())));
+            importingContexts.addObjectToPool(ICoreAbstractFactory.getInstance().createDiatonicPitch(null, EDiatonicPitches.valueOf(ctx.lowerCasePitch().getText().toUpperCase())));
             endContext(ctx);
         }
 
@@ -334,7 +330,7 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Beginning a key",
                     ctx.getText());
 
-            beginContext(ctx, new IUnconventionalKeySignatureBuilder(coreAbstractFactory));
+            beginContext(ctx, new IUnconventionalKeySignatureBuilder());
         }
 
         @Override
@@ -353,14 +349,14 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
                     "Key signature {0}", ctx.getText());
 
-            importingContexts.addObjectToPool(coreAbstractFactory.createCautionaryKeySignatureAccidentals(null, true));
+            importingContexts.addObjectToPool(ICoreAbstractFactory.getInstance().createCautionaryKeySignatureAccidentals(null, true));
         }
 
         @Override
         public void enterKeyMode(skmParser.KeyModeContext ctx) {
             super.exitKeyMode(ctx);
-            beginContext(ctx, new IModeBuilder(coreAbstractFactory));
-            importingContexts.begin("pitchClass", new IPitchClassBuilder(coreAbstractFactory));
+            beginContext(ctx, new IModeBuilder());
+            importingContexts.begin("pitchClass", new IPitchClassBuilder());
         }
 
         @Override
@@ -397,7 +393,7 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void enterKey(skmParser.KeyContext ctx) {
             super.enterKey(ctx);
-            beginContext(ctx, new IKeyBuilder(coreAbstractFactory));
+            beginContext(ctx, new IKeyBuilder());
         }
 
         @Override
@@ -412,7 +408,7 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void enterAdditiveTimeSignature(skmParser.AdditiveTimeSignatureContext ctx) {
             super.enterAdditiveTimeSignature(ctx);
-            beginContext(ctx, new IAdditiveMeterBuilder(coreAbstractFactory));
+            beginContext(ctx, new IAdditiveMeterBuilder());
         }
 
         @Override
@@ -426,7 +422,7 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void enterMixedTimeSignature(skmParser.MixedTimeSignatureContext ctx) {
             super.enterMixedTimeSignature(ctx);
-            beginContext(ctx, new IMixedMeterBuilder(coreAbstractFactory));
+            beginContext(ctx, new IMixedMeterBuilder());
         }
 
         @Override
@@ -440,7 +436,7 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void enterAlternatingTimeSignature(skmParser.AlternatingTimeSignatureContext ctx) {
             super.enterAlternatingTimeSignature(ctx);
-            beginContext(ctx, new IAlternatingMeterBuilder(coreAbstractFactory));
+            beginContext(ctx, new IAlternatingMeterBuilder());
         }
 
         @Override
@@ -455,7 +451,7 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void enterInterchangingTimeSignature(skmParser.InterchangingTimeSignatureContext ctx) {
             super.enterInterchangingTimeSignature(ctx);
-            beginContext(ctx, new IInterchangingMeterBuilder(coreAbstractFactory));
+            beginContext(ctx, new IInterchangingMeterBuilder());
         }
 
         @Override
@@ -469,7 +465,7 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void enterStandardTimeSignature(skmParser.StandardTimeSignatureContext ctx) {
             super.enterStandardTimeSignature(ctx);
-            beginContext(ctx, new IStandardTimeSignatureBuilder(coreAbstractFactory));
+            beginContext(ctx, new IStandardTimeSignatureBuilder());
         }
 
         @Override
@@ -483,7 +479,7 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void enterTimeSignature(skmParser.TimeSignatureContext ctx) {
             super.enterTimeSignature(ctx);
-            beginContext(ctx, new SkmMeterBuilder(coreAbstractFactory));
+            beginContext(ctx, new SkmMeterBuilder());
         }
 
 
@@ -501,7 +497,7 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
                     "Numerator {0}", ctx.getText());
 
-            this.importingContexts.addObjectToPool(coreAbstractFactory.createTimeSignatureNumerator(null, Integer.parseInt(ctx.getText())));
+            this.importingContexts.addObjectToPool(ICoreAbstractFactory.getInstance().createTimeSignatureNumerator(null, Integer.parseInt(ctx.getText())));
         }
 
         @Override
@@ -510,7 +506,7 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
                     "Denominator {0}", ctx.getText());
 
-            this.importingContexts.addObjectToPool(coreAbstractFactory.createTimeSignatureDenominator(null, Integer.parseInt(ctx.getText())));
+            this.importingContexts.addObjectToPool(ICoreAbstractFactory.getInstance().createTimeSignatureDenominator(null, Integer.parseInt(ctx.getText())));
         }
 
         @Override
@@ -522,10 +518,10 @@ public class SkmSyntaxDirectedTranslation {
             IMeter meter;
             switch (ctx.getText()) {
                 case "c":
-                    meter = coreAbstractFactory.createCommonTime(null);
+                    meter = ICoreAbstractFactory.getInstance().createCommonTime(null);
                     break;
                 case "c|":
-                    meter = coreAbstractFactory.createCutTime(null);
+                    meter = ICoreAbstractFactory.getInstance().createCutTime(null);
                     break;
                 default:
                     throw createException("Unkown meter symbol: " + ctx.getText());
@@ -576,7 +572,7 @@ public class SkmSyntaxDirectedTranslation {
                     throw createException("Unkown mensuration: " + ctx.getText());
 
             }
-            IMensuration mensurationObject = coreAbstractFactory.createMensuration(null, mensuration);
+            IMensuration mensurationObject = ICoreAbstractFactory.getInstance().createMensuration(null, mensuration);
             try {
                 addItemToSpine(new SkmCoreSymbol(ctx.getText(), mensurationObject));
             } catch (IMException e) {
@@ -587,7 +583,7 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void enterMetronome(skmParser.MetronomeContext ctx) {
             super.enterMetronome(ctx);
-            beginContext(ctx, new IMetronomeMarkBuilder(coreAbstractFactory));
+            beginContext(ctx, new IMetronomeMarkBuilder());
 
         }
 
@@ -597,10 +593,11 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "Metronome {0}", ctx.getText());
 
             try {
-                IFigure figure = coreAbstractFactory.createFigure(null, EFigures.QUARTER);
-                IMetronomeMarkValue metronomeMarkValue = coreAbstractFactory.createMetronomeMarkValue(null, Integer.parseInt(ctx.number().getText()));
-                IMetronomeMark metronomeMark = coreAbstractFactory.createMetronomeMark(null, figure, null, metronomeMarkValue);
-                addItemToSpine(new SkmCoreSymbol(ctx.getText(), metronomeMark));
+                IFigure figure = ICoreAbstractFactory.getInstance().createFigure(null, EFigures.QUARTER);
+                IMetronomeMarkValue metronomeMarkValue = ICoreAbstractFactory.getInstance().createMetronomeMarkValue(null, Integer.parseInt(ctx.number().getText()));
+                throw new IMException("TO-DO"); //TODO
+                /*IMetronomeMark metronomeMark = .createMetronomeMark(null, figure, null, metronomeMarkValue);
+                addItemToSpine(new SkmCoreSymbol(ctx.getText(), metronomeMark));*/
             } catch (IMException e) {
                 throw createException(e);
             }
@@ -647,7 +644,7 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void enterBarline(skmParser.BarlineContext ctx) {
             super.enterBarline(ctx);
-            beginContext(ctx, new IBarlineBuilder(coreAbstractFactory));
+            beginContext(ctx, new IBarlineBuilder());
         }
 
         @Override
@@ -656,7 +653,7 @@ public class SkmSyntaxDirectedTranslation {
             Logger.getLogger(SkmSyntaxDirectedTranslation.class.getName()).log(Level.FINEST, "BarLine {0}", ctx.getText());
 
             if (ctx.number() != null) {
-                importingContexts.addObjectToPool(coreAbstractFactory.createNumber(null, Integer.parseInt(ctx.number().getText())));
+                importingContexts.addObjectToPool(ICoreAbstractFactory.getInstance().createNumber(null, Integer.parseInt(ctx.number().getText())));
             }
 
             endContextAndAddToSpine(ctx);
@@ -726,7 +723,7 @@ public class SkmSyntaxDirectedTranslation {
 
                 int augmentationDots = ctx.augmentationDot().size();
                 if (augmentationDots > 0) {
-                    IDots dots = coreAbstractFactory.createDots(null, augmentationDots);
+                    IDots dots = ICoreAbstractFactory.getInstance().createDots(null, augmentationDots);
                     importingContexts.addObjectToPool(dots);
                 }
             } catch (IMException e) {
@@ -737,7 +734,7 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void enterRest(skmParser.RestContext ctx) {
             super.enterRest(ctx);
-            beginContext(ctx, new IRestBuilder(coreAbstractFactory));
+            beginContext(ctx, new IRestBuilder());
         }
 
 
@@ -781,7 +778,7 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void enterDiatonicPitchAndOctave(skmParser.DiatonicPitchAndOctaveContext ctx) {
             super.enterDiatonicPitchAndOctave(ctx);
-            beginContext(ctx, new IDiatonicPitchBuilder(coreAbstractFactory));
+            beginContext(ctx, new IDiatonicPitchBuilder());
         }
 
         @Override
@@ -796,7 +793,7 @@ public class SkmSyntaxDirectedTranslation {
         private void handleNoteName(String code, int octaveModif) {
             checkAllNoteNameEqual(code);
 
-            importingContexts.addObjectToPool(coreAbstractFactory.createOctave(null, 4 + octaveModif));
+            importingContexts.addObjectToPool(ICoreAbstractFactory.getInstance().createOctave(null, 4 + octaveModif));
             String noteName = code.substring(0, 1).toUpperCase();
             importingContexts.addObjectToPool(EDiatonicPitches.valueOf(noteName));
         }
@@ -817,8 +814,8 @@ public class SkmSyntaxDirectedTranslation {
 
         @Override
         public void enterNote(skmParser.NoteContext ctx) {
-            beginContext(ctx, new INoteBuilder(coreAbstractFactory));
-            this.importingContexts.begin("noteHead", new INoteHeadBuilder(coreAbstractFactory));
+            beginContext(ctx, new INoteBuilder());
+            this.importingContexts.begin("noteHead", new INoteHeadBuilder());
         }
 
 
@@ -895,7 +892,7 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void enterAlteration(skmParser.AlterationContext ctx) {
             super.enterAlteration(ctx);
-            beginContext(ctx, new IAlterationBuilder(coreAbstractFactory));
+            beginContext(ctx, new IAlterationBuilder());
         }
 
         @Override
@@ -910,7 +907,7 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void enterPitch(skmParser.PitchContext ctx) {
             super.enterPitch(ctx);
-            beginContext(ctx, new IPitchBuilder(coreAbstractFactory));
+            beginContext(ctx, new IPitchBuilder());
         }
 
         @Override
@@ -925,7 +922,7 @@ public class SkmSyntaxDirectedTranslation {
         @Override
         public void enterCustos(skmParser.CustosContext ctx) {
             super.enterCustos(ctx);
-            beginContext(ctx, new IPitchBuilder(coreAbstractFactory));
+            beginContext(ctx, new IPitchBuilder());
         }
 
         @Override
@@ -1031,7 +1028,7 @@ public class SkmSyntaxDirectedTranslation {
 
             ParseTree tree = parser.start();
             ParseTreeWalker walker = new ParseTreeWalker();
-            Loader loader = new Loader(parser, debug, coreAbstractFactory);
+            Loader loader = new Loader(parser, debug);
             walker.walk(loader, tree);
             if (errorListener.getNumberErrorsFound() != 0) {
                 throw new IMException(errorListener.getNumberErrorsFound() + " errors found in "

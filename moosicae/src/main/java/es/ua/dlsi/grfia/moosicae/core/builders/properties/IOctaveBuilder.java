@@ -10,13 +10,12 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IOctave;
  * @created 22/03/2020
  */
 public class IOctaveBuilder extends IIntegerPropertyBuilder<IOctave>  {
-    public IOctaveBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public IOctaveBuilder() {
     }
 
     @Override
     public IOctave build() throws IMException {
-        return coreObjectFactory.createOctave(getId(), value);
+        return ICoreAbstractFactory.getInstance().createOctave(getId(), value);
     }
 
 

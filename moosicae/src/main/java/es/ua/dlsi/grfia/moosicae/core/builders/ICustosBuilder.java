@@ -10,9 +10,6 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IPitch;
  */
 public class ICustosBuilder extends CoreObjectBuilder<ICustos> {
     private IPitch pitch;
-    public ICustosBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
 
     public ICustosBuilder from(IPitch pitch) {
         this.pitch = pitch;
@@ -21,7 +18,7 @@ public class ICustosBuilder extends CoreObjectBuilder<ICustos> {
 
     @Override
     public ICustos build() throws IMException {
-        return coreObjectFactory.createCustos(getId(), pitch);
+        return ICoreAbstractFactory.getInstance().createCustos(getId(), pitch);
     }
 
 

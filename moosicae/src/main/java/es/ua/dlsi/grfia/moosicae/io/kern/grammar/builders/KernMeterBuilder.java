@@ -13,10 +13,6 @@ import es.ua.dlsi.grfia.moosicae.core.builders.CoreObjectBuilder;
 public class KernMeterBuilder extends CoreObjectBuilder<IMeter> {
     private IMeter meter;
 
-    public KernMeterBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
-
     public KernMeterBuilder from(IMeter meter) {
         this.meter = meter;
         return this;

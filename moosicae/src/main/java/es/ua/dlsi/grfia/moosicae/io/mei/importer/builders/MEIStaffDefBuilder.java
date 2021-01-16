@@ -18,10 +18,6 @@ public class MEIStaffDefBuilder extends MEIObjectBuilder<MEIStaffDef> {
     protected IMeter meter;
     private Integer n;
 
-    public MEIStaffDefBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
-
 
     @Override
     public MEIStaffDef build() throws IMException {
@@ -35,16 +31,16 @@ public class MEIStaffDefBuilder extends MEIObjectBuilder<MEIStaffDef> {
             n = Integer.parseInt(nattr.get());
         }
 
-        Optional<IClef> clef = MEIAttributesParsers.getInstance().parseClef(coreObjectFactory, xmlImporterParam);
+        Optional<IClef> clef = MEIAttributesParsers.getInstance().parseClef(xmlImporterParam);
         if (clef.isPresent()) {
             this.clef = clef.get();
         }
 
-        Optional<IKey> key = MEIAttributesParsers.getInstance().parseKey(coreObjectFactory, xmlImporterParam);
+        Optional<IKey> key = MEIAttributesParsers.getInstance().parseKey(xmlImporterParam);
         if (key.isPresent()) {
             this.key = key.get();
         } else {
-            Optional<IConventionalKeySignature> conventionalKeySignature = MEIAttributesParsers.getInstance().parseConventionalKeySignature(coreObjectFactory, xmlImporterParam);
+            Optional<IConventionalKeySignature> conventionalKeySignature = MEIAttributesParsers.getInstance().parseConventionalKeySignature(xmlImporterParam);
             if (conventionalKeySignature.isPresent()) {
                 this.conventionalKeySignature = conventionalKeySignature.get();
             }

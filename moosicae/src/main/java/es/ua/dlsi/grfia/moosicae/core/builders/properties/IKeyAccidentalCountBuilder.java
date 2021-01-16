@@ -10,13 +10,10 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IKeyAccidentalCount;
  * @created 22/03/2020
  */
 public class IKeyAccidentalCountBuilder extends IIntegerPropertyBuilder<IKeyAccidentalCount> {
-    public IKeyAccidentalCountBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
 
     @Override
     public IKeyAccidentalCount build() throws IMException {
-        return coreObjectFactory.createKeyAccidentalCount(getId(), value);
+        return ICoreAbstractFactory.getInstance().createKeyAccidentalCount(getId(), value);
     }
 
 }

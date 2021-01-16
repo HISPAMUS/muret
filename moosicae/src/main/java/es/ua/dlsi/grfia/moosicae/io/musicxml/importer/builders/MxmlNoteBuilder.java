@@ -22,9 +22,6 @@ public class MxmlNoteBuilder extends INoteBuilder implements IImporterAdapter<IN
     private MxmlChord chord;
     //TODO poner aquí parámetro pitch
 
-    public MxmlNoteBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
 
     public MxmlNoteBuilder from(StaffNumber staffNumber) {
         this.staffNumber = staffNumber;
@@ -46,7 +43,7 @@ public class MxmlNoteBuilder extends INoteBuilder implements IImporterAdapter<IN
      */
     public MxmlNoteBuilder from(IPitch pitch) {
         // when a pitch is received, a note head is built
-        this.noteHead = coreObjectFactory.createNoteHead(null, pitch, null); //TODO ties
+        this.noteHead = ICoreAbstractFactory.getInstance().createNoteHead(null, pitch, null); //TODO ties
         return this;
     }
 

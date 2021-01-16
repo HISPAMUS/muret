@@ -10,13 +10,12 @@ import es.ua.dlsi.grfia.moosicae.core.ITimeSignatureNumerator;
  * @created 22/03/2020
  */
 public class ITimeSignatureNumeratorBuilder extends IIntegerPropertyBuilder<ITimeSignatureNumerator>  {
-    public ITimeSignatureNumeratorBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public ITimeSignatureNumeratorBuilder(){
     }
 
     @Override
     public ITimeSignatureNumerator build() throws IMException {
-        return coreObjectFactory.createTimeSignatureNumerator(getId(), value);
+        return ICoreAbstractFactory.getInstance().createTimeSignatureNumerator(getId(), value);
     }
 
 

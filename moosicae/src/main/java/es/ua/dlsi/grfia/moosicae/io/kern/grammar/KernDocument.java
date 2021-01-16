@@ -93,8 +93,8 @@ public class KernDocument {
         dag2DotExporter.export(file, dag);
     }
 
-    public IScore buildScore(ICoreAbstractFactory abstractFactory) throws IMException {
-        return new KernDocument2IScore(abstractFactory).convert(dag.getFirstNode());
+    public IScore buildScore() throws IMException {
+        return new KernDocument2IScore().convert(dag.getFirstNode());
     }
 
     public List<KernToken> getHeaderTokens() {

@@ -13,7 +13,6 @@ import java.util.HashMap;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class SkmDocument2IScore {
-    private final ICoreAbstractFactory abstractFactory;
     private final IScore score;
     private final HashMap<Integer, IPart> partNumbers;
     private final HashMap<Integer, IStaff> staffNumbers;
@@ -22,9 +21,8 @@ public class SkmDocument2IScore {
     private IPart defaultPart;
     private IStaff defaultStaff;
 
-    public SkmDocument2IScore(ICoreAbstractFactory abstractFactory) {
-        this.abstractFactory = abstractFactory;
-        this.score = abstractFactory.createScore(null);
+    public SkmDocument2IScore() {
+        this.score = ICoreAbstractFactory.getInstance().createScore(null);
         this.partNumbers = new HashMap<>();
         this.voiceParts = new HashMap<>();
         this.staffNumbers = new HashMap<>();
@@ -33,9 +31,9 @@ public class SkmDocument2IScore {
 
 
     public IScore convert(DAGNode<SkmToken> firstNode) throws IMException {
-        defaultPart = abstractFactory.createPart(score, null, null);
-        IStaffLineCount defaultStaffLineCount = abstractFactory.createStaffLineCount(5);
-        defaultStaff = abstractFactory.createStaff(score, null, defaultStaffLineCount);
+        defaultPart = ICoreAbstractFactory.getInstance().createPart(score, null, null);
+        IStaffLineCount defaultStaffLineCount = ICoreAbstractFactory.getInstance().createStaffLineCount(5);
+        defaultStaff = ICoreAbstractFactory.getInstance().createStaff(score, null, defaultStaffLineCount);
 
         // first create voices, all associated to a default part that will be moved to other part when the **part token is found
         for (DAGNode<SkmToken> node: firstNode.getNextList()) {
@@ -43,10 +41,10 @@ public class SkmDocument2IScore {
             if (skmToken instanceof SkmHeader) {
                 ESkmHeaders headerType = ((SkmHeader) skmToken).getSkmHeaderType();
                 if (headerType == ESkmHeaders.skern || headerType == ESkmHeaders.smens) {
-                    IVoice voice = abstractFactory.createVoice(defaultPart, null, null);
+                    IVoice voice = ICoreAbstractFactory.getInstance().createVoice(defaultPart, null, null);
                     voiceParts.put(voice, defaultPart);
                     //TODO staves - cuando se encuentre con *staff1 o *staff1/2
-                    IStaff defaultStaff = abstractFactory.createStaff(score, null, defaultStaffLineCount);
+                    IStaff defaultStaff = ICoreAbstractFactory.getInstance().createStaff(score, null, defaultStaffLineCount);
                     voiceStaves.put(voice, defaultStaff);
                     // now traverse the spine
                     for (DAGNode<SkmToken> next: node.getNextList()) {
@@ -104,7 +102,7 @@ public class SkmDocument2IScore {
         IStaff staff = staffNumbers.get(skmStaff.getNumber());
 
         if (staff == null) {
-            staff = abstractFactory.createStaff(score, null, abstractFactory.createStaffLineCount(5));
+            staff = ICoreAbstractFactory.getInstance().createStaff(score, null, ICoreAbstractFactory.getInstance().createStaffLineCount(5));
             staffNumbers.put(skmStaff.getNumber(), staff);
         }
 
@@ -115,7 +113,7 @@ public class SkmDocument2IScore {
         IPart part = partNumbers.get(skmPart.getNumber());
 
         if (part == null) {
-            part = abstractFactory.createPart(score, null, null);
+            part = ICoreAbstractFactory.getInstance().createPart(score, null, null);
             partNumbers.put(skmPart.getNumber(), part);
         }
 

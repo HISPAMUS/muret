@@ -18,8 +18,7 @@ public class MEIMeterSigGrpBuilder extends MEIObjectBuilder<IMeter> implements I
     private String func;
     private List<IMeter> submeters;
 
-    public MEIMeterSigGrpBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public MEIMeterSigGrpBuilder() {
         this.submeters = new LinkedList<>();
     }
 
@@ -48,14 +47,14 @@ public class MEIMeterSigGrpBuilder extends MEIObjectBuilder<IMeter> implements I
 
         switch (func) {
             case "mixed":
-                return coreObjectFactory.createMixedMeter(getId(), submeters.toArray(new IMeter[0]));
+                return ICoreAbstractFactory.getInstance().createMixedMeter(getId(), submeters.toArray(new IMeter[0]));
             case "alternating":
-                return coreObjectFactory.createAlternatingMeter(getId(), submeters.toArray(new IMeter[0]));
+                return ICoreAbstractFactory.getInstance().createAlternatingMeter(getId(), submeters.toArray(new IMeter[0]));
             case "interchanging":
                 if (submeters.size() != 2) {
                     throw new IMException("Expecting 2 submeters");
                 }
-                return coreObjectFactory.createInterchangingMeter(getId(), submeters.get(0), submeters.get(1));
+                return ICoreAbstractFactory.getInstance().createInterchangingMeter(getId(), submeters.get(0), submeters.get(1));
             default:
                 throw new IMException("Unknown func attribute: '" + func + "'");
         }

@@ -11,8 +11,7 @@ import es.ua.dlsi.grfia.moosicae.core.IWholeMeasureRest;
  */
 public class IWholeMeasureRestBuilder extends IMultimeasureRestBuilder {
 
-    public IWholeMeasureRestBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public IWholeMeasureRestBuilder(){
     }
 
     @Override
@@ -20,7 +19,7 @@ public class IWholeMeasureRestBuilder extends IMultimeasureRestBuilder {
         if (this.children.size() != 1) {
             throw new IMException("Expected 1 child, and found " + this.children.size());
         }
-        return coreObjectFactory.createWholeMeasureRest(getId(), (IRest)this.children.get(0));
+        return ICoreAbstractFactory.getInstance().createWholeMeasureRest(getId(), (IRest)this.children.get(0));
     }
 
 }

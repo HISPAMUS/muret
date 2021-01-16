@@ -16,10 +16,6 @@ import java.util.Optional;
 public class MxmlDivisionsBuilder extends CoreObjectBuilder<MxmlDivisions> implements IImporterAdapter<MxmlDivisions, XMLImporterParam> {
     private Integer value;
 
-    public MxmlDivisionsBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
-    }
-
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
         Optional<String> characters = xmlImporterParam.getCharacters();

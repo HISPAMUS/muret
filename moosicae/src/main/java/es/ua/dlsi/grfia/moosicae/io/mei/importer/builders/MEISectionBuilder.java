@@ -16,8 +16,7 @@ import java.util.List;
 public class MEISectionBuilder extends MEIObjectBuilder<MEISection> {
     private final List<MEIMeasure> measureList;
 
-    public MEISectionBuilder(ICoreAbstractFactory coreObjectFactory) {
-        super(coreObjectFactory);
+    public MEISectionBuilder() {
         this.measureList = new LinkedList<>();
     }
 

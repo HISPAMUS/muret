@@ -3,10 +3,10 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICommonTime;
 import es.ua.dlsi.grfia.moosicae.core.TimeSignatureDenominator;
+import es.ua.dlsi.grfia.moosicae.core.adt.ITime;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
-import es.ua.dlsi.grfia.moosicae.utils.Time;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -25,7 +25,7 @@ public class CommonTime extends StandardTimeSignature implements ICommonTime {
     }
 
     @Override
-    public Time getBarDuration() {
+    public ITime getBarDuration() {
         return EFigures.WHOLE.getDuration();
     }
 
