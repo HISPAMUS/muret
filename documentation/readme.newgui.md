@@ -62,9 +62,9 @@ note right: This will reload session data into the store
 @enduml
 ```
 
-## CoreState
-This *Redux* class contains information used along the whole application. 
-The following class diagram contains the whole hierarchy, however it's not always fully populated, it depends on the different actions.  
+
+## Model
+The following class diagram contains the whole hierarchy, however it's not always fully populated, it depends on the different actions in individual modules.
 
 ```puml
 @startuml
@@ -74,13 +74,6 @@ entity Entity {
     id: number
 }
 note top of Entity : To minimize the number of lines in the diagram\nall classes deriving Entity are drawn with an E inside a circle as this class Entity
-
-
-class UserState {
-  loggedInUser
-  permissionsData: any
-  userList: string[]
-}
 
 class User {
     username: string
@@ -177,26 +170,11 @@ class State {
 }
 
 
-class ServerStatusState {
-    status: string
-}
-
-class APIRestServerError {
-  status[0..1]: number
-  message[0..1]: string
-  detailedMessage[0..1]: string
-  url[0..1]: string
-  caller[0..1]: any
-} 
-
-
 Document *--> "*" Image
 Document *--> "*" Part
 Document *-> "*" State
 Collection *-- "*" Document
 Collection *--> "*" Collection: "subcollections"
-
-
 
 Image *-> "*" Page
 Image *--> "*" State
@@ -231,6 +209,39 @@ Permissions -> Collection
 
 State *--> EnumState
 
+User --> "*" Document
+User --> "*" Permissions
+
+@enduml
+```
+
+
+
+## CoreState
+This *Redux* class contains information used along the whole application. 
+
+**TODO Decir qué se rellena de la jerarquía en cada llamada**
+
+```puml
+@startuml
+
+
+class UserState {
+  permissionsData: any
+  userList: string[]
+}
+
+class ServerStatusState {
+    status: string
+}
+
+class APIRestServerError {
+  status[0..1]: number
+  message[0..1]: string
+  detailedMessage[0..1]: string
+  url[0..1]: string
+  caller[0..1]: any
+} 
 
 CoreState *-> "0..1" RouterReducerState
 CoreState *--> UserState
@@ -238,15 +249,13 @@ CoreState *--> ServerStatusState
 CoreState *--> FontsState
 
 UserState *--> User: loggedInUser
-User --> "*" Document
-User --> "*" Permissions
 
 FontsState *--> SVGSet: "svgAgnosticOrSemanticSymbolsSet"
 FontsState *--> APIRestServerError
 
-
 @enduml
 ```
+
 
 
 ## LayoutComponent
