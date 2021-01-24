@@ -28,7 +28,7 @@ export const selectResetPWDStatus = createSelector(
   (state: AuthState) => state.passwordresetmess
 );
 
-export const selectRole = createSelector(
+export const selectRoles = createSelector(
   selectAuthState,
   (state: AuthState) => state.roles
 );

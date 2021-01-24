@@ -1,0 +1,352 @@
+' -----------------------------------------------------------------------------------------------------------
+```puml
+@startuml auth_store_component
+    ' Auth
+    [Auth Store]
+    LogIn -- [Auth Store]
+    LogOut -- [Auth Store]
+    GetStatus -- [Auth Store]
+    Refresh -- [Auth Store]
+    RefreshLogged -- [Auth Store]
+    ResetPassword -- [Auth Store]
+    [Auth Store] -- selectIsAuthenticated
+    [Auth Store] -- selectUsername
+    [Auth Store] -- selectAuthErrorMessage
+    [Auth Store] -- selectAccessToken
+    [Auth Store] -- selectResetPWDStatus
+    [Auth Store] -- selectRole
+
+    [LogIn] <.. [LoginComponent]
+    [LogOut] <.. [LoginComponent]
+    [Refresh] <.. [AppComponent]
+
+    [ResetPassword] <.. [ResetPasswordComponent]
+    selectIsAuthenticated <.. AuthService
+    selectIsAuthenticated <.. [LoginComponent]
+    selectIsAuthenticated <.. [LayoutComponent]
+    selectUsername <.. [LoginComponent]
+    selectUsername <.. [RegisterComponent]
+    selectUsername <.. [LayoutComponent]
+    selectAuthErrorMessage <.. [LoginComponent]
+    selectAccessToken <.. TokenInterceptorService
+    selectResetPWDStatus <.. [ResetPasswordComponent]
+    selectRoles <.. [LayoutComponent]
+@enduml
+```
+
+' -----------------------------------------------------------------------------------------------------------
+```puml
+@startuml user_store_component
+    [User Store]
+    GetUser -- [User Store]
+    GetUsersPermissions -- [User Store]
+    GetUsers -- [User Store]
+
+    [CollectionsComponent] ..> GetUser
+    [TrainingSetsComponent] ..> GetUser
+@enduml
+```
+
+' -----------------------------------------------------------------------------------------------------------
+```puml
+@startuml model_class
+entity Entity {
+    id: number
+}
+note top of Entity : To minimize the number of lines in the diagram\nall classes deriving Entity are drawn with an E inside a circle as this class Entity
+
+class User {
+    username: string
+}
+
+entity Document {
+  name: string
+  path: string
+  thumbnailBase64Encoding: string
+  comments: string
+  imagesOrdering: string
+  notationType: string
+  manuscriptType: string
+  composer: string
+}
+entity Collection {
+  name[0..1]: string
+  comments[0..1]: string
+  parentId[0..1]: number
+  thumbnailBase64Encoding[0..1]: string
+}
+
+entity Image {
+  documentId: number
+  filename: string
+}
+
+
+entity Page {
+}
+
+
+entity Part {
+  name: string
+  comments[0..1]: string
+}
+
+entity Region {
+  notationType[0..1]: string 
+}
+
+note right of Region::notationType
+  When it's different from the document notation type
+end note
+
+
+class BoundingBox {
+  id [0..1]: number 
+  fromX: number
+  fromY: number
+  toX: number
+  toY: number    
+}
+
+
+entity AgnosticSymbol {
+  positionInStaff: string
+  agnosticSymbolType: string
+  approximateX[0..1]: number;
+  comments[0..1]: string
+}
+
+class Strokes {
+}
+
+class Point {
+  time: number
+  x: number
+  y: number
+}
+
+entity RegionType {
+  name: string
+  hexargb: string
+  help: string
+}
+
+entity RegionInteractionType {
+    name: string
+}
+
+class Permissions {
+    permission: string
+}
+
+
+enum EnumState {
+    doublechecked
+    done
+    inprogress
+} 
+class State {
+  comments: string
+}
+
+
+Document *--> "*" Image
+Document *--> "*" Part
+Document *-> "*" State
+Collection *-- "*" Document
+Collection *--> "*" Collection: "subcollections"
+
+Image *-> "*" Page
+Image *--> "*" State
+Image -> Part 
+
+note right of BoundingBox::id
+  We may associate to a symbol, region or page
+end note
+
+
+Page *--> "0..1" BoundingBox
+Page "0..1" *- "*" Region
+Page --> "0..1" Part 
+
+Region *--> "0..1" BoundingBox
+Region *--> "*" AgnosticSymbol
+Region *-> "0..1" RegionType
+
+AgnosticSymbol *--> "0..1" BoundingBox
+AgnosticSymbol *--> "0..1" Strokes
+AgnosticSymbol *--> "0..1" Part
+
+
+Strokes *-> "*" Stroke: strokeList
+Stroke *-> "*" Point: points
+
+
+RegionType --> "0..1" RegionInteractionType
+
+
+Permissions -> Collection
+
+State *--> EnumState
+
+User --> "*" Document
+User --> "*" Permissions
+
+@enduml
+```
+
+
+' -----------------------------------------------------------------------------------------------------------
+
+```puml
+// ***** GUARD MECHANISM SEQUENCE DIAGRAM ****
+@startuml guard_sequence
+actor User
+participant "/documents/collections" as urlCollections <<URL>>
+participant AppRoutingModule
+
+AuthGuardService -\\ Store: select(selectIsAuthenticated) <<async subscription>>
+note right: This ngrx select will be invoked each time \n the store changes its value
+Store -> AuthState: isAuthenticated
+return
+Store -\\ AuthGuardService
+AuthGuardService --> AuthGuardService: setIsAuthenticated
+ 
+User -> urlCollections: Go to any page in MuRET
+urlCollections -> AppRoutingModule: search route starting with "documents"
+AppRoutingModule -> AuthGuardService: canActivate
+return
+
+alt User has permissions
+    AppRoutingModule --> DocumentsModule: <<forward request>>
+    DocumentsModule --> DocumentsRoutingModule: search route /collections
+    return
+    control CollectionsComponent
+    DocumentsModule --> CollectionsComponent
+else User has not permissions
+    control LoginComponent
+    AppRoutingModule --> LoginComponent
+end
+@enduml
+```
+
+' -----------------------------------------------------------------------------------------------------------
+
+```puml
+@startuml appcomponent_class
+[AppComponent] *-> [LayoutComponent]
+[AppComponent] *--> Router
+[AppComponent] *--> AuthStore
+@enduml
+```
+
+' -----------------------------------------------------------------------------------------------------------
+
+
+```puml
+@startuml appcomponent_sequence
+AppComponent -\\ Router: subscribe() <<async subscription>>
+Router -\\ AppComponent: refresh event
+create Refresh
+AppComponent -> Refresh
+return r
+AppComponent -> AuthStore: dispatch(r)
+note right: This will reload session data into the store
+@enduml
+```
+
+
+' -----------------------------------------------------------------------------------------------------------
+
+```puml
+@startuml authentication_sequence
+actor Client
+participant Store
+create LogIn
+Store -> LogIn : new (credentials: Credentials)
+LogIn -> Store: l
+Client -> Store: dispatch(l)
+control AuthEffects
+Store -> AuthEffects: LogIn
+control AuthService
+AuthEffects -> AuthService: attemptAuth$(credentials)
+boundary HttpClient
+AuthService -> HttpClient: HTTP post '/auth/login' (credentials)
+return
+participant LoginSuccess
+participant LogInFailure
+Participant authReducers
+entity AuthState
+alt Success
+    create LoginSuccess
+    AuthEffects -> LoginSuccess: new(r: JwtResponse)
+    return
+    AuthEffects -> SessionData: saveSessionData(r)
+    AuthEffects -> authReducers 
+    authReducers -> AuthState: set values from r: JwtResponse
+else Error
+    create LogInFailure
+    AuthEffects -> LogInFailure: new (error message)
+    return
+    AuthEffects -> authReducers 
+    authReducers -> AuthState: set state from error message
+end
+
+@enduml
+```
+
+' -----------------------------------------------------------------------------------------------------------
+
+```puml
+@startuml corestore_class
+
+class ServerStatusState {
+    status: string
+}
+
+class APIRestServerError {
+  status[0..1]: number
+  message[0..1]: string
+  detailedMessage[0..1]: string
+  url[0..1]: string
+  caller[0..1]: any
+} 
+
+CoreState *-> "0..1" RouterReducerState
+CoreState *--> UserState
+CoreState *--> ServerStatusState
+CoreState *--> FontsState
+
+FontsState *--> SVGSet: "svgAgnosticOrSemanticSymbolsSet"
+FontsState *--> APIRestServerError
+
+@enduml
+```
+
+' -----------------------------------------------------------------------------------------------------------
+```puml
+@startuml layout_component
+[LayoutComponent] *-> [ServerStateComponent]
+[LayoutComponent] *--> [AvatarComponent]
+[LayoutComponent] *--> [RouterOutlet]
+@enduml
+```
+
+
+' -----------------------------------------------------------------------------------------------------------
+```puml
+@startuml home_sequence
+actor User
+participant "/" as urlRoot <<URL>>
+participant AppRoutingModule 
+participant DocumentsRoutingModule
+ 
+User -> urlRoot: Go to home page 
+urlRoot -> AppRoutingModule: search route "/"
+AppRoutingModule --> DocumentsRoutingModule: <<forward request>> 
+note right: The AuthGuard allows the login
+DocumentsRoutingModule --> HomeModule
+control HomeComponent
+HomeModule --> HomeComponent
+@enduml
+```

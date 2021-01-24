@@ -12,12 +12,12 @@ export enum UserActionTypes {
 
 export class GetUser implements Action {
   public readonly type = UserActionTypes.GetUser;
-  constructor(public payload: number) {}
+  constructor(public userID: number) {}
 }
 
 export class GetUserSuccess implements Action {
   public readonly type = UserActionTypes.GetUserSuccess;
-  constructor(public payload: User) {}
+  constructor(public user: User) {}
 }
 
 export class GetUserPermissions implements Action{

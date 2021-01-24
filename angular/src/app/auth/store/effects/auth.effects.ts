@@ -95,7 +95,7 @@ export class AuthEffects {
   /*@Effect()
   GetStatus: Observable<any> = this.actions.pipe(
     ofType(AuthActionTypes.GET_STATUS),
-    switchMap(payload => {
+    switchMap(userID => {
       return this.authService.getStatus();
     })
   );*/

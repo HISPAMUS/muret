@@ -21,7 +21,7 @@ export class UserEffects {
   @Effect()
   getUser$ = this.actions$.pipe(
     ofType<GetUser>(UserActionTypes.GetUser),
-    map((action: GetUser) => action.payload),
+    map((action: GetUser) => action.userID),
     switchMap((userID) => this.userService.getUserProjection$(userID)),
     switchMap((user: User) => {
       return of(new GetUserSuccess(user));

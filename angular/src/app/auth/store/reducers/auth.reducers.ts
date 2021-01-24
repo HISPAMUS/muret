@@ -3,7 +3,7 @@ import {AuthActions, AuthActionTypes} from '../actions/auth.actions';
 
 export function authReducers(state = initialAuthState, action: AuthActions): AuthState {
   switch (action.type) {
-    case AuthActionTypes.LOGIN_SUCCESS: { // action.payload: JwtResponse
+    case AuthActionTypes.LOGIN_SUCCESS: { // action.userID: JwtResponse
       return {
         ...state,
         isAuthenticated: true,

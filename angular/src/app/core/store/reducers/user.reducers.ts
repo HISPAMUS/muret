@@ -7,7 +7,7 @@ export function userReducers(state = initialUserState, action: UserActions): Use
     case UserActionTypes.GetUserSuccess: {
       return {
         ...state,
-        loggedInUser: action.payload
+        loggedInUser: action.user
       };
     }
 

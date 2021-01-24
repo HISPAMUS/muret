@@ -2,7 +2,7 @@ import {Component, isDevMode, OnInit, OnChanges, OnDestroy, Input} from '@angula
 import {Observable, Subscription} from 'rxjs';
 import {CoreState} from '../../../core/store/state/core.state';
 import {Store} from '@ngrx/store';
-import {selectIsAuthenticated, selectUsername, selectRole} from '../../../auth/store/selectors/auth.selector';
+import {selectIsAuthenticated, selectUsername, selectRoles} from '../../../auth/store/selectors/auth.selector';
 import {selectServerStatus } from 'src/app/core/store/selectors/core.selector';
 import { GetServerStatus } from 'src/app/core/store/actions/serverStatus.actions';
 import { DialogsService} from 'src/app/shared/services/dialogs.service';
@@ -36,7 +36,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
     this.isAuthenticated$ = this.store.select(selectIsAuthenticated);
     this.username$ = this.store.select(selectUsername);
     this.serverStatus$ = this.store.select(selectServerStatus);
-    this.userRoles$ = this.store.select(selectRole);
+    this.userRoles$ = this.store.select(selectRoles);
     this.isAdmin = false;
 
     this.serverStatusSubscription = this.serverStatus$.subscribe((status: string) =>{
