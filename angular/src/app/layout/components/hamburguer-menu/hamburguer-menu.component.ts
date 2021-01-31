@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./hamburguer-menu.component.css']
 })
 export class HamburguerMenuComponent implements OnInit {
+  isMenuCollapsed = true;
 
   constructor() { }
 
