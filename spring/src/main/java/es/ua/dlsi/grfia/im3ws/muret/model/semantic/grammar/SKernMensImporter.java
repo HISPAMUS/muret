@@ -53,6 +53,8 @@ public class SKernMensImporter {
         private StemDirection lastStemDirection;
         private Integer lastRestLinePosition;
         private ArrayList<Long> associatedIDS;
+        private NotationType notationType;
+        private SimpleNote pendingTieFrom;
 
         public Loader(Parser parser, boolean debug) {
             this.humdrumMatrix = new HumdrumMatrix();
@@ -83,6 +85,17 @@ public class SKernMensImporter {
         @Override
         public void exitHeaderField(sKernMensParser.HeaderFieldContext ctx) {
             super.exitHeaderField(ctx);
+            NotationType nt = null;
+            if (ctx.SKERN() != null) {
+                nt = NotationType.eModern;
+            } else if (ctx.SMENS() != null) {
+                nt = NotationType.eMensural;
+            }
+            if (this.notationType != null && nt != null && this.notationType != nt) {
+                throw new GrammarParseRuntimeException("Unsupported mixed **smens and **skern");
+            } else {
+                this.notationType = nt;
+            }
             humdrumMatrix.addItemToCurrentRow(ctx.getText());
         }
 
@@ -621,7 +634,17 @@ public class SKernMensImporter {
 
             ScientificPitch scientificPitch = constructScientificPitch(ctx.alteration());
             SimpleNote note = new SimpleNote(lastFigure, lastAgumentationDots, scientificPitch);
-            note.getAtomFigure().setFollowedByMensuralDivisionDot(lastHasSeparationDot);
+            if (pendingTieFrom != null) {
+                try {
+                    note.tieFromPrevious(pendingTieFrom);
+                    pendingTieFrom = null;
+                } catch (IM3Exception e) {
+                    throw new GrammarParseRuntimeException(e);
+                }
+            }
+            if (notationType == NotationType.eMensural) {
+                note.getAtomFigure().setFollowedByMensuralDivisionDot(lastHasSeparationDot);
+            }
 
             if (lastStemDirection != null) {
                 note.setExplicitStemDirection(lastStemDirection);
@@ -676,46 +699,52 @@ public class SKernMensImporter {
             KernLigatureComponent ligatureComponent = null;
             if (ctx.beforeNote().ligatureStart() != null && ctx.beforeNote().ligatureStart().size() > 0) {
                 if (ctx.afterNote().ligatureEnd() != null && ctx.afterNote().ligatureEnd().size() > 0) {
-                    throw new GrammarParseRuntimeException("Cannot create a ligature of just one symbol");
+                    throw new GrammarParseRuntimeException("Cannot create a ligature or tie of just one symbol");
                 }
                 if (ctx.beforeNote().ligatureStart().size() != 1) {
-                    throw new GrammarParseRuntimeException("Expected just 1 ligature start");
+                    throw new GrammarParseRuntimeException("Expected just 1 ligature / tie start");
                 }
-                switch (ctx.beforeNote().ligatureStart().get(0).getText()) {
-                    case "[":
-                        ligatureType = LigatureType.recta;
-                        break;
-                    case "<":
-                        ligatureType = LigatureType.obliqua;
-                        break;
-                    default:
-                        throw new GrammarParseRuntimeException("Invalid ligature start type, should be [ or <, and it is: " + ctx.beforeNote().ligatureStart().get(0).getText());
+                
+                if (this.notationType == NotationType.eMensural) {
+                    switch (ctx.beforeNote().ligatureStart().get(0).getText()) {
+                        case "[":
+                            ligatureType = LigatureType.recta;
+                            break;
+                        case "<":
+                            ligatureType = LigatureType.obliqua;
+                            break;
+                        default:
+                            throw new GrammarParseRuntimeException("Invalid ligature start type, should be [ or <, and it is: " + ctx.beforeNote().ligatureStart().get(0).getText());
+                    }
+                    ligatureComponent = new KernLigatureComponent(LigatureStartEnd.start, ligatureType, note);
+                    inLigature = true;
+                } else {
+                    pendingTieFrom = note;
                 }
-                ligatureComponent = new KernLigatureComponent(LigatureStartEnd.start, ligatureType, note);
-                inLigature = true;
             } else if (ctx.afterNote().ligatureEnd() != null && ctx.afterNote().ligatureEnd().size() > 0) {
                 if (ctx.afterNote().ligatureEnd().size() != 1) {
-                    throw new GrammarParseRuntimeException("Expected just 1 ligature end");
+                    throw new GrammarParseRuntimeException("Expected just 1 ligature / tie end");
                 }
-                switch (ctx.afterNote().ligatureEnd().get(0).getText()) {
-                    case "]":
-                        if (ligatureType != LigatureType.recta) {
-                            throw new GrammarParseRuntimeException("Expected > and found ] with previous ligature type " + ligatureType);
-                        }
-                        break;
-                    case ">":
-                        if (ligatureType != LigatureType.obliqua) {
-                            throw new GrammarParseRuntimeException("Expected ] and found > with previous ligature type " + ligatureType);
-                        }
-                        break;
-                    default:
-                        throw new GrammarParseRuntimeException("Invalid ligature end type, should be > or ], and it is: " + ctx.beforeNote().ligatureStart().get(0).getText());
+                if (this.notationType == NotationType.eMensural) {
+                    switch (ctx.afterNote().ligatureEnd().get(0).getText()) {
+                        case "]":
+                            if (ligatureType != LigatureType.recta) {
+                                throw new GrammarParseRuntimeException("Expected > and found ] with previous ligature type " + ligatureType);
+                            }
+                            break;
+                        case ">":
+                            if (ligatureType != LigatureType.obliqua) {
+                                throw new GrammarParseRuntimeException("Expected ] and found > with previous ligature type " + ligatureType);
+                            }
+                            break;
+                        default:
+                            throw new GrammarParseRuntimeException("Invalid ligature end type, should be > or ], and it is: " + ctx.beforeNote().ligatureStart().get(0).getText());
+                    }
+
+                    ligatureComponent = new KernLigatureComponent(LigatureStartEnd.end, ligatureType, note);
+                    inLigature = false;
+                    ligatureType = null;
                 }
-
-                ligatureComponent = new KernLigatureComponent(LigatureStartEnd.end, ligatureType, note);
-                inLigature = false;
-                ligatureType = null;
-
             } else if (inLigature) {
                 ligatureComponent = new KernLigatureComponent(LigatureStartEnd.inside, ligatureType, note);
             }

@@ -170,7 +170,7 @@ public class Worms2021MuRETDatasets implements CommandLineRunner {
 
         new AuthenticateForScripts(authenticationManager).consoleAuthenticate();
 
-        doExport("Zaragoza", new File(args[0], "zaragoza"));
+        //doExport("Zaragoza", new File(args[0], "zaragoza"));
         doExport("Música tradicional", new File(args[0], "FMT"));
     }
 

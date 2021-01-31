@@ -165,7 +165,7 @@ public class ImportFMT implements CommandLineRunner {
 
         // now convert all staves
         for (int i=0; i<systems.size(); i++) {
-            Encoder encoder = new Encoder(AgnosticVersion.v2, false);
+            Encoder encoder = new Encoder(AgnosticVersion.v2, false, false, false);
             encoder.encode(staff, systems.get(i));
             System.out.println("Region ID #" + regions.get(i).getId());
 

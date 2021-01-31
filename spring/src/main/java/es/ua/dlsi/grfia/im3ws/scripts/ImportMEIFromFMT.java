@@ -48,9 +48,14 @@ import java.util.logging.Logger;
 @EntityScan("es.ua.dlsi.grfia.im3ws.muret.entity")
 @Transactional
 public class ImportMEIFromFMT implements CommandLineRunner {
-    private static final String GROUNDTRUTH_PATH = "/Users/drizo/GCLOUDUA/HISPAMUS/repositorios/musicatradicional/misiones/hispamus/sibelius_finale/alineados";
+    private static final String GROUNDTRUTH_PATH = System.getProperty("user.home") + "/GCLOUDUA/HISPAMUS/repositorios/musicatradicional/misiones/hispamus/sibelius_finale/alineados";
     private static final String [] DOCUMENTS = {"C5", "C14", "M16", "M38"};
     //private static final String [] DOCUMENTS = {"M16"};
+    private static final HashSet<String> DOCUMENTS_WITHOUT_CLEF_KEYSIG_IN_ALL_STAVES = new HashSet<>(); { // these works have contain the clef and key signature just in the first staff
+        DOCUMENTS_WITHOUT_CLEF_KEYSIG_IN_ALL_STAVES.add("C5");
+        DOCUMENTS_WITHOUT_CLEF_KEYSIG_IN_ALL_STAVES.add("C14");
+    }
+            //private static final String [] DOCUMENTS = {"M16"};
 
     @Autowired
     RegionRepository regionRepository;
@@ -93,7 +98,9 @@ public class ImportMEIFromFMT implements CommandLineRunner {
 
         StringBuilder filesWithErrors = new StringBuilder();
         for (String documentName: DOCUMENTS) {
-            System.out.println("Importing using path '" + path + "'");
+            System.out.println("Importing " + documentName + " using path '" + path + "'");
+            boolean propagateClefAndKeySignature = !DOCUMENTS_WITHOUT_CLEF_KEYSIG_IN_ALL_STAVES.contains(documentName);
+            System.out.println("\tPropagating clef and key signature between staves? " + propagateClefAndKeySignature);
             Optional<Document> document = documentRepository.findByName(documentName);
             if (!document.isPresent()) {
                 throw new Exception("Cannot find collection");
@@ -168,7 +175,7 @@ public class ImportMEIFromFMT implements CommandLineRunner {
                     }
 
                     // encode agnostic and semantic
-                    Encoder encoder = new Encoder(true);
+                    Encoder encoder = new Encoder(true, propagateClefAndKeySignature, propagateClefAndKeySignature);
                     encoder.encode(scoreSong);
                     AgnosticEncoding agnosticEncoding = encoder.getAgnosticEncoding();
                     SemanticEncoding semanticEncoding = encoder.getSemanticEncoding();

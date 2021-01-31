@@ -25,14 +25,21 @@ import java.util.List;
 
 /**
  * This class loads all MEI files in CameraPrIMuS 2020. It transforms them into agnostic, contextual agnostic,
- * and semantic, and finally exports them into 10 JSON files
+ * and semantic, and finally exports them into sets of 10 JSON files. Each JSON file contains a fold.
+ * Each set contains different size corpora.
+ * (100, 500, .... , 10k, 20k, 30k..., 80k).
  *
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 24/11/20
  */
 public class Worms2021PrIMUS {
+    private static final int [] SIZES = {100, 500, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000,
+            10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000};
     public static final void main(String [] args) throws Exception {
-        if (args.length != 2) {
+        if (args.length == 0) {
+            System.out.println("Using default parameters");
+            args = new String[] {System.getProperty("user.home") + "/cmg/experiments/primusKern/CameraPrIMuS_2020", "/tmp/worms2021/primus"};
+        } else if (args.length != 2) {
             throw new Exception("Use: <input path> <output path>");
         }
 
@@ -70,8 +77,6 @@ public class Worms2021PrIMUS {
             return;
         }*/
 
-
-
         for (int i=0; i<folds.length; i++) {
             System.out.println("Fold #" + i + " with #" + folds[i].size() + " files");
         }
@@ -80,13 +85,17 @@ public class Worms2021PrIMUS {
 
         File outputFolder = new File(args[1]);
 
-        for (int i=0; i<folds.length; i++) {
-            exportFold(i, folds[i], new File(outputFolder, Worms2021MuRETDatasets.AGNOSTIC_SEMANTIC), new File(outputFolder, Worms2021MuRETDatasets.CONTEXTUAL_AGNOSTIC_SEMANTIC));
+        for (int s=0; s<SIZES.length; s++) {
+            int maximumFoldSize = SIZES[s] / folds.length;
+            System.out.println("\n\n\nRunning for size " + SIZES[s] + ", max fold size = " + maximumFoldSize + "..........");
+            for (int i = 0; i < folds.length; i++) {
+                File outFolderSize = new File(outputFolder, "size_" + SIZES[s]);
+                exportFold(i, maximumFoldSize, folds[i], new File(outFolderSize, Worms2021MuRETDatasets.AGNOSTIC_SEMANTIC), new File(outFolderSize, Worms2021MuRETDatasets.CONTEXTUAL_AGNOSTIC_SEMANTIC));
+            }
         }
-
     }
 
-    private static void exportFold(int foldNumber, List<File> fold, File outputFolderAgnosticSemantic, File outputFolderContextualAgnosticSemantic) throws IM3Exception, IOException {
+    private static void exportFold(int foldNumber, int maximumFoldSize, List<File> fold, File outputFolderAgnosticSemantic, File outputFolderContextualAgnosticSemantic) throws IM3Exception, IOException {
         outputFolderAgnosticSemantic.mkdirs();
         outputFolderContextualAgnosticSemantic.mkdirs();
         System.out.println("Generating fold #" + foldNumber);
@@ -96,19 +105,24 @@ public class Worms2021PrIMUS {
         JSONObject documentJSONContextualAgnosticSemantic = new JSONObject();
         JSONArray jsonSystemsAgnosticSemantic = new JSONArray();
         JSONArray jsonSystemsContextualAgnosticSemantic = new JSONArray();
-        for (File file: fold) {
+        for (int i=0; i<fold.size() && i<maximumFoldSize; i++) {
+            File file = fold.get(i);
             String filename = FilenameUtils.getBaseName(file.getName());
             System.out.println("\tFILE: " + filename);
-            Encoder encoder = importFile(file);
-            AgnosticEncoding agnosticEncoding = encoder.getAgnosticEncoding();
-            SemanticEncoding semanticEncoding = encoder.getSemanticEncoding();
+            try {
+                Encoder encoder = importFile(file);
+                AgnosticEncoding agnosticEncoding = encoder.getAgnosticEncoding();
+                SemanticEncoding semanticEncoding = encoder.getSemanticEncoding();
 
-            generateJSONRegionContent(filename, jsonSystemsAgnosticSemantic, agnosticEncoding, semanticEncoding);
-            documentJSONAgnosticSemantic.put("regions", jsonSystemsAgnosticSemantic);
+                generateJSONRegionContent(filename, jsonSystemsAgnosticSemantic, agnosticEncoding, semanticEncoding);
+                documentJSONAgnosticSemantic.put("regions", jsonSystemsAgnosticSemantic);
 
-            agnosticEncoding.insertContextInSequence(null);
-            generateJSONRegionContent(filename, jsonSystemsContextualAgnosticSemantic, agnosticEncoding, semanticEncoding);
-            documentJSONContextualAgnosticSemantic.put("regions", jsonSystemsContextualAgnosticSemantic);
+                agnosticEncoding.insertContextInSequence(null);
+                generateJSONRegionContent(filename, jsonSystemsContextualAgnosticSemantic, agnosticEncoding, semanticEncoding);
+                documentJSONContextualAgnosticSemantic.put("regions", jsonSystemsContextualAgnosticSemantic);
+            } catch (Exception e) {
+                System.err.println("Skipping file: " + e.getMessage());
+            }
         }
 
         writeJSON(outputJSonFileAngnosticSemantic, documentJSONAgnosticSemantic);
@@ -140,7 +154,7 @@ public class Worms2021PrIMUS {
             importer.setAllowErrors(true);
 
             ScoreSong scoreSong = importer.importSong(file);
-            Encoder encoder = new Encoder(true);
+            Encoder encoder = new Encoder(true, false, false);
             encoder.encode(scoreSong);
             return encoder;
         } catch (Exception e) {

@@ -205,7 +205,7 @@ afterNote:
 	     (slurEnd | stem| ligatureEnd | beam | pause | barLineCrossedNoteEnd)*;
 
 slurStart: LEFT_PARENTHESIS;
-ligatureStart: ANGLE_BRACKET_OPEN | LEFT_BRACKET;
+ligatureStart: ANGLE_BRACKET_OPEN | LEFT_BRACKET; // both ligature and ties - ambiguity solved in Java code (SKernMensImporter)
 ligatureEnd: ANGLE_BRACKET_CLOSE | RIGHT_BRACKET;
 slurEnd: RIGHT_PARENTHESIS;
 barLineCrossedNoteStart: CHAR_T;
