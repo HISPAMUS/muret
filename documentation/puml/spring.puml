@@ -1,0 +1,53 @@
+' -----------------------------------------------------------------------------------------------------------
+```puml
+@startuml spring_projections
+interface IUserProjection {
+    getId(): int
+    getUsername(): String
+    getPermissions(): List<IPermissionsProjection>
+}
+
+IUserProjection ..> IPermissionsProjection
+
+interface IPermissionsProjection {
+    getId(): int
+    getPermission(): char
+    getCollection(): ICollectionProjection
+}
+
+IPermissionsProjection .> ICollectionProjection
+
+interface ICollectionProjection {
+    getId(): int
+    getName(): String
+    getComments(): String
+    getDocuments(): List<IDocumentProjection>
+    getSubcollections(): List<ICollectionProjection>
+    getParentId(): Integer
+}
+
+ICollectionProjection ..> IDocumentProjection
+ICollectionProjection <. ICollectionProjection
+
+interface IDocumentProjection {
+    getId(): int
+    getName(): String
+    getComposer(): String
+    getComments(): String
+    getState(): State
+    getPath(): String
+    getThumbnailBase64Encoding(): String
+    getParts(): IPartProjection[]
+}
+
+IPartProjection <. IDocumentProjection
+
+interface IPartProjection {
+    getId(): long
+    getName(): String
+    getComments(): String
+}
+
+
+@enduml
+```
