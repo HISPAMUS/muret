@@ -1,6 +1,10 @@
 # MuRET technical documentation
 The front end has been developed using **Angular** with **Redux**. The following diagrams depict the interaction between components and [how the *ngrx store* is managed](../angular/redux.md).
 
+Notes on naming style:
+* selectors names should be prefixed with the name of the store (e.g. `selectAuthIsAuthenticated` rather than `selectIsAuthenticated`).
+* the same principle is applied to public actions: `AuthLogIn` instead of `LogIn`. Actions used internally by the effects can omit this prefix.
+
 ## Model
 The following class diagram contains the whole hierarchy, however it's not always fully populated, it depends on the different actions in individual modules.
 
@@ -22,58 +26,78 @@ Everything else is delegated to the `LayoutComponent`.
 ![AppComponent sequence diagram](puml/angular/appcomponent_sequence.svg)
 
 
-## Authentication
+## Auth store
 
 ![Authentication sequence](puml/angular/authentication_sequence.svg)
 
 
-**Hereafter, rather than using sequence diagrams, the following information wil be used in order to summarize the Redux tuples.**
+**Hereafter, rather than using sequence diagrams, the following information wil be used to summarize the Redux tuples.**
 
 | **Action** | **`AuthService` method** | **API Rest method** | **`AuthState` properties on succes** | **Properties on failure** | 
 | --- | ----------- | ----------- | ----------- | ----- | 
-| `LogIn(c: Credentials)` | `attemptAuth$(c: Credentials)` | `/auth/login` | `isAuthenticated`, `accessToken`, `userID`,  `username`, `roles`, reset `errorMessage`. <br> It sets `SessionData` with these data| `errorMessage`| 
-| `LogOut()` |  |  | Clears `SessionData` | |  
-| `GetStatus()` |  |  |  | 
-| `Refresh()`: it invokes `RefreshLogged` |  |  |  | 
-| `RefreshLogged(s: SessionData)` |  | `isAuthenticated`, `accessToken`, `userID`,  `username`, `roles` are set from `SessionData` if present |  | 
-| `ResetPassword(r: ResetPWD)` | `resetPassword$(r: ResetPWD)` | `/users/resetpwd` | `passwordresetmess=0` | `passwordresetmess=1` |
+| `AuthLogIn(c: Credentials)` | `attemptAuth$(c: Credentials)` | `/auth/login` | `isAuthenticated`, `accessToken`, `userID`,  `username`, `roles`, reset `errorMessage`. <br> It sets `SessionData` with these data| `errorMessage`| 
+| `AuthLogOut()` |  |  | Clears `SessionData` | |  
+| `AuthGetStatus()` |  |  |  | 
+| `AuthRefresh()`: it invokes `RefreshLogged` |  |  |  | 
+| `AuthRefreshLogged(s: SessionData)` |  | `isAuthenticated`, `accessToken`, `userID`,  `username`, `roles` are set from `SessionData` if present |  | 
+| `AuthResetPassword(r: ResetPWD)` | `resetPassword$(r: ResetPWD)` | `/users/resetpwd` | `passwordresetmess=0` | `passwordresetmess=1` |
 |  |  |  |  |  | 
 
 ![Auth store component](puml/angular/auth_store_component.svg)
 
 
 ## Core store
-This *Redux* class contains information used along the whole application.
+This *Redux* class contains information used along the whole application: user, status and fonts.
 
 ![Authentication sequence](puml/angular/corestore_class.svg)
 
 The ``APIRestServerError`` is used to record the last API rest call error reported by the different services.  
 
-## User store
-| ** Action** | **`UserService` method** | **API Rest method** | **`User State` properties** | **Comments** |
+![Core store component](puml/angular/core_store_component.svg)
+
+### User actions
+Note this store just obtains data such as collections associated to the authenticated user through its user ID. For authentication, see the [Auth Store](#auth-store).
+
+| ** Action** | **`UserService` method** | **API Rest method** | **`UserState` properties on succes** | **Properties on failure** | 
 | --- | ----------- | ----------- | ----------- | ----- |
-| `GetUser(userID: number)` | `getUserProjection$(userID: number)` | `/users/user/excerpt` | `loggedInUser: User` from [IUserProjection](spring.md#projections)  | 
-| `GetUsersPermissions()` |`getUsersPermissions$()` | `/users/userPermissions` |  `permissionsData: any` | 
-| `GetUsers()` | `getUsersPermissions$()` | `/users/allUsers` | `userList: any` | 
+| `UserGetUser(userID: number)` | `getUserProjection$(userID: number)` | `/users/user/excerpt` | `loggedInUser: User` from [IUserProjection](spring.md#projections)  | 
+| `UserGetUsersPermissions()` |`getUsersPermissions$()` | `/users/userPermissions` |  `permissionsData: any` | 
+| `UserGetUsers()` | `getUsersPermissions$()` | `/users/allUsers` | `userList: any` | 
 |  |  |  |  |  |
 
 **TODO hacer tipo de dato para permissionsData y userList, que no sean string, any -- hacer también las proyecciones ** 
 
-![User store component](puml/angular/user_store_component.svg)
+### Fonts actions 
+| ** Action** | **`FontsService` method** | **API Rest method** |**`FontsState` properties on succes** | **Properties on failure** | 
+| --- | ----------- | ----------- | ----------- | ----- |
+| `CoreGetSVGSet(notationType: string, manuscriptType: string)` | `getSVGSet$(notationType: string, manuscriptType: string)` | `/fonts/svgset` | `svgAgnosticOrSemanticSymbolsSet` | `apiRestServerError`| 
+|  |  |  |  |  |
+
+
+### ServerStatus actions
+| ** Action** | **`ServerStatusService` method** | **API Rest method** |**`FontsState` properties on succes** | **Properties on failure** | 
+| --- | ----------- | ----------- | ----------- | ----- |
+| `CoreGetServerStatus()` | `getServerStatus$()` | `/fonts/svgset` | `status: ((action.payload == "true") ? "ON" : "OFF")` | `| 
+|  |  |  |  |  |
+
+**TODO - mensaje con más información del servidor **
 
 ## LayoutComponent
-This component is in charge of displaying the common information of the application: menu bar and status bar.  
+This component is in charge of displaying the common information of the application: menu bar and status bar for logged in users.
+
 The `RouterOutlet` renders the component selected by the active routing module, i.e., the active page.
 
 ![LayoutComponent component diagram](puml/angular/layout_component.svg)
 
-
 The `AvatarComponent` displays the current logged user information. 
 `ServerStateComponent` shows server-side information state.
 
+## auth.LogIn Component
+As described in section [Routing and permissions](#routing-and-permissions), when a user tries to access any page and has not logged in yet, he/she is forwared to the `LoginComponent` by the `AuthGuard`.
+
+
 ## Home page
 After the user logs in and the guard allows to enter as depicted above in diagram in [routing and permissions](#routing-and-permissions)), the following sequence is followed:
-
 ![Home sequence](puml/angular/home_sequence.svg)
 
 

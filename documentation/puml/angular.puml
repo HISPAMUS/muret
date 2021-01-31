@@ -3,47 +3,73 @@
 @startuml auth_store_component
     ' Auth
     [Auth Store]
-    LogIn -- [Auth Store]
-    LogOut -- [Auth Store]
-    GetStatus -- [Auth Store]
-    Refresh -- [Auth Store]
-    RefreshLogged -- [Auth Store]
-    ResetPassword -- [Auth Store]
-    [Auth Store] -- selectIsAuthenticated
-    [Auth Store] -- selectUsername
+    AuthLogIn -- [Auth Store]
+    AuthLogOut -- [Auth Store]
+    AuthGetStatus -- [Auth Store]
+    AuthRefresh -- [Auth Store]
+    AuthRefreshLogged -- [Auth Store]
+    AuthResetPassword -- [Auth Store]
+    [Auth Store] -- selectAuthIsAuthenticated
+    [Auth Store] -- selectAuthUsername
     [Auth Store] -- selectAuthErrorMessage
-    [Auth Store] -- selectAccessToken
-    [Auth Store] -- selectResetPWDStatus
-    [Auth Store] -- selectRole
+    [Auth Store] -- selectAuthAccessToken
+    [Auth Store] -- selectAuthResetPWDStatus
+    [Auth Store] -- selectAuthRole
+    [Auth Store] -- selectAuthIsAdmin
 
     [LogIn] <.. [LoginComponent]
     [LogOut] <.. [LoginComponent]
     [Refresh] <.. [AppComponent]
 
     [ResetPassword] <.. [ResetPasswordComponent]
-    selectIsAuthenticated <.. AuthService
-    selectIsAuthenticated <.. [LoginComponent]
-    selectIsAuthenticated <.. [LayoutComponent]
-    selectUsername <.. [LoginComponent]
-    selectUsername <.. [RegisterComponent]
-    selectUsername <.. [LayoutComponent]
-    selectAuthErrorMessage <.. [LoginComponent]
-    selectAccessToken <.. TokenInterceptorService
-    selectResetPWDStatus <.. [ResetPasswordComponent]
-    selectRoles <.. [LayoutComponent]
+    selectAuthIsAuthenticated <.. [LoginComponent]
+    selectAuthIsAuthenticated <.. [LayoutComponent]
+    selectAuthUsername <.. [LoginComponent]
+    selectAuthUsername <.. [RegisterComponent]
+    selectAuthUsername <.. [AvatarComponent]
+    selectAuthAuthErrorMessage <.. [LoginComponent]
+    selectAuthAccessToken <.. TokenInterceptorService
+    selectAuthResetPWDStatus <.. [ResetPasswordComponent]
+    selectAuthIsAdmin <.. [HomeComponent]
 @enduml
 ```
 
 ' -----------------------------------------------------------------------------------------------------------
 ```puml
-@startuml user_store_component
-    [User Store]
-    GetUser -- [User Store]
-    GetUsersPermissions -- [User Store]
-    GetUsers -- [User Store]
+@startuml core_store_component
+    [Core Store]
+    CoreGetUsersPermissions -- [Core Store]
+    CoreGetUsers -- [Core Store]
+    CoreGetUser -- [Core Store]
+    CoreGetSVGSet -- [Core Store]
 
-    [CollectionsComponent] ..> GetUser
-    [TrainingSetsComponent] ..> GetUser
+    [Core Store] -- selectCoreLoggedInUser
+    [Core Store] -- selectCoreUserPermissions
+    [Core Store] -- selectCoreUserList
+    [Core Store] -- selectCoreServerStatus
+    [Core Store] -- selectCoreSVGAgnosticOrSemanticSymbolSet
+
+    [CollectionsComponent] ..> CoreGetUser
+    [TrainingSetsComponent] ..> CoreGetUser
+
+    [PermissionsComponent] ..> CoreGetUsersPermissions
+    [PermissionsComponent] ..> CoreGetUsers
+
+    [AgnosticRepresentationComponent] ..> CoreGetSVGSet
+    [SemanticRepresentationComponent] ..> CoreGetSVGSet
+
+    [ServerStateComponent] ..> CoreGetServerStatus
+
+    selectCoreLoggedInUser <.. [CollectionsComponent]
+    selectCoreLoggedInUser <.. [TrainingSetsComponent]
+    
+    selectCoreUserPermissions <.. [PermissionsComponent]
+    selectCoreUserList <.. [PermissionsComponent]
+
+    selectCoreServerStatus <.. [ServerStateComponent]
+    selectCoreSVGAgnosticOrSemanticSymbolSet <.. [AgnosticRepresentationComponent]
+    selectCoreSVGAgnosticOrSemanticSymbolSet <.. [SemanticRepresentationComponent]
+    
 @enduml
 ```
 
