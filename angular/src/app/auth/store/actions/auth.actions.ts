@@ -17,7 +17,7 @@ export enum AuthActionTypes {
   RESET_PASSWORD_FAIL = '[Auth] Reset password fail'
 }
 
-export class LogIn implements Action {
+export class AuthLogIn implements Action {
   readonly type = AuthActionTypes.LOGIN;
   constructor(public payload: Credentials) {}
 }
@@ -32,15 +32,15 @@ export class LogInFailure implements Action {
   constructor(public payload: string) {}
 }
 
-export class LogOut implements Action {
+export class AuthLogOut implements Action {
   readonly type = AuthActionTypes.LOGOUT;
 }
 
-export class GetStatus implements Action {
+export class AuthGetStatus implements Action {
   readonly type = AuthActionTypes.GET_STATUS;
 }
 
-export class Refresh implements Action {
+export class AuthRefresh implements Action {
   readonly type = AuthActionTypes.REFRESH;
   constructor() {}
 }
@@ -50,7 +50,7 @@ export class RefreshLogged implements Action {
   constructor(public sessionData: SessionData) {}
 }
 
-export class ResetPassword implements Action {
+export class AuthResetPassword implements Action {
   readonly type = AuthActionTypes.RESET_PASSWORD;
   constructor(public payload: ResetPWD){}
 }
@@ -66,13 +66,13 @@ export class ResetPasswordFail implements Action
 }
 
 export type AuthActions =
-  | LogIn
+  | AuthLogIn
   | LogInSuccess
   | LogInFailure
-  | LogOut
-  | GetStatus
-  | Refresh
+  | AuthLogOut
+  | AuthGetStatus
+  | AuthRefresh
   | RefreshLogged
-  | ResetPassword
+  | AuthResetPassword
   | ResetPasswordSuccess
   | ResetPasswordFail;

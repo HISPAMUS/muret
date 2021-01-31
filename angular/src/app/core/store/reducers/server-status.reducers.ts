@@ -1,5 +1,5 @@
 import { initialServerStatusState, ServerStatusState } from '../state/status.state';
-import { ServerStatusActions, serverStatusActionTypes } from '../actions/serverStatus.actions';
+import { ServerStatusActions, serverStatusActionTypes } from '../actions/server-status.actions';
 
 
 export function serverStatusReducers(state = initialServerStatusState, action: ServerStatusActions): ServerStatusState
@@ -8,7 +8,7 @@ export function serverStatusReducers(state = initialServerStatusState, action: S
     {
         case serverStatusActionTypes.GetStatus:
             return {
-                
+
                 ...state
             };
         case serverStatusActionTypes.StatusSuccess:

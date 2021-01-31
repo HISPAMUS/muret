@@ -46,8 +46,8 @@ import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
 import { LinkType } from 'src/app/layout/components/breadcrumb/breadcrumbType';
 import {SVGSet} from "../../../agnostic-representation/model/svgset";
-import {selectSVGAgnosticOrSemanticSymbolSet} from "../../../../core/store/selectors/core.selector";
-import {GetSVGSet} from "../../../../core/store/actions/fonts.actions";
+import {selectCoreSVGAgnosticOrSemanticSymbolSet} from "../../../../core/store/selectors/core.selector";
+import {CoreGetSVGSet} from "../../../../core/store/actions/fonts.actions";
 import {KeyValue} from "@angular/common";
 
 @Component({
@@ -125,13 +125,13 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     // -- TODO -- From here it is repeated in Semantic
     this.documentTypeSubscription  = store.select(selectDocumentType).subscribe(next => {
       if (next) {
-        this.store.dispatch(new GetSVGSet(next.notationType, next.manuscriptType));
+        this.store.dispatch(new CoreGetSVGSet(next.notationType, next.manuscriptType));
         // this.store.dispatch(new GetAgnosticEnd2EndClassifierModels(0, 0, next.notationType, next.manuscriptType));
         // moved to ngOnInit with region ID rather than these values
         // this.store.dispatch(new GetSymbolClassifierModels(0, 0, next.notationType, next.manuscriptType));
       }
     });
-    this.svgSet$ = this.store.select(selectSVGAgnosticOrSemanticSymbolSet);
+    this.svgSet$ = this.store.select(selectCoreSVGAgnosticOrSemanticSymbolSet);
     // -- TODO -- To here it is repeated in Semantic
   }
 
@@ -398,10 +398,12 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
           agnosticSymbols: this.findAgnosticID(agnosticIDS) // replaces the actual symbol ID for a more usable one
         });
 
-        const IDS: string[] = agnosticIDS.split(',');
-        IDS.forEach(id => {
-          this.agnosticGridRow.set(id, rowNumber);
-        });
+        if (agnosticIDS) {
+          const IDS: string[] = agnosticIDS.split(',');
+          IDS.forEach(id => {
+            this.agnosticGridRow.set(id, rowNumber);
+          });
+        }
         rowNumber++;
       }
     });

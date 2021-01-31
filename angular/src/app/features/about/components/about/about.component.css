@@ -19,15 +19,15 @@
   width: 80%;
 }
 
-footer{
+#footerAbout {
   font-size: 10px;
   position: fixed;
-  bottom: 2em;
-  right: 2em;
+  bottom: 1em;
+  width: 100%;
 }
 
-footer p {
-  text-align: right;
+#footerAbout p {
+  text-align: center;
 }
 
 #cite {

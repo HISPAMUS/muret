@@ -10,7 +10,7 @@ export enum UserActionTypes {
   GetUsersSuccess = '[User] Get all users success'
 }
 
-export class GetUser implements Action {
+export class CoreGetUser implements Action {
   public readonly type = UserActionTypes.GetUser;
   constructor(public userID: number) {}
 }
@@ -20,7 +20,7 @@ export class GetUserSuccess implements Action {
   constructor(public user: User) {}
 }
 
-export class GetUserPermissions implements Action{
+export class CoreGetUserPermissions implements Action{
   public readonly type = UserActionTypes.GetUserPermissions;
   constructor(){}
 }
@@ -31,7 +31,7 @@ export class GetUserPermissionsSuccess implements Action
   constructor(public payload: any) {}
 }
 
-export class GetUsers implements Action
+export class CoreGetUsers implements Action
 {
   public readonly type = UserActionTypes.GetUsers;
 }
@@ -42,4 +42,4 @@ export class GetUsersSuccess implements Action
   constructor(public payload: string[]){}
 }
 
-export type UserActions = GetUser | GetUserSuccess | GetUserPermissions | GetUserPermissionsSuccess | GetUsers | GetUsersSuccess;
+export type UserActions = CoreGetUser | GetUserSuccess | CoreGetUserPermissions | GetUserPermissionsSuccess | CoreGetUsers | GetUsersSuccess;

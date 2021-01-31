@@ -3,8 +3,8 @@ import { Store, State } from '@ngrx/store';
 import { Subscription, Observable } from 'rxjs';
 import { Collection } from 'src/app/core/model/entities/collection';
 import { User } from 'src/app/core/model/entities/user';
-import { GetUserPermissions, GetUsers } from 'src/app/core/store/actions/user.actions';
-import { selectUserPermissions, selectUserList } from 'src/app/core/store/selectors/core.selector';
+import { CoreGetUserPermissions, CoreGetUsers } from 'src/app/core/store/actions/user.actions';
+import { selectCoreUserPermissions, selectCoreUserList } from 'src/app/core/store/selectors/core.selector';
 import { UserState } from 'src/app/core/store/state/user.state';
 import { DialogsService } from 'src/app/shared/services/dialogs.service';
 import { AdminDashboardState } from '../../store/state/admindb.state';
@@ -32,11 +32,11 @@ export class PermissionsComponent implements OnInit, OnDestroy {
   userListSubs: Subscription;
 
   constructor(private store: Store<UserState>, private adminStore: Store<AdminDashboardState>, private dialogs: DialogsService) {
-    this.userPermissions$ = this.store.select(selectUserPermissions);
+    this.userPermissions$ = this.store.select(selectCoreUserPermissions);
   }
 
   ngOnInit() {
-    this.store.dispatch(new GetUserPermissions());
+    this.store.dispatch(new CoreGetUserPermissions());
     this.collectionsSubscription = this.userPermissions$.subscribe((element: any) => {
       if (element != null) {
         console.log(element);
@@ -65,9 +65,9 @@ export class PermissionsComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.store.dispatch(new GetUsers());
+    this.store.dispatch(new CoreGetUsers());
 
-    this.userListSubs = this.store.select(selectUserList).subscribe((element: string[]) => {
+    this.userListSubs = this.store.select(selectCoreUserList).subscribe((element: string[]) => {
       this.userList = element;
     });
 

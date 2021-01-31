@@ -6,7 +6,7 @@ import {Observable, Subscription, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 import {AuthState} from './store/state/auth.state';
-import {selectAccessToken} from './store/selectors/auth.selector';
+import {selectAuthAccessToken} from './store/selectors/auth.selector';
 
 const TOKEN_HEADER_KEY = 'Authorization';
 
@@ -20,7 +20,7 @@ export class TokenInterceptor implements HttpInterceptor, OnDestroy {
     accessToken: string;
 
     constructor(private store: Store<AuthState>) {
-      this.accessTokenSubscription = store.select(selectAccessToken).subscribe(next => {
+      this.accessTokenSubscription = store.select(selectAuthAccessToken).subscribe(next => {
         this.accessToken = next;
       });
 

@@ -4,9 +4,9 @@ import {ResetPWD} from '../../models/resetpwd'
 import { DialogsService } from 'src/app/shared/services/dialogs.service';
 import { AuthState } from '../../store/state/auth.state';
 import { Store } from '@ngrx/store';
-import { ResetPassword } from '../../store/actions/auth.actions';
+import { AuthResetPassword } from '../../store/actions/auth.actions';
 import { Subscription } from 'rxjs';
-import { selectResetPWDStatus } from '../../store/selectors/auth.selector';
+import { selectAuthResetPWDStatus } from '../../store/selectors/auth.selector';
 
 @Component({
   selector: 'app-reset-password',
@@ -21,7 +21,7 @@ export class ResetPasswordComponent implements OnInit {
 
   constructor(private modalService: DialogsService, private store: Store<AuthState>)
   {
-    this.pwdresetmsg = store.select(selectResetPWDStatus).subscribe((number)=>{
+    this.pwdresetmsg = store.select(selectAuthResetPWDStatus).subscribe((number)=>{
       if(number == 1)
         this.modalService.showConfirmation("Success", "Password reseted correctly")
       else if(number == -1)
@@ -41,7 +41,7 @@ export class ResetPasswordComponent implements OnInit {
       return;
     }
 
-    this.store.dispatch(new ResetPassword(this.resetpwd));
+    this.store.dispatch(new AuthResetPassword(this.resetpwd));
   }
 
 }

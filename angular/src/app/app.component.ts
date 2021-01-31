@@ -2,7 +2,7 @@ import {Component, OnDestroy} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {NavigationStart, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
-import {Refresh} from './auth/store/actions/auth.actions';
+import {AuthRefresh} from './auth/store/actions/auth.actions';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +19,7 @@ export class AppComponent implements OnDestroy {
       if (event instanceof NavigationStart && !router.navigated) {
         // refresh page
         console.log('Refreshing');
-        store.dispatch(new Refresh());
+        store.dispatch(new AuthRefresh());
       }
     });
   }

@@ -7,9 +7,9 @@ import {ExporterService} from '../../services/exporter.service';
 import {Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
 import {DownloadTrainingSet, GetTrainingSetExporters, ResetExportServerError} from '../../store/actions/export.actions';
-import {GetUser} from '../../../../core/store/actions/user.actions';
+import {CoreGetUser} from '../../../../core/store/actions/user.actions';
 import {selectAuthState} from '../../../../auth/store/selectors/auth.selector';
-import {selectLoggedInUser} from '../../../../core/store/selectors/core.selector';
+import {selectCoreLoggedInUser} from '../../../../core/store/selectors/core.selector';
 import {
   selectTrainingSetExportedBlob,
   selectTrainingSetExporters,
@@ -57,7 +57,7 @@ export class TrainingSetsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.authSubscription = this.store.select(selectAuthState).subscribe(next => {
-      this.store.dispatch(new GetUser(next.userID));
+      this.store.dispatch(new CoreGetUser(next.userID));
     });
 
     this.trainingSetExporters$ = this.store.select(selectTrainingSetExporters);
@@ -77,7 +77,7 @@ export class TrainingSetsComponent implements OnInit, OnDestroy {
       }
     );*/
 
-    this.userSubscription = this.store.select(selectLoggedInUser).subscribe(next => {
+    this.userSubscription = this.store.select(selectCoreLoggedInUser).subscribe(next => {
       /*const documentsFormArray = (this.form.get('documentsFormArray') as FormArray);
       if (next && documentsFormArray.controls.length === 0) {
         if (next && next.permissions) {

@@ -7,7 +7,7 @@ import {environment} from '../../environments/environment';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {coreReducers} from './store/reducers/core.reducers';
 import {UserEffects} from './store/effects/user.effects';
-import { ServerStatusEffects } from './store/effects/serverStatus.effects';
+import { ServerStatusEffects } from './store/effects/server-status.effects';
 import {FontsEffects} from "./store/effects/fonts.effects";
 
 @NgModule({

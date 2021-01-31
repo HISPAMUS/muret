@@ -2,10 +2,10 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {User} from '../../../../core/model/entities/user';
 import {Store} from '@ngrx/store';
-import {selectLoggedInUser} from '../../../../core/store/selectors/core.selector';
+import {selectCoreLoggedInUser} from '../../../../core/store/selectors/core.selector';
 import {ActivateLink} from '../../../../layout/store/actions/breadcrumbs.actions';
 import {selectAuthState} from '../../../../auth/store/selectors/auth.selector';
-import {GetUser} from '../../../../core/store/actions/user.actions';
+import {CoreGetUser} from '../../../../core/store/actions/user.actions';
 import {Document} from '../../../../core/model/entities/document';
 import {Permissions} from '../../../../core/model/entities/permissions';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
@@ -25,14 +25,14 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   private serverErrorSubscription: Subscription;
 
   constructor(private store: Store<any>, private showErrorService: ShowErrorService) {
-    this.user$ = this.store.select(selectLoggedInUser);
+    this.user$ = this.store.select(selectCoreLoggedInUser);
 
     this.store.dispatch(new ActivateLink(LinkType.Collection, {title: 'Collections', routerLink: 'collections'}));
   }
 
   ngOnInit(): void {
     this.authSubscription = this.store.select(selectAuthState).subscribe(next => {
-      this.store.dispatch(new GetUser(next.userID));
+      this.store.dispatch(new CoreGetUser(next.userID));
     });
 
     this.serverErrorSubscription = this.store.select(selectDocumentsServerError).subscribe(next => {

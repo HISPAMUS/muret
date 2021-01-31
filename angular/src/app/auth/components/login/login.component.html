@@ -1,6 +1,11 @@
 <div class="container">
-  <div id="login" class="row justify-content-around align-items-center">
+  <div id="loginJumbotron" class="jumbotron">
+    <p><img class="img-fluid" src="assets/images/logos/muret_negativo.png" alt="Logo MuRET"></p>
+    <p>Music Recognition, encoding, and transcription</p>
+  </div>
 
+
+  <div id="login">
     <!-- login -->
     <div *ngIf="isAuthenticated$ | async; else loginBlock" class="col-5 ">
       <div class="col-10">
@@ -11,9 +16,8 @@
         </p>
       </div>
     </div>
-      <!-- logout -->
+    <!-- logout -->
     <ng-template #loginBlock>
-      <h1>Login</h1>
       <form role="form" (submit)="login()">
         <div class="form-group">
           <label for="username">Username:</label>
@@ -36,7 +40,22 @@
         <br>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
-      <button *ngIf="isDev" class="btn btn-secondary" (click)="dev()">Dev</button>
     </ng-template>
+  </div>
+
+  <footer id="footerLogin">
+    <div class="container">
+      <div class="row">
+        <div class="col-2">
+          <p>
+            <a [routerLink]="'/about'">About</a>
+          </p>
+        </div>
+        <div class="col-2 offset-8">
+          <p><img class="img-fluid" src="assets/images/logos/hispamus_negativo_sin_fondo.png" alt="Logo HISPAMUS"></p>
+        </div>
+      </div>
+    </div>
+  </footer>
 </div>
-</div>
+

@@ -3,8 +3,8 @@ import {Credentials} from '../../models/credentials';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {AuthState} from '../../store/state/auth.state';
-import {selectAuthErrorMessage, selectIsAuthenticated, selectUsername} from '../../store/selectors/auth.selector';
-import {LogIn, LogOut} from '../../store/actions/auth.actions';
+import {selectAuthErrorMessage, selectAuthIsAuthenticated, selectAuthUsername} from '../../store/selectors/auth.selector';
+import {AuthLogIn, AuthLogOut} from '../../store/actions/auth.actions';
 import {environment} from '../../../../environments/environment';
 
 @Component({
@@ -21,25 +21,19 @@ export class LoginComponent implements OnInit {
   isDev = isDevMode();
 
   constructor(private store: Store<AuthState>) {
-    this.isAuthenticated$ = this.store.select(selectIsAuthenticated);
+    this.isAuthenticated$ = this.store.select(selectAuthIsAuthenticated);
     this.errorMessage$ = this.store.select(selectAuthErrorMessage);
-    this.username$ = this.store.select(selectUsername);
+    this.username$ = this.store.select(selectAuthUsername);
   }
 
   ngOnInit() {
   }
 
   login() {
-    this.store.dispatch(new LogIn(this.credentials));
+    this.store.dispatch(new AuthLogIn(this.credentials));
   }
 
   logout() {
-    this.store.dispatch(new LogOut());
-  }
-
-  dev() {
-    this.credentials.username = environment.debugusername;
-    this.credentials.password = environment.debugpass;
-    this.login();
+    this.store.dispatch(new AuthLogOut());
   }
 }

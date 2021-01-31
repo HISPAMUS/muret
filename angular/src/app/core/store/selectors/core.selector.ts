@@ -6,27 +6,28 @@ export const selectCoreState = createFeatureSelector<CoreState>('core');
 //export const selectUser = createFeatureSelector<UserState>('user')
 //export const selectFonts = createFeatureSelector<FontsState>('fonts')
 
-export const selectLoggedInUser = createSelector(
+export const selectCoreLoggedInUser = createSelector(
   selectCoreState,
   (state: CoreState) => state.user.loggedInUser
 );
 
-export const selectServerStatus = createSelector(
-  selectCoreState,
-  (state: CoreState) => state.server.status
-);
-
-export const selectUserPermissions = createSelector(
+export const selectCoreUserPermissions = createSelector(
   selectCoreState,
   (state: CoreState) => state.user.permissionsData
 )
 
-export const selectUserList = createSelector(
+export const selectCoreUserList = createSelector(
   selectCoreState,
   (state: CoreState) => state.user.userList
 )
 
-export const selectSVGAgnosticOrSemanticSymbolSet = createSelector(
+
+export const selectCoreServerStatus = createSelector(
+  selectCoreState,
+  (state: CoreState) => state.server.status
+);
+
+export const selectCoreSVGAgnosticOrSemanticSymbolSet = createSelector(
   selectCoreState,
   (state: CoreState) => state.fonts.svgAgnosticOrSemanticSymbolsSet
 );

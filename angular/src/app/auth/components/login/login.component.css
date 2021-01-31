@@ -1,8 +1,26 @@
+#loginJumbotron {
+  background-color: transparent;
+  margin-bottom: 0;
+}
+
+#loginJumbotron img {
+  max-height: 12vh;
+  max-width: 24vw;
+  margin-top: 4rem;
+}
+
+#loginJumbotron  p {
+  text-align: center;
+}
+
 #login {
-  height: 80vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
 }
 
-#login h1 {
-  color: white;
+#footerLogin {
+  position: fixed;
+  bottom: 2px;
 }
-

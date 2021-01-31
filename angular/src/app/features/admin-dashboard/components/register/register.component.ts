@@ -5,7 +5,7 @@ import { AdminDashboardState } from '../../store/state/admindb.state';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { CoreState } from 'src/app/core/store/state/core.state';
-import { selectUsername } from 'src/app/auth/store/selectors/auth.selector';
+import { selectAuthUsername } from 'src/app/auth/store/selectors/auth.selector';
 import { RegisterStart } from '../../store/actions/admindb.actions';
 import { selectRegisterStatus } from '../../store/selectors/admindb.selector';
 import { DialogsService } from 'src/app/shared/services/dialogs.service';
@@ -26,7 +26,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   private serverErrorSubscription: Subscription;
 
   constructor(private store: Store<AdminDashboardState>, private userstore: Store<CoreState>, private dialogService: DialogsService) {
-    this.usernamesubscription = userstore.select(selectUsername).subscribe((name) => {this.username = name; });
+    this.usernamesubscription = userstore.select(selectAuthUsername).subscribe((name) => {this.username = name; });
     this.userregistersubscription = store.select(selectRegisterStatus).subscribe((status) => {
       if (status === 1) {
         dialogService.showConfirmation('Success', 'User registered correctly');

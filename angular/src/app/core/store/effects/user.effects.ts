@@ -5,7 +5,7 @@ import {switchMap, map, withLatestFrom, catchError, tap} from 'rxjs/operators';
 
 import {
   GetUserSuccess,
-  GetUser, UserActionTypes, GetUserPermissions, GetUserPermissionsSuccess, GetUsers, GetUsersSuccess,
+  CoreGetUser, UserActionTypes, CoreGetUserPermissions, GetUserPermissionsSuccess, CoreGetUsers, GetUsersSuccess,
 } from '../actions/user.actions';
 import {UserService} from '../../services/user.service';
 import {User} from '../../model/entities/user';
@@ -20,8 +20,8 @@ export class UserEffects {
 
   @Effect()
   getUser$ = this.actions$.pipe(
-    ofType<GetUser>(UserActionTypes.GetUser),
-    map((action: GetUser) => action.userID),
+    ofType<CoreGetUser>(UserActionTypes.GetUser),
+    map((action: CoreGetUser) => action.userID),
     switchMap((userID) => this.userService.getUserProjection$(userID)),
     switchMap((user: User) => {
       return of(new GetUserSuccess(user));
@@ -30,7 +30,7 @@ export class UserEffects {
 
   @Effect()
   getUserPermission$ = this.actions$.pipe(
-    ofType<GetUserPermissions>(UserActionTypes.GetUserPermissions),
+    ofType<CoreGetUserPermissions>(UserActionTypes.GetUserPermissions),
     switchMap(()=> this.userService.getUsersPermissions$()),
     switchMap((response:any) => {
       return of(new GetUserPermissionsSuccess(response))
@@ -39,7 +39,7 @@ export class UserEffects {
 
   @Effect()
   getAllUsers$ = this.actions$.pipe(
-    ofType<GetUsers>(UserActionTypes.GetUsers),
+    ofType<CoreGetUsers>(UserActionTypes.GetUsers),
     switchMap(()=> this.userService.getAllUsers()),
     switchMap((response:string[]) => {
       return of(new GetUsersSuccess(response))

@@ -1,6 +1,6 @@
 import { Actions, ofType, Effect } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
-import { GetServerStatus, serverStatusActionTypes, GetStatusSuccess } from '../actions/serverStatus.actions';
+import { CoreGetServerStatus, serverStatusActionTypes, GetStatusSuccess } from '../actions/server-status.actions';
 import { ServerStatusService } from '../../services/server-status.service';
 import { switchMap, map } from 'rxjs/operators';
 import { StringResponse } from '../../model/restapi/string-response';
@@ -15,7 +15,7 @@ export class ServerStatusEffects
 
     @Effect()
     getServerStatus$ = this.actions$.pipe(
-        ofType<GetServerStatus>(serverStatusActionTypes.GetStatus),
+        ofType<CoreGetServerStatus>(serverStatusActionTypes.GetStatus),
         switchMap(()=>{
             return this.statusService.getServerStatus$().pipe(
                 map((response: StringResponse)=>{
@@ -24,5 +24,5 @@ export class ServerStatusEffects
             )
         }
     )
-    ) 
+    )
 }

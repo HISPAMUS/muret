@@ -18,8 +18,6 @@ export const environment = {
   // apiEndpoint: 'https://muret.dlsi.ua.es/rest/muretapi' // production
   apiEndpoint: 'http://localhost:8080/muretapi',
   // RECALL CHANGE the baseHRef in index.html
-  debugusername: 'davidrizo',
-  debugpass: 'nose'
 };
 
 /*

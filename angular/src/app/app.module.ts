@@ -47,6 +47,7 @@ import {faCommentDots} from '@fortawesome/free-solid-svg-icons/faCommentDots';
 import {faCaretRight} from '@fortawesome/free-solid-svg-icons/faCaretRight';
 import {faCaretDown} from '@fortawesome/free-solid-svg-icons/faCaretDown';
 import {faBomb} from '@fortawesome/free-solid-svg-icons/faBomb';
+import {faExclamationTriangle} from '@fortawesome/free-solid-svg-icons/faExclamationTriangle';
 import {AgGridModule} from 'ag-grid-angular';
 import {PartsModule} from './features/parts/parts.module';
 import { AdminDashboardModule } from './features/admin-dashboard/admin-dashboard.module';
@@ -125,5 +126,6 @@ export class AppModule {
     library.addIcons(faCaretRight); // used in treeView
     library.addIcons(faCaretDown); // used in treeView
     library.addIcons(faBomb);
+    library.addIcons(faExclamationTriangle); // warning icon
   }
 }

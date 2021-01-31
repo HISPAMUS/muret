@@ -1,1 +1,3 @@
-<p>server-state works!</p>
+<div id="statusError" *ngIf="serverError">
+  <a><fa-icon ngbTooltip="{{serverErrorMessage}}" icon="exclamation-triangle" class="icons" size="lg"></fa-icon> Server error</a>
+</div>

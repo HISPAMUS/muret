@@ -42,8 +42,8 @@ import {Line} from '../../../../svg/model/line';
 import {ClassifierModel} from '../../../../core/model/entities/classifier-model';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
 import { LinkType } from 'src/app/layout/components/breadcrumb/breadcrumbType';
-import {GetSVGSet} from "../../../../core/store/actions/fonts.actions";
-import {selectSVGAgnosticOrSemanticSymbolSet} from "../../../../core/store/selectors/core.selector";
+import {CoreGetSVGSet} from "../../../../core/store/actions/fonts.actions";
+import {selectCoreSVGAgnosticOrSemanticSymbolSet} from "../../../../core/store/selectors/core.selector";
 import {KeyValue} from "@angular/common";
 
 @Component({
@@ -121,13 +121,13 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     // -- TODO -- From here it is repeated in Semantic
     this.documentTypeSubscription  = store.select(selectDocumentType).subscribe(next => {
       if (next) {
-        this.store.dispatch(new GetSVGSet(next.notationType, next.manuscriptType));
+        this.store.dispatch(new CoreGetSVGSet(next.notationType, next.manuscriptType));
         // this.store.dispatch(new GetAgnosticEnd2EndClassifierModels(0, 0, next.notationType, next.manuscriptType));
         // moved to ngOnInit with region ID rather than these values
         // this.store.dispatch(new GetSymbolClassifierModels(0, 0, next.notationType, next.manuscriptType));
       }
     });
-    this.svgSet$ = store.select(selectSVGAgnosticOrSemanticSymbolSet);
+    this.svgSet$ = store.select(selectCoreSVGAgnosticOrSemanticSymbolSet);
     // -- TODO -- To here it is repeated in Semantic
 
     this.symbolsClassifierModels$ = store.select(selectAgnosticSymbolClassifierModels);

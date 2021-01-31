@@ -4,9 +4,9 @@ import {catchError, map, switchMap, tap} from 'rxjs/operators';
 
 import {
   AuthActionTypes,
-  LogIn, LogInSuccess, LogInFailure,
+  AuthLogIn, LogInSuccess, LogInFailure,
   RefreshLogged,
-  ResetPassword,
+  AuthResetPassword,
   ResetPasswordSuccess,
   ResetPasswordFail,
 } from '../actions/auth.actions';
@@ -30,7 +30,7 @@ export class AuthEffects {
   @Effect()
   LogIn: Observable<any> = this.actions.pipe(
     ofType(AuthActionTypes.LOGIN),
-    map((action: LogIn) => action.payload),
+    map((action: AuthLogIn) => action.payload),
     switchMap(payload => {
       return this.authService.attemptAuth$(payload).pipe(
         map((jwtResponse: JwtResponse) => {
@@ -77,7 +77,7 @@ export class AuthEffects {
   @Effect()
   ResetPassword: Observable<any> = this.actions.pipe(
     ofType(AuthActionTypes.RESET_PASSWORD),
-    map((action: ResetPassword)=> action.payload),
+    map((action: AuthResetPassword)=> action.payload),
     switchMap(payload => {
       return this.authService.resetPassword$(payload).pipe(
         map((response: StringResponse) => {
@@ -93,7 +93,7 @@ export class AuthEffects {
 
   // @Effect({ dispatch: false })
   /*@Effect()
-  GetStatus: Observable<any> = this.actions.pipe(
+  AuthGetStatus: Observable<any> = this.actions.pipe(
     ofType(AuthActionTypes.GET_STATUS),
     switchMap(userID => {
       return this.authService.getStatus();

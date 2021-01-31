@@ -2,7 +2,7 @@ import {Injectable, OnDestroy} from '@angular/core';
 import {CanActivate, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {AuthState} from '../store/state/auth.state';
-import {selectIsAuthenticated} from '../store/selectors/auth.selector';
+import {selectAuthIsAuthenticated} from '../store/selectors/auth.selector';
 import {Subscription} from 'rxjs';
 
 @Injectable({
@@ -16,7 +16,7 @@ export class AuthGuardService implements CanActivate, OnDestroy {
     private store: Store<AuthState>,
     public router: Router
   ) {
-    this.isAuthenticatedSubscription = this.store.select(selectIsAuthenticated).subscribe(next => {
+    this.isAuthenticatedSubscription = this.store.select(selectAuthIsAuthenticated).subscribe(next => {
       this.isAuthenticated = next;
     });
   }

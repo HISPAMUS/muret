@@ -8,7 +8,7 @@ export enum FontsActionTypes
   GetSVGSet = '[Fonts] Get SVG set',
   GetSVGSetSucccess = '[Fonts] Get SVG set success',
 }
-export class GetSVGSet implements Action {
+export class CoreGetSVGSet implements Action {
   public readonly type = FontsActionTypes.GetSVGSet;
   constructor(public notationType: string, public manuscriptType: string) {
   }
@@ -25,5 +25,5 @@ export class FontsServerError implements Action {
   constructor(public serverError: APIRestServerError) {}
 }
 
-export type FontsActions = GetSVGSet | GetSVGSetSucccess | FontsServerError;
+export type FontsActions = CoreGetSVGSet | GetSVGSetSucccess | FontsServerError;
 
