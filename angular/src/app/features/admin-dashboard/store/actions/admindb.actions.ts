@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
-import { NewUser } from '../../models/newusermodel';
-import { PermissionsModel } from '../../models/permissionsModel';
+import { NewUser } from '../../model/new-user';
+import { Permissions } from '../../model/permissions';
 import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 
 export enum AdminDBActionTypes {
@@ -41,7 +41,7 @@ export class RegisterFail implements Action {
 
 export class RevokePermissions implements Action {
     readonly type = AdminDBActionTypes.REVOKE_PERMISSIONS;
-    constructor(public payload: PermissionsModel) {}
+    constructor(public payload: Permissions) {}
 }
 
 export class RevokePermissionsSuccess implements Action {
@@ -50,7 +50,7 @@ export class RevokePermissionsSuccess implements Action {
 
 export class GrantPermissions implements Action {
     readonly type = AdminDBActionTypes.GRANT_PERMISSIONS;
-    constructor(public payload: PermissionsModel) {}
+    constructor(public payload: Permissions) {}
 }
 
 export class GrantPermissionsSuccess implements Action {

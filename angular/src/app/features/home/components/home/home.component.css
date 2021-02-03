@@ -1,10 +1,27 @@
-#home {
-  height: 100vh;
-  margin-top: 20vh;
-}
 #homeLogo {
-  margin-bottom: 5vh;
+  margin-top: 10vh;
+  margin-bottom: 10vh;
 }
-#home img {
+#homeLogo img {
   width: 100%;
 }
+
+#homeButtons {
+  text-align: center;
+}
+#homeButtons img {
+  width: 70%;
+}
+
+#lastDocuments {
+  margin-top: 1rem;
+}
+#lastDocuments a {
+  color: white;
+}
+
+#lastDocuments li {
+  list-style: none;
+  text-align: left;
+}
+

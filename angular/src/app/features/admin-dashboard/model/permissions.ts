@@ -1,4 +1,4 @@
-export interface PermissionsModel
+export interface Permissions
 {
     userName : string;
     typeOfPermission : string;

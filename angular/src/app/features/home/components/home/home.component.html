@@ -1,24 +1,35 @@
 <div class="container">
-  <div class="row" id="home">
-    <div class="col-4 offset-4">
-      <div class="row">
-        <div class="col" id="homeLogo">
+  <div class="row">
+    <div class="col-4 offset-4" id="homeLogo">
           <img src="assets/images/logos/muret_negativo.png" alt="Logo">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-6">
-          <a routerLinkActive="active" routerLink="/newdocument">
-            <img src="assets/images/newdocument.png" alt="New Document">
-          </a>
-        </div>
-        <div class="col-6">
-          <a routerLinkActive="active" routerLink="/collections">
-            <img src="assets/images/opendocument.png" alt="Open Document">
-          </a>
-        </div>
-      </div>
     </div>
+  </div>
+  <div class="row" id="homeButtons">
+    <div class="col">
+      <a routerLinkActive="active" routerLink="/collections">
+        <img src="assets/images/opendocument.png" alt="Open Document">
+      </a>
+      <ul id="lastDocuments">
+        <li *ngFor="let lastDocument of lastDocuments$ | async; trackBy: lastDocumentFn">
+          <a title="Last opened on {{lastDocument.timestamp}}" [routerLink]="['/document', lastDocument.documentID]">{{lastDocument.documentName}}</a>
+        </li>
+      </ul>
+    </div>
+    <div class="col">
+      <a routerLinkActive="active" routerLink="/newdocument">
+        <img src="assets/images/newdocument.png" alt="New Document">
+      </a>
+    </div>
+    <div class="col">
+        <a routerLinkActive="active" routerLink="/export/trainingsets">
+          <img src="assets/images/trainingsets.png" alt="Training sets">
+        </a>
+    </div>
+    <div *ngIf="isAdmin$ | async" class="col">
+        <a routerLinkActive="active" routerLink="/admin">
+          <img src="assets/images/admindashboard.png" alt="Admin dashboard">
+        </a>
+      </div>
   </div>
 </div>
 

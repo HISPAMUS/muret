@@ -7,7 +7,7 @@ import {
 } from '../actions/admindb.actions';
 import { switchMap, catchError } from 'rxjs/operators';
 import { AdminDBService } from '../../services/admindb.service';
-import { UserRegisteredResponse } from '../../models/registeredusermodel';
+import { UserRegisteredResponse } from '../../model/user-registered-response';
 import {Action} from '@ngrx/store';
 
 @Injectable()

@@ -1,13 +1,15 @@
+import {Role} from "./role";
+
 const KEY = 'ioweuroweihfdsc';
 
 export class SessionData {
   userID: string;
   username: string;
   accessToken: string;
-  roles: string[];
+  roles: Role[];
 
 
-  constructor(userID: string, username: string, accessToken: string, roles: string[]) {
+  constructor(userID: string, username: string, accessToken: string, roles: Role[]) {
     this.userID = userID;
     this.username = username;
     this.accessToken = accessToken;

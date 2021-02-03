@@ -33,17 +33,21 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Permissions> permissions;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<LastDocument> lastDocuments;
     public User() {
     }
 
-    public User(String firstName, String lastName, String username, String password, String email, boolean administrator) {
+    public User(String firstName, String lastName, String username, String password, String email, boolean administrator, List<LastDocument> lastDocuments) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.administrator = administrator;
         this.username = username;
         this.password = password;
         this.email = email;
+        this.lastDocuments = lastDocuments;
     }
+
     public Integer getId() {
         return id;
     }
@@ -116,6 +120,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<LastDocument> getLastDocuments() {
+        return lastDocuments;
+    }
+
+    public void setLastDocuments(List<LastDocument> lastDocuments) {
+        this.lastDocuments = lastDocuments;
     }
 
     @Override

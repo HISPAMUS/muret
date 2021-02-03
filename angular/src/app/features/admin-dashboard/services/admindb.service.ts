@@ -2,8 +2,8 @@ import { Injectable } from "@angular/core";
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment'
 import { NGXLogger } from 'ngx-logger';
-import { NewUser } from '../models/newusermodel';
-import {PermissionsModel} from '../models/permissionsModel'
+import { NewUser } from '../model/new-user';
+import {Permissions} from '../model/permissions'
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -25,14 +25,14 @@ export class AdminDBService
         return this.httpClient.post(this.registeruserURL, registerdata, httpOptions)
     }
 
-    revokePermissions$(permissionsForm: PermissionsModel)
+    revokePermissions$(permissionsForm: Permissions)
     {
         this.logger.debug('AdminDBService#post' + this.revokepermissionsURL)
         return this.httpClient.post(this.revokepermissionsURL, permissionsForm, httpOptions)
 
     }
 
-    grantPermissions$(permissionsForm: PermissionsModel)
+    grantPermissions$(permissionsForm: Permissions)
     {
         this.logger.debug('AdminDBService#post' + this.grantpermissionsURL)
         return this.httpClient.post(this.grantpermissionsURL, permissionsForm, httpOptions)

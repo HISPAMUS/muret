@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { NewUser } from '../../models/newusermodel';
+import { NewUser } from '../../model/new-user';
 import { AdminDashboardState } from '../../store/state/admindb.state';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';

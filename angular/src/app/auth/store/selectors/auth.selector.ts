@@ -23,6 +23,11 @@ export const selectAuthAccessToken = createSelector(
   (state: AuthState) => state.accessToken
 );
 
+export const selectAuthUserID = createSelector(
+  selectAuthState,
+  (state: AuthState) => state.userID
+);
+
 export const selectAuthResetPWDStatus = createSelector(
   selectAuthState,
   (state: AuthState) => state.passwordresetmess
@@ -36,5 +41,5 @@ export const selectAuthRoles = createSelector(
 export const selectAuthIsAdmin = createSelector(
   selectAuthState,
   //(state: AuthState) => state.roles.find(role => role.authority == 'ADMIN') != undefined
-  (state: AuthState) => state.roles.find(role => role == 'ADMIN') != undefined
+  (state: AuthState) => state.roles.find(role => role.authority == 'ADMIN') != undefined
 );

@@ -1,4 +1,4 @@
-export interface NewClassifierModel
+export interface NewClassifier
 {
     eName?: string,
     eClassifierType?: string

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
 import { ApiRestClientService } from 'src/app/core/services/api-rest-client.service';
-import { NewClassifierModel } from '../../models/newclassifiermodel';
+import { NewClassifier } from '../../model/new-classifier';
 import { Observable, Subscription } from 'rxjs';
 import { Collection } from 'src/app/core/model/entities/collection';
 import { Store } from '@ngrx/store';
@@ -20,7 +20,7 @@ export class RegisterModelComponent implements OnInit {
 
   public uploader: FileUploader;
   private url: string;
-  registerModel: NewClassifierModel = {};
+  registerModel: NewClassifier = {};
   collections$: Observable<Collection[]>;
   private collections: Collection[];
   private collectionSubs: Subscription;

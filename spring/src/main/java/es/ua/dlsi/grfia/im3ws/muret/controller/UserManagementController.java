@@ -49,7 +49,7 @@ public class UserManagementController
                                         c_newUserData.getUsername(),
                                         new BCryptPasswordEncoder().encode(c_newUserData.getPassword()),
                                         c_newUserData.getEmail(),
-                                        c_newUserData.getAdministrator());
+                                        c_newUserData.getAdministrator(), null);
 
         m_userManager.createUser( userToRegister, c_newUserData.getAdminCreator() );
 

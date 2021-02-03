@@ -15,13 +15,13 @@
   <div [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse" id="collapsibleNavbar">
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link" routerLink="export/trainingsets">Training sets</a>
+        <a (click)="isMenuCollapsed = true" class="nav-link" routerLink="export/trainingsets">Training sets</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="https://github.com/HISPAMUS/muret/issues" target="_blank">Report an issue</a>
+        <a (click)="isMenuCollapsed = true" class="nav-link" href="https://github.com/HISPAMUS/muret/issues" target="_blank">Report an issue</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="about">About</a>
+        <a (click)="isMenuCollapsed = true" class="nav-link" routerLink="about">About</a>
       </li>
     </ul>
   </div>

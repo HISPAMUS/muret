@@ -1,10 +1,12 @@
+import {Role} from "../../models/role";
+
 export interface AuthState {
   isAuthenticated: boolean;
   userID: number | null;
   username: string | null;
   errorMessage: string | null;
   accessToken: string | null;
-  roles: string[];
+  roles: Role[];
   passwordresetmess: number
 }
 

@@ -1,5 +1,6 @@
 import {AuthState, initialAuthState} from '../state/auth.state';
 import {AuthActions, AuthActionTypes} from '../actions/auth.actions';
+import {Role} from "../../models/role";
 
 export function authReducers(state = initialAuthState, action: AuthActions): AuthState {
   switch (action.type) {
@@ -10,7 +11,12 @@ export function authReducers(state = initialAuthState, action: AuthActions): Aut
         accessToken: action.payload.accessToken,
         userID: action.payload.userID,
         username: action.payload.username,
-        roles: action.payload.authorities,
+        roles: action.payload.authorities.map(value => {
+          const role: Role = {
+            authority : value
+          };
+          return role;
+        }),
         errorMessage: null
       };
     }

@@ -1,4 +1,6 @@
 #statusError {
   color: red;
+  text-align: center;
+  padding-top: 1rem;
 }
 
