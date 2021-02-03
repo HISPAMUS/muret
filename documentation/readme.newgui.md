@@ -96,9 +96,58 @@ The `AvatarComponent` displays the current logged user information.
 As described in section [Routing and permissions](#routing-and-permissions), when a user tries to access any page and has not logged in yet, he/she is forwared to the `LoginComponent` by the `AuthGuard`.
 
 
-## Home page
+## Features: Home
 After the user logs in and the guard allows to enter as depicted above in diagram in [routing and permissions](#routing-and-permissions)), the following sequence is followed:
 ![Home sequence](puml/angular/home_sequence.svg)
 
+### Home store component
+The last docuemnts are used to show the user the last documents opened by him/her. When a document is opened in the [Documents Component](#documents-component) this list is updated.
 
+| **Action** | **`HomeService` method** | **API Rest method** | **`HomeState` properties on succes** | **Properties on failure** | 
+| --- | ----------- | ----------- | ----------- | ----- | 
+| `GetLastDocuments(userID: number, count: number)` | `getUserLastDocuments$(userID: number, count: number)` | `/lastdocument/user` | `lastDocuments` | `errorMessage`| 
+| `UpdateLastDocuments(userID: number, documentID: number)` | `updateUserLastDocument$(userID: number, documentID: number)` | `/lastdocument/update` | `lastDocuments` | `errorMessage`| 
+
+
+![Home store component](puml/angular/home_store_component.svg)
+
+## Features: Documents
+It shows the collections, subcollections and their documents.
+
+### Documents store component
+
+| **Action** | **`DocumentsService` method** | **API Rest method** | **`DocumentsState` properties on succes** | **Properties on failure** | 
+| --- | ----------- | ----------- | ----------- | ----- | 
+| `GetCollection(collectionID: number)` | `getCollection$(collectionID: number)` | `/collections/collection/excerpt` | `collection` | `apiRestServerError`| 
+| `CreateSubcollection(parentID: number, name: string)` | `createSubcollection$(parentId: number, subcollectionName: string)` | `/collections/create` | `subcollections` | `apiRestServerError`| 
+| `DeleteSubcollection(id: number)` | `deleteSubcollection$(id: number)` | `/collections/delete` | `subcollections` | `apiRestServerError`| 
+| `MoveDocumentsToSubcollection(currentCollectionID: number, documentIDs: number[], subcollectionID: number)` | `moveDocumentsToSubcollection$(currentCollectionID: number, documentIDs: number[], subcollectionID: number)` | `/collections/moveDocumentToSubcollection` | `changedCollectionID` | `apiRestServerError`| 
+| `MoveDocumentsToNewSubcollection(currentCollectionID: number, documentIDs: number[], subCollectionName: string)` | `moveDocumentsToNewSubcollection$(currentCollectionID: number, documentIDs: number[], newCollectionName: string)` | `/collections/moveDocumentToNewSubcollection` | `changedCollectionID` | `apiRestServerError`| 
+
+
+![Documents store component](puml/angular/documents_store_component.svg)
+
+
+### features.documents.CollectionsComponent
+It retrieves the collections the user has permissions to access using:
+1. First the user ID through the [Auth Store](#auth-store)
+2. Then the [Core store](#core-store).
+
+
+### features.documents.DocumentsComponent
+It shows both subcollections and leaf documents.
+
+**TO-DO StateComponent**
+
+### Home store component
+The last docuemnts are used to show the user the last documents opened by him/her. When a document is opened in the [Documents Component](#documents-component) this list is updated.
+
+| **Action** | **`HomeService` method** | **API Rest method** | **`HomeState` properties on succes** | **Properties on failure** | 
+| --- | ----------- | ----------- | ----------- | ----- | 
+| `GetLastDocuments(userID: number, count: number)` | `getUserLastDocuments$(userID: number, count: number)` | `/lastdocument/user` | `lastDocuments` | `errorMessage`| 
+
+| `UpdateLastDocuments(userID: number, documentID: number)` | `updateUserLastDocument$(userID: number, documentID: number)` | `/lastdocument/update` | `lastDocuments` | `errorMessage`| 
+|  |  |  |  |  | 
+
+![Home store component](puml/angular/home_store_component.svg)
 

@@ -16,6 +16,7 @@
     [Auth Store] -- selectAuthResetPWDStatus
     [Auth Store] -- selectAuthRole
     [Auth Store] -- selectAuthIsAdmin
+    [Auth Store] -- selectAuthUserID
 
     [LogIn] <.. [LoginComponent]
     [LogOut] <.. [LoginComponent]
@@ -31,6 +32,8 @@
     selectAuthAccessToken <.. TokenInterceptorService
     selectAuthResetPWDStatus <.. [ResetPasswordComponent]
     selectAuthIsAdmin <.. [HomeComponent]
+    selectAuthUserID <.. [HomeComponent]
+    selectAuthUserID <.. [CollectionsComponent]
 @enduml
 ```
 
@@ -43,7 +46,12 @@
     CoreGetUser -- [Core Store]
     CoreGetSVGSet -- [Core Store]
 
-    [Core Store] -- selectCoreLoggedInUser
+    [Core Store] -- selectCoreLoggedInUser 
+    note top of selectCoreLoggedInUser
+      See the main class diagram: the logged in user (User class) contains information 
+      about its documents and accesible collection through the Permissions class
+    end note
+
     [Core Store] -- selectCoreUserPermissions
     [Core Store] -- selectCoreUserList
     [Core Store] -- selectCoreServerStatus
@@ -70,6 +78,49 @@
     selectCoreSVGAgnosticOrSemanticSymbolSet <.. [AgnosticRepresentationComponent]
     selectCoreSVGAgnosticOrSemanticSymbolSet <.. [SemanticRepresentationComponent]
     
+@enduml
+```
+
+' -----------------------------------------------------------------------------------------------------------
+```puml
+@startuml home_store_component
+    [Home Store]
+    GetLastDocuments -- [Home Store]
+    UpdateLastDocuments -- [Home Store]
+    [Home Store] -- selectHomeLastDocuments
+
+    [GetLastDocuments] <.. [HomeComponent]
+    [UpdateLastDocuments] <.. [DocumentsComponent]
+
+    selectHomeLastDocuments <.. [HomeComponent]
+@enduml
+```
+
+
+' -----------------------------------------------------------------------------------------------------------
+```puml
+@startuml documents_store_component
+    [Documents Store]
+    GetCollection -- [Documents Store]
+    CreateSubcollection -- [Documents Store]
+    DeleteSubcollection -- [Documents Store]
+    MoveDocumentsToSubcollection -- [Documents Store]
+    MoveDocumentsToNewSubcollection -- [Documents Store]
+    ResetDocumentsServerError -- [Documents Store]
+
+    [Documents Store] -- selectDocumentsCollection
+    [Documents Store] -- selectDocumentsChangedCollectionID
+    [Documents Store] -- selectDocumentsServerError
+
+    [ResetDocumentsServerError] <.. [CollectionsComponent]
+    [GetCollection] <.. [DocumentsComponent]
+    [CreateSubcollection] <.. [DocumentsComponent]
+    [DeleteSubcollection] <.. [DocumentsComponent]
+    [MoveDocumentsToSubcollection] <.. [DocumentsComponent]
+    [MoveDocumentsToNewSubcollection] <.. [DocumentsComponent]
+
+    [selectDocumentsCollection] <.. [DocumentsComponent]
+    [selectDocumentsChangedCollectionID] <.. [DocumentsComponent]
 @enduml
 ```
 
@@ -376,3 +427,4 @@ control HomeComponent
 HomeModule --> HomeComponent
 @enduml
 ```
+

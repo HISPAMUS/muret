@@ -11,17 +11,29 @@
 }
 #homeButtons img {
   width: 70%;
+  margin-bottom: 1rem;
 }
 
-#lastDocuments {
-  margin-top: 1rem;
+#homeButtons h5 {
+  color: lightgrey;
+  font-weight: lighter;
 }
+
 #lastDocuments a {
   color: white;
+}
+
+.lastDocumentCollectionName {
+  font-weight: lighter;
+}
+
+.lastDocumentDocumentName {
+  font-weight: bold;
 }
 
 #lastDocuments li {
   list-style: none;
   text-align: left;
+  margin-left: -4rem;
 }
 

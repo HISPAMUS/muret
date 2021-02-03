@@ -58,7 +58,7 @@ public class LastDocumentController {
             ArrayList<LastDocumentExtract> result = new ArrayList<>();
             for (int i=0; i<lastDocs.size() && i<count; i++) {
                 LastDocument lastDocument = lastDocs.get(i);
-                result.add(new LastDocumentExtract(lastDocument.getId(), lastDocument.getDocument().getName(), lastDocument.getTimestamp()));
+                result.add(new LastDocumentExtract(lastDocument));
             }
 
             return result;
@@ -104,7 +104,7 @@ public class LastDocumentController {
                 lastDocument.setTimestamp(new Date());
             }
             lastDocumentRepository.save(lastDocument);
-            return new LastDocumentExtract(lastDocument.getId(), lastDocument.getDocument().getName(), lastDocument.getTimestamp());
+            return new LastDocumentExtract(lastDocument);
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot update or insert the last opened document", e);
         }

@@ -9,11 +9,7 @@
       <a routerLinkActive="active" routerLink="/collections">
         <img src="assets/images/opendocument.png" alt="Open Document">
       </a>
-      <ul id="lastDocuments">
-        <li *ngFor="let lastDocument of lastDocuments$ | async; trackBy: lastDocumentFn">
-          <a title="Last opened on {{lastDocument.timestamp}}" [routerLink]="['/document', lastDocument.documentID]">{{lastDocument.documentName}}</a>
-        </li>
-      </ul>
+      <h5>Last opened documents</h5>
     </div>
     <div class="col">
       <a routerLinkActive="active" routerLink="/newdocument">
@@ -30,6 +26,22 @@
           <img src="assets/images/admindashboard.png" alt="Admin dashboard">
         </a>
       </div>
+  </div>
+
+  <div class="row">
+    <div class="col offset-1">
+      <ul id="lastDocuments">
+        <li *ngFor="let lastDocument of lastDocuments$ | async; trackBy: lastDocumentFn">
+          <a class="lastDocumentCollectionName"  title="Last opened on {{lastDocument.timestamp}}" [routerLink]="['/documents', lastDocument.collectionID]">
+            {{lastDocument.collectionName}}
+          </a>
+          &nbsp; / &nbsp;
+          <a class="lastDocumentName" title="Last opened on {{lastDocument.timestamp}}" [routerLink]="['/document', lastDocument.documentID]">
+            {{lastDocument.documentName}}
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>
 

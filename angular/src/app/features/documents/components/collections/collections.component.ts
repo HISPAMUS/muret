@@ -4,7 +4,7 @@ import {User} from '../../../../core/model/entities/user';
 import {Store} from '@ngrx/store';
 import {selectCoreLoggedInUser} from '../../../../core/store/selectors/core.selector';
 import {ActivateLink} from '../../../../layout/store/actions/breadcrumbs.actions';
-import {selectAuthState} from '../../../../auth/store/selectors/auth.selector';
+import {selectAuthState, selectAuthUserID} from '../../../../auth/store/selectors/auth.selector';
 import {CoreGetUser} from '../../../../core/store/actions/user.actions';
 import {Document} from '../../../../core/model/entities/document';
 import {Permissions} from '../../../../core/model/entities/permissions';
@@ -31,8 +31,11 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.authSubscription = this.store.select(selectAuthState).subscribe(next => {
+    /*this.authSubscription = this.store.select(selectAuthState).subscribe(next => {
       this.store.dispatch(new CoreGetUser(next.userID));
+    });*/
+    this.authSubscription = this.store.select(selectAuthUserID).subscribe(next => {
+      this.store.dispatch(new CoreGetUser(next));
     });
 
     this.serverErrorSubscription = this.store.select(selectDocumentsServerError).subscribe(next => {

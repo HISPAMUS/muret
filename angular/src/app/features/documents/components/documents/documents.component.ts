@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit, Self} from '@angular/core';
 import {Document} from '../../../../core/model/entities/document';
 import {Permissions} from '../../../../core/model/entities/permissions';
-import {Observable, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {Collection} from '../../../../core/model/entities/collection';
 import {ActivatedRoute, ParamMap} from '@angular/router';
@@ -11,7 +11,7 @@ import {
   GetCollection,
   MoveDocumentsToNewSubcollection, MoveDocumentsToSubcollection, ResetDocumentsServerError
 } from '../../store/actions/documents.actions';
-import {selectChangedCollectionID, selectCollection, selectDocumentsServerError} from '../../store/selectors/documents.selector';
+import {selectDocumentsChangedCollectionID, selectDocumentsCollection, selectDocumentsServerError} from '../../store/selectors/documents.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {ModalOptions} from '../../../../dialogs/options-dialog/options-dialog.component';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
@@ -43,7 +43,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.selectedDocumentsIds = new Array<number>();
-    this.collectionSubscription = this.store.select(selectCollection).subscribe(next => {
+    this.collectionSubscription = this.store.select(selectDocumentsCollection).subscribe(next => {
       this.collection = next;
       setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
         if (this.collection) {
@@ -54,7 +54,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
         }
       });
     });
-    this.changedCollectionIDSubscription = this.store.select(selectChangedCollectionID).subscribe(next => {
+    this.changedCollectionIDSubscription = this.store.select(selectDocumentsChangedCollectionID).subscribe(next => {
       if (next) {
         // reload it
         this.collectionID = next;
