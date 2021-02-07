@@ -52,6 +52,10 @@ public class Document extends Auditable {
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "document")
     private List<Part> parts;
 
+    @JsonManagedReference (value="document")
+    @OneToMany(fetch=FetchType.LAZY, mappedBy = "document")
+    private List<Section> sections;
+
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="state_id")
     State state;
@@ -65,7 +69,7 @@ public class Document extends Auditable {
     public Document() {
     }
 
-    public Document(String name, String path, String composer, Date creationDate, Date lastModifiedDate, User createdBy, User lastModifiedBy , String thumbnailBase64Encoding, String comments, String imagesOrdering, NotationType notationType, ManuscriptType manuscriptType, State state, List<Image> images, List<Part> parts, Collection collection) {
+    public Document(String name, String path, String composer, Date creationDate, Date lastModifiedDate, User createdBy, User lastModifiedBy , String thumbnailBase64Encoding, String comments, String imagesOrdering, NotationType notationType, ManuscriptType manuscriptType, State state, List<Image> images, List<Part> parts, Collection collection, List<Section> sections) {
         this.name = name;
         this.composer = composer;
         this.notationType = notationType;
@@ -82,6 +86,7 @@ public class Document extends Auditable {
         this.state = state;
         this.parts = parts;
         this.collection = collection;
+        this.sections = sections;
     }
     public Integer getId() {
         return id;
@@ -192,6 +197,14 @@ public class Document extends Auditable {
 
     public void setCollection(Collection collection) {
         this.collection = collection;
+    }
+
+    public List<Section> getSections() {
+        return sections;
+    }
+
+    public void setSections(List<Section> sections) {
+        this.sections = sections;
     }
 
     @Override

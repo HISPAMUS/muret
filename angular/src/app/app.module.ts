@@ -97,7 +97,7 @@ import {DialogsModule} from "./dialogs/dialogs.module";
     LazyLoadImageModule,
     LoggerModule.forRoot({level: NgxLoggerLevel.DEBUG, serverLogLevel: NgxLoggerLevel.ERROR}),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
-    NgbModule,
+    NgbModule
   ],
   providers: [], // don't add here singleton services if using @Injectable( providedIn: 'root'})
   bootstrap: [AppComponent]

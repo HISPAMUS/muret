@@ -32,7 +32,6 @@ import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {Polylines} from '../../../../svg/model/polylines';
 import {Strokes} from '../../../../core/model/entities/strokes';
 import {Polyline} from '../../../../svg/model/polyline';
-import {ActivateLink} from '../../../../layout/store/actions/breadcrumbs.actions';
 import {SVGSet} from '../../model/svgset';
 import {AgnosticOrSemanticSymbolAndPosition} from '../../model/agnostic-or-semantic-symbol-and-position';
 import {Point} from '../../../../core/model/entities/point';
@@ -41,7 +40,7 @@ import {PositionInStaffService} from '../../../../shared/services/position-in-st
 import {Line} from '../../../../svg/model/line';
 import {ClassifierModel} from '../../../../core/model/entities/classifier-model';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
-import { LinkType } from 'src/app/layout/components/breadcrumb/breadcrumbType';
+import { LinkType } from 'src/app/layout/components/breadcrumbs/breadcrumbType';
 import {CoreGetSVGSet} from "../../../../core/store/actions/fonts.actions";
 import {selectCoreSVGAgnosticOrSemanticSymbolSet} from "../../../../core/store/selectors/core.selector";
 import {KeyValue} from "@angular/common";
@@ -57,7 +56,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
   selectedSymbol: AgnosticSymbol;
   selectedRegion: Region;
   selectedSymbolSubscription: Subscription;
-  filenameSubscription: Subscription;
+  //filenameSubscription: Subscription;
   selectedRegionShapes: Shape[];
   selectedRegionZoomFactor = 1;
 
@@ -113,10 +112,10 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
     this.mode = 'eIdle';
     this.filename$ = store.select(selectFileName);
-    this.filenameSubscription = this.filename$.subscribe(name => {
+    /*this.filenameSubscription = this.filename$.subscribe(name => {
       if(name != null)
       this.store.dispatch(new ActivateLink(LinkType.File, {title: name + ' /Agnostic', routerLink: 'agnosticrepresentation/' + this.imageID}));
-    })
+    })*/
 
     // -- TODO -- From here it is repeated in Semantic
     this.documentTypeSubscription  = store.select(selectDocumentType).subscribe(next => {
@@ -192,7 +191,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.documentTypeSubscription.unsubscribe();
     this.classifiedSymbolsSubscription.unsubscribe();
     this.serverErrorSubscription.unsubscribe();
-    this.filenameSubscription.unsubscribe();
+    //this.filenameSubscription.unsubscribe();
   }
 
   private findSelectedShape(): Shape {

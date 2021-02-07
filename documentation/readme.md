@@ -48,7 +48,7 @@ The following structure has been used inside the `app` module:
         * SemanticRepresentationComponent
 * layout
   + LayoutComponent
-  + BreadcrumbComponent
+  + BreadcrumbsComponent
 * shared
     + CrudToolBarComponent
     + StateComponent
@@ -137,12 +137,12 @@ package "semantic-representation" #LightPink {
         [SemanticRepresentationComponent] ....> [NotationComponent]
 }                               
 
-[BreadcrumbComponent] #LightGray
+[BreadcrumbsComponent] #LightGray
 
 [LayoutComponent] #LightGray    
     () "Indicator" as layout.Indicator
     layout.Indicator )-- [LayoutComponent]
-    [LayoutComponent] .down.> BreadcrumbComponent
+    [LayoutComponent] .down.> BreadcrumbsComponent
 
 [AppComponent] #White
 [AppComponent] .left.> [LayoutComponent]

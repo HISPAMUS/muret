@@ -4,31 +4,31 @@ import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-
 import {LastDocumentExtract} from "../../model/last-document-extract";
 
 export enum HomeActionTypes {
-  GetLastDocuments = '[Home] Get last documents',
-  GetLastDocumentsSuccess = '[Home] Get last documents success',
-  UpdateLastDocuments = '[Home] Update last documents',
-  UpdateLastDocumentsSuccess = '[Home] Update last documents succcess',
+  HomeGetLastDocuments = '[Home] Get last documents',
+  HomeGetLastDocumentsSuccess = '[Home] Get last documents success',
+  HomeUpdateLastDocuments = '[Home] Update last documents',
+  HomeUpdateLastDocumentsSuccess = '[Home] Update last documents succcess',
   HomeServerError = '[Home] Server error',
 }
 
-export class GetLastDocuments implements Action {
-  public readonly type = HomeActionTypes.GetLastDocuments;
+export class HomeGetLastDocuments implements Action {
+  public readonly type = HomeActionTypes.HomeGetLastDocuments;
   constructor(public userID: number, public count: number) {}
 }
 
-export class GetLastDocumentsSuccess implements Action {
-  public readonly type = HomeActionTypes.GetLastDocumentsSuccess;
+export class HomeGetLastDocumentsSuccess implements Action {
+  public readonly type = HomeActionTypes.HomeGetLastDocumentsSuccess;
   constructor(public lastDocuments: LastDocumentExtract[]) {}
 }
 
 
-export class UpdateLastDocuments implements Action {
-  public readonly type = HomeActionTypes.UpdateLastDocuments;
+export class HomeUpdateLastDocuments implements Action {
+  public readonly type = HomeActionTypes.HomeUpdateLastDocuments;
   constructor(public userID: number, public documentID: number) {}
 }
 
-export class UpdateLastDocumentsSuccess implements Action {
-  public readonly type = HomeActionTypes.UpdateLastDocumentsSuccess;
+export class HomeUpdateLastDocumentsSuccess implements Action {
+  public readonly type = HomeActionTypes.HomeUpdateLastDocumentsSuccess;
   constructor(public lastDocument: LastDocumentExtract) {}
 }
 
@@ -39,5 +39,5 @@ export class HomeServerError implements Action {
 
 export type HomeActions =
   HomeServerError |
-  GetLastDocuments | GetLastDocumentsSuccess |
-  UpdateLastDocuments | UpdateLastDocumentsSuccess;
+  HomeGetLastDocuments | HomeGetLastDocumentsSuccess |
+  HomeUpdateLastDocuments | HomeUpdateLastDocumentsSuccess;

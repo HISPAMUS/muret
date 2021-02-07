@@ -14,26 +14,14 @@ import java.util.stream.Collectors;
  * @author drizo
  */
 @Entity
-public class Page extends Auditable implements IAssignableToPart {
+public class Page extends Auditable implements IAssignableToPart, IDelimitedWithBoundingBox {
     /**
      * It orders pages given its middle horizontal point or its approximate x
      */
     private static Comparator<? super Page> verticalPositionComparator = new Comparator<Page>() {
         @Override
         public int compare(Page o1, Page o2) {
-            if (o1.getBoundingBox().getFromY() < o2.getBoundingBox().getFromY()) {
-                return -1;
-            } else if (o1.getBoundingBox().getFromY() > o2.getBoundingBox().getFromY()) {
-                return 1;
-            } else {
-                if (o1.getBoundingBox().getFromX() < o2.getBoundingBox().getFromX()) {
-                    return -1;
-                } else if (o1.getBoundingBox().getFromX() > o2.getBoundingBox().getFromX()) {
-                    return 1;
-                } else {
-                    return o1.hashCode() - o2.hashCode();
-                }
-            }
+            return IDelimitedWithBoundingBox.compareBoundingBoxesVertically(o1.getBoundingBox(), o2.getBoundingBox(), o1.hashCode(), o2.hashCode(), o1, o2);
         }
     };
     @Id

@@ -1,0 +1,12 @@
+<nav id="breadcrumbs" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li *ngFor="let breadcrumb of breadcrumbs$ | async; trackBy: trackBreadcrumb; last as isLast" [ngClass]="getClass(isLast)">
+      <a *ngIf="!isLast; else last" (click)="openLink(breadcrumb)">{{breadcrumb.title}}</a>
+      <ng-template #last>
+        {{breadcrumb.title}}
+      </ng-template>
+    </li>
+    <!--<li class="breadcrumb-item"><a href="#">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Data</li>-->
+  </ol>
+</nav>

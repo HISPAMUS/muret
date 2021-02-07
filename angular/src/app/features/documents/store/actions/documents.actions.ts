@@ -3,22 +3,22 @@ import {Collection} from '../../../../core/model/entities/collection';
 import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 
 export enum DocumentsActionTypes {
-  ResetDocumentsServerError = '[Documents] Reset Server error',
+  DocumentsResetDocumentsServerError = '[Documents] Reset Server error',
   DocumentsServerError = '[Documents] Server error',
-  GetCollection = '[Documents] Get collection',
-  GetCollectionSuccess = '[Documents] Get collection success',
-  CreateSubcollection = '[Documents] Create subcollection',
-  CreateSubcollectionSuccess = '[Documents] Create subcollection success',
-  DeleteSubcollection = '[Documents] Delete subcollection',
-  DeleteSubcollectionSuccess = '[Documents] Delete subcollection success',
-  MoveDocumentsToSubcollection = '[Document] Move documents to subcollection',
-  MoveDocumentsToSubcollectionSuccess = '[Document] Move documents to subcollection success',
-  MoveDocumentsToNewSubcollection = '[Document] Move documents to new subcollection',
-  MoveDocumentsToNewSubcollectionSuccess = '[Document] Move documents to new subcollection success',
+  DocumentsGetCollection = '[Documents] Get collection',
+  DocumentsGetCollectionSuccess = '[Documents] Get collection success',
+  DocumentsCreateSubcollection = '[Documents] Create subcollection',
+  DocumentsCreateSubcollectionSuccess = '[Documents] Create subcollection success',
+  DocumentsDeleteSubcollection = '[Documents] Delete subcollection',
+  DocumentsDeleteSubcollectionSuccess = '[Documents] Delete subcollection success',
+  DocumentsMoveDocumentsToSubcollection = '[Document] Move documents to subcollection',
+  DocumentsMoveDocumentsToSubcollectionSuccess = '[Document] Move documents to subcollection success',
+  DocumentsMoveDocumentsToNewSubcollection = '[Document] Move documents to new subcollection',
+  DocumentsMoveDocumentsToNewSubcollectionSuccess = '[Document] Move documents to new subcollection success',
 }
 
-export class ResetDocumentsServerError implements Action {
-  public readonly type = DocumentsActionTypes.ResetDocumentsServerError;
+export class DocumentsResetDocumentsServerError implements Action {
+  public readonly type = DocumentsActionTypes.DocumentsResetDocumentsServerError;
   constructor() {}
 }
 
@@ -27,62 +27,62 @@ export class DocumentsServerError implements Action {
   constructor(public serverError: APIRestServerError) {}
 }
 
-export class GetCollection implements Action {
-  public readonly type = DocumentsActionTypes.GetCollection;
+export class DocumentsGetCollection implements Action {
+  public readonly type = DocumentsActionTypes.DocumentsGetCollection;
   constructor(public collectionID: number) {}
 }
 
-export class GetCollectionSuccess implements Action {
-  public readonly type = DocumentsActionTypes.GetCollectionSuccess;
+export class DocumentsGetCollectionSuccess implements Action {
+  public readonly type = DocumentsActionTypes.DocumentsGetCollectionSuccess;
   constructor(public collection: Collection) {}
 }
 
-export class CreateSubcollection implements Action {
-  public readonly type = DocumentsActionTypes.CreateSubcollection;
+export class DocumentsCreateSubcollection implements Action {
+  public readonly type = DocumentsActionTypes.DocumentsCreateSubcollection;
   constructor(public parentID: number, public name: string) {}
 }
 
-export class CreateSubcollectionSuccess implements Action {
-  public readonly type = DocumentsActionTypes.CreateSubcollectionSuccess;
+export class DocumentsCreateSubcollectionSuccess implements Action {
+  public readonly type = DocumentsActionTypes.DocumentsCreateSubcollectionSuccess;
   constructor(public collection: Collection) {}
 }
 
-export class DeleteSubcollection implements Action {
-  public readonly type = DocumentsActionTypes.DeleteSubcollection;
+export class DocumentsDeleteSubcollection implements Action {
+  public readonly type = DocumentsActionTypes.DocumentsDeleteSubcollection;
   constructor(public id: number) {}
 }
 
-export class DeleteSubcollectionSuccess implements Action {
-  public readonly type = DocumentsActionTypes.DeleteSubcollectionSuccess;
+export class DocumentsDeleteSubcollectionSuccess implements Action {
+  public readonly type = DocumentsActionTypes.DocumentsDeleteSubcollectionSuccess;
   constructor(public deletedSubcollectionID: number) {}
 }
 
 
-export class MoveDocumentsToSubcollection implements Action {
-  public readonly type = DocumentsActionTypes.MoveDocumentsToSubcollection;
+export class DocumentsMoveDocumentsToSubcollection implements Action {
+  public readonly type = DocumentsActionTypes.DocumentsMoveDocumentsToSubcollection;
   constructor(public currentCollectionID: number, public documentIDs: number[], public subcollectionID: number) {}
 }
 
-export class MoveDocumentsToSubcollectionSuccess implements Action {
-  public readonly type = DocumentsActionTypes.MoveDocumentsToSubcollectionSuccess;
+export class DocumentsMoveDocumentsToSubcollectionSuccess implements Action {
+  public readonly type = DocumentsActionTypes.DocumentsMoveDocumentsToSubcollectionSuccess;
   constructor(public changedCollectionID: number) {}
 }
 
-export class MoveDocumentsToNewSubcollection implements Action {
-  public readonly type = DocumentsActionTypes.MoveDocumentsToNewSubcollection;
+export class DocumentsMoveDocumentsToNewSubcollection implements Action {
+  public readonly type = DocumentsActionTypes.DocumentsMoveDocumentsToNewSubcollection;
   constructor(public currentCollectionID: number, public documentIDs: number[], public subCollectionName: string) {}
 }
 
-export class MoveDocumentsToNewSubcollectionSuccess implements Action {
-  public readonly type = DocumentsActionTypes.MoveDocumentsToNewSubcollectionSuccess;
+export class DocumentsMoveDocumentsToNewSubcollectionSuccess implements Action {
+  public readonly type = DocumentsActionTypes.DocumentsMoveDocumentsToNewSubcollectionSuccess;
   constructor(public changedCollectionID: number) {}
 }
 
 
 export type DocumentsActions =
-  ResetDocumentsServerError | DocumentsServerError |
-  GetCollection | GetCollectionSuccess |
-  CreateSubcollection | CreateSubcollectionSuccess |
-  DeleteSubcollection | DeleteSubcollectionSuccess |
-  MoveDocumentsToSubcollection | MoveDocumentsToSubcollectionSuccess |
-  MoveDocumentsToNewSubcollection | MoveDocumentsToNewSubcollectionSuccess;
+  DocumentsResetDocumentsServerError | DocumentsServerError |
+  DocumentsGetCollection | DocumentsGetCollectionSuccess |
+  DocumentsCreateSubcollection | DocumentsCreateSubcollectionSuccess |
+  DocumentsDeleteSubcollection | DocumentsDeleteSubcollectionSuccess |
+  DocumentsMoveDocumentsToSubcollection | DocumentsMoveDocumentsToSubcollectionSuccess |
+  DocumentsMoveDocumentsToNewSubcollection | DocumentsMoveDocumentsToNewSubcollectionSuccess;

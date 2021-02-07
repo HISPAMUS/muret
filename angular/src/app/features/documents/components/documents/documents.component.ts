@@ -6,17 +6,16 @@ import {Store} from '@ngrx/store';
 import {Collection} from '../../../../core/model/entities/collection';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {
-  CreateSubcollection,
-  DeleteSubcollection,
-  GetCollection,
-  MoveDocumentsToNewSubcollection, MoveDocumentsToSubcollection, ResetDocumentsServerError
+  DocumentsCreateSubcollection,
+  DocumentsDeleteSubcollection,
+  DocumentsGetCollection,
+  DocumentsMoveDocumentsToNewSubcollection, DocumentsMoveDocumentsToSubcollection, DocumentsResetDocumentsServerError
 } from '../../store/actions/documents.actions';
 import {selectDocumentsChangedCollectionID, selectDocumentsCollection, selectDocumentsServerError} from '../../store/selectors/documents.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {ModalOptions} from '../../../../dialogs/options-dialog/options-dialog.component';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
-import { ActivateLink } from 'src/app/layout/store/actions/breadcrumbs.actions';
-import { LinkType } from 'src/app/layout/components/breadcrumb/breadcrumbType';
+import {BreadcrumbsUpdateCollection} from "../../../../layout/store/actions/breadcrumbs.actions";
 
 
 @Component({
@@ -37,7 +36,8 @@ export class DocumentsComponent implements OnInit, OnDestroy {
               private showErrorService: ShowErrorService) {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.collectionID = +this.route.snapshot.paramMap.get('id'); // + converts the string to number
-      this.store.dispatch(new GetCollection(this.collectionID));
+      this.store.dispatch(new DocumentsGetCollection(this.collectionID));
+      this.store.dispatch(new BreadcrumbsUpdateCollection(this.collectionID));
     });
   }
 
@@ -45,26 +45,26 @@ export class DocumentsComponent implements OnInit, OnDestroy {
     this.selectedDocumentsIds = new Array<number>();
     this.collectionSubscription = this.store.select(selectDocumentsCollection).subscribe(next => {
       this.collection = next;
-      setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
+      /*setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
         if (this.collection) {
           this.store.dispatch(new ActivateLink(LinkType.Collection, {
             title: this.collection.name,
             routerLink: 'documents/' + this.collectionID
           }));
         }
-      });
+      });*/
     });
     this.changedCollectionIDSubscription = this.store.select(selectDocumentsChangedCollectionID).subscribe(next => {
       if (next) {
         // reload it
         this.collectionID = next;
-        this.store.dispatch(new GetCollection(next));
+        this.store.dispatch(new DocumentsGetCollection(next));
       }
     });
     this.serverErrorSubscription = this.store.select(selectDocumentsServerError).subscribe(next => {
       if (next) {
         this.showErrorService.warning(next);
-        this.store.dispatch(new ResetDocumentsServerError());
+        this.store.dispatch(new DocumentsResetDocumentsServerError());
       }
     });
   }
@@ -92,7 +92,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
     this.dialogsService.showInput('Subcollections', 'Add subcollection', '')
       .subscribe((text) => {
         if (text) {
-          this.store.dispatch(new CreateSubcollection(this.collectionID, text.trim()));
+          this.store.dispatch(new DocumentsCreateSubcollection(this.collectionID, text.trim()));
         }
       });
   }
@@ -101,7 +101,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
     this.dialogsService.showConfirmation('Delete subcollection?', 'This action will delete subcollection and cannot be undone')
       .subscribe((isConfirmed) => {
         if (isConfirmed) {
-          this.store.dispatch(new DeleteSubcollection(id));
+          this.store.dispatch(new DocumentsDeleteSubcollection(id));
         }
       });
   }
@@ -133,9 +133,9 @@ export class DocumentsComponent implements OnInit, OnDestroy {
       this.dialogsService.showOptions('Move documents to collection', options, 'New subcollection').subscribe(result => {
         if (result) {
           if (!result.id) {
-            this.store.dispatch(new MoveDocumentsToNewSubcollection(this.collection.id, this.selectedDocumentsIds, result.name));
+            this.store.dispatch(new DocumentsMoveDocumentsToNewSubcollection(this.collection.id, this.selectedDocumentsIds, result.name));
           } else {
-            this.store.dispatch(new MoveDocumentsToSubcollection(this.collection.id, this.selectedDocumentsIds, +result.id));
+            this.store.dispatch(new DocumentsMoveDocumentsToSubcollection(this.collection.id, this.selectedDocumentsIds, +result.id));
           }
         }
       });

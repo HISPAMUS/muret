@@ -14,7 +14,7 @@ import java.util.Comparator;
  * @author drizo
  */
 @Entity
-public class Symbol extends Auditable implements IAssignableToPart{
+public class Symbol extends Auditable implements IAssignableToPart, IDelimitedWithBoundingBox{
     private static Integer getMiddleX(Symbol symbol) {
         if (symbol.getApproximateX() != null) {
             return symbol.getApproximateX();

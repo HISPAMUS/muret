@@ -1,7 +1,6 @@
 import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {GetImageProjection} from '../../../document-analysis/store/actions/document-analysis.actions';
-import {ActivateLink} from '../../../../layout/store/actions/breadcrumbs.actions';
 import {Store} from '@ngrx/store';
 import {Subscription, Observable} from 'rxjs';
 import {Region} from '../../../../core/model/entities/region';
@@ -44,7 +43,7 @@ import {
 import {ModalOptions} from '../../../../dialogs/options-dialog/options-dialog.component';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
-import { LinkType } from 'src/app/layout/components/breadcrumb/breadcrumbType';
+import { LinkType } from 'src/app/layout/components/breadcrumbs/breadcrumbType';
 import {SVGSet} from "../../../agnostic-representation/model/svgset";
 import {selectCoreSVGAgnosticOrSemanticSymbolSet} from "../../../../core/store/selectors/core.selector";
 import {CoreGetSVGSet} from "../../../../core/store/actions/fonts.actions";
@@ -77,7 +76,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   documentIDSubscription: Subscription;
 
   agnosticIDs: number[];
-  fileNameSubscription : Subscription;
+  //fileNameSubscription : Subscription;
   agnosticIDMap: Map<number, number>; // key = agnostic ID, value = usable ID (the one drawn in the agnostic view to identify the object visually)
   agnosticGridRow: Map<string, number>; // key = agnostic ID, value = row in the grid
   columnDefs = [
@@ -140,12 +139,12 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     this.semanticLabel = "Convert from agnostic";
     this.waitingForSemantic = false;
 
-    this.fileNameSubscription = this.store.select(selectFileName).subscribe(name => {
+    /*this.fileNameSubscription = this.store.select(selectFileName).subscribe(name => {
       if(name!=null)
         setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
           this.store.dispatch(new ActivateLink(LinkType.File ,{title: name + ' /Semantic', routerLink: 'semanticrepresentation/' + this.imageID}));
         });
-    })
+    })*/
 
     // this.mynumber = 189;
     this.route.paramMap.subscribe((params: ParamMap) => {
@@ -220,7 +219,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     this.documentIDSubscription.unsubscribe();
     this.useOfPartsSubscription.unsubscribe();
     this.serverErrorSubscription.unsubscribe();
-    this.fileNameSubscription.unsubscribe();
+    //this.fileNameSubscription.unsubscribe();
     // this.usesOfPartsSubscription.unsubscribe();
     this.documentTypeSubscription.unsubscribe();
   }

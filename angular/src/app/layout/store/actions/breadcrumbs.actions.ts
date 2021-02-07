@@ -1,21 +1,42 @@
 import {Action} from '@ngrx/store';
-import {BreadcrumbLink} from '../../model/breadcrumb-link';
-import { LinkType } from '../../components/breadcrumb/breadcrumbType';
+import {Breadcrumb} from "../../../core/model/restapi/breadcrumb";
+import {APIRestServerError} from "../../../core/model/restapi/apirest-server-error";
+import {DocumentsActionTypes} from "../../../features/documents/store/actions/documents.actions";
 
 export enum BreadcrumbsActionTypes {
-  ActivateLink = '[Breadcrumbs] Activate link',
-  ClearLinks = '[Breadcrumbs] Clear links'
+  BreadcrumbsUpdateCollection = '[Breadcrumbs] Update collection',
+  BreadcrumbsUpdateCollectionSuccess = '[Breadcrumbs] Update collection success',
+  BreadcrumbsUpdateDocument = '[Breadcrumbs] Update document',
+  BreadcrumbsUpdateDocumentSuccess = '[Breadcrumbs] Update document success',
+  BreadcrumbsServerError = '[Breadcrumbs] Server error',
 }
 
-export class ActivateLink implements Action {
-  public readonly type = BreadcrumbsActionTypes.ActivateLink;
-  constructor(public linkType: LinkType, public link: BreadcrumbLink) {}
+export class BreadcrumbsUpdateCollection implements Action {
+  public readonly type = BreadcrumbsActionTypes.BreadcrumbsUpdateCollection;
+  constructor(public collectionID: number) {}
 }
 
-export class ClearLinks implements Action {
-  public readonly type = BreadcrumbsActionTypes.ClearLinks;
-  constructor() {}
+export class BreadcrumbsUpdateCollectionSuccess implements Action {
+  public readonly type = BreadcrumbsActionTypes.BreadcrumbsUpdateCollectionSuccess;
+  constructor(public breadcrumbs: Breadcrumb[]) {}
+}
+
+
+export class BreadcrumbsUpdateDocument implements Action {
+  public readonly type = BreadcrumbsActionTypes.BreadcrumbsUpdateDocument;
+  constructor(public documentID: number) {}
+}
+
+export class BreadcrumbsUpdateDocumentSuccess implements Action {
+  public readonly type = BreadcrumbsActionTypes.BreadcrumbsUpdateDocumentSuccess;
+  constructor(public breadcrumbs: Breadcrumb[]) {}
+}
+
+export class BreadcrumbsServerError implements Action {
+  public readonly type = BreadcrumbsActionTypes.BreadcrumbsServerError;
+  constructor(public serverError: APIRestServerError) {}
 }
 
 export type BreadcrumbsActions =
-  ActivateLink | ClearLinks;
+  BreadcrumbsUpdateCollection | BreadcrumbsUpdateDocument | BreadcrumbsServerError |
+  BreadcrumbsUpdateCollectionSuccess | BreadcrumbsUpdateDocumentSuccess;

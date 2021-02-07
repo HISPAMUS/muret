@@ -28,12 +28,11 @@ import {
   selectDocumentAnalysisClassifierModels, selectDocumentAnalysisServerError
 } from '../../store/selectors/document-analysis.selector';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
-import {ActivateLink} from '../../../../layout/store/actions/breadcrumbs.actions';
 import {NgbModal, NgbTooltipConfig} from '@ng-bootstrap/ng-bootstrap';
 import {Part} from '../../../../core/model/entities/part';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
-import { LinkType } from 'src/app/layout/components/breadcrumb/breadcrumbType';
+import { LinkType } from 'src/app/layout/components/breadcrumbs/breadcrumbType';
 
 @Component({
   selector: 'app-document-analysis',
@@ -49,7 +48,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
 
   imagePart$: Observable<Part>;
   documentAnalysisModels$: Observable<ClassifierModel[]>;
-  filenameSubscription: Subscription;
+  //filenameSubscription: Subscription;
   pagesSubscription: Subscription;
   regionTypesSubscription: Subscription;
   imagewidthSubscription: Subscription;
@@ -107,13 +106,13 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     });
 
     this.filename$ = store.select(selectFileName);
-    this.filenameSubscription = this.filename$.subscribe(name =>
+    /*this.filenameSubscription = this.filename$.subscribe(name =>
       {
         if(name != null)
         setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
           this.store.dispatch(new ActivateLink(LinkType.File, {title: name + ' / Document analysis', routerLink: 'documentanalysis/' + this.imageID}));
         });
-      })
+      })*/
     this.mode = 'eIdle';
     this.selectedRegionTypeID = 'page';
     this.regionTypeFilterOut = new Set<string>();
@@ -174,7 +173,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     this.pagesSubscription.unsubscribe();
     this.regionTypesSubscription.unsubscribe();
     this.serverErrorSubscription.unsubscribe();
-    this.filenameSubscription.unsubscribe();
+   // this.filenameSubscription.unsubscribe();
   }
 
   zoomIn() {

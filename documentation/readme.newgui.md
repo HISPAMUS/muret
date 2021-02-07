@@ -92,6 +92,17 @@ The `RouterOutlet` renders the component selected by the active routing module, 
 The `AvatarComponent` displays the current logged user information. 
 `ServerStateComponent` shows server-side information state.
 
+### Breadcrumbs store component
+It only contains information about the breadcrumbs.
+
+| **Action** | **`BreadcrumbsService` method** | **API Rest method** | **`BreadcrumbsState` properties on succes** | **Properties on failure** | 
+| --- | ----------- | ----------- | ----------- | ----- | 
+| `BreadcrumbsUpdateCollection(collectionID: number)` | `getCollectionBreadcrumbs$(collectionID)` | `/breadcrumbs/collection` | `breadcrumbs` | `serverError`| 
+| `BreadcrumbsUpdateDocument(documentID: number)` | `getDocumentBreadcrumbs$(documentID)` | `/breadcrumbs/document` | `breadcrumbs` | `serverError`| 
+
+
+![Home store component](puml/angular/home_store_component.svg)
+
 ## auth.LogIn Component
 As described in section [Routing and permissions](#routing-and-permissions), when a user tries to access any page and has not logged in yet, he/she is forwared to the `LoginComponent` by the `AuthGuard`.
 
@@ -105,8 +116,8 @@ The last docuemnts are used to show the user the last documents opened by him/he
 
 | **Action** | **`HomeService` method** | **API Rest method** | **`HomeState` properties on succes** | **Properties on failure** | 
 | --- | ----------- | ----------- | ----------- | ----- | 
-| `GetLastDocuments(userID: number, count: number)` | `getUserLastDocuments$(userID: number, count: number)` | `/lastdocument/user` | `lastDocuments` | `errorMessage`| 
-| `UpdateLastDocuments(userID: number, documentID: number)` | `updateUserLastDocument$(userID: number, documentID: number)` | `/lastdocument/update` | `lastDocuments` | `errorMessage`| 
+| `HomeGetLastDocuments(userID: number, count: number)` | `getUserLastDocuments$(userID: number, count: number)` | `/lastdocument/user` | `lastDocuments` | `errorMessage`| 
+| `HomeUpdateLastDocuments(userID: number, documentID: number)` | `updateUserLastDocument$(userID: number, documentID: number)` | `/lastdocument/update` | `lastDocuments` | `errorMessage`| 
 
 
 ![Home store component](puml/angular/home_store_component.svg)
@@ -118,11 +129,11 @@ It shows the collections, subcollections and their documents.
 
 | **Action** | **`DocumentsService` method** | **API Rest method** | **`DocumentsState` properties on succes** | **Properties on failure** | 
 | --- | ----------- | ----------- | ----------- | ----- | 
-| `GetCollection(collectionID: number)` | `getCollection$(collectionID: number)` | `/collections/collection/excerpt` | `collection` | `apiRestServerError`| 
-| `CreateSubcollection(parentID: number, name: string)` | `createSubcollection$(parentId: number, subcollectionName: string)` | `/collections/create` | `subcollections` | `apiRestServerError`| 
-| `DeleteSubcollection(id: number)` | `deleteSubcollection$(id: number)` | `/collections/delete` | `subcollections` | `apiRestServerError`| 
-| `MoveDocumentsToSubcollection(currentCollectionID: number, documentIDs: number[], subcollectionID: number)` | `moveDocumentsToSubcollection$(currentCollectionID: number, documentIDs: number[], subcollectionID: number)` | `/collections/moveDocumentToSubcollection` | `changedCollectionID` | `apiRestServerError`| 
-| `MoveDocumentsToNewSubcollection(currentCollectionID: number, documentIDs: number[], subCollectionName: string)` | `moveDocumentsToNewSubcollection$(currentCollectionID: number, documentIDs: number[], newCollectionName: string)` | `/collections/moveDocumentToNewSubcollection` | `changedCollectionID` | `apiRestServerError`| 
+| `DocumentsGetCollection(collectionID: number)` | `getCollection$(collectionID: number)` | `/collections/collection/excerpt` | `collection` | `apiRestServerError`| 
+| `DocumentsCreateSubcollection(parentID: number, name: string)` | `createSubcollection$(parentId: number, subcollectionName: string)` | `/collections/create` | `subcollections` | `apiRestServerError`| 
+| `DocumentsDeleteSubcollection(id: number)` | `deleteSubcollection$(id: number)` | `/collections/delete` | `subcollections` | `apiRestServerError`| 
+| `DocumentsMoveDocumentsToSubcollection(currentCollectionID: number, documentIDs: number[], subcollectionID: number)` | `moveDocumentsToSubcollection$(currentCollectionID: number, documentIDs: number[], subcollectionID: number)` | `/collections/moveDocumentToSubcollection` | `changedCollectionID` | `apiRestServerError`| 
+| `DocumentsMoveDocumentsToNewSubcollection(currentCollectionID: number, documentIDs: number[], subCollectionName: string)` | `moveDocumentsToNewSubcollection$(currentCollectionID: number, documentIDs: number[], newCollectionName: string)` | `/collections/moveDocumentToNewSubcollection` | `changedCollectionID` | `apiRestServerError`| 
 
 
 ![Documents store component](puml/angular/documents_store_component.svg)
@@ -139,15 +150,15 @@ It shows both subcollections and leaf documents.
 
 **TO-DO StateComponent**
 
-### Home store component
-The last docuemnts are used to show the user the last documents opened by him/her. When a document is opened in the [Documents Component](#documents-component) this list is updated.
 
-| **Action** | **`HomeService` method** | **API Rest method** | **`HomeState` properties on succes** | **Properties on failure** | 
+### Document store component
+It shows the opened document.
+
+
+| **Action** | **`DocumentService` method** | **API Rest method** | **`Documenttate` properties on succes** | **Properties on failure** | 
 | --- | ----------- | ----------- | ----------- | ----- | 
 | `GetLastDocuments(userID: number, count: number)` | `getUserLastDocuments$(userID: number, count: number)` | `/lastdocument/user` | `lastDocuments` | `errorMessage`| 
 
-| `UpdateLastDocuments(userID: number, documentID: number)` | `updateUserLastDocument$(userID: number, documentID: number)` | `/lastdocument/update` | `lastDocuments` | `errorMessage`| 
-|  |  |  |  |  | 
 
-![Home store component](puml/angular/home_store_component.svg)
+![Document store component](puml/angular/document_store_component.svg)
 

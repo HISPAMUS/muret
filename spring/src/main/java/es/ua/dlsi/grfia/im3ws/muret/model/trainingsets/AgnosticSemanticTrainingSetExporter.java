@@ -135,9 +135,16 @@ public class AgnosticSemanticTrainingSetExporter extends AbstractTrainingSetExpo
     }
 
     public void exportPage(JSONArray jsonSystems, Page page) throws IM3Exception {
+
+
         AgnosticToken lastAgnosticClef = null; // used for the agnostic format including the context
         for (Region region: page.getSortedStaves()) {
             if (region.getSymbols() != null && !region.getSymbols().isEmpty() && region.getSemanticEncoding() != null) {
+
+                /*if (page.getImage().getFilename().equals("[C14-15] 10.jpg")) {
+                    System.out.println("Region Y: " + region.getBoundingBox().getFromY());
+                }*/
+
                 JSONObject systemJSON = new JSONObject();
 
                 ArrayList<Symbol> symbolArrayList = new ArrayList<>(region.getSymbols());

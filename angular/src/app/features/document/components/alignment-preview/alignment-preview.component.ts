@@ -3,7 +3,7 @@ import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {DocumentState} from '../../store/state/document.state';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
-import {GetAlignmentPreview, ResetDocumentServerError} from '../../store/actions/document.actions';
+import {DocumentGetAlignmentPreview, DocumentResetServerError} from '../../store/actions/document.actions';
 import {Subscription} from 'rxjs';
 import {
   AlignmenPreviewTimeSignature,
@@ -66,7 +66,7 @@ export class AlignmentPreviewComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.documentID = +this.route.snapshot.paramMap.get('id'); // + converts the string to number
-      this.store.dispatch(new GetAlignmentPreview(this.documentID));
+      this.store.dispatch(new DocumentGetAlignmentPreview(this.documentID));
     });
 
     this.alignmentPreviewSubscription = this.store.select(selectAlignmentPreview).subscribe(next => {
@@ -77,7 +77,7 @@ export class AlignmentPreviewComponent implements OnInit, OnDestroy {
     this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
       if (next) {
         this.showErrorService.warning(next);
-        this.store.dispatch(new ResetDocumentServerError());
+        this.store.dispatch(new DocumentResetServerError());
       }
     });
   }

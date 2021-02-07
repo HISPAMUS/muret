@@ -3,15 +3,19 @@ import {Observable, Subscription} from 'rxjs';
 import {User} from '../../../../core/model/entities/user';
 import {Store} from '@ngrx/store';
 import {selectCoreLoggedInUser} from '../../../../core/store/selectors/core.selector';
-import {ActivateLink} from '../../../../layout/store/actions/breadcrumbs.actions';
-import {selectAuthState, selectAuthUserID} from '../../../../auth/store/selectors/auth.selector';
+import {selectAuthUserID} from '../../../../auth/store/selectors/auth.selector';
 import {CoreGetUser} from '../../../../core/store/actions/user.actions';
 import {Document} from '../../../../core/model/entities/document';
 import {Permissions} from '../../../../core/model/entities/permissions';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
 import {selectDocumentsServerError} from '../../store/selectors/documents.selector';
-import {ResetDocumentsServerError} from '../../store/actions/documents.actions';
-import { LinkType } from 'src/app/layout/components/breadcrumb/breadcrumbType';
+import {DocumentsResetDocumentsServerError} from '../../store/actions/documents.actions';
+import { LinkType } from 'src/app/layout/components/breadcrumbs/breadcrumbType';
+import {ActivatedRoute, ParamMap} from "@angular/router";
+import {
+  BreadcrumbsUpdateCollection,
+  BreadcrumbsUpdateDocument
+} from "../../../../layout/store/actions/breadcrumbs.actions";
 
 @Component({
   selector: 'app-collections',
@@ -24,13 +28,18 @@ export class CollectionsComponent implements OnInit, OnDestroy {
   user$: Observable<User>;
   private serverErrorSubscription: Subscription;
 
-  constructor(private store: Store<any>, private showErrorService: ShowErrorService) {
+  constructor(private route: ActivatedRoute, private store: Store<any>, private showErrorService: ShowErrorService) {
     this.user$ = this.store.select(selectCoreLoggedInUser);
-
-    this.store.dispatch(new ActivateLink(LinkType.Collection, {title: 'Collections', routerLink: 'collections'}));
   }
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      if (this.route.snapshot.paramMap.get('id')) {
+        const collectionID = +this.route.snapshot.paramMap.get('id'); // + converts the string to number
+        this.store.dispatch(new BreadcrumbsUpdateCollection(collectionID));
+      }
+    });
+
     /*this.authSubscription = this.store.select(selectAuthState).subscribe(next => {
       this.store.dispatch(new CoreGetUser(next.userID));
     });*/
@@ -41,7 +50,7 @@ export class CollectionsComponent implements OnInit, OnDestroy {
     this.serverErrorSubscription = this.store.select(selectDocumentsServerError).subscribe(next => {
       if (next) {
         this.showErrorService.warning(next);
-        this.store.dispatch(new ResetDocumentsServerError());
+        this.store.dispatch(new DocumentsResetDocumentsServerError());
       }
     });
 

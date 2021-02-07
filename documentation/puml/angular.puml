@@ -85,44 +85,76 @@
 ```puml
 @startuml home_store_component
     [Home Store]
-    GetLastDocuments -- [Home Store]
-    UpdateLastDocuments -- [Home Store]
+    HomeGetLastDocuments -- [Home Store]
+    HomeUpdateLastDocuments -- [Home Store]
     [Home Store] -- selectHomeLastDocuments
 
-    [GetLastDocuments] <.. [HomeComponent]
-    [UpdateLastDocuments] <.. [DocumentsComponent]
+    [HomeComponent] ..> HomeGetLastDocuments
+    [DocumentsComponent] ..> HomeUpdateLastDocuments
 
     selectHomeLastDocuments <.. [HomeComponent]
 @enduml
 ```
 
+' -----------------------------------------------------------------------------------------------------------
+```puml
+@startuml breadcrumbs_store_component
+    [Breadcrumbs Store]
+    BreadcrumbsUpdateDocument -- [Breadcrumbs Store]
+    BreadcrumbsUpdateDocumentBreadcrumbs -- [Breadcrumbs Store]
+    [Breadcrumbs Store] -- selectBreadcrumbs
+
+    [DocumentComponent] ..> BreadcrumbsUpdateDocument
+    [CollectionsComponent] ..> BreadcrumbsUpdateCollection
+    [DocumentsComponent] ..> BreadcrumbsUpdateCollection
+
+    selectBreadcrumbs <.. [BreadcrumbsComponent]
+@enduml
+```
 
 ' -----------------------------------------------------------------------------------------------------------
 ```puml
 @startuml documents_store_component
     [Documents Store]
-    GetCollection -- [Documents Store]
-    CreateSubcollection -- [Documents Store]
-    DeleteSubcollection -- [Documents Store]
-    MoveDocumentsToSubcollection -- [Documents Store]
-    MoveDocumentsToNewSubcollection -- [Documents Store]
-    ResetDocumentsServerError -- [Documents Store]
+    DocumentsGetCollection -- [Documents Store]
+    DocumentsCreateSubcollection -- [Documents Store]
+    DocumentsDeleteSubcollection -- [Documents Store]
+    DocumentsMoveDocumentsToSubcollection -- [Documents Store]
+    DocumentsMoveDocumentsToNewSubcollection -- [Documents Store]
+    DocumentsResetDocumentsServerError -- [Documents Store]
 
     [Documents Store] -- selectDocumentsCollection
     [Documents Store] -- selectDocumentsChangedCollectionID
     [Documents Store] -- selectDocumentsServerError
 
-    [ResetDocumentsServerError] <.. [CollectionsComponent]
-    [GetCollection] <.. [DocumentsComponent]
-    [CreateSubcollection] <.. [DocumentsComponent]
-    [DeleteSubcollection] <.. [DocumentsComponent]
-    [MoveDocumentsToSubcollection] <.. [DocumentsComponent]
-    [MoveDocumentsToNewSubcollection] <.. [DocumentsComponent]
+    [CollectionsComponent] ..> DocumentsResetDocumentsServerError
+    [DocumentsComponent] ..> DocumentsGetCollection
+    [DocumentsComponent] ..> DocumentsCreateSubcollection
+    [DocumentsComponent] ..> DocumentsDeleteSubcollection
+    [DocumentsComponent] ..> DocumentsMoveDocumentsToSubcollection
+    [DocumentsComponent] ..> DocumentsMoveDocumentsToNewSubcollection
 
-    [selectDocumentsCollection] <.. [DocumentsComponent]
-    [selectDocumentsChangedCollectionID] <.. [DocumentsComponent]
+    selectDocumentsCollection <.. [DocumentsComponent]
+    selectDocumentsChangedCollectionID <.. [DocumentsComponent]
 @enduml
 ```
+
+
+
+' -----------------------------------------------------------------------------------------------------------
+```puml
+@startuml document_store_component
+    [Document Store]
+    ResetDocumentServerError -- [Document Store]
+
+    [Document Store] -- selectDocumentTODO
+
+    [TODOComponent] ..> TODOAction
+
+    selectDocumentTODO <.. [TODOComponent]
+@enduml
+```
+
 
 ' -----------------------------------------------------------------------------------------------------------
 ```puml

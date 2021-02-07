@@ -144,7 +144,7 @@ public class DocumentController {
 
         //TODO Atómico
         //TODO Ordenación
-        Image image = new Image(fileName, null, fullImage.getWidth(), fullImage.getHeight(), document.get(), null, null);
+        Image image = new Image(fileName, null, fullImage.getWidth(), fullImage.getHeight(), document.get(), null, null, null);
         image.setCreatedBy(AuditorAwareImpl.getCurrentUser());
         imageRepository.save(image);
     }

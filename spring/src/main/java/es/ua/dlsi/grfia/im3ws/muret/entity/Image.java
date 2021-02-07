@@ -51,10 +51,16 @@ public class Image extends Auditable implements IAssignableToPart {
     @JoinColumn(name="part_id")
     private Part part;
 
+    @JsonBackReference (value="section")
+    @ManyToOne(fetch=FetchType.LAZY)
+    //@JoinColumn(name="document_id", referencedColumnName="id")
+    @JoinColumn(name="section_id", nullable = true)
+    private Section section;
+
     public Image() {
     }
 
-    public Image(String path, String comments, Integer width, Integer height, Document document, State state, Part part) {
+    public Image(String path, String comments, Integer width, Integer height, Document document, State state, Part part, Section section) {
         this.filename = path;
         this.document = document;
         this.width = width;
@@ -62,6 +68,7 @@ public class Image extends Auditable implements IAssignableToPart {
         this.comments = comments;
         this.state = state;
         this.part = part;
+        this.section = section;
     }
     public Long getId() {
         return id;
@@ -117,6 +124,14 @@ public class Image extends Auditable implements IAssignableToPart {
 
     public void setHeight(Integer height) {
         this.height = height;
+    }
+
+    public Section getSection() {
+        return section;
+    }
+
+    public void setSection(Section section) {
+        this.section = section;
     }
 
     @Override

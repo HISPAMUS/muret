@@ -1,0 +1,7 @@
+.breadcrumb {
+  background-color: transparent;
+}
+
+#breadcrumb .nav-link {
+  color: #D91E63;
+}

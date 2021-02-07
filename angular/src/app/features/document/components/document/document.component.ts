@@ -12,11 +12,10 @@ import {
   selectDocumentAPIRestErrorSelector
 } from '../../store/selectors/document.selector';
 import {
-  GetImages,
-  GetDocument,
-  GetDocumentStatistics, ResetDocumentServerError
+  DocumentGetImages,
+  DocumentGetDocument,
+  DocumentGetDocumentStatistics, DocumentResetServerError
 } from '../../store/actions/document.actions';
-import {ActivateLink} from '../../../../layout/store/actions/breadcrumbs.actions';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {DocumentStatistics} from '../../../../core/model/restapi/document-statistics';
 import {GetUsesOfParts} from '../../../parts/store/actions/parts.actions';
@@ -25,7 +24,8 @@ import {UsesOfAllParts} from '../../../../core/model/restapi/uses-of-all-parts';
 import { AgnosticRepresentationState } from 'src/app/features/agnostic-representation/store/state/agnostic-representation.state';
 import { ResetSelectedRegion } from 'src/app/features/agnostic-representation/store/actions/agnostic-representation.actions';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
-import { LinkType } from 'src/app/layout/components/breadcrumb/breadcrumbType';
+import { LinkType } from 'src/app/layout/components/breadcrumbs/breadcrumbType';
+import {BreadcrumbsUpdateDocument} from "../../../../layout/store/actions/breadcrumbs.actions";
 
 @Component({
   selector: 'app-document',
@@ -33,7 +33,7 @@ import { LinkType } from 'src/app/layout/components/breadcrumb/breadcrumbType';
   styleUrls: ['./document.component.css'],
 })
 export class DocumentComponent implements OnInit, OnDestroy {
-  documentSubscription : Subscription;
+  //documentSubscription : Subscription;
   document$: Observable<Document>;
   images$: Observable<Image[]>;
   statistics$: Observable<DocumentStatistics>;
@@ -45,16 +45,6 @@ export class DocumentComponent implements OnInit, OnDestroy {
               private router: Router,
               private dialogsService: DialogsService, private showErrorService: ShowErrorService) {
     this.document$ = this.store.select(selectDocument)
-    this.documentSubscription = this.document$.subscribe(doc => {
-      setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
-        if (doc) {
-          this.store.dispatch(new ActivateLink(LinkType.Document, {
-            title: doc.name,
-            routerLink: 'document/' + this.documentID
-          }));
-        }
-      });
-    })
     this.images$ = this.store.select(selectImages);
     this.statistics$ = this.store.select(selectDocumentStatistics);
     this.usesOfParts$ = this.store.select(selectUsesOfParts);
@@ -63,17 +53,18 @@ export class DocumentComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.documentID = +this.route.snapshot.paramMap.get('id'); // + converts the string to number
-      this.store.dispatch(new GetDocument(this.documentID));
+      this.store.dispatch(new DocumentGetDocument(this.documentID));
       this.store.dispatch(new GetUsesOfParts(this.documentID));
-      this.store.dispatch(new GetImages(this.documentID));
-      this.store.dispatch(new GetDocumentStatistics(this.documentID));
+      this.store.dispatch(new DocumentGetImages(this.documentID));
+      this.store.dispatch(new DocumentGetDocumentStatistics(this.documentID));
+      this.store.dispatch(new BreadcrumbsUpdateDocument(this.documentID));
 
     });
 
     this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
       if (next) {
         this.showErrorService.warning(next);
-        this.store.dispatch(new ResetDocumentServerError());
+        this.store.dispatch(new DocumentResetServerError());
       }
     });
 
@@ -82,7 +73,6 @@ export class DocumentComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
    this.agnosticStore.dispatch(new ResetSelectedRegion());
    this.serverErrorSubscription.unsubscribe();
-   this.documentSubscription.unsubscribe();
   }
 
   trackByImageFn(index, item: Image) {

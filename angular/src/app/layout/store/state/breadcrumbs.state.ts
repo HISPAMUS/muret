@@ -1,13 +1,14 @@
-import {BreadcrumbLink} from '../../model/breadcrumb-link';
+import {Breadcrumb} from "../../../core/model/restapi/breadcrumb";
+import {APIRestServerError} from "../../../core/model/restapi/apirest-server-error";
 
 export interface BreadcrumbsState {
-  links: BreadcrumbLink[];
-  init: boolean;
+  breadcrumbs: Breadcrumb[];
+  serverError: APIRestServerError;
 }
 
 export const initialBreadcrumbsState: BreadcrumbsState = {
-  links: [],
-  init: false
+  breadcrumbs: [],
+  serverError: null
 };
 
 export function getInitialState(): BreadcrumbsState {

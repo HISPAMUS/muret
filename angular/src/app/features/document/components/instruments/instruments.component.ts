@@ -4,7 +4,7 @@ import {Store} from '@ngrx/store';
 import {DocumentState} from '../../store/state/document.state';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {selectDocument, selectDocumentAPIRestErrorSelector} from '../../store/selectors/document.selector';
-import {GetDocument, ResetDocumentServerError} from '../../store/actions/document.actions';
+import {DocumentGetDocument, DocumentResetServerError} from '../../store/actions/document.actions';
 import {Observable, Subscription} from 'rxjs';
 import {Document} from '../../../../core/model/entities/document';
 import {PartUsedIn, UsesOfAllParts} from '../../../../core/model/restapi/uses-of-all-parts';
@@ -34,14 +34,14 @@ export class InstrumentsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.documentID = +this.route.snapshot.paramMap.get('id'); // + converts the string to number
-      // this.store.dispatch(new GetDocument(this.documentID));
+      // this.store.dispatch(new DocumentGetDocument(this.documentID));
       // The use of parts and document should already be loaded at document component
       // this.store.dispatch(new GetUsesOfParts(this.documentID));
     });
     this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
       if (next) {
         this.showErrorService.warning(next);
-        this.store.dispatch(new ResetDocumentServerError());
+        this.store.dispatch(new DocumentResetServerError());
       }
     });
   }

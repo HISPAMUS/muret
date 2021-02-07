@@ -16,23 +16,23 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
         apiRestServerError: action.error
       };
     }
-    case DocumentActionTypes.GetDocumentSuccess: {
+    case DocumentActionTypes.DocumentGetDocumentSuccess: {
       return {
         ...state,
         document: action.document,
         apiRestServerError: null
       };
     }
-    case DocumentActionTypes.GetImagesSuccess: {
+    case DocumentActionTypes.DocumentGetImagesSuccess: {
       return {
         ...state,
         images: action.images,
         apiRestServerError: null
       };
     }
-    case DocumentActionTypes.ExportMusicXML:
-    case DocumentActionTypes.ExportMensurstrich:
-    case DocumentActionTypes.ExportMEI: {
+    case DocumentActionTypes.DocumentExportMusicXML:
+    case DocumentActionTypes.DocumentExportMensurstrich:
+    case DocumentActionTypes.DocumentExportMEI: {
       return {
         ...state,
         exportedFile: null,
@@ -40,7 +40,7 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
         apiRestServerError: null
       };
     }
-    case DocumentActionTypes.ExportMEIPartsFacsimileSuccess: {
+    case DocumentActionTypes.DocumentExportMEIPartsFacsimileSuccess: {
       return {
         ...state,
         exportedFile: {
@@ -51,7 +51,7 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
         apiRestServerError: null
       };
     }
-    case DocumentActionTypes.ExportMEISuccess: {
+    case DocumentActionTypes.DocumentExportMEISuccess: {
       return {
         ...state,
         exportedFile: {
@@ -63,7 +63,7 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
         apiRestServerError: null
       };
     }
-    case DocumentActionTypes.ExportMusicXMLSuccess: {
+    case DocumentActionTypes.DocumentExportMusicXMLSuccess: {
       return {
         ...state,
         exportedFile: {
@@ -74,7 +74,7 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
         apiRestServerError: null
       };
     }
-    case DocumentActionTypes.ExportMensurstrichSuccess: {
+    case DocumentActionTypes.DocumentExportMensurstrichSuccess: {
       return {
         ...state,
         exportedFile: {
@@ -85,7 +85,7 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
         apiRestServerError: null
       };
     }
-    case DocumentActionTypes.GetDocumentStatisticsSuccess: {
+    case DocumentActionTypes.DocumentGetDocumentStatisticsSuccess: {
       return {
         ...state,
         statistics: action.documentStatistics,
@@ -98,7 +98,7 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
         preflightCheckResults: action.preflightCheckResult
       };
     }*/
-    case DocumentActionTypes.GetAlignmentPreviewSuccess: {
+    case DocumentActionTypes.DocumentGetAlignmentPreviewSuccess: {
       return {
         ...state,
         alignmentPreview: action.alignmentPreview,

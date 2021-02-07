@@ -9,27 +9,27 @@ import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-
 export enum DocumentActionTypes {
   ResetDocumentServerError = '[Document] Reset Server error',
   DocumentServerError = '[Document] Server error',
-  GetDocument = '[Document] Get document',
-  GetDocumentSuccess = '[Document] Get document success',
-  GetImages = '[Document] Get images',
-  GetImagesSuccess = '[Document] Get images success',
-  ExportMEI = '[Document] Export MEI',
-  ExportMEISuccess = '[Document] Export MEI success',
-  ExportMEIPartsFacsimile = '[Document] Export MEI parts and facsimile',
-  ExportMEIPartsFacsimileSuccess = '[Document] Export MEI parts and facsimile success',
-  ExportMensurstrich = '[Document] Export mensurstrich',
-  ExportMensurstrichSuccess = '[Document] Export mensurstrich success',
-  ExportMusicXML = '[Document] Export MusicXML',
-  ExportMusicXMLSuccess = '[Document] Export MusicXML success',
-  GetDocumentStatistics = '[Document] Get document statistics',
-  GetDocumentStatisticsSuccess = '[Document] Get document statistics success',
-  GetAlignmentPreview = '[Document] Get alignment preview',
-  GetAlignmentPreviewSuccess = '[Document] Get alignment preview success',
-  GetCroppedImage = '[Document] Get cropped image',
-  GetCroppedImageSuccess = '[Document] Get cropped image success',
+  DocumentGetDocument = '[Document] Get document',
+  DocumentGetDocumentSuccess = '[Document] Get document success',
+  DocumentGetImages = '[Document] Get images',
+  DocumentGetImagesSuccess = '[Document] Get images success',
+  DocumentExportMEI = '[Document] Export MEI',
+  DocumentExportMEISuccess = '[Document] Export MEI success',
+  DocumentExportMEIPartsFacsimile = '[Document] Export MEI parts and facsimile',
+  DocumentExportMEIPartsFacsimileSuccess = '[Document] Export MEI parts and facsimile success',
+  DocumentExportMensurstrich = '[Document] Export mensurstrich',
+  DocumentExportMensurstrichSuccess = '[Document] Export mensurstrich success',
+  DocumentExportMusicXML = '[Document] Export MusicXML',
+  DocumentExportMusicXMLSuccess = '[Document] Export MusicXML success',
+  DocumentGetDocumentStatistics = '[Document] Get document statistics',
+  DocumentGetDocumentStatisticsSuccess = '[Document] Get document statistics success',
+  DocumentGetAlignmentPreview = '[Document] Get alignment preview',
+  DocumentGetAlignmentPreviewSuccess = '[Document] Get alignment preview success',
+  DocumentGetCroppedImage = '[Document] Get cropped image',
+  DocumentGetCroppedImageSuccess = '[Document] Get cropped image success',
 }
 
-export class ResetDocumentServerError implements Action {
+export class DocumentResetServerError implements Action {
   public readonly type = DocumentActionTypes.ResetDocumentServerError;
   constructor() {}
 }
@@ -42,73 +42,73 @@ export class DocumentServerError implements Action {
 
 
 
-export class GetDocument implements Action {
-  public readonly type = DocumentActionTypes.GetDocument;
+export class DocumentGetDocument implements Action {
+  public readonly type = DocumentActionTypes.DocumentGetDocument;
   constructor(public documentID: number) {}
 }
 
-export class GetDocumentSuccess implements Action {
-  public readonly type = DocumentActionTypes.GetDocumentSuccess;
+export class DocumentGetDocumentSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentGetDocumentSuccess;
   constructor(public document: Document) {}
 }
 
-export class GetImages implements Action {
-  public readonly type = DocumentActionTypes.GetImages;
+export class DocumentGetImages implements Action {
+  public readonly type = DocumentActionTypes.DocumentGetImages;
   constructor(public documentID: number) {}
 }
 
-export class GetImagesSuccess implements Action {
-  public readonly type = DocumentActionTypes.GetImagesSuccess;
+export class DocumentGetImagesSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentGetImagesSuccess;
   constructor(public images: Image[]) {}
 }
 
-export class ExportMEI implements Action {
-  public readonly type = DocumentActionTypes.ExportMEI;
+export class DocumentExportMEI implements Action {
+  public readonly type = DocumentActionTypes.DocumentExportMEI;
   constructor(public documentID: number, public partID: number, public selectedImages: Array<number>) {}
 }
 
-export class ExportMEISuccess implements Action {
-  public readonly type = DocumentActionTypes.ExportMEISuccess;
+export class DocumentExportMEISuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentExportMEISuccess;
   constructor(public mei: string) {}
 }
 
-export class ExportMEIPartsFacsimile implements Action {
-  public readonly type = DocumentActionTypes.ExportMEIPartsFacsimile;
+export class DocumentExportMEIPartsFacsimile implements Action {
+  public readonly type = DocumentActionTypes.DocumentExportMEIPartsFacsimile;
   constructor(public documentID: number, public selectedImages: Array<number>, public forMeasuringPolyphony: boolean) {}
 }
 
-export class ExportMEIPartsFacsimileSuccess implements Action {
-  public readonly type = DocumentActionTypes.ExportMEIPartsFacsimileSuccess;
+export class DocumentExportMEIPartsFacsimileSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentExportMEIPartsFacsimileSuccess;
   constructor(public mei: string) {}
 }
 
-export class ExportMensurstrich implements Action {
-  public readonly type = DocumentActionTypes.ExportMensurstrich;
+export class DocumentExportMensurstrich implements Action {
+  public readonly type = DocumentActionTypes.DocumentExportMensurstrich;
   constructor(public documentID: number, public selectedImages: Array<number>) {}
 }
 
-export class ExportMensurstrichSuccess implements Action {
-  public readonly type = DocumentActionTypes.ExportMensurstrichSuccess;
+export class DocumentExportMensurstrichSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentExportMensurstrichSuccess;
   constructor(public payload: Blob) {}
 }
 
-export class ExportMusicXML implements Action {
-  public readonly type = DocumentActionTypes.ExportMusicXML;
+export class DocumentExportMusicXML implements Action {
+  public readonly type = DocumentActionTypes.DocumentExportMusicXML;
   constructor(public documentID: number, public selectedImages: Array<number>) {}
 }
 
-export class ExportMusicXMLSuccess implements Action {
-  public readonly type = DocumentActionTypes.ExportMusicXMLSuccess;
+export class DocumentExportMusicXMLSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentExportMusicXMLSuccess;
   constructor(public payload: Blob) {}
 }
 
-export class GetDocumentStatistics implements Action {
-  public readonly type = DocumentActionTypes.GetDocumentStatistics;
+export class DocumentGetDocumentStatistics implements Action {
+  public readonly type = DocumentActionTypes.DocumentGetDocumentStatistics;
   constructor(public documentID: number) {}
 }
 
-export class GetDocumentStatisticsSuccess implements Action {
-  public readonly type = DocumentActionTypes.GetDocumentStatisticsSuccess;
+export class DocumentGetDocumentStatisticsSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentGetDocumentStatisticsSuccess;
   constructor(public documentStatistics: DocumentStatistics) {}
 }
 
@@ -122,34 +122,34 @@ export class PreflightCheckSuccess implements Action {
   constructor(public preflightCheckResult: PreflightCheckResult) {}
 }*/
 
-export class GetAlignmentPreview implements Action {
-  public readonly type = DocumentActionTypes.GetAlignmentPreview;
+export class DocumentGetAlignmentPreview implements Action {
+  public readonly type = DocumentActionTypes.DocumentGetAlignmentPreview;
   constructor(public documentID: number) {}
 }
 
-export class GetAlignmentPreviewSuccess implements Action {
-  public readonly type = DocumentActionTypes.GetAlignmentPreviewSuccess;
+export class DocumentGetAlignmentPreviewSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentGetAlignmentPreviewSuccess;
   constructor(public alignmentPreview: AlignmentPreview) {}
 }
 
 
-export class GetCroppedImage implements Action {
-  public readonly type = DocumentActionTypes.GetCroppedImage;
+export class DocumentGetCroppedImage implements Action {
+  public readonly type = DocumentActionTypes.DocumentGetCroppedImage;
   constructor(public imageID: number, public boundingBox: BoundingBox) {}
 }
 
-export class GetCroppedImageSuccess implements Action {
-  public readonly type = DocumentActionTypes.GetCroppedImageSuccess;
+export class DocumentGetCroppedImageSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentGetCroppedImageSuccess;
   constructor(public url: string) {}
 }
 
 export type DocumentActions =
-  ResetDocumentServerError | DocumentServerError |
-  GetDocument | GetDocumentSuccess | GetImages | GetImagesSuccess | ExportMEI | ExportMEISuccess |
-  ExportMEIPartsFacsimile | ExportMEIPartsFacsimileSuccess |
-  ExportMensurstrich | ExportMensurstrichSuccess |
-  ExportMusicXML | ExportMusicXMLSuccess |
-  GetDocumentStatistics | GetDocumentStatisticsSuccess |
+  DocumentResetServerError | DocumentServerError |
+  DocumentGetDocument | DocumentGetDocumentSuccess | DocumentGetImages | DocumentGetImagesSuccess | DocumentExportMEI | DocumentExportMEISuccess |
+  DocumentExportMEIPartsFacsimile | DocumentExportMEIPartsFacsimileSuccess |
+  DocumentExportMensurstrich | DocumentExportMensurstrichSuccess |
+  DocumentExportMusicXML | DocumentExportMusicXMLSuccess |
+  DocumentGetDocumentStatistics | DocumentGetDocumentStatisticsSuccess |
   // PreflightCheck | PreflightCheckSuccess |
-  GetAlignmentPreview | GetAlignmentPreviewSuccess |
-  GetCroppedImage | GetCroppedImageSuccess;
+  DocumentGetAlignmentPreview | DocumentGetAlignmentPreviewSuccess |
+  DocumentGetCroppedImage | DocumentGetCroppedImageSuccess;

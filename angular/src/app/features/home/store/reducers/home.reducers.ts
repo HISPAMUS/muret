@@ -12,14 +12,14 @@ export function homeReducers(state = initialHomeState, action: HomeActions):
         apiRestServerError: action.serverError
       };
     }
-    case HomeActionTypes.GetLastDocumentsSuccess: {
+    case HomeActionTypes.HomeGetLastDocumentsSuccess: {
       return {
         ...state,
         lastDocuments: action.lastDocuments,
         apiRestServerError: null
       };
     }
-    case HomeActionTypes.UpdateLastDocumentsSuccess: {
+    case HomeActionTypes.HomeUpdateLastDocumentsSuccess: {
       const newState = {...state, apiRestServerError: null};
       if (action.lastDocument != null) { // if no error
         const documentsWithoutChangedOne: LastDocumentExtract[] =

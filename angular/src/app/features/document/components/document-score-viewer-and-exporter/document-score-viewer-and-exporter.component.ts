@@ -3,11 +3,11 @@ import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {DocumentState} from '../../store/state/document.state';
 import {
-  ExportMEI,
-  ExportMEIPartsFacsimile,
-  ExportMensurstrich,
-  ExportMusicXML,
-  GetDocument, GetImages, ResetDocumentServerError,
+  DocumentExportMEI,
+  DocumentExportMEIPartsFacsimile,
+  DocumentExportMensurstrich,
+  DocumentExportMusicXML,
+  DocumentGetDocument, DocumentGetImages, DocumentResetServerError,
 } from '../../store/actions/document.actions';
 import {
   selectDocument,
@@ -59,10 +59,10 @@ export class DocumentScoreViewerAndExporterComponent implements OnInit, OnDestro
   ngOnInit() {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.documentID = +this.route.snapshot.paramMap.get('id'); // + converts the string to number
-      this.store.dispatch(new GetDocument(this.documentID));
+      this.store.dispatch(new DocumentGetDocument(this.documentID));
 
       this.store.dispatch(new GetUsesOfParts(this.documentID));
-      this.store.dispatch(new GetImages(this.documentID));
+      this.store.dispatch(new DocumentGetImages(this.documentID));
 
       /// this.store.dispatch(new GetDocumentParts(this.documentID));
 
@@ -112,7 +112,7 @@ export class DocumentScoreViewerAndExporterComponent implements OnInit, OnDestro
       if (next) {
         this.exportingState.clear();
         this.showErrorService.warning(next);
-        this.store.dispatch(new ResetDocumentServerError());
+        this.store.dispatch(new DocumentResetServerError());
       }
     });
   }
@@ -149,28 +149,28 @@ export class DocumentScoreViewerAndExporterComponent implements OnInit, OnDestro
   exportMEI() {
     this.generatingMEIVisualization = false;
     this.exportingState.set(DocumentExportType.mei_score, true);
-    this.store.dispatch(new ExportMEI(this.documentID, null, this.getIDOfSelectedImages()));
+    this.store.dispatch(new DocumentExportMEI(this.documentID, null, this.getIDOfSelectedImages()));
   }
 
   visualizeMEI() {
     this.generatingMEIVisualization = true;
     this.exportingState.set(DocumentExportType.mei_score, true);
-    this.store.dispatch(new ExportMEI(this.documentID, null, this.getIDOfSelectedImages()));
+    this.store.dispatch(new DocumentExportMEI(this.documentID, null, this.getIDOfSelectedImages()));
   }
 
   exportPartsAndFacsimile(forMeasuringPolyphony: boolean) {
     this.exportingState.set(DocumentExportType.mei_parts_facsimile, true);
-    this.store.dispatch(new ExportMEIPartsFacsimile(this.documentID, this.getIDOfSelectedImages(), forMeasuringPolyphony));
+    this.store.dispatch(new DocumentExportMEIPartsFacsimile(this.documentID, this.getIDOfSelectedImages(), forMeasuringPolyphony));
   }
 
   exportFullMensurstrich() {
     this.exportingState.set(DocumentExportType.mensurstrich_svg, true);
-    this.store.dispatch(new ExportMensurstrich(this.documentID, this.getIDOfSelectedImages()));
+    this.store.dispatch(new DocumentExportMensurstrich(this.documentID, this.getIDOfSelectedImages()));
   }
 
   exportMusicXML() {
     this.exportingState.set(DocumentExportType.musicxml, true);
-    this.store.dispatch(new ExportMusicXML(this.documentID, this.getIDOfSelectedImages()));
+    this.store.dispatch(new DocumentExportMusicXML(this.documentID, this.getIDOfSelectedImages()));
   }
 
   trackByImageFn(index, item: Image) {

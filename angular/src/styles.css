@@ -16,6 +16,7 @@ body {
 a {
   cursor: pointer;
   cursor: hand;
+  color: white;
 }
 
 .screenTitle {

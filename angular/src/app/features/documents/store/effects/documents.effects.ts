@@ -3,15 +3,15 @@ import { Effect, ofType, Actions } from '@ngrx/effects';
 import {Observable, of} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {
-  GetCollection,
-  GetCollectionSuccess,
+  DocumentsGetCollection,
+  DocumentsGetCollectionSuccess,
   DocumentsActionTypes,
-  CreateSubcollection,
-  CreateSubcollectionSuccess,
-  DeleteSubcollection,
-  DeleteSubcollectionSuccess,
-  MoveDocumentsToSubcollection,
-  MoveDocumentsToSubcollectionSuccess, MoveDocumentsToNewSubcollection, MoveDocumentsToNewSubcollectionSuccess, DocumentsServerError
+  DocumentsCreateSubcollection,
+  DocumentsCreateSubcollectionSuccess,
+  DocumentsDeleteSubcollection,
+  DocumentsDeleteSubcollectionSuccess,
+  DocumentsMoveDocumentsToSubcollection,
+  DocumentsMoveDocumentsToSubcollectionSuccess, DocumentsMoveDocumentsToNewSubcollection, DocumentsMoveDocumentsToNewSubcollectionSuccess, DocumentsServerError
 } from '../actions/documents.actions';
 import {Collection} from '../../../../core/model/entities/collection';
 import {DocumentsService} from '../../services/documents.service';
@@ -26,45 +26,45 @@ export class DocumentsEffects {
 
   @Effect()
   getCollection$: Observable<Action> = this.actions$.pipe(
-    ofType<GetCollection>(DocumentsActionTypes.GetCollection),
-    switchMap((action: GetCollection) => this.documentsService.getCollection$(action.collectionID).pipe(
-      switchMap((collection: Collection) => of(new GetCollectionSuccess(collection))),
+    ofType<DocumentsGetCollection>(DocumentsActionTypes.DocumentsGetCollection),
+    switchMap((action: DocumentsGetCollection) => this.documentsService.getCollection$(action.collectionID).pipe(
+      switchMap((collection: Collection) => of(new DocumentsGetCollectionSuccess(collection))),
       catchError(err => of(new DocumentsServerError(err)))
     )));
 
   @Effect()
   createSubcollection$: Observable<Action> = this.actions$.pipe(
-    ofType<CreateSubcollection>(DocumentsActionTypes.CreateSubcollection),
-    switchMap((action: CreateSubcollection) =>
+    ofType<DocumentsCreateSubcollection>(DocumentsActionTypes.DocumentsCreateSubcollection),
+    switchMap((action: DocumentsCreateSubcollection) =>
       this.documentsService.createSubcollection$(action.parentID, action.name).pipe(
-      switchMap((collection: Collection) => of(new CreateSubcollectionSuccess(collection))),
+      switchMap((collection: Collection) => of(new DocumentsCreateSubcollectionSuccess(collection))),
       catchError(err => of(new DocumentsServerError(err)))
     )));
 
   @Effect()
   deleteSubcollection$: Observable<Action> = this.actions$.pipe(
-    ofType<DeleteSubcollection>(DocumentsActionTypes.DeleteSubcollection),
-    switchMap((action: DeleteSubcollection) =>
+    ofType<DocumentsDeleteSubcollection>(DocumentsActionTypes.DocumentsDeleteSubcollection),
+    switchMap((action: DocumentsDeleteSubcollection) =>
       this.documentsService.deleteSubcollection$(action.id).pipe(
-      switchMap((deletedCollectionID: number) => of(new DeleteSubcollectionSuccess(deletedCollectionID))),
+      switchMap((deletedCollectionID: number) => of(new DocumentsDeleteSubcollectionSuccess(deletedCollectionID))),
         catchError(err => of(new DocumentsServerError(err)))
       )));
 
   @Effect()
   moveDocumentsToSubcollection$: Observable<Action> = this.actions$.pipe(
-    ofType<MoveDocumentsToSubcollection>(DocumentsActionTypes.MoveDocumentsToSubcollection),
-    switchMap((action: MoveDocumentsToSubcollection) =>
+    ofType<DocumentsMoveDocumentsToSubcollection>(DocumentsActionTypes.DocumentsMoveDocumentsToSubcollection),
+    switchMap((action: DocumentsMoveDocumentsToSubcollection) =>
       this.documentsService.moveDocumentsToSubcollection$(action.currentCollectionID, action.documentIDs, action.subcollectionID).pipe(
-      switchMap((changedCollectionID: number) => of(new MoveDocumentsToSubcollectionSuccess(changedCollectionID))),
+      switchMap((changedCollectionID: number) => of(new DocumentsMoveDocumentsToSubcollectionSuccess(changedCollectionID))),
         catchError(err => of(new DocumentsServerError(err)))
       )));
 
   @Effect()
   moveDocumentsToNewSubcollection$: Observable<Action> = this.actions$.pipe(
-    ofType<MoveDocumentsToNewSubcollection>(DocumentsActionTypes.MoveDocumentsToNewSubcollection),
-    switchMap((action: MoveDocumentsToNewSubcollection) =>
+    ofType<DocumentsMoveDocumentsToNewSubcollection>(DocumentsActionTypes.DocumentsMoveDocumentsToNewSubcollection),
+    switchMap((action: DocumentsMoveDocumentsToNewSubcollection) =>
       this.documentsService.moveDocumentsToNewSubcollection$(action.currentCollectionID, action.documentIDs, action.subCollectionName).pipe(
-      switchMap((changedCollectionID: number) => of(new MoveDocumentsToNewSubcollectionSuccess(changedCollectionID))),
+      switchMap((changedCollectionID: number) => of(new DocumentsMoveDocumentsToNewSubcollectionSuccess(changedCollectionID))),
         catchError(err => of(new DocumentsServerError(err)))
       )));
 }

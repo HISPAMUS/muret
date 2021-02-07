@@ -93,7 +93,8 @@ public class DocumentModel {
                     null,
                     null,
                     null,
-                    document.getCollection()
+                    document.getCollection(),
+                    null
             );
 
             return documentRepository.save(newDocument);
