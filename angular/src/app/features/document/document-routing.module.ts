@@ -1,13 +1,15 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {DocumentComponent} from './components/document/document.component';
+import {DocumentComponentOld} from './components/document/document-component-old.component';
 import {UploadImagesComponent} from './components/upload-images/upload-images.component';
 import {DocumentScoreViewerAndExporterComponent} from './components/document-score-viewer-and-exporter/document-score-viewer-and-exporter.component';
 import {InstrumentsComponent} from './components/instruments/instruments.component';
 import {AlignmentPreviewComponent} from './components/alignment-preview/alignment-preview.component';
 import {MEIScoreViewerComponent} from './components/mei-score-viewer/meiscore-viewer.component';
+import {DocumentComponent} from "./components/document/document.component";
 
 const routes: Routes = [
+  { path: 'old/:id', component: DocumentComponentOld },
   { path: ':id', component: DocumentComponent },
   { path: 'instruments/:id', component: InstrumentsComponent },
   { path: 'uploadImages/:id', component: UploadImagesComponent },

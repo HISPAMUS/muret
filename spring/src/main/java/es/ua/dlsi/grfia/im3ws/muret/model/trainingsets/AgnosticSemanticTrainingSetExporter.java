@@ -71,7 +71,6 @@ public class AgnosticSemanticTrainingSetExporter extends AbstractTrainingSetExpo
     }
 
     /**
-     * @deprecated
      * @param
      * @param outputJSonFile
      * @throws IOException

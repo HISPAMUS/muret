@@ -21,7 +21,7 @@ import {LazyLoadImageModule} from 'ng-lazyload-image';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import {FontAwesomeModule, FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {faSearchMinus} from '@fortawesome/free-solid-svg-icons';
+import {faCompressAlt, faExpandAlt, faSearchMinus} from '@fortawesome/free-solid-svg-icons';
 import { faSearchPlus } from '@fortawesome/free-solid-svg-icons';
 import { faExpand } from '@fortawesome/free-solid-svg-icons';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
@@ -127,5 +127,7 @@ export class AppModule {
     library.addIcons(faCaretDown); // used in treeView
     library.addIcons(faBomb);
     library.addIcons(faExclamationTriangle); // warning icon
+    library.addIcons(faCompressAlt); // used in section
+    library.addIcons(faExpandAlt); // used in section
   }
 }

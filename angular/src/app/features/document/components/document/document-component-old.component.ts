@@ -28,11 +28,11 @@ import { LinkType } from 'src/app/layout/components/breadcrumbs/breadcrumbType';
 import {BreadcrumbsUpdateDocument} from "../../../../layout/store/actions/breadcrumbs.actions";
 
 @Component({
-  selector: 'app-document',
-  templateUrl: './document.component.html',
-  styleUrls: ['./document.component.css'],
+  selector: 'app-document-old',
+  templateUrl: './document-component-old.component.html',
+  styleUrls: ['./document-component-old.component.css'],
 })
-export class DocumentComponent implements OnInit, OnDestroy {
+export class DocumentComponentOld implements OnInit, OnDestroy {
   //documentSubscription : Subscription;
   document$: Observable<Document>;
   images$: Observable<Image[]>;

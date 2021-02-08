@@ -50,7 +50,7 @@ import java.util.logging.Logger;
 public class ImportMEIFromFMT implements CommandLineRunner {
     private static final String GROUNDTRUTH_PATH = System.getProperty("user.home") + "/GCLOUDUA/HISPAMUS/repositorios/musicatradicional/misiones/hispamus/sibelius_finale/alineados";
     private static final String [] DOCUMENTS = {"C5", "C14", "M16", "M38"};
-    //private static final String [] DOCUMENTS = {"M16"};
+    //private static final String [] DOCUMENTS = {"C14"};
     private static final HashSet<String> DOCUMENTS_WITHOUT_CLEF_KEYSIG_IN_ALL_STAVES = new HashSet<>(); { // these works have contain the clef and key signature just in the first staff
         DOCUMENTS_WITHOUT_CLEF_KEYSIG_IN_ALL_STAVES.add("C5");
         DOCUMENTS_WITHOUT_CLEF_KEYSIG_IN_ALL_STAVES.add("C14");
@@ -174,6 +174,14 @@ public class ImportMEIFromFMT implements CommandLineRunner {
                         throw new Exception("MuRET has " + staves.size() + "staves  and MEI file has " + pageSystemBeginnings.getSystemBeginnings().size());
                     }
 
+                    // first clean it - if there is any error in encoding, it must be clean
+                    for (Region region: staves) {
+                        region.getSymbols().clear();
+                        region.setSemanticEncoding(null);
+                        regionRepository.save(region);
+                    }
+
+
                     // encode agnostic and semantic
                     Encoder encoder = new Encoder(true, propagateClefAndKeySignature, propagateClefAndKeySignature);
                     encoder.encode(scoreSong);
@@ -252,10 +260,6 @@ public class ImportMEIFromFMT implements CommandLineRunner {
         if (semanticEncoding.size() == 0) {
             throw new Exception("Semantic sequence for region #" + regionNumber + " is empty");
         }
-
-        // first clean it
-        region.getSymbols().clear();
-        region.setSemanticEncoding(null);
 
         // now insert all values
         // we consider each agnostic symbol takes the same space

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { DocumentRoutingModule } from './document-routing.module';
-import { DocumentComponent } from './components/document/document.component';
+import { DocumentComponentOld } from './components/document/document-component-old.component';
 import {ImageThumbnailComponent} from './components/image-thumbnail/image-thumbnail.component';
 import {LightboxModule} from 'ngx-lightbox';
 import {StoreModule} from '@ngrx/store';
@@ -20,9 +20,12 @@ import {FormsModule} from '@angular/forms';
 import { AlignmentPreviewComponent } from './components/alignment-preview/alignment-preview.component';
 import {SvgModule} from '../../svg/svg.module';
 import { MEIScoreViewerComponent } from './components/mei-score-viewer/meiscore-viewer.component';
+import { DocumentComponent } from './components/document/document.component';
+import { SectionComponent } from './components/section/section.component';
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 
 @NgModule({
-  declarations: [DocumentComponent, ImageThumbnailComponent, UploadImagesComponent, DocumentScoreViewerAndExporterComponent, InstrumentsComponent, AlignmentPreviewComponent, MEIScoreViewerComponent],
+  declarations: [DocumentComponentOld, ImageThumbnailComponent, UploadImagesComponent, DocumentScoreViewerAndExporterComponent, InstrumentsComponent, AlignmentPreviewComponent, MEIScoreViewerComponent, DocumentComponent, SectionComponent],
   imports: [
     CommonModule,
     DocumentRoutingModule,
@@ -33,7 +36,8 @@ import { MEIScoreViewerComponent } from './components/mei-score-viewer/meiscore-
     EffectsModule.forFeature([DocumentEffects]),
     FormsModule,
     SvgModule,
-    SharedModule
+    SharedModule,
+    FontAwesomeModule
   ],
   providers: [
     DocumentService
