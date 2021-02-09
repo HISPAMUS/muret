@@ -135,7 +135,6 @@ It shows the collections, subcollections and their documents.
 | `DocumentsMoveDocumentsToSubcollection(currentCollectionID: number, documentIDs: number[], subcollectionID: number)` | `moveDocumentsToSubcollection$(currentCollectionID: number, documentIDs: number[], subcollectionID: number)` | `/collections/moveDocumentToSubcollection` | `changedCollectionID` | `apiRestServerError`| 
 | `DocumentsMoveDocumentsToNewSubcollection(currentCollectionID: number, documentIDs: number[], subCollectionName: string)` | `moveDocumentsToNewSubcollection$(currentCollectionID: number, documentIDs: number[], newCollectionName: string)` | `/collections/moveDocumentToNewSubcollection` | `changedCollectionID` | `apiRestServerError`| 
 
-
 ![Documents store component](puml/angular/documents_store_component.svg)
 
 
@@ -155,10 +154,16 @@ It shows both subcollections and leaf documents.
 It shows the opened document.
 
 
-| **Action** | **`DocumentService` method** | **API Rest method** | **`Documenttate` properties on succes** | **Properties on failure** | 
+
+
+| **Action** | **`DocumentService` method** | **API Rest method** | **`DocumentState` properties on succes** | **Properties on failure** | 
 | --- | ----------- | ----------- | ----------- | ----- | 
-| `GetLastDocuments(userID: number, count: number)` | `getUserLastDocuments$(userID: number, count: number)` | `/lastdocument/user` | `lastDocuments` | `errorMessage`| 
+| `DocumentGetOverview(documentID: number)` | `getOverview$(documentID: number)` | `/documents/181?projection=overview` | `documentOverview` (containing images unassigned to sections), parts, sections (including images)  | `apiRestServerError`| 
 
 
 ![Document store component](puml/angular/document_store_component.svg)
 
+
+
+-----
+**TODO ¿Unificar apiRestServerError en un sólo Store?**

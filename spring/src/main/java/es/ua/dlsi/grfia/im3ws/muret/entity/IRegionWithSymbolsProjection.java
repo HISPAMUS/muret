@@ -5,7 +5,7 @@ import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Note this projection must be defined in the same package as the entity class
@@ -19,7 +19,7 @@ public interface IRegionWithSymbolsProjection {
     String getComments();
     BoundingBox getBoundingBox();
     IRegionTypeProjection getRegionType();
-    List<ISymbolProjection> getSymbols();
+    Set<ISymbolProjection> getSymbols();
     NotationType getNotationType();
 
     Part getPart();

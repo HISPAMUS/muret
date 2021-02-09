@@ -9,10 +9,7 @@ import es.ua.dlsi.grfia.im3ws.muret.controller.payload.DocumentStatistics;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.PreflightCkeckResult;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.StringBody;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.UploadFileResponse;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Document;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Image;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Part;
-import es.ua.dlsi.grfia.im3ws.muret.entity.State;
+import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.model.NotationModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.DocumentModel;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
@@ -29,11 +26,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
-import javax.transaction.Transactional;
+import javax.persistence.EntityGraph;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -62,6 +62,9 @@ public class DocumentController {
     private final DocumentModel documentModel;
     private final NotationModel notationModel;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Autowired
     public DocumentController(DocumentModel documentModel, FileStorageService fileStorageService,
                               MURETConfiguration muretConfiguration, DocumentRepository documentRepository, ImageRepository imageRepository,
@@ -75,6 +78,25 @@ public class DocumentController {
         this.partRepository = partRepository;
         this.notationModel = new NotationModel();
     }
+
+    /**
+     * It returns the basic information of the document: sections, parts and images
+     * @param id
+     * @return
+     */
+    @GetMapping(path = {"/basicinfo/{id}"})
+    @Transactional(readOnly=true)
+    public Document getDocumentBasicInfo(@PathVariable("id") Integer id)  {
+        EntityGraph entityGraph = entityManager.createEntityGraph(Document.class);
+        entityGraph.addAttributeNodes("name", "images", "parts", "sections");
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("javax.persistence.fetchgraph", entityGraph);
+        return entityManager.find(Document.class, id, properties);
+    }
+
+
+
+    // revisado hasta aquí
 
     @PostMapping(path = {"/new"})
     public Document newDocument(@RequestBody Document document) throws IM3WSException {

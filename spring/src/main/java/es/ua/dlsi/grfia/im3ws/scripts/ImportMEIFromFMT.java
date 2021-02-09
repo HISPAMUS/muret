@@ -132,7 +132,7 @@ public class ImportMEIFromFMT implements CommandLineRunner {
                         throw new Exception("Expected 1 page and found " + image.get().getPages().size());
                     }
 
-                    Page page = image.get().getPages().get(0);
+                    Page page = image.get().getPages().iterator().next();
 
                     // import MEI file
                     MEISongImporter meiSongImporter = new MEISongImporter();
@@ -151,7 +151,7 @@ public class ImportMEIFromFMT implements CommandLineRunner {
                     if (image.get().getPart() == null) {
                         Logger.getLogger(this.getClass().getName()).info("Image " + image.get().getFilename() + " did not contain a part yet");
                         if (document.get().getParts() != null && document.get().getParts().size() > 0) {
-                            voz = document.get().getParts().get(0);
+                            voz = document.get().getParts().iterator().next();
                             Logger.getLogger(this.getClass().getName()).info("There were "+ document.get().getParts().size() + " voices in document " + document.get().getName() + ", using the first one namned '" + voz.getName() + "'");
                         } else {
                             voz = new Part("Voz", null, document.get());

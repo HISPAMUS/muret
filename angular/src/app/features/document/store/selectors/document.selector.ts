@@ -1,10 +1,18 @@
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {DocumentState} from '../state/document.state';
-import {CoreState} from '../../../../core/store/state/core.state';
-import {selectCoreState} from '../../../../core/store/selectors/core.selector';
 
 export const documentState = createFeatureSelector<DocumentState>('document');
 
+
+export const selectDocumentOverview = createSelector(
+  documentState,
+  (state: DocumentState) => state.documentOverview
+);
+
+
+
+
+// revisado hasta aquí
 export const selectDocument = createSelector(
   documentState,
   (state: DocumentState) => state.document

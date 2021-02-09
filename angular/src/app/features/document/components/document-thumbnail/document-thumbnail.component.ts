@@ -1,6 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Observable, of} from "rxjs";
 import {Part} from "../../../../core/model/entities/part";
+import {ImageFilesService} from "../../../../core/services/image-files.service";
+import {map} from "rxjs/operators";
+import {Observable} from "rxjs";
+import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-document-thumbnail',
@@ -8,38 +11,24 @@ import {Part} from "../../../../core/model/entities/part";
   styleUrls: ['./document-thumbnail.component.css']
 })
 export class DocumentThumbnailComponent implements OnInit {
+  @Input() documentPath: string;
+  @Input() imageID: number;
   @Input() filename: string;
-  documentParts$: Observable<Part[]>;
-  imagePartIds$: Observable<number[]>; // set of part ids
-  image: string;
+  @Input() documentParts: Part[];
+  imagePartIds: number[]; // set of part ids
+  loadedImage$: Observable<SafeResourceUrl>;
   loadingImage = "assets/images/loading.svg";
 
-  constructor() {
-    //TODO - de momento - cambiar por petición
-    this.documentParts$ = of([
-      {
-        id: 1,
-        name: 'Tiple'
-      },
-      {
-        id: 2,
-        name: 'Alto'
-      },
-      {
-        id: 3,
-        name: 'Tenor'
-      },      {
-        id: 4,
-        name: 'Bass'
-      }
-    ]);
-
-    this.imagePartIds$ = of([1,3]);
+  constructor(private imageFilesService: ImageFilesService) { // }, private sanitizer: DomSanitizer) {
     //TODO Quitar
-    this.image = "https://upload.wikimedia.org/wikipedia/commons/2/27/00_208_Bw_Angerbrücke%2C_ET_20_LAAG.jpg?" + Math.random();
+    this.imagePartIds = [13];
   }
 
   ngOnInit(): void {
+    this.loadedImage$ = this.imageFilesService.getThumbnailImageBlob$(this.documentPath, this.imageID).pipe(
+      //map(imageBlob => this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(imageBlob)))
+      map(imageBlob => window.URL.createObjectURL(imageBlob))
+    );
   }
 
 }

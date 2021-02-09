@@ -8,6 +8,7 @@ import es.ua.dlsi.im3.core.score.NotationType;
 import javax.persistence.*;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -52,7 +53,7 @@ public class Region extends Auditable implements IAssignableToPart, IDelimitedWi
             orphanRemoval = true) // orphanRemoval = remove dependent rather than set the FK to null)
     //@JoinColumn(name="region_id", referencedColumnName="id")
     //@JoinColumn(name="region_id")
-    private List<Symbol> symbols;
+    private Set<Symbol> symbols;
 
     @ManyToOne
     @JoinColumn(name="regiontype_id")
@@ -79,7 +80,7 @@ public class Region extends Auditable implements IAssignableToPart, IDelimitedWi
     public Region() {
     }
 
-    public Region(Page page, BoundingBox boundingBox, String comments, RegionType regionType, List<Symbol> symbols, Part part, String semanticEncoding, NotationType notationType) {
+    public Region(Page page, BoundingBox boundingBox, String comments, RegionType regionType, Set<Symbol> symbols, Part part, String semanticEncoding, NotationType notationType) {
         this.boundingBox = boundingBox;
         this.page = page;
         this.regionType = regionType;
@@ -142,11 +143,11 @@ public class Region extends Auditable implements IAssignableToPart, IDelimitedWi
         this.page = page;
     }
 
-    public List<Symbol> getSymbols() {
+    public Set<Symbol> getSymbols() {
         return symbols;
     }
 
-    public void setSymbols(List<Symbol> symbols) {
+    public void setSymbols(Set<Symbol> symbols) {
         this.symbols = symbols;
     }
 

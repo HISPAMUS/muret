@@ -3,7 +3,7 @@ package es.ua.dlsi.grfia.im3ws.muret.entity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Note this projection must be defined in the same package as the entity class
@@ -15,7 +15,7 @@ public interface IUserProjection {
     int getId();
 
     String getUsername();
-    // List<IDocumentProjection> getDocumentsCreated();
-    List<IPermissionsProjection> getPermissions();
+    // Set<IDocumentProjection> getDocumentsCreated();
+    Set<IPermissionsProjection> getPermissions();
 
 }

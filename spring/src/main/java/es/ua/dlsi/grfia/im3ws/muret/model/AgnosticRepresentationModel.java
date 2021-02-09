@@ -305,7 +305,7 @@ public class AgnosticRepresentationModel {
         }
 
         actionLogAgnosticModel.logEndToEnd(persistentRegion);
-        return persistentRegion.getSymbols();
+        return persistentRegion.getSortedSymbols();
 
 
         /*

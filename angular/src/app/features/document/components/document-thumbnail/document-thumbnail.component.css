@@ -1,5 +1,4 @@
 #documentThumbnail {
-  max-width: 180px;
   margin-left: 2.5rem;
   margin-right: 2rem;
   margin-top: 2.5rem;
@@ -7,6 +6,6 @@
 }
 
 #documentThumbnail img {
-  width: 100px;
-  height: 600px;
+  height: 200px;
+  max-width: 400px;
 }

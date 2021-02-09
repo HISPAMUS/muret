@@ -3,6 +3,7 @@ import {State} from './state';
 import {Entity} from './entity';
 import {Collection} from './collection';
 import {Part} from './part';
+import {Section} from "./section";
 
 export interface Document extends Entity {
   name: string;
@@ -17,4 +18,5 @@ export interface Document extends Entity {
   composer: string;
   collection: Collection;
   parts: Part[];
+  sections: Section[];
 }

@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.im3ws.muret.entity;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -28,17 +28,17 @@ public class User {
     private boolean administrator;
 
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "createdBy")
-    private List<Document> documentsCreated;
+    private Set<Document> documentsCreated;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<Permissions> permissions;
+    private Set<Permissions> permissions;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<LastDocument> lastDocuments;
+    private Set<LastDocument> lastDocuments;
     public User() {
     }
 
-    public User(String firstName, String lastName, String username, String password, String email, boolean administrator, List<LastDocument> lastDocuments) {
+    public User(String firstName, String lastName, String username, String password, String email, boolean administrator, Set<LastDocument> lastDocuments) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.administrator = administrator;
@@ -60,11 +60,11 @@ public class User {
         return username;
     }
 
-    public List<Document> getDocumentsCreated() {
+    public Set<Document> getDocumentsCreated() {
         return documentsCreated;
     }
 
-    public List<Permissions> getPermissions() {
+    public Set<Permissions> getPermissions() {
         return permissions;
     }
 
@@ -92,11 +92,11 @@ public class User {
         this.administrator = administrator;
     }
 
-    public void setDocumentsCreated(List<Document> documentsCreated) {
+    public void setDocumentsCreated(Set<Document> documentsCreated) {
         this.documentsCreated = documentsCreated;
     }
 
-    public void setPermissions(List<Permissions> permissions) {
+    public void setPermissions(Set<Permissions> permissions) {
         this.permissions = permissions;
     }
 
@@ -122,11 +122,11 @@ public class User {
         this.email = email;
     }
 
-    public List<LastDocument> getLastDocuments() {
+    public Set<LastDocument> getLastDocuments() {
         return lastDocuments;
     }
 
-    public void setLastDocuments(List<LastDocument> lastDocuments) {
+    public void setLastDocuments(Set<LastDocument> lastDocuments) {
         this.lastDocuments = lastDocuments;
     }
 

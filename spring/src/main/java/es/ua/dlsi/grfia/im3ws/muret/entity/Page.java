@@ -6,8 +6,9 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.Comparator;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -49,7 +50,7 @@ public class Page extends Auditable implements IAssignableToPart, IDelimitedWith
             cascade = CascadeType.ALL,
             orphanRemoval = true) // orphanRemoval = remove dependent rather than set the FK to null)
     //@JoinColumn(name="page_id", referencedColumnName="id")
-    private List<Region> regions;
+    private Set<Region> regions;
 
     /**
      * It can be null because the part is assigned to other element of the score
@@ -62,7 +63,7 @@ public class Page extends Auditable implements IAssignableToPart, IDelimitedWith
     public Page() {
     }
 
-    public Page(BoundingBox boundingBox, String comments, Image image, List<Region> regions, Part part) {
+    public Page(BoundingBox boundingBox, String comments, Image image, Set<Region> regions, Part part) {
         this.boundingBox = boundingBox;
         this.image = image;
         this.regions = regions;
@@ -70,7 +71,7 @@ public class Page extends Auditable implements IAssignableToPart, IDelimitedWith
         this.part = part;
     }
 
-    public Page(Image image, int fromX, int fromY, int toX, int toY, String comments, List<Region> regions, Part part) {
+    public Page(Image image, int fromX, int fromY, int toX, int toY, String comments, Set<Region> regions, Part part) {
         this.boundingBox = new BoundingBox(fromX, fromY, toX, toY);
         this.image = image;
         this.regions = regions;
@@ -100,11 +101,11 @@ public class Page extends Auditable implements IAssignableToPart, IDelimitedWith
         this.image = image;
     }
 
-    public List<Region> getRegions() {
+    public Set<Region> getRegions() {
         return regions;
     }
 
-    public void setRegions(List<Region> regions) {
+    public void setRegions(Set<Region> regions) {
         this.regions = regions;
     }
 
@@ -118,7 +119,7 @@ public class Page extends Auditable implements IAssignableToPart, IDelimitedWith
 
     public void addRegion(Region newRegion) {
         if (regions == null) {
-            regions = new LinkedList<>();
+            regions = new HashSet<>();
         }
         regions.add(newRegion);
     }

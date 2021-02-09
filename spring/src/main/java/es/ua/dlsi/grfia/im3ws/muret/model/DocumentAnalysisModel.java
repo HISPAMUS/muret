@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,7 +48,7 @@ public class DocumentAnalysisModel {
      * @return list of all pages including new ones
      */
     @Transactional
-    public List<Page> pageSplit(Image image, int x) throws IM3WSException {
+    public Set<Page> pageSplit(Image image, int x) throws IM3WSException {
         //TODO Transaction
 
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Splitting page at {0}", x);
@@ -115,7 +112,7 @@ public class DocumentAnalysisModel {
     }
 
     @Transactional
-    public List<Page> regionSplit(Image image, int x, int y) throws IM3WSException {
+    public Set<Page> regionSplit(Image image, int x, int y) throws IM3WSException {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Splitting region at {0},{1}", new Object[]{x, y});
         if (image.getPages() == null || image.getPages().isEmpty()) {
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, "No page, creating a single page");
@@ -146,7 +143,7 @@ public class DocumentAnalysisModel {
      * @param image
      */
     @Transactional
-    public List<Page> leaveJustOnePageAndRegion(Image image) throws IM3WSException {
+    public Set<Page> leaveJustOnePageAndRegion(Image image) throws IM3WSException {
         RegionType regionType = this.regionTypeRepository.findByName("undefined");
         if (regionType == null) {
             throw new IM3WSException("Cannot find 'undefined' region type");
@@ -256,7 +253,7 @@ public class DocumentAnalysisModel {
     /**
      * It moves the current regions to the new page if its center is contained inside the new page
      */
-    public List<Page> createPage(long imageID, BoundingBox boundingBox) throws IM3WSException {
+    public Set<Page> createPage(long imageID, BoundingBox boundingBox) throws IM3WSException {
         Image persistentImage = getImage(imageID);
 
         List<Region> regionsToBeMoved = new ArrayList<>();
@@ -284,7 +281,7 @@ public class DocumentAnalysisModel {
     }
 
     @Transactional
-    public List<Page> createRegion(long imageID, int regionTypeID, BoundingBox boundingBox) throws IM3WSException {
+    public Set<Page> createRegion(long imageID, int regionTypeID, BoundingBox boundingBox) throws IM3WSException {
         Image persistentImage = getImage(imageID);
 
         Optional<RegionType> persistentRegionType = regionTypeRepository.findById(regionTypeID);
@@ -293,7 +290,7 @@ public class DocumentAnalysisModel {
         }
 
         // if there is not any page, a new page is created spaning the whole image
-        List<Page> pages;
+        Set<Page> pages;
         if (persistentImage.getPages() == null || persistentImage.getPages().isEmpty()) {
             pages = this.createPage(imageID, new BoundingBox(0, 0, persistentImage.getWidth(), persistentImage.getHeight()));
         } else {
@@ -319,7 +316,7 @@ public class DocumentAnalysisModel {
         region.setBoundingBox(boundingBox);
         regionRepository.save(region);
         if (parentPage.getRegions() == null) {
-            parentPage.setRegions(new ArrayList<>());
+            parentPage.setRegions(new HashSet<>());
         }
         parentPage.getRegions().add(region);
 
@@ -341,7 +338,7 @@ public class DocumentAnalysisModel {
 
         if (persistentPage.get().getRegions() != null) {
             if (persistentPage.get().getRegions().size() == 1) {
-                Region persistentRegion = getRegion(persistentPage.get().getRegions().get(0).getId());
+                Region persistentRegion = getRegion(persistentPage.get().getRegions().iterator().next().getId());
                 if (persistentRegion.getSymbols() != null && !persistentRegion.getSymbols().isEmpty()) {
                     throw new IM3WSException("Cannot remove a page that with a region containing " + persistentRegion.getSymbols() + " symbols");
                 } else {

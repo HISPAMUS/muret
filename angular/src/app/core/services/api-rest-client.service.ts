@@ -78,7 +78,9 @@ export class ApiRestClientService {
     );
   }
 
-  // HATEOAS
+  // HATEOAS - it invokes the Spring repository of endpoint and gets a subcollection from there
+  // (e.g. endpoint = documents --> DocumentRepository, detailsEndspoint --> section, that is translated into
+  // the API request http://localhost:8080/muretapi/documents/181/sections)
   public getDetailsExcerptProjection$<T>(endpoint: string, detailsEndpoint: string, id: number): Observable<T[]> {
 
     let url: string;

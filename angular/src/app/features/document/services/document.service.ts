@@ -7,11 +7,22 @@ import {StringResponse} from '../../../core/model/restapi/string-response';
 import {DocumentStatistics} from '../../../core/model/restapi/document-statistics';
 import {PreflightCheckResult} from '../../../core/model/restapi/preflight-check-result';
 import {AlignmentPreview} from '../../../core/model/restapi/alignment-preview';
+import {Section} from "../../../core/model/entities/section";
 
 @Injectable() // non-singleton
 export class DocumentService {
 
   constructor(private apiRestClientService: ApiRestClientService) { }
+
+  public getOverview$(documentID: number): Observable<Document> {
+    return this.apiRestClientService.getProjectionOf$<Document>(documentID, 'documents', 'overview');
+  }
+
+  /*public getParts$(documentID: number): Observable<Section[]> {
+    return this.apiRestClientService.getDetailsExcerptProjection$<Section>('documents', 'parts', documentID);
+  }*/
+
+  // revisado hasta aquí
 
   public getDocument$(id: number): Observable<Document> {
     // return this.apiRestClientService.getOf$<Document>('documents', id);

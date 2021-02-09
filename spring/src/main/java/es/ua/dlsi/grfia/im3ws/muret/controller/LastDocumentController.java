@@ -19,10 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -50,7 +47,7 @@ public class LastDocumentController {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Retrieving last open documents by user {0}", userID);
         try {
             User user = findByUserId(userID);
-            List<LastDocument> lastDocs = user.getLastDocuments();
+            List<LastDocument> lastDocs = new ArrayList<>(user.getLastDocuments());
             lastDocs.sort((o1, o2) ->
                     -o1.getTimestamp().compareTo(o2.getTimestamp()) // sort descending
             );
@@ -81,7 +78,7 @@ public class LastDocumentController {
         try {
             // first search it, if found update last open date
             User user = findByUserId(userID);
-            List<LastDocument> lastDocs = user.getLastDocuments();
+            Set<LastDocument> lastDocs = user.getLastDocuments();
             // there is a unique key user-document
             LastDocument lastDocument = null;
             for (LastDocument l: lastDocs) {

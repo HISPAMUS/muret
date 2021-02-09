@@ -104,7 +104,7 @@
     BreadcrumbsUpdateDocumentBreadcrumbs -- [Breadcrumbs Store]
     [Breadcrumbs Store] -- selectBreadcrumbs
 
-    [DocumentComponent] ..> BreadcrumbsUpdateDocument
+    [DocumentComponentOld] ..> BreadcrumbsUpdateDocument
     [CollectionsComponent] ..> BreadcrumbsUpdateCollection
     [DocumentsComponent] ..> BreadcrumbsUpdateCollection
 
@@ -145,13 +145,13 @@
 ```puml
 @startuml document_store_component
     [Document Store]
-    ResetDocumentServerError -- [Document Store]
+    DocumentGetOverview -- [Document Store]
 
-    [Document Store] -- selectDocumentTODO
+    [Document Store] -- selectDocumentOverview
 
-    [TODOComponent] ..> TODOAction
+    [DocumentComponent] ..> DocumentGetOverview
 
-    selectDocumentTODO <.. [TODOComponent]
+    selectDocumentOverview <.. [DocumentComponent]
 @enduml
 ```
 

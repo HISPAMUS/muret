@@ -9,15 +9,18 @@ import java.util.Set;
  * Note this projection must be defined in the same package as the entity class
  * @author drizo
  */
-@Projection(name = "excerpt", types = { Collection.class })
-public interface ICollectionProjection {
+@Projection(name = "overview", types = { Document.class })
+public interface IDocumentOverviewProjection {
     @Value("#{target.id}")
     int getId();
 
     String getName();
+    String getComposer();
     String getComments();
-    Set<IDocumentProjection> getDocuments();
-    Set<ICollectionProjection> getSubcollections();
-    @Value("#{target.parent == null ? null : target.parent.id}")
-    Integer getParentId();
+    State getState();
+    String getPath();
+    String getThumbnailBase64Encoding();
+    Set<IPartProjection> getParts();
+    Set<ISectionProjection> getSections();
+    Set<IImageProjection> getImages();
 }

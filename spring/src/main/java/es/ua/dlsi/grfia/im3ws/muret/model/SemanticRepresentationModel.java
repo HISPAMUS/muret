@@ -14,8 +14,10 @@ import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticEncoding;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.HorizontalSeparator;
 import es.ua.dlsi.im3.omr.encoding.semantic.*;
+import sun.jvm.hotspot.debugger.cdbg.Sym;
 
 import java.io.FileNotFoundException;
+import java.util.Collection;
 import java.util.List;
 
 public class SemanticRepresentationModel {
@@ -37,15 +39,16 @@ public class SemanticRepresentationModel {
         /*ArrayList<Symbol> symbols = new ArrayList<>(staff.getSymbols());
         symbols.sort(Symbol.getHorizontalPositionComparator());*/
 
-        List<Symbol> symbols = staff.getSortedSymbols();
+        Collection<Symbol> symbols = staff.getSortedSymbols();
 
-        for (int i=0; i<symbols.size(); i++) {
-            Symbol symbol = symbols.get(i);
+        int i=0;
+        for (Symbol symbol: symbols) {
             symbol.getAgnosticSymbol().setId(symbol.getId()); // associate the symbol ID to the agnostic symbol
             agnosticEncoding.add(symbol.getAgnosticSymbol());
             if (addSeparator && i < symbols.size() - 1) {
                 agnosticEncoding.add(new HorizontalSeparator(AgnosticVersion.v2));
             }
+            i++;
         }
 
         if (agnosticEncoding.getSymbols().isEmpty()) {

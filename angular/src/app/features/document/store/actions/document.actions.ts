@@ -7,6 +7,11 @@ import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 
 export enum DocumentActionTypes {
+  DocumentGetOverview = '[Document] Get Overview',
+  DocumentGetOverviewSuccess = '[Document] Get Overview success',
+
+
+  // revisado hasta aquí
   ResetDocumentServerError = '[Document] Reset Server error',
   DocumentServerError = '[Document] Server error',
   DocumentGetDocument = '[Document] Get document',
@@ -28,6 +33,20 @@ export enum DocumentActionTypes {
   DocumentGetCroppedImage = '[Document] Get cropped image',
   DocumentGetCroppedImageSuccess = '[Document] Get cropped image success',
 }
+
+
+export class DocumentGetOverview implements Action {
+  public readonly type = DocumentActionTypes.DocumentGetOverview;
+  constructor(public documentID: number) {}
+}
+
+export class DocumentGetOverviewSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentGetOverviewSuccess;
+  constructor(public documentOverview: Document) {}
+}
+
+// revisado hasta aquí
+
 
 export class DocumentResetServerError implements Action {
   public readonly type = DocumentActionTypes.ResetDocumentServerError;
@@ -144,6 +163,9 @@ export class DocumentGetCroppedImageSuccess implements Action {
 }
 
 export type DocumentActions =
+  DocumentGetOverview | DocumentGetOverviewSuccess |
+
+  // revisado hasta aquí
   DocumentResetServerError | DocumentServerError |
   DocumentGetDocument | DocumentGetDocumentSuccess | DocumentGetImages | DocumentGetImagesSuccess | DocumentExportMEI | DocumentExportMEISuccess |
   DocumentExportMEIPartsFacsimile | DocumentExportMEIPartsFacsimileSuccess |

@@ -142,7 +142,7 @@ public class ImportFMT implements CommandLineRunner {
         TreeMap<Time, SystemBeginning> systemBeginnings = staff.getParts().get(0).getPageSystemBeginnings().getSystemBeginnings();
         int nsystems = systemBeginnings.size();
 
-        List<Region> regions = image.getPages().get(0).getSortedStaves();
+        List<Region> regions = image.getPages().iterator().next().getSortedStaves();
         if (regions.size() != nsystems) {
             throw new ImportException("MEI file has " + nsystems + " systems  and there are " + regions.size() + " regions");
         }

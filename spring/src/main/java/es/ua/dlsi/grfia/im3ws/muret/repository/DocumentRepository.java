@@ -12,6 +12,7 @@ import java.util.Optional;
  */
 @RepositoryRestResource
 public interface DocumentRepository extends CrudRepository<Document, Integer> {
+    // revisado hasta aquí
     @Query(value="SELECT count(*) FROM image WHERE document_id = :id ",  nativeQuery = true)
     int getNumberOfImages(Integer id);
 

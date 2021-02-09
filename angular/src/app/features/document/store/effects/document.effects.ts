@@ -20,7 +20,8 @@ import {
   DocumentGetDocumentSuccess,
   DocumentActionTypes,
   DocumentGetAlignmentPreview,
-  DocumentGetAlignmentPreviewSuccess, DocumentServerError,
+  DocumentGetAlignmentPreviewSuccess,
+  DocumentServerError, DocumentGetOverview, DocumentGetOverviewSuccess,
 } from '../actions/document.actions';
 import {Document} from '../../../../core/model/entities/document';
 import {Image} from '../../../../core/model/entities/image';
@@ -38,6 +39,16 @@ export class DocumentEffects {
     private actions$: Actions,
   ) {}
 
+  @Effect()
+  getDocumentOverview$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentGetOverview>(DocumentActionTypes.DocumentGetOverview),
+    switchMap((action: DocumentGetOverview) => this.documentService.getOverview$(action.documentID).pipe(
+      switchMap((documentSummary: Document) => of(new DocumentGetOverviewSuccess(documentSummary))),
+      catchError(err => of(new DocumentServerError(err)))
+    )));
+
+
+  // revisado hasta aquí
   @Effect()
   getDocument$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentGetDocument>(DocumentActionTypes.DocumentGetDocument),

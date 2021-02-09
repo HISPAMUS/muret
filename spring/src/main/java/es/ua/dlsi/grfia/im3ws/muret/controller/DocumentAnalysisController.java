@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 // !!! Important: no controller should throw any exception
@@ -110,9 +111,9 @@ public class DocumentAnalysisController extends MuRETBaseController {
      * @throws IM3WSException
      */
     @PostMapping(path = {"createPage"})
-    public List<Page> createPage(@RequestBody PageCreation pageCreation)  {
+    public Set<Page> createPage(@RequestBody PageCreation pageCreation)  {
         try {
-            List<Page> createdPages = this.documentAnalysisModel.createPage(pageCreation.getImageID(), pageCreation.getBoundingBox());
+            Set<Page> createdPages = this.documentAnalysisModel.createPage(pageCreation.getImageID(), pageCreation.getBoundingBox());
             return createdPages;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot create page", e);
@@ -143,9 +144,9 @@ public class DocumentAnalysisController extends MuRETBaseController {
      * @throws IM3WSException
      */
     @PostMapping(path = {"createRegion"})
-    public List<Page> createRegion(@RequestBody RegionCreation regionCreation)  {
+    public Set<Page> createRegion(@RequestBody RegionCreation regionCreation)  {
         try {
-            List<Page> pages = this.documentAnalysisModel.createRegion(regionCreation.getImageID(), regionCreation.getRegionTypeID(), regionCreation.getBoundingBox());
+            Set<Page> pages = this.documentAnalysisModel.createRegion(regionCreation.getImageID(), regionCreation.getRegionTypeID(), regionCreation.getBoundingBox());
             return pages;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot create region", e);
@@ -194,7 +195,7 @@ public class DocumentAnalysisController extends MuRETBaseController {
             Optional<Image> imageAttempt = imageRepository.findById(imageID);
             if (imageAttempt.isPresent()) {
                 Image imageToHandle = imageAttempt.get(); //Get the image
-                List<Page> pagestoClean = imageToHandle.getPages(); //Get all the pages as we have to clean them one by one
+                Set<Page> pagestoClean = imageToHandle.getPages(); //Get all the pages as we have to clean them one by one
                 for (Page page : pagestoClean) {
                     for (Region region : page.getRegions()) {
                         //Erase agnostic symbols

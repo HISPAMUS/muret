@@ -5,6 +5,7 @@
       <app-document-phases></app-document-phases>
     </p>
   </div>
-  <img class="mt-0 pt-0" [defaultImage]="loadingImage" [lazyLoad]="image">
-  <app-image-parts [documentParts]="documentParts$ | async" [imagePartIds]="imagePartIds$ | async"></app-image-parts>
+  <!--<img class="mt-0 pt-0" [defaultImage]="loadingImage" [lazyLoad]="loadedImage$ | async">-->
+  <img class="mt-0 pt-0 img-fluid" [defaultImage]="loadingImage" [lazyLoad]="loadedImage$ | async">
+  <app-image-parts [documentParts]="documentParts" [imagePartIds]="imagePartIds"></app-image-parts>
 </div>

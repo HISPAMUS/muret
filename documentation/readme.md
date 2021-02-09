@@ -23,7 +23,7 @@ The following structure has been used inside the `app` module:
       * ImagePreviewComponent
     + document
       * AlignmentPreviewComponent
-      * DocumentComponent
+      * DocumentComponentOld
       * DocumentScoreViewerAndExporterComponent
       * ImageThumbnailComponent
       * InstrumentsComponent
@@ -114,8 +114,8 @@ package "document" #LightPink {
         
     [ImageThumbnailComponent]
 
-    [DocumentComponent]
-        [DocumentComponent] ....> [ImageThumbnailComponent]        
+    [DocumentComponentOld]
+        [DocumentComponentOld] ....> [ImageThumbnailComponent]        
 }       
 package "document-analysis" #LightPink {
     [DocumentAnalysisComponent]

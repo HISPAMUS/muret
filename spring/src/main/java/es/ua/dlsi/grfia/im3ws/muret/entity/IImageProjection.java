@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Note this projection must be defined in the same package as the entity class
@@ -17,8 +18,9 @@ public interface IImageProjection {
     State getState();
     String getFilename();
 
-    Part getPart();
+    //TODO Ver si esto lo usamos
+    /*Part getPart();
 
     @Value("#{target.document.parts}")
-    Part [] getDocumentParts();
+    Set<Part> getDocumentParts();*/
 }

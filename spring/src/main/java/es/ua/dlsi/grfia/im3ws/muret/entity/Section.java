@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -28,7 +28,7 @@ public class Section extends Auditable {
 
     @JsonManagedReference(value="section")
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "section")
-    private List<Image> images;
+    private Set<Image> images;
 
     public Section() {
     }
@@ -60,6 +60,14 @@ public class Section extends Auditable {
 
     public void setDocument(Document document) {
         this.document = document;
+    }
+
+    public Set<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(Set<Image> images) {
+        this.images = images;
     }
 
     @Override

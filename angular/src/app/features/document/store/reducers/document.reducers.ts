@@ -4,16 +4,26 @@ import {DocumentExportType} from '../../../../core/model/restapi/document-export
 
 export function documentReducers(state = initialDocumentState, action: DocumentActions): DocumentState {
   switch (action.type) {
-    case DocumentActionTypes.ResetDocumentServerError: {
+    case DocumentActionTypes.DocumentGetOverviewSuccess: {
       return {
         ...state,
+        documentOverview: action.documentOverview,
         apiRestServerError: null
       };
     }
+
     case DocumentActionTypes.DocumentServerError: {
       return {
         ...state,
         apiRestServerError: action.error
+      };
+    }
+
+    // revisado hasta aquí
+    case DocumentActionTypes.ResetDocumentServerError: {
+      return {
+        ...state,
+        apiRestServerError: null
       };
     }
     case DocumentActionTypes.DocumentGetDocumentSuccess: {

@@ -6,7 +6,7 @@ import es.ua.dlsi.im3.core.score.NotationType;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author drizo
@@ -35,7 +35,7 @@ public class Document extends Auditable {
     private ManuscriptType manuscriptType;
 
     /**
-     * Comma separated list of image ids - when an image is not present here is sorted at the end of the list
+     * Comma separated Set of image ids - when an image is not present here is sorted at the end of the Set
      */
     @Column (name = "images_ordering")
     private String imagesOrdering;
@@ -46,15 +46,15 @@ public class Document extends Auditable {
 
     @JsonManagedReference (value="document")
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "document")
-    private List<Image> images;
+    private Set<Image> images;
 
     @JsonManagedReference (value="document")
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "document")
-    private List<Part> parts;
+    private Set<Part> parts;
 
     @JsonManagedReference (value="document")
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "document")
-    private List<Section> sections;
+    private Set<Section> sections;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="state_id")
@@ -69,7 +69,7 @@ public class Document extends Auditable {
     public Document() {
     }
 
-    public Document(String name, String path, String composer, Date creationDate, Date lastModifiedDate, User createdBy, User lastModifiedBy , String thumbnailBase64Encoding, String comments, String imagesOrdering, NotationType notationType, ManuscriptType manuscriptType, State state, List<Image> images, List<Part> parts, Collection collection, List<Section> sections) {
+    public Document(String name, String path, String composer, Date creationDate, Date lastModifiedDate, User createdBy, User lastModifiedBy , String thumbnailBase64Encoding, String comments, String imagesOrdering, NotationType notationType, ManuscriptType manuscriptType, State state, Set<Image> images, Set<Part> parts, Collection collection, Set<Section> sections) {
         this.name = name;
         this.composer = composer;
         this.notationType = notationType;
@@ -127,11 +127,11 @@ public class Document extends Auditable {
         this.createdBy = createdBy;
     }
 
-    public List<Image> getImages() {
+    public Set<Image> getImages() {
         return images;
     }
 
-    public void setImages(List<Image> images) {
+    public void setImages(Set<Image> images) {
         this.images = images;
     }
 
@@ -183,11 +183,11 @@ public class Document extends Auditable {
         this.imagesOrdering = imagesOrdering;
     }
 
-    public List<Part> getParts() {
+    public Set<Part> getParts() {
         return parts;
     }
 
-    public void setParts(List<Part> parts) {
+    public void setParts(Set<Part> parts) {
         this.parts = parts;
     }
 
@@ -199,11 +199,11 @@ public class Document extends Auditable {
         this.collection = collection;
     }
 
-    public List<Section> getSections() {
+    public Set<Section> getSections() {
         return sections;
     }
 
-    public void setSections(List<Section> sections) {
+    public void setSections(Set<Section> sections) {
         this.sections = sections;
     }
 
@@ -217,7 +217,7 @@ public class Document extends Auditable {
     }
 
     @Transient
-    public List<Image> getSortedImages() {
+    public Set<Image> getSortedImages() {
         if (imagesOrdering != null) {
             // TODO Image ordering
             throw new UnsupportedOperationException("TO-DO Images ordering");

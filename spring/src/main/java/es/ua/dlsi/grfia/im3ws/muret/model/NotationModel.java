@@ -34,6 +34,7 @@ import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticTimeSignatur
 import java.io.File;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -215,7 +216,7 @@ public class NotationModel {
             }
         }
 
-        List<Image> sortedImages = document.getSortedImages();
+        Collection<Image> sortedImages = document.getSortedImages();
         for (Image image: sortedImages) {
             if (idsOfSelectedImages.contains(image.getId())) {
                 Surface imageSurface = null;
@@ -511,7 +512,7 @@ public class NotationModel {
             if (idsOfSelectedImages.contains(image.getId())) {
                 Part imagePart = image.getPart();
                 for (Page page: image.getSortedPages()) {
-                    List<Region> sortedStaves = page.getSortedStaves();
+                    Collection<Region> sortedStaves = page.getSortedStaves();
                     for (Region region: sortedStaves) {
                         ArrayList<String> problems = new ArrayList<>();
                         Part regionPart = region.getPart();
