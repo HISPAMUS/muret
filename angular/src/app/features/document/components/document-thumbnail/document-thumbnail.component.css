@@ -5,3 +5,8 @@
   margin-top: 2.5rem;
   margin-bottom: 1rem;
 }
+
+#documentThumbnail img {
+  width: 100px;
+  height: 600px;
+}

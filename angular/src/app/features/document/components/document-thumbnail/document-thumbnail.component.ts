@@ -11,6 +11,8 @@ export class DocumentThumbnailComponent implements OnInit {
   @Input() filename: string;
   documentParts$: Observable<Part[]>;
   imagePartIds$: Observable<number[]>; // set of part ids
+  image: string;
+  loadingImage = "assets/images/loading.svg";
 
   constructor() {
     //TODO - de momento - cambiar por petición
@@ -33,6 +35,8 @@ export class DocumentThumbnailComponent implements OnInit {
     ]);
 
     this.imagePartIds$ = of([1,3]);
+    //TODO Quitar
+    this.image = "https://upload.wikimedia.org/wikipedia/commons/2/27/00_208_Bw_Angerbrücke%2C_ET_20_LAAG.jpg?" + Math.random();
   }
 
   ngOnInit(): void {

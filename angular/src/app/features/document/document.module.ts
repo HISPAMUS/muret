@@ -26,6 +26,7 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import { DocumentThumbnailComponent } from './components/document-thumbnail/document-thumbnail.component';
 import { ImagePhasesComponent } from './components/image-phases/image-phases.component';
 import { ImagePartsComponent } from './components/image-parts/image-parts.component';
+import {LazyLoadImageModule} from "ng-lazyload-image";
 
 @NgModule({
   declarations: [DocumentComponentOld, ImageThumbnailComponent, UploadImagesComponent, DocumentScoreViewerAndExporterComponent, InstrumentsComponent, AlignmentPreviewComponent, MEIScoreViewerComponent, DocumentComponent, SectionComponent, DocumentThumbnailComponent, ImagePhasesComponent, ImagePartsComponent],
@@ -40,7 +41,8 @@ import { ImagePartsComponent } from './components/image-parts/image-parts.compon
     FormsModule,
     SvgModule,
     SharedModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    LazyLoadImageModule
   ],
   providers: [
     DocumentService
