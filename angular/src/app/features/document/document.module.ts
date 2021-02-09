@@ -23,9 +23,12 @@ import { MEIScoreViewerComponent } from './components/mei-score-viewer/meiscore-
 import { DocumentComponent } from './components/document/document.component';
 import { SectionComponent } from './components/section/section.component';
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import { DocumentThumbnailComponent } from './components/document-thumbnail/document-thumbnail.component';
+import { ImagePhasesComponent } from './components/image-phases/image-phases.component';
+import { ImagePartsComponent } from './components/image-parts/image-parts.component';
 
 @NgModule({
-  declarations: [DocumentComponentOld, ImageThumbnailComponent, UploadImagesComponent, DocumentScoreViewerAndExporterComponent, InstrumentsComponent, AlignmentPreviewComponent, MEIScoreViewerComponent, DocumentComponent, SectionComponent],
+  declarations: [DocumentComponentOld, ImageThumbnailComponent, UploadImagesComponent, DocumentScoreViewerAndExporterComponent, InstrumentsComponent, AlignmentPreviewComponent, MEIScoreViewerComponent, DocumentComponent, SectionComponent, DocumentThumbnailComponent, ImagePhasesComponent, ImagePartsComponent],
   imports: [
     CommonModule,
     DocumentRoutingModule,

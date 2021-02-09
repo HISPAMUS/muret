@@ -53,11 +53,11 @@ export class DocumentComponentOld implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.documentID = +this.route.snapshot.paramMap.get('id'); // + converts the string to number
+      this.store.dispatch(new BreadcrumbsUpdateDocument(this.documentID));
       this.store.dispatch(new DocumentGetDocument(this.documentID));
       this.store.dispatch(new GetUsesOfParts(this.documentID));
       this.store.dispatch(new DocumentGetImages(this.documentID));
       this.store.dispatch(new DocumentGetDocumentStatistics(this.documentID));
-      this.store.dispatch(new BreadcrumbsUpdateDocument(this.documentID));
 
     });
 
