@@ -1,13 +1,13 @@
 import {Directive, ElementRef, EventEmitter, HostListener, Input, Output} from '@angular/core';
 
-import {Selections} from './selections';
+import {SelectionManager} from './selectionManager';
 
 // It contains elements with the appSelectable directive
 @Directive({
   selector: '[appSelectableContainer]'
 })
 export class SelectableContainerDirective {
-  @Input() selection: Selections;
+  @Input() selection: SelectionManager;
 
   constructor(el: ElementRef) { // el = the element containing the directive
   }

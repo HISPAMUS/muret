@@ -4,7 +4,7 @@ import {ImageFilesService} from "../../../../core/services/image-files.service";
 import {map} from "rxjs/operators";
 import {Observable} from "rxjs";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
-import {Selections} from "../../../../shared/directives/selections";
+import {SelectionManager} from "../../../../shared/directives/selectionManager";
 
 @Component({
   selector: 'app-document-thumbnail',
@@ -16,7 +16,7 @@ export class DocumentThumbnailComponent implements OnInit {
   @Input() imageID: number;
   @Input() filename: string;
   @Input() documentParts: Part[];
-  @Input() selection: Selections;
+  @Input() selection: SelectionManager;
 
   imagePartIds: number[]; // set of part ids
   loadedImage$: Observable<SafeResourceUrl>;

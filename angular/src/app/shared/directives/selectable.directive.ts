@@ -1,14 +1,14 @@
-import {Directive, ElementRef, HostListener, Input, OnInit, Output} from '@angular/core';
+import {Directive, ElementRef, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import {Selections} from './selections';
+import {SelectionManager} from './selectionManager';
 
 @Directive({
   selector: '[appSelectable]'
 })
-export class SelectableDirective {
-  @Input() selection: Selections;
-  @Output() onSelected = new EventEmitter();
-  @Output() onDeselected = new EventEmitter();
+export class SelectableDirective implements OnChanges {
+  @Input() selection: SelectionManager;
+  @Output() onSelected = new EventEmitter(); // emitted by the selection manager on the insertion to the selected set of elements
+  @Output() onDeselected = new EventEmitter(); // emitted by the selection manager
 
   constructor(private el: ElementRef) { // el is the element containing the directive
   }
@@ -20,13 +20,23 @@ export class SelectableDirective {
     }
     // @ts-ignore
     if (event.shiftKey) {
-      this.selection.add(this);
+      this.selection.selectRange(this);
+      // @ts-ignore
+    } else if (event.metaKey) {
+      this.selection.addOrRemove(this);
     } else {
       this.selection.replace(this);
     }
 
-    this.onSelected.emit();
     event.stopPropagation();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.selection.isFirstChange()) {
+      if (changes.selection.currentValue instanceof SelectionManager) {
+        (changes.selection.currentValue as SelectionManager).addSelectable(this);
+      }
+    }
   }
 
   /*@HostListener('mouseenter', ["$event"])

@@ -1,7 +1,7 @@
-import { Selections } from './selections';
+import { SelectionManager } from './selectionManager';
 
 describe('Selection', () => {
   it('should create an instance', () => {
-    expect(new Selections()).toBeTruthy();
+    expect(new SelectionManager()).toBeTruthy();
   });
 });
