@@ -97,9 +97,9 @@
          <button class="btn btn-outline-primary" id="dropdownForm1" ngbDropdownToggle>Select part to be rendered</button>
          <div ngbDropdownMenu aria-labelledby="dropdownForm1">
            <button (click)="renderFullScore()">Full score</button>
-           <ng-container *ngIf="usesOfParts">
+           <ng-selectableContainer *ngIf="usesOfParts">
             <button *ngFor="let uses of usesOfParts.uses" ngbDropdownItem (click)="render(uses.part.id)">{{uses.part.name}}</button>
-           </ng-container>
+           </ng-selectableContainer>
          </div>
        </div>
      </div>-->

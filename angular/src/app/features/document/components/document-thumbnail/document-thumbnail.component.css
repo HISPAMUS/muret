@@ -9,3 +9,9 @@
   height: 200px;
   max-width: 400px;
 }
+
+.selected {
+  border-color: red;
+  border-style: solid;
+  border-width: 2px;
+}

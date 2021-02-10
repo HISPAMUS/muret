@@ -12,6 +12,8 @@ import {ImagePreviewComponent} from "./components/image-preview/image-preview.co
 import {ImageComponent} from "./components/image/image.component";
 import {SvgModule} from "../svg/svg.module";
 import {AgnosticOrSemanticToolbarIconComponent} from "./components/agnostic-or-semantic-toolbar-icon/agnostic-or-semantic-toolbar-icon.component";
+import { SelectableDirective } from './directives/selectable.directive';
+import { SelectableContainerDirective } from './directives/selectable-container.directive';
 
 @NgModule({
   imports: [
@@ -31,7 +33,9 @@ import {AgnosticOrSemanticToolbarIconComponent} from "./components/agnostic-or-s
     AgnosticOrSemanticToolbarComponent,
     AgnosticOrSemanticToolbarIconComponent,
     ImagePreviewComponent,
-    ImageComponent
+    ImageComponent,
+    SelectableDirective,
+    SelectableContainerDirective
   ],
   exports: [
     StateComponent,
@@ -39,7 +43,9 @@ import {AgnosticOrSemanticToolbarIconComponent} from "./components/agnostic-or-s
     SafePipe,
     AgnosticOrSemanticToolbarComponent,
     ImagePreviewComponent,
-    ImageComponent
+    ImageComponent,
+    SelectableDirective,
+    SelectableContainerDirective
   ],
   providers: []
 })

@@ -4,6 +4,7 @@ import {ImageFilesService} from "../../../../core/services/image-files.service";
 import {map} from "rxjs/operators";
 import {Observable} from "rxjs";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
+import {Selections} from "../../../../shared/directives/selections";
 
 @Component({
   selector: 'app-document-thumbnail',
@@ -15,11 +16,15 @@ export class DocumentThumbnailComponent implements OnInit {
   @Input() imageID: number;
   @Input() filename: string;
   @Input() documentParts: Part[];
+  @Input() selection: Selections;
+
   imagePartIds: number[]; // set of part ids
   loadedImage$: Observable<SafeResourceUrl>;
   loadingImage = "assets/images/loading.svg";
+  imageClass: string;
 
   constructor(private imageFilesService: ImageFilesService) { // }, private sanitizer: DomSanitizer) {
+    this.imageClass = '';
     //TODO Quitar
     this.imagePartIds = [13];
   }
@@ -31,4 +36,11 @@ export class DocumentThumbnailComponent implements OnInit {
     );
   }
 
+  onSelect() {
+    this.imageClass = 'selected';
+  }
+
+  onDeselect() {
+    this.imageClass = '';
+  }
 }
