@@ -1,10 +1,12 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Part} from "../../../../core/model/entities/part";
 import {ImageFilesService} from "../../../../core/services/image-files.service";
 import {map} from "rxjs/operators";
 import {Observable} from "rxjs";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
-import {SelectionManager} from "../../../../shared/directives/selectionManager";
+import {SelectionManager} from "../../../../shared/directives/selection-manager";
+import {ContextMenuComponent} from "ngx-contextmenu";
+import {Lightbox, LightboxConfig} from "ngx-lightbox";
 
 @Component({
   selector: 'app-document-thumbnail',
@@ -22,8 +24,12 @@ export class DocumentThumbnailComponent implements OnInit {
   loadedImage$: Observable<SafeResourceUrl>;
   loadingImage = "assets/images/loading.svg";
   imageClass: string;
+  @ViewChild(ContextMenuComponent) public contextualMenu: ContextMenuComponent;
 
-  constructor(private imageFilesService: ImageFilesService) { // }, private sanitizer: DomSanitizer) {
+  constructor(private imageFilesService: ImageFilesService, private sanitizer: DomSanitizer, private lightbox: Lightbox,
+              private lighboxConfig: LightboxConfig,
+  ) {
+    lighboxConfig.fitImageInViewPort = true;
     this.imageClass = '';
     //TODO Quitar
     this.imagePartIds = [13];
@@ -43,4 +49,18 @@ export class DocumentThumbnailComponent implements OnInit {
   onDeselect() {
     this.imageClass = '';
   }
-}
+
+  preview() {
+    this.imageFilesService.getPreviewImageBlob$(this.documentPath, this.imageID).subscribe(imageBlob => {
+      const albums = []; // used by Lightbox
+
+      const album = {
+        src: this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(imageBlob)),
+        caption: this.filename,
+      };
+
+      albums.push(album);
+      this.lightbox.open(albums);
+      // window.open(window.URL.createObjectURL(imageBlob), 'Preview ' + this.image.filename, 'widthPercentage=1280,heightPercentage=720');
+    });
+  }}

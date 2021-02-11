@@ -6,6 +6,17 @@
     </p>
   </div>
   <!--<img class="mt-0 pt-0" [defaultImage]="loadingImage" [lazyLoad]="loadedImage$ | async">-->
-  <img appSelectable [selection]="selection" (onSelected)="onSelect()" (onDeselected)="onDeselect()" [defaultImage]="loadingImage" [lazyLoad]="loadedImage$ | async" [ngClass]="imageClass">
+  <img appSelectable [selection]="selection" (onSelected)="onSelect()" (onDeselected)="onDeselect()"
+       [defaultImage]="loadingImage"
+       [lazyLoad]="loadedImage$ | async"
+       [ngClass]="imageClass"
+       [contextMenu]="contextualMenu"
+  >
   <app-image-parts [documentParts]="documentParts" [imagePartIds]="imagePartIds"></app-image-parts>
 </div>
+
+<context-menu>
+  <ng-template contextMenuItem (execute)="preview()">
+    Preview
+  </ng-template>
+</context-menu>

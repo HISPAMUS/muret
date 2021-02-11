@@ -1,6 +1,6 @@
 import {Directive, ElementRef, EventEmitter, HostListener, Input, Output} from '@angular/core';
 
-import {SelectionManager} from './selectionManager';
+import {SelectionManager} from './selection-manager';
 
 // It contains elements with the appSelectable directive
 @Directive({

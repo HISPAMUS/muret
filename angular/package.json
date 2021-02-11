@@ -12,7 +12,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^11.0.5",
-    "@angular/cdk": "^11.0.3",
+    "@angular/cdk": "^11.2.0",
     "@angular/common": "^11.0.5",
     "@angular/compiler": "^11.0.5",
     "@angular/core": "^11.0.5",
@@ -42,6 +42,7 @@
     "jquery": "^3.5.1",
     "ng-lazyload-image": "^9.1.0",
     "ng2-file-upload": "^1.4.0",
+    "ngx-contextmenu": "^5.4.0",
     "ngx-lightbox": "^2.2.2",
     "ngx-logger": "^4.1.9",
     "ngx-simple-modal": "^1.4.14",

@@ -14,6 +14,7 @@ import {SvgModule} from "../svg/svg.module";
 import {AgnosticOrSemanticToolbarIconComponent} from "./components/agnostic-or-semantic-toolbar-icon/agnostic-or-semantic-toolbar-icon.component";
 import { SelectableDirective } from './directives/selectable.directive';
 import { SelectableContainerDirective } from './directives/selectable-container.directive';
+import {ContextMenuModule} from "ngx-contextmenu";
 
 @NgModule({
   imports: [
@@ -24,7 +25,10 @@ import { SelectableContainerDirective } from './directives/selectable-container.
     ReactiveFormsModule,
     NgbButtonsModule,
     NgbTooltipModule,
-    SvgModule
+    SvgModule,
+    ContextMenuModule.forRoot({
+      useBootstrap4: true,
+    })
   ],
   declarations: [
     StateComponent,

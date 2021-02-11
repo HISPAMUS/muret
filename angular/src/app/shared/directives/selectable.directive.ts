@@ -1,6 +1,6 @@
 import {Directive, ElementRef, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import {SelectionManager} from './selectionManager';
+import {SelectionManager} from './selection-manager';
 
 @Directive({
   selector: '[appSelectable]'

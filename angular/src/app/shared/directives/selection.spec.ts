@@ -1,4 +1,4 @@
-import { SelectionManager } from './selectionManager';
+import { SelectionManager } from './selection-manager';
 
 describe('Selection', () => {
   it('should create an instance', () => {

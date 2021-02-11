@@ -1,9 +1,11 @@
 /**
  * Not using Selection name because it exists in Angular
  */
+import {SelectableDirective} from "./selectable.directive";
+
 export class SelectionManager {
-  private selectedElements: Set<any>;
-  private _selectableElements: any[]; // optional - in order to be able to select with shift key from an element to another one
+  private selectedElements: Set<SelectableDirective>;
+  private _selectableElements: SelectableDirective[]; // in order to be able to select with shift key from an element to another one
   private lastSelectedElementIndex: number = 0;
 
   constructor() {
