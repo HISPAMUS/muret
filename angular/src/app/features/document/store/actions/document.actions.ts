@@ -5,10 +5,13 @@ import {DocumentStatistics} from '../../../../core/model/restapi/document-statis
 import {AlignmentPreview} from '../../../../core/model/restapi/alignment-preview';
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
+import {SectionImages} from "../../../../core/model/restapi/section-images";
 
 export enum DocumentActionTypes {
   DocumentGetOverview = '[Document] Get Overview',
   DocumentGetOverviewSuccess = '[Document] Get Overview success',
+  DocumentMoveImagesToSection = '[Document] Move image to section',
+  DocumentMoveImagesToSectionSuccess = '[Document] Move image to section success',
 
 
   // revisado hasta aquí
@@ -43,6 +46,16 @@ export class DocumentGetOverview implements Action {
 export class DocumentGetOverviewSuccess implements Action {
   public readonly type = DocumentActionTypes.DocumentGetOverviewSuccess;
   constructor(public documentOverview: Document) {}
+}
+
+export class DocumentMoveImagesToSection implements Action {
+  public readonly type = DocumentActionTypes.DocumentMoveImagesToSection;
+  constructor(public sectionImages: SectionImages) {}
+}
+
+export class DocumentMoveImagesToSectionSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentMoveImagesToSectionSuccess;
+  constructor(public sectionImages: SectionImages) {}
 }
 
 // revisado hasta aquí
@@ -164,6 +177,7 @@ export class DocumentGetCroppedImageSuccess implements Action {
 
 export type DocumentActions =
   DocumentGetOverview | DocumentGetOverviewSuccess |
+  DocumentMoveImagesToSection | DocumentMoveImagesToSectionSuccess |
 
   // revisado hasta aquí
   DocumentResetServerError | DocumentServerError |

@@ -140,7 +140,7 @@ MINOR UPDATES
 0.3
 
 MAJOR UPDATES
-    - Selection of images to be exported to MEI / MusicXML / Verovio
+    - SelectionManager of images to be exported to MEI / MusicXML / Verovio
     - Administrator can now manage permissions
 
 MINOR UPDATES

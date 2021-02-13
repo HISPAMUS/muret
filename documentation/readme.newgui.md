@@ -158,7 +158,8 @@ It shows the opened document.
 
 | **Action** | **`DocumentService` method** | **API Rest method** | **`DocumentState` properties on succes** | **Properties on failure** | 
 | --- | ----------- | ----------- | ----------- | ----- | 
-| `DocumentGetOverview(documentID: number)` | `getOverview$(documentID: number)` | `/documents/181?projection=overview` | `documentOverview` (containing images unassigned to sections), parts, sections (including images)  | `apiRestServerError`| 
+| `DocumentGetOverview(documentID: number)` | `getOverview$(documentID: number)` | `/documents/<documentID>?projection=overview` | `documentOverview` (containing images unassigned to sections), parts, sections (including images)  | `apiRestServerError`| 
+| `DocumentMoveImagesToSection(imageIDs: number[], sectionID: number)` | `moveImagesToSection$(imageIDs: number[], sectionID: number)` | `/documents/moveToSection` | `documentOverview` (containing images unassigned to sections), parts, sections (including images)  | `apiRestServerError`| 
 
 
 ![Document store component](puml/angular/document_store_component.svg)
@@ -167,3 +168,8 @@ It shows the opened document.
 
 -----
 **TODO ¿Unificar apiRestServerError en un sólo Store?**
+
+----
+** Documentar Librerías**
+https://www.npmjs.com/package/klona
+para deep-copy objetos en reducer de ngrx

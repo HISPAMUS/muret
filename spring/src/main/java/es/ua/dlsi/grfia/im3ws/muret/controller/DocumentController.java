@@ -5,17 +5,12 @@ import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.controller.StringResponse;
 import es.ua.dlsi.grfia.im3ws.muret.auditing.AuditorAwareImpl;
-import es.ua.dlsi.grfia.im3ws.muret.controller.payload.DocumentStatistics;
-import es.ua.dlsi.grfia.im3ws.muret.controller.payload.PreflightCkeckResult;
-import es.ua.dlsi.grfia.im3ws.muret.controller.payload.StringBody;
-import es.ua.dlsi.grfia.im3ws.muret.controller.payload.UploadFileResponse;
+import es.ua.dlsi.grfia.im3ws.muret.controller.payload.*;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
+import es.ua.dlsi.grfia.im3ws.muret.entity.Collection;
 import es.ua.dlsi.grfia.im3ws.muret.model.NotationModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.DocumentModel;
-import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
-import es.ua.dlsi.grfia.im3ws.muret.repository.PartRepository;
-import es.ua.dlsi.grfia.im3ws.muret.repository.DocumentRepository;
-import es.ua.dlsi.grfia.im3ws.muret.repository.StateRepository;
+import es.ua.dlsi.grfia.im3ws.muret.repository.*;
 import es.ua.dlsi.grfia.im3ws.service.FileStorageService;
 import es.ua.dlsi.grfia.im3ws.service.Utils;
 import es.ua.dlsi.im3.core.IM3Exception;
@@ -57,10 +52,14 @@ public class DocumentController {
     private final MURETConfiguration muretConfiguration;
     private final DocumentRepository documentRepository;
     private final ImageRepository imageRepository;
+    private final SectionRepository sectionRepository;
+
+
     private final StateRepository stateRepository;
     private final PartRepository partRepository;
     private final DocumentModel documentModel;
     private final NotationModel notationModel;
+
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -68,7 +67,7 @@ public class DocumentController {
     @Autowired
     public DocumentController(DocumentModel documentModel, FileStorageService fileStorageService,
                               MURETConfiguration muretConfiguration, DocumentRepository documentRepository, ImageRepository imageRepository,
-                              StateRepository stateRepository, PartRepository partRepository) {
+                              StateRepository stateRepository, PartRepository partRepository, SectionRepository sectionRepository) {
         this.documentModel = documentModel;
         this.fileStorageService = fileStorageService;
         this.muretConfiguration = muretConfiguration;
@@ -76,22 +75,47 @@ public class DocumentController {
         this.imageRepository = imageRepository;
         this.stateRepository = stateRepository;
         this.partRepository = partRepository;
+        this.sectionRepository = sectionRepository;
         this.notationModel = new NotationModel();
     }
 
-    /**
-     * It returns the basic information of the document: sections, parts and images
-     * @param id
-     * @return
-     */
-    @GetMapping(path = {"/basicinfo/{id}"})
-    @Transactional(readOnly=true)
-    public Document getDocumentBasicInfo(@PathVariable("id") Integer id)  {
-        EntityGraph entityGraph = entityManager.createEntityGraph(Document.class);
-        entityGraph.addAttributeNodes("name", "images", "parts", "sections");
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("javax.persistence.fetchgraph", entityGraph);
-        return entityManager.find(Document.class, id, properties);
+    @PutMapping(path = {"/moveImagesToSection"})
+    @javax.transaction.Transactional
+    public SectionImages moveImageToSection(@RequestBody SectionImages sectionImages) {
+        try {
+            java.util.Collection<Image> images = new ArrayList<>();
+            Long [] previousSectionIDs = new Long[sectionImages.getImageIDS().length];
+            for (int i=0; i<sectionImages.getImageIDS().length; i++) {
+                Long id = sectionImages.getImageIDS()[i];
+                Optional<Image> image = imageRepository.findById(id);
+                if (!image.isPresent()) {
+                    throw new IM3WSException("Cannot find an image with ID= " + id);
+                }
+                if (image.get().getSection() == null) {
+                    previousSectionIDs[i] = null;
+                } else {
+                    previousSectionIDs[i] = image.get().getSection().getId();
+                }
+
+                if (sectionImages.getNewSectionID() == null) {
+                    // add to the previous document
+                    image.get().changeDocumentAndSection(image.get().getSection().getDocument(), null);
+                } else {
+                    Optional<Section> section = sectionRepository.findById(sectionImages.getNewSectionID());
+                    if (!section.isPresent()) {
+                        throw new IM3WSException("Cannot find a section with ID= " + sectionImages.getNewSectionID());
+                    }
+                    image.get().changeDocumentAndSection(null, section.get());
+                }
+                images.add(image.get());
+            }
+
+            imageRepository.saveAll(images);
+            sectionImages.setPreviousSectionIDs(previousSectionIDs);
+            return sectionImages;
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot move image to section", e);
+        }
     }
 
 

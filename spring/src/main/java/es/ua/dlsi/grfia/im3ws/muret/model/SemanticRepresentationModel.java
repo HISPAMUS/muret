@@ -14,7 +14,6 @@ import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticEncoding;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.HorizontalSeparator;
 import es.ua.dlsi.im3.omr.encoding.semantic.*;
-import sun.jvm.hotspot.debugger.cdbg.Sym;
 
 import java.io.FileNotFoundException;
 import java.util.Collection;

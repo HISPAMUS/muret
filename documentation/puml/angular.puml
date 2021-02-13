@@ -146,10 +146,12 @@
 @startuml document_store_component
     [Document Store]
     DocumentGetOverview -- [Document Store]
+    DocumentMoveImagesToSection -- [Document Store]
 
     [Document Store] -- selectDocumentOverview
 
     [DocumentComponent] ..> DocumentGetOverview
+    [DocumentComponent] ..> DocumentMoveImagesToSection
 
     selectDocumentOverview <.. [DocumentComponent]
 @enduml

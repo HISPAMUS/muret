@@ -7,10 +7,11 @@ import {SelectionManager} from './selection-manager';
 })
 export class SelectableDirective implements OnChanges {
   @Input() selection: SelectionManager;
+  @Input() modelID: any;
   @Output() onSelected = new EventEmitter(); // emitted by the selection manager on the insertion to the selected set of elements
   @Output() onDeselected = new EventEmitter(); // emitted by the selection manager
 
-  constructor(private el: ElementRef) { // el is the element containing the directive
+  constructor() { // private el: ElementRef el is the element containing the directive
   }
 
   @HostListener('click', ["$event"])
@@ -37,6 +38,16 @@ export class SelectableDirective implements OnChanges {
         (changes.selection.currentValue as SelectionManager).addSelectable(this);
       }
     }
+  }
+
+  /**
+   * It returns the model ID associated to the selectable
+   */
+  public getSelectedModelID(): any {
+    if (!this.modelID) {
+      throw new Error('The [modelID] property is not set');
+    }
+    return this.modelID;
   }
 
   /*@HostListener('mouseenter', ["$event"])

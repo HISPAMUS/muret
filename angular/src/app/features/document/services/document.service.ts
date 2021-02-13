@@ -8,6 +8,7 @@ import {DocumentStatistics} from '../../../core/model/restapi/document-statistic
 import {PreflightCheckResult} from '../../../core/model/restapi/preflight-check-result';
 import {AlignmentPreview} from '../../../core/model/restapi/alignment-preview';
 import {Section} from "../../../core/model/entities/section";
+import {SectionImages} from "../../../core/model/restapi/section-images";
 
 @Injectable() // non-singleton
 export class DocumentService {
@@ -18,6 +19,10 @@ export class DocumentService {
     return this.apiRestClientService.getProjectionOf$<Document>(documentID, 'documents', 'overview');
   }
 
+  moveImagesToSection$(sectionImages: SectionImages): Observable<SectionImages> {
+    const url = `document/moveImagesToSection`;
+    return this.apiRestClientService.put$(url, sectionImages);
+  }
   /*public getParts$(documentID: number): Observable<Section[]> {
     return this.apiRestClientService.getDetailsExcerptProjection$<Section>('documents', 'parts', documentID);
   }*/
@@ -85,4 +90,6 @@ export class DocumentService {
     const url = `alignment/preview/${documentID}`;
     return this.apiRestClientService.get$<AlignmentPreview>(url);
   }
+
+
 }

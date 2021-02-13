@@ -38,7 +38,8 @@ public class Worms2021PrIMUS {
     public static final void main(String [] args) throws Exception {
         if (args.length == 0) {
             System.out.println("Using default parameters");
-            args = new String[] {System.getProperty("user.home") + "/cmg/experiments/primusKern/CameraPrIMuS_2020", "/tmp/worms2021/primus"};
+            args = new String[] {System.getProperty("user.home") + "/cmg/experiments/primusKern/CameraPrIMuS_2020/Corpus", "/tmp/worms2021/primus"};
+            //args = new String[] {System.getProperty("user.home") + "/cmg/experiments/primusKern/CameraPrIMuS_2020/Corpus/230005168-1_3_1", "/tmp/worms2021/primus"};
         } else if (args.length != 2) {
             throw new Exception("Use: <input path> <output path>");
         }

@@ -10844,7 +10844,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
   </define>
   <define name="mei_beam">
     <element name="beam">
-      <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">A container for
+      <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">A selectableContainer for
         a series of explicitly beamed events that begins and ends entirely within a
         measure.</a:documentation>
       <zeroOrMore>
@@ -11134,7 +11134,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
   </define>
   <define name="mei_graceGrp">
     <element name="graceGrp">
-      <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">A container for
+      <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">A selectableContainer for
         a sequence of grace notes.</a:documentation>
       <zeroOrMore>
         <choice>
@@ -13982,7 +13982,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
   </define>
   <define name="mei_manifestationList">
     <element name="manifestationList">
-      <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">A container for
+      <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">A selectableContainer for
         the descriptions of physical embodiments of an expression of a work.</a:documentation>
       <zeroOrMore>
         <ref name="mei_model.headLike"/>
@@ -16023,7 +16023,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
   <define name="mei_extMeta">
     <element name="extMeta">
       <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">(extended
-        metadata) – Provides a container element for non-MEI metadata formats.</a:documentation>
+        metadata) – Provides a selectableContainer element for non-MEI metadata formats.</a:documentation>
       <zeroOrMore>
         <choice>
           <text/>
@@ -16180,7 +16180,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
   <define name="mei_history">
     <element name="history">
       <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Provides a
-        container for information about the history of a resource other than the circumstances of
+        selectableContainer for information about the history of a resource other than the circumstances of
         its creation.</a:documentation>
       <zeroOrMore>
         <ref name="mei_model.headLike"/>
@@ -17059,7 +17059,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
   <define name="mei_sourceDesc">
     <element name="sourceDesc">
       <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">(source
-        description) – A container for the descriptions of the source(s) used in the creation of the
+        description) – A selectableContainer for the descriptions of the source(s) used in the creation of the
         electronic file.</a:documentation>
       <zeroOrMore>
         <ref name="mei_model.headLike"/>
@@ -28525,7 +28525,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
   </define>
   <define name="mei_label">
     <element name="label">
-      <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">A container for
+      <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">A selectableContainer for
         document text that identifies the feature to which it is attached. For a "tool tip" or other
         generated label, use the label attribute.</a:documentation>
       <zeroOrMore>
@@ -29056,7 +29056,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
   <define name="mei_parts">
     <element name="parts">
       <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Provides a
-        container for performers' parts.</a:documentation>
+        selectableContainer for performers' parts.</a:documentation>
       <zeroOrMore>
         <ref name="mei_model.partLike"/>
       </zeroOrMore>

@@ -7,6 +7,11 @@ import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 import {SelectionManager} from "../../../../shared/directives/selection-manager";
 import {ContextMenuComponent} from "ngx-contextmenu";
 import {Lightbox, LightboxConfig} from "ngx-lightbox";
+import {Section} from "../../../../core/model/entities/section";
+import {Store} from "@ngrx/store";
+import {DocumentState} from "../../store/state/document.state";
+import {DocumentMoveImagesToSection} from "../../store/actions/document.actions";
+import {SectionImages} from "../../../../core/model/restapi/section-images";
 
 @Component({
   selector: 'app-document-thumbnail',
@@ -15,6 +20,8 @@ import {Lightbox, LightboxConfig} from "ngx-lightbox";
 })
 export class DocumentThumbnailComponent implements OnInit {
   @Input() documentPath: string;
+  @Input() section: Section;
+  @Input() sections: Section[];
   @Input() imageID: number;
   @Input() filename: string;
   @Input() documentParts: Part[];
@@ -24,10 +31,10 @@ export class DocumentThumbnailComponent implements OnInit {
   loadedImage$: Observable<SafeResourceUrl>;
   loadingImage = "assets/images/loading.svg";
   imageClass: string;
-  @ViewChild(ContextMenuComponent) public contextualMenu: ContextMenuComponent;
+  @ViewChild(ContextMenuComponent, { static: true }) public contextualMenu: ContextMenuComponent; // , { static: true } for avoiding ExpressionChangedAfterItHasCheckedError
 
   constructor(private imageFilesService: ImageFilesService, private sanitizer: DomSanitizer, private lightbox: Lightbox,
-              private lighboxConfig: LightboxConfig,
+              private lighboxConfig: LightboxConfig, private store: Store<DocumentState>
   ) {
     lighboxConfig.fitImageInViewPort = true;
     this.imageClass = '';
@@ -63,4 +70,34 @@ export class DocumentThumbnailComponent implements OnInit {
       this.lightbox.open(albums);
       // window.open(window.URL.createObjectURL(imageBlob), 'Preview ' + this.image.filename, 'widthPercentage=1280,heightPercentage=720');
     });
-  }}
+  }
+
+  linkToPart() {
+
+  }
+
+  moveToSection(section: Section) {
+    const sectionImages: SectionImages = {
+      newSectionID: section ? section.id : null,
+      imageIDS: []
+    };
+    if (this.selection.getSelected().length > 0) {
+      this.selection.getSelected().forEach(selectable => {
+        const id = selectable.getSelectedModelID();
+        sectionImages.imageIDS.push(id);
+      });
+    } else {
+      // no selection has been done but the right clicked object must be moved
+      sectionImages.imageIDS.push(this.imageID);
+    }
+    this.store.dispatch(new DocumentMoveImagesToSection(sectionImages));
+  }
+
+  sectionTracking(index, item): number {
+    return index;
+  }
+
+  getImageID() {
+    return this.imageID;
+  }
+}

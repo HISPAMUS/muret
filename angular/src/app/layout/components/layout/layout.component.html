@@ -1,18 +1,20 @@
-<div *ngIf="isAuthenticated$ | async" class="container-fluid">
-  <div class="row">
-    <div class="col-3">
-      <app-hamburguer-menu></app-hamburguer-menu>
-    </div>
-    <div class="col">
-      <app-breadcrumbs></app-breadcrumbs>
-    </div>
-    <div class="col-1">
-      <app-server-state></app-server-state>
-    </div>
-    <div class="col-3 d-flex align-items-center flex-row-reverse">
-      <app-avatar></app-avatar>
+<header class="fixed-top">
+  <div *ngIf="isAuthenticated$ | async" class="container-fluid">
+    <div class="row">
+      <div class="col-3">
+        <app-hamburguer-menu></app-hamburguer-menu>
+      </div>
+      <div class="col">
+        <app-breadcrumbs></app-breadcrumbs>
+      </div>
+      <div class="col-1">
+        <app-server-state></app-server-state>
+      </div>
+      <div class="col-3 d-flex align-items-center flex-row-reverse">
+        <app-avatar></app-avatar>
+      </div>
     </div>
   </div>
-</div>
+</header>
 <router-outlet></router-outlet>
 

@@ -32,6 +32,12 @@ public class CollectionsController {
     }
 
 
+    /**
+     * TO-DO Debería ser POST (https://arquitecturaibm.com/diferencia-entre-put-y-post-en-un-web-service-rest-en-java/)
+     * @param parentCollectionID
+     * @param subcollectionName
+     * @return
+     */
     @PutMapping(path = {"create/{parentCollectionID}/{subcollectionName}"})
     @Transactional
     public Collection createSubcollection(@PathVariable(name="parentCollectionID") Integer parentCollectionID, @PathVariable(name="subcollectionName") String subcollectionName) {

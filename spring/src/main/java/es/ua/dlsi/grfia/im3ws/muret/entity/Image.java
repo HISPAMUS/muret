@@ -3,6 +3,7 @@ package es.ua.dlsi.grfia.im3ws.muret.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import es.ua.dlsi.grfia.im3ws.IM3WSException;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -106,7 +107,7 @@ public class Image extends Auditable implements IAssignableToPart {
     }
 
     public void setDocument(Document document) {
-        if (this.section != null) {
+        if (document != null && this.section != null) {
             throw new RuntimeException("section and document are mutually exclusive");
         }
 
@@ -142,7 +143,7 @@ public class Image extends Auditable implements IAssignableToPart {
     }
 
     public void setSection(Section section) {
-        if (this.document != null) {
+        if (section != null && this.document != null) {
             throw new RuntimeException("section and document are mutually exclusive");
         }
         this.section = section;
@@ -190,5 +191,17 @@ public class Image extends Auditable implements IAssignableToPart {
     public List<Page> getSortedPages() {
         List<Page> sortedPages = getPages().stream().sorted(Page.getVerticalPositionComparator()).collect(Collectors.toList());
         return sortedPages;
+    }
+
+    public void changeDocumentAndSection(Document document, Section section) throws IM3WSException {
+        if (section == null && document == null) {
+            throw new IM3WSException("Cannot set both section and document to null");
+        }
+        if (section != null && document != null) {
+            throw new IM3WSException("Section and document are mutually exclusive");
+        }
+
+        this.section = section;
+        this.document = document;
     }
 }

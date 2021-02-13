@@ -21,7 +21,10 @@ import {
   DocumentActionTypes,
   DocumentGetAlignmentPreview,
   DocumentGetAlignmentPreviewSuccess,
-  DocumentServerError, DocumentGetOverview, DocumentGetOverviewSuccess,
+  DocumentServerError,
+  DocumentGetOverview,
+  DocumentGetOverviewSuccess,
+  DocumentMoveImagesToSection, DocumentMoveImagesToSectionSuccess,
 } from '../actions/document.actions';
 import {Document} from '../../../../core/model/entities/document';
 import {Image} from '../../../../core/model/entities/image';
@@ -44,6 +47,15 @@ export class DocumentEffects {
     ofType<DocumentGetOverview>(DocumentActionTypes.DocumentGetOverview),
     switchMap((action: DocumentGetOverview) => this.documentService.getOverview$(action.documentID).pipe(
       switchMap((documentSummary: Document) => of(new DocumentGetOverviewSuccess(documentSummary))),
+      catchError(err => of(new DocumentServerError(err)))
+    )));
+
+
+  @Effect()
+  moveImageToSection$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentMoveImagesToSection>(DocumentActionTypes.DocumentMoveImagesToSection),
+    switchMap((action: DocumentMoveImagesToSection) => this.documentService.moveImagesToSection$(action.sectionImages).pipe(
+      switchMap((sectionImages) => of(new DocumentMoveImagesToSectionSuccess(sectionImages))),
       catchError(err => of(new DocumentServerError(err)))
     )));
 

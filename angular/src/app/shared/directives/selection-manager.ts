@@ -18,7 +18,6 @@ export class SelectionManager {
   }
 
   public addOrRemove(item: any) {
-    debugger;
     if (this.selectedElements.has(item)) {
       this.remove(item);
     } else {
@@ -67,5 +66,9 @@ export class SelectionManager {
 
   public addSelectable(el: any) {
     this._selectableElements.push(el);
+  }
+
+  getSelected(): SelectableDirective[] { // use a copy of the collection to avoid manipulating from outside
+    return Array.from(this.selectedElements);
   }
 }
