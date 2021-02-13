@@ -62,6 +62,7 @@ import { AdminDashboardModule } from './features/admin-dashboard/admin-dashboard
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import {DialogsModule} from "./dialogs/dialogs.module";
+import {faEllipsisV} from "@fortawesome/free-solid-svg-icons/faEllipsisV";
 
 @NgModule({
   declarations: [
@@ -139,5 +140,6 @@ export class AppModule {
     library.addIcons(faObjectGroup); // used in document thumbnail
     library.addIcons(faMusic); // used in document thumbnail
     library.addIcons(faGuitar); // used in document thumbnail
+    library.addIcons(faEllipsisV); // used in section
   }
 }

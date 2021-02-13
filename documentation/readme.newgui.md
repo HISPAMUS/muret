@@ -159,7 +159,10 @@ It shows the opened document.
 | **Action** | **`DocumentService` method** | **API Rest method** | **`DocumentState` properties on succes** | **Properties on failure** | 
 | --- | ----------- | ----------- | ----------- | ----- | 
 | `DocumentGetOverview(documentID: number)` | `getOverview$(documentID: number)` | `/documents/<documentID>?projection=overview` | `documentOverview` (containing images unassigned to sections), parts, sections (including images)  | `apiRestServerError`| 
-| `DocumentMoveImagesToSection(imageIDs: number[], sectionID: number)` | `moveImagesToSection$(imageIDs: number[], sectionID: number)` | `/documents/moveToSection` | `documentOverview` (containing images unassigned to sections), parts, sections (including images)  | `apiRestServerError`| 
+| `DocumentMoveImagesToSection(imageIDs: number[], sectionID: number)` | `moveImagesToSection$(imageIDs: number[], sectionID: number)` | `/documents/moveToSection` | `documentOverview` (with images moved from secetion)  | `apiRestServerError`| 
+| `DocumentNewSection(documentID: number, name: string)` | `createSection$(documentID: number, name: string)` | `/documents/createSection` | `documentOverview` (with new section)  | `apiRestServerError`| 
+| `DocumentRenameSection(section: Section)` | `renameSection$(section: Section)` | `/documents/renameSection` | `documentOverview` (with section changed)  | `apiRestServerError`| 
+| `DocumentDeleteSection(sectionID: number)` | `deleteSection$(sectionID: number)` | `/documents/deleteSection` | `documentOverview` (with section deleted and images moved)  | `apiRestServerError`| 
 
 
 ![Document store component](puml/angular/document_store_component.svg)
@@ -173,3 +176,6 @@ It shows the opened document.
 ** Documentar Librerías**
 https://www.npmjs.com/package/klona
 para deep-copy objetos en reducer de ngrx
+
+https://www.npmjs.com/package/ngx-contextmenu
+Context menus

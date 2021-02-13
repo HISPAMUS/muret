@@ -24,7 +24,11 @@ import {
   DocumentServerError,
   DocumentGetOverview,
   DocumentGetOverviewSuccess,
-  DocumentMoveImagesToSection, DocumentMoveImagesToSectionSuccess,
+  DocumentMoveImagesToSection,
+  DocumentMoveImagesToSectionSuccess,
+  DocumentCreateSection,
+  DocumentCreateSectionSuccess,
+  DocumentRenameSection, DocumentRenameSectionSuccess, DocumentDeleteSection, DocumentDeleteSectionSuccess,
 } from '../actions/document.actions';
 import {Document} from '../../../../core/model/entities/document';
 import {Image} from '../../../../core/model/entities/image';
@@ -59,6 +63,31 @@ export class DocumentEffects {
       catchError(err => of(new DocumentServerError(err)))
     )));
 
+
+  @Effect()
+  createSection$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentCreateSection>(DocumentActionTypes.DocumentCreateSection),
+    switchMap((action: DocumentCreateSection) => this.documentService.createSection$(action.documentID, action.name).pipe(
+      switchMap((section) => of(new DocumentCreateSectionSuccess(section))),
+      catchError(err => of(new DocumentServerError(err)))
+    )));
+
+  @Effect()
+  renameSection$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentRenameSection>(DocumentActionTypes.DocumentRenameSection),
+    switchMap((action: DocumentRenameSection) => this.documentService.renameSection$(action.section).pipe(
+      switchMap((section) => of(new DocumentRenameSectionSuccess(section))),
+      catchError(err => of(new DocumentServerError(err)))
+    )));
+
+
+  @Effect()
+  deleteSection$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentDeleteSection>(DocumentActionTypes.DocumentDeleteSection),
+    switchMap((action: DocumentDeleteSection) => this.documentService.deleteSection$(action.sectionID).pipe(
+      switchMap((sectionID) => of(new DocumentDeleteSectionSuccess(sectionID))),
+      catchError(err => of(new DocumentServerError(err)))
+    )));
 
   // revisado hasta aquí
   @Effect()

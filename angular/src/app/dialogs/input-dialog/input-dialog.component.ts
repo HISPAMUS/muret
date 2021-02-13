@@ -5,6 +5,7 @@ export interface InputModel {
   title: string;
   message?: string;
   currentValue?: string;
+  singleLine?: boolean;
 }
 
 @Component({
@@ -16,6 +17,8 @@ export class InputDialogComponent extends SimpleModalComponent<InputModel, strin
   title: string;
   message: string;
   currentValue: string;
+  singleLine?: boolean;
+
   constructor() {
     super();
     this.currentValue = '1';

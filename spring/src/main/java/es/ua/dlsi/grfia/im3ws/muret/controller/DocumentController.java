@@ -118,6 +118,73 @@ public class DocumentController {
         }
     }
 
+    // TO-DO Debería ser POST (https://arquitecturaibm.com/diferencia-entre-put-y-post-en-un-web-service-rest-en-java/)
+    @PutMapping(path = {"/createSection/{documentID}/{name}"})
+    @Transactional
+    public Section createSection(@PathVariable("documentID") Integer documentID, @PathVariable("name") String name) {
+        try {
+            Optional<Document> document = documentRepository.findById(documentID);
+            if (!document.isPresent()) {
+                throw new IM3WSException("Cannot find document with id=" + documentID);
+            }
+
+            Section section = new Section();
+            section.setDocument(document.get());
+            section.setName(name);
+            return sectionRepository.save(section);
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot create new section", e);
+        }
+    }
+
+    @PutMapping(path = {"/renameSection/{sectionID}/{name}"})
+    @Transactional
+    public Section renameSection(@PathVariable("sectionID") Long sectionID, @PathVariable("name") String name) {
+        try {
+            Optional<Section> optionalSection = sectionRepository.findById(sectionID);
+            if (!optionalSection.isPresent()) {
+                throw new IM3WSException("Cannot find section with id=" + sectionID);
+            }
+            optionalSection.get().setName(name);
+
+            // avoid returning section with images and document
+            sectionRepository.save(optionalSection.get());
+            Section result = new Section();
+            result.setId(sectionID);
+            result.setName(name);
+            return result;
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot save section", e);
+        }
+    }
+
+    /**
+     * Return the deleted section
+     * @param sectionID
+     * @return
+     */
+    @DeleteMapping(path = {"/deleteSection/{sectionID}"})
+    @Transactional
+    public Long deleteSection(@PathVariable("sectionID") Long sectionID) {
+        try {
+            Optional<Section> optionalSection = sectionRepository.findById(sectionID);
+            if (!optionalSection.isPresent()) {
+                throw new IM3WSException("Cannot find section with id=" + sectionID);
+            }
+            // first move all the images in the section to the main document
+            ArrayList<Image> changedImages = new ArrayList<>();
+            optionalSection.get().getImages().forEach(image -> {
+                image.setSection(null);
+                image.setDocument(optionalSection.get().getDocument());
+                changedImages.add(image);
+            });
+            imageRepository.saveAll(changedImages);
+            sectionRepository.delete(optionalSection.get());
+            return sectionID;
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot delete section", e);
+        }
+    }
 
 
     // revisado hasta aquí

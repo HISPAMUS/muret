@@ -6,12 +6,19 @@ import {AlignmentPreview} from '../../../../core/model/restapi/alignment-preview
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 import {SectionImages} from "../../../../core/model/restapi/section-images";
+import {Section} from "../../../../core/model/entities/section";
 
 export enum DocumentActionTypes {
   DocumentGetOverview = '[Document] Get Overview',
   DocumentGetOverviewSuccess = '[Document] Get Overview success',
   DocumentMoveImagesToSection = '[Document] Move image to section',
   DocumentMoveImagesToSectionSuccess = '[Document] Move image to section success',
+  DocumentCreateSection = '[Document] Create section',
+  DocumentCreateSectionSuccess = '[Document] Create section success',
+  DocumentRenameSection = '[Document] Rename section',
+  DocumentRenameSectionSuccess = '[Document] Rename section success',
+  DocumentDeleteSection = '[Document] Delete section',
+  DocumentDeleteSectionSuccess = '[Document] Delete section success',
 
 
   // revisado hasta aquí
@@ -57,6 +64,38 @@ export class DocumentMoveImagesToSectionSuccess implements Action {
   public readonly type = DocumentActionTypes.DocumentMoveImagesToSectionSuccess;
   constructor(public sectionImages: SectionImages) {}
 }
+
+export class DocumentCreateSection implements Action {
+  public readonly type = DocumentActionTypes.DocumentCreateSection;
+  constructor(public documentID: number, public name: string) {}
+}
+
+export class DocumentCreateSectionSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentCreateSectionSuccess;
+  constructor(public section: Section) {}
+}
+
+export class DocumentRenameSection implements Action {
+  public readonly type = DocumentActionTypes.DocumentRenameSection;
+  constructor(public section: Section) {}
+}
+
+export class DocumentRenameSectionSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentRenameSectionSuccess;
+  constructor(public section: Section) {}
+}
+
+
+export class DocumentDeleteSection implements Action {
+  public readonly type = DocumentActionTypes.DocumentDeleteSection;
+  constructor(public sectionID: number) {}
+}
+
+export class DocumentDeleteSectionSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentDeleteSectionSuccess;
+  constructor(public sectionID: number) {}
+}
+
 
 // revisado hasta aquí
 
@@ -178,7 +217,9 @@ export class DocumentGetCroppedImageSuccess implements Action {
 export type DocumentActions =
   DocumentGetOverview | DocumentGetOverviewSuccess |
   DocumentMoveImagesToSection | DocumentMoveImagesToSectionSuccess |
-
+  DocumentCreateSection | DocumentCreateSectionSuccess |
+  DocumentRenameSection | DocumentRenameSectionSuccess |
+  DocumentDeleteSection | DocumentDeleteSectionSuccess |
   // revisado hasta aquí
   DocumentResetServerError | DocumentServerError |
   DocumentGetDocument | DocumentGetDocumentSuccess | DocumentGetImages | DocumentGetImagesSuccess | DocumentExportMEI | DocumentExportMEISuccess |

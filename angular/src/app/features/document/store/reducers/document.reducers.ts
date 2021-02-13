@@ -32,14 +32,14 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
       if (action.sectionImages.newSectionID) {
         newSection = findSection(newState.documentOverview.sections, action.sectionImages.newSectionID);
         if (!newSection) {
-          newState.apiRestServerError = createServerError('Cannot move image to section', 'Cannot find new section with id ' + action.sectionImages.newSectionID);
+          newState.apiRestServerError = createServerError('Cannot update movement image to section', 'Cannot find new section with id ' + action.sectionImages.newSectionID);
         }
       } else {
         newSection = null;
       }
 
       if (action.sectionImages.imageIDS.length !== action.sectionImages.previousSectionIDs.length) {
-        newState.apiRestServerError = createServerError('Cannot move image to section', 'The image IDS != previous section IDs');
+        newState.apiRestServerError = createServerError('Cannot update movement image to section', 'The image IDS != previous section IDs');
       }
       for (let i=0; i<action.sectionImages.imageIDS.length; i++) {
         const imageID = action.sectionImages.imageIDS[i];
@@ -50,7 +50,7 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
         if (previousSectionID) { // if it was in a section
           const previousSection = findSection(newState.documentOverview.sections, previousSectionID);
           if (!previousSection) {
-            newState.apiRestServerError = createServerError('Cannot move image to section', 'Cannot find previous section with id ' + previousSectionID);
+            newState.apiRestServerError = createServerError('Cannot update movement image to section', 'Cannot find previous section with id ' + previousSectionID);
           }
           changedImage = previousSection.images.find(image => image.id === imageID);
           // remove from previous section (if there was one)
@@ -63,7 +63,7 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
         }
 
         if (!changedImage) {
-          newState.apiRestServerError = createServerError('Cannot move image to section', 'Cannot find image with id ' + imageID);
+          newState.apiRestServerError = createServerError('Cannot update movement image to section', 'Cannot find image with id ' + imageID);
         } else {
           if (newSection) {
             changedImage.sectionId = newSection.id;
@@ -75,6 +75,41 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
             newState.documentOverview.images.push(changedImage);
           }
         }
+      }
+      return newState;
+    }
+
+    case DocumentActionTypes.DocumentCreateSectionSuccess: {
+      const newState = klona(state); // deep copy
+      newState.apiRestServerError = null;
+      const newSection = klona(action.section);
+      newSection.images = [];// if comes with null value
+      newState.documentOverview.sections.push(newSection);
+      return newState;
+    }
+
+    case DocumentActionTypes.DocumentRenameSectionSuccess: {
+      const newState = klona(state); // deep copy
+      newState.apiRestServerError = null;
+      const changedSection = newState.documentOverview.sections.find(section => section.id === action.section.id);
+      if (!changedSection) {
+        newState.apiRestServerError = createServerError('Cannot update renamed section', 'Cannot find section with id ' + action.section.id);
+      } else {
+        changedSection.name = action.section.name;
+      }
+      return newState;
+    }
+
+    case DocumentActionTypes.DocumentDeleteSectionSuccess: {
+      const newState = klona(state); // deep copy
+      newState.apiRestServerError = null;
+      const deletedSection = newState.documentOverview.sections.find(section => section.id === action.sectionID);
+      if (!deletedSection) {
+        newState.apiRestServerError = createServerError('Cannot update deleted section', 'Cannot find section with id ' + action.sectionID);
+      } else {
+        // move all the images to the document
+        newState.documentOverview.images = newState.documentOverview.images.concat(deletedSection.images);
+        newState.documentOverview.sections = newState.documentOverview.sections.filter(section => section.id !== action.sectionID);
       }
       return newState;
     }

@@ -55,11 +55,12 @@ export class DialogsService {
     });
   }
 
-  public showInput(title: string, message: string, currentValue: string): Observable<string> {
+  public showInput(title: string, message: string, currentValue: string, singleLine?: boolean): Observable<string> {
     return this.simpleModalService.addModal(InputDialogComponent, {
       title,
       message,
-      currentValue
+      currentValue,
+      singleLine
     });
   }
 

@@ -28,6 +28,7 @@ import { ImagePhasesComponent } from './components/image-phases/image-phases.com
 import { ImagePartsComponent } from './components/image-parts/image-parts.component';
 import {LazyLoadImageModule} from "ng-lazyload-image";
 import {ContextMenuModule} from "ngx-contextmenu";
+import {DialogsModule} from "../../dialogs/dialogs.module";
 
 @NgModule({
   declarations: [DocumentComponentOld, ImageThumbnailComponent, UploadImagesComponent, DocumentScoreViewerAndExporterComponent, InstrumentsComponent, AlignmentPreviewComponent, MEIScoreViewerComponent, DocumentComponent, SectionComponent, DocumentThumbnailComponent, ImagePhasesComponent, ImagePartsComponent],
@@ -44,6 +45,7 @@ import {ContextMenuModule} from "ngx-contextmenu";
     SharedModule,
     FontAwesomeModule,
     LazyLoadImageModule,
+    DialogsModule,
     ContextMenuModule.forRoot({
       useBootstrap4: true,
     })

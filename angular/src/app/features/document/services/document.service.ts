@@ -23,6 +23,24 @@ export class DocumentService {
     const url = `document/moveImagesToSection`;
     return this.apiRestClientService.put$(url, sectionImages);
   }
+
+
+  createSection$(documentID: number, name: string): Observable<Section> {
+    const url = `document/createSection/${documentID}/${name}`;
+    return this.apiRestClientService.put$(url, null);
+  }
+
+  renameSection$(section: Section): Observable<Section> {
+    const url = `document/renameSection/${section.id}/${section.name}`;
+    return this.apiRestClientService.put$(url, null);
+  }
+
+  deleteSection$(sectionID: number): Observable<number> {
+    const url = `document/deleteSection`;
+    return this.apiRestClientService.delete$(url, sectionID);
+  }
+
+
   /*public getParts$(documentID: number): Observable<Section[]> {
     return this.apiRestClientService.getDetailsExcerptProjection$<Section>('documents', 'parts', documentID);
   }*/

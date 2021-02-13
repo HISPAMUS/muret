@@ -5,7 +5,8 @@
   </div>
   <div class="modal-body">
     <p>{{message}}</p>
-    <textarea id="inputDialogTextArea" [(ngModel)]="currentValue"></textarea>
+    <input *ngIf="singleLine" id="inputDialogInput" [(ngModel)]="currentValue"/>
+    <textarea *ngIf="!singleLine" id="inputDialogTextArea" [(ngModel)]="currentValue"></textarea>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-outline-danger" (click)="cancel()">Cancel</button>
