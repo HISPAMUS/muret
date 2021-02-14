@@ -3,12 +3,18 @@
   <p>Drag and drop images to reorder them</p>
 
   <div cdkDropList class="image-list" (cdkDropListDropped)="drop($event)">
-    <div class="example-box" *ngFor="let imageTuple of sortedImages; trackBy: sortedImagesTracking" cdkDrag>
+    <div class="image-box" *ngFor="let imageTuple of sortedImages; trackBy: sortedImagesTracking" cdkDrag>
       {{imageTuple[0].filename}}
+      <img [alt]="imageTuple[0].filename" [title]="imageTuple[0].filename"
+           [defaultImage]="loadingImage"
+           [lazyLoad]="imageTuple[1] | async"
+           class="img-small-thumbnail"
+      >
+
       <img *cdkDragPreview [alt]="imageTuple[0].filename" [title]="imageTuple[0].filename"
            [defaultImage]="loadingImage"
            [lazyLoad]="imageTuple[1] | async"
-           class="img-fluid"
+           class="img-drag-preview"
       >
     </div>
   </div>

@@ -1,3 +1,7 @@
+.img-small-thumbnail {
+  height: 80px;
+}
+
 .image-list {
   width: 500px;
   max-width: 100%;
