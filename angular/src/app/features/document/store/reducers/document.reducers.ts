@@ -140,7 +140,37 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
 
       return newState;
     }
+    case DocumentActionTypes.DocumentGetSectionSuccess: {
+      const result: DocumentState = {
+        ...state,
+        apiRestServerError: null
+      };
+      result.section = action.section;
+      return result;
+    }
+    case DocumentActionTypes.DocumentReorderImagesSuccess: {
+      const newState: DocumentState = klona(state);
+      newState.apiRestServerError = null;
+      const imageMap: Map<number, Image> = new Map<number, Image>();
 
+      newState.section.images.forEach(image => {
+        imageMap.set(image.id, image);
+      });
+      let i=0;
+      newState.section.images = [];
+      action.ordering.idsSequence.forEach(id => {
+        const image = imageMap.get(id);
+        if (!image) {
+          newState.apiRestServerError = createServerError('Cannot update images after reordering', 'Cannot find new image with id ' + id);
+        } else {
+          image.ordering = i;
+          newState.section.images.push(image);
+          i++;
+        }
+      });
+
+      return newState;
+    }
     // revisado hasta aquí
     case DocumentActionTypes.ResetDocumentServerError: {
       return {

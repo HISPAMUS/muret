@@ -10,6 +10,10 @@ export const selectDocumentOverview = createSelector(
 );
 
 
+export const selectDocumentSection = createSelector(
+  documentState,
+  (state: DocumentState) => state.section
+);
 
 
 // revisado hasta aquí

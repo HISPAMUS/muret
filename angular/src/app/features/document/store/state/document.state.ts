@@ -4,10 +4,11 @@ import {DocumentStatistics} from '../../../../core/model/restapi/document-statis
 import {AlignmentPreview} from '../../../../core/model/restapi/alignment-preview';
 import {DocumentExport} from '../../../../core/model/restapi/document-export';
 import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
+import {Section} from "../../../../core/model/entities/section";
 
 export interface DocumentState {
   documentOverview: Document, // it contains images unassigned to sections), parts, sections (including images)
-
+  section: Section, // used just in reorder images
   apiRestServerError: APIRestServerError;
 
   // revisado hasta aquí
@@ -22,7 +23,7 @@ export interface DocumentState {
 
 export const initialDocumentState: DocumentState = {
   documentOverview: null,
-
+  section: null,
   apiRestServerError: null,
   // revisado hasta aquí
   document: null,

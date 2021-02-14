@@ -7,8 +7,9 @@ import {selectDocumentOverview} from "../../store/selectors/document.selector";
 import {Document} from "../../../../core/model/entities/document";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {DocumentGetOverview, DocumentReorderSections} from "../../store/actions/document.actions";
-import {compare, Section} from "../../../../core/model/entities/section";
+import {Section} from "../../../../core/model/entities/section";
 import {Ordering} from "../../../../core/model/restapi/ordering";
+import {compareOrdering} from "../../../../core/model/entities/iordered";
 
 @Component({
   selector: 'app-reorder-sections',
@@ -30,7 +31,7 @@ export class ReorderSectionsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.documentOverviewSubscription = this.store.select(selectDocumentOverview).subscribe(next => {
       if (next) {
-        this.sections = next.sections.slice().sort(compare); // must use slide to use a copy
+        this.sections = next.sections.slice().sort(compareOrdering); // must use slide to use a copy
       }
     });
   }

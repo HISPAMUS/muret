@@ -32,7 +32,11 @@ import {
   DocumentRenameSectionSuccess,
   DocumentDeleteSection,
   DocumentDeleteSectionSuccess,
-  DocumentReorderSections, DocumentReorderSectionsSuccess,
+  DocumentReorderSections,
+  DocumentReorderSectionsSuccess,
+  DocumentGetSection,
+  DocumentGetSectionSuccess,
+  DocumentReorderImages, DocumentReorderImagesSuccess,
 } from '../actions/document.actions';
 import {Document} from '../../../../core/model/entities/document';
 import {Image} from '../../../../core/model/entities/image';
@@ -42,6 +46,7 @@ import {AlignmentPreview} from '../../../../core/model/restapi/alignment-preview
 import {ImageFilesService} from '../../../../core/services/image-files.service';
 import {Action} from '@ngrx/store';
 import {Ordering} from "../../../../core/model/restapi/ordering";
+import {Section} from "../../../../core/model/entities/section";
 
 @Injectable()
 export class DocumentEffects {
@@ -95,13 +100,29 @@ export class DocumentEffects {
     )));
 
   @Effect()
-  reorderSections: Observable<Action> = this.actions$.pipe(
+  reorderSections$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentReorderSections>(DocumentActionTypes.DocumentReorderSections),
     switchMap((action: DocumentReorderSections) => this.documentService.reorderSections$(action.ordering).pipe(
       switchMap((ordering) => of(new DocumentReorderSectionsSuccess(ordering))),
       catchError(err => of(new DocumentServerError(err)))
     )));
 
+
+  @Effect()
+  getSection$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentGetSection>(DocumentActionTypes.DocumentGetSection),
+    switchMap((action: DocumentGetSection) => this.documentService.getSection$(action.id).pipe(
+      switchMap((section: Section) => of(new DocumentGetSectionSuccess(section))),
+      catchError(err => of(new DocumentServerError(err)))
+    )));
+
+  @Effect()
+  reorderImages$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentReorderImages>(DocumentActionTypes.DocumentReorderImages),
+    switchMap((action: DocumentReorderImages) => this.documentService.reorderImages$(action.ordering).pipe(
+      switchMap((ordering) => of(new DocumentReorderImagesSuccess(ordering))),
+      catchError(err => of(new DocumentServerError(err)))
+    )));
 
   // revisado hasta aquí
   @Effect()

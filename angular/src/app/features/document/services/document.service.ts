@@ -50,6 +50,19 @@ export class DocumentService {
     return this.apiRestClientService.put$(url, ordering);
   }
 
+  getSection$(id: number): Observable<Section> {
+    return this.apiRestClientService.getExcerptProjectionOf$(id, 'sections')
+  }
+
+  /**
+   * Returns the applied sectionIDsOrdering in the document
+   * @param sectionIDsOrdering
+   */
+  reorderImages$(ordering: Ordering): Observable<Ordering> {
+    const url = `document/reorderImages`;
+    return this.apiRestClientService.put$(url, ordering);
+  }
+
   /*public getParts$(documentID: number): Observable<Section[]> {
     return this.apiRestClientService.getDetailsExcerptProjection$<Section>('documents', 'parts', documentID);
   }*/

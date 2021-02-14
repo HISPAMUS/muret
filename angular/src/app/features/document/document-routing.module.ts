@@ -8,11 +8,13 @@ import {AlignmentPreviewComponent} from './components/alignment-preview/alignmen
 import {MEIScoreViewerComponent} from './components/mei-score-viewer/meiscore-viewer.component';
 import {DocumentComponent} from "./components/document/document.component";
 import {ReorderSectionsComponent} from "./components/reorder-sections/reorder-sections.component";
+import {ReorderImagesComponent} from "./components/reorder-images/reorder-images.component";
 
 const routes: Routes = [
   { path: 'old/:id', component: DocumentComponentOld },
   { path: ':id', component: DocumentComponent },
   { path: 'reorderSections/:id', component: ReorderSectionsComponent },
+  { path: 'reorderImages/:id', component: ReorderImagesComponent },
   { path: 'instruments/:id', component: InstrumentsComponent },
   { path: 'uploadImages/:id', component: UploadImagesComponent },
   { path: 'documentScoreViewAndExport/:id', component: DocumentScoreViewerAndExporterComponent },

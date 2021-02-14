@@ -22,6 +22,10 @@ export enum DocumentActionTypes {
   DocumentDeleteSectionSuccess = '[Document] Delete section success',
   DocumentReorderSections = '[Document] Reorder sections',
   DocumentReorderSectionsSuccess = '[Document] Reorder sections success',
+  DocumentGetSection = '[Document] Get section',
+  DocumentGetSectionSuccess = '[Document] Get section success',
+  DocumentReorderImages = '[Document] Reorder images',
+  DocumentReorderImagesSuccess = '[Document] Reorder images success',
 
 
   // revisado hasta aquí
@@ -109,6 +113,27 @@ export class DocumentReorderSectionsSuccess implements Action {
   constructor(public ordering: Ordering) {}
 }
 
+
+export class DocumentGetSection implements Action {
+  public readonly type = DocumentActionTypes.DocumentGetSection;
+  constructor(public id: number) {}
+}
+
+export class DocumentGetSectionSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentGetSectionSuccess;
+  constructor(public section: Section) {}
+}
+
+
+export class DocumentReorderImages implements Action {
+  public readonly type = DocumentActionTypes.DocumentReorderImages;
+  constructor(public ordering: Ordering) {}
+}
+
+export class DocumentReorderImagesSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentReorderImagesSuccess;
+  constructor(public ordering: Ordering) {}
+}
 // revisado hasta aquí
 
 
@@ -233,6 +258,9 @@ export type DocumentActions =
   DocumentRenameSection | DocumentRenameSectionSuccess |
   DocumentDeleteSection | DocumentDeleteSectionSuccess |
   DocumentReorderSections | DocumentReorderSectionsSuccess |
+  DocumentGetSection | DocumentGetSectionSuccess |
+  DocumentReorderImages | DocumentReorderImagesSuccess |
+
   // revisado hasta aquí
   DocumentResetServerError | DocumentServerError |
   DocumentGetDocument | DocumentGetDocumentSuccess | DocumentGetImages | DocumentGetImagesSuccess | DocumentExportMEI | DocumentExportMEISuccess |

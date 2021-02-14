@@ -2,14 +2,14 @@ import {Page} from './page';
 import {State} from './state';
 import {Entity} from './entity';
 import {Part} from './part';
-import {Section} from "./section";
+import {IOrdered} from "./iordered";
 
-export interface Image extends Entity {
+export interface Image extends Entity, IOrdered {
   sectionId?: number;
   documentId?: number; // if the sectionID is null the image is unassigned to a section, then documentId must be not null
   filename: string;
   pages: Page[];
   state: State;
   part: Part;
-  ordering: number;
 }
+

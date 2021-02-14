@@ -1,0 +1,17 @@
+<div *ngIf="section" class="container">
+  <h2>Reorder section {{section.name}}</h2>
+  <p>Drag and drop images to reorder them</p>
+
+  <div cdkDropList class="image-list" (cdkDropListDropped)="drop($event)">
+    <div class="example-box" *ngFor="let imageTuple of sortedImages; trackBy: sortedImagesTracking" cdkDrag>
+      {{imageTuple[0].filename}}
+      <img *cdkDragPreview [alt]="imageTuple[0].filename" [title]="imageTuple[0].filename"
+           [defaultImage]="loadingImage"
+           [lazyLoad]="imageTuple[1] | async"
+           class="img-fluid"
+      >
+    </div>
+  </div>
+
+  <a [routerLink]="['/document', section.documentId]">Back to document</a>
+</div>

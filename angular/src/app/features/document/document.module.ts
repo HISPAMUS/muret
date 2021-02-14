@@ -31,9 +31,10 @@ import {ContextMenuModule} from "ngx-contextmenu";
 import {DialogsModule} from "../../dialogs/dialogs.module";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import { ReorderSectionsComponent } from './components/reorder-sections/reorder-sections.component';
+import { ReorderImagesComponent } from './components/reorder-images/reorder-images.component';
 
 @NgModule({
-  declarations: [DocumentComponentOld, ImageThumbnailComponent, UploadImagesComponent, DocumentScoreViewerAndExporterComponent, InstrumentsComponent, AlignmentPreviewComponent, MEIScoreViewerComponent, DocumentComponent, SectionComponent, DocumentThumbnailComponent, ImagePhasesComponent, ImagePartsComponent, ReorderSectionsComponent],
+  declarations: [DocumentComponentOld, ImageThumbnailComponent, UploadImagesComponent, DocumentScoreViewerAndExporterComponent, InstrumentsComponent, AlignmentPreviewComponent, MEIScoreViewerComponent, DocumentComponent, SectionComponent, DocumentThumbnailComponent, ImagePhasesComponent, ImagePartsComponent, ReorderSectionsComponent, ReorderImagesComponent],
   imports: [
     CommonModule,
     DocumentRoutingModule,
