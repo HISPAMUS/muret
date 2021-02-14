@@ -87,14 +87,12 @@ public class DocumentModel {
                     null,
                     document.getThumbnailBase64Encoding(),
                     document.getComments(),
-                    null,
                     document.getNotationType(),
                     document.getManuscriptType(),
                     null,
                     null,
                     null,
-                    document.getCollection(),
-                    null
+                    document.getCollection(),  null
             );
 
             return documentRepository.save(newDocument);
@@ -154,7 +152,7 @@ public class DocumentModel {
         JSONArray canvasesJSON = new JSONArray();
 
         int canvasN = 1;
-        for (Image image: document.getSortedImages()) {
+        for (Image image: document.getImages()) {
             JSONObject canvasJSON = new JSONObject();
             String canvasID = baseID + "/canvas/f" + canvasN;
             model.addCanvas(image, canvasID);

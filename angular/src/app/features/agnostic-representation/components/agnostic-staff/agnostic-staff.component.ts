@@ -225,7 +225,7 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
 
   private computeViewBox() {
     /*// this.viewBox = `0 0 ${this.width} ${this.margin * 2 + this.em}`;
-    // in order to use the same horizontal scale of the selected region (see AgnosticRepresentationComponent) we use its same x viewBox
+    // in orderEntities to use the same horizontal scale of the selected region (see AgnosticRepresentationComponent) we use its same x viewBox
     this.width = this.regionCropped.toX - this.regionCropped.fromX;
     this.height = this.margin * 2 + this.em;
 

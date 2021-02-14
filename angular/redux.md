@@ -181,7 +181,7 @@ Finally, recall to add the effects to the ```app.module.ts''' (or the suitable m
 
 ## 6 View and controller
 ### 6.1 Visual rendering of data
-In order visually render to use the information stored in the state:
+In orderEntities visually render to use the information stored in the state:
 - when component is initialized (```ngOnInit```) send the *action* to get the requested data.
 - the data (```products$``` observable in the example below), is just a slice of the state using a *selector*. 
 
@@ -210,6 +210,6 @@ or send an action with ```this.store.dispatch(new SOME_ACTION());```
 
 **TODO Draw a UML sequence diagram**
 
-**TODO Document - In order to separate stores in modules we use:** 
+**TODO Document - In orderEntities to separate stores in modules we use:** 
 https://offering.solutions/blog/articles/2018/02/10/separating-state-into-angular-modules-with-ngrx/
 

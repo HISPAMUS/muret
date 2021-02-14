@@ -1,0 +1,13 @@
+<div class="h-100 vh-100 d-flex justify-content-center align-items-center">
+  <div>
+    <h2>Sections reordering</h2>
+    <h3>Drag and drop sections to reorder</h3>
+    <div *ngIf="sections" cdkDropList class="section-list" (cdkDropListDropped)="drop($event)">
+      <div class="section-box" *ngFor="let section of sections" cdkDrag>
+        <div class="section-custom-placeholder" *cdkDragPlaceholder></div>
+        {{section.name}}
+      </div>
+    </div>
+    <a [routerLink]="['/document', documentID]">Back to document</a>
+  </div>
+</div>

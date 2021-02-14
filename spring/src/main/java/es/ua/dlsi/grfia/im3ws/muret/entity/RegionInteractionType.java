@@ -6,7 +6,7 @@ import javax.persistence.*;
  * @author drizo
  */
 @Entity
-public class RegionInteractionType {
+public class RegionInteractionType implements IID<Integer>  {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +26,7 @@ public class RegionInteractionType {
         this.name = name;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }

@@ -29,9 +29,11 @@ import { ImagePartsComponent } from './components/image-parts/image-parts.compon
 import {LazyLoadImageModule} from "ng-lazyload-image";
 import {ContextMenuModule} from "ngx-contextmenu";
 import {DialogsModule} from "../../dialogs/dialogs.module";
+import {DragDropModule} from "@angular/cdk/drag-drop";
+import { ReorderSectionsComponent } from './components/reorder-sections/reorder-sections.component';
 
 @NgModule({
-  declarations: [DocumentComponentOld, ImageThumbnailComponent, UploadImagesComponent, DocumentScoreViewerAndExporterComponent, InstrumentsComponent, AlignmentPreviewComponent, MEIScoreViewerComponent, DocumentComponent, SectionComponent, DocumentThumbnailComponent, ImagePhasesComponent, ImagePartsComponent],
+  declarations: [DocumentComponentOld, ImageThumbnailComponent, UploadImagesComponent, DocumentScoreViewerAndExporterComponent, InstrumentsComponent, AlignmentPreviewComponent, MEIScoreViewerComponent, DocumentComponent, SectionComponent, DocumentThumbnailComponent, ImagePhasesComponent, ImagePartsComponent, ReorderSectionsComponent],
   imports: [
     CommonModule,
     DocumentRoutingModule,
@@ -48,7 +50,8 @@ import {DialogsModule} from "../../dialogs/dialogs.module";
     DialogsModule,
     ContextMenuModule.forRoot({
       useBootstrap4: true,
-    })
+    }),
+    DragDropModule
   ],
   providers: [
     DocumentService

@@ -1,7 +1,7 @@
 import {Part} from '../entities/part';
 
 /**
- * This complex structure has been used in order to avoid too many server API calls
+ * This complex structure has been used in orderEntities to avoid too many server API calls
  */
 export interface PartUse {
   partName?: string;

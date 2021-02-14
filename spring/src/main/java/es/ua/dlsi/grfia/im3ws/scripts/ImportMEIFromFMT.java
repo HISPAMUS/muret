@@ -154,7 +154,7 @@ public class ImportMEIFromFMT implements CommandLineRunner {
                             voz = document.get().getParts().iterator().next();
                             Logger.getLogger(this.getClass().getName()).info("There were "+ document.get().getParts().size() + " voices in document " + document.get().getName() + ", using the first one namned '" + voz.getName() + "'");
                         } else {
-                            voz = new Part("Voz", null, document.get());
+                            voz = new Part("Voz", null, document.get(), null);
                             partRepository.save(voz);
                             document.get().getParts().add(voz);
                             documentRepository.save(document.get());

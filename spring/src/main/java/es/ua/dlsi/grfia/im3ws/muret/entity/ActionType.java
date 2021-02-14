@@ -6,7 +6,7 @@ import javax.persistence.*;
  * @author drizo
  */
 @Entity
-public class ActionType {
+public class ActionType implements IID<Integer>  {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +33,7 @@ public class ActionType {
         this.name = name;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }

@@ -14,6 +14,7 @@ public interface IPartProjection {
 
     String getName();
     String getComments();
+    Integer getOrdering();
 
 
 }

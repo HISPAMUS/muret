@@ -14,7 +14,7 @@ import java.util.Comparator;
  * @author drizo
  */
 @Entity
-public class Symbol extends Auditable implements IAssignableToPart, IDelimitedWithBoundingBox{
+public class Symbol extends Auditable implements IAssignableToPart, IDelimitedWithBoundingBox, IID<Long>{
     private static Integer getMiddleX(Symbol symbol) {
         if (symbol.getApproximateX() != null) {
             return symbol.getApproximateX();
@@ -116,6 +116,7 @@ public class Symbol extends Auditable implements IAssignableToPart, IDelimitedWi
         return horizontalPositionComparator;
     }
 
+    @Override
     public Long getId() {
         return id;
     }

@@ -4,15 +4,17 @@ import {DocumentExportType} from '../../../../core/model/restapi/document-export
 import {Section} from "../../../../core/model/entities/section";
 import {APIRestServerError} from "../../../../core/model/restapi/apirest-server-error";
 import {Image} from "../../../../core/model/entities/image";
+import {Document} from "../../../../core/model/entities/document";
 import { klona } from 'klona/lite';
 
 
 export function documentReducers(state = initialDocumentState, action: DocumentActions): DocumentState {
   switch (action.type) {
     case DocumentActionTypes.DocumentGetOverviewSuccess: {
+      const documentOverview = klona(action.documentOverview); // deep copy
       return {
         ...state,
-        documentOverview: action.documentOverview,
+        documentOverview: documentOverview,
         apiRestServerError: null
       };
     }
@@ -111,6 +113,31 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
         newState.documentOverview.images = newState.documentOverview.images.concat(deletedSection.images);
         newState.documentOverview.sections = newState.documentOverview.sections.filter(section => section.id !== action.sectionID);
       }
+      return newState;
+    }
+
+    case DocumentActionTypes.DocumentReorderSectionsSuccess: {
+      const newState = klona(state); // deep copy
+      newState.apiRestServerError = null;
+      const sectionMap: Map<number, Section> = new Map<number, Section>();
+      newState.documentOverview.sections.forEach(section => {
+        sectionMap.set(section.id, section);
+      })
+      // now insert ordered
+      newState.documentOverview.sections = new Array();
+
+      let i=0;
+      action.ordering.idsSequence.forEach(id => {
+        const section = sectionMap.get(id);
+        if (!section) {
+          newState.apiRestServerError = createServerError('Cannot update sections after reordering', 'Cannot find new section with id ' + id);
+        } else {
+          section.ordering = i;
+          newState.documentOverview.sections.push(section);
+          i++;
+        }
+      });
+
       return newState;
     }
 

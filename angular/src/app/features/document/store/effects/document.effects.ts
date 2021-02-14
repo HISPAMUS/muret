@@ -28,7 +28,11 @@ import {
   DocumentMoveImagesToSectionSuccess,
   DocumentCreateSection,
   DocumentCreateSectionSuccess,
-  DocumentRenameSection, DocumentRenameSectionSuccess, DocumentDeleteSection, DocumentDeleteSectionSuccess,
+  DocumentRenameSection,
+  DocumentRenameSectionSuccess,
+  DocumentDeleteSection,
+  DocumentDeleteSectionSuccess,
+  DocumentReorderSections, DocumentReorderSectionsSuccess,
 } from '../actions/document.actions';
 import {Document} from '../../../../core/model/entities/document';
 import {Image} from '../../../../core/model/entities/image';
@@ -37,6 +41,7 @@ import {DocumentStatistics} from '../../../../core/model/restapi/document-statis
 import {AlignmentPreview} from '../../../../core/model/restapi/alignment-preview';
 import {ImageFilesService} from '../../../../core/services/image-files.service';
 import {Action} from '@ngrx/store';
+import {Ordering} from "../../../../core/model/restapi/ordering";
 
 @Injectable()
 export class DocumentEffects {
@@ -88,6 +93,15 @@ export class DocumentEffects {
       switchMap((sectionID) => of(new DocumentDeleteSectionSuccess(sectionID))),
       catchError(err => of(new DocumentServerError(err)))
     )));
+
+  @Effect()
+  reorderSections: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentReorderSections>(DocumentActionTypes.DocumentReorderSections),
+    switchMap((action: DocumentReorderSections) => this.documentService.reorderSections$(action.ordering).pipe(
+      switchMap((ordering) => of(new DocumentReorderSectionsSuccess(ordering))),
+      catchError(err => of(new DocumentServerError(err)))
+    )));
+
 
   // revisado hasta aquí
   @Effect()

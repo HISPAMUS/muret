@@ -13,7 +13,7 @@ import static javax.persistence.TemporalType.TIMESTAMP;
  * @author drizo
  */
 @Entity
-public class Action {
+public class Action implements IID<Long>  {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,6 +46,7 @@ public class Action {
     public Action() {
     }
 
+    @Override
     public Long getId() {
         return id;
     }

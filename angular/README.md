@@ -8,7 +8,7 @@ Components don't include business logic, rather, it is contained in different Se
  
  Prefer template async over synchronized
  
- In order to develop, we have added at development time only the button "dev" at login component
+ In orderEntities to develop, we have added at development time only the button "dev" at login component
   
 https://www.npmjs.com/package/angular-svg
 
@@ -50,6 +50,6 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
 -------
-David: in order to check dependencies, run in terminal:
+David: in orderEntities to check dependencies, run in terminal:
 ```
 npx depcheck 

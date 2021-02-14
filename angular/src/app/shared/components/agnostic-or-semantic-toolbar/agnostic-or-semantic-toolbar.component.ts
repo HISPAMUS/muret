@@ -109,7 +109,7 @@ export class AgnosticOrSemanticToolbarComponent implements OnInit, OnDestroy {
           } else {
             return null;
           }
-          // sort decreasing order
+          // sort decreasing orderEntities
         default:
           return this.svgAgnosticOrSemanticSymbolSet.paths.filter(value => value.agnosticOrSemanticTypeString.includes(this.symbolsFilter));
       }

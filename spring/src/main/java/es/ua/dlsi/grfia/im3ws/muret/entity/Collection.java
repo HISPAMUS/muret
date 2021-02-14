@@ -11,7 +11,7 @@ import java.util.Objects;
  * @author drizo
  */
 @Entity (name="collection")
-public class Collection {
+public class Collection implements IID<Integer>  {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +47,7 @@ public class Collection {
         this.thumbnailBase64Encoding = thumbnailBase64Encoding;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }

@@ -81,7 +81,7 @@ public class AlignmentController extends MuRETBaseController {
                 alignmentPreviewPartHashMap.put(part.getId(), alignmentPreviewPart);
             }
 
-            for (Image image : document.getSortedImages()) {
+            for (Image image : document.getImages()) {
                 AlignmentPreviewImage alignmentPreviewImage = new AlignmentPreviewImage();
                 alignmentPreviewImage.setId(image.getId());
                 alignmentPreviewImage.setFilename(image.getFilename());

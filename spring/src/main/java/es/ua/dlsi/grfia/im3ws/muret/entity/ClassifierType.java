@@ -11,7 +11,7 @@ import java.util.Objects;
  * @author drizo
  */
 @Entity (name="classifier_type")
-public class ClassifierType {
+public class ClassifierType  implements IID<Integer> {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +31,7 @@ public class ClassifierType {
         this.classifiers = classifiers;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }

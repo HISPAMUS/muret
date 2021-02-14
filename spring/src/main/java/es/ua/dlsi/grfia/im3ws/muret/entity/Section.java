@@ -4,14 +4,14 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 import java.util.Objects;
 
 /**
  * @author drizo
  */
 @Entity
-public class Section extends Auditable {
+public class Section extends Auditable implements IID<Long>, IOrdered {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,16 +28,22 @@ public class Section extends Auditable {
 
     @JsonManagedReference(value="section")
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "section")
-    private Set<Image> images;
+    // don't use because it requires non sparse values @OrderColumn(name = "ordering", nullable = false)
+    private List<Image> images;
+
+    @Column // in the document
+    private Integer ordering;
 
     public Section() {
     }
 
-    public Section(String name, Document document) {
+    public Section(String name, Document document, Integer ordering) {
         this.name = name;
         this.document = document;
+        this.ordering = ordering;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -62,12 +68,22 @@ public class Section extends Auditable {
         this.document = document;
     }
 
-    public Set<Image> getImages() {
+    public List<Image> getImages() {
         return images;
     }
 
-    public void setImages(Set<Image> images) {
+    public void setImages(List<Image> images) {
         this.images = images;
+    }
+
+    @Override
+    public Integer getOrdering() {
+        return ordering;
+    }
+
+    @Override
+    public void setOrdering(Integer ordering) {
+        this.ordering = ordering;
     }
 
     @Override

@@ -9,6 +9,7 @@ import {PreflightCheckResult} from '../../../core/model/restapi/preflight-check-
 import {AlignmentPreview} from '../../../core/model/restapi/alignment-preview';
 import {Section} from "../../../core/model/entities/section";
 import {SectionImages} from "../../../core/model/restapi/section-images";
+import {Ordering} from "../../../core/model/restapi/ordering";
 
 @Injectable() // non-singleton
 export class DocumentService {
@@ -40,6 +41,14 @@ export class DocumentService {
     return this.apiRestClientService.delete$(url, sectionID);
   }
 
+  /**
+   * Returns the applied sectionIDsOrdering in the document
+   * @param sectionIDsOrdering
+   */
+  reorderSections$(ordering: Ordering): Observable<Ordering> {
+    const url = `document/reorderSections`;
+    return this.apiRestClientService.put$(url, ordering);
+  }
 
   /*public getParts$(documentID: number): Observable<Section[]> {
     return this.apiRestClientService.getDetailsExcerptProjection$<Section>('documents', 'parts', documentID);

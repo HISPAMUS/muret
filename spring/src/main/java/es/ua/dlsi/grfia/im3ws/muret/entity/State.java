@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-public class State {
+public class State implements IID<Long>  {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +32,7 @@ public class State {
         this.changedBy = changedBy;
         this.comments = comments;
     }
+    @Override
     public Long getId() {
         return id;
     }

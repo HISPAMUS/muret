@@ -120,7 +120,7 @@ public class AgnosticSemanticTrainingSetExporter extends AbstractTrainingSetExpo
         JSONObject documentJSON = new JSONObject();
         JSONArray jsonSystems = new JSONArray();
 
-        for (Image image: document.getSortedImages()) {
+        for (Image image: document.getImages()) {
             for (Page page: image.getSortedPages()) {
                 exportPage(jsonSystems, page);
             }

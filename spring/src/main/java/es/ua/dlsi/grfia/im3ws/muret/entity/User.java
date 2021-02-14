@@ -8,7 +8,7 @@ import java.util.Objects;
  * @author drizo
  */
 @Entity
-public class User {
+public class User  implements IID<Integer> {
     public static final String ADMINISTRATOR_ROLE = "ADMIN";
     @Id
     @Column
@@ -48,6 +48,7 @@ public class User {
         this.lastDocuments = lastDocuments;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }

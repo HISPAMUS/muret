@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * @author drizo
  */
 @Entity
-public class Page extends Auditable implements IAssignableToPart, IDelimitedWithBoundingBox {
+public class Page extends Auditable implements IAssignableToPart, IDelimitedWithBoundingBox, IID<Long> {
     /**
      * It orders pages given its middle horizontal point or its approximate x
      */
@@ -79,6 +79,7 @@ public class Page extends Auditable implements IAssignableToPart, IDelimitedWith
         this.part = part;
     }
 
+    @Override
     public Long getId() {
         return id;
     }

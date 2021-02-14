@@ -3,6 +3,7 @@ package es.ua.dlsi.grfia.im3ws.muret.entity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -20,7 +21,7 @@ public interface IDocumentOverviewProjection {
     State getState();
     String getPath();
     String getThumbnailBase64Encoding();
-    Set<IPartProjection> getParts();
-    Set<ISectionProjection> getSections();
-    Set<IImageProjection> getImages();
+    List<IPartProjection> getParts();
+    List<ISectionProjection> getSections();
+    List<IImageProjection> getImages();
 }

@@ -6,13 +6,17 @@ import es.ua.dlsi.im3.core.score.NotationType;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
+import java.util.List;
 
 /**
+ * The ordering has been moved from a fields "imagesOrdering" and "sectionOrdering" to an ordering field both in sectino
+ * and images because being smaller the update and insertion, it is more convenient and faster in selecting, that is the
+ * most used operation
  * @author drizo
  */
 @Entity
-public class Document extends Auditable {
+public class Document extends Auditable implements IID<Integer>  {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,27 +38,24 @@ public class Document extends Auditable {
     @Enumerated(EnumType.STRING)
     private ManuscriptType manuscriptType;
 
-    /**
-     * Comma separated Set of image ids - when an image is not present here is sorted at the end of the Set
-     */
-    @Column (name = "images_ordering")
-    private String imagesOrdering;
-
     @Lob
     @Column (name = "thumbnail_base64_encoding", columnDefinition = "LONGTEXT")
     private String thumbnailBase64Encoding;
 
     @JsonManagedReference (value="document")
+    //@OrderColumn(name = "ordering", nullable = false) -- these images are not guaranteed to be ordered
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "document")
-    private Set<Image> images;
+    private List<Image> images;
 
     @JsonManagedReference (value="document")
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "document")
-    private Set<Part> parts;
+    // don't use because it requires non sparse values @OrderColumn(name = "ordering", nullable = false)
+    private List<Part> parts;
 
     @JsonManagedReference (value="document")
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "document")
-    private Set<Section> sections;
+    // don't use because it requires non sparse values @OrderColumn(name = "ordering", nullable = false)
+    private List<Section> sections;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="state_id")
@@ -69,7 +70,7 @@ public class Document extends Auditable {
     public Document() {
     }
 
-    public Document(String name, String path, String composer, Date creationDate, Date lastModifiedDate, User createdBy, User lastModifiedBy , String thumbnailBase64Encoding, String comments, String imagesOrdering, NotationType notationType, ManuscriptType manuscriptType, State state, Set<Image> images, Set<Part> parts, Collection collection, Set<Section> sections) {
+    public Document(String name, String path, String composer, Date creationDate, Date lastModifiedDate, User createdBy, User lastModifiedBy , String thumbnailBase64Encoding, String comments, NotationType notationType, ManuscriptType manuscriptType, State state, List<Image> images, List<Part> parts, Collection collection, List<Section> sections) {
         this.name = name;
         this.composer = composer;
         this.notationType = notationType;
@@ -81,13 +82,13 @@ public class Document extends Auditable {
         this.lastModifiedBy = lastModifiedBy;
         this.images = images;
         this.comments = comments;
-        this.imagesOrdering = imagesOrdering;
         this.manuscriptType = manuscriptType;
         this.state = state;
         this.parts = parts;
         this.collection = collection;
         this.sections = sections;
     }
+    @Override
     public Integer getId() {
         return id;
     }
@@ -127,11 +128,11 @@ public class Document extends Auditable {
         this.createdBy = createdBy;
     }
 
-    public Set<Image> getImages() {
+    public List<Image> getImages() {
         return images;
     }
 
-    public void setImages(Set<Image> images) {
+    public void setImages(List<Image> images) {
         this.images = images;
     }
 
@@ -175,19 +176,11 @@ public class Document extends Auditable {
         this.composer = composer;
     }
 
-    public String getImagesOrdering() {
-        return imagesOrdering;
-    }
-
-    public void setImagesOrdering(String imagesOrdering) {
-        this.imagesOrdering = imagesOrdering;
-    }
-
-    public Set<Part> getParts() {
+    public List<Part> getParts() {
         return parts;
     }
 
-    public void setParts(Set<Part> parts) {
+    public void setParts(List<Part> parts) {
         this.parts = parts;
     }
 
@@ -199,11 +192,11 @@ public class Document extends Auditable {
         this.collection = collection;
     }
 
-    public Set<Section> getSections() {
+    public List<Section> getSections() {
         return sections;
     }
 
-    public void setSections(Set<Section> sections) {
+    public void setSections(List<Section> sections) {
         this.sections = sections;
     }
 
@@ -214,15 +207,5 @@ public class Document extends Auditable {
                 ", name='" + name + '\'' +
                 ", path='" + path + '\'' +
                 '}';
-    }
-
-    @Transient
-    public Set<Image> getSortedImages() {
-        if (imagesOrdering != null) {
-            // TODO Image ordering
-            throw new UnsupportedOperationException("TO-DO Images ordering");
-        } else {
-            return images;
-        }
     }
 }

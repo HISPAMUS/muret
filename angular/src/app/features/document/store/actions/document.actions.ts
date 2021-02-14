@@ -7,6 +7,7 @@ import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 import {SectionImages} from "../../../../core/model/restapi/section-images";
 import {Section} from "../../../../core/model/entities/section";
+import {Ordering} from "../../../../core/model/restapi/ordering";
 
 export enum DocumentActionTypes {
   DocumentGetOverview = '[Document] Get Overview',
@@ -19,6 +20,8 @@ export enum DocumentActionTypes {
   DocumentRenameSectionSuccess = '[Document] Rename section success',
   DocumentDeleteSection = '[Document] Delete section',
   DocumentDeleteSectionSuccess = '[Document] Delete section success',
+  DocumentReorderSections = '[Document] Reorder sections',
+  DocumentReorderSectionsSuccess = '[Document] Reorder sections success',
 
 
   // revisado hasta aquí
@@ -96,6 +99,15 @@ export class DocumentDeleteSectionSuccess implements Action {
   constructor(public sectionID: number) {}
 }
 
+export class DocumentReorderSections implements Action {
+  public readonly type = DocumentActionTypes.DocumentReorderSections;
+  constructor(public ordering: Ordering) {}
+}
+
+export class DocumentReorderSectionsSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentReorderSectionsSuccess;
+  constructor(public ordering: Ordering) {}
+}
 
 // revisado hasta aquí
 
@@ -220,6 +232,7 @@ export type DocumentActions =
   DocumentCreateSection | DocumentCreateSectionSuccess |
   DocumentRenameSection | DocumentRenameSectionSuccess |
   DocumentDeleteSection | DocumentDeleteSectionSuccess |
+  DocumentReorderSections | DocumentReorderSectionsSuccess |
   // revisado hasta aquí
   DocumentResetServerError | DocumentServerError |
   DocumentGetDocument | DocumentGetDocumentSuccess | DocumentGetImages | DocumentGetImagesSuccess | DocumentExportMEI | DocumentExportMEISuccess |

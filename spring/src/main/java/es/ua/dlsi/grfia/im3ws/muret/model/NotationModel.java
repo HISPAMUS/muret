@@ -216,7 +216,7 @@ public class NotationModel {
             }
         }
 
-        Collection<Image> sortedImages = document.getSortedImages();
+        List<Image> sortedImages = document.getImages();
         for (Image image: sortedImages) {
             if (idsOfSelectedImages.contains(image.getId())) {
                 Surface imageSurface = null;
@@ -504,7 +504,7 @@ public class NotationModel {
 
         HashMap<Part, PreflightPartContext> partContexts = new HashMap<>();
         // TODO parts, context ...
-        for (Image image: document.getSortedImages()) {
+        for (Image image: document.getImages()) {
             PreflightCkeckResult.PreflightCkeckImageResult preflightCkeckImageResult = new PreflightCkeckResult.PreflightCkeckImageResult();
             preflightCkeckResult.addPreflightImageResult(preflightCkeckImageResult);
             preflightCkeckImageResult.setImageID(image.getId());

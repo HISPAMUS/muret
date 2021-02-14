@@ -11,7 +11,7 @@ import java.util.Objects;
  * @author drizo
  */
 @Entity
-public class Permissions {
+public class Permissions implements IID<Integer>  {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +38,7 @@ public class Permissions {
         this.permissions = permissions;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }

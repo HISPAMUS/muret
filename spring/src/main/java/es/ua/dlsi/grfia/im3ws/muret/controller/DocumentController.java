@@ -7,7 +7,6 @@ import es.ua.dlsi.grfia.im3ws.controller.StringResponse;
 import es.ua.dlsi.grfia.im3ws.muret.auditing.AuditorAwareImpl;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.*;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Collection;
 import es.ua.dlsi.grfia.im3ws.muret.model.NotationModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.DocumentModel;
 import es.ua.dlsi.grfia.im3ws.muret.repository.*;
@@ -19,6 +18,7 @@ import es.ua.dlsi.im3.core.utils.FileUtils;
 import es.ua.dlsi.im3.core.utils.ImageUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
-import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.awt.image.BufferedImage;
@@ -79,12 +78,45 @@ public class DocumentController {
         this.notationModel = new NotationModel();
     }
 
+    private <O extends IOrdered, R extends CrudRepository> void updateOrdering(R repository, List<O> entities) {
+        ArrayList<O> toUpdate = new ArrayList<>();
+        for (int i=0; i<entities.size(); i++) {
+            O entity = entities.get(i);
+            if (entity.getOrdering() != i) {
+                entity.setOrdering(i);
+                toUpdate.add(entity);
+            }
+        }
+        repository.saveAll(toUpdate);
+    }
+
+
+    private <O extends IOrdered, R extends CrudRepository> OrderingLong setOrdering(R repository, OrderingLong ordering, String entityName) {
+        final ArrayList<O> updatedEntities = new ArrayList<>();
+        int i=0;
+        OrderingLong orderingLong = new OrderingLong();
+        for (Long id: ordering.getIdsSequence()) {
+            Optional<O> entity = repository.findById(id);
+            if (!entity.isPresent()) {
+                throw new RuntimeException("Cannot find " + entityName + " with id " + id);
+            }
+            entity.get().setOrdering(i);
+            updatedEntities.add(entity.get());
+            orderingLong.add(id);
+            i++;
+        }
+
+        repository.saveAll(updatedEntities);
+        return orderingLong;
+    }
+
     @PutMapping(path = {"/moveImagesToSection"})
     @javax.transaction.Transactional
     public SectionImages moveImageToSection(@RequestBody SectionImages sectionImages) {
         try {
             java.util.Collection<Image> images = new ArrayList<>();
             Long [] previousSectionIDs = new Long[sectionImages.getImageIDS().length];
+            ArrayList<Section> modifiedSections = new ArrayList<>();
             for (int i=0; i<sectionImages.getImageIDS().length; i++) {
                 Long id = sectionImages.getImageIDS()[i];
                 Optional<Image> image = imageRepository.findById(id);
@@ -100,12 +132,14 @@ public class DocumentController {
                 if (sectionImages.getNewSectionID() == null) {
                     // add to the previous document
                     image.get().changeDocumentAndSection(image.get().getSection().getDocument(), null);
+                    updateOrdering(imageRepository, image.get().getSection().getDocument().getImages());
                 } else {
                     Optional<Section> section = sectionRepository.findById(sectionImages.getNewSectionID());
                     if (!section.isPresent()) {
                         throw new IM3WSException("Cannot find a section with ID= " + sectionImages.getNewSectionID());
                     }
                     image.get().changeDocumentAndSection(null, section.get());
+                    updateOrdering(imageRepository, image.get().getSection().getImages());
                 }
                 images.add(image.get());
             }
@@ -131,7 +165,9 @@ public class DocumentController {
             Section section = new Section();
             section.setDocument(document.get());
             section.setName(name);
-            return sectionRepository.save(section);
+            Section createdSection = sectionRepository.save(section);
+            updateOrdering(sectionRepository, document.get().getSections());
+            return createdSection;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot create new section", e);
         }
@@ -158,6 +194,21 @@ public class DocumentController {
         }
     }
 
+
+    /**
+     * @return sectionIDsOrdering Comma separated list of IDS
+     */
+    @PutMapping(path = {"/reorderSections"})
+    @Transactional
+    public Ordering<Long> reorderSections(@RequestBody OrderingLong ordering) {
+        try {
+            return setOrdering(sectionRepository, ordering, "section");
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot save sections reordering", e);
+        }
+    }
+
+
     /**
      * Return the deleted section
      * @param sectionID
@@ -172,12 +223,13 @@ public class DocumentController {
                 throw new IM3WSException("Cannot find section with id=" + sectionID);
             }
             // first move all the images in the section to the main document
+            Document document = optionalSection.get().getDocument();
             ArrayList<Image> changedImages = new ArrayList<>();
-            optionalSection.get().getImages().forEach(image -> {
+            for (Image image: optionalSection.get().getImages()) {
                 image.setSection(null);
                 image.setDocument(optionalSection.get().getDocument());
                 changedImages.add(image);
-            });
+            }
             imageRepository.saveAll(changedImages);
             sectionRepository.delete(optionalSection.get());
             return sectionID;
@@ -257,7 +309,7 @@ public class DocumentController {
 
         //TODO Atómico
         //TODO Ordenación
-        Image image = new Image(fileName, null, fullImage.getWidth(), fullImage.getHeight(), document.get(), null, null, null);
+        Image image = new Image(fileName, null, fullImage.getWidth(), fullImage.getHeight(), document.get(), null, null, null, null);
         image.setCreatedBy(AuditorAwareImpl.getCurrentUser());
         imageRepository.save(image);
     }

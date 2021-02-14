@@ -111,7 +111,7 @@ public class Worms2021MuRETDatasets implements CommandLineRunner {
         for (Document document: collection.getDocuments()) {
             //if (!document.getName().equals("mision02")) { // skip it because it's not complete
             if (!document.getName().startsWith("M")) { // skip it because it's not complete
-                for (Image image : document.getSortedImages()) {
+                for (Image image : document.getImages()) {
                     for (Page page : image.getSortedPages()) {
                         List<Region> staves = page.getSortedStaves();
                         if (!staves.isEmpty()) {

@@ -12,7 +12,7 @@ import static javax.persistence.TemporalType.TIMESTAMP;
  * @author drizo
  */
 @Entity
-public class LastDocument {
+public class LastDocument implements IID<Integer>  {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +40,7 @@ public class LastDocument {
         this.user = user;
         this.timestamp = timestamp;
     }
+    @Override
     public Integer getId() {
         return id;
     }

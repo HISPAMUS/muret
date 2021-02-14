@@ -11,4 +11,5 @@ export interface Image extends Entity {
   pages: Page[];
   state: State;
   part: Part;
+  ordering: number;
 }

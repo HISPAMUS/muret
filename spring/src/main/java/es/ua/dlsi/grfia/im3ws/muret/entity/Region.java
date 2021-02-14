@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * @author drizo
  */
 @Entity
-public class Region extends Auditable implements IAssignableToPart, IDelimitedWithBoundingBox {
+public class Region extends Auditable implements IAssignableToPart, IDelimitedWithBoundingBox, IID<Long> {
     /**
      * It orders regions given its middle horizontal point or its approximate x
      */
@@ -102,6 +102,7 @@ public class Region extends Auditable implements IAssignableToPart, IDelimitedWi
         return verticalPositionComparator;
     }
 
+    @Override
     public Long getId() {
         return id;
     }

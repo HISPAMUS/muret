@@ -8,7 +8,7 @@ import javax.persistence.*;
  * @author drizo
  */
 @Entity
-public class RegionType {
+public class RegionType implements IID<Integer>  {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +42,7 @@ public class RegionType {
         this.name = name;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }

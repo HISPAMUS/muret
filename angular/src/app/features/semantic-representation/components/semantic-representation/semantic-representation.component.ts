@@ -673,7 +673,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   //TODO The selection behaviour should be refactored to another object
   // The notation component takes the selected element from the binded this.selectedSemanticSymbolID
   // The **skern / **smens grid / matrix is selected using the selectGridRow method
-  // In order to select the agnostic element, the this.selectedAgnosticSymbolID field is used, but the
+  // In orderEntities to select the agnostic element, the this.selectedAgnosticSymbolID field is used, but the
 
   onGridRowSelected($event: any) {
     if ($event && $event.node.selected) {

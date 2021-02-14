@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * @author drizo
  */
 @Entity
-public class Image extends Auditable implements IAssignableToPart {
+public class Image extends Auditable implements IAssignableToPart, IID<Long>, IOrdered {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +28,8 @@ public class Image extends Auditable implements IAssignableToPart {
     private Integer width;
     @Column
     private Integer height;
+    @Column // in the document or section
+    private Integer ordering;
 
     @JsonBackReference (value="document")
     @ManyToOne(fetch=FetchType.LAZY)
@@ -65,7 +67,7 @@ public class Image extends Auditable implements IAssignableToPart {
     public Image() {
     }
 
-    public Image(String path, String comments, Integer width, Integer height, Document document, State state, Part part, Section section) {
+    public Image(String path, String comments, Integer width, Integer height, Document document, State state, Part part, Section section, Integer ordering) {
         if (document != null && section != null) {
             throw new RuntimeException("Document and Section are mutually exclusive");
         }
@@ -77,7 +79,9 @@ public class Image extends Auditable implements IAssignableToPart {
         this.state = state;
         this.part = part;
         this.section = section;
+        this.ordering = ordering;
     }
+    @Override
     public Long getId() {
         return id;
     }
@@ -112,6 +116,16 @@ public class Image extends Auditable implements IAssignableToPart {
         }
 
         this.document = document;
+    }
+
+    @Override
+    public Integer getOrdering() {
+        return ordering;
+    }
+
+    @Override
+    public void setOrdering(Integer ordering) {
+        this.ordering = ordering;
     }
 
     public Set<Page> getPages() {

@@ -137,7 +137,7 @@ export class AlignmentPreviewComponent implements OnInit, OnDestroy {
   private constructPianoRollForPart(part: AlignmentPreviewPart) {
     // it is reused along staves in the same part
     let lastMeasureDuration: number;
-    // used for staves that don't complete the measure in order to correctly draw the measure lines
+    // used for staves that don't complete the measure in orderEntities to correctly draw the measure lines
     let pendingMeasureTimeFromPreviousStaff = 0;
 
     part.staves.forEach(staff => {

@@ -10,7 +10,7 @@ import java.util.Objects;
  * @author drizo
  */
 @Entity
-public class Classifier {
+public class Classifier  implements IID<Integer> {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +32,7 @@ public class Classifier {
         this.classifierType = classifierType;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }

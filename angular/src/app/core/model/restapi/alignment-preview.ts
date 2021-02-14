@@ -26,7 +26,7 @@ export interface AlignmentPreviewStaff {
   id: number; // region ID
   imageID: number; // the image where the region is located
   pageNumber: number; // the number of page (1 for left, 2 for right ...)
-  order: number; // the order number among the staves from top to bottom in the page
+  order: number; // the orderEntities number among the staves from top to bottom in the page
   boundingBox: BoundingBox;
   items: AlignmentPreviewItem[];
 }

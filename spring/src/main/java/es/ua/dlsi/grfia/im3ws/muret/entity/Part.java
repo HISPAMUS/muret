@@ -9,7 +9,7 @@ import java.util.Objects;
  * @author drizo
  */
 @Entity
-public class Part extends Auditable {
+public class Part extends Auditable implements IID<Long>, IOrdered  {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +21,9 @@ public class Part extends Auditable {
     @Column
     private String comments;
 
+    @Column
+    private Integer ordering;
+
     @JsonBackReference (value="document")
     @ManyToOne(fetch=FetchType.LAZY)
     //@JoinColumn(name="document_id", referencedColumnName="id")
@@ -30,15 +33,18 @@ public class Part extends Auditable {
     public Part() {
     }
 
-    public Part(String name, String comments, Document document) {
+    public Part(String name, String comments, Document document, Integer ordering) {
         this.name = name;
         this.comments = comments;
         this.document = document;
+        this.ordering = ordering;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
+
 
     public void setId(Long id) {
         this.id = id;
@@ -66,6 +72,16 @@ public class Part extends Auditable {
 
     public void setDocument(Document document) {
         this.document = document;
+    }
+
+    @Override
+    public Integer getOrdering() {
+        return ordering;
+    }
+
+    @Override
+    public void setOrdering(Integer ordering) {
+        this.ordering = ordering;
     }
 
     @Override
