@@ -163,6 +163,9 @@ It shows the opened document.
 | `DocumentNewSection(documentID: number, name: string)` | `createSection$(documentID: number, name: string)` | `/documents/createSection` | `documentOverview` (with new section)  | `apiRestServerError`| 
 | `DocumentRenameSection(section: Section)` | `renameSection$(section: Section)` | `/documents/renameSection` | `documentOverview` (with section changed)  | `apiRestServerError`| 
 | `DocumentDeleteSection(sectionID: number)` | `deleteSection$(sectionID: number)` | `/documents/deleteSection` | `documentOverview` (with section deleted and images moved)  | `apiRestServerError`| 
+| `DocumentReorderSections(ordering: Ordering)` | `reorderSections$(ordering: Ordering)` | `/documents/reorderSections` | `documentOverview` (with section reordered)  | `apiRestServerError`| 
+| `DocumentGetSection(id: number)` | `getSection$(id: number)` | `/sections/<id>?projection=excerpt` | `section`  | `apiRestServerError`| 
+| `DocumentReorderImages(ordering: Ordering)` | `reorderImages$(ordering: Ordering)` | `/documents/reorderImages` | `section` (with images reordered)  | `apiRestServerError`| 
 
 
 ![Document store component](puml/angular/document_store_component.svg)
@@ -179,3 +182,6 @@ para deep-copy objetos en reducer de ngrx
 
 https://www.npmjs.com/package/ngx-contextmenu
 Context menus
+
+https://www.npmjs.com/package/@fortawesome/free-solid-svg-icons
+Iconos que usa https://fontawesome.com

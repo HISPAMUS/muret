@@ -68,7 +68,7 @@ The following structure has been used inside the `app` module:
     + SvgCanvasComponent
     + TextComponent
     
-In the following diagrams, only dependencies are represented. In order to easily layout
+In the following diagrams, only dependencies are represented. In orderEntities to easily layout
 the diagram, packages are not drawn but replaced for the following colors:
 * `SVG`: blue  
 * `shared`: green

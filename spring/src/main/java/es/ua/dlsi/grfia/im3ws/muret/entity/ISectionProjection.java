@@ -19,4 +19,13 @@ public interface ISectionProjection {
 
     List<IImageProjection> getImages();
     Integer getOrdering();
+
+    // Convenience method for ReorderImagesComponent
+    @Value("#{target.document.path}")
+    String getDocumentPath();
+
+    // Convenience method for ReorderImagesComponent
+    @Value("#{target.document.id}")
+    Integer getDocumentId();
+
 }

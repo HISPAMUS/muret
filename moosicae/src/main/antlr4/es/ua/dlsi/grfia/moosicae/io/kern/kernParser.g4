@@ -300,7 +300,7 @@ pitch: diatonicPitchAndOctave
     CHAR_x?; // sometimes found
 alteration: accidental alterationDisplay?;
 
-// The correct order of notes is: beforeNote duration pitch staffChange afterNote, however, if changes in some encodings
+// The correct orderEntities of notes is: beforeNote duration pitch staffChange afterNote, however, if changes in some encodings
 
 note:
     beforeNote

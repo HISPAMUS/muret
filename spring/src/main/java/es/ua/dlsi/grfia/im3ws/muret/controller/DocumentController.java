@@ -195,9 +195,6 @@ public class DocumentController {
     }
 
 
-    /**
-     * @return sectionIDsOrdering Comma separated list of IDS
-     */
     @PutMapping(path = {"/reorderSections"})
     @Transactional
     public Ordering<Long> reorderSections(@RequestBody OrderingLong ordering) {
@@ -208,6 +205,18 @@ public class DocumentController {
         }
     }
 
+    /**
+     * @return sectionIDsOrdering Comma separated list of IDS
+     */
+    @PutMapping(path = {"/reorderImages"})
+    @Transactional
+    public Ordering<Long> reorderImages(@RequestBody OrderingLong ordering) {
+        try {
+            return setOrdering(imageRepository, ordering, "image");
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot save image reordering", e);
+        }
+    }
 
     /**
      * Return the deleted section

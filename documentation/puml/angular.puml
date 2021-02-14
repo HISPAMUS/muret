@@ -150,16 +150,27 @@
     DocumentNewSection -- [Document Store]
     DocumentRenameSection -- [Document Store]
     DocumentDeleteSection -- [Document Store]
+    DocumentReorderSections -- [Document Store]
+    DocumentGetSection -- [Document Store]
+    DocumentReorderImages -- [Document Store]
 
     [Document Store] -- selectDocumentOverview
+    [Document Store] -- selectDocumentSection
+    
 
     [DocumentComponent] ..> DocumentGetOverview
+    [ReorderSectionsComponent] ..> DocumentGetOverview
     [DocumentThumbnailComponent] ..> DocumentMoveImagesToSection
     [SectionComponent] ..> DocumentNewSection
     [SectionComponent] ..> DocumentRenameSection
     [SectionComponent] ..> DocumentDeleteSection
+    [ReorderSectionsComponent] ..> DocumentReorderSections
+    [ReorderImagesComponent] ..> DocumentGetSection
+    [ReorderImagesComponent] ..> DocumentReorderImages
 
     selectDocumentOverview <.. [DocumentComponent]
+    selectDocumentOverview <.. [ReorderSectionsComponent]
+    selectDocumentSection <.. [ReorderImagesComponent]
 @enduml
 ```
 

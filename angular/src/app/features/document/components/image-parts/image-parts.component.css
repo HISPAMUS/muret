@@ -1,0 +1,8 @@
+ul {
+  padding-top: 1rem;
+}
+li {
+  list-style: none;
+  text-align: center;
+  font-size: small;
+}

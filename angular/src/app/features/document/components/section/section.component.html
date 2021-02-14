@@ -1,0 +1,47 @@
+<section class="d-flex">
+  <div id="sectionMenu">
+    <h4 *ngIf="section">{{section.name}}</h4>
+    <h4 *ngIf="!section">Unassigned to section</h4>
+    <div class="d-flex align-items-end flex-column">
+      <nav *ngIf="!compressed">
+        <a class="nav-link" href="#">Parts</a>
+        <a class="nav-link" href="#">Alignment</a>
+        <a class="nav-link" href="#">Score view</a>
+        <button *ngIf="includeNewSection" (click)="createSection()">New section...</button>
+        <a *ngIf="section" href="" (click)="onContextMenu($event)"><fa-icon id="ellipsis" icon="ellipsis-v" size="1x"></fa-icon></a>
+      </nav>
+      <div class="mt-5">
+        <a [routerLink]="" *ngIf="compressed" (click)="expand()"><fa-icon icon="compress-alt" size="2x"></fa-icon></a>
+        <a [routerLink]="" *ngIf="!compressed" (click)="compress()"><fa-icon icon="expand-alt" size="1x"></fa-icon></a>
+      </div>
+    </div>
+  </div>
+  <div id="thumbnails" *ngIf="!compressed" class="d-flex align-items-end flex-row flex-wrap">
+    <app-document-thumbnail [selection]="selection"
+                            *ngFor="let image of sortedImages; trackBy: imageTracking"
+                            [documentPath]="documentPath"
+                            [section]="section"
+                            [sections]="sections"
+                            [imageID]="image.id"
+                            [filename]="image.filename" [documentParts]="documentParts">
+
+    </app-document-thumbnail>
+  </div>
+
+</section>
+
+<!-- "unassigned section does not show this menu" -->
+<context-menu>
+  <ng-template contextMenuItem (execute)="renameSection()">
+    Rename...
+  </ng-template>
+  <ng-template contextMenuItem (execute)="reorderImages()">
+    Reorder images...
+  </ng-template>
+  <ng-template contextMenuItem divider="true"></ng-template>
+  <ng-template contextMenuItem (execute)="deleteSection()">
+    Delete section ...
+  </ng-template>
+</context-menu>
+
+

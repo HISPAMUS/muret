@@ -1,0 +1,26 @@
+section {
+  margin: 2rem;
+}
+
+#sectionMenu {
+  min-width: 10rem;
+  padding-right: 1rem;
+  border-right-style: solid;
+  border-right-color: white;
+  border-right-width: 1px;
+  padding-top: 4rem;
+  margin-top: 1rem;
+  text-align: right;
+}
+
+
+#sectionMenu a {
+  padding-right: 0;
+  margin-right: 0;
+}
+
+#section a {
+  padding-right: 0;
+}
+
+
