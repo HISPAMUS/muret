@@ -144,7 +144,7 @@ export class SectionComponent implements OnChanges {
   }
 
   getImagePartIds(id: number): number[] {
-    if (this.partsInImages) {
+    if (this.imagePartsMap) {
       return this.imagePartsMap.get(id);
     }
   }

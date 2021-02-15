@@ -14,6 +14,8 @@ import {CdkDragDrop} from "@angular/cdk/drag-drop";
 import {Section} from "../../../../core/model/entities/section";
 import {compareOrdering} from "../../../../core/model/entities/iordered";
 import {PartsInImage} from "../../../../core/model/restapi/parts-in-image";
+import {HomeGetLastDocuments, HomeUpdateLastDocuments} from "../../../home/store/actions/home.actions";
+import {selectAuthUserID} from "../../../../auth/store/selectors/auth.selector";
 
 @Component({
   selector: 'app-document',
@@ -27,6 +29,7 @@ export class DocumentComponent implements OnInit, OnDestroy {
   sections: Section[];
   selectedImages: SelectionManager;
   partsInImages$: Observable<PartsInImage[]>;
+  private userIDSubscription: Subscription;
 
   constructor(private route: ActivatedRoute, private store: Store<DocumentState>,
               private router: Router,
@@ -41,6 +44,11 @@ export class DocumentComponent implements OnInit, OnDestroy {
       this.store.dispatch(new DocumentGetOverview(this.documentID));
       this.store.dispatch(new DocumentGetPartsInImages(this.documentID));
       this.store.dispatch(new BreadcrumbsUpdateDocument(this.documentID));
+      this.userIDSubscription = this.store.select(selectAuthUserID).subscribe(next => {
+        if (next) {
+          this.store.dispatch(new HomeUpdateLastDocuments(next, this.documentID));
+        }
+      });
     });
 
     this.documentOverviewSubscription = this.store.select(selectDocumentOverview).subscribe(next => {
@@ -53,6 +61,7 @@ export class DocumentComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.documentOverviewSubscription.unsubscribe();
+    this.userIDSubscription.unsubscribe();
   }
 
   sectionTracking(index, item): number {

@@ -14,6 +14,6 @@ export class HomeService {
 
   updateUserLastDocument$(userID: number, documentID: number): Observable<LastDocumentExtract> {
     const url = `lastdocument/update/${userID}/${documentID}`;
-    return this.apiRestClientService.get$<LastDocumentExtract>('trainingsets/exporters');
+    return this.apiRestClientService.get$<LastDocumentExtract>(url);
   }
 }
