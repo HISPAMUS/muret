@@ -1,7 +1,7 @@
 <div *ngIf="section" class="container">
   <h2>Reorder section {{section.name}}</h2>
   <p>Drag and drop images to reorder them</p>
-
+  <!-- cdk does not allow the drag and drop in flex yet -->
   <div cdkDropList class="image-list" (cdkDropListDropped)="drop($event)">
     <div class="image-box" *ngFor="let imageTuple of sortedImages; trackBy: sortedImagesTracking" cdkDrag>
       {{imageTuple[0].filename}}

@@ -10,6 +10,7 @@ import {DocumentGetOverview, DocumentReorderSections} from "../../store/actions/
 import {Section} from "../../../../core/model/entities/section";
 import {Ordering} from "../../../../core/model/restapi/ordering";
 import {compareOrdering} from "../../../../core/model/entities/iordered";
+import {BreadcrumbsUpdateDocument} from "../../../../layout/store/actions/breadcrumbs.actions";
 
 @Component({
   selector: 'app-reorder-sections',
@@ -25,6 +26,7 @@ export class ReorderSectionsComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.documentID = +this.route.snapshot.paramMap.get('id'); // + converts the string to number
       this.store.dispatch(new DocumentGetOverview(this.documentID));
+      this.store.dispatch(new BreadcrumbsUpdateDocument(this.documentID));
     });
   }
 

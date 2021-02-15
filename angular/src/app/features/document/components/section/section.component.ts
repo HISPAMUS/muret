@@ -13,6 +13,7 @@ import {
 import {ContextMenuComponent, ContextMenuService} from "ngx-contextmenu";
 import {compareOrdering} from "../../../../core/model/entities/iordered";
 import {Router} from "@angular/router";
+import {PartsInImage} from "../../../../core/model/restapi/parts-in-image";
 
 @Component({
   selector: 'app-section',
@@ -28,11 +29,14 @@ export class SectionComponent implements OnChanges {
   @Input() documentPath: string;
   @Input() images: Image[];
   @Input() selection: Selection;
+  @Input() partsInImages: PartsInImage[];
+
   // , { static: true } for avoiding ExpressionChangedAfterItHasCheckedError
   @ViewChild(ContextMenuComponent, {static: true}) public contextualMenu: ContextMenuComponent;
   compressed: boolean = false;
 
   sortedImages: Image[];
+  imagePartsMap: Map<number, number[]>; // key = imageID, value = part IDS
 
   constructor(private dialogsService: DialogsService, private store: Store<Document>,
               private contextMenuService: ContextMenuService, private router: Router) {
@@ -42,7 +46,20 @@ export class SectionComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
       if (changes.images) {
         this.sortedImages = this.images.slice().sort(compareOrdering);
+      } else if (changes.partsInImages) {
+        this.buildMaps();
+      } else if (changes.parts) {
+        this.buildMaps();
       }
+  }
+  // built when partsInImages and parts are received
+  private buildMaps() {
+    if (this.partsInImages && this.documentParts) {
+      this.imagePartsMap = new Map<number, number[]>();
+      this.partsInImages.forEach(partsInImage => {
+        this.imagePartsMap.set(partsInImage.imageID, partsInImage.idsOfParts);
+      });
+    }
   }
 
 
@@ -121,4 +138,15 @@ export class SectionComponent implements OnChanges {
   reorderImages() {
     this.router.navigate(['/document/reorderImages', this.section.id]);
   }
+
+  reorderSections() {
+    this.router.navigate(['/document/reorderSections', this.documentID]);
+  }
+
+  getImagePartIds(id: number): number[] {
+    if (this.partsInImages) {
+      return this.imagePartsMap.get(id);
+    }
+  }
+
 }

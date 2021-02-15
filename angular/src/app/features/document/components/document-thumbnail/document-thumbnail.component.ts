@@ -26,8 +26,8 @@ export class DocumentThumbnailComponent implements OnInit {
   @Input() filename: string;
   @Input() documentParts: Part[];
   @Input() selection: SelectionManager;
+  @Input() imagePartIds: number[];
 
-  imagePartIds: number[]; // set of part ids
   loadedImage$: Observable<SafeResourceUrl>;
   loadingImage = "assets/images/loading.svg";
   imageClass: string;

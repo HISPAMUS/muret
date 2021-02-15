@@ -10,6 +10,7 @@ import {AlignmentPreview} from '../../../core/model/restapi/alignment-preview';
 import {Section} from "../../../core/model/entities/section";
 import {SectionImages} from "../../../core/model/restapi/section-images";
 import {Ordering} from "../../../core/model/restapi/ordering";
+import {PartsInImage} from "../../../core/model/restapi/parts-in-image";
 
 @Injectable() // non-singleton
 export class DocumentService {
@@ -61,6 +62,11 @@ export class DocumentService {
   reorderImages$(ordering: Ordering): Observable<Ordering> {
     const url = `document/reorderImages`;
     return this.apiRestClientService.put$(url, ordering);
+  }
+
+  getPartsInImages$(documentID: number): Observable<PartsInImage[]> {
+    const url = `document/partsInImages/${documentID}`;
+    return this.apiRestClientService.get$<PartsInImage[]>(url);
   }
 
   /*public getParts$(documentID: number): Observable<Section[]> {

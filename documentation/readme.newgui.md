@@ -166,6 +166,7 @@ It shows the opened document.
 | `DocumentReorderSections(ordering: Ordering)` | `reorderSections$(ordering: Ordering)` | `/documents/reorderSections` | `documentOverview` (with section reordered)  | `apiRestServerError`| 
 | `DocumentGetSection(id: number)` | `getSection$(id: number)` | `/sections/<id>?projection=excerpt` | `section`  | `apiRestServerError`| 
 | `DocumentReorderImages(ordering: Ordering)` | `reorderImages$(ordering: Ordering)` | `/documents/reorderImages` | `section` (with images reordered)  | `apiRestServerError`| 
+| `DocumentGetPartsInImages(documentID: number)` | `getPartsInImages$(documentID: number)` | `/documents/partsInImages/<document ID>` | `partsInImages` | `apiRestServerError`| 
 
 
 ![Document store component](puml/angular/document_store_component.svg)

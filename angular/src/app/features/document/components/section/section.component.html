@@ -23,7 +23,8 @@
                             [section]="section"
                             [sections]="sections"
                             [imageID]="image.id"
-                            [filename]="image.filename" [documentParts]="documentParts">
+                            [filename]="image.filename" [documentParts]="documentParts"
+                            [imagePartIds]="getImagePartIds(image.id)">
 
     </app-document-thumbnail>
   </div>
@@ -34,6 +35,9 @@
 <context-menu>
   <ng-template contextMenuItem (execute)="renameSection()">
     Rename...
+  </ng-template>
+  <ng-template contextMenuItem (execute)="reorderSections()">
+    Reorder sections...
   </ng-template>
   <ng-template contextMenuItem (execute)="reorderImages()">
     Reorder images...

@@ -153,9 +153,11 @@
     DocumentReorderSections -- [Document Store]
     DocumentGetSection -- [Document Store]
     DocumentReorderImages -- [Document Store]
+    DocumentGetPartsInImages -- [Document Store]
 
     [Document Store] -- selectDocumentOverview
     [Document Store] -- selectDocumentSection
+    [Document Store] -- selectDocumentPartsInImages
     
 
     [DocumentComponent] ..> DocumentGetOverview
@@ -167,10 +169,12 @@
     [ReorderSectionsComponent] ..> DocumentReorderSections
     [ReorderImagesComponent] ..> DocumentGetSection
     [ReorderImagesComponent] ..> DocumentReorderImages
+    [DocumentComponent] ..> DocumentGetPartsInImages
 
     selectDocumentOverview <.. [DocumentComponent]
     selectDocumentOverview <.. [ReorderSectionsComponent]
     selectDocumentSection <.. [ReorderImagesComponent]
+    selectDocumentPartsInImages <.. [DocumentComponent]
 @enduml
 ```
 

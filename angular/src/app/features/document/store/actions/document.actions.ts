@@ -8,6 +8,7 @@ import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-
 import {SectionImages} from "../../../../core/model/restapi/section-images";
 import {Section} from "../../../../core/model/entities/section";
 import {Ordering} from "../../../../core/model/restapi/ordering";
+import {PartsInImage} from "../../../../core/model/restapi/parts-in-image";
 
 export enum DocumentActionTypes {
   DocumentGetOverview = '[Document] Get Overview',
@@ -26,7 +27,8 @@ export enum DocumentActionTypes {
   DocumentGetSectionSuccess = '[Document] Get section success',
   DocumentReorderImages = '[Document] Reorder images',
   DocumentReorderImagesSuccess = '[Document] Reorder images success',
-
+  DocumentGetPartsInImages = '[Document] Get parts in images',
+  DocumentGetPartsInImagesSuccess = '[Document] Get parts in images success',
 
   // revisado hasta aquí
   ResetDocumentServerError = '[Document] Reset Server error',
@@ -134,6 +136,17 @@ export class DocumentReorderImagesSuccess implements Action {
   public readonly type = DocumentActionTypes.DocumentReorderImagesSuccess;
   constructor(public ordering: Ordering) {}
 }
+
+export class DocumentGetPartsInImages implements Action {
+  public readonly type = DocumentActionTypes.DocumentGetPartsInImages;
+  constructor(public documentID: number) {}
+}
+
+export class DocumentGetPartsInImagesSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentGetPartsInImagesSuccess;
+  constructor(public partsInImages: PartsInImage[]) {}
+}
+
 // revisado hasta aquí
 
 
@@ -260,6 +273,7 @@ export type DocumentActions =
   DocumentReorderSections | DocumentReorderSectionsSuccess |
   DocumentGetSection | DocumentGetSectionSuccess |
   DocumentReorderImages | DocumentReorderImagesSuccess |
+  DocumentGetPartsInImages | DocumentGetPartsInImagesSuccess |
 
   // revisado hasta aquí
   DocumentResetServerError | DocumentServerError |

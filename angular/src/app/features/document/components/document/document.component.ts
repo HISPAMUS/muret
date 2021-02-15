@@ -7,12 +7,13 @@ import {DialogsService} from "../../../../shared/services/dialogs.service";
 import {ShowErrorService} from "../../../../core/services/show-error.service";
 import {BreadcrumbsUpdateDocument} from "../../../../layout/store/actions/breadcrumbs.actions";
 import {Document} from "../../../../core/model/entities/document";
-import {DocumentGetOverview} from "../../store/actions/document.actions";
-import {selectDocumentOverview} from "../../store/selectors/document.selector";
+import {DocumentGetOverview, DocumentGetPartsInImages} from "../../store/actions/document.actions";
+import {selectDocumentOverview, selectDocumentPartsInImages} from "../../store/selectors/document.selector";
 import {SelectionManager} from "../../../../shared/directives/selection-manager";
 import {CdkDragDrop} from "@angular/cdk/drag-drop";
 import {Section} from "../../../../core/model/entities/section";
 import {compareOrdering} from "../../../../core/model/entities/iordered";
+import {PartsInImage} from "../../../../core/model/restapi/parts-in-image";
 
 @Component({
   selector: 'app-document',
@@ -24,18 +25,21 @@ export class DocumentComponent implements OnInit, OnDestroy {
   documentOverview: Document;
   documentOverviewSubscription: Subscription;
   sections: Section[];
-  selectedImages: SelectionManager; // TODO tipo de dato
+  selectedImages: SelectionManager;
+  partsInImages$: Observable<PartsInImage[]>;
 
   constructor(private route: ActivatedRoute, private store: Store<DocumentState>,
               private router: Router,
               private dialogsService: DialogsService, private showErrorService: ShowErrorService) {
     this.selectedImages = new SelectionManager();
+    this.partsInImages$ = this.store.select(selectDocumentPartsInImages);
   }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.documentID = +this.route.snapshot.paramMap.get('id'); // + converts the string to number
       this.store.dispatch(new DocumentGetOverview(this.documentID));
+      this.store.dispatch(new DocumentGetPartsInImages(this.documentID));
       this.store.dispatch(new BreadcrumbsUpdateDocument(this.documentID));
     });
 

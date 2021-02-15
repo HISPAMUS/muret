@@ -247,6 +247,53 @@ public class DocumentController {
         }
     }
 
+    @GetMapping(path = {"/partsInImages/{documentID}"})
+    @Transactional(readOnly = true)
+    public Set<PartsInImage> getPartsInImages(@PathVariable("documentID") Integer id)  {
+        try {
+            Optional<Document> document = documentRepository.findById(id);
+            if (!document.isPresent()) {
+                throw new IM3WSException("Cannot find a document with id " + id);
+            }
+
+            HashSet<PartsInImage> result = new HashSet<>();
+            for (Image image : document.get().getImages()) {
+                result.add(fillPartsInImage(image));
+            }
+
+            for (Section section: document.get().getSections()) {
+                for (Image image: section.getImages()) {
+                    PartsInImage partsInImage = fillPartsInImage(image);
+                    if (!partsInImage.getIdsOfParts().isEmpty()) {
+                        result.add(partsInImage);
+                    }
+                }
+            }
+            return result;
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot create statistics", e);
+        }
+    }
+
+    private PartsInImage fillPartsInImage(Image image) {
+        PartsInImage partsInImage = new PartsInImage(image.getId());
+        if (image.getPart() != null) {
+            partsInImage.addPart(image.getPart().getId());
+        }
+
+        for (Page page: image.getPages()) {
+            if (page.getPart() != null) {
+                partsInImage.addPart(page.getPart().getId());
+            }
+            for (Region region: page.getRegions()) {
+                if (region.getPart() != null) {
+                    partsInImage.addPart(region.getPart().getId());
+                }
+            }
+        }
+
+        return partsInImage;
+    }
 
     // revisado hasta aquí
 

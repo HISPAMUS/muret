@@ -171,6 +171,15 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
 
       return newState;
     }
+    case DocumentActionTypes.DocumentGetPartsInImagesSuccess: {
+      const result: DocumentState = {
+        ...state,
+        apiRestServerError: null
+      };
+      result.partsInImages = action.partsInImages;
+      return result;
+    }
+
     // revisado hasta aquí
     case DocumentActionTypes.ResetDocumentServerError: {
       return {

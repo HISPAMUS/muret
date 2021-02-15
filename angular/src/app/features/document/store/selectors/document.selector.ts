@@ -15,6 +15,11 @@ export const selectDocumentSection = createSelector(
   (state: DocumentState) => state.section
 );
 
+export const selectDocumentPartsInImages = createSelector(
+  documentState,
+  (state: DocumentState) => state.partsInImages
+);
+
 
 // revisado hasta aquí
 export const selectDocument = createSelector(

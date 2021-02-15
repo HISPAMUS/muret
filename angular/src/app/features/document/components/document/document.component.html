@@ -1,6 +1,5 @@
 <div *ngIf="documentOverview" id="document" xmlns="http://www.w3.org/1999/html"
      appSelectableContainer [selection]="selectedImages">
-  <button [routerLink]="['/document/reorderSections', documentID]">Reorder</button>
   <app-section *ngFor="let section of sections; trackBy: sectionTracking"
                [documentPath]="documentOverview.path"
                [documentID]="documentID"
@@ -9,6 +8,7 @@
                [section]="section"
                [sections]="documentOverview.sections"
                [selection]="selectedImages"
+               [partsInImages]="partsInImages$ | async"
   >
 
   </app-section>
@@ -20,6 +20,7 @@
                [sections]="documentOverview.sections"
                [includeNewSection]="'true'"
                [selection]="selectedImages"
+               [partsInImages]="partsInImages$ | async"
   >
   </app-section>
 </div>
