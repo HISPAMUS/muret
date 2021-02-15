@@ -42,10 +42,10 @@ export class SelectableContainerDirective {
   }
 
   public onSelect(item: any) {
-    if (!this.selection) {
-      throw new Error('[selection] attribute is required for the appSelectable directive');
+    if (!this.selectionManager) {
+      throw new Error('[selectionManager] attribute is required for the appSelectable directive');
     }
-    this.selection.add(item);
+    this.selectionManager.add(item);
   }
 
   public startSelectingWithDrag() {

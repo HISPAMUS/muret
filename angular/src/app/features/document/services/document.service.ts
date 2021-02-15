@@ -26,6 +26,10 @@ export class DocumentService {
     return this.apiRestClientService.put$(url, sectionImages);
   }
 
+  moveImagesToDefaultSection$(documentID: number): Observable<Section> {
+    const url = `document/moveImagesToDefaultSection/${documentID}`;
+    return this.apiRestClientService.put$(url, null);
+  }
 
   createSection$(documentID: number, name: string): Observable<Section> {
     const url = `document/createSection/${documentID}/${name}`;
@@ -136,6 +140,5 @@ export class DocumentService {
     const url = `alignment/preview/${documentID}`;
     return this.apiRestClientService.get$<AlignmentPreview>(url);
   }
-
 
 }

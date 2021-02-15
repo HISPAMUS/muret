@@ -17,7 +17,7 @@ export class SelectionManager {
     return this._selectableElements;
   }
 
-  public addOrRemove(item: any) {
+  public addOrRemove(item: SelectableDirective) {
     if (this.selectedElements.has(item)) {
       this.remove(item);
     } else {
@@ -26,12 +26,12 @@ export class SelectionManager {
     this.lastSelectedElementIndex = this._selectableElements.indexOf(item);
   }
 
-  public _add(item: any) {
+  _add(item: SelectableDirective) {
     this.selectedElements.add(item);
     item.onSelected.emit();
   }
 
-  public remove(item: any) {
+  public remove(item: SelectableDirective) {
     this.selectedElements.delete(item);
     item.onDeselected.emit();
   }
@@ -44,15 +44,15 @@ export class SelectionManager {
     this.lastSelectedElementIndex = 0;
   }
 
-  replace(item: any) {
+  public replace(item: SelectableDirective) {
     this.clear();
     this.addOrRemove(item);
   }
 
-  public selectRange(to: any) {
+  public selectRange(to: SelectableDirective) {
     let indexTo = this._selectableElements.indexOf(to);
     if (indexTo !== -1) {
-      if (indexTo < this.lastSelectedElementIndex) { // if selection from an element previous than the selected one
+      if (indexTo < this.lastSelectedElementIndex) { // if selectionManager from an element previous than the selected one
         const aux = indexTo;
         indexTo = this.lastSelectedElementIndex;
         this.lastSelectedElementIndex = aux;
@@ -64,7 +64,7 @@ export class SelectionManager {
     }
   }
 
-  public addSelectable(el: any) {
+  public addSelectable(el: SelectableDirective) {
     this._selectableElements.push(el);
   }
 

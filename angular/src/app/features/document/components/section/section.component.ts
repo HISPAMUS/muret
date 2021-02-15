@@ -7,13 +7,14 @@ import {Store} from "@ngrx/store";
 
 import {
   DocumentCreateSection,
-  DocumentDeleteSection,
+  DocumentDeleteSection, DocumentMoveImagesToDefaultSection,
   DocumentRenameSection
 } from "../../store/actions/document.actions";
 import {ContextMenuComponent, ContextMenuService} from "ngx-contextmenu";
 import {compareOrdering} from "../../../../core/model/entities/iordered";
 import {Router} from "@angular/router";
 import {PartsInImage} from "../../../../core/model/restapi/parts-in-image";
+import {SelectionManager} from "../../../../shared/directives/selection-manager";
 
 @Component({
   selector: 'app-section',
@@ -28,7 +29,7 @@ export class SectionComponent implements OnChanges {
   @Input() documentParts: Part[];
   @Input() documentPath: string;
   @Input() images: Image[];
-  @Input() selection: Selection;
+  @Input() selectionManager: SelectionManager;
   @Input() partsInImages: PartsInImage[];
 
   // , { static: true } for avoiding ExpressionChangedAfterItHasCheckedError
@@ -149,4 +150,7 @@ export class SectionComponent implements OnChanges {
     }
   }
 
+  moveAllToDefaultSection() {
+    this.store.dispatch(new DocumentMoveImagesToDefaultSection(this.documentID));
+  }
 }

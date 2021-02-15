@@ -11,7 +11,6 @@ export interface Document extends Entity {
   thumbnailBase64Encoding: string;
   images: Image[];
   comments: string;
-  imagesOrdering: string;
   notationType: string;
   manuscriptType: string;
   state: State;

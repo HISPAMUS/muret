@@ -36,7 +36,11 @@ import {
   DocumentReorderSectionsSuccess,
   DocumentGetSection,
   DocumentGetSectionSuccess,
-  DocumentReorderImages, DocumentReorderImagesSuccess, DocumentGetPartsInImages, DocumentGetPartsInImagesSuccess,
+  DocumentReorderImages,
+  DocumentReorderImagesSuccess,
+  DocumentGetPartsInImages,
+  DocumentGetPartsInImagesSuccess,
+  DocumentMoveImagesToDefaultSection, DocumentMoveImagesToDefaultSectionSuccess,
 } from '../actions/document.actions';
 import {Document} from '../../../../core/model/entities/document';
 import {Image} from '../../../../core/model/entities/image';
@@ -70,6 +74,14 @@ export class DocumentEffects {
     ofType<DocumentMoveImagesToSection>(DocumentActionTypes.DocumentMoveImagesToSection),
     switchMap((action: DocumentMoveImagesToSection) => this.documentService.moveImagesToSection$(action.sectionImages).pipe(
       switchMap((sectionImages) => of(new DocumentMoveImagesToSectionSuccess(sectionImages))),
+      catchError(err => of(new DocumentServerError(err)))
+    )));
+
+  @Effect()
+  moveImageToDefaultSection$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentMoveImagesToDefaultSection>(DocumentActionTypes.DocumentMoveImagesToDefaultSection),
+    switchMap((action: DocumentMoveImagesToDefaultSection) => this.documentService.moveImagesToDefaultSection$(action.documentID).pipe(
+      switchMap((section) => of(new DocumentMoveImagesToDefaultSectionSuccess(section))),
       catchError(err => of(new DocumentServerError(err)))
     )));
 

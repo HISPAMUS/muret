@@ -7,7 +7,7 @@
                [documentParts]="documentOverview.parts"
                [section]="section"
                [sections]="documentOverview.sections"
-               [selection]="selectedImages"
+               [selectionManager]="selectedImages"
                [partsInImages]="partsInImages$ | async"
   >
 
@@ -19,7 +19,7 @@
                [section]="null"
                [sections]="documentOverview.sections"
                [includeNewSection]="'true'"
-               [selection]="selectedImages"
+               [selectionManager]="selectedImages"
                [partsInImages]="partsInImages$ | async"
   >
   </app-section>

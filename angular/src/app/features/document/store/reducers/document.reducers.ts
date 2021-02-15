@@ -26,6 +26,16 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
       };
     }
 
+    case DocumentActionTypes.DocumentMoveImagesToDefaultSectionSuccess: {
+      const newState = klona(state); // deep copy
+      debugger;
+      newState.apiRestServerError = null;
+      newState.documentOverview.sections = [klona(action.section)];
+      newState.documentOverview.sections[0].images = newState.documentOverview.images;
+      newState.documentOverview.images = [];
+      return newState;
+      break;
+    }
     case DocumentActionTypes.DocumentMoveImagesToSectionSuccess: {
       const newState = klona(state); // deep copy
       newState.apiRestServerError = null;

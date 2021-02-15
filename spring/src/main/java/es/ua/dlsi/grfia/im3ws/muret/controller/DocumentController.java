@@ -116,7 +116,6 @@ public class DocumentController {
         try {
             java.util.Collection<Image> images = new ArrayList<>();
             Long [] previousSectionIDs = new Long[sectionImages.getImageIDS().length];
-            ArrayList<Section> modifiedSections = new ArrayList<>();
             for (int i=0; i<sectionImages.getImageIDS().length; i++) {
                 Long id = sectionImages.getImageIDS()[i];
                 Optional<Image> image = imageRepository.findById(id);
@@ -149,6 +148,34 @@ public class DocumentController {
             return sectionImages;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot move image to section", e);
+        }
+    }
+
+    @PutMapping(path = {"/moveImagesToDefaultSection/{documentID}"})
+    @javax.transaction.Transactional
+    public Section moveImageToDefaultSection(@PathVariable("documentID") Integer documentID) {
+        try {
+            Optional<Document> document = documentRepository.findById(documentID);
+            if (!document.isPresent()) {
+                throw new IM3WSException("Cannot find document with id=" + documentID);
+            }
+
+            Section defaultSection = new Section();
+            defaultSection.setName("Default");
+            defaultSection.setDocument(document.get());
+            defaultSection.setOrdering(0);
+            Section savedSection = sectionRepository.save(defaultSection);
+            int ordering = 0;
+            for (Image image: document.get().getImages()) {
+                image.setOrdering(ordering);
+                image.setDocument(null);
+                image.setSection(savedSection);
+                ordering++;
+            }
+            imageRepository.saveAll(document.get().getImages());
+            return savedSection;
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot create default section and move images", e);
         }
     }
 

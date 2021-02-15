@@ -6,7 +6,7 @@
     </p>
   </div>
   <!--<img class="mt-0 pt-0" [defaultImage]="loadingImage" [lazyLoad]="loadedImage$ | async">-->
-  <img appSelectable [selection]="selection" [modelID]="imageID" (onSelected)="onSelect()" (onDeselected)="onDeselect()"
+  <img appSelectable [selectionManager]="selectionManager" [modelID]="imageID" (onSelected)="onSelect()" (onDeselected)="onDeselect()"
        [defaultImage]="loadingImage"
        [lazyLoad]="loadedImage$ | async"
        [ngClass]="imageClass"

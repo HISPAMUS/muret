@@ -25,7 +25,7 @@ export class DocumentThumbnailComponent implements OnInit {
   @Input() imageID: number;
   @Input() filename: string;
   @Input() documentParts: Part[];
-  @Input() selection: SelectionManager;
+  @Input() selectionManager: SelectionManager;
   @Input() imagePartIds: number[];
 
   loadedImage$: Observable<SafeResourceUrl>;
@@ -81,13 +81,13 @@ export class DocumentThumbnailComponent implements OnInit {
       newSectionID: section ? section.id : null,
       imageIDS: []
     };
-    if (this.selection.getSelected().length > 0) {
-      this.selection.getSelected().forEach(selectable => {
+    if (this.selectionManager.getSelected().length > 0) {
+      this.selectionManager.getSelected().forEach(selectable => {
         const id = selectable.getSelectedModelID();
         sectionImages.imageIDS.push(id);
       });
     } else {
-      // no selection has been done but the right clicked object must be moved
+      // no selectionManager has been done but the right clicked object must be moved
       sectionImages.imageIDS.push(this.imageID);
     }
     this.store.dispatch(new DocumentMoveImagesToSection(sectionImages));

@@ -670,7 +670,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     return this.hasPartAssignedToRegion() || this.hasPartAssignedToImage();
   }
 
-  //TODO The selection behaviour should be refactored to another object
+  //TODO The selectionManager behaviour should be refactored to another object
   // The notation component takes the selected element from the binded this.selectedSemanticSymbolID
   // The **skern / **smens grid / matrix is selected using the selectGridRow method
   // In orderEntities to select the agnostic element, the this.selectedAgnosticSymbolID field is used, but the

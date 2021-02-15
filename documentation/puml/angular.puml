@@ -34,6 +34,7 @@
     selectAuthIsAdmin <.. [HomeComponent]
     selectAuthUserID <.. [HomeComponent]
     selectAuthUserID <.. [CollectionsComponent]
+    selectAuthUserID <.. [DocumentComponent]
 @enduml
 ```
 
@@ -91,7 +92,7 @@
 
     [HomeComponent] ..> HomeGetLastDocuments
     [DocumentsComponent] ..> HomeUpdateLastDocuments
-
+    [DocumentComponent] ..> HomeUpdateLastDocuments
     selectHomeLastDocuments <.. [HomeComponent]
 @enduml
 ```
@@ -148,12 +149,14 @@
     DocumentGetOverview -- [Document Store]
     DocumentMoveImagesToSection -- [Document Store]
     DocumentNewSection -- [Document Store]
+    DocumentMoveImagesToDefaultSection -- [Document Store]
     DocumentRenameSection -- [Document Store]
     DocumentDeleteSection -- [Document Store]
     DocumentReorderSections -- [Document Store]
     DocumentGetSection -- [Document Store]
     DocumentReorderImages -- [Document Store]
     DocumentGetPartsInImages -- [Document Store]
+
 
     [Document Store] -- selectDocumentOverview
     [Document Store] -- selectDocumentSection
@@ -170,6 +173,7 @@
     [ReorderImagesComponent] ..> DocumentGetSection
     [ReorderImagesComponent] ..> DocumentReorderImages
     [DocumentComponent] ..> DocumentGetPartsInImages
+    [SectionComponent] ..> DocumentMoveImagesToDefaultSection
 
     selectDocumentOverview <.. [DocumentComponent]
     selectDocumentOverview <.. [ReorderSectionsComponent]
@@ -482,4 +486,162 @@ control HomeComponent
 HomeModule --> HomeComponent
 @enduml
 ```
+
+' -----------------------------------------------------------------------------------------------------------
+```puml
+@startuml document_component
+[DocumentComponent] -- documentID
+[DocumentComponent] -- section
+[DocumentComponent] -- sections
+[DocumentComponent] -- includeNewSection
+[DocumentComponent] -- documentParts
+[DocumentComponent] -- documentPath
+[DocumentComponent] -- images
+[DocumentComponent] -- selectionManager
+[DocumentComponent] -- partsInImages
+
+documentID )-- [SectionComponent]
+section )-- [SectionComponent]
+sections )-- [SectionComponent]
+includeNewSection )-- [SectionComponent]
+documentParts )-- [SectionComponent]
+documentPath )-- [SectionComponent]
+images )-- [SectionComponent]
+selectionManager )-- [SectionComponent]
+partsInImages )-- [SectionComponent]
+
+
+() "documentPath" as SectionComponent.documentPath
+() "section" as SectionComponent.section
+() "sections" as SectionComponent.sections
+() "imageID" as SectionComponent.imageID
+() "filename" as SectionComponent.filename
+() "documentParts" as SectionComponent.documentParts
+() "selectionManager" as SectionComponent.selectionManager
+() "imagePartIds" as SectionComponent.imagePartIds
+
+[SectionComponent] -- SectionComponent.selectionManager
+[SectionComponent] -- SectionComponent.documentPath
+[SectionComponent] -- SectionComponent.section
+[SectionComponent] -- SectionComponent.sections
+[SectionComponent] -- SectionComponent.imageID
+[SectionComponent] -- SectionComponent.filename
+[SectionComponent] -- SectionComponent.documentParts
+[SectionComponent] -- SectionComponent.imagePartIds
+
+SectionComponent.selectionManager )-- [DocumentThumbnailComponent]
+SectionComponent.documentPath )-- [DocumentThumbnailComponent]
+SectionComponent.section )-- [DocumentThumbnailComponent]
+SectionComponent.sections )-- [DocumentThumbnailComponent]
+SectionComponent.imageID )-- [DocumentThumbnailComponent]
+SectionComponent.filename )-- [DocumentThumbnailComponent]
+SectionComponent.documentParts )-- [DocumentThumbnailComponent]
+SectionComponent.imagePartIds )-- [DocumentThumbnailComponent]
+
+() "documentParts" as DocumentThumbnailComponent.documentParts
+() "imagePartIds" as DocumentThumbnailComponent.imagePartIds
+[DocumentThumbnailComponent] -- DocumentThumbnailComponent.documentParts
+[DocumentThumbnailComponent] -- DocumentThumbnailComponent.imagePartIds
+
+DocumentThumbnailComponent.documentParts )-- [ImagePartsComponent]
+DocumentThumbnailComponent.imagePartIds )-- [ImagePartsComponent]
+
+[appSelectableContainer] --( selectionManager
+selectionManager )-- [appSelectable]
+
+[appSelectableContainer] <- [DocumentComponent]
+selectionManager <- [DocumentThumbnailComponent]: getSelected()
+
+() "onSelected" as DocumentThumbnailComponent.onSelected
+() "onDeselected" as DocumentThumbnailComponent.onDeselected
+() "modelID" as DocumentThumbnailComponent.modelID
+
+DocumentThumbnailComponent.onSelected -- [DocumentThumbnailComponent]
+DocumentThumbnailComponent.onDeselected -- [DocumentThumbnailComponent]
+DocumentThumbnailComponent.modelID -- [DocumentThumbnailComponent]
+
+[appSelectable] -( DocumentThumbnailComponent.onSelected
+[appSelectable] --( DocumentThumbnailComponent.onDeselected
+[appSelectable] --( DocumentThumbnailComponent.modelID
+
+
+
+@enduml
+```
+
+' -----------------------------------------------------------------------------------------------------------
+```puml
+@startuml selectable_class
+
+class SelectableDirective
+
+class SelectableContainerDirective
+
+class SelectionManager {
+  +addOrRemove(item: SelectableDirective)
+  +remove(item: SelectableDirective)
+  +clear()
+  +replace(item: SelectableDirective) 
+  +selectRange(to: SelectableDirective)
+  +addSelectable(el: SelectableDirective)
+  getSelected(): SelectableDirective[]
+}
+
+SelectionManager --> "n" SelectableDirective: selectedElements
+SelectionManager --> "n" SelectableDirective: selectableElements
+
+SelectableContainerDirective *--> SelectionManager
+SelectableDirective *--> SelectionManager
+@enduml
+```
+
+
+' -----------------------------------------------------------------------------------------------------------
+```puml
+@startuml selectable_sequence
+actor User
+boundary DocumentComponent
+create entity SelectionManager
+DocumentComponent -> SelectionManager
+create control appSelectableContainer
+DocumentComponent -> appSelectableContainer : selectionManager
+create boundary SectionComponent
+DocumentComponent -> SectionComponent : selectionManager
+create boundary DocumentThumbnailComponent
+SectionComponent -> DocumentThumbnailComponent : selectionManager
+create control appSelectable
+DocumentThumbnailComponent -> appSelectable : selectionManager and modelID=documentID
+User -> DocumentThumbnailComponent: mouse event
+note right : mouse click on the document thumbnail that has the appSelectable directive
+DocumentThumbnailComponent -> appSelectable
+note right : the mouse event is captured by the appSelectable through the :host angular mechanism
+alt shift + left click
+  appSelectable -> SelectionManager: selectRange(this)
+end
+alt meta key + click
+  appSelectable -> SelectionManager: addOrRemove(this)
+end
+alt click
+  appSelectable -> SelectionManager: replace(this)
+end
+DocumentThumbnailComponent -> SelectionManager: getSelected()
+SelectionManager --> DocumentThumbnailComponent: appSelectable[]
+note right : Return all selected appSelectable
+loop for each appSelectable
+  DocumentThumbnailComponent --> appSelectable: modelID
+  note right : It gets the modelID with which the appSelectable was created
+end  
+
+alt click
+  User -> Document: mouse click event
+  note right : mouse click on the document that has the appSelectableContainer directive
+  Document -> appSelectableContainer
+  note right : the mouse event is captured by the appSelectableContainer through the :host angular mechanism. \n M
+  appSelectableContainer -> SelectionManager: clear()
+end
+
+
+@enduml
+```
+
 

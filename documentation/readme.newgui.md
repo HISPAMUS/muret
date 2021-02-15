@@ -8,27 +8,27 @@ Notes on naming style:
 ## Model
 The following class diagram contains the whole hierarchy, however it's not always fully populated, it depends on the different actions in individual modules.
 
-![Model class diagram](puml/angular/model_class.svg)
+![Model class diagram](out/puml/angular/model_class.svg)
 
 
 ## Routing and permissions
 The routing mechanism has been used. All elements are grouped into components, each one with its own routing.
 Guards are used to prevent unauthorized users from entering restricted pages.
 
-![Guard mechanism sequence diagram](puml/angular/guard_sequence.svg)
+![Guard mechanism sequence diagram](out/puml/angular/guard_sequence.svg)
 
 
 ## Main AppComponent
 The main angular component just takes care of notifying the store when the page has been refreshed to reload session data as a means of not loosing the state of the application.
 Everything else is delegated to the `LayoutComponent`.
 
-![AppComponent class diagram](puml/angular/appcomponent_class.svg)
-![AppComponent sequence diagram](puml/angular/appcomponent_sequence.svg)
+![AppComponent class diagram](out/puml/angular/appcomponent_class.svg)
+![AppComponent sequence diagram](out/puml/angular/appcomponent_sequence.svg)
 
 
 ## Auth store
 
-![Authentication sequence](puml/angular/authentication_sequence.svg)
+![Authentication sequence](out/puml/angular/authentication_sequence.svg)
 
 
 **Hereafter, rather than using sequence diagrams, the following information wil be used to summarize the Redux tuples.**
@@ -43,17 +43,17 @@ Everything else is delegated to the `LayoutComponent`.
 | `AuthResetPassword(r: ResetPWD)` | `resetPassword$(r: ResetPWD)` | `/users/resetpwd` | `passwordresetmess=0` | `passwordresetmess=1` |
 |  |  |  |  |  | 
 
-![Auth store component](puml/angular/auth_store_component.svg)
+![Auth store component](out/puml/angular/auth_store_component.svg)
 
 
 ## Core store
 This *Redux* class contains information used along the whole application: user, status and fonts.
 
-![Authentication sequence](puml/angular/corestore_class.svg)
+![Authentication sequence](out/puml/angular/corestore_class.svg)
 
 The ``APIRestServerError`` is used to record the last API rest call error reported by the different services.  
 
-![Core store component](puml/angular/core_store_component.svg)
+![Core store component](out/puml/angular/core_store_component.svg)
 
 ### User actions
 Note this store just obtains data such as collections associated to the authenticated user through its user ID. For authentication, see the [Auth Store](#auth-store).
@@ -87,7 +87,7 @@ This component is in charge of displaying the common information of the applicat
 
 The `RouterOutlet` renders the component selected by the active routing module, i.e., the active page.
 
-![LayoutComponent component diagram](puml/angular/layout_component.svg)
+![LayoutComponent component diagram](out/puml/angular/layout_component.svg)
 
 The `AvatarComponent` displays the current logged user information. 
 `ServerStateComponent` shows server-side information state.
@@ -101,7 +101,7 @@ It only contains information about the breadcrumbs.
 | `BreadcrumbsUpdateDocument(documentID: number)` | `getDocumentBreadcrumbs$(documentID)` | `/breadcrumbs/document` | `breadcrumbs` | `serverError`| 
 
 
-![Home store component](puml/angular/home_store_component.svg)
+![Home store component](out/puml/angular/home_store_component.svg)
 
 ## auth.LogIn Component
 As described in section [Routing and permissions](#routing-and-permissions), when a user tries to access any page and has not logged in yet, he/she is forwared to the `LoginComponent` by the `AuthGuard`.
@@ -109,7 +109,7 @@ As described in section [Routing and permissions](#routing-and-permissions), whe
 
 ## Features: Home
 After the user logs in and the guard allows to enter as depicted above in diagram in [routing and permissions](#routing-and-permissions)), the following sequence is followed:
-![Home sequence](puml/angular/home_sequence.svg)
+![Home sequence](out/puml/angular/home_sequence.svg)
 
 ### Home store component
 The last docuemnts are used to show the user the last documents opened by him/her. When a document is opened in the [Documents Component](#documents-component) this list is updated.
@@ -120,7 +120,7 @@ The last docuemnts are used to show the user the last documents opened by him/he
 | `HomeUpdateLastDocuments(userID: number, documentID: number)` | `updateUserLastDocument$(userID: number, documentID: number)` | `/lastdocument/update` | `lastDocuments` | `errorMessage`| 
 
 
-![Home store component](puml/angular/home_store_component.svg)
+![Home store component](out/puml/angular/home_store_component.svg)
 
 ## Features: Documents
 It shows the collections, subcollections and their documents.
@@ -135,7 +135,7 @@ It shows the collections, subcollections and their documents.
 | `DocumentsMoveDocumentsToSubcollection(currentCollectionID: number, documentIDs: number[], subcollectionID: number)` | `moveDocumentsToSubcollection$(currentCollectionID: number, documentIDs: number[], subcollectionID: number)` | `/collections/moveDocumentToSubcollection` | `changedCollectionID` | `apiRestServerError`| 
 | `DocumentsMoveDocumentsToNewSubcollection(currentCollectionID: number, documentIDs: number[], subCollectionName: string)` | `moveDocumentsToNewSubcollection$(currentCollectionID: number, documentIDs: number[], newCollectionName: string)` | `/collections/moveDocumentToNewSubcollection` | `changedCollectionID` | `apiRestServerError`| 
 
-![Documents store component](puml/angular/documents_store_component.svg)
+![Documents store component](out/puml/angular/documents_store_component.svg)
 
 
 ### features.documents.CollectionsComponent
@@ -149,18 +149,17 @@ It shows both subcollections and leaf documents.
 
 **TO-DO StateComponent**
 
+## Features: Document
+This feature deals with all functionalities related to the whole document: preview, export, sections, parts.
 
 ### Document store component
-It shows the opened document.
-
-
-
 
 | **Action** | **`DocumentService` method** | **API Rest method** | **`DocumentState` properties on succes** | **Properties on failure** | 
 | --- | ----------- | ----------- | ----------- | ----- | 
 | `DocumentGetOverview(documentID: number)` | `getOverview$(documentID: number)` | `/documents/<documentID>?projection=overview` | `documentOverview` (containing images unassigned to sections), parts, sections (including images)  | `apiRestServerError`| 
-| `DocumentMoveImagesToSection(imageIDs: number[], sectionID: number)` | `moveImagesToSection$(imageIDs: number[], sectionID: number)` | `/documents/moveToSection` | `documentOverview` (with images moved from secetion)  | `apiRestServerError`| 
+| `DocumentMoveImagesToSection(imageIDs: number[], sectionID: number)` | `moveImagesToSection$(imageIDs: number[], sectionID: number)` | `/documents/moveToSection` | `documentOverview` (with images moved from section)  | `apiRestServerError`| 
 | `DocumentNewSection(documentID: number, name: string)` | `createSection$(documentID: number, name: string)` | `/documents/createSection` | `documentOverview` (with new section)  | `apiRestServerError`| 
+| `DocumentMoveImagesToDefaultSection(documentID: number)` | `moveImagesToDefaultSection$(documentID: number)` | `/documents/moveToDefaultSection` | `documentOverview` (with new sectiona and images moved to that section)  | `apiRestServerError`| 
 | `DocumentRenameSection(section: Section)` | `renameSection$(section: Section)` | `/documents/renameSection` | `documentOverview` (with section changed)  | `apiRestServerError`| 
 | `DocumentDeleteSection(sectionID: number)` | `deleteSection$(sectionID: number)` | `/documents/deleteSection` | `documentOverview` (with section deleted and images moved)  | `apiRestServerError`| 
 | `DocumentReorderSections(ordering: Ordering)` | `reorderSections$(ordering: Ordering)` | `/documents/reorderSections` | `documentOverview` (with section reordered)  | `apiRestServerError`| 
@@ -169,9 +168,21 @@ It shows the opened document.
 | `DocumentGetPartsInImages(documentID: number)` | `getPartsInImages$(documentID: number)` | `/documents/partsInImages/<document ID>` | `partsInImages` | `apiRestServerError`| 
 
 
-![Document store component](puml/angular/document_store_component.svg)
+![Document store component](out/puml/angular/document_store_component.svg)
 
+### features.documents.DocumentComponent
+It shows the preview of the document. It delegates almost all functionalities to other components in the same feature.
 
+![Document component](out/puml/angular/document_component.svg)
+
+-----
+# Shared
+## Directives
+### Selectable and SelectableContainer
+Both work as a group. 
+
+![Selectable class diagram](out/puml/angular/selectable_class.svg)
+![Selectable sequence diagram](out/puml/angular/selectable_sequence.svg)
 
 -----
 **TODO ¿Unificar apiRestServerError en un sólo Store?**

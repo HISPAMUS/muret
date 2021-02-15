@@ -7,7 +7,9 @@
         <a class="nav-link" href="#">Parts</a>
         <a class="nav-link" href="#">Alignment</a>
         <a class="nav-link" href="#">Score view</a>
-        <button *ngIf="includeNewSection" (click)="createSection()">New section...</button>
+        <button class="btn-primary" *ngIf="includeNewSection" (click)="createSection()">New section...</button>
+        <br><br>
+        <button class="btn-secondary" *ngIf="includeNewSection" (click)="moveAllToDefaultSection()">Move all to default section...</button>
         <a *ngIf="section" href="" (click)="onContextMenu($event)"><fa-icon id="ellipsis" icon="ellipsis-v" size="1x"></fa-icon></a>
       </nav>
       <div class="mt-5">
@@ -17,7 +19,7 @@
     </div>
   </div>
   <div id="thumbnails" *ngIf="!compressed" class="d-flex align-items-end flex-row flex-wrap">
-    <app-document-thumbnail [selection]="selection"
+    <app-document-thumbnail [selectionManager]="selectionManager"
                             *ngFor="let image of sortedImages; trackBy: imageTracking"
                             [documentPath]="documentPath"
                             [section]="section"

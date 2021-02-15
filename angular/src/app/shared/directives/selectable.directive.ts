@@ -6,36 +6,36 @@ import {SelectionManager} from './selection-manager';
   selector: '[appSelectable]'
 })
 export class SelectableDirective implements OnChanges {
-  @Input() selection: SelectionManager;
+  @Input() selectionManager: SelectionManager;
   @Input() modelID: any;
-  @Output() onSelected = new EventEmitter(); // emitted by the selection manager on the insertion to the selected set of elements
-  @Output() onDeselected = new EventEmitter(); // emitted by the selection manager
+  @Output() onSelected = new EventEmitter(); // emitted by the selectionManager manager on the insertion to the selected set of elements
+  @Output() onDeselected = new EventEmitter(); // emitted by the selectionManager manager
 
   constructor() { // private el: ElementRef el is the element containing the directive
   }
 
   @HostListener('click', ["$event"])
   onMouseClick() {
-    if (!this.selection) {
-      throw new Error('The [selection] attribute must be set when using the appSelectable directive');
+    if (!this.selectionManager) {
+      throw new Error('The [selectionManager] attribute must be set when using the appSelectable directive');
     }
     // @ts-ignore
     if (event.shiftKey) {
-      this.selection.selectRange(this);
+      this.selectionManager.selectRange(this);
       // @ts-ignore
     } else if (event.metaKey) {
-      this.selection.addOrRemove(this);
+      this.selectionManager.addOrRemove(this);
     } else {
-      this.selection.replace(this);
+      this.selectionManager.replace(this);
     }
 
     event.stopPropagation();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.selection.isFirstChange()) {
-      if (changes.selection.currentValue instanceof SelectionManager) {
-        (changes.selection.currentValue as SelectionManager).addSelectable(this);
+    if (changes.selectionManager.isFirstChange()) {
+      if (changes.selectionManager.currentValue instanceof SelectionManager) {
+        (changes.selectionManager.currentValue as SelectionManager).addSelectable(this);
       }
     }
   }

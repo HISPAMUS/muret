@@ -17,6 +17,8 @@ export enum DocumentActionTypes {
   DocumentMoveImagesToSectionSuccess = '[Document] Move image to section success',
   DocumentCreateSection = '[Document] Create section',
   DocumentCreateSectionSuccess = '[Document] Create section success',
+  DocumentMoveImagesToDefaultSection = '[Document] Move images to default section',
+  DocumentMoveImagesToDefaultSectionSuccess = '[Document] Move images to default section success',
   DocumentRenameSection = '[Document] Rename section',
   DocumentRenameSectionSuccess = '[Document] Rename section success',
   DocumentDeleteSection = '[Document] Delete section',
@@ -74,6 +76,17 @@ export class DocumentMoveImagesToSectionSuccess implements Action {
   constructor(public sectionImages: SectionImages) {}
 }
 
+
+export class DocumentMoveImagesToDefaultSection implements Action {
+  public readonly type = DocumentActionTypes.DocumentMoveImagesToDefaultSection;
+  constructor(public documentID: number) {}
+}
+
+export class DocumentMoveImagesToDefaultSectionSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentMoveImagesToDefaultSectionSuccess;
+  constructor(public section: Section) {}
+}
+
 export class DocumentCreateSection implements Action {
   public readonly type = DocumentActionTypes.DocumentCreateSection;
   constructor(public documentID: number, public name: string) {}
@@ -83,6 +96,9 @@ export class DocumentCreateSectionSuccess implements Action {
   public readonly type = DocumentActionTypes.DocumentCreateSectionSuccess;
   constructor(public section: Section) {}
 }
+
+
+
 
 export class DocumentRenameSection implements Action {
   public readonly type = DocumentActionTypes.DocumentRenameSection;
@@ -269,6 +285,7 @@ export type DocumentActions =
   DocumentMoveImagesToSection | DocumentMoveImagesToSectionSuccess |
   DocumentCreateSection | DocumentCreateSectionSuccess |
   DocumentRenameSection | DocumentRenameSectionSuccess |
+  DocumentMoveImagesToDefaultSection | DocumentMoveImagesToDefaultSectionSuccess |
   DocumentDeleteSection | DocumentDeleteSectionSuccess |
   DocumentReorderSections | DocumentReorderSectionsSuccess |
   DocumentGetSection | DocumentGetSectionSuccess |
