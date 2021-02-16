@@ -1,3 +1,4 @@
+//@deprecated
 export enum LinkType
 {
     Collection = 0,

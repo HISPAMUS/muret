@@ -8,6 +8,8 @@ export enum BreadcrumbsActionTypes {
   BreadcrumbsUpdateCollectionSuccess = '[Breadcrumbs] Update collection success',
   BreadcrumbsUpdateDocument = '[Breadcrumbs] Update document',
   BreadcrumbsUpdateDocumentSuccess = '[Breadcrumbs] Update document success',
+  BreadcrumbsUpdateImage = '[Breadcrumbs] Update image',
+  BreadcrumbsUpdateImageSuccess = '[Breadcrumbs] Update image success',
   BreadcrumbsServerError = '[Breadcrumbs] Server error',
 }
 
@@ -32,6 +34,17 @@ export class BreadcrumbsUpdateDocumentSuccess implements Action {
   constructor(public breadcrumbs: Breadcrumb[]) {}
 }
 
+export class BreadcrumbsUpdateImage implements Action {
+  public readonly type = BreadcrumbsActionTypes.BreadcrumbsUpdateImage;
+  constructor(public imageID: number) {}
+}
+
+export class BreadcrumbsUpdateImageSuccess implements Action {
+  public readonly type = BreadcrumbsActionTypes.BreadcrumbsUpdateImageSuccess;
+  constructor(public breadcrumbs: Breadcrumb[]) {}
+}
+
+
 export class BreadcrumbsServerError implements Action {
   public readonly type = BreadcrumbsActionTypes.BreadcrumbsServerError;
   constructor(public serverError: APIRestServerError) {}
@@ -39,4 +52,5 @@ export class BreadcrumbsServerError implements Action {
 
 export type BreadcrumbsActions =
   BreadcrumbsUpdateCollection | BreadcrumbsUpdateDocument | BreadcrumbsServerError |
-  BreadcrumbsUpdateCollectionSuccess | BreadcrumbsUpdateDocumentSuccess;
+  BreadcrumbsUpdateCollectionSuccess | BreadcrumbsUpdateDocumentSuccess |
+  BreadcrumbsUpdateImage | BreadcrumbsUpdateImageSuccess;

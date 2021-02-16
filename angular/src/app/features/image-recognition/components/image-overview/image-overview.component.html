@@ -1,7 +1,7 @@
-<div class="container">
+<div class="container" *ngIf="imageOverview">
   <div class="row">
     <div class="col-8">
-      <app-image-document-analysis-navigator [imageOverview]="imageOverview$ | async"></app-image-document-analysis-navigator>
+      <app-image-document-analysis-navigator [imageOverview]="imageOverview"></app-image-document-analysis-navigator>
     </div>
     <div class="col-4">
       <ul>

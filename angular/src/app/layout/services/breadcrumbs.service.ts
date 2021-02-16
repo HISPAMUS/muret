@@ -8,13 +8,18 @@ export class BreadcrumbsService {
 
   constructor(private apiRestClientService: ApiRestClientService) { }
 
-  public getCollectionBreadcrumbs(collectionID: number): Observable<Breadcrumb[]> {
+  public getCollectionBreadcrumbs$(collectionID: number): Observable<Breadcrumb[]> {
     const url = `breadcrumbs/collection/${collectionID}`;
     return this.apiRestClientService.get$<Breadcrumb[]>(url);
   }
 
-  public getDocumentBreadcrumbs(document: number): Observable<Breadcrumb[]> {
-    const url = `breadcrumbs/document/${document}`;
+  public getDocumentBreadcrumbs$(documentID: number): Observable<Breadcrumb[]> {
+    const url = `breadcrumbs/document/${documentID}`;
+    return this.apiRestClientService.get$<Breadcrumb[]>(url);
+  }
+
+  public getImageBreadcrumbs$(imageID: number): Observable<Breadcrumb[]> {
+    const url = `breadcrumbs/image/${imageID}`;
     return this.apiRestClientService.get$<Breadcrumb[]>(url);
   }
 

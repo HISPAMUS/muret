@@ -14,7 +14,7 @@ import {CdkDragDrop} from "@angular/cdk/drag-drop";
 import {Section} from "../../../../core/model/entities/section";
 import {compareOrdering} from "../../../../core/model/entities/iordered";
 import {PartsInImage} from "../../../../core/model/restapi/parts-in-image";
-import {HomeGetLastDocuments, HomeUpdateLastDocuments} from "../../../home/store/actions/home.actions";
+import {HomeUpdateLastDocuments} from "../../../home/store/actions/home.actions";
 import {selectAuthUserID} from "../../../../auth/store/selectors/auth.selector";
 import {Part} from "../../../../core/model/entities/part";
 

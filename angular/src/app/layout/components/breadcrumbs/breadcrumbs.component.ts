@@ -26,6 +26,8 @@ export class BreadcrumbsComponent implements OnInit {
       this.router.navigate(['/documents', link.id]);
     } else if (link.breadcrumbType === 'document') {
       this.router.navigate(['/document', link.id]);
+    } else if (link.breadcrumbType === 'image') {
+      this.router.navigate(['/imageRecognition/overview', link.id]);
     } else {
       throw new Error('Link not valid with breadcrumb type: ' + link.breadcrumbType);
     }

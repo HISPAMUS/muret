@@ -5,24 +5,24 @@ package es.ua.dlsi.grfia.im3ws.muret.controller.payload;
  * @created 7/2/21
  */
 public class Breadcrumb {
-    private int id;
+    private Number id;
     private BreadcrumbType breadcrumbType;
     private String title;
 
     public Breadcrumb() {
     }
 
-    public Breadcrumb(int id, BreadcrumbType breadcrumbType, String title) {
+    public Breadcrumb(Number id, BreadcrumbType breadcrumbType, String title) {
         this.id = id;
         this.breadcrumbType = breadcrumbType;
         this.title = title;
     }
 
-    public int getId() {
+    public Number getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Number id) {
         this.id = id;
     }
 

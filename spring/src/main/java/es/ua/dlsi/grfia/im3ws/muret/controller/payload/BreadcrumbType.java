@@ -5,5 +5,5 @@ package es.ua.dlsi.grfia.im3ws.muret.controller.payload;
  * @created 7/2/21
  */
 public enum BreadcrumbType {
-    collection, document
+    collection, document, image
 }

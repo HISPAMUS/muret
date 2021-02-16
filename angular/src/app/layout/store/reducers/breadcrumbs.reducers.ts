@@ -5,6 +5,7 @@ export function breadcrumbsReducers(state = initialBreadcrumbsState, action: Bre
 BreadcrumbsState {
   switch (action.type) {
     case BreadcrumbsActionTypes.BreadcrumbsUpdateCollectionSuccess:
+    case BreadcrumbsActionTypes.BreadcrumbsUpdateImageSuccess:
     case BreadcrumbsActionTypes.BreadcrumbsUpdateDocumentSuccess: {
       return {
         ...state,
