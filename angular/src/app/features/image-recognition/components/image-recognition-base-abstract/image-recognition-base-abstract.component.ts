@@ -19,8 +19,6 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
   private _imageID: number;
   private _imageOverview: ImageOverview;
   private imageOverviewSubscription: Subscription;
-  private userIDSubscription: Subscription;
-  private userID: any;
 
   constructor(private route: ActivatedRoute, private store: Store<ImageRecognitionState>) { }
 
@@ -35,27 +33,12 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
     this.imageOverviewSubscription = this.store.select(selectImageRecognitionImageOverview).subscribe(next => {
       if (next) {
         this._imageOverview = next;
-        this.updateLastDocuments();
       }
     });
-
-    this.userIDSubscription = this.store.select(selectAuthUserID).subscribe(next => {
-      if (next) {
-        this.userID = next;
-        this.updateLastDocuments();
-      }
-    });
-  }
-
-  private updateLastDocuments() {
-    if (this.userID && this.imageOverview) {
-      this.store.dispatch(new HomeUpdateLastDocuments(this.userID, this.imageOverview.documentID));
-    }
   }
 
   ngOnDestroy() {
     this.imageOverviewSubscription.unsubscribe();
-    this.userIDSubscription.unsubscribe();
   }
 
   get imageOverview() {

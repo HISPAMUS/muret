@@ -15,6 +15,12 @@ import {AgnosticOrSemanticToolbarIconComponent} from "./components/agnostic-or-s
 import { SelectableDirective } from './directives/selectable.directive';
 import { SelectableContainerDirective } from './directives/selectable-container.directive';
 import {ContextMenuModule} from "ngx-contextmenu";
+import {ImagePhasesComponent} from "./components/image-phases/image-phases.component";
+import {RouterModule} from "@angular/router";
+import {ImagePhasePartsComponent} from "./components/image-phase/image-phase-parts.component";
+import {ImagePhaseTranscriptionComponent} from "./components/image-phase/image-phase-transcription.component";
+import {ImagePhaseDocumentAnalysisComponent} from "./components/image-phase/image-phase-document-analysis.component";
+import {ImagePhaseOverviewComponent} from "./components/image-phase/image-phase-overview.component";
 
 @NgModule({
   imports: [
@@ -28,7 +34,8 @@ import {ContextMenuModule} from "ngx-contextmenu";
     SvgModule,
     ContextMenuModule.forRoot({
       useBootstrap4: true,
-    })
+    }),
+    RouterModule
   ],
   declarations: [
     StateComponent,
@@ -38,8 +45,13 @@ import {ContextMenuModule} from "ngx-contextmenu";
     AgnosticOrSemanticToolbarIconComponent,
     ImagePreviewComponent,
     ImageComponent,
+    ImagePhasesComponent,
     SelectableDirective,
-    SelectableContainerDirective
+    SelectableContainerDirective,
+    ImagePhaseOverviewComponent,
+    ImagePhaseDocumentAnalysisComponent,
+    ImagePhasePartsComponent,
+    ImagePhaseTranscriptionComponent
   ],
   exports: [
     StateComponent,
@@ -48,8 +60,12 @@ import {ContextMenuModule} from "ngx-contextmenu";
     AgnosticOrSemanticToolbarComponent,
     ImagePreviewComponent,
     ImageComponent,
+    ImagePhasesComponent,
     SelectableDirective,
-    SelectableContainerDirective
+    SelectableContainerDirective,
+    ImagePhaseDocumentAnalysisComponent,
+    ImagePhasePartsComponent,
+    ImagePhaseTranscriptionComponent
   ],
   providers: []
 })

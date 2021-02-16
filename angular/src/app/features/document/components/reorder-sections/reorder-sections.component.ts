@@ -20,7 +20,7 @@ import {BreadcrumbsUpdateDocument} from "../../../../layout/store/actions/breadc
 export class ReorderSectionsComponent implements OnInit, OnDestroy {
   documentOverviewSubscription: Subscription;
   sections: Section[];
-  private documentID: number;
+  documentID: number;
 
   constructor(private store: Store<DocumentState>, private route: ActivatedRoute) {
     this.route.paramMap.subscribe((params: ParamMap) => {

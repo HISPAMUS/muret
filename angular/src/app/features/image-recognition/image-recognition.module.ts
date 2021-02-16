@@ -10,10 +10,9 @@ import {ImageRecognitionService} from "./services/image-recognition-service";
 import { ImageDocumentAnalysisNavigatorComponent } from './components/image-document-analysis-navigator/image-document-analysis-navigator.component';
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import { PartsInImageComponentComponent } from './components/parts-in-image/parts-in-image-component.component';
-import { ImageRecognitionBaseAbstractComponent } from './components/image-recognition-base-abstract/image-recognition-base-abstract.component';
 import { DocumentAnalysisComponent } from './components/document-analysis/document-analysis.component';
 import { TranscriptionComponentComponent } from './components/transcription/transcription-component.component';
-import {DocumentModule} from "../document/document.module";
+import {SharedModule} from "../../shared/shared.module";
 
 
 
@@ -25,7 +24,7 @@ import {DocumentModule} from "../document/document.module";
     EffectsModule.forFeature([ImageRecognitionEffects]),
     ImageRecognitionRoutingModule,
     FontAwesomeModule,
-    DocumentModule, // for image phases
+    SharedModule
   ],providers: [
     ImageRecognitionService
   ]

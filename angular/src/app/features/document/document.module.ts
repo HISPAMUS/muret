@@ -24,7 +24,7 @@ import { DocumentComponent } from './components/document/document.component';
 import { SectionComponent } from './components/section/section.component';
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import { DocumentThumbnailComponent } from './components/document-thumbnail/document-thumbnail.component';
-import { ImagePhasesComponent } from './components/image-phases/image-phases.component';
+import { ImagePhasesComponent } from '../../shared/components/image-phases/image-phases.component';
 import { ImagePartsComponent } from './components/image-parts/image-parts.component';
 import {LazyLoadImageModule} from "ng-lazyload-image";
 import {ContextMenuModule} from "ngx-contextmenu";
@@ -34,7 +34,7 @@ import { ReorderSectionsComponent } from './components/reorder-sections/reorder-
 import { ReorderImagesComponent } from './components/reorder-images/reorder-images.component';
 
 @NgModule({
-  declarations: [DocumentComponentOld, ImageThumbnailComponent, UploadImagesComponent, DocumentScoreViewerAndExporterComponent, InstrumentsComponent, AlignmentPreviewComponent, MEIScoreViewerComponent, DocumentComponent, SectionComponent, DocumentThumbnailComponent, ImagePhasesComponent, ImagePartsComponent, ReorderSectionsComponent, ReorderImagesComponent],
+  declarations: [DocumentComponentOld, ImageThumbnailComponent, UploadImagesComponent, DocumentScoreViewerAndExporterComponent, InstrumentsComponent, AlignmentPreviewComponent, MEIScoreViewerComponent, DocumentComponent, SectionComponent, DocumentThumbnailComponent, ImagePartsComponent, ReorderSectionsComponent, ReorderImagesComponent],
   imports: [
     CommonModule,
     DocumentRoutingModule,
@@ -56,9 +56,6 @@ import { ReorderImagesComponent } from './components/reorder-images/reorder-imag
   ],
   providers: [
     DocumentService
-  ],
-  exports: [
-    ImagePhasesComponent // used in ImageRecognition
   ]
 })
 export class DocumentModule { }
