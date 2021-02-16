@@ -35,6 +35,11 @@ const routes = [
   },
   {
     canActivate: [AuthGuard],
+    path: 'imageRecognition',
+    loadChildren: () => import('./features/image-recognition/image-recognition.module').then(m => m.ImageRecognitionModule)
+  },
+  {
+    canActivate: [AuthGuard],
     path: 'newdocument',
     loadChildren: () => import('./features/new-document/new-document.module').then(m => m.NewDocumentModule)
   },

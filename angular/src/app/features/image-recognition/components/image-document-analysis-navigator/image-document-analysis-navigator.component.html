@@ -1,0 +1,7 @@
+<div *ngIf="loadedImage$ | async as loadedImage; else loading">
+  <img [src]="loadedImage" alt="Thumbnail" class="img-fluid">
+</div>
+<ng-template #loading>
+  <img class="img-fluid" src="assets/images/loading.svg" alt="Thumbnail loading">
+</ng-template>
+

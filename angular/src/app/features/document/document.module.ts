@@ -56,6 +56,9 @@ import { ReorderImagesComponent } from './components/reorder-images/reorder-imag
   ],
   providers: [
     DocumentService
+  ],
+  exports: [
+    ImagePhasesComponent // used in ImageRecognition
   ]
 })
 export class DocumentModule { }

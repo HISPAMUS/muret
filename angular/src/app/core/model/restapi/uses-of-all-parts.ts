@@ -8,6 +8,7 @@ export interface PartUse {
   id: number;
   partId: number;
   imageId: number;
+  ordering?: number;
 }
 
 /**

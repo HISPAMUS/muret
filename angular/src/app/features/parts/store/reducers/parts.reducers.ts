@@ -24,7 +24,8 @@ export function partsReducers(state = initialPartsState, action: PartsActions):
       const newState = {...initialPartsState};
       const newPart: Part = {
         id: action.partUse.id,
-        name: action.partUse.partName
+        name: action.partUse.partName,
+        ordering: action.partUse.ordering
       };
       const newUseOfParts: PartUsedIn = {
         images: [action.partUse.imageId],
@@ -43,7 +44,8 @@ export function partsReducers(state = initialPartsState, action: PartsActions):
       const newState = {...initialPartsState};
       const newPart: Part = {
         id: action.partUse.id,
-        name: action.partUse.partName
+        name: action.partUse.partName,
+        ordering: action.partUse.ordering
       };
       const regionPartUse: PartUse = {
         id: action.partUse.id,
@@ -67,7 +69,8 @@ export function partsReducers(state = initialPartsState, action: PartsActions):
       const newState = {...initialPartsState};
       const newPart: Part = {
         id: action.part.id,
-        name: action.part.name
+        name: action.part.name,
+        ordering: action.part.ordering
       };
       const newUseOfParts: PartUsedIn = {
         images: [],

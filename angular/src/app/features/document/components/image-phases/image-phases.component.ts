@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-document-phases',
@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./image-phases.component.css']
 })
 export class ImagePhasesComponent implements OnInit {
+  @Input() imageID: number;
 
   constructor() { }
 

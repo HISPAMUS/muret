@@ -16,6 +16,7 @@ import {compareOrdering} from "../../../../core/model/entities/iordered";
 import {PartsInImage} from "../../../../core/model/restapi/parts-in-image";
 import {HomeGetLastDocuments, HomeUpdateLastDocuments} from "../../../home/store/actions/home.actions";
 import {selectAuthUserID} from "../../../../auth/store/selectors/auth.selector";
+import {Part} from "../../../../core/model/entities/part";
 
 @Component({
   selector: 'app-document',
@@ -26,7 +27,8 @@ export class DocumentComponent implements OnInit, OnDestroy {
   private documentID: number;
   documentOverview: Document;
   documentOverviewSubscription: Subscription;
-  sections: Section[];
+  orderedSections: Section[];
+  orderedParts: Part[];
   selectedImages: SelectionManager;
   partsInImages$: Observable<PartsInImage[]>;
   private userIDSubscription: Subscription;
@@ -54,7 +56,8 @@ export class DocumentComponent implements OnInit, OnDestroy {
     this.documentOverviewSubscription = this.store.select(selectDocumentOverview).subscribe(next => {
       if (next) {
         this.documentOverview = next;
-        this.sections = next.sections.slice().sort(compareOrdering); // must use slide to use a copy
+        this.orderedSections = next.sections.slice().sort(compareOrdering); // must use slide to use a copy
+        this.orderedParts = next.parts.slice().sort(compareOrdering); // must use slide to use a copy
       }
     });
   }

@@ -1,0 +1,20 @@
+<div class="container">
+  <div class="row">
+    <div class="col-8">
+      <app-image-document-analysis-navigator [imageOverview]="imageOverview$ | async"></app-image-document-analysis-navigator>
+    </div>
+    <div class="col-4">
+      <ul>
+        <li>Document analysis: <a [routerLink]="['/imageRecognition/documentAnalysis', imageID]"><fa-icon icon="object-group" size="1x"></fa-icon></a></li>
+        <li>Parts: <a [routerLink]="['/imageRecognition/parts', imageID]"><fa-icon icon="guitar" size="1x"></fa-icon></a></li>
+        <li>Score transcription: <a [routerLink]="['/imageRecognition/transcription', imageID]"><fa-icon icon="music" size="1x"></fa-icon></a></li>
+      </ul>
+      <form>
+        <h5>Comments</h5>
+        <textarea></textarea>
+      </form>
+    </div>
+  </div>
+</div>
+
+

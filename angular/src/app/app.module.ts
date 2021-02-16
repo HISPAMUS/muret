@@ -64,6 +64,7 @@ import { ToastrModule } from 'ngx-toastr';
 import {DialogsModule} from "./dialogs/dialogs.module";
 import {faEllipsisV} from "@fortawesome/free-solid-svg-icons/faEllipsisV";
 import {faArrowsAlt} from "@fortawesome/free-solid-svg-icons/faArrowsAlt";
+import {faClipboardList} from "@fortawesome/free-solid-svg-icons/faClipboardList";
 
 @NgModule({
   declarations: [
@@ -141,6 +142,7 @@ export class AppModule {
     library.addIcons(faObjectGroup); // used in document thumbnail
     library.addIcons(faMusic); // used in document thumbnail
     library.addIcons(faGuitar); // used in document thumbnail
+    library.addIcons(faClipboardList); // used in document to show drag and drop
     library.addIcons(faEllipsisV); // used in section
     library.addIcons(faArrowsAlt); // used in document to show drag and drop
   }
