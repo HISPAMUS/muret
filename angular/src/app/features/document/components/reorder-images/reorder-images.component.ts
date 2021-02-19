@@ -13,7 +13,7 @@ import {Lightbox, LightboxConfig} from "ngx-lightbox";
 import {map} from "rxjs/operators";
 import {Section} from "../../../../core/model/entities/section";
 import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
-import {Ordering} from "../../../../core/model/restapi/ordering";
+import {NumberArray} from "../../../../core/model/restapi/number-array";
 
 @Component({
   selector: 'app-reorder-images',
@@ -70,11 +70,11 @@ export class ReorderImagesComponent implements OnInit, OnDestroy {
   drop(event: CdkDragDrop<[Image, Observable<SafeResourceUrl>][]>) {
     moveItemInArray(this.sortedImages, event.previousIndex, event.currentIndex);
     // translate this ordering into the list of ids
-    const ordering: Ordering = {
-      idsSequence: []
+    const ordering: NumberArray = {
+      values: []
     }
     for (let i=0; i<this.sortedImages.length; i++) {
-      ordering.idsSequence.push(this.sortedImages[i][0].id);
+      ordering.values.push(this.sortedImages[i][0].id);
     }
     this.store.dispatch(new DocumentReorderImages(ordering));
   }

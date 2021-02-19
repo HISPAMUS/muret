@@ -91,11 +91,11 @@ public class DocumentController {
     }
 
 
-    private <O extends IOrdered, R extends CrudRepository> OrderingLong setOrdering(R repository, OrderingLong ordering, String entityName) {
+    private <O extends IOrdered, R extends CrudRepository> NumberArray<Long> setOrdering(R repository, NumberArray<Long> ordering, String entityName) {
         final ArrayList<O> updatedEntities = new ArrayList<>();
         int i=0;
-        OrderingLong orderingLong = new OrderingLong();
-        for (Long id: ordering.getIdsSequence()) {
+        NumberArray<Long> orderingLong = new NumberArray<Long>();
+        for (Long id: ordering.getValues()) {
             Optional<O> entity = repository.findById(id);
             if (!entity.isPresent()) {
                 throw new RuntimeException("Cannot find " + entityName + " with id " + id);
@@ -131,7 +131,7 @@ public class DocumentController {
                 if (sectionImages.getNewSectionID() == null) {
                     // add to the previous document
                     image.get().changeDocumentAndSection(image.get().getSection().getDocument(), null);
-                    updateOrdering(imageRepository, image.get().getSection().getDocument().getImages());
+                    updateOrdering(imageRepository, image.get().getDocument().getImages());
                 } else {
                     Optional<Section> section = sectionRepository.findById(sectionImages.getNewSectionID());
                     if (!section.isPresent()) {
@@ -224,7 +224,7 @@ public class DocumentController {
 
     @PutMapping(path = {"/reorderSections"})
     @Transactional
-    public Ordering<Long> reorderSections(@RequestBody OrderingLong ordering) {
+    public NumberArray<Long> reorderSections(@RequestBody LongArray ordering) {
         try {
             return setOrdering(sectionRepository, ordering, "section");
         } catch (Throwable e) {
@@ -237,7 +237,7 @@ public class DocumentController {
      */
     @PutMapping(path = {"/reorderImages"})
     @Transactional
-    public Ordering<Long> reorderImages(@RequestBody OrderingLong ordering) {
+    public NumberArray<Long> reorderImages(@RequestBody LongArray ordering) {
         try {
             return setOrdering(imageRepository, ordering, "image");
         } catch (Throwable e) {
@@ -283,23 +283,27 @@ public class DocumentController {
                 throw new IM3WSException("Cannot find a document with id " + id);
             }
 
-            HashSet<PartsInImage> result = new HashSet<>();
-            for (Image image : document.get().getImages()) {
-                result.add(fillPartsInImage(image));
-            }
-
-            for (Section section: document.get().getSections()) {
-                for (Image image: section.getImages()) {
-                    PartsInImage partsInImage = fillPartsInImage(image);
-                    if (!partsInImage.getIdsOfParts().isEmpty()) {
-                        result.add(partsInImage);
-                    }
-                }
-            }
-            return result;
+            return getPartsInImages(document.get());
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot create statistics", e);
         }
+    }
+
+    private HashSet<PartsInImage> getPartsInImages(Document document) {
+        HashSet<PartsInImage> result = new HashSet<>();
+        for (Image image : document.getImages()) {
+            result.add(fillPartsInImage(image));
+        }
+
+        for (Section section: document.getSections()) {
+            for (Image image: section.getImages()) {
+                PartsInImage partsInImage = fillPartsInImage(image);
+                if (!partsInImage.getIdsOfParts().isEmpty()) {
+                    result.add(partsInImage);
+                }
+            }
+        }
+        return result;
     }
 
     private PartsInImage fillPartsInImage(Image image) {
@@ -320,6 +324,44 @@ public class DocumentController {
         }
 
         return partsInImage;
+    }
+
+    /**
+     * @param partID
+     * @param imageIds
+     * @return All parts in image again
+     */
+    @PutMapping(path = {"/linkImagesToPart/{partID}"})
+    @javax.transaction.Transactional
+    public HashSet<PartsInImage> linkImagesToPart(@PathVariable("partID") Long partID, @RequestBody LongArray imageIds) {
+        try {
+            Document document = null;
+            ArrayList<Image> changedImages = new ArrayList<>();
+
+            for (Long imageID: imageIds.getValues()) {
+                Optional<Image> image = imageRepository.findById(imageID);
+                if (!image.isPresent()) {
+                    throw new IM3WSException("Cannot find an image with id " + imageID);
+                }
+
+                if (document == null) {
+                    document = image.get().computeDocument();
+                }
+
+                Optional<Part> part = partRepository.findById(partID);
+                if (!part.isPresent()) {
+                    throw new IM3WSException("Cannot find a part with id " + imageID);
+                }
+
+                image.get().setPart(part.get());
+                changedImages.add(image.get());
+            }
+
+            imageRepository.saveAll(changedImages);
+            return getPartsInImages(document);
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot create statistics", e);
+        }
     }
 
     // revisado hasta aquí

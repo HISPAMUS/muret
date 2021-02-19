@@ -1,16 +1,15 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
-import {Observable, Subscription} from "rxjs";
+import {Subscription} from "rxjs";
 import {DocumentState} from "../../store/state/document.state";
 import {Store} from "@ngrx/store";
 import {selectDocumentOverview} from "../../store/selectors/document.selector";
-import {Document} from "../../../../core/model/entities/document";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {DocumentGetOverview, DocumentReorderSections} from "../../store/actions/document.actions";
 import {Section} from "../../../../core/model/entities/section";
-import {Ordering} from "../../../../core/model/restapi/ordering";
 import {compareOrdering} from "../../../../core/model/entities/iordered";
 import {BreadcrumbsUpdateDocument} from "../../../../layout/store/actions/breadcrumbs.actions";
+import {NumberArray} from "../../../../core/model/restapi/number-array";
 
 @Component({
   selector: 'app-reorder-sections',
@@ -41,11 +40,11 @@ export class ReorderSectionsComponent implements OnInit, OnDestroy {
   drop(event: CdkDragDrop<Section[]>) {
     moveItemInArray(this.sections, event.previousIndex, event.currentIndex);
     // translate this ordering into the list of ids
-    const ordering: Ordering = {
-      idsSequence: []
+    const ordering: NumberArray = {
+      values: []
     }
     for (let i=0; i<this.sections.length; i++) {
-      ordering.idsSequence.push(this.sections[i].id);
+      ordering.values.push(this.sections[i].id);
     }
     this.store.dispatch(new DocumentReorderSections(ordering));
   }

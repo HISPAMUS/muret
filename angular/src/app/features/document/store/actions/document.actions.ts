@@ -7,8 +7,8 @@ import {BoundingBox} from '../../../../core/model/entities/bounding-box';
 import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 import {SectionImages} from "../../../../core/model/restapi/section-images";
 import {Section} from "../../../../core/model/entities/section";
-import {Ordering} from "../../../../core/model/restapi/ordering";
 import {PartsInImage} from "../../../../core/model/restapi/parts-in-image";
+import {NumberArray} from "../../../../core/model/restapi/number-array";
 
 export enum DocumentActionTypes {
   DocumentGetOverview = '[Document] Get Overview',
@@ -31,6 +31,8 @@ export enum DocumentActionTypes {
   DocumentReorderImagesSuccess = '[Document] Reorder images success',
   DocumentGetPartsInImages = '[Document] Get parts in images',
   DocumentGetPartsInImagesSuccess = '[Document] Get parts in images success',
+  DocumentLinkImagesToPart = '[Document] Link image to part',
+  DocumentLinkImagesToPartSuccess = '[Document] Link image to part success',
 
   // revisado hasta aquí
   ResetDocumentServerError = '[Document] Reset Server error',
@@ -123,12 +125,12 @@ export class DocumentDeleteSectionSuccess implements Action {
 
 export class DocumentReorderSections implements Action {
   public readonly type = DocumentActionTypes.DocumentReorderSections;
-  constructor(public ordering: Ordering) {}
+  constructor(public ordering: NumberArray) {}
 }
 
 export class DocumentReorderSectionsSuccess implements Action {
   public readonly type = DocumentActionTypes.DocumentReorderSectionsSuccess;
-  constructor(public ordering: Ordering) {}
+  constructor(public ordering: NumberArray) {}
 }
 
 
@@ -145,12 +147,12 @@ export class DocumentGetSectionSuccess implements Action {
 
 export class DocumentReorderImages implements Action {
   public readonly type = DocumentActionTypes.DocumentReorderImages;
-  constructor(public ordering: Ordering) {}
+  constructor(public ordering: NumberArray) {}
 }
 
 export class DocumentReorderImagesSuccess implements Action {
   public readonly type = DocumentActionTypes.DocumentReorderImagesSuccess;
-  constructor(public ordering: Ordering) {}
+  constructor(public ordering: NumberArray) {}
 }
 
 export class DocumentGetPartsInImages implements Action {
@@ -160,6 +162,19 @@ export class DocumentGetPartsInImages implements Action {
 
 export class DocumentGetPartsInImagesSuccess implements Action {
   public readonly type = DocumentActionTypes.DocumentGetPartsInImagesSuccess;
+  constructor(public partsInImages: PartsInImage[]) {}
+}
+
+/**
+ * We use this action here in order to update the parts
+ */
+export class DocumentLinkImagesToPart implements Action {
+  public readonly type = DocumentActionTypes.DocumentLinkImagesToPart;
+  constructor(public imageIDs: NumberArray, public partID: number) {}
+}
+
+export class DocumentLinkImagesToPartSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentLinkImagesToPartSuccess;
   constructor(public partsInImages: PartsInImage[]) {}
 }
 
@@ -291,6 +306,7 @@ export type DocumentActions =
   DocumentGetSection | DocumentGetSectionSuccess |
   DocumentReorderImages | DocumentReorderImagesSuccess |
   DocumentGetPartsInImages | DocumentGetPartsInImagesSuccess |
+  DocumentLinkImagesToPart | DocumentLinkImagesToPartSuccess |
 
   // revisado hasta aquí
   DocumentResetServerError | DocumentServerError |

@@ -28,7 +28,6 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
 
     case DocumentActionTypes.DocumentMoveImagesToDefaultSectionSuccess: {
       const newState = klona(state); // deep copy
-      debugger;
       newState.apiRestServerError = null;
       newState.documentOverview.sections = [klona(action.section)];
       newState.documentOverview.sections[0].images = newState.documentOverview.images;
@@ -137,7 +136,7 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
       newState.documentOverview.sections = new Array();
 
       let i=0;
-      action.ordering.idsSequence.forEach(id => {
+      action.ordering.values.forEach(id => {
         const section = sectionMap.get(id);
         if (!section) {
           newState.apiRestServerError = createServerError('Cannot update sections after reordering', 'Cannot find new section with id ' + id);
@@ -168,7 +167,7 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
       });
       let i=0;
       newState.section.images = [];
-      action.ordering.idsSequence.forEach(id => {
+      action.ordering.values.forEach(id => {
         const image = imageMap.get(id);
         if (!image) {
           newState.apiRestServerError = createServerError('Cannot update images after reordering', 'Cannot find new image with id ' + id);
@@ -181,7 +180,8 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
 
       return newState;
     }
-    case DocumentActionTypes.DocumentGetPartsInImagesSuccess: {
+    case DocumentActionTypes.DocumentGetPartsInImagesSuccess:
+    case DocumentActionTypes.DocumentLinkImagesToPartSuccess: {
       const result: DocumentState = {
         ...state,
         apiRestServerError: null

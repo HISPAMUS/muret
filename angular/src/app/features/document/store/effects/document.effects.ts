@@ -40,7 +40,10 @@ import {
   DocumentReorderImagesSuccess,
   DocumentGetPartsInImages,
   DocumentGetPartsInImagesSuccess,
-  DocumentMoveImagesToDefaultSection, DocumentMoveImagesToDefaultSectionSuccess,
+  DocumentMoveImagesToDefaultSection,
+  DocumentMoveImagesToDefaultSectionSuccess,
+  DocumentLinkImagesToPart,
+  DocumentLinkImagesToPartSuccess,
 } from '../actions/document.actions';
 import {Document} from '../../../../core/model/entities/document';
 import {Image} from '../../../../core/model/entities/image';
@@ -49,7 +52,6 @@ import {DocumentStatistics} from '../../../../core/model/restapi/document-statis
 import {AlignmentPreview} from '../../../../core/model/restapi/alignment-preview';
 import {ImageFilesService} from '../../../../core/services/image-files.service';
 import {Action} from '@ngrx/store';
-import {Ordering} from "../../../../core/model/restapi/ordering";
 import {Section} from "../../../../core/model/entities/section";
 
 @Injectable()
@@ -141,6 +143,14 @@ export class DocumentEffects {
     ofType<DocumentGetPartsInImages>(DocumentActionTypes.DocumentGetPartsInImages),
     switchMap((action: DocumentGetPartsInImages) => this.documentService.getPartsInImages$(action.documentID).pipe(
       switchMap((partsInImages) => of(new DocumentGetPartsInImagesSuccess(partsInImages))),
+      catchError(err => of(new DocumentServerError(err)))
+    )));
+
+  @Effect()
+  linkImageToPart$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentLinkImagesToPart>(DocumentActionTypes.DocumentLinkImagesToPart),
+    switchMap((action: DocumentLinkImagesToPart) => this.documentService.linkImageToPart$(action.imageIDs, action.partID).pipe(
+      switchMap((partsInImages) => of(new DocumentLinkImagesToPartSuccess(partsInImages))),
       catchError(err => of(new DocumentServerError(err)))
     )));
 

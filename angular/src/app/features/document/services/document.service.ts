@@ -9,8 +9,8 @@ import {PreflightCheckResult} from '../../../core/model/restapi/preflight-check-
 import {AlignmentPreview} from '../../../core/model/restapi/alignment-preview';
 import {Section} from "../../../core/model/entities/section";
 import {SectionImages} from "../../../core/model/restapi/section-images";
-import {Ordering} from "../../../core/model/restapi/ordering";
 import {PartsInImage} from "../../../core/model/restapi/parts-in-image";
+import {NumberArray} from "../../../core/model/restapi/number-array";
 
 @Injectable() // non-singleton
 export class DocumentService {
@@ -50,7 +50,7 @@ export class DocumentService {
    * Returns the applied sectionIDsOrdering in the document
    * @param sectionIDsOrdering
    */
-  reorderSections$(ordering: Ordering): Observable<Ordering> {
+  reorderSections$(ordering: NumberArray): Observable<NumberArray> {
     const url = `document/reorderSections`;
     return this.apiRestClientService.put$(url, ordering);
   }
@@ -63,7 +63,7 @@ export class DocumentService {
    * Returns the applied sectionIDsOrdering in the document
    * @param sectionIDsOrdering
    */
-  reorderImages$(ordering: Ordering): Observable<Ordering> {
+  reorderImages$(ordering: NumberArray): Observable<NumberArray> {
     const url = `document/reorderImages`;
     return this.apiRestClientService.put$(url, ordering);
   }
@@ -71,6 +71,11 @@ export class DocumentService {
   getPartsInImages$(documentID: number): Observable<PartsInImage[]> {
     const url = `document/partsInImages/${documentID}`;
     return this.apiRestClientService.get$<PartsInImage[]>(url);
+  }
+
+  linkImageToPart$(imageIDs: NumberArray, partID: number): Observable<PartsInImage[]> {
+    const url = `document/linkImagesToPart/${partID}`;
+    return this.apiRestClientService.put$<PartsInImage[]>(url, imageIDs);
   }
 
   /*public getParts$(documentID: number): Observable<Section[]> {

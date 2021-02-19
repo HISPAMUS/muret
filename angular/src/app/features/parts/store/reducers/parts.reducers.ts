@@ -20,7 +20,7 @@ export function partsReducers(state = initialPartsState, action: PartsActions):
       };
     }
     /** A new part is created and assigned to an image **/
-    case PartsActionTypes.CreateImagePartSuccess: {
+    case PartsActionTypes.PartsCreateImagePartSuccess: {
       const newState = {...initialPartsState};
       const newPart: Part = {
         id: action.partUse.id,
@@ -40,7 +40,7 @@ export function partsReducers(state = initialPartsState, action: PartsActions):
       return newState;
     }
     /** A new part is created and assigned to a region **/
-    case PartsActionTypes.CreateRegionPartSuccess: {
+    case PartsActionTypes.PartsCreateRegionPartSuccess: {
       const newState = {...initialPartsState};
       const newPart: Part = {
         id: action.partUse.id,
@@ -65,7 +65,7 @@ export function partsReducers(state = initialPartsState, action: PartsActions):
       return newState;
     }
     /** A new part is created but not assigned to any element **/
-    case PartsActionTypes.CreatePartSuccess: {
+    case PartsActionTypes.PartsCreatePartSuccess: {
       const newState = {...initialPartsState};
       const newPart: Part = {
         id: action.part.id,
@@ -120,7 +120,7 @@ export function partsReducers(state = initialPartsState, action: PartsActions):
     /**
      * Link an existing part to an image3
      */
-    case PartsActionTypes.LinkPartToImageSuccess: {
+    case PartsActionTypes.PartsLinkPartToImageSuccess: {
       if (action.partUse != null) { // if no error
         const newState = {... initialPartsState};
         newState.usesOfParts = {

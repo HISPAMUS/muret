@@ -4,14 +4,21 @@ import {PartUse, UsesOfAllParts} from '../../../../core/model/restapi/uses-of-al
 import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 
 export enum PartsActionTypes {
+  PartsLinkPartToImage = '[Parts] Link part to image',
+  PartsLinkPartToImageSuccess = '[Parts] Link part to image success',
+
+
+
+
+  // revisado hasta aquí
   ResetPartsServerError = '[Parts] Reset ServerError',
   PartsServerError = '[Parts] ServerError',
-  CreateImagePart = '[Parts] Create image part',
-  CreateImagePartSuccess = '[Parts] Create image part success',
-  CreatePagePart = '[Parts] Create page part',
-  CreatePagePartSuccess = '[Parts] Create page part success',
-  CreateRegionPart = '[Parts] Create region part',
-  CreateRegionPartSuccess = '[Parts] Create region part success',
+  PartsCreateImagePart = '[Parts] Create image part',
+  PartsCreateImagePartSuccess = '[Parts] Create image part success',
+  PartsCreatePagePart = '[Parts] Create page part',
+  PartsCreatePagePartSuccess = '[Parts] Create page part success',
+  PartsCreateRegionPart = '[Parts] Create region part',
+  PartsCreateRegionPartSuccess = '[Parts] Create region part success',
 
   /*GetDocumentParts = '[Parts] Get document parts',
   GetDocumentPartsSuccess = '[Parts] Get document parts success',
@@ -40,18 +47,15 @@ export enum PartsActionTypes {
   UpdateSymbolPart = '[Parts] Update symbol part',
   UpdateSymbolPartSuccess = '[Parts] Update symbol part success',*/
 
-  CreatePart = '[Parts] Create part',
-  CreatePartSuccess = '[Parts] Create part success',
-  RenamePart = '[Parts] Rename part',
+  PartsCreatePart = '[Parts] Create part',
+  PartsCreatePartSuccess = '[Parts] Create part success',
+  PartsRenamePart = '[Parts] Rename part',
   RenamePartSuccess = '[Parts] Rename part success',
   DeletePart = '[Parts] Delete part',
   DeletePartSuccess = '[Parts] Delete part success',
 
   GetUsesOfParts = '[Parts] Get uses of parts',
   GetUsesOfPartsSuccess = '[Parts] Get uses of parts success',
-
-  LinkPartToImage = '[Parts] Link part to image',
-  LinkPartToImageSuccess = '[Parts] Link part to image success',
 
   UnlinkPartToImage = '[Parts] Unlink part to image',
   UnlinkPartToImageSuccess = '[Parts] Unlink part to image success',
@@ -72,6 +76,20 @@ export enum PartsActionTypes {
   GetPartNamesUsedByImageSuccess = '[Parts] Get part names used by image success'*/
 }
 
+
+export class PartsLinkPartToImage implements Action {
+  public readonly type = PartsActionTypes.PartsLinkPartToImage;
+  constructor(public partUse: PartUse) {}
+}
+
+export class PartsLinkPartToImageSuccess implements Action {
+  public readonly type = PartsActionTypes.PartsLinkPartToImageSuccess;
+  constructor(public partUse: PartUse) {}
+}
+
+
+
+// revisado hasta aquí
 export class ResetPartsServerError implements Action {
   public readonly type = PartsActionTypes.ResetPartsServerError;
   constructor() {}
@@ -83,32 +101,32 @@ export class PartsServerError implements Action {
 }
 
 export class CreateImagePart implements Action {
-  public readonly type = PartsActionTypes.CreateImagePart;
+  public readonly type = PartsActionTypes.PartsCreateImagePart;
   constructor(public imageId: number, public partName: string) {}
 }
 
 export class CreateImagePartSuccess implements Action {
-  public readonly type = PartsActionTypes.CreateImagePartSuccess;
+  public readonly type = PartsActionTypes.PartsCreateImagePartSuccess;
   constructor(public partUse: PartUse) {}
 }
 
 export class CreatePagePart implements Action {
-  public readonly type = PartsActionTypes.CreatePagePart;
+  public readonly type = PartsActionTypes.PartsCreatePagePart;
   constructor(public pageId: number, public partName: string) {}
 }
 
 export class CreatePagePartSuccess implements Action {
-  public readonly type = PartsActionTypes.CreatePagePartSuccess;
+  public readonly type = PartsActionTypes.PartsCreatePagePartSuccess;
   constructor(public partUse: PartUse) {}
 }
 
 export class CreateRegionPart implements Action {
-  public readonly type = PartsActionTypes.CreateRegionPart;
+  public readonly type = PartsActionTypes.PartsCreateRegionPart;
   constructor(public regionId: number, public partName: string) {}
 }
 
 export class CreateRegionPartSuccess implements Action {
-  public readonly type = PartsActionTypes.CreateRegionPartSuccess;
+  public readonly type = PartsActionTypes.PartsCreateRegionPartSuccess;
   constructor(public partUse: PartUse) {}
 }
 
@@ -224,7 +242,7 @@ export class CreateSymbolPartSuccess implements Action {
 }
 */
 export class RenamePart implements Action {
-  public readonly type = PartsActionTypes.RenamePart;
+  public readonly type = PartsActionTypes.PartsRenamePart;
   constructor(public part: Part, public newName: string) {}
 }
 
@@ -244,12 +262,12 @@ export class DeletePartSuccess implements Action {
 }
 
 export class CreatePart implements Action {
-  public readonly type = PartsActionTypes.CreatePart;
+  public readonly type = PartsActionTypes.PartsCreatePart;
   constructor(public documentID: number, public name: string) {}
 }
 
 export class CreatePartSuccess implements Action {
-  public readonly type = PartsActionTypes.CreatePartSuccess;
+  public readonly type = PartsActionTypes.PartsCreatePartSuccess;
   constructor(public part: Part) {}
 }
 
@@ -261,16 +279,6 @@ export class GetUsesOfParts implements Action {
 export class GetUsesOfPartsSuccess implements Action {
   public readonly type = PartsActionTypes.GetUsesOfPartsSuccess;
   constructor(public usesOfParts: UsesOfAllParts) {}
-}
-
-export class LinkPartToImage implements Action {
-  public readonly type = PartsActionTypes.LinkPartToImage;
-  constructor(public partUse: PartUse) {}
-}
-
-export class LinkPartToImageSuccess implements Action {
-  public readonly type = PartsActionTypes.LinkPartToImageSuccess;
-  constructor(public partUse: PartUse) {}
 }
 
 export class UnlinkPartToImage implements Action {
@@ -334,6 +342,9 @@ export class GetPartNamesUsedByImageSuccess implements Action {
 }*/
 
 export type PartsActions =
+  PartsLinkPartToImage | PartsLinkPartToImageSuccess |
+
+  // revisado hasta aquí
   ResetPartsServerError | PartsServerError |
   CreateImagePart | CreateImagePartSuccess |
   CreatePagePart | CreatePagePartSuccess |
@@ -344,15 +355,15 @@ export type PartsActions =
   GetPagePart | GetPagePartSuccess | UpdatePagePart | UpdatePagePartSuccess |
   GetRegionPart | GetRegionPartSuccess | UpdateRegionPart | UpdateRegionPartSuccess |
   GetSymbolPart | GetSymbolPartSuccess | UpdateSymbolPart | UpdateSymbolPartSuccess |
-  CreateImagePart | CreateImagePartSuccess |
-  CreatePagePart | CreatePagePartSuccess |
-  CreateRegionPart | CreateRegionPartSuccess |
+  PartsCreateImagePart | PartsCreateImagePartSuccess |
+  PartsCreatePagePart | PartsCreatePagePartSuccess |
+  PartsCreateRegionPart | PartsCreateRegionPartSuccess |
   CreateSymbolPart | CreateSymbolPartSuccess |*/
   CreatePart | CreatePartSuccess |
   RenamePart | RenamePartSuccess |
   DeletePart | DeletePartSuccess |
   GetUsesOfParts | GetUsesOfPartsSuccess |
-  LinkPartToImage | LinkPartToImageSuccess |
+
   UnlinkPartToImage | UnlinkPartToImageSuccess |
   LinkPartToPage | LinkPartToPageSuccess |
   UnlinkPartToPage | UnlinkPartToPageSuccess |

@@ -10,8 +10,10 @@ import {Lightbox, LightboxConfig} from "ngx-lightbox";
 import {Section} from "../../../../core/model/entities/section";
 import {Store} from "@ngrx/store";
 import {DocumentState} from "../../store/state/document.state";
-import {DocumentMoveImagesToSection} from "../../store/actions/document.actions";
+import {DocumentLinkImagesToPart, DocumentMoveImagesToSection} from "../../store/actions/document.actions";
 import {SectionImages} from "../../../../core/model/restapi/section-images";
+import {PartsLinkPartToImage} from "../../../parts/store/actions/parts.actions";
+import {NumberArray} from "../../../../core/model/restapi/number-array";
 
 @Component({
   selector: 'app-document-thumbnail',
@@ -72,10 +74,6 @@ export class DocumentThumbnailComponent implements OnInit {
     });
   }
 
-  linkToPart() {
-
-  }
-
   moveToSection(section: Section) {
     const sectionImages: SectionImages = {
       newSectionID: section ? section.id : null,
@@ -97,7 +95,28 @@ export class DocumentThumbnailComponent implements OnInit {
     return index;
   }
 
+  partTracking(index, item): number {
+    return index;
+  }
+
   getImageID() {
     return this.imageID;
+  }
+
+  linkToPart(part: Part) {
+    const imageIDs: NumberArray = {
+      values: []
+    }
+    if (this.selectionManager.getSelected().length > 0) {
+      this.selectionManager.getSelected().forEach(selectable => {
+        const id = selectable.getSelectedModelID();
+        imageIDs.values.push(id);
+      });
+    } else {
+      // no selectionManager has been done but the right clicked object must be moved
+      imageIDs.values.push(this.imageID);
+    }
+
+    this.store.dispatch(new DocumentLinkImagesToPart(imageIDs, part.id));
   }
 }

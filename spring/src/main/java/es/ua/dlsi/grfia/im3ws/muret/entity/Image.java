@@ -218,4 +218,12 @@ public class Image extends Auditable implements IAssignableToPart, IID<Long>, IO
         this.section = section;
         this.document = document;
     }
+
+    public Document computeDocument() {
+        if (document == null) {
+            return section.getDocument();
+        } else {
+            return document;
+        }
+    }
 }

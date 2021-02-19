@@ -31,7 +31,7 @@ import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {
   CreateImagePart, CreateRegionPart,
   GetUsesOfParts,
-  LinkPartToImage,
+  PartsLinkPartToImage,
   LinkPartToRegion,
   UnlinkPartToImage, UnlinkPartToRegion
 } from '../../../parts/store/actions/parts.actions';
@@ -514,7 +514,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     }
 
     createRegionPart($event: string) {
-      this.store.dispatch(new CreateRegionPart(this.selectedRegion, $event));
+      this.store.dispatch(new PartsCreateRegionPart(this.selectedRegion, $event));
       /// this.store.dispatch(new GetImageDocumentParts(+this.imageID)); // to update the drop down
     }*/
 
@@ -602,7 +602,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
             partId: +next.id,
             imageId: this.imageID
           };
-          this.store.dispatch(new LinkPartToImage(partUse));
+          this.store.dispatch(new PartsLinkPartToImage(partUse));
         } else {
           // create a new part and assign to the image
           this.store.dispatch(new CreateImagePart(this.imageID, next.name));

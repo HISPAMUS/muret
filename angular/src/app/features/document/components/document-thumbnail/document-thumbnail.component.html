@@ -30,7 +30,7 @@
   </ng-template>
   <ng-template contextMenuItem divider="true"></ng-template>
   <ng-template contextMenuItem><strong>Link whole image to part:</strong></ng-template>
-  <ng-template contextMenuItem (execute)="linkToPart()">
-    TO-DO
+  <ng-template contextMenuItem (execute)="linkToPart(part)" *ngFor="let part of documentParts; trackBy: partTracking">
+    {{part.name}}
   </ng-template>
 </context-menu>

@@ -11,8 +11,8 @@ import {
   DeletePartSuccess,
   GetUsesOfParts,
   GetUsesOfPartsSuccess,
-  LinkPartToImage,
-  LinkPartToImageSuccess,
+  PartsLinkPartToImage,
+  PartsLinkPartToImageSuccess,
   LinkPartToPage,
   LinkPartToPageSuccess,
   LinkPartToRegion,
@@ -37,7 +37,7 @@ export class PartsEffects {
 
   @Effect()
   createImagePart$ = this.actions$.pipe(
-    ofType<CreateImagePart>(PartsActionTypes.CreateImagePart),
+    ofType<CreateImagePart>(PartsActionTypes.PartsCreateImagePart),
     switchMap((action: CreateImagePart) =>
       this.partsService.createImagePart$(action.imageId, action.partName).pipe(
     switchMap((partUse: PartUse) => of(new CreateImagePartSuccess(partUse))),
@@ -47,7 +47,7 @@ export class PartsEffects {
 
   @Effect()
   createPagePart$ = this.actions$.pipe(
-    ofType<CreatePagePart>(PartsActionTypes.CreatePagePart),
+    ofType<CreatePagePart>(PartsActionTypes.PartsCreatePagePart),
     switchMap((action: CreatePagePart) =>
       this.partsService.createPagePart$(action.pageId, action.partName).pipe(
     switchMap((partUse: PartUse) => of(new CreatePagePartSuccess(partUse))),
@@ -56,7 +56,7 @@ export class PartsEffects {
 
   @Effect()
   createRegionPart$ = this.actions$.pipe(
-    ofType<CreateRegionPart>(PartsActionTypes.CreateRegionPart),
+    ofType<CreateRegionPart>(PartsActionTypes.PartsCreateRegionPart),
     switchMap((action: CreateRegionPart) =>
       this.partsService.createRegionPart$(action.regionId, action.partName).pipe(
     switchMap((partUse: PartUse) => of(new CreateRegionPartSuccess(partUse))),
@@ -177,7 +177,7 @@ export class PartsEffects {
 
   @Effect()
   renamePart$ = this.actions$.pipe(
-    ofType<RenamePart>(PartsActionTypes.RenamePart),
+    ofType<RenamePart>(PartsActionTypes.PartsRenamePart),
     switchMap((action: RenamePart) =>
       this.partsService.renamePart$(action.part, action.newName).pipe(
     switchMap((part: Part) => of(new RenamePartSuccess(part))),
@@ -186,7 +186,7 @@ export class PartsEffects {
 
   @Effect()
   createPart$ = this.actions$.pipe(
-    ofType<CreatePart>(PartsActionTypes.CreatePart),
+    ofType<CreatePart>(PartsActionTypes.PartsCreatePart),
     switchMap((action: CreatePart) =>
       this.partsService.createPart$(action.documentID, action.name).pipe(
     switchMap((part: Part) => of(new CreatePartSuccess(part))),
@@ -214,10 +214,10 @@ export class PartsEffects {
 
   @Effect()
   linkPartToImage$ = this.actions$.pipe(
-    ofType<LinkPartToImage>(PartsActionTypes.LinkPartToImage),
-    switchMap((action: LinkPartToImage) =>
+    ofType<PartsLinkPartToImage>(PartsActionTypes.PartsLinkPartToImage),
+    switchMap((action: PartsLinkPartToImage) =>
       this.partsService.linkPartToImage$(action.partUse).pipe(
-    switchMap((partUse: PartUse) => of(new LinkPartToImageSuccess(partUse))),
+    switchMap((partUse: PartUse) => of(new PartsLinkPartToImageSuccess(partUse))),
         catchError(err => of(new PartsServerError(err)))
       )));
 
