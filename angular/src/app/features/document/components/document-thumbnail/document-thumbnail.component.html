@@ -33,4 +33,7 @@
   <ng-template contextMenuItem (execute)="linkToPart(part)" *ngFor="let part of documentParts; trackBy: partTracking">
     {{part.name}}
   </ng-template>
+  <ng-template contextMenuItem (execute)="linkToNewPart()">
+    Create new part...
+  </ng-template>
 </context-menu>

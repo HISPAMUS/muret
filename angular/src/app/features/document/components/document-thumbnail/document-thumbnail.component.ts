@@ -10,10 +10,15 @@ import {Lightbox, LightboxConfig} from "ngx-lightbox";
 import {Section} from "../../../../core/model/entities/section";
 import {Store} from "@ngrx/store";
 import {DocumentState} from "../../store/state/document.state";
-import {DocumentLinkImagesToPart, DocumentMoveImagesToSection} from "../../store/actions/document.actions";
+import {
+  DocumentLinkImagesToNewPart,
+  DocumentLinkImagesToPart,
+  DocumentMoveImagesToSection
+} from "../../store/actions/document.actions";
 import {SectionImages} from "../../../../core/model/restapi/section-images";
 import {PartsLinkPartToImage} from "../../../parts/store/actions/parts.actions";
 import {NumberArray} from "../../../../core/model/restapi/number-array";
+import {DialogsService} from "../../../../shared/services/dialogs.service";
 
 @Component({
   selector: 'app-document-thumbnail',
@@ -36,7 +41,8 @@ export class DocumentThumbnailComponent implements OnInit {
   @ViewChild(ContextMenuComponent, { static: true }) public contextualMenu: ContextMenuComponent; // , { static: true } for avoiding ExpressionChangedAfterItHasCheckedError
 
   constructor(private imageFilesService: ImageFilesService, private sanitizer: DomSanitizer, private lightbox: Lightbox,
-              private lighboxConfig: LightboxConfig, private store: Store<DocumentState>
+              private lighboxConfig: LightboxConfig, private store: Store<DocumentState>,
+              private dialogsService: DialogsService
   ) {
     lighboxConfig.fitImageInViewPort = true;
     this.imageClass = '';
@@ -103,7 +109,7 @@ export class DocumentThumbnailComponent implements OnInit {
     return this.imageID;
   }
 
-  linkToPart(part: Part) {
+  getSelectedImageIds(): NumberArray {
     const imageIDs: NumberArray = {
       values: []
     }
@@ -116,7 +122,19 @@ export class DocumentThumbnailComponent implements OnInit {
       // no selectionManager has been done but the right clicked object must be moved
       imageIDs.values.push(this.imageID);
     }
+    return imageIDs;
+  }
 
-    this.store.dispatch(new DocumentLinkImagesToPart(imageIDs, part.id));
+  linkToPart(part: Part) {
+    this.store.dispatch(new DocumentLinkImagesToPart(this.getSelectedImageIds(), part.id));
+  }
+
+  linkToNewPart() {
+    this.dialogsService.showInput('Link images to new part', 'Input the name of the new part', null, true)
+      .subscribe((text) => {
+        if (text) {
+          this.store.dispatch(new DocumentLinkImagesToNewPart(this.getSelectedImageIds(), text));
+        }
+      });
   }
 }

@@ -263,7 +263,7 @@ public class DocumentController {
             ArrayList<Image> changedImages = new ArrayList<>();
             for (Image image: optionalSection.get().getImages()) {
                 image.setSection(null);
-                image.setDocument(optionalSection.get().getDocument());
+                image.setDocument(document);
                 changedImages.add(image);
             }
             imageRepository.saveAll(changedImages);
@@ -335,33 +335,72 @@ public class DocumentController {
     @javax.transaction.Transactional
     public HashSet<PartsInImage> linkImagesToPart(@PathVariable("partID") Long partID, @RequestBody LongArray imageIds) {
         try {
-            Document document = null;
-            ArrayList<Image> changedImages = new ArrayList<>();
-
-            for (Long imageID: imageIds.getValues()) {
-                Optional<Image> image = imageRepository.findById(imageID);
-                if (!image.isPresent()) {
-                    throw new IM3WSException("Cannot find an image with id " + imageID);
-                }
-
-                if (document == null) {
-                    document = image.get().computeDocument();
-                }
-
-                Optional<Part> part = partRepository.findById(partID);
-                if (!part.isPresent()) {
-                    throw new IM3WSException("Cannot find a part with id " + imageID);
-                }
-
-                image.get().setPart(part.get());
-                changedImages.add(image.get());
+            Optional<Part> optionalPart = partRepository.findById(partID);
+            if (!optionalPart.isPresent()) {
+                throw new IM3WSException("Cannot find a part with id " + partID);
             }
 
-            imageRepository.saveAll(changedImages);
-            return getPartsInImages(document);
+            Part part = optionalPart.get();
+            return linkImagesToPart(imageIds, part);
         } catch (Throwable e) {
-            throw ControllerUtils.createServerError(this, "Cannot create statistics", e);
+            throw ControllerUtils.createServerError(this, "Cannot linl images to part", e);
         }
+    }
+
+    /**
+     * @return All parts in image again
+     */
+    @PostMapping(path = {"/linkImagesToNewPart/{partName}"})
+    @javax.transaction.Transactional
+    public ImagesInNewPart linkImagesToNewPart(@PathVariable("partName") String partName, @RequestBody LongArray imageIds) {
+        try {
+            if (imageIds.getValues().isEmpty()) {
+                throw new IM3WSException("No image given");
+            }
+
+            Image image = findImage(imageIds.getValues().get(0));
+            Document document = image.computeDocument();
+            Part part = new Part();
+            part.setDocument(document);
+            part.setName(partName);
+            part.setOrdering(document.computeNextPartOrdering());
+            Part savedPart = partRepository.save(part);
+
+            ImagesInNewPart imagesInNewPart = new ImagesInNewPart();
+            imagesInNewPart.setPart(savedPart);
+            HashSet<PartsInImage> partsInImages = linkImagesToPart(imageIds, savedPart);
+            imagesInNewPart.setPartsInImage(partsInImages);
+            return imagesInNewPart;
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot create part and link to image", e);
+        }
+    }
+
+    private HashSet<PartsInImage> linkImagesToPart(LongArray imageIds, Part part) throws IM3WSException {
+        Document document = null;
+        ArrayList<Image> changedImages = new ArrayList<>();
+
+        for (Long imageID: imageIds.getValues()) {
+            Image image = findImage(imageID);
+
+            if (document == null) { // lookup first document
+                document = image.computeDocument();
+            }
+
+            image.setPart(part);
+            changedImages.add(image);
+        }
+
+        imageRepository.saveAll(changedImages);
+        return getPartsInImages(document);
+    }
+
+    private Image findImage(Long imageID) throws IM3WSException {
+        Optional<Image> image = imageRepository.findById(imageID);
+        if (!image.isPresent()) {
+            throw new IM3WSException("Cannot find an image with id " + imageID);
+        }
+        return image.get();
     }
 
     // revisado hasta aquí

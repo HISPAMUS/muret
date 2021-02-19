@@ -180,6 +180,13 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
 
       return newState;
     }
+    case DocumentActionTypes.DocumentLinkImagesToNewPartSuccess: {
+      const newState: DocumentState = klona(state);
+      newState.apiRestServerError = null;
+      newState.documentOverview.parts.push(action.imagesInNewPart.part);
+      newState.partsInImages = action.imagesInNewPart.partsInImage;
+      return newState;
+    }
     case DocumentActionTypes.DocumentGetPartsInImagesSuccess:
     case DocumentActionTypes.DocumentLinkImagesToPartSuccess: {
       const result: DocumentState = {

@@ -43,7 +43,7 @@ import {
   DocumentMoveImagesToDefaultSection,
   DocumentMoveImagesToDefaultSectionSuccess,
   DocumentLinkImagesToPart,
-  DocumentLinkImagesToPartSuccess,
+  DocumentLinkImagesToPartSuccess, DocumentLinkImagesToNewPart, DocumentLinkImagesToNewPartSuccess,
 } from '../actions/document.actions';
 import {Document} from '../../../../core/model/entities/document';
 import {Image} from '../../../../core/model/entities/image';
@@ -151,6 +151,14 @@ export class DocumentEffects {
     ofType<DocumentLinkImagesToPart>(DocumentActionTypes.DocumentLinkImagesToPart),
     switchMap((action: DocumentLinkImagesToPart) => this.documentService.linkImageToPart$(action.imageIDs, action.partID).pipe(
       switchMap((partsInImages) => of(new DocumentLinkImagesToPartSuccess(partsInImages))),
+      catchError(err => of(new DocumentServerError(err)))
+    )));
+
+  @Effect()
+  linkImageToNewPart$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentLinkImagesToNewPart>(DocumentActionTypes.DocumentLinkImagesToNewPart),
+    switchMap((action: DocumentLinkImagesToNewPart) => this.documentService.linkImageToNewPart$(action.imageIDs, action.partName).pipe(
+      switchMap((imagesInNewPart) => of(new DocumentLinkImagesToNewPartSuccess(imagesInNewPart))),
       catchError(err => of(new DocumentServerError(err)))
     )));
 

@@ -47,9 +47,8 @@ export class SectionComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
       if (changes.images) {
         this.sortedImages = this.images.slice().sort(compareOrdering);
-      } else if (changes.partsInImages) {
-        this.buildMaps();
-      } else if (changes.parts) {
+      }
+      if (changes.partsInImages || changes.parts) {
         this.buildMaps();
       }
   }

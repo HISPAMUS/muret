@@ -11,6 +11,7 @@ import {Section} from "../../../core/model/entities/section";
 import {SectionImages} from "../../../core/model/restapi/section-images";
 import {PartsInImage} from "../../../core/model/restapi/parts-in-image";
 import {NumberArray} from "../../../core/model/restapi/number-array";
+import {ImagesInNewPart} from "../../../core/model/restapi/images-in-new-part";
 
 @Injectable() // non-singleton
 export class DocumentService {
@@ -76,6 +77,11 @@ export class DocumentService {
   linkImageToPart$(imageIDs: NumberArray, partID: number): Observable<PartsInImage[]> {
     const url = `document/linkImagesToPart/${partID}`;
     return this.apiRestClientService.put$<PartsInImage[]>(url, imageIDs);
+  }
+
+  linkImageToNewPart$(imageIDs: NumberArray, partName: string): Observable<ImagesInNewPart> {
+    const url = `document/linkImagesToNewPart/${partName}`;
+    return this.apiRestClientService.post$<ImagesInNewPart>(url, imageIDs);
   }
 
   /*public getParts$(documentID: number): Observable<Section[]> {

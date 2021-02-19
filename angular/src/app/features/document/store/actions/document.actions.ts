@@ -9,6 +9,7 @@ import {SectionImages} from "../../../../core/model/restapi/section-images";
 import {Section} from "../../../../core/model/entities/section";
 import {PartsInImage} from "../../../../core/model/restapi/parts-in-image";
 import {NumberArray} from "../../../../core/model/restapi/number-array";
+import {ImagesInNewPart} from "../../../../core/model/restapi/images-in-new-part";
 
 export enum DocumentActionTypes {
   DocumentGetOverview = '[Document] Get Overview',
@@ -33,6 +34,8 @@ export enum DocumentActionTypes {
   DocumentGetPartsInImagesSuccess = '[Document] Get parts in images success',
   DocumentLinkImagesToPart = '[Document] Link image to part',
   DocumentLinkImagesToPartSuccess = '[Document] Link image to part success',
+  DocumentLinkImagesToNewPart = '[Document] Link image to new part',
+  DocumentLinkImagesToNewPartSuccess = '[Document] Link image to part new success',
 
   // revisado hasta aquí
   ResetDocumentServerError = '[Document] Reset Server error',
@@ -166,7 +169,7 @@ export class DocumentGetPartsInImagesSuccess implements Action {
 }
 
 /**
- * We use this action here in order to update the parts
+ * We use this action here, in document and not in other PartsActions, in order to update the document overview
  */
 export class DocumentLinkImagesToPart implements Action {
   public readonly type = DocumentActionTypes.DocumentLinkImagesToPart;
@@ -176,6 +179,16 @@ export class DocumentLinkImagesToPart implements Action {
 export class DocumentLinkImagesToPartSuccess implements Action {
   public readonly type = DocumentActionTypes.DocumentLinkImagesToPartSuccess;
   constructor(public partsInImages: PartsInImage[]) {}
+}
+
+export class DocumentLinkImagesToNewPart implements Action {
+  public readonly type = DocumentActionTypes.DocumentLinkImagesToNewPart;
+  constructor(public imageIDs: NumberArray, public partName: string) {}
+}
+
+export class DocumentLinkImagesToNewPartSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentLinkImagesToNewPartSuccess;
+  constructor(public imagesInNewPart: ImagesInNewPart) {}
 }
 
 // revisado hasta aquí
@@ -307,6 +320,7 @@ export type DocumentActions =
   DocumentReorderImages | DocumentReorderImagesSuccess |
   DocumentGetPartsInImages | DocumentGetPartsInImagesSuccess |
   DocumentLinkImagesToPart | DocumentLinkImagesToPartSuccess |
+  DocumentLinkImagesToNewPart | DocumentLinkImagesToNewPartSuccess |
 
   // revisado hasta aquí
   DocumentResetServerError | DocumentServerError |

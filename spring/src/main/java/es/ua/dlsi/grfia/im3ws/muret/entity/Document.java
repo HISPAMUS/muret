@@ -208,4 +208,12 @@ public class Document extends Auditable implements IID<Integer>  {
                 ", path='" + path + '\'' +
                 '}';
     }
+
+    public Integer computeNextPartOrdering() {
+        int max = 0;
+        for (Part part: parts) {
+            max = Math.max(part.getOrdering(), max);
+        }
+        return max+1;
+    }
 }
