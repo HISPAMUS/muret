@@ -14,58 +14,56 @@ export enum DocumentAnalysisActionTypes {
   DocumentAnalysisGetRegionTypes = '[Image recognition. Document Analysis] Get region types',
   DocumentAnalysisGetRegionTypesSuccess = '[Image recognition. Document Analysis] Get region types success',
 
-  // TODO - recordar cambiar la cadena entre [ ]
-
   // revisado hasta aquí
-  ResetDocumentAnalysisServerError = '[DocumentAnalysis] Reset Server error',
-  GetImageProjection = '[DocumentAnalysis] Get image projection',
-  GetImageProjectionSuccess = '[DocumentAnalysis] Get image projection success',
-  GetImageURL = '[DocumentAnalysis] Get image URL',
-  GetImageURLSuccess = '[DocumentAnalysis] Get image URL success',
+  ResetDocumentAnalysisServerError = '[Image Recognition. Document Analysis] Reset Server error',
+  GetImageProjection = '[Image Recognition. Document Analysis] Get image projection',
+  GetImageProjectionSuccess = '[Image Recognition. Document Analysis] Get image projection success',
+  GetImageURL = '[Image Recognition. Document Analysis] Get image URL',
+  GetImageURLSuccess = '[Image Recognition. Document Analysis] Get image URL success',
 
-  GetImagePart = '[DocumentAnalysis] Get image part',
-  GetImagePartSuccess = '[DocumentAnalysis] Get image part success',
+  GetImagePart = '[Image Recognition. Document Analysis] Get image part',
+  GetImagePartSuccess = '[Image Recognition. Document Analysis] Get image part success',
 
-  // SelectPage = '[DocumentAnalysis] Select page',
+  // SelectPage = '[Image Recognition. Document Analysis] Select page',
 
-  // SelectRegion = '[DocumentAnalysis] Select region',
+  // SelectRegion = '[Image Recognition. Document Analysis] Select region',
 
-  ChangeRegionType = '[DocumentAnalysis] Change region type',
-  ChangeRegionTypeSuccess = '[DocumentAnalysis] Change region type success',
+  ChangeRegionType = '[Image Recognition. Document Analysis] Change region type',
+  ChangeRegionTypeSuccess = '[Image Recognition. Document Analysis] Change region type success',
 
-  ChangePageBoundingBox = '[DocumentAnalysis] Change page bounding box',
-  ChangePageBoundingBoxSuccess = '[DocumentAnalysis] Change page bounding box success',
+  ChangePageBoundingBox = '[Image Recognition. Document Analysis] Change page bounding box',
+  ChangePageBoundingBoxSuccess = '[Image Recognition. Document Analysis] Change page bounding box success',
 
-  ChangeRegionBoundingBox = '[DocumentAnalysis] Change region bounding box',
-  ChangeRegionBoundingBoxSuccess = '[DocumentAnalysis] Change region bounding box success',
+  ChangeRegionBoundingBox = '[Image Recognition. Document Analysis] Change region bounding box',
+  ChangeRegionBoundingBoxSuccess = '[Image Recognition. Document Analysis] Change region bounding box success',
 
-  CreatePage = '[DocumentAnalysis] Create page',
-  CreatePageSuccess = '[DocumentAnalysis] Create page success',
+  CreatePage = '[Image Recognition. Document Analysis] Create page',
+  CreatePageSuccess = '[Image Recognition. Document Analysis] Create page success',
 
-  CreatePages = '[DocumentAnalysis] Create pages',
-  CreatePagesSuccess = '[DocumentAnalysis] Create pages success',
+  CreatePages = '[Image Recognition. Document Analysis] Create pages',
+  CreatePagesSuccess = '[Image Recognition. Document Analysis] Create pages success',
 
-  CreateRegion = '[DocumentAnalysis] Create region',
-  CreateRegionSuccess = '[DocumentAnalysis] Create region success',
+  CreateRegion = '[Image Recognition. Document Analysis] Create region',
+  CreateRegionSuccess = '[Image Recognition. Document Analysis] Create region success',
 
-  Clear = '[DocumentAnalysis] Clear',
-  ClearSuccess = '[DocumentAnalysis] Clear success',
+  Clear = '[Image Recognition. Document Analysis] Clear',
+  ClearSuccess = '[Image Recognition. Document Analysis] Clear success',
 
-  DeletePage = '[DocumentAnalysis] Delete page',
-  DeletePageSuccess = '[DocumentAnalysis] Delete page success',
+  DeletePage = '[Image Recognition. Document Analysis] Delete page',
+  DeletePageSuccess = '[Image Recognition. Document Analysis] Delete page success',
 
-  DeleteRegion = '[DocumentAnalysis] Delete region',
-  DeleteRegionSuccess = '[DocumentAnalysis] Delete region success',
+  DeleteRegion = '[Image Recognition. Document Analysis] Delete region',
+  DeleteRegionSuccess = '[Image Recognition. Document Analysis] Delete region success',
 
-  GetDocumentAnModels = '[DocumentAnalysis] Get Models',
-  GetDocumentAnModelsSuccess = '[DocumentAnalysis] Get Models Success',
+  GetDocumentAnModels = '[Image Recognition. Document Analysis] Get Models',
+  GetDocumentAnModelsSuccess = '[Image Recognition. Document Analysis] Get Models Success',
 
-  AutomaticDocumentAnalysis = '[DocumentAnalysis] Start automatic analysis',
-  AutomaticDocumentAnalysisSuccess = '[DocumentAnalysis] Automatic analysis success',
+  AutomaticDocumentAnalysis = '[Image Recognition. Document Analysis] Start automatic analysis',
+  AutomaticDocumentAnalysisSuccess = '[Image Recognition. Document Analysis] Automatic analysis success',
 
-  DocumentClearAll = '[DocumentAnalysis] Clear all the document',
-  DocumentClearAllSucess = '[DocumentAnalysis] Clear all the document successful',
-  ResetWipeOut = '[DocumentAnalysis] Reset wipeout flag'
+  DocumentClearAll = '[Image Recognition. Document Analysis] Clear all the document',
+  DocumentClearAllSucess = '[Image Recognition. Document Analysis] Clear all the document successful',
+  ResetWipeOut = '[Image Recognition. Document Analysis] Reset wipeout flag'
 }
 
 

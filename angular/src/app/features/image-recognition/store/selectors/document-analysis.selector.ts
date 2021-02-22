@@ -1,17 +1,17 @@
 import {createFeatureSelector, createSelector} from '@ngrx/store';
-import {DocumentAnalysisState} from '../state/document-analysis.state';
+import {ImageRecognitionState} from "../state/image-recognition.state";
 
-export const documentAnalysisState = createFeatureSelector<DocumentAnalysisState>('document-analysis');
-
+export const selectImageRecognitionState = createFeatureSelector<ImageRecognitionState>('imageRecognition');
 
 export const selectDocumentAnalysisRegionTypes = createSelector(
-  documentAnalysisState,
-  (state: DocumentAnalysisState) => state.regionTypes
+  selectImageRecognitionState,
+  (state: ImageRecognitionState) => state.documentAnalysis?state.documentAnalysis.regionTypes:null
 );
 
 
+
 // revisado hasta aquí
-export const selectImageWidth = createSelector(
+/*export const selectImageWidth = createSelector(
   documentAnalysisState,
   (state: DocumentAnalysisState) => state.imageWidth
 );
@@ -61,6 +61,6 @@ export const selectDocumentAnalysisClassifierModels = createSelector(
 export const selectDocumentAnalysisServerError = createSelector(
   documentAnalysisState,
   (state: DocumentAnalysisState) => state.apiRestServerError
-)
+)*/
 
 

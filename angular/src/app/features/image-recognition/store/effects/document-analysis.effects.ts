@@ -42,6 +42,7 @@ import {Page} from '../../../../core/model/entities/page';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 import { StringResponse } from 'src/app/core/model/restapi/string-response';
 import {DocumentAnalysisService} from "../../services/document-analysis.service";
+import {CoreGetSVGSet, FontsActionTypes} from "../../../../core/store/actions/fonts.actions";
 
 @Injectable()
 export class DocumentAnalysisEffects {
@@ -54,8 +55,8 @@ export class DocumentAnalysisEffects {
 
 
   @Effect()
-  getRegionTypes$ = this.actions$.pipe(
-    ofType<DocumentAnalysisGetRegionTypes>(DocumentAnalysisActionTypes.GetImageProjection),
+  getDocumentAnalsysisRegionTypes$ = this.actions$.pipe(
+    ofType<DocumentAnalysisGetRegionTypes>(DocumentAnalysisActionTypes.DocumentAnalysisGetRegionTypes),
     switchMap(() => this.documentAnalysisService.getRegionTypes$().pipe(
       switchMap((regionTypes: RegionType[]) => of(new DocumentAnalysisGetRegionTypesSuccess(regionTypes))),
       catchError(err => of(new DocumentAnalysisServerError(err)))
