@@ -6,7 +6,5 @@ import {ImageRecognitionBaseAbstractComponent} from "../image-recognition-base-a
   templateUrl: './image-overview.component.html',
   styleUrls: ['./image-overview.component.css']
 })
-export class ImageOverviewComponent extends ImageRecognitionBaseAbstractComponent implements OnInit{
-
-
+export class ImageOverviewComponent extends ImageRecognitionBaseAbstractComponent implements OnInit {
 }

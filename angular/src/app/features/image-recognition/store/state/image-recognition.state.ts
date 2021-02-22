@@ -1,12 +1,17 @@
-import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
-import {ImageOverview} from "../../model/image-overview";
+import {ImageOverviewState, initialImageOverviewState} from "./image-overview.state";
+import {DocumentAnalysisState, initialDocumentAnalysisState} from "./document-analysis.state";
+
 
 export interface ImageRecognitionState {
-  imageOverview: ImageOverview;
-  apiRestServerError: APIRestServerError;
+  imageOverview: ImageOverviewState;
+  documentAnalysis: DocumentAnalysisState
 }
 
 export const initialImageRecognitionState: ImageRecognitionState = {
-  imageOverview: null,
-  apiRestServerError: null
+  imageOverview: initialImageOverviewState,
+  documentAnalysis: initialDocumentAnalysisState
 };
+
+export function getInitialState(): ImageRecognitionState {
+  return initialImageRecognitionState;
+}

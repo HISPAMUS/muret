@@ -4,7 +4,7 @@ import {ImageOverview} from "../model/image-overview";
 import {Observable} from "rxjs";
 
 @Injectable() // non-singleton
-export class ImageRecognitionService {
+export class ImageOverviewService {
   constructor(private apiRestClientService: ApiRestClientService) {
   }
 

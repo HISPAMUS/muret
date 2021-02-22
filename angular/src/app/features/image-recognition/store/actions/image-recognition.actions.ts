@@ -10,7 +10,7 @@ export enum ImageRecognitionActionTypes {
 
 export class ImageRecognitionGetImageOverview implements Action {
   public readonly type = ImageRecognitionActionTypes.ImageRecognitionGetImageOverview;
-  constructor(public documentID: number) {}
+  constructor(public imageID: number) {}
 }
 
 export class ImageRecognitionGetImageOverviewSuccess implements Action {

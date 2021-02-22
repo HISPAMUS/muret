@@ -71,13 +71,12 @@ export class DocumentComponent implements OnInit, OnDestroy {
     return index;
   }
 
-  drop(event: CdkDragDrop<Section[]>) {
+  /*drop(event: CdkDragDrop<Section[]>) {
     // reordering
     console.log('Previous=' + event.previousIndex + ', new=' + event.currentIndex);
-  }
+  }*/
 
   sortSections(sections: Section[]) {
-    console.log('COmparing');
     return sections.slice().sort(compareOrdering);
   }
 }

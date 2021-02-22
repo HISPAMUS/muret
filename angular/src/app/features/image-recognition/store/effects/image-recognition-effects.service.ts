@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Effect, ofType, Actions } from '@ngrx/effects';
 import { of } from 'rxjs';
 import {catchError, switchMap} from 'rxjs/operators';
-import {ImageRecognitionService} from "../../services/image-recognition-service";
+import {ImageOverviewService} from "../../services/image-overview.service";
 import {
   ImageRecognitionActionTypes,
   ImageRecognitionGetImageOverview, ImageRecognitionGetImageOverviewSuccess,
@@ -10,9 +10,9 @@ import {
 } from "../actions/image-recognition.actions";
 
 @Injectable()
-export class ImageRecognitionEffects {
+export class ImageOverviewEffects {
   constructor(
-    private imageRecognitionService: ImageRecognitionService,
+    private imageRecognitionService: ImageOverviewService,
     private actions$: Actions,
   ) {}
 
@@ -20,7 +20,7 @@ export class ImageRecognitionEffects {
   @Effect()
   getImageOverview$ = this.actions$.pipe(
     ofType<ImageRecognitionGetImageOverview>(ImageRecognitionActionTypes.ImageRecognitionGetImageOverview),
-    switchMap((action: ImageRecognitionGetImageOverview) => this.imageRecognitionService.getImageOverview$(action.documentID).pipe(
+    switchMap((action: ImageRecognitionGetImageOverview) => this.imageRecognitionService.getImageOverview$(action.imageID).pipe(
       switchMap((overview) => of(new ImageRecognitionGetImageOverviewSuccess(overview))),
       catchError(err => of(new ImageRecognitionServerError(err)))
     )));

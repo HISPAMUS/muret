@@ -1,0 +1,9 @@
+<div id="regionTypesFilter">
+    <label *ngFor="let regionType of regionTypes; trackBy: trackByRegionTypeFn" ngbButtonLabel>
+      <input type="checkbox" [checked]="true" [name]="regionType.name" (change)="onLayerVisibilityChanged($event)">
+      {{beautifyRegionName(regionType)}}
+    </label>
+    <label ngbButtonLabel>
+      <input type="checkbox" [checked]="true" (change)="selectAllNone($event)"> Select all/none
+    </label>
+</div>

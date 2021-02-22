@@ -1,14 +1,15 @@
-import {Component, OnChanges, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from "rxjs";
 import {ImageOverview} from "../../model/image-overview";
 import {ActivatedRoute, ParamMap} from "@angular/router";
 import {Store} from "@ngrx/store";
-import {ImageRecognitionState} from "../../store/state/image-recognition.state";
 import {ImageRecognitionGetImageOverview} from "../../store/actions/image-recognition.actions";
 import {selectImageRecognitionImageOverview} from "../../store/selectors/image-recognition.selector";
-import {BreadcrumbsUpdateDocument, BreadcrumbsUpdateImage} from "../../../../layout/store/actions/breadcrumbs.actions";
-import {selectAuthUserID} from "../../../../auth/store/selectors/auth.selector";
-import {HomeUpdateLastDocuments} from "../../../home/store/actions/home.actions";
+import {BreadcrumbsUpdateImage} from "../../../../layout/store/actions/breadcrumbs.actions";
+import {RegionType} from "../../../../core/model/entities/region-type";
+import {ImageRecognitionState} from "../../store/state/image-recognition.state";
+import {DocumentAnalysisGetRegionTypes} from "../../store/actions/document-analysis.actions";
+import {selectDocumentAnalysisRegionTypes} from "../../store/selectors/document-analysis.selector";
 
 @Component({
   selector: 'app-image-recognition-base-abstract-component',
@@ -19,8 +20,11 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
   private _imageID: number;
   private _imageOverview: ImageOverview;
   private imageOverviewSubscription: Subscription;
+  regionTypes$: Observable<RegionType[]>;
 
-  constructor(private route: ActivatedRoute, private store: Store<ImageRecognitionState>) { }
+  constructor(private route: ActivatedRoute, private store: Store<ImageRecognitionState>) {
+    this.store.dispatch(new DocumentAnalysisGetRegionTypes());
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params: ParamMap) => {
@@ -35,6 +39,9 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
         this._imageOverview = next;
       }
     });
+
+    this.regionTypes$ = this.store.select(selectDocumentAnalysisRegionTypes);
+
   }
 
   ngOnDestroy() {
