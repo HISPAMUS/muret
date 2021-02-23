@@ -16,6 +16,7 @@ import { DocumentAnalysisComponent } from './components/document-analysis/docume
 import { TranscriptionComponentComponent } from './components/transcription/transcription-component.component';
 import {SharedModule} from "../../shared/shared.module";
 import { DocumentAnalysisFiltersComponent } from './components/document-analysis-filters/document-analysis-filters.component';
+import {NgbCollapseModule} from "@ng-bootstrap/ng-bootstrap";
 
 
 
@@ -27,7 +28,8 @@ import { DocumentAnalysisFiltersComponent } from './components/document-analysis
     EffectsModule.forFeature([ImageOverviewEffects, DocumentAnalysisEffects]),
     ImageRecognitionRoutingModule,
     FontAwesomeModule,
-    SharedModule
+    SharedModule,
+    NgbCollapseModule
   ],providers: [
     ImageOverviewService, DocumentAnalysisService
   ]

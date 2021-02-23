@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {RegionType} from "../../../../core/model/entities/region-type";
 
 @Component({
@@ -6,12 +6,16 @@ import {RegionType} from "../../../../core/model/entities/region-type";
   templateUrl: './document-analysis-filters.component.html',
   styleUrls: ['./document-analysis-filters.component.css']
 })
-export class DocumentAnalysisFiltersComponent implements OnInit {
+export class DocumentAnalysisFiltersComponent implements OnInit, OnChanges {
   @Input() regionTypes: RegionType[];
   @Output() onShowRegionType = new EventEmitter<RegionType>();
   @Output() onHideRegionType = new EventEmitter<RegionType>();
 
   regionTypeFilterOut: Set<string>;
+  mainRegionTypes: RegionType[]; // staff, lyrics
+  otherRegionTypes: RegionType[]; // all the other ones
+
+  public isCollapsed = true;
 
   constructor() {
     this.regionTypeFilterOut = new Set<string>();
@@ -19,6 +23,29 @@ export class DocumentAnalysisFiltersComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  isStaff(regionType: RegionType) {
+    return regionType.id === 2;
+  }
+
+  isLyrics(regionType: RegionType) {
+    return regionType.id === 7;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.regionTypes && this.regionTypes) {
+      this.mainRegionTypes = [];
+      this.otherRegionTypes = [];
+      this.regionTypes.forEach(region => {
+        if (this.isStaff(region) || this.isLyrics(region)) {
+          this.mainRegionTypes.push(region);
+        } else {
+          this.otherRegionTypes.push(region);
+        }
+      });
+    }
+  }
+
 
   beautifyRegionName(regionType: RegionType): string {
     if (regionType && regionType.name) {
@@ -61,4 +88,6 @@ export class DocumentAnalysisFiltersComponent implements OnInit {
       });
     }
   }
+
+
 }
