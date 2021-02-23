@@ -398,7 +398,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     this.dialogsService.showConfirmation('Automatic classification: it will erase previous analysis', 'This action cannot be undone')
       .subscribe((isConfirmed) => {
         if (isConfirmed) {
-          this.dialogsService.showInput('Automatic classification', 'How many vertical pages do you wish to create?',
+          this.dialogsService.showInput('Automatic classification', 'How many vertical pagesWithRegions do you wish to create?',
             '1').subscribe(value => {
               if (value) {
                 const pagesToCreate = Number(value);
@@ -518,7 +518,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   createPages() {
-      this.dialogsService.showInput('Page creation', 'No pages found. How many vertical pages do you wish to create?',
+      this.dialogsService.showInput('Page creation', 'No pagesWithRegions found. How many vertical pagesWithRegions do you wish to create?',
         '1').subscribe(value => {
         if(value != null) //The cancel method returns a null value, so we only have to catch it to avoid the server request
         {

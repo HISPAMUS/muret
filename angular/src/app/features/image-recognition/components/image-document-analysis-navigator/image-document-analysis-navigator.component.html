@@ -1,6 +1,14 @@
-<div *ngIf="loadedImage$ | async as loadedImage; else loading">
-  <img [src]="loadedImage" alt="Thumbnail" class="img-fluid">
+<div *ngIf="shapes && loadedImage$ | async as loadedImage; else loading">
+  <div #canvas id="imageCanvas">
+    <!-- shape selected, changed, and deselected are forwarded from the canvas -->
+    <app-svg-canvas #svgCanvasComponent
+      [shapes]="shapes" [backgroundImage]="loadedImage"
+                    [zoomFactor]="zoomFactor"
+    >
+    </app-svg-canvas>
+  </div>
 </div>
+
 <ng-template #loading>
   <img class="img-fluid" src="assets/images/loading.svg" alt="Thumbnail loading">
 </ng-template>

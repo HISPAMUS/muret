@@ -34,7 +34,7 @@ export class ImagePreviewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // the request of the imageProjection that generates the pages must be done by the host component
+    // the request of the imageProjection that generates the pagesWithRegions must be done by the host component
     // (agnostic-representation, semantic-representation)
     this.pagesSubscription = this.store.select(selectPages).subscribe(next => {
       if (next) {

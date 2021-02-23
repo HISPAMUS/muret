@@ -20,8 +20,6 @@ import {
   DeleteRegion,
   DeleteRegionSuccess,
   DocumentAnalysisActionTypes,
-  GetImageProjection,
-  GetImageProjectionSuccess,
   GetImageURL,
   GetImageURLSuccess,
   GetDocumentAnModels,
@@ -32,7 +30,8 @@ import {
   DocumentAnalysisServerError,
   ClearAllDoc,
   ClearAllDocSuccess,
-  DocumentAnalysisGetRegionTypes, DocumentAnalysisGetRegionTypesSuccess
+  DocumentAnalysisGetRegionTypes,
+  DocumentAnalysisGetRegionTypesSuccess,
 } from '../actions/document-analysis.actions';
 import {DocumentAnalysisImageProjection} from '../../../../core/model/restapi/document-analysis-image-projection';
 import {RegionType} from '../../../../core/model/entities/region-type';
@@ -62,16 +61,7 @@ export class DocumentAnalysisEffects {
       catchError(err => of(new DocumentAnalysisServerError(err)))
     )));
 
-
-
   // revisado hasta aquí
-  @Effect()
-  getImageProjection$ = this.actions$.pipe(
-    ofType<GetImageProjection>(DocumentAnalysisActionTypes.GetImageProjection),
-    switchMap((action: GetImageProjection) => this.documentAnalysisService.getDocumentAnalysisImageProjection$(action.imageID).pipe(
-    switchMap((imageProjection: DocumentAnalysisImageProjection) => of(new GetImageProjectionSuccess(imageProjection))),
-      catchError(err => of(new DocumentAnalysisServerError(err)))
-    )));
 
   @Effect()
   getImageURL$ = this.actions$.pipe(

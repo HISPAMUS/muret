@@ -19,27 +19,14 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
     }
 
     // revisado hasta aquí
-
-    case DocumentAnalysisActionTypes.DocumentAnalysisServerError:
-      return {
-        ...state,
-        apiRestServerError: action.serverError
-      };
-
-    case DocumentAnalysisActionTypes.GetImageProjection: { // reset before downloading new elements
-      return {
-        ...initialDocumentAnalysisState,
-        apiRestServerError: null
-      };
-    }
-    case DocumentAnalysisActionTypes.GetImageProjectionSuccess: {
+    /*case DocumentAnalysisActionTypes.DocumentAnalysisGetImageProjectionSuccess: {
       return {
         ...state,
         documentID: action.documentAnalysisImageProjection.documentId,
         imageWidth: action.documentAnalysisImageProjection.width,
         imageHeight: action.documentAnalysisImageProjection.height,
         filename: action.documentAnalysisImageProjection.filename,
-        pages: action.documentAnalysisImageProjection.pages,
+        pagesWithRegions: action.documentAnalysisImageProjection.pages,
         imagePart: action.documentAnalysisImageProjection.part,
         documentType: {
           manuscriptType: action.documentAnalysisImageProjection.manuscriptType,
@@ -47,7 +34,20 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
         },
         apiRestServerError: null
       };
-    }
+    }*/
+    case DocumentAnalysisActionTypes.DocumentAnalysisServerError:
+      return {
+        ...state,
+        apiRestServerError: action.serverError
+      };
+
+    /*case DocumentAnalysisActionTypes.DocumentAnalysisGetImageProjection: { // reset before downloading new elements
+      return {
+        ...initialDocumentAnalysisState,
+        apiRestServerError: null
+      };
+    }*/
+
     case DocumentAnalysisActionTypes.GetImagePartSuccess: {
       return {
         ...state,
@@ -78,9 +78,9 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
       const newState = {...state,
         apiRestServerError: null};
 
-      newState.pages = deepcopy<Page[]>(state.pages);
+      newState.pagesWithRegions = deepcopy<Page[]>(state.pagesWithRegions);
 
-      const page = newState.pages.find(p => p.id === action.page.id);
+      const page = newState.pagesWithRegions.find(p => p.id === action.page.id);
       if (page) {
         page.boundingBox = action.page.boundingBox;
       }
@@ -90,9 +90,9 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
       const newState = {...state,
         apiRestServerError: null};
 
-      newState.pages = deepcopy<Page[]>(state.pages);
+      newState.pagesWithRegions = deepcopy<Page[]>(state.pagesWithRegions);
 
-      newState.pages.forEach(page => {
+      newState.pagesWithRegions.forEach(page => {
           const region = page.regions.find(r => r.id === action.region.id);
           if (region) {
             region.regionType = action.region.regionType;
@@ -106,9 +106,9 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
       const newState = {...state,
         apiRestServerError: null};
 
-      newState.pages = deepcopy<Page[]>(state.pages);
+      newState.pagesWithRegions = deepcopy<Page[]>(state.pagesWithRegions);
 
-      newState.pages.forEach(page => {
+      newState.pagesWithRegions.forEach(page => {
           const region = page.regions.find(r => r.id === action.region.id);
           if (region) {
             region.boundingBox = action.region.boundingBox;
@@ -121,16 +121,16 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
     case DocumentAnalysisActionTypes.ClearSuccess: {
       const newState = {...state,
         apiRestServerError: null};
-      newState.pages = [];
+      newState.pagesWithRegions = [];
       return newState;
     }
     case DocumentAnalysisActionTypes.CreatePagesSuccess:
     case DocumentAnalysisActionTypes.CreatePageSuccess: {
       const newState = {...state};
       if (action.pages == null) { // if an error has occurred
-        newState.pages = deepcopy<Page[]>(state.pages);
+        newState.pagesWithRegions = deepcopy<Page[]>(state.pagesWithRegions);
       } else {
-        newState.pages = deepcopy<Page[]>(action.pages);
+        newState.pagesWithRegions = deepcopy<Page[]>(action.pages);
       }
 
       return newState;
@@ -139,21 +139,21 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
       const newState = {...state,
         apiRestServerError: null};
       if (action.pages == null) { // if an error has ocurred
-        newState.pages = deepcopy<Page[]>(state.pages);
+        newState.pagesWithRegions = deepcopy<Page[]>(state.pagesWithRegions);
       } else {
-        newState.pages = deepcopy<Page[]>(action.pages);
+        newState.pagesWithRegions = deepcopy<Page[]>(action.pages);
       }
       return newState;
     }
     case DocumentAnalysisActionTypes.DeletePageSuccess: {
       const newState = {...state,
         apiRestServerError: null};
-      newState.pages = deepcopy<Page[]>(state.pages);
+      newState.pagesWithRegions = deepcopy<Page[]>(state.pagesWithRegions);
 
       if (action.deletedPageID) { // if no error has ocurred
         // remove the deleted page
-        if (newState.pages) { // we may have deleted all pages
-          newState.pages = newState.pages.filter(page => page.id !== action.deletedPageID);
+        if (newState.pagesWithRegions) { // we may have deleted all pagesWithRegions
+          newState.pagesWithRegions = newState.pagesWithRegions.filter(page => page.id !== action.deletedPageID);
         }
       }
       return newState;
@@ -161,11 +161,11 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
     case DocumentAnalysisActionTypes.DeleteRegionSuccess: {
       const newState = {...state,
         apiRestServerError: null};
-      newState.pages = deepcopy<Page[]>(state.pages);
+      newState.pagesWithRegions = deepcopy<Page[]>(state.pagesWithRegions);
 
       if (action.deletedRegionID) { // if no error has ocurred
         // remove the deleted region
-        newState.pages.forEach(page => {
+        newState.pagesWithRegions.forEach(page => {
           page.regions = page.regions.filter(region => region.id !== action.deletedRegionID);
         });
       }
@@ -185,7 +185,7 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
     /*case DocumentAnalysisActionTypes.AutomaticDocumentAnalysisSuccess: {
       const newState = {...state,
         apiRestServerError: null};
-      newState.pages = deepcopy<Page[]>(action.pages);
+      newState.pagesWithRegions = deepcopy<Page[]>(action.pagesWithRegions);
       return newState;
     }*/
 

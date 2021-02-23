@@ -16,8 +16,6 @@ export enum DocumentAnalysisActionTypes {
 
   // revisado hasta aquí
   ResetDocumentAnalysisServerError = '[Image Recognition. Document Analysis] Reset Server error',
-  GetImageProjection = '[Image Recognition. Document Analysis] Get image projection',
-  GetImageProjectionSuccess = '[Image Recognition. Document Analysis] Get image projection success',
   GetImageURL = '[Image Recognition. Document Analysis] Get image URL',
   GetImageURLSuccess = '[Image Recognition. Document Analysis] Get image URL success',
 
@@ -85,22 +83,13 @@ export class DocumentAnalysisGetRegionTypesSuccess implements Action {
 }
 
 
+
 // revisado hasta aquí
 export class ResetDocumentAnalysisServerError implements Action {
   public readonly type = DocumentAnalysisActionTypes.ResetDocumentAnalysisServerError;
   constructor() {}
 }
 
-
-export class GetImageProjection implements Action {
-  public readonly type = DocumentAnalysisActionTypes.GetImageProjection;
-  constructor(public imageID: number) {}
-}
-
-export class GetImageProjectionSuccess implements Action {
-  public readonly type = DocumentAnalysisActionTypes.GetImageProjectionSuccess;
-  constructor(public documentAnalysisImageProjection: DocumentAnalysisImageProjection) {}
-}
 
 export class GetImagePart implements Action {
   public readonly type = DocumentAnalysisActionTypes.GetImagePart;
@@ -172,7 +161,7 @@ export class CreatePage implements Action {
 
 export class CreatePageSuccess implements Action {
   public readonly type = DocumentAnalysisActionTypes.CreatePageSuccess;
-  constructor(public pages: Page[]) {} // it returns several pages because some regions may have changed its page
+  constructor(public pages: Page[]) {} // it returns several pagesWithRegions because some regions may have changed its page
 }
 
 export class CreatePages implements Action {
@@ -182,7 +171,7 @@ export class CreatePages implements Action {
 
 export class CreatePagesSuccess implements Action {
   public readonly type = DocumentAnalysisActionTypes.CreatePagesSuccess;
-  constructor(public pages: Page[]) {} // new pages
+  constructor(public pages: Page[]) {} // new pagesWithRegions
 }
 
 export class CreateRegion implements Action {
@@ -192,7 +181,7 @@ export class CreateRegion implements Action {
 
 export class CreateRegionSuccess implements Action {
   public readonly type = DocumentAnalysisActionTypes.CreateRegionSuccess;
-  constructor(public pages: Page[]) {} // it returns several pages because we don't a priori in which page the region has been created
+  constructor(public pages: Page[]) {} // it returns several pagesWithRegions because we don't a priori in which page the region has been created
 }
 
 export class DeletePage implements Action {
@@ -265,7 +254,6 @@ export type DocumentAnalysisActions =
 
   // revisado hasta aquí
   ResetDocumentAnalysisServerError |
-  GetImageProjection | GetImageProjectionSuccess |
   GetImagePart | GetImagePartSuccess |
   GetImageURL | GetImageURLSuccess |
  // SelectPage | SelectRegion |

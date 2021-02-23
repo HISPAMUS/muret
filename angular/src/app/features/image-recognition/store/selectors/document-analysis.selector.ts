@@ -9,7 +9,6 @@ export const selectDocumentAnalysisRegionTypes = createSelector(
 );
 
 
-
 // revisado hasta aquí
 /*export const selectImageWidth = createSelector(
   documentAnalysisState,
@@ -39,7 +38,7 @@ export const selectDocumentType = createSelector(
 
 export const selectPages = createSelector(
   documentAnalysisState,
-  (state: DocumentAnalysisState) => state.pages
+  (state: DocumentAnalysisState) => state.pagesWithRegions
 );
 
 

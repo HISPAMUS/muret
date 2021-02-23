@@ -192,8 +192,12 @@ public class DocumentController {
             Section section = new Section();
             section.setDocument(document.get());
             section.setName(name);
+            int max = 0;
+            for (Section s: document.get().getSections()) {
+                max = Math.max(max, s.getOrdering());
+            }
+            section.setOrdering(max+1);
             Section createdSection = sectionRepository.save(section);
-            updateOrdering(sectionRepository, document.get().getSections());
             return createdSection;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot create new section", e);
@@ -758,4 +762,6 @@ public class DocumentController {
 
         return notationModel.preflightCheck(document.get(), idsOfSelectedImages);
     }
+
+
 }

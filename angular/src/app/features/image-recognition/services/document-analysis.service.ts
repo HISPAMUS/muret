@@ -20,9 +20,9 @@ export class DocumentAnalysisService {
 
 
 
-
-
   // revisado hasta aquí
+
+
   public getDocumentAnalysisImageProjection$(id: number): Observable<DocumentAnalysisImageProjection> {
     return this.apiRestClientService.getProjectionOf$<DocumentAnalysisImageProjection>(id, 'images', 'documentAnalysisImage');
   }

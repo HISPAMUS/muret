@@ -17,6 +17,7 @@ import { TranscriptionComponentComponent } from './components/transcription/tran
 import {SharedModule} from "../../shared/shared.module";
 import { DocumentAnalysisFiltersComponent } from './components/document-analysis-filters/document-analysis-filters.component';
 import {NgbCollapseModule} from "@ng-bootstrap/ng-bootstrap";
+import {SvgModule} from "../../svg/svg.module";
 
 
 
@@ -29,7 +30,8 @@ import {NgbCollapseModule} from "@ng-bootstrap/ng-bootstrap";
     ImageRecognitionRoutingModule,
     FontAwesomeModule,
     SharedModule,
-    NgbCollapseModule
+    NgbCollapseModule,
+    SvgModule
   ],providers: [
     ImageOverviewService, DocumentAnalysisService
   ]

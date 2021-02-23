@@ -90,4 +90,30 @@ public class ImageRecognitionController {
             throw ControllerUtils.createServerError(this, "Cannot create statistics", e);
         }
     }
+
+
+    /**
+     * Note pages in images and regions in pages are EAGER
+     * @param imageID
+     * @return Parts with region and symbol information
+     */
+    @GetMapping(path = {"/pagesRegionsSymbols/{imageID}"})
+    // @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public Set<Page> getPagesAndRegions(@PathVariable("imageID") Long imageID)  {
+        try {
+            HashSet<Page> result = new HashSet<>();
+            Optional<Image> image = imageRepository.findById(imageID);
+            if (!image.isPresent()) {
+                throw new IM3WSException("Cannot find an image with id " + imageID);
+            }
+            for (Page page: image.get().getPages()) {
+                // nothing - just retrieve them - it
+                result.add(page);
+            }
+            return result;
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot create statistics", e);
+        }
+    }
+
 }

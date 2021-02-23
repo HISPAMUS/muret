@@ -37,7 +37,7 @@ public class Image extends Auditable implements IAssignableToPart, IID<Long>, IO
     private Document document;
 
     @JsonManagedReference (value="image")
-    @OneToMany(fetch=FetchType.LAZY, mappedBy = "image",
+    @OneToMany(fetch=FetchType.EAGER, mappedBy = "image",
             cascade = CascadeType.ALL,
             orphanRemoval = true) // orphanRemoval = remove dependent rather than set the FK to null
     //@JoinColumn(name="image_id", referencedColumnName="id") // don't use this construct to let orphanRemoval to work right

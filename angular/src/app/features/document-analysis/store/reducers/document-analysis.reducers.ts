@@ -148,7 +148,7 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
 
       if (action.deletedPageID) { // if no error has ocurred
         // remove the deleted page
-        if (newState.pages) { // we may have deleted all pages
+        if (newState.pages) { // we may have deleted all pagesWithRegions
           newState.pages = newState.pages.filter(page => page.id !== action.deletedPageID);
         }
       }

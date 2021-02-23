@@ -8,9 +8,7 @@ import {RegionType} from "../../../../core/model/entities/region-type";
 })
 export class DocumentAnalysisFiltersComponent implements OnInit, OnChanges {
   @Input() regionTypes: RegionType[];
-  @Output() onShowRegionType = new EventEmitter<RegionType>();
-  @Output() onHideRegionType = new EventEmitter<RegionType>();
-
+  @Output() onFilterChange = new EventEmitter<Set<string>>(); // emits the regionTypeFilterOut
   regionTypeFilterOut: Set<string>;
   mainRegionTypes: RegionType[]; // staff, lyrics
   otherRegionTypes: RegionType[]; // all the other ones
@@ -59,11 +57,10 @@ export class DocumentAnalysisFiltersComponent implements OnInit, OnChanges {
   onLayerVisibilityChanged($event) {
     if ($event.target.checked) {
       this.regionTypeFilterOut.delete($event.target.name);
-      this.onHideRegionType.emit($event.target);
     } else {
       this.regionTypeFilterOut.add($event.target.name);
-      this.onShowRegionType.emit($event.target);
     }
+    this.onFilterChange.emit(this.regionTypeFilterOut);
   }
 
   trackByRegionTypeFn(index, item: RegionType) {

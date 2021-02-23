@@ -163,7 +163,7 @@ export class CreatePage implements Action {
 
 export class CreatePageSuccess implements Action {
   public readonly type = DocumentAnalysisActionTypes.CreatePageSuccess;
-  constructor(public pages: Page[]) {} // it returns several pages because some regions may have changed its page
+  constructor(public pages: Page[]) {} // it returns several pagesWithRegions because some regions may have changed its page
 }
 
 export class CreatePages implements Action {
@@ -173,7 +173,7 @@ export class CreatePages implements Action {
 
 export class CreatePagesSuccess implements Action {
   public readonly type = DocumentAnalysisActionTypes.CreatePagesSuccess;
-  constructor(public pages: Page[]) {} // new pages
+  constructor(public pages: Page[]) {} // new pagesWithRegions
 }
 
 export class CreateRegion implements Action {
@@ -183,7 +183,7 @@ export class CreateRegion implements Action {
 
 export class CreateRegionSuccess implements Action {
   public readonly type = DocumentAnalysisActionTypes.CreateRegionSuccess;
-  constructor(public pages: Page[]) {} // it returns several pages because we don't a priori in which page the region has been created
+  constructor(public pages: Page[]) {} // it returns several pagesWithRegions because we don't a priori in which page the region has been created
 }
 
 export class DeletePage implements Action {

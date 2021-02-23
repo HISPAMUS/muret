@@ -1,7 +1,11 @@
 <div class="container" *ngIf="imageOverview">
   <div class="row">
     <div class="col-8">
-      <app-image-document-analysis-navigator [imageOverview]="imageOverview" [regionTypes]="regionTypes$ | async"></app-image-document-analysis-navigator>
+      <app-image-document-analysis-navigator
+        [imageOverview]="imageOverview"
+        [regionTypes]="regionTypes$ | async"
+        [shapes]="documentAnalysisShapes"
+      ></app-image-document-analysis-navigator>
     </div>
     <div class="col-4">
       <ul>

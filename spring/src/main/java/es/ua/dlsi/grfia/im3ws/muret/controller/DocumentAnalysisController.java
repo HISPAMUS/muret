@@ -19,10 +19,7 @@ import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 // !!! Important: no controller should throw any exception
@@ -56,6 +53,9 @@ public class DocumentAnalysisController extends MuRETBaseController {
         this.m_client = new ClassifierClient(muretConfiguration.getPythonclassifiers());
     }
 
+
+
+    // revisado hasta aquí
     @PutMapping(path = {"pageBoundingBoxUpdate"})
     public Page pageBoundingBoxUpdate(@RequestBody BoundingBox boundingBox)  {
         try {

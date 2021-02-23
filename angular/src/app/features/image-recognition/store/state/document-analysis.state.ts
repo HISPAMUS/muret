@@ -11,7 +11,7 @@ export interface DocumentType {
 
 export interface DocumentAnalysisState {
   regionTypes: RegionType[];
-
+  pagesWithRegions: Page[];
 
 
 
@@ -22,7 +22,6 @@ export interface DocumentAnalysisState {
   imageWidth: number;
   imageHeight: number;
   imagePart: Part;
-  pages: Page[];
   documentType: DocumentType;
 //  selectedRegion: Region;
 //  selectedPage: Page;
@@ -32,6 +31,7 @@ export interface DocumentAnalysisState {
 
 export const initialDocumentAnalysisState: DocumentAnalysisState = {
   regionTypes: null,
+  pagesWithRegions: null,
 
 
   // revisado hasta aquí
@@ -41,7 +41,6 @@ export const initialDocumentAnalysisState: DocumentAnalysisState = {
   imageWidth: 0,
   imageHeight: 0,
   imagePart: null,
-  pages: null,
   documentType: null,
   documentAnalysisClassifierModels: null,
   apiRestServerError: null

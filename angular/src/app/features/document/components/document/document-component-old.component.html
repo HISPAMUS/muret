@@ -8,7 +8,7 @@
       <p><a (click)="viewAndExport()">Score view and export</a></p>
       <p><a (click)="editInstruments()">Parts / Instruments</a></p>
       <p *ngIf="statistics$ | async as statistics">
-        #{{statistics.images}} images, #{{statistics.pages}} pages, #{{statistics.regions}} regions (#{{statistics.staves}} staves), #{{statistics.agnosticSymbols}} agnostic symbols
+        #{{statistics.images}} images, #{{statistics.pages}} pagesWithRegions, #{{statistics.regions}} regions (#{{statistics.staves}} staves), #{{statistics.agnosticSymbols}} agnostic symbols
       </p>
       <p></p>
     </div>
@@ -43,7 +43,7 @@
   <div *ngIf="documentIsLoaded()" class="col-7 offset-1">
     <h2>{{document?.name}}</h2>
     <app-inline-setEditingMode [(ngModel)]="document.composer" type="text" [label]="'Enter value for composer'" (changed)="composerChanged($event)" [size]="128"> </app-inline-setEditingMode>
-    <p>{{documentStatistics?.images}} images, {{documentStatistics?.pages}} pages, {{documentStatistics?.regions}} regions, {{documentStatistics?.agnosticSymbols}} symbols </p>
+    <p>{{documentStatistics?.images}} images, {{documentStatistics?.pagesWithRegions}} pagesWithRegions, {{documentStatistics?.regions}} regions, {{documentStatistics?.agnosticSymbols}} symbols </p>
 
     <input type="radio" name="rbDocumentState" [(ngModel)]="documentState" value="none">
     None

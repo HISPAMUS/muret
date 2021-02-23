@@ -79,7 +79,7 @@
   <div *ngIf="documentIsLoaded()" class="col-7 offset-1">
     <h2>{{document?.name}}</h2>
     <app-inline-setEditingMode [(ngModel)]="document.composer" type="text" [label]="'Enter value for composer'" (changed)="composerChanged($event)" [size]="128"> </app-inline-setEditingMode>
-    <p>{{documentStatistics?.images}} images, {{documentStatistics?.pages}} pages, {{documentStatistics?.regions}} regions, {{documentStatistics?.agnosticSymbols}} symbols </p>
+    <p>{{documentStatistics?.images}} images, {{documentStatistics?.pagesWithRegions}} pagesWithRegions, {{documentStatistics?.regions}} regions, {{documentStatistics?.agnosticSymbols}} symbols </p>
 
     <input type="radio" name="rbDocumentState" [(ngModel)]="documentState" value="none">
     None

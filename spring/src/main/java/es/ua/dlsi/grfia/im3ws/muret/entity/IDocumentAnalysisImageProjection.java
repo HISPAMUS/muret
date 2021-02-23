@@ -25,11 +25,11 @@ public interface IDocumentAnalysisImageProjection {
     String getDocumentPath();
 
 
-    @Value("#{target.document.manuscriptType}")
+   /* @Value("#{target.document.manuscriptType}")
     ManuscriptType getManuscriptType();
 
     @Value("#{target.document.notationType}")
-    NotationType getNotationType();
+    NotationType getNotationType();*/
 
     List<IPageProjection> getPages();
 

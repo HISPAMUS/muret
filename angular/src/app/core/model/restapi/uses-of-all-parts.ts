@@ -12,9 +12,9 @@ export interface PartUse {
 }
 
 /**
- * It contains the places where every part is used, either images, pages, regions or individual symbols.
+ * It contains the places where every part is used, either images, pagesWithRegions, regions or individual symbols.
  * In the case of images we only record the image id numbers.
- * For pages, regions, and symbols the PartUse symbol contain information about their parent image
+ * For pagesWithRegions, regions, and symbols the PartUse symbol contain information about their parent image
  *
  */
 export interface PartUsedIn {
