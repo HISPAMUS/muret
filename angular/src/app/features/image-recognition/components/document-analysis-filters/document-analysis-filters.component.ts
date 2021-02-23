@@ -90,4 +90,11 @@ export class DocumentAnalysisFiltersComponent implements OnInit, OnChanges {
   }
 
 
+  getShowMoreLessString() {
+    if (this.isCollapsed) {
+      return 'Show more...';
+    } else {
+      return 'Show less...';
+    }
+  }
 }

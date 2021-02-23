@@ -6,9 +6,11 @@
   <label ngbButtonLabel>
     <input type="checkbox" [checked]="false" (change)="selectAllNone($event)"> Select all/none
   </label>
+  <p>
   <a [routerLink]="" data-toggle="collapse" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed" aria-controls="otherRegionTypesFilter">
-    Show more...
+    {{getShowMoreLessString()}}
   </a>
+  </p>
 </div>
 <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed" id="otherRegionTypesFilter">
     <label *ngFor="let regionType of otherRegionTypes; trackBy: trackByRegionTypeFn" ngbButtonLabel>
