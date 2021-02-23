@@ -16,6 +16,7 @@ export class ImageDocumentAnalysisNavigatorComponent implements OnChanges {
   @Input() imageOverview: ImageOverview;
   @Input() regionTypes: RegionType[];
   @Input() shapes: Shape[];
+  filteredOutRegionNames: Set<string> = new Set<string>();
 
   loadedImage$: Observable<SafeResourceUrl>;
   zoomFactor = 1;
@@ -31,6 +32,21 @@ export class ImageDocumentAnalysisNavigatorComponent implements OnChanges {
         map(imageBlob => window.URL.createObjectURL(imageBlob))
       );
     }
+    if (changes.shapes) {
+      this.doFilterOut();
+    }
   }
 
+  onFilterChange($event: Set<string>) {
+    this.filteredOutRegionNames = $event;
+    this.doFilterOut();
+  }
+
+  private doFilterOut() {
+    if (this.shapes) {
+      this.shapes.forEach(shape => {
+        shape.hidden = this.filteredOutRegionNames.has(shape.layer);
+      });
+    }
+  }
 }

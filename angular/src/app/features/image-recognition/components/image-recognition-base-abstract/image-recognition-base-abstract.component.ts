@@ -51,23 +51,25 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
       this.store.dispatch(new ImageRecognitionGetPagesRegionsSymbols(+this.imageID));
     });
 
+    this.regionTypes$ = this.store.select(selectDocumentAnalysisRegionTypes);
+
+  }
+  // To avoid expression changed error
+  //TODO No va, sigue dando error
+  ngAfterViewInit(): void {
+    this.pagesSubscription = this.store.select(selectImageRecognitionImageOverviewPagesRegionsSymbols).subscribe(next => {
+      if (next) {
+        this.drawPagesAndRegions(next);
+      }
+      //this.pagesWithRegions = next;
+    });
+
     this.imageOverviewSubscription = this.store.select(selectImageRecognitionImageOverview).subscribe(next => {
       if (next) {
         this._imageOverview = next;
       }
     });
 
-    this.regionTypes$ = this.store.select(selectDocumentAnalysisRegionTypes);
-
-  }
-  ngAfterViewInit(): void {
-    this.pagesSubscription = this.store.select(selectImageRecognitionImageOverviewPagesRegionsSymbols).subscribe(next => {
-      if (next) {
-        this.drawPagesAndRegions(next);
-      }
-
-      //this.pagesWithRegions = next;
-    });
   }
 
   ngOnDestroy() {

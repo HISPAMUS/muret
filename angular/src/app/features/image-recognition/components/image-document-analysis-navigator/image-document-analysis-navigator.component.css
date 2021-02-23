@@ -6,3 +6,7 @@
   margin: 0;
   overflow: auto;
 }
+
+#imageCanvas {
+  max-height: 70vh;
+}

@@ -1,4 +1,13 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  AfterContentInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {RegionType} from "../../../../core/model/entities/region-type";
 
 @Component({
@@ -6,7 +15,7 @@ import {RegionType} from "../../../../core/model/entities/region-type";
   templateUrl: './document-analysis-filters.component.html',
   styleUrls: ['./document-analysis-filters.component.css']
 })
-export class DocumentAnalysisFiltersComponent implements OnInit, OnChanges {
+export class DocumentAnalysisFiltersComponent implements OnInit, OnChanges, AfterContentInit {
   @Input() regionTypes: RegionType[];
   @Output() onFilterChange = new EventEmitter<Set<string>>(); // emits the regionTypeFilterOut
   regionTypeFilterOut: Set<string>;
@@ -40,10 +49,16 @@ export class DocumentAnalysisFiltersComponent implements OnInit, OnChanges {
         } else {
           this.otherRegionTypes.push(region);
         }
+        if (!this.isStaff(region)) {
+          this.regionTypeFilterOut.add(region.name); // check only staff
+        }
       });
     }
   }
 
+  ngAfterContentInit(): void {
+    this.onFilterChange.emit(this.regionTypeFilterOut); // to propagate filter
+  }
 
   beautifyRegionName(regionType: RegionType): string {
     if (regionType && regionType.name) {
@@ -84,6 +99,7 @@ export class DocumentAnalysisFiltersComponent implements OnInit, OnChanges {
         element["checked"] = false;
       });
     }
+    this.onFilterChange.emit(this.regionTypeFilterOut);
   }
 
 
@@ -94,4 +110,5 @@ export class DocumentAnalysisFiltersComponent implements OnInit, OnChanges {
       return 'Show less...';
     }
   }
+
 }
