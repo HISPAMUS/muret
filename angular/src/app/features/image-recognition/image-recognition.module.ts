@@ -5,7 +5,7 @@ import {ImageRecognitionRoutingModule} from "./image-recognition-routing.module"
 import {StoreModule} from "@ngrx/store";
 import {EffectsModule} from "@ngrx/effects";
 import {imageRecognitionReducers} from "./store/reducers/image-recognition.reducers";
-import {ImageOverviewEffects} from "./store/effects/image-recognition-effects.service";
+import {ImageOverviewEffects} from "./store/effects/image-overview-effects.service";
 import {ImageOverviewService} from "./services/image-overview.service";
 import {DocumentAnalysisService} from "./services/document-analysis.service";
 import {DocumentAnalysisEffects} from "./store/effects/document-analysis.effects";
@@ -18,7 +18,9 @@ import {SharedModule} from "../../shared/shared.module";
 import { DocumentAnalysisFiltersComponent } from './components/document-analysis-filters/document-analysis-filters.component';
 import {NgbCollapseModule} from "@ng-bootstrap/ng-bootstrap";
 import {SvgModule} from "../../svg/svg.module";
-
+import {FormsModule} from "@angular/forms";
+import {ContextMenuModule} from "ngx-contextmenu";
+import {ImagePartsService} from "./services/image-parts.service";
 
 
 @NgModule({
@@ -31,9 +33,11 @@ import {SvgModule} from "../../svg/svg.module";
     FontAwesomeModule,
     SharedModule,
     NgbCollapseModule,
-    SvgModule
+    SvgModule,
+    FormsModule,
+    ContextMenuModule
   ],providers: [
-    ImageOverviewService, DocumentAnalysisService
+    ImageOverviewService, DocumentAnalysisService, ImagePartsService
   ]
 })
 export class ImageRecognitionModule { }

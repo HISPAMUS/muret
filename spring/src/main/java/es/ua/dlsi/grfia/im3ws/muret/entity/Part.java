@@ -9,7 +9,7 @@ import java.util.Objects;
  * @author drizo
  */
 @Entity
-public class Part extends Auditable implements IID<Long>, IOrdered  {
+public class Part extends Auditable implements IID<Long>, IOrdered, Comparable<Part>  {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -96,5 +96,23 @@ public class Part extends Auditable implements IID<Long>, IOrdered  {
     @Override
     public int hashCode() {
         return Objects.hash(name, document);
+    }
+
+    @Override
+    public int compareTo(Part o) {
+        int result = 0;
+        if (this.ordering != null && o.ordering != null) {
+            result = this.ordering - o.ordering;
+        }
+        if (result == 0) {
+            if (this.id < o.id) {
+                result = -1;
+            } else if (this.id > o.id) {
+                result = 1;
+            } else {
+                result = 0;
+            }
+        }
+        return result;
     }
 }

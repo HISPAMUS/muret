@@ -11,6 +11,7 @@ export class Shape {
   originY: number;
   strokeColor: string;
   fillColor: string;
+  fillOpacity: number;
   strokeWidth: number;
   strokeDashArray?: string; // see SVG stroke-dasharray
   hidden = false;
@@ -18,6 +19,8 @@ export class Shape {
   layer: string;
   data?: any;
   shapeComponent: ShapeComponent;
+  originalFillColor: string;
+  selectable: boolean = true;
 
   constructor(public type: string) {
     this.fromX = 0;
@@ -25,4 +28,18 @@ export class Shape {
     this.originX = this.fromX;
     this.originY = this.fromY;
   }
+
+  highlightSelected() {
+    if (!this.originalFillColor) {
+      this.originalFillColor = this.fillColor;
+    }
+    this.fillOpacity = 0.2;
+    this.fillColor = 'red';
+  }
+
+  unHighlightSelected() {
+    this.fillOpacity = 0.8;
+    this.fillColor = this.originalFillColor;
+  }
+
 }

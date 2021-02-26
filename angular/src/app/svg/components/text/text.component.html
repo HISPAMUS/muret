@@ -1,6 +1,8 @@
 <svg:text id="{{appText.id}}"
           attr.x="{{appText.fromX}}" attr.y="{{appText.fromY}}"
           attr.fill="{{appText.fillColor}}" *ngIf="!appText.hidden"
+          attr.stroke="{{appText.strokeColor}}"
+          attr.stroke-width="{{appText.strokeWidth}}"
           attr.font-size="{{appText.fontSize}}"
           (click)="onClick()"
 >

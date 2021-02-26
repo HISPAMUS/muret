@@ -10,7 +10,6 @@ import { SafePipe } from './pipes/safe.pipe';
 import {AgnosticOrSemanticToolbarComponent} from "./components/agnostic-or-semantic-toolbar/agnostic-or-semantic-toolbar.component";
 import {ImagePreviewComponent} from "./components/image-preview/image-preview.component";
 import {ImageComponent} from "./components/image/image.component";
-import {SvgModule} from "../svg/svg.module";
 import {AgnosticOrSemanticToolbarIconComponent} from "./components/agnostic-or-semantic-toolbar-icon/agnostic-or-semantic-toolbar-icon.component";
 import { SelectableDirective } from './directives/selectable.directive';
 import { SelectableContainerDirective } from './directives/selectable-container.directive';
@@ -31,7 +30,6 @@ import {ImagePhaseOverviewComponent} from "./components/image-phase/image-phase-
     ReactiveFormsModule,
     NgbButtonsModule,
     NgbTooltipModule,
-    SvgModule,
     ContextMenuModule.forRoot({
       useBootstrap4: true,
     }),
@@ -53,20 +51,20 @@ import {ImagePhaseOverviewComponent} from "./components/image-phase/image-phase-
     ImagePhasePartsComponent,
     ImagePhaseTranscriptionComponent
   ],
-  exports: [
-    StateComponent,
-    CrudToolbarComponent,
-    SafePipe,
-    AgnosticOrSemanticToolbarComponent,
-    ImagePreviewComponent,
-    ImageComponent,
-    ImagePhasesComponent,
-    SelectableDirective,
-    SelectableContainerDirective,
-    ImagePhaseDocumentAnalysisComponent,
-    ImagePhasePartsComponent,
-    ImagePhaseTranscriptionComponent
-  ],
+    exports: [
+        StateComponent,
+        CrudToolbarComponent,
+        SafePipe,
+        AgnosticOrSemanticToolbarComponent,
+        ImagePreviewComponent,
+        ImageComponent,
+        ImagePhasesComponent,
+        SelectableDirective,
+        SelectableContainerDirective,
+        ImagePhaseDocumentAnalysisComponent,
+        ImagePhasePartsComponent,
+        ImagePhaseTranscriptionComponent
+    ],
   providers: []
 })
 export class SharedModule {

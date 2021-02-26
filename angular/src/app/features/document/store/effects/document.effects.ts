@@ -43,7 +43,10 @@ import {
   DocumentMoveImagesToDefaultSection,
   DocumentMoveImagesToDefaultSectionSuccess,
   DocumentLinkImagesToPart,
-  DocumentLinkImagesToPartSuccess, DocumentLinkImagesToNewPart, DocumentLinkImagesToNewPartSuccess,
+  DocumentLinkImagesToPartSuccess,
+  DocumentLinkImagesToNewPart,
+  DocumentLinkImagesToNewPartSuccess,
+  DocumentUnlinkImagesFromPart, DocumentUnlinkImagesFromPartSuccess,
 } from '../actions/document.actions';
 import {Document} from '../../../../core/model/entities/document';
 import {Image} from '../../../../core/model/entities/image';
@@ -147,18 +150,26 @@ export class DocumentEffects {
     )));
 
   @Effect()
-  linkImageToPart$: Observable<Action> = this.actions$.pipe(
+  linkImagesToPart$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentLinkImagesToPart>(DocumentActionTypes.DocumentLinkImagesToPart),
-    switchMap((action: DocumentLinkImagesToPart) => this.documentService.linkImageToPart$(action.imageIDs, action.partID).pipe(
+    switchMap((action: DocumentLinkImagesToPart) => this.documentService.linkImagesToPart$(action.imageIDs, action.partID).pipe(
       switchMap((partsInImages) => of(new DocumentLinkImagesToPartSuccess(partsInImages))),
       catchError(err => of(new DocumentServerError(err)))
     )));
 
   @Effect()
-  linkImageToNewPart$: Observable<Action> = this.actions$.pipe(
+  linkImagesToNewPart$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentLinkImagesToNewPart>(DocumentActionTypes.DocumentLinkImagesToNewPart),
-    switchMap((action: DocumentLinkImagesToNewPart) => this.documentService.linkImageToNewPart$(action.imageIDs, action.partName).pipe(
+    switchMap((action: DocumentLinkImagesToNewPart) => this.documentService.linkImagesToNewPart$(action.imageIDs, action.partName).pipe(
       switchMap((imagesInNewPart) => of(new DocumentLinkImagesToNewPartSuccess(imagesInNewPart))),
+      catchError(err => of(new DocumentServerError(err)))
+    )));
+
+  @Effect()
+  unlinkImagesFromPart$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentUnlinkImagesFromPart>(DocumentActionTypes.DocumentUnlinkImagesFromPart),
+    switchMap((action: DocumentUnlinkImagesFromPart) => this.documentService.unlinkImagesFromPart$(action.imageIDs).pipe(
+      switchMap((partsInImages) => of(new DocumentUnlinkImagesFromPartSuccess(partsInImages))),
       catchError(err => of(new DocumentServerError(err)))
     )));
 

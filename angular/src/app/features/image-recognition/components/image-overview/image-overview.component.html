@@ -15,7 +15,9 @@
       </ul>
       <form>
         <h5>Comments</h5>
-        <textarea></textarea>
+        <textarea [(ngModel)]="comments" [ngModelOptions]="{standalone: true}" (ngModelChange)="onCommentsChanged($event)"></textarea>
+        <br>
+        <button class="btn-primary" *ngIf="commentsChanged" (click)="saveComments()">Save comments</button>
       </form>
     </div>
   </div>

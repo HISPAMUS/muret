@@ -2,7 +2,6 @@ import {Component, Input, OnInit} from '@angular/core';
 import {ShapeComponent} from '../shape/shape.component';
 import {Rectangle} from '../../model/rectangle';
 import {Coordinate} from '../../model/coordinate';
-import {Shape} from '../../model/shape';
 
 /**
  * We don't use the angular 7 capabilities because we are getting some troubles with zoom

@@ -74,14 +74,19 @@ export class DocumentService {
     return this.apiRestClientService.get$<PartsInImage[]>(url);
   }
 
-  linkImageToPart$(imageIDs: NumberArray, partID: number): Observable<PartsInImage[]> {
+  linkImagesToPart$(imageIDs: NumberArray, partID: number): Observable<PartsInImage[]> {
     const url = `document/linkImagesToPart/${partID}`;
     return this.apiRestClientService.put$<PartsInImage[]>(url, imageIDs);
   }
 
-  linkImageToNewPart$(imageIDs: NumberArray, partName: string): Observable<ImagesInNewPart> {
+  linkImagesToNewPart$(imageIDs: NumberArray, partName: string): Observable<ImagesInNewPart> {
     const url = `document/linkImagesToNewPart/${partName}`;
     return this.apiRestClientService.post$<ImagesInNewPart>(url, imageIDs);
+  }
+
+  unlinkImagesFromPart$(imageIDs: NumberArray): Observable<PartsInImage[]> {
+    const url = `document/unlinkImagesFromPart`;
+    return this.apiRestClientService.put$<PartsInImage[]>(url, imageIDs);
   }
 
   /*public getParts$(documentID: number): Observable<Section[]> {

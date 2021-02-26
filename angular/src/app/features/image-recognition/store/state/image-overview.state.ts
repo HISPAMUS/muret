@@ -1,5 +1,5 @@
 import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
-import {ImageOverview} from "../../model/image-overview";
+import {ImageOverview} from "../../../../core/model/restapi/image-overview";
 import {Page} from "../../../../core/model/entities/page";
 
 export interface ImageOverviewState {

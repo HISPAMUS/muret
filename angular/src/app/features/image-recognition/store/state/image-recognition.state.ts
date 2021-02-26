@@ -4,7 +4,7 @@ import {DocumentAnalysisState, initialDocumentAnalysisState} from "./document-an
 
 export interface ImageRecognitionState {
   imageOverview: ImageOverviewState;
-  documentAnalysis: DocumentAnalysisState
+  documentAnalysis: DocumentAnalysisState;
 }
 
 export const initialImageRecognitionState: ImageRecognitionState = {

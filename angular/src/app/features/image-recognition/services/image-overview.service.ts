@@ -1,6 +1,6 @@
 import {ApiRestClientService} from "../../../core/services/api-rest-client.service";
 import {Injectable} from "@angular/core";
-import {ImageOverview} from "../model/image-overview";
+import {ImageOverview} from "../../../core/model/restapi/image-overview";
 import {Observable} from "rxjs";
 import {Page} from "../../../core/model/entities/page";
 
@@ -21,6 +21,15 @@ export class ImageOverviewService {
   getPagesRegionsSymbols$(imageID: number): Observable<Page[]> {
     const url = `imageRecognition/pagesRegionsSymbols/${imageID}`
     return this.apiRestClientService.get$<Page[]>(url);
+  }
+
+
+  /**
+   * It returns the comments set
+   */
+  putComments$(imageID: number, comments: string): Observable<String> {
+    const url = `imageRecognition/comments/${imageID}`
+    return this.apiRestClientService.put$<String>(url, comments);
   }
 
 }

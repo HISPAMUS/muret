@@ -8,6 +8,7 @@ import es.ua.dlsi.grfia.im3ws.muret.auditing.AuditorAwareImpl;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.*;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.model.DocumentModel;
+import es.ua.dlsi.grfia.im3ws.muret.model.ImageRecognitionModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.NotationModel;
 import es.ua.dlsi.grfia.im3ws.muret.repository.*;
 import es.ua.dlsi.grfia.im3ws.service.FileStorageService;
@@ -84,7 +85,10 @@ public class ImageRecognitionController {
             }
             result.setDocumentID(document.getId());
             result.setDocumentPath(document.getPath());
-
+            result.setComments(image.get().getComments());
+            ArrayList<Part> sortedParts = new ArrayList<>(document.getParts());
+            Collections.sort(sortedParts);
+            result.setDocumentParts(sortedParts);
             return result;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot create statistics", e);
@@ -93,27 +97,42 @@ public class ImageRecognitionController {
 
 
     /**
-     * Note pages in images and regions in pages are EAGER
+     *
      * @param imageID
      * @return Parts with region and symbol information
      */
     @GetMapping(path = {"/pagesRegionsSymbols/{imageID}"})
     // @org.springframework.transaction.annotation.Transactional(readOnly = true)
-    public Set<Page> getPagesAndRegions(@PathVariable("imageID") Long imageID)  {
+    public Set<Page> getPagesRegionsSymbols(@PathVariable("imageID") Long imageID)  {
         try {
-            HashSet<Page> result = new HashSet<>();
             Optional<Image> image = imageRepository.findById(imageID);
             if (!image.isPresent()) {
                 throw new IM3WSException("Cannot find an image with id " + imageID);
             }
-            for (Page page: image.get().getPages()) {
-                // nothing - just retrieve them - it
-                result.add(page);
-            }
-            return result;
+
+            return new ImageRecognitionModel().getPagesRegionsSymbols(image.get());
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot create statistics", e);
         }
     }
 
+    /**
+     * It returns the comments set
+     * @return
+     */
+    @PutMapping("/comments/{imageID}")
+    public String putComments(@PathVariable("imageID") long imageID, @RequestBody(required=false) String comments)  {
+        try {
+            Optional<Image> image = imageRepository.findById(imageID);
+            if (!image.isPresent()) {
+                throw new IM3WSException("Cannot find an image with id " + imageID);
+            }
+
+            image.get().setComments(comments);
+            imageRepository.save(image.get());
+            return image.get().getComments();
+        } catch (IM3WSException e) {
+            throw ControllerUtils.createServerError(this, "Cannot put comments", e);
+        }
+    }
 }

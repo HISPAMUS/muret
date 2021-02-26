@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnInit} from '@angular/core';
 import {Shape} from '../../model/shape';
 import {Coordinate} from '../../model/coordinate';
 
@@ -15,9 +15,6 @@ export class ShapeComponent implements OnInit {
 
   protected handleSelected: string;
   private drawStarted = false;
-
-  constructor() {
-  }
 
   ngOnInit() {
     this.shape.shapeComponent = this;
@@ -55,6 +52,4 @@ export class ShapeComponent implements OnInit {
     // it will be overriden by specific shapes
     this.drawStarted = true;
   }
-
-
 }

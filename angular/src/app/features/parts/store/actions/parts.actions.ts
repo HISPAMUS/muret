@@ -4,14 +4,10 @@ import {PartUse, UsesOfAllParts} from '../../../../core/model/restapi/uses-of-al
 import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 
 export enum PartsActionTypes {
-  PartsLinkPartToImage = '[Parts] Link part to image',
-  PartsLinkPartToImageSuccess = '[Parts] Link part to image success',
-
-
-
-
   // revisado hasta aquí
   ResetPartsServerError = '[Parts] Reset ServerError',
+  PartsLinkPartToImage = '[Parts] Link part to image',
+  PartsLinkPartToImageSuccess = '[Parts] Link part to image success',
   PartsServerError = '[Parts] ServerError',
   PartsCreateImagePart = '[Parts] Create image part',
   PartsCreateImagePartSuccess = '[Parts] Create image part success',
@@ -342,9 +338,9 @@ export class GetPartNamesUsedByImageSuccess implements Action {
 }*/
 
 export type PartsActions =
+  // revisado hasta aquí
   PartsLinkPartToImage | PartsLinkPartToImageSuccess |
 
-  // revisado hasta aquí
   ResetPartsServerError | PartsServerError |
   CreateImagePart | CreateImagePartSuccess |
   CreatePagePart | CreatePagePartSuccess |

@@ -5,5 +5,5 @@ import {imageOverviewReducers} from "./image-overview.reducers";
 
 export const imageRecognitionReducers: ActionReducerMap<ImageRecognitionState, any> = {
   imageOverview: imageOverviewReducers,
-  documentAnalysis: documentAnalysisReducers
+  documentAnalysis: documentAnalysisReducers,
 };

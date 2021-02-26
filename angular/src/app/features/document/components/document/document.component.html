@@ -1,5 +1,5 @@
 <div *ngIf="documentOverview" id="document" xmlns="http://www.w3.org/1999/html"
-     appSelectableContainer [selection]="selectedImages">
+     appSelectableContainer [selectionManager]="selectedImages">
   <app-section *ngFor="let section of orderedSections; trackBy: sectionTracking"
                [documentPath]="documentOverview.path"
                [documentID]="documentID"

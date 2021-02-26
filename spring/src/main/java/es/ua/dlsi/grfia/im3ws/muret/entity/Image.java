@@ -50,7 +50,7 @@ public class Image extends Auditable implements IAssignableToPart, IID<Long>, IO
     /**
      * It can be null because the part is assigned to other element of the score
      */
-    @JsonBackReference
+    //@JsonBackReference Remove it for ImageRecognitionController.getPagesAndRegions
     @ManyToOne
     @JoinColumn(name="part_id")
     private Part part;

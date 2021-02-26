@@ -7,14 +7,16 @@ import {SelectionManager} from './selection-manager';
   selector: '[appSelectableContainer]'
 })
 export class SelectableContainerDirective {
-  @Input() selection: SelectionManager;
+  @Input() selectionManager: SelectionManager;
 
   constructor(el: ElementRef) { // el = the element containing the directive
   }
 
   @HostListener('click', ["$event"])
   onMouseDown() {
-    this.selection.clear();
+    if (this.selectionManager) {
+      this.selectionManager.clear();
+    }
     //event.stopPropagation();
   }
 

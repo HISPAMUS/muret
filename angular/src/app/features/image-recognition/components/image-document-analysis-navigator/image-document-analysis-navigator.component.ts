@@ -1,11 +1,13 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {ImageFilesService} from "../../../../core/services/image-files.service";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
-import {ImageOverview} from "../../model/image-overview";
+import {ImageOverview} from "../../../../core/model/restapi/image-overview";
 import {Observable} from "rxjs";
 import {map} from "rxjs/operators";
 import {RegionType} from "../../../../core/model/entities/region-type";
 import {Shape} from "../../../../svg/model/shape";
+import {SelectionManager} from "../../../../shared/directives/selection-manager";
+import {ContextMenuSVGSelectionEvent} from "../../../../svg/model/context-menu-s-v-g-selection-event";
 
 @Component({
   selector: 'app-image-document-analysis-navigator',
@@ -16,13 +18,16 @@ export class ImageDocumentAnalysisNavigatorComponent implements OnChanges {
   @Input() imageOverview: ImageOverview;
   @Input() regionTypes: RegionType[];
   @Input() shapes: Shape[];
+  @Output() onNavigatorContextMenu = new EventEmitter<ContextMenuSVGSelectionEvent>();
   filteredOutRegionNames: Set<string> = new Set<string>();
 
   loadedImage$: Observable<SafeResourceUrl>;
   zoomFactor = 1;
+  selectionManager: SelectionManager;
 
   constructor(private imageFilesService: ImageFilesService, private sanitizer: DomSanitizer,
               ) {
+    this.selectionManager = new SelectionManager();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -48,5 +53,9 @@ export class ImageDocumentAnalysisNavigatorComponent implements OnChanges {
         shape.hidden = this.filteredOutRegionNames.has(shape.layer);
       });
     }
+  }
+
+  onSVGContextMenu(selectedShapes: ContextMenuSVGSelectionEvent) {
+    this.onNavigatorContextMenu.emit(selectedShapes);
   }
 }

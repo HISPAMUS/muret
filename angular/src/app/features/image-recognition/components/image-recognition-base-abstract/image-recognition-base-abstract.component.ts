@@ -1,12 +1,12 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from "rxjs";
-import {ImageOverview} from "../../model/image-overview";
+import {ImageOverview} from "../../../../core/model/restapi/image-overview";
 import {ActivatedRoute, ParamMap} from "@angular/router";
 import {Store} from "@ngrx/store";
 import {
   ImageRecognitionGetImageOverview,
   ImageRecognitionGetPagesRegionsSymbols
-} from "../../store/actions/image-recognition.actions";
+} from "../../store/actions/image-overview.actions";
 import {
   selectImageRecognitionImageOverview,
   selectImageRecognitionImageOverviewPagesRegionsSymbols
@@ -25,6 +25,7 @@ import {BoundingBox} from "../../../../core/model/entities/bounding-box";
 import {Region} from "../../../../core/model/entities/region";
 import {Rectangle} from "../../../../svg/model/rectangle";
 import {Shape} from "../../../../svg/model/shape";
+import {DialogsService} from "../../../../shared/services/dialogs.service";
 
 @Component({
   selector: 'app-image-recognition-base-abstract-component',
@@ -39,7 +40,7 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
   regionTypes$: Observable<RegionType[]>;
   private _documentAnalysisShapes: Shape[];
 
-  constructor(private route: ActivatedRoute, private store: Store<ImageRecognitionState>) {
+  constructor(protected route: ActivatedRoute, protected store: Store<ImageRecognitionState>, protected dialogsService: DialogsService) {
     this.store.dispatch(new DocumentAnalysisGetRegionTypes());
   }
 
@@ -53,9 +54,14 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
 
     this.regionTypes$ = this.store.select(selectDocumentAnalysisRegionTypes);
 
+    this.imageOverviewSubscription = this.store.select(selectImageRecognitionImageOverview).subscribe(next => {
+      if (next) {
+        this._imageOverview = next;
+        this.onImageOverviewChanged();
+      }
+    });
+
   }
-  // To avoid expression changed error
-  //TODO No va, sigue dando error
   ngAfterViewInit(): void {
     this.pagesSubscription = this.store.select(selectImageRecognitionImageOverviewPagesRegionsSymbols).subscribe(next => {
       if (next) {
@@ -63,13 +69,6 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
       }
       //this.pagesWithRegions = next;
     });
-
-    this.imageOverviewSubscription = this.store.select(selectImageRecognitionImageOverview).subscribe(next => {
-      if (next) {
-        this._imageOverview = next;
-      }
-    });
-
   }
 
   ngOnDestroy() {
@@ -89,7 +88,7 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
     return this._documentAnalysisShapes;
   }
 
-  private drawPagesAndRegions(pagesRegionsSymbols: Page[]) {
+  protected drawPagesAndRegions(pagesRegionsSymbols: Page[]) {
     this._documentAnalysisShapes = new Array();
     if (pagesRegionsSymbols) {
       pagesRegionsSymbols.forEach(page => {
@@ -101,17 +100,6 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
         }
       });
     }
-
-    this.applyRegionTypeFilter();
-  }
-
-  private applyRegionTypeFilter() {
-    //TODO
-    /*if (this.documentAnalysisShapes) {
-      this.documentAnalysisShapes.forEach(shape => {
-        shape.hidden = this.regionTypeFilterOut.has(shape.layer);
-      });
-    }*/
   }
 
   private drawBox(layer: string, id: number, boundingBox: BoundingBox, color: string, data: Region | Page): Rectangle {
@@ -129,11 +117,15 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
     this._documentAnalysisShapes.push(rect);
     return rect;
   }
-  private drawPage(page: Page) {
+  protected drawPage(page: Page) {
     this.drawBox('page', page.id, page.boundingBox, 'red', page); // TODO color
   }
 
-  private drawRegion(region: Region) {
+  protected drawRegion(region: Region) {
     this.drawBox(region.regionType.name, region.id, region.boundingBox, '#' + region.regionType.hexargb, region);
+  }
+
+  protected onImageOverviewChanged() {
+    // just to notify children about the change
   }
 }

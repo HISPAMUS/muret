@@ -351,6 +351,30 @@ public class DocumentController {
         }
     }
 
+    @PutMapping(path = {"/unlinkImagesFromPart"})
+    @javax.transaction.Transactional
+    public HashSet<PartsInImage> unlinkImagesFromPart(@RequestBody LongArray imageIds) {
+        try {
+            Document document = null;
+            ArrayList<Image> changedImages = new ArrayList<>();
+
+            for (Long imageID: imageIds.getValues()) {
+                Image image = findImage(imageID);
+
+                if (document == null) { // lookup first document
+                    document = image.computeDocument();
+                }
+
+                image.setPart(null);
+                changedImages.add(image);
+            }
+            imageRepository.saveAll(changedImages);
+            return getPartsInImages(document);
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot linl images to part", e);
+        }
+    }
+
     /**
      * @return All parts in image again
      */

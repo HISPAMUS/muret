@@ -62,7 +62,7 @@ public class Region extends Auditable implements IAssignableToPart, IDelimitedWi
     /**
      * It can be null because the part is assigned to other element of the score
      */
-    @JsonBackReference
+    //@JsonBackReference Remove it for ImageRecognitionController.getPagesAndRegions
     @ManyToOne
     @JoinColumn(name="part_id")
     private Part part;

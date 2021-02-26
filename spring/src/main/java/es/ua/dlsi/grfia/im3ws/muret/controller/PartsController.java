@@ -4,14 +4,17 @@ import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.*;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
+import es.ua.dlsi.grfia.im3ws.muret.model.ImageRecognitionModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.PartsModel;
 import es.ua.dlsi.grfia.im3ws.muret.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 // !!! Important: no controller should throw any exception
@@ -34,6 +37,113 @@ public class PartsController extends MuRETBaseController {
         this.partRepository = partRepository;
     }
 
+    @PutMapping(path = {"linkToPart"})
+    @Transactional
+    public Set<Page> linkToPart(@RequestBody PartLinking partLinking) throws IM3WSException {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Linking to part: {0}", partLinking);
+
+        Image image = getImage(partLinking.getImageID());
+
+        Part part = getPart(partLinking.getPartID());
+
+        linkToPart(partLinking, part);
+        return new ImageRecognitionModel().getPagesRegionsSymbols(image);
+    }
+
+
+    // This could be better done with a saveAll
+    private void linkToPart(PartLinking partLinking, Part part) throws IM3WSException {
+        for (Long id: partLinking.getToIDs().getValues()) {
+            switch (partLinking.getPartAssignedTo()) {
+                case image:
+                    Image image = getImage(id);
+                    image.setPart(part);
+                    imageRepository.save(image);
+                    break;
+                case page:
+                    Page page = getPage(id);
+                    page.setPart(part);
+                    pageRepository.save(page);
+                    break;
+                case region:
+                    Region region = getRegion(id);
+                    region.setPart(part);
+                    regionRepository.save(region);
+                    break;
+                case symbol:
+                    Symbol symbol = getSymbol(id);
+                    symbol.setPart(part);
+                    symbolRepository.save(symbol);
+                    break;
+                default:
+                    throw new IM3WSException("Invalid assignable to part type: " + partLinking.getPartAssignedTo());
+            }
+        }
+    }
+
+    @PostMapping(path = {"linkToNewPart"})
+    @Transactional
+    public PagesRegionsSymbolsAndNewPart linkToNewPart(@RequestBody PartLinking partLinking) throws IM3WSException {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Linking to new part: {0}", partLinking);
+
+        Optional<Document> document = documentRepository.findById(partLinking.getDocumentID());
+        if (!document.isPresent()) {
+            throw new IM3WSException("Cannot find a document with id " + document);
+        }
+
+        Image image = getImage(partLinking.getImageID());
+
+        Part part = new Part();
+        part.setDocument(document.get());
+        part.setOrdering(document.get().computeNextPartOrdering());
+        part.setName(partLinking.getPartName());
+        Part savedPart = partRepository.save(part);
+        partLinking.setPartID(savedPart.getId());
+        linkToPart(partLinking, part);
+        PagesRegionsSymbolsAndNewPart pagesRegionsSymbolsAndNewPart = new PagesRegionsSymbolsAndNewPart();
+        pagesRegionsSymbolsAndNewPart.setPart(savedPart);
+        pagesRegionsSymbolsAndNewPart.setPagesRegionsSymbols(new ImageRecognitionModel().getPagesRegionsSymbols(image));
+        return pagesRegionsSymbolsAndNewPart;
+    }
+
+    @PutMapping(path = {"unlinkPart"})
+    @Transactional
+    // This could be better done with a saveAll
+    public Set<Page> unlinkPart(@RequestBody PartLinking partLinking) throws IM3WSException {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Unlinking part: {0}", partLinking);
+
+        Image image = getImage(partLinking.getImageID());
+
+        for (Long id: partLinking.getToIDs().getValues()) {
+            switch (partLinking.getPartAssignedTo()) {
+                case image:
+                    // we already have it Image image = getImage(id);
+                    image.setPart(null);
+                    imageRepository.save(image);
+                    break;
+                case page:
+                    Page page = getPage(id);
+                    page.setPart(null);
+                    pageRepository.save(page);
+                    break;
+                case region:
+                    Region region = getRegion(id);
+                    region.setPart(null);
+                    regionRepository.save(region);
+                    break;
+                case symbol:
+                    Symbol symbol = getSymbol(id);
+                    symbol.setPart(null);
+                    symbolRepository.save(symbol);
+                    break;
+                default:
+                    throw new IM3WSException("Invalid assignable to part type: " + partLinking.getPartAssignedTo());
+            }
+        }
+        return new ImageRecognitionModel().getPagesRegionsSymbols(image);
+    }
+
+    // revisado hasta aquí
     @GetMapping(path = {"uses/{documentID}"})
     @Transactional(readOnly = true)
     public UsesOfParts getUsesOfParts(@PathVariable(name="documentID") Integer documentID){

@@ -13,10 +13,9 @@ import {DocumentState} from "../../store/state/document.state";
 import {
   DocumentLinkImagesToNewPart,
   DocumentLinkImagesToPart,
-  DocumentMoveImagesToSection
+  DocumentMoveImagesToSection, DocumentUnlinkImagesFromPart
 } from "../../store/actions/document.actions";
 import {SectionImages} from "../../../../core/model/restapi/section-images";
-import {PartsLinkPartToImage} from "../../../parts/store/actions/parts.actions";
 import {NumberArray} from "../../../../core/model/restapi/number-array";
 import {DialogsService} from "../../../../shared/services/dialogs.service";
 
@@ -136,5 +135,9 @@ export class DocumentThumbnailComponent implements OnInit {
           this.store.dispatch(new DocumentLinkImagesToNewPart(this.getSelectedImageIds(), text));
         }
       });
+  }
+
+  unlinkFromPart() {
+    this.store.dispatch(new DocumentUnlinkImagesFromPart(this.getSelectedImageIds()));
   }
 }

@@ -188,6 +188,7 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
       return newState;
     }
     case DocumentActionTypes.DocumentGetPartsInImagesSuccess:
+    case DocumentActionTypes.DocumentUnlinkImagesFromPartSuccess:
     case DocumentActionTypes.DocumentLinkImagesToPartSuccess: {
       const result: DocumentState = {
         ...state,

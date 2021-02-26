@@ -32,10 +32,13 @@ export enum DocumentActionTypes {
   DocumentReorderImagesSuccess = '[Document] Reorder images success',
   DocumentGetPartsInImages = '[Document] Get parts in images',
   DocumentGetPartsInImagesSuccess = '[Document] Get parts in images success',
-  DocumentLinkImagesToPart = '[Document] Link image to part',
-  DocumentLinkImagesToPartSuccess = '[Document] Link image to part success',
-  DocumentLinkImagesToNewPart = '[Document] Link image to new part',
-  DocumentLinkImagesToNewPartSuccess = '[Document] Link image to part new success',
+  DocumentLinkImagesToPart = '[Document] Link images to part',
+  DocumentLinkImagesToPartSuccess = '[Document] Link images to part success',
+  DocumentLinkImagesToNewPart = '[Document] Link images to new part',
+  DocumentLinkImagesToNewPartSuccess = '[Document] Link images to part new success',
+  DocumentUnlinkImagesFromPart = '[Document] Unlink images from part',
+  DocumentUnlinkImagesFromPartSuccess = '[Document] Unlink images from part success',
+
 
   // revisado hasta aquí
   ResetDocumentServerError = '[Document] Reset Server error',
@@ -191,6 +194,17 @@ export class DocumentLinkImagesToNewPartSuccess implements Action {
   constructor(public imagesInNewPart: ImagesInNewPart) {}
 }
 
+export class DocumentUnlinkImagesFromPart implements Action {
+  public readonly type = DocumentActionTypes.DocumentUnlinkImagesFromPart;
+  constructor(public imageIDs: NumberArray) {}
+}
+
+export class DocumentUnlinkImagesFromPartSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentUnlinkImagesFromPartSuccess;
+  constructor(public partsInImages: PartsInImage[]) {}
+}
+
+
 // revisado hasta aquí
 
 
@@ -321,6 +335,7 @@ export type DocumentActions =
   DocumentGetPartsInImages | DocumentGetPartsInImagesSuccess |
   DocumentLinkImagesToPart | DocumentLinkImagesToPartSuccess |
   DocumentLinkImagesToNewPart | DocumentLinkImagesToNewPartSuccess |
+  DocumentUnlinkImagesFromPart |   DocumentUnlinkImagesFromPartSuccess |
 
   // revisado hasta aquí
   DocumentResetServerError | DocumentServerError |

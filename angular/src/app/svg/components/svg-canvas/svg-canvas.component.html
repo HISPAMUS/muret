@@ -8,6 +8,7 @@
        (mousedown)="onMouseDown($event)" (touchstart)="onTouchStart($event)"
        (mouseup)="onMouseUp($event)" (touchend)="onTouchEnd($event)"
        (mousemove)="onMouseMove($event)" (touchmove)="onTouchMove($event)"
+       (contextmenu)="onContextMenuEvent($event)"
   >
 
     <!--
@@ -26,7 +27,7 @@
     <!-- width and height compulsory for Firefox and Safari -->
 
     <!--<g *ngFor="let shape of shapes; trackBy: trackByShapeFn">-->
-    <!-- Force repainting DOM because otherwise it does not create the shape again and it causes problems -->
+    <!-- Don't add shapeFn, Force repainting DOM because otherwise it does not create the shape again and it causes problems -->
     <g *ngFor="let shape of shapes" (dblclick)="onDblClickOnShape(shape)">
       <ng-container [ngSwitch]="shape.type">
         <ng-container *ngSwitchCase="'Rectangle'">
