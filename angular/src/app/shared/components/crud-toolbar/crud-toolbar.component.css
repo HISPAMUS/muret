@@ -23,7 +23,7 @@
 .separator
 {
   border:2px solid #7DE2DB;
-  margin-top: .7em;
+  margin-top: .2em;
   margin-left: .7em;
   margin-right: .7em;
   height: 30px;
@@ -31,17 +31,18 @@
 
 label
 {
-  margin-top: .5em;
+  /*margin-top: .5em;*/
 }
 label:hover
 {
   background-color: #7DE2DB;
   cursor: pointer;
 }
-  label:hover *
-  {
+
+label:hover *
+{
     color: #103339;
-  }
+}
 
 /*input[type=radio] + .icons {
   color: red;

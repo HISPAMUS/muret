@@ -9,6 +9,7 @@ import {Router} from "@angular/router";
 })
 export class ImagePhasePartsComponent extends ImagePhaseComponent implements OnChanges {
   @Input() imageID: number;
+  @Input() size: string;
 
   public constructor(public router: Router) {
     super(router);

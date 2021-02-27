@@ -16,3 +16,11 @@
   border-style: solid;
   border-width: 2px;
 }
+
+:host #links ::ng-deep .btn { /* for removing the padding to the label of the phases links */
+  padding: 0;
+}
+
+p {
+  margin-bottom: 0;
+}

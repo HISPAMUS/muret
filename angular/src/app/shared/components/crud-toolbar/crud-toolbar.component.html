@@ -14,39 +14,41 @@
           <a (click)="zoomFit()"><fa-icon icon="expand" class="icons" size="lg"></fa-icon></a>
         </label>
 
-        <div class="separator"></div>
+        <ng-container *ngIf="!hideModeButtons">
+          <div class="separator"></div>
 
-        <label ngbButtonLabel>
-          <input name="modeRadioButton" ngbButton type="radio" [value]="'eIdle'" ngbTooltip="View (shortcut: ESC)" placement="bottom">
-          <fa-icon icon="eye" class="icons" size="lg"></fa-icon>
-        </label>
+          <label ngbButtonLabel>
+            <input name="modeRadioButton" ngbButton type="radio" [value]="'eIdle'" ngbTooltip="View (shortcut: ESC)" placement="bottom">
+            <fa-icon icon="eye" class="icons" size="lg"></fa-icon>
+          </label>
 
-        <label ngbButtonLabel>
-          <input name="modeRadioButton" ngbButton type="radio" [value]="'eAdding'"  ngbTooltip="View (shortcut: a)" placement="bottom">
-          <fa-icon icon="plus" class="icons" size="lg"></fa-icon>
-        </label>
-        <label ngbButtonLabel>
-          <input name="modeRadioButton" ngbButton type="radio" [value]="'eEditing'"  ngbTooltip="View (shortcut: e)" placement="bottom">
-          <fa-icon icon="edit" class="icons" size="lg"></fa-icon>
-        </label>
-        <label ngbButtonLabel>
-          <button [disabled]="!isEditingMode() && !isAddingMode()" (click)="addCommentToSelected()">
-            <fa-icon icon="comment-dots" class="icons" size="lg"></fa-icon>
-          </button>
-        </label>
-        <label ngbButtonLabel>
-          <button [disabled]="!isEditingMode() && !isAddingMode()" (click)="deleteSelected()">
-            <fa-icon icon="minus" class="icons" size="lg"></fa-icon>
-          </button>
-        </label>
+          <label ngbButtonLabel>
+            <input name="modeRadioButton" ngbButton type="radio" [value]="'eAdding'"  ngbTooltip="View (shortcut: a)" placement="bottom">
+            <fa-icon icon="plus" class="icons" size="lg"></fa-icon>
+          </label>
+          <label ngbButtonLabel>
+            <input name="modeRadioButton" ngbButton type="radio" [value]="'eEditing'"  ngbTooltip="View (shortcut: e)" placement="bottom">
+            <fa-icon icon="edit" class="icons" size="lg"></fa-icon>
+          </label>
+          <label ngbButtonLabel>
+            <button [disabled]="!isEditingMode() && !isAddingMode()" (click)="addCommentToSelected()">
+              <fa-icon icon="comment-dots" class="icons" size="lg"></fa-icon>
+            </button>
+          </label>
+          <label ngbButtonLabel>
+            <button [disabled]="!isEditingMode() && !isAddingMode()" (click)="deleteSelected()">
+              <fa-icon icon="minus" class="icons" size="lg"></fa-icon>
+            </button>
+          </label>
 
-        <div class="separator"></div>
+          <div class="separator"></div>
 
-        <label ngbButtonLabel>
-          <button (click)="clear()">
-            <fa-icon icon="trash" class="icons" size="lg"></fa-icon>
-          </button>
-        </label>
+          <label ngbButtonLabel>
+            <button (click)="clear()">
+              <fa-icon icon="trash" class="icons" size="lg"></fa-icon>
+            </button>
+          </label>
+        </ng-container>
 
         &nbsp;
         &nbsp;

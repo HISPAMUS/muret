@@ -8,6 +8,7 @@ import {RegionType} from "../../../../core/model/entities/region-type";
 import {Shape} from "../../../../svg/model/shape";
 import {SelectionManager} from "../../../../shared/directives/selection-manager";
 import {ContextMenuSVGSelectionEvent} from "../../../../svg/model/context-menu-s-v-g-selection-event";
+import {ZoomManager} from "../../../../shared/model/zoom-manager";
 
 @Component({
   selector: 'app-image-document-analysis-navigator',
@@ -19,10 +20,11 @@ export class ImageDocumentAnalysisNavigatorComponent implements OnChanges {
   @Input() regionTypes: RegionType[];
   @Input() shapes: Shape[];
   @Output() onNavigatorContextMenu = new EventEmitter<ContextMenuSVGSelectionEvent>();
+  @Input() zoomManager: ZoomManager;
+
   filteredOutRegionNames: Set<string> = new Set<string>();
 
   loadedImage$: Observable<SafeResourceUrl>;
-  zoomFactor = 1;
   selectionManager: SelectionManager;
 
   constructor(private imageFilesService: ImageFilesService, private sanitizer: DomSanitizer,

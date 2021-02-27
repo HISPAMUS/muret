@@ -7,6 +7,7 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class ImagePhasesComponent implements OnInit {
   @Input() imageID: number;
+  @Input() size: string;
 
   constructor() { }
 

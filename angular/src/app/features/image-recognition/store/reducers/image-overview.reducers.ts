@@ -57,6 +57,36 @@ export function imageOverviewReducers(state = initialImageOverviewState, action:
       newState.imageOverview.documentParts.push(action.pagesRegionsSymbolsAndNewPart.part);
       return newState;
     }
+    case ImageOverviewActionTypes.ImageRecognitionLinkImageToPartSuccess: {
+      const newState: ImageOverviewState = {
+        pagesRegionsSymbols: state.pagesRegionsSymbols,
+        imageOverview: klona(state.imageOverview),
+        apiRestServerError: null
+      };
+      newState.imageOverview.imagePart = action.part;
+      return newState;
+      break;
+    }
+    case ImageOverviewActionTypes.ImageRecognitionLinkImageToNewPartSuccess: {
+      const newState: ImageOverviewState = {
+        pagesRegionsSymbols: state.pagesRegionsSymbols,
+        imageOverview: klona(state.imageOverview),
+        apiRestServerError: null
+      };
+      newState.imageOverview.imagePart = action.part;
+      newState.imageOverview.documentParts.push(action.part);
+      return newState;
+      break;
+    }
+    case ImageOverviewActionTypes.ImageRecognitionUnlinkImageFromPartSuccess: {
+      const newState: ImageOverviewState = {
+        pagesRegionsSymbols: state.pagesRegionsSymbols,
+        imageOverview: klona(state.imageOverview),
+        apiRestServerError: null
+      };
+      newState.imageOverview.imagePart = null;
+      return newState;
+    }
     default:
       return state;
   }

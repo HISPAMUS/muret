@@ -143,6 +143,44 @@ public class PartsController extends MuRETBaseController {
         return new ImageRecognitionModel().getPagesRegionsSymbols(image);
     }
 
+    @PutMapping(path = {"linkImageToPart/{imageID}/{partID}"})
+    @Transactional
+    public Part linkImageToPart(@PathVariable Long imageID, @PathVariable Long partID) throws IM3WSException {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Linking image {0} to part {1}", new Object[]{imageID, partID});
+
+        Image image = getImage(imageID);
+        Part part = getPart(partID);
+        image.setPart(part);
+        imageRepository.save(image);
+        return part;
+    }
+
+    @PostMapping(path = {"linkImageToNewPart/{imageID}"})
+    @Transactional
+    public Part linkImageToNewPart(@PathVariable Long imageID, @RequestBody String partName) throws IM3WSException {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Linking image {0} to new part with name {1}", new Object[]{imageID, partName});
+
+        Image image = getImage(imageID);
+        Document document = image.computeDocument();
+        Part part = new Part();
+        part.setDocument(document);
+        part.setName(partName);
+        part.setOrdering(document.computeNextPartOrdering());
+        Part savedPart = partRepository.save(part);
+        image.setPart(savedPart);
+        imageRepository.save(image);
+        return savedPart;
+    }
+    @PutMapping(path = {"unlinkImageFromPart/{imageID}"})
+    @Transactional
+    public void linkImageToPart(@PathVariable Long imageID) throws IM3WSException {
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Unlinking image {0} from part", imageID);
+
+        Image image = getImage(imageID);
+        image.setPart(null);
+        imageRepository.save(image);
+    }
+
     // revisado hasta aquí
     @GetMapping(path = {"uses/{documentID}"})
     @Transactional(readOnly = true)

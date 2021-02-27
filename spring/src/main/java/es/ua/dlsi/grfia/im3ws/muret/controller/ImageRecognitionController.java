@@ -89,6 +89,7 @@ public class ImageRecognitionController {
             ArrayList<Part> sortedParts = new ArrayList<>(document.getParts());
             Collections.sort(sortedParts);
             result.setDocumentParts(sortedParts);
+            result.setImagePart(image.get().getPart());
             return result;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot create statistics", e);

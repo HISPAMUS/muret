@@ -9,6 +9,9 @@ import {Router} from "@angular/router";
 })
 export class ImagePhaseOverviewComponent extends ImagePhaseComponent implements OnChanges{
   @Input() imageID: number;
+  @Input() size: string;
+
+
   public constructor(public router: Router) {
     super(router);
     this.iconName = 'clipboard-list';

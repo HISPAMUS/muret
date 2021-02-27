@@ -6,4 +6,5 @@ export interface ImageOverview {
   documentPath: string;
   comments: string;
   documentParts: Part[]; // already sorted in Spring controller
+  imagePart: Part;
 }

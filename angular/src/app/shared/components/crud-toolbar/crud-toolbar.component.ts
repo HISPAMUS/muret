@@ -1,4 +1,5 @@
 import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
+import {ZoomManager} from "../../model/zoom-manager";
 
 
 @Component({
@@ -12,11 +13,14 @@ export class CrudToolbarComponent implements OnInit {
   private modeValue: 'eIdle' | 'eEditing' | 'eAdding' | 'eSelecting';
   @Output() modeChange = new EventEmitter();
 
-  @Output() onZoomIn = new EventEmitter();
-  @Output() onZoomOut = new EventEmitter();
-  @Output() onZoomFit = new EventEmitter();
+  @Output() onZoomIn = new EventEmitter(); // deprecated -- use ZoomFactor
+  @Output() onZoomOut = new EventEmitter(); // deprecated -- use ZoomFactor
+  @Output() onZoomFit = new EventEmitter(); // deprecated -- use ZoomFactor
   @Output() onAddComment = new EventEmitter();
   @Output() onDeleteAll = new EventEmitter();
+
+  @Input() hideModeButtons: boolean;
+  @Input() zoomManager: ZoomManager;
 
   constructor() {
     // ------- menus --------
@@ -52,14 +56,23 @@ export class CrudToolbarComponent implements OnInit {
 
   zoomOut() {
     this.onZoomOut.emit();
+    if (this.zoomManager) {
+      this.zoomManager.zoomOut();
+    }
   }
 
   zoomIn() {
     this.onZoomIn.emit();
+    if (this.zoomManager) {
+      this.zoomManager.zoomIn();
+    }
   }
 
   zoomFit() {
     this.onZoomFit.emit();
+    if (this.zoomManager) {
+      this.zoomManager.resetZoom();
+    }
   }
 
   displayMode(): string {

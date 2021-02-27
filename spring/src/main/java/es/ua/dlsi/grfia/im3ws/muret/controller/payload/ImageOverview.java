@@ -14,6 +14,7 @@ public class ImageOverview {
     String documentPath;
     String comments;
     List<Part> documentParts; // ordered
+    Part imagePart;
 
     public ImageOverview() {
     }
@@ -56,5 +57,13 @@ public class ImageOverview {
 
     public void setDocumentParts(List<Part> documentParts) {
         this.documentParts = documentParts;
+    }
+
+    public Part getImagePart() {
+        return imagePart;
+    }
+
+    public void setImagePart(Part imagePart) {
+        this.imagePart = imagePart;
     }
 }

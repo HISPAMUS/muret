@@ -8,11 +8,20 @@ import {
   ImageRecognitionGetImageOverview,
   ImageRecognitionGetImageOverviewSuccess,
   ImageRecognitionGetPagesRegionsSymbols,
-  ImageRecognitionGetPagesRegionsSymbolsSuccess, ImageRecognitionLinkNewPart, ImageRecognitionLinkNewPartSuccess,
-  ImageRecognitionLinkPart, ImageRecognitionLinkPartSuccess,
+  ImageRecognitionGetPagesRegionsSymbolsSuccess,
+  ImageRecognitionLinkImageToNewPart,
+  ImageRecognitionLinkImageToNewPartSuccess,
+  ImageRecognitionLinkImageToPart,
+  ImageRecognitionLinkImageToPartSuccess,
+  ImageRecognitionLinkNewPart,
+  ImageRecognitionLinkNewPartSuccess,
+  ImageRecognitionLinkPart,
+  ImageRecognitionLinkPartSuccess,
   ImageRecognitionPutComments,
   ImageRecognitionPutCommentsSuccess,
-  ImageRecognitionServerError, ImageRecognitionUnlinkPart, ImageRecognitionUnlinkPartSuccess
+  ImageRecognitionServerError, ImageRecognitionUnlinkImageFromPart, ImageRecognitionUnlinkImageFromPartSuccess,
+  ImageRecognitionUnlinkPart,
+  ImageRecognitionUnlinkPartSuccess
 } from "../actions/image-overview.actions";
 import {
   DocumentAnalysisServerError
@@ -80,8 +89,33 @@ export class ImageOverviewEffects {
   @Effect()
   unlinkPart$ = this.actions$.pipe(
     ofType<ImageRecognitionUnlinkPart>(ImageOverviewActionTypes.ImageRecognitionUnlinkPart),
-    switchMap((action: ImageRecognitionUnlinkPart) => this.imagePartsService.unlinkToPart$(action.payload).pipe(
+    switchMap((action: ImageRecognitionUnlinkPart) => this.imagePartsService.unlinkFromPart$(action.payload).pipe(
       switchMap((payload) => of(new ImageRecognitionUnlinkPartSuccess(payload))),
+      catchError(err => of(new ImageRecognitionServerError(err)))
+    )));
+
+
+  @Effect()
+  linkPartToPart$ = this.actions$.pipe(
+    ofType<ImageRecognitionLinkImageToPart>(ImageOverviewActionTypes.ImageRecognitionLinkImageToPart),
+    switchMap((action: ImageRecognitionLinkImageToPart) => this.imagePartsService.linkImageToPart$(action.imageID, action.partID).pipe(
+      switchMap((part) => of(new ImageRecognitionLinkImageToPartSuccess(part))),
+      catchError(err => of(new ImageRecognitionServerError(err)))
+    )));
+
+  @Effect()
+  linkImageToNewPart$ = this.actions$.pipe(
+    ofType<ImageRecognitionLinkImageToNewPart>(ImageOverviewActionTypes.ImageRecognitionLinkImageToNewPart),
+    switchMap((action: ImageRecognitionLinkImageToNewPart) => this.imagePartsService.linkImageToNewPart$(action.imageID, action.partName).pipe(
+      switchMap((payload) => of(new ImageRecognitionLinkImageToNewPartSuccess(payload))),
+      catchError(err => of(new ImageRecognitionServerError(err)))
+    )));
+
+  @Effect()
+  unlinkImageFromPart$ = this.actions$.pipe(
+    ofType<ImageRecognitionUnlinkImageFromPart>(ImageOverviewActionTypes.ImageRecognitionUnlinkImageFromPart),
+    switchMap((action: ImageRecognitionUnlinkImageFromPart) => this.imagePartsService.unlinkImageFromPart$(action.imageID).pipe(
+      switchMap(() => of(new ImageRecognitionUnlinkImageFromPartSuccess())),
       catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 }

@@ -4,6 +4,7 @@ import {ImageOverview} from "../../../../core/model/restapi/image-overview";
 import {Page} from "../../../../core/model/entities/page";
 import {PartLinking} from "../../../../core/model/restapi/part-linking";
 import {PagesRegionsSymbolsAndNewPart} from "../../../../core/model/restapi/pages-regions-symbols-and-new-part";
+import {Part} from "../../../../core/model/entities/part";
 
 /**
  * We use the same actions for overview and parts because they share the state
@@ -24,6 +25,13 @@ export enum ImageOverviewActionTypes {
   ImageRecognitionLinkNewPartSuccess = '[ImageRecognition - Parts] Link new part success',
   ImageRecognitionUnlinkPart = '[ImageRecognition - Parts] Unlink part',
   ImageRecognitionUnlinkPartSuccess = '[ImageRecognition - Parts] Unlink part success',
+
+  ImageRecognitionLinkImageToPart = '[ImageRecognition - Parts] Link part to image',
+  ImageRecognitionLinkImageToPartSuccess = '[ImageRecognition - Parts] Link part to image success',
+  ImageRecognitionLinkImageToNewPart = '[ImageRecognition - Parts] Link new part to image',
+  ImageRecognitionLinkImageToNewPartSuccess = '[ImageRecognition - Parts] Link new part to image success',
+  ImageRecognitionUnlinkImageFromPart = '[ImageRecognition - Parts] Unlink part from image',
+  ImageRecognitionUnlinkImageFromPartSuccess = '[ImageRecognition - Parts] Unlink part from image success',
 
 }
 
@@ -97,6 +105,37 @@ export class ImageRecognitionUnlinkPartSuccess implements Action {
   constructor(public pagesRegionsSymbols: Page[]) {}
 }
 
+
+export class ImageRecognitionLinkImageToPart implements Action {
+  public readonly type = ImageOverviewActionTypes.ImageRecognitionLinkImageToPart;
+  constructor(public imageID: number, public partID: number) {}
+}
+
+export class ImageRecognitionLinkImageToPartSuccess implements Action {
+  public readonly type = ImageOverviewActionTypes.ImageRecognitionLinkImageToPartSuccess;
+  constructor(public part: Part) {}
+}
+
+export class ImageRecognitionLinkImageToNewPart implements Action {
+  public readonly type = ImageOverviewActionTypes.ImageRecognitionLinkImageToNewPart;
+  constructor(public imageID: number, public partName: string) {}
+}
+
+export class ImageRecognitionLinkImageToNewPartSuccess implements Action {
+  public readonly type = ImageOverviewActionTypes.ImageRecognitionLinkImageToNewPartSuccess;
+  constructor(public part: Part) {}
+}
+
+export class ImageRecognitionUnlinkImageFromPart implements Action {
+  public readonly type = ImageOverviewActionTypes.ImageRecognitionUnlinkImageFromPart;
+  constructor(public imageID: number) {}
+}
+
+export class ImageRecognitionUnlinkImageFromPartSuccess implements Action {
+  public readonly type = ImageOverviewActionTypes.ImageRecognitionUnlinkImageFromPartSuccess;
+  constructor() {}
+}
+
 export type ImageOverviewActions =
   ImageRecognitionServerError |
   ImageRecognitionGetImageOverview | ImageRecognitionGetImageOverviewSuccess |
@@ -106,6 +145,9 @@ export type ImageOverviewActions =
   // parts
   ImageRecognitionLinkPart | ImageRecognitionLinkPartSuccess |
   ImageRecognitionLinkNewPart | ImageRecognitionLinkNewPartSuccess |
-  ImageRecognitionUnlinkPart | ImageRecognitionUnlinkPartSuccess
+  ImageRecognitionUnlinkPart | ImageRecognitionUnlinkPartSuccess |
+  ImageRecognitionLinkImageToPart | ImageRecognitionLinkImageToPartSuccess |
+  ImageRecognitionLinkImageToNewPart | ImageRecognitionLinkImageToNewPartSuccess |
+  ImageRecognitionUnlinkImageFromPart | ImageRecognitionUnlinkImageFromPartSuccess
   ;
 
