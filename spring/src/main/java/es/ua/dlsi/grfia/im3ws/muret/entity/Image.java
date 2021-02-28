@@ -30,6 +30,8 @@ public class Image extends Auditable implements IAssignableToPart, IID<Long>, IO
     private Integer height;
     @Column // in the document or section
     private Integer ordering;
+    @Column
+    private boolean hidden;
 
     @JsonBackReference (value="document")
     @ManyToOne(fetch=FetchType.LAZY)
@@ -63,6 +65,13 @@ public class Image extends Auditable implements IAssignableToPart, IID<Long>, IO
     //@JoinColumn(name="document_id", referencedColumnName="id")
     @JoinColumn(name="section_id", nullable = true)
     private Section section;
+
+    @JsonManagedReference (value="image")
+    @OneToMany(fetch=FetchType.EAGER, mappedBy = "image",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true) // orphanRemoval = remove dependent rather than set the FK to null
+    //@JoinColumn(name="image_id", referencedColumnName="id") // don't use this construct to let orphanRemoval to work right
+    private Set<ImageRecognitionProgressStatus> imageRecognitionProgressStatuses;
 
     public Image() {
     }
@@ -163,6 +172,14 @@ public class Image extends Auditable implements IAssignableToPart, IID<Long>, IO
         this.section = section;
     }
 
+    public Set<ImageRecognitionProgressStatus> getImageRecognitionProgressStatuses() {
+        return imageRecognitionProgressStatuses;
+    }
+
+    public void setImageRecognitionProgressStatuses(Set<ImageRecognitionProgressStatus> imageRecognitionProgressStatuses) {
+        this.imageRecognitionProgressStatuses = imageRecognitionProgressStatuses;
+    }
+
     @Override
     public String toString() {
         return "Image{" +
@@ -227,5 +244,11 @@ public class Image extends Auditable implements IAssignableToPart, IID<Long>, IO
         }
     }
 
+    public boolean isHidden() {
+        return hidden;
+    }
 
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
 }

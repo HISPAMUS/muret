@@ -46,7 +46,10 @@ import {
   DocumentLinkImagesToPartSuccess,
   DocumentLinkImagesToNewPart,
   DocumentLinkImagesToNewPartSuccess,
-  DocumentUnlinkImagesFromPart, DocumentUnlinkImagesFromPartSuccess,
+  DocumentUnlinkImagesFromPart,
+  DocumentUnlinkImagesFromPartSuccess,
+  DocumentChangeImagesVisibility,
+  DocumentChangeImagesVisibilitySuccess,
 } from '../actions/document.actions';
 import {Document} from '../../../../core/model/entities/document';
 import {Image} from '../../../../core/model/entities/image';
@@ -170,6 +173,14 @@ export class DocumentEffects {
     ofType<DocumentUnlinkImagesFromPart>(DocumentActionTypes.DocumentUnlinkImagesFromPart),
     switchMap((action: DocumentUnlinkImagesFromPart) => this.documentService.unlinkImagesFromPart$(action.imageIDs).pipe(
       switchMap((partsInImages) => of(new DocumentUnlinkImagesFromPartSuccess(partsInImages))),
+      catchError(err => of(new DocumentServerError(err)))
+    )));
+
+  @Effect()
+  changeImageVisibility$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentChangeImagesVisibility>(DocumentActionTypes.DocumentChangeImagesVisibility),
+    switchMap((action: DocumentChangeImagesVisibility) => this.documentService.changeImagesVisibility$(action.imageIDs, action.hidden).pipe(
+      switchMap((imageVisibility) => of(new DocumentChangeImagesVisibilitySuccess(imageVisibility))),
       catchError(err => of(new DocumentServerError(err)))
     )));
 

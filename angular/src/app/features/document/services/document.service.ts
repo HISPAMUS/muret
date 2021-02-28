@@ -12,6 +12,7 @@ import {SectionImages} from "../../../core/model/restapi/section-images";
 import {PartsInImage} from "../../../core/model/restapi/parts-in-image";
 import {NumberArray} from "../../../core/model/restapi/number-array";
 import {ImagesInNewPart} from "../../../core/model/restapi/images-in-new-part";
+import {ImagesVisibility} from "../../../core/model/restapi/images-visibility";
 
 @Injectable() // non-singleton
 export class DocumentService {
@@ -87,6 +88,16 @@ export class DocumentService {
   unlinkImagesFromPart$(imageIDs: NumberArray): Observable<PartsInImage[]> {
     const url = `document/unlinkImagesFromPart`;
     return this.apiRestClientService.put$<PartsInImage[]>(url, imageIDs);
+  }
+
+
+  changeImagesVisibility$(imageIDs: NumberArray, hidden: boolean): Observable<ImagesVisibility> {
+    const url = `document/changeImagesVisibility`;
+    const iv: ImagesVisibility = {
+      imageIDS: imageIDs,
+      hidden: hidden
+    };
+    return this.apiRestClientService.put$<ImagesVisibility>(url, iv);
   }
 
   /*public getParts$(documentID: number): Observable<Section[]> {

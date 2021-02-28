@@ -18,6 +18,7 @@ public interface IImageProjection {
     State getState();
     String getFilename();
     Integer getOrdering();
+    boolean isHidden();
 
     //TODO Ver si esto lo usamos
     /*Part getPart();

@@ -24,3 +24,8 @@
 p {
   margin-bottom: 0;
 }
+
+.hidden {
+  opacity: 0.3;
+}
+

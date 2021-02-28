@@ -1,8 +1,10 @@
 package es.ua.dlsi.grfia.im3ws.muret.controller.payload;
 
+import es.ua.dlsi.grfia.im3ws.muret.entity.ImageRecognitionProgressStatus;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Part;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -15,6 +17,8 @@ public class ImageOverview {
     String comments;
     List<Part> documentParts; // ordered
     Part imagePart;
+    boolean hidden;
+    Set<ImageRecognitionProgressStatus> imageRecognitionProgressStatusSet;
 
     public ImageOverview() {
     }
@@ -65,5 +69,21 @@ public class ImageOverview {
 
     public void setImagePart(Part imagePart) {
         this.imagePart = imagePart;
+    }
+
+    public Set<ImageRecognitionProgressStatus> getImageRecognitionProgressStatusSet() {
+        return imageRecognitionProgressStatusSet;
+    }
+
+    public void setImageRecognitionProgressStatusSet(Set<ImageRecognitionProgressStatus> imageRecognitionProgressStatusSet) {
+        this.imageRecognitionProgressStatusSet = imageRecognitionProgressStatusSet;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 }

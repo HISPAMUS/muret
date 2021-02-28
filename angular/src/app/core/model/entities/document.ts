@@ -9,7 +9,7 @@ export interface Document extends Entity {
   name: string;
   path: string;
   thumbnailBase64Encoding: string;
-  images: Image[];
+  images: Image[]; // images associated to the image
   comments: string;
   notationType: string;
   manuscriptType: string;
@@ -17,5 +17,5 @@ export interface Document extends Entity {
   composer: string;
   collection: Collection;
   parts: Part[];
-  sections: Section[];
+  sections: Section[]; // they contain images[] inside
 }

@@ -431,6 +431,26 @@ public class DocumentController {
         return image.get();
     }
 
+
+    @PutMapping(path = {"/changeImagesVisibility"})
+    @javax.transaction.Transactional
+    public ImagesVisibility changeImagesVisibility(@RequestBody ImagesVisibility imagesVisibility) {
+        try {
+            ArrayList<Image> changedImages = new ArrayList<>();
+
+            for (Long imageID: imagesVisibility.getImageIDS().getValues()) {
+                Image image = findImage(imageID);
+
+                image.setHidden(imagesVisibility.isHidden());
+                changedImages.add(image);
+            }
+            imageRepository.saveAll(changedImages);
+            return imagesVisibility;
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot linl images to part", e);
+        }
+    }
+
     // revisado hasta aquí
 
     @PostMapping(path = {"/new"})

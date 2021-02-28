@@ -6,6 +6,8 @@ import {APIRestServerError} from "../../../../core/model/restapi/apirest-server-
 import {Image} from "../../../../core/model/entities/image";
 import {Document} from "../../../../core/model/entities/document";
 import { klona } from 'klona/lite';
+import {PartsInImage} from "../../../../core/model/restapi/parts-in-image";
+import {imageRecognitionReducers} from "../../../image-recognition/store/reducers/image-recognition.reducers";
 
 
 export function documentReducers(state = initialDocumentState, action: DocumentActions): DocumentState {
@@ -197,7 +199,31 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
       result.partsInImages = action.partsInImages;
       return result;
     }
-
+    case DocumentActionTypes.DocumentChangeImagesVisibilitySuccess: {
+      const result: DocumentState = {
+        documentOverview: klona(state.documentOverview),
+        section: state.section,
+        partsInImages: state.partsInImages,
+        apiRestServerError: null
+      };
+      const changedImageIDS: Set<number> = new Set<number>();
+      action.imagesVisibility.imageIDS.values.forEach(id => {
+        changedImageIDS.add(id);
+      });
+      result.documentOverview.images.forEach(image => {
+        if (changedImageIDS.has(image.id)) {
+          image.hidden = action.imagesVisibility.hidden
+        }
+      });
+      result.documentOverview.sections.forEach(section => {
+        section.images.forEach(image => {
+          if (changedImageIDS.has(image.id)) {
+            image.hidden = action.imagesVisibility.hidden
+          }
+        });
+      });
+      return result;
+    }
     // revisado hasta aquí
     case DocumentActionTypes.ResetDocumentServerError: {
       return {

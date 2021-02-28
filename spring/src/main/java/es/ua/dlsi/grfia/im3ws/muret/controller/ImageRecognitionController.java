@@ -90,6 +90,7 @@ public class ImageRecognitionController {
             Collections.sort(sortedParts);
             result.setDocumentParts(sortedParts);
             result.setImagePart(image.get().getPart());
+            result.setHidden(image.get().isHidden());
             return result;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot create statistics", e);

@@ -11,6 +11,7 @@ import {Section} from "../../../../core/model/entities/section";
 import {Store} from "@ngrx/store";
 import {DocumentState} from "../../store/state/document.state";
 import {
+  DocumentChangeImagesVisibility,
   DocumentLinkImagesToNewPart,
   DocumentLinkImagesToPart,
   DocumentMoveImagesToSection, DocumentUnlinkImagesFromPart
@@ -29,6 +30,7 @@ export class DocumentThumbnailComponent implements OnInit {
   @Input() section: Section;
   @Input() sections: Section[];
   @Input() imageID: number;
+  @Input() hidden: boolean;
   @Input() filename: string;
   @Input() documentParts: Part[];
   @Input() selectionManager: SelectionManager;
@@ -139,5 +141,13 @@ export class DocumentThumbnailComponent implements OnInit {
 
   unlinkFromPart() {
     this.store.dispatch(new DocumentUnlinkImagesFromPart(this.getSelectedImageIds()));
+  }
+
+  unhide() {
+    this.store.dispatch(new DocumentChangeImagesVisibility(this.getSelectedImageIds(), false));
+  }
+
+  hide() {
+    this.store.dispatch(new DocumentChangeImagesVisibility(this.getSelectedImageIds(), true));
   }
 }

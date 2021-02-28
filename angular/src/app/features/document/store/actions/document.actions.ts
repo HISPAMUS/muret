@@ -10,6 +10,7 @@ import {Section} from "../../../../core/model/entities/section";
 import {PartsInImage} from "../../../../core/model/restapi/parts-in-image";
 import {NumberArray} from "../../../../core/model/restapi/number-array";
 import {ImagesInNewPart} from "../../../../core/model/restapi/images-in-new-part";
+import {ImagesVisibility} from "../../../../core/model/restapi/images-visibility";
 
 export enum DocumentActionTypes {
   DocumentGetOverview = '[Document] Get Overview',
@@ -38,6 +39,9 @@ export enum DocumentActionTypes {
   DocumentLinkImagesToNewPartSuccess = '[Document] Link images to part new success',
   DocumentUnlinkImagesFromPart = '[Document] Unlink images from part',
   DocumentUnlinkImagesFromPartSuccess = '[Document] Unlink images from part success',
+
+  DocumentChangeImagesVisibility = '[Document] Change images visibility',
+  DocumentChangeImagesVisibilitySuccess = '[Document] Change images visibility success',
 
 
   // revisado hasta aquí
@@ -205,6 +209,17 @@ export class DocumentUnlinkImagesFromPartSuccess implements Action {
 }
 
 
+export class DocumentChangeImagesVisibility implements Action {
+  public readonly type = DocumentActionTypes.DocumentChangeImagesVisibility;
+  constructor(public imageIDs: NumberArray, public hidden: boolean) {}
+}
+
+export class DocumentChangeImagesVisibilitySuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentChangeImagesVisibilitySuccess;
+  constructor(public imagesVisibility: ImagesVisibility) {}
+}
+
+
 // revisado hasta aquí
 
 
@@ -336,6 +351,7 @@ export type DocumentActions =
   DocumentLinkImagesToPart | DocumentLinkImagesToPartSuccess |
   DocumentLinkImagesToNewPart | DocumentLinkImagesToNewPartSuccess |
   DocumentUnlinkImagesFromPart |   DocumentUnlinkImagesFromPartSuccess |
+  DocumentChangeImagesVisibility | DocumentChangeImagesVisibilitySuccess |
 
   // revisado hasta aquí
   DocumentResetServerError | DocumentServerError |

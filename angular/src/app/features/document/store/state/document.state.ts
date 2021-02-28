@@ -15,12 +15,12 @@ export interface DocumentState {
 
 
   // revisado hasta aquí
-  document: Document;
-  images: Image[];
-  statistics: DocumentStatistics;
-  alignmentPreview: AlignmentPreview;
-  exportedFile: DocumentExport;
-  mei: string;
+  document?: Document;
+  images?: Image[];
+  statistics?: DocumentStatistics;
+  alignmentPreview?: AlignmentPreview;
+  exportedFile?: DocumentExport;
+  mei?: string;
 
 }
 

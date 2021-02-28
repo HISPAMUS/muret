@@ -2,7 +2,8 @@
   <div class="d-flex flex-nowrap">
     <p class="pl-1">{{filename}}</p>
     <p id="links" class="ml-auto pr-1">
-      <app-document-phases [imageID]="imageID" [size]="'sm'"></app-document-phases>
+      <app-document-phases *ngIf="!hidden" [imageID]="imageID" [size]="'sm'"></app-document-phases>
+      <span *ngIf="hidden">Hidden</span>
     </p>
   </div>
   <!--<img class="mt-0 pt-0" [defaultImage]="loadingImage" [lazyLoad]="loadedImage$ | async">-->
@@ -11,6 +12,7 @@
        [lazyLoad]="loadedImage$ | async"
        [ngClass]="imageClass"
        [contextMenu]="contextualMenu"
+       [class]="hidden?'hidden':''"
   >
   <app-image-parts [documentParts]="documentParts" [imagePartIds]="imagePartIds"></app-image-parts>
 </div>
@@ -19,7 +21,13 @@
   <ng-template contextMenuItem (execute)="preview()">
     Preview...
   </ng-template>
-  <hr>
+  <ng-template contextMenuItem divider="true"></ng-template>
+  <ng-template *ngIf="hidden" contextMenuItem (execute)="unhide()">
+    Unhide
+  </ng-template>
+  <ng-template *ngIf="!hidden" contextMenuItem (execute)="hide()">
+    Hide
+  </ng-template>
   <ng-template contextMenuItem divider="true"></ng-template>
   <ng-template contextMenuItem><strong>Move to section:</strong></ng-template>
   <ng-template contextMenuItem (execute)="moveToSection(section)" *ngFor="let section of sections; trackBy: sectionTracking">
