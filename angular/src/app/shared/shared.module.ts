@@ -20,6 +20,7 @@ import {ImagePhasePartsComponent} from "./components/image-phase/image-phase-par
 import {ImagePhaseTranscriptionComponent} from "./components/image-phase/image-phase-transcription.component";
 import {ImagePhaseDocumentAnalysisComponent} from "./components/image-phase/image-phase-document-analysis.component";
 import {ImagePhaseOverviewComponent} from "./components/image-phase/image-phase-overview.component";
+import { ProgressStatusComponent } from './components/progress-status/progress-status.component';
 
 @NgModule({
   imports: [
@@ -49,7 +50,8 @@ import {ImagePhaseOverviewComponent} from "./components/image-phase/image-phase-
     ImagePhaseOverviewComponent,
     ImagePhaseDocumentAnalysisComponent,
     ImagePhasePartsComponent,
-    ImagePhaseTranscriptionComponent
+    ImagePhaseTranscriptionComponent,
+    ProgressStatusComponent
   ],
     exports: [
         StateComponent,
@@ -63,7 +65,8 @@ import {ImagePhaseOverviewComponent} from "./components/image-phase/image-phase-
         SelectableContainerDirective,
         ImagePhaseDocumentAnalysisComponent,
         ImagePhasePartsComponent,
-        ImagePhaseTranscriptionComponent
+        ImagePhaseTranscriptionComponent,
+        ProgressStatusComponent
     ],
   providers: []
 })

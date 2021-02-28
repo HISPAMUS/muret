@@ -14,7 +14,7 @@ export class ImagePhaseOverviewComponent extends ImagePhaseComponent implements 
 
   public constructor(public router: Router) {
     super(router);
-    this.iconName = 'clipboard-list';
+    this.iconName = 'tasks';
     this.route = '/imageRecognition/overview';
   }
 

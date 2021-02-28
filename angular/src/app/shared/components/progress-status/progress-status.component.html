@@ -1,0 +1,22 @@
+<form>
+  <div class="iconRadioGroup btn-group btn-group-toggle" ngbRadioGroup
+       name="modeRadioButtonGroup" [(ngModel)]="_status">
+
+      <label ngbButtonLabel>
+        <input name="modeRadioButton" ngbButton type="radio" [value]="'hidden'" ngbTooltip="Hidden" placement="bottom">
+        <fa-icon icon="eye-slash" class="icons" size="lg"></fa-icon>
+      </label>
+
+      <label ngbButtonLabel>
+        <input name="modeRadioButton" ngbButton type="radio" [value]="'working'"  ngbTooltip="Working, in progress" placement="bottom">
+        <fa-icon icon="spinner" class="icons" size="lg"></fa-icon>
+      </label>
+      <label ngbButtonLabel>
+        <input name="modeRadioButton" ngbButton type="radio" [value]="'done'"  ngbTooltip="Done" placement="bottom">
+        <fa-icon icon="check" class="icons" size="lg"></fa-icon>
+      </label>
+  </div>
+</form>
+
+
+
