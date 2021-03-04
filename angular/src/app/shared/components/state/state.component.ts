@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {State} from '../../../core/model/entities/state';
 
+/** Deprecated **/
 @Component({
   selector: 'app-state',
   templateUrl: './state.component.html',
@@ -13,6 +14,7 @@ export class StateComponent implements OnInit {
 
   ngOnInit() {
   }
+
   getTooltip() {
     if (this.state) {
       return this.state.comments;

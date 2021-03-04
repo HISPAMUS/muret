@@ -18,7 +18,7 @@ public class ImageOverview {
     List<Part> documentParts; // ordered
     Part imagePart;
     boolean hidden;
-    Set<ImageRecognitionProgressStatus> imageRecognitionProgressStatusSet;
+    Set<ImageRecognitionProgressStatus> imageRecognitionProgressStatuses;
 
     public ImageOverview() {
     }
@@ -71,12 +71,12 @@ public class ImageOverview {
         this.imagePart = imagePart;
     }
 
-    public Set<ImageRecognitionProgressStatus> getImageRecognitionProgressStatusSet() {
-        return imageRecognitionProgressStatusSet;
+    public Set<ImageRecognitionProgressStatus> getImageRecognitionProgressStatuses() {
+        return imageRecognitionProgressStatuses;
     }
 
-    public void setImageRecognitionProgressStatusSet(Set<ImageRecognitionProgressStatus> imageRecognitionProgressStatusSet) {
-        this.imageRecognitionProgressStatusSet = imageRecognitionProgressStatusSet;
+    public void setImageRecognitionProgressStatuses(Set<ImageRecognitionProgressStatus> imageRecognitionProgressStatuses) {
+        this.imageRecognitionProgressStatuses = imageRecognitionProgressStatuses;
     }
 
     public boolean isHidden() {

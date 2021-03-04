@@ -1,22 +1,20 @@
-<form>
-  <div class="iconRadioGroup btn-group btn-group-toggle" ngbRadioGroup
-       name="modeRadioButtonGroup" [(ngModel)]="_status">
+<div id="statusBar" class="d-flex justify-content-center">
+  <div id="progress-status" class="iconRadioGroup btn-group btn-group-toggle"
+       name="modeRadioButtonGroup">
 
-      <label ngbButtonLabel>
-        <input name="modeRadioButton" ngbButton type="radio" [value]="'hidden'" ngbTooltip="Hidden" placement="bottom">
+    <button ngbTooltip="Hidden" [ngClass]="getButtonClass('hidden')" (click)="changeStatus('hidden')">
         <fa-icon icon="eye-slash" class="icons" size="lg"></fa-icon>
-      </label>
+    </button>
 
-      <label ngbButtonLabel>
-        <input name="modeRadioButton" ngbButton type="radio" [value]="'working'"  ngbTooltip="Working, in progress" placement="bottom">
-        <fa-icon icon="spinner" class="icons" size="lg"></fa-icon>
-      </label>
-      <label ngbButtonLabel>
-        <input name="modeRadioButton" ngbButton type="radio" [value]="'done'"  ngbTooltip="Done" placement="bottom">
-        <fa-icon icon="check" class="icons" size="lg"></fa-icon>
-      </label>
+    <button ngbTooltip="Working, in progress" [ngClass]="getButtonClass('working')" (click)="changeStatus('working')">
+      <fa-icon icon="spinner" class="icons" size="lg"></fa-icon>
+    </button>
+
+    <button ngbTooltip="Done" [ngClass]="getButtonClass('done')" (click)="changeStatus('done')">
+      <fa-icon icon="check" class="icons" size="lg"></fa-icon>
+    </button>
   </div>
-</form>
+</div>
 
 
 

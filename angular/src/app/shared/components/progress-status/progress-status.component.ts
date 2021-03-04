@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-progress-status',
@@ -6,25 +7,26 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
   styleUrls: ['./progress-status.component.css']
 })
 export class ProgressStatusComponent implements OnInit {
-  _status: 'hidden' | 'working' | 'done';
-  @Output() statusChange = new EventEmitter<'hidden' | 'working' | 'done'>();
+  @Input() status: string;
+  @Output() statusChange = new EventEmitter<string>();
 
-  constructor() {
-    // ------- menus --------
+  constructor(public config: NgbTooltipConfig) {
+    config.placement = 'top';
+    config.triggers = 'click';
   }
 
   ngOnInit() {
   }
 
-  @Input()
-  get status() {
-    return this._status;
+  getButtonClass(status: string) {
+    if (status === this.status) {
+      return 'selected';
+    } else {
+      return 'unselected';
+    }
   }
 
-  set mode(val) {
-    if (this._status !== val) {
-      this._status = val;
-      this.statusChange.emit(this._status);
-    }
+  changeStatus(status: string) {
+    this.statusChange.emit(status);
   }
 }

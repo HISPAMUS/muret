@@ -2,7 +2,7 @@
   <div class="d-flex flex-nowrap">
     <p class="pl-1">{{filename}}</p>
     <p id="links" class="ml-auto pr-1">
-      <app-document-phases *ngIf="!hidden" [imageID]="imageID" [size]="'sm'"></app-document-phases>
+      <app-document-phases *ngIf="!hidden" [imageID]="imageID" [size]="'sm'" [imageRecognitionProgressStatuses]="imageRecognitionProgressStatuses"></app-document-phases>
       <span *ngIf="hidden">Hidden</span>
     </p>
   </div>

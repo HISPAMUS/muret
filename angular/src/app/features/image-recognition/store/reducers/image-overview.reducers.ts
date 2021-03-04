@@ -2,6 +2,7 @@
 import {ImageOverviewActions, ImageOverviewActionTypes} from "../actions/image-overview.actions";
 import {ImageOverviewState, initialImageOverviewState} from "../state/image-overview.state";
 import {klona} from "klona";
+import {ImageRecognitionProgressStatusChange} from "../../../../core/model/restapi/image-recognition-progress-status-change";
 
 /**
  * We use the same effects, actions and reducers for overview and parts because they share the state
@@ -37,6 +38,17 @@ export function imageOverviewReducers(state = initialImageOverviewState, action:
       newState.imageOverview.comments = action.comments;
       return newState;
     }
+
+    case ImageOverviewActionTypes.ImageRecognitionChangeStatusSuccess: {
+      const newState: ImageOverviewState = {
+        pagesRegionsSymbols: state.pagesRegionsSymbols,
+        imageOverview: klona(state.imageOverview),
+        apiRestServerError: null
+      };
+      newState.imageOverview.imageRecognitionProgressStatuses = action.statuses;
+      return newState;
+    }
+
 
     /// ----- Parts ----
     case ImageOverviewActionTypes.ImageRecognitionLinkPartSuccess:

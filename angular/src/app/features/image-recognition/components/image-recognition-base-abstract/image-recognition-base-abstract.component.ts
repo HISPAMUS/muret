@@ -4,6 +4,7 @@ import {ImageOverview} from "../../../../core/model/restapi/image-overview";
 import {ActivatedRoute, ParamMap} from "@angular/router";
 import {Store} from "@ngrx/store";
 import {
+  ImageRecognitionChangeStatus,
   ImageRecognitionGetImageOverview,
   ImageRecognitionGetPagesRegionsSymbols
 } from "../../store/actions/image-overview.actions";
@@ -27,6 +28,7 @@ import {Rectangle} from "../../../../svg/model/rectangle";
 import {Shape} from "../../../../svg/model/shape";
 import {DialogsService} from "../../../../shared/services/dialogs.service";
 import {ZoomManager} from "../../../../shared/model/zoom-manager";
+import {ImageRecognitionProgressStatusChange} from "../../../../core/model/restapi/image-recognition-progress-status-change";
 
 @Component({
   selector: 'app-image-recognition-base-abstract-component',
@@ -41,6 +43,8 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
   regionTypes$: Observable<RegionType[]>;
   private _documentAnalysisShapes: Shape[];
   zoomManager: ZoomManager = new ZoomManager();
+  protected phase: string;
+  private _status: string;
 
   constructor(protected route: ActivatedRoute, protected store: Store<ImageRecognitionState>, protected dialogsService: DialogsService) {
     this.store.dispatch(new DocumentAnalysisGetRegionTypes());
@@ -59,6 +63,7 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
     this.imageOverviewSubscription = this.store.select(selectImageRecognitionImageOverview).subscribe(next => {
       if (next) {
         this._imageOverview = next;
+        this._status = this.getProgressStatus();
         this.onImageOverviewChanged();
       }
     });
@@ -130,4 +135,32 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
   protected onImageOverviewChanged() {
     // just to notify children about the change
   }
+
+
+  get status(): string {
+    return this._status;
+  }
+
+  set status(value: string) {
+    this._status = value;
+  }
+
+  onStatusChange(status: string) {
+    const imageRecognitionProgressStatusChange: ImageRecognitionProgressStatusChange = {
+      imageID: this.imageID,
+      phase: this.phase,
+      status: status
+    };
+    this.store.dispatch(new ImageRecognitionChangeStatus(imageRecognitionProgressStatusChange));
+  }
+
+  private getProgressStatus(): string {
+    if (this.phase && this._imageOverview && this._imageOverview.imageRecognitionProgressStatuses) {
+      const result = this._imageOverview.imageRecognitionProgressStatuses.find(s => s.phase === this.phase);
+      if (result) {
+        return result.status;
+      }
+    }
+  }
+
 }

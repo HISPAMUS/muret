@@ -4,7 +4,7 @@ import { of } from 'rxjs';
 import {catchError, switchMap} from 'rxjs/operators';
 import {ImageOverviewService} from "../../services/image-overview.service";
 import {
-  ImageOverviewActionTypes,
+  ImageOverviewActionTypes, ImageRecognitionChangeStatus, ImageRecognitionChangeStatusSuccess,
   ImageRecognitionGetImageOverview,
   ImageRecognitionGetImageOverviewSuccess,
   ImageRecognitionGetPagesRegionsSymbols,
@@ -68,6 +68,13 @@ export class ImageOverviewEffects {
       catchError(err => of(new DocumentAnalysisServerError(err)))
     )));
 
+  @Effect()
+  changeStatus$ = this.actions$.pipe(
+    ofType<ImageRecognitionChangeStatus>(ImageOverviewActionTypes.ImageRecognitionChangeStatus),
+    switchMap((action: ImageRecognitionChangeStatus) => this.imageOverviewService.changeProgressStatus$(action.imageRecognitionProgressStatusChange).pipe(
+      switchMap((statuses) => of(new ImageRecognitionChangeStatusSuccess(statuses))),
+      catchError(err => of(new DocumentAnalysisServerError(err)))
+    )));
   // --------- Parts -------
 
   @Effect()

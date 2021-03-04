@@ -45,6 +45,7 @@ public class Image extends Auditable implements IAssignableToPart, IID<Long>, IO
     //@JoinColumn(name="image_id", referencedColumnName="id") // don't use this construct to let orphanRemoval to work right
     private Set<Page> pages;
 
+    //@deprecated Use imageRecognitionProgressStatuses
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="state_id")
     State state;
@@ -251,4 +252,5 @@ public class Image extends Auditable implements IAssignableToPart, IID<Long>, IO
     public void setHidden(boolean hidden) {
         this.hidden = hidden;
     }
+
 }

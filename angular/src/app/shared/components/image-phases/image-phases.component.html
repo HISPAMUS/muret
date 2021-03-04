@@ -1,4 +1,4 @@
 <app-image-phase-overview [imageID]="imageID" [size]="size"></app-image-phase-overview>&nbsp;
-<app-image-phase-document-analysis [imageID]="imageID" [size]="size"></app-image-phase-document-analysis>
-<app-image-phase-parts [imageID]="imageID" [size]="size"></app-image-phase-parts>
-<app-image-phase-transcription [imageID]="imageID" [size]="size"></app-image-phase-transcription>
+<app-image-phase-document-analysis [imageID]="imageID" [size]="size" [status]="getPhaseStatus('documentAnalysis')"></app-image-phase-document-analysis>
+<app-image-phase-parts [imageID]="imageID" [size]="size" [status]="getPhaseStatus('parts')"></app-image-phase-parts>
+<app-image-phase-transcription [imageID]="imageID" [size]="size" [status]="getPhaseStatus('transcription')"></app-image-phase-transcription>

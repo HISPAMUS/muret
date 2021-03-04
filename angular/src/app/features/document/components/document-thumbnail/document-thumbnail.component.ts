@@ -19,6 +19,7 @@ import {
 import {SectionImages} from "../../../../core/model/restapi/section-images";
 import {NumberArray} from "../../../../core/model/restapi/number-array";
 import {DialogsService} from "../../../../shared/services/dialogs.service";
+import {ImageRecognitionProgressStatus} from "../../../../core/model/entities/image-recognition-progress-status";
 
 @Component({
   selector: 'app-document-thumbnail',
@@ -35,6 +36,7 @@ export class DocumentThumbnailComponent implements OnInit {
   @Input() documentParts: Part[];
   @Input() selectionManager: SelectionManager;
   @Input() imagePartIds: number[];
+  @Input() imageRecognitionProgressStatuses: ImageRecognitionProgressStatus[];
 
   loadedImage$: Observable<SafeResourceUrl>;
   loadingImage = "assets/images/loading.svg";
@@ -47,8 +49,6 @@ export class DocumentThumbnailComponent implements OnInit {
   ) {
     lighboxConfig.fitImageInViewPort = true;
     this.imageClass = '';
-    //TODO Quitar
-    this.imagePartIds = [13];
   }
 
   ngOnInit(): void {

@@ -5,6 +5,8 @@ import {Page} from "../../../../core/model/entities/page";
 import {PartLinking} from "../../../../core/model/restapi/part-linking";
 import {PagesRegionsSymbolsAndNewPart} from "../../../../core/model/restapi/pages-regions-symbols-and-new-part";
 import {Part} from "../../../../core/model/entities/part";
+import {ImageRecognitionProgressStatusChange} from "../../../../core/model/restapi/image-recognition-progress-status-change";
+import {ImageRecognitionProgressStatus} from "../../../../core/model/entities/image-recognition-progress-status";
 
 /**
  * We use the same actions for overview and parts because they share the state
@@ -18,6 +20,8 @@ export enum ImageOverviewActionTypes {
   ImageRecognitionGetPagesRegionsSymbolsSuccess = '[ImageRecognition] Get pages, regions, symbols success',
   ImageRecognitionPutComments = '[ImageRecognition] Put comments',
   ImageRecognitionPutCommentsSuccess = '[ImageRecognition] Put comments success',
+  ImageRecognitionChangeStatus = '[ImageRecognition] Change status',
+  ImageRecognitionChangeStatusSuccess = '[ImageRecognition] Change status success',
 
   ImageRecognitionLinkPart = '[ImageRecognition - Parts] Link part',
   ImageRecognitionLinkPartSuccess = '[ImageRecognition - Parts] Link part success',
@@ -32,6 +36,7 @@ export enum ImageOverviewActionTypes {
   ImageRecognitionLinkImageToNewPartSuccess = '[ImageRecognition - Parts] Link new part to image success',
   ImageRecognitionUnlinkImageFromPart = '[ImageRecognition - Parts] Unlink part from image',
   ImageRecognitionUnlinkImageFromPartSuccess = '[ImageRecognition - Parts] Unlink part from image success',
+
 
 }
 
@@ -70,6 +75,18 @@ export class ImageRecognitionPutCommentsSuccess implements Action {
   public readonly type = ImageOverviewActionTypes.ImageRecognitionPutCommentsSuccess;
   constructor(public comments: string) {}
 }
+
+
+export class ImageRecognitionChangeStatus implements Action {
+  public readonly type = ImageOverviewActionTypes.ImageRecognitionChangeStatus;
+  constructor(public imageRecognitionProgressStatusChange: ImageRecognitionProgressStatusChange) {}
+}
+
+export class ImageRecognitionChangeStatusSuccess implements Action {
+  public readonly type = ImageOverviewActionTypes.ImageRecognitionChangeStatusSuccess;
+  constructor(public statuses: ImageRecognitionProgressStatus[]) {}
+}
+
 
 // ------ Parts ----
 
@@ -141,6 +158,7 @@ export type ImageOverviewActions =
   ImageRecognitionGetImageOverview | ImageRecognitionGetImageOverviewSuccess |
   ImageRecognitionGetPagesRegionsSymbols | ImageRecognitionGetPagesRegionsSymbolsSuccess |
   ImageRecognitionPutComments | ImageRecognitionPutCommentsSuccess |
+  ImageRecognitionChangeStatus | ImageRecognitionChangeStatusSuccess |
 
   // parts
   ImageRecognitionLinkPart | ImageRecognitionLinkPartSuccess |

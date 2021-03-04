@@ -1,9 +1,7 @@
-.state {
-  position: absolute;
-  right: 1em;
-  top: 1em;
-}
-
-.state {
-  color: green;
+#state {
+  position: fixed;
+  margin-left: auto;
+  margin-right: auto;
+  bottom: 0;
+  left: 0;
 }

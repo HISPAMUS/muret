@@ -11,6 +11,7 @@ import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 export class ImagePhasePartsComponent extends ImagePhaseComponent implements OnChanges {
   @Input() imageID: number;
   @Input() size: string;
+  @Input() status: string;
 
   public constructor(public router: Router, public config: NgbTooltipConfig) {
     super(router, config);

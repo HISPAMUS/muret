@@ -20,10 +20,9 @@ public class ImageRecognitionProgressStatus extends Auditable implements IID<Lon
     @JoinColumn(name="image_id", nullable = false) // use this construct to let orphanRemoval to work well
     Image image;
 
-    @JsonBackReference(value="imageRecognitionPhase")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="image_recognition_phase_id", nullable = false) // use this construct to let orphanRemoval to work well
-    ImageRecognitionPhase imageRecognitionPhase;
+    @Column(name="phase")
+    @Enumerated(EnumType.STRING)
+    ImageRecognitionPhase phase;
 
     @Column(name="status")
     @Enumerated(EnumType.STRING)
@@ -63,11 +62,11 @@ public class ImageRecognitionProgressStatus extends Auditable implements IID<Lon
         this.status = state;
     }
 
-    public ImageRecognitionPhase getImageRecognitionPhase() {
-        return imageRecognitionPhase;
+    public ImageRecognitionPhase getPhase() {
+        return phase;
     }
 
-    public void setImageRecognitionPhase(ImageRecognitionPhase imageRecognitionPhase) {
-        this.imageRecognitionPhase = imageRecognitionPhase;
+    public void setPhase(ImageRecognitionPhase imageRecognitionPhase) {
+        this.phase = imageRecognitionPhase;
     }
 }

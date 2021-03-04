@@ -1,0 +1,15 @@
+#statusBar {
+  width: 100vw;
+  position: fixed;
+  bottom: 0;
+}
+
+.selected {
+  background-color: #D91E63;
+  color: white;
+}
+
+.unselected {
+  color: #D91E63;
+  background-color: transparent;
+}

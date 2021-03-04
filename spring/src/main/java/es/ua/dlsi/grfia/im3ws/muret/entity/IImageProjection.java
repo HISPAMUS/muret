@@ -20,6 +20,8 @@ public interface IImageProjection {
     Integer getOrdering();
     boolean isHidden();
 
+    Set<ImageRecognitionProgressStatus> getImageRecognitionProgressStatuses();
+
     //TODO Ver si esto lo usamos
     /*Part getPart();
 
