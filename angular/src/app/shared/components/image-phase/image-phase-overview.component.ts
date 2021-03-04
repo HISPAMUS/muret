@@ -1,6 +1,7 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {ImagePhaseComponent} from "./image-phase.component";
 import {Router} from "@angular/router";
+import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-image-phase-overview',
@@ -12,10 +13,11 @@ export class ImagePhaseOverviewComponent extends ImagePhaseComponent implements 
   @Input() size: string;
 
 
-  public constructor(public router: Router) {
-    super(router);
+  public constructor(public router: Router, public config: NgbTooltipConfig) {
+    super(router, config);
     this.iconName = 'tasks';
     this.route = '/imageRecognition/overview';
+    this.tooltip = 'Overview';
   }
 
   ngOnChanges(changes: SimpleChanges): void {

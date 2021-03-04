@@ -26,6 +26,7 @@ import {Region} from "../../../../core/model/entities/region";
 import {Rectangle} from "../../../../svg/model/rectangle";
 import {Shape} from "../../../../svg/model/shape";
 import {DialogsService} from "../../../../shared/services/dialogs.service";
+import {ZoomManager} from "../../../../shared/model/zoom-manager";
 
 @Component({
   selector: 'app-image-recognition-base-abstract-component',
@@ -39,6 +40,7 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
   private pagesSubscription: Subscription;
   regionTypes$: Observable<RegionType[]>;
   private _documentAnalysisShapes: Shape[];
+  zoomManager: ZoomManager = new ZoomManager();
 
   constructor(protected route: ActivatedRoute, protected store: Store<ImageRecognitionState>, protected dialogsService: DialogsService) {
     this.store.dispatch(new DocumentAnalysisGetRegionTypes());

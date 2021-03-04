@@ -1,6 +1,7 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {ImagePhaseComponent} from "./image-phase.component";
 import {Router} from "@angular/router";
+import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-image-phase-parts',
@@ -11,10 +12,11 @@ export class ImagePhasePartsComponent extends ImagePhaseComponent implements OnC
   @Input() imageID: number;
   @Input() size: string;
 
-  public constructor(public router: Router) {
-    super(router);
+  public constructor(public router: Router, public config: NgbTooltipConfig) {
+    super(router, config);
     this.iconName = 'guitar';
     this.route = '/imageRecognition/parts';
+    this.tooltip = 'Parts / instruments';
   }
 
   ngOnChanges(changes: SimpleChanges): void {

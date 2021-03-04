@@ -1,6 +1,7 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {ImagePhaseComponent} from "./image-phase.component";
 import {Router} from "@angular/router";
+import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-image-phase-document-analysis',
@@ -11,10 +12,11 @@ export class ImagePhaseDocumentAnalysisComponent extends ImagePhaseComponent imp
   @Input() imageID: number;
   @Input() size: string;
 
-  public constructor(public router: Router) {
-    super(router);
+  public constructor(public router: Router, public config: NgbTooltipConfig) {
+    super(router, config);
     this.iconName = 'object-group';
     this.route = '/imageRecognition/documentAnalysis';
+    this.tooltip = 'Document analysis';
   }
 
   ngOnChanges(changes: SimpleChanges): void {

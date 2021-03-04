@@ -6,7 +6,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
   styleUrls: ['./progress-status.component.css']
 })
 export class ProgressStatusComponent implements OnInit {
-  private _status: 'hidden' | 'working' | 'done';
+  _status: 'hidden' | 'working' | 'done';
   @Output() statusChange = new EventEmitter<'hidden' | 'working' | 'done'>();
 
   constructor() {
