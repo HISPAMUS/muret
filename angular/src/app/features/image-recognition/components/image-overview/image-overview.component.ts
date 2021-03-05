@@ -28,4 +28,9 @@ export class ImageOverviewComponent extends ImageRecognitionBaseAbstractComponen
   saveComments() {
     this.store.dispatch(new ImageRecognitionPutComments(this.imageID, this.comments));
   }
+
+  protected isPageSelectable(): boolean {
+    return true;
+  }
+
 }

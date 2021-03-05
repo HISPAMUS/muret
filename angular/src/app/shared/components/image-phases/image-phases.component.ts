@@ -10,6 +10,7 @@ export class ImagePhasesComponent implements OnInit, OnChanges {
   @Input() imageID: number;
   @Input() size: string;
   @Input() imageRecognitionProgressStatuses: ImageRecognitionProgressStatus[];
+  @Input() selectedPhase: string;
 
   phaseStatus: Map<string, string>;
 

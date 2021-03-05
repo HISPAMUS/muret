@@ -125,8 +125,10 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
     return rect;
   }
   protected drawPage(page: Page) {
-    this.drawBox('page', page.id, page.boundingBox, 'red', page); // TODO color
+    this.drawBox('page', page.id, page.boundingBox, 'red', page).selectable = this.isPageSelectable();
   }
+
+  protected abstract isPageSelectable(): boolean;
 
   protected drawRegion(region: Region) {
     this.drawBox(region.regionType.name, region.id, region.boundingBox, '#' + region.regionType.hexargb, region);

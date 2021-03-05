@@ -12,6 +12,7 @@ export class ImagePhasePartsComponent extends ImagePhaseComponent implements OnC
   @Input() imageID: number;
   @Input() size: string;
   @Input() status: string;
+  @Input() selected: boolean;
 
   public constructor(public router: Router, public config: NgbTooltipConfig) {
     super(router, config);
