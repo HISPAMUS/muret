@@ -16,27 +16,30 @@ import { DocumentAnalysisComponent } from './components/document-analysis/docume
 import { TranscriptionComponentComponent } from './components/transcription/transcription-component.component';
 import {SharedModule} from "../../shared/shared.module";
 import { DocumentAnalysisFiltersComponent } from './components/document-analysis-filters/document-analysis-filters.component';
-import {NgbCollapseModule} from "@ng-bootstrap/ng-bootstrap";
+import {NgbButtonsModule, NgbCollapseModule, NgbTooltipModule} from "@ng-bootstrap/ng-bootstrap";
 import {SvgModule} from "../../svg/svg.module";
 import {FormsModule} from "@angular/forms";
 import {ContextMenuModule} from "ngx-contextmenu";
 import {ImagePartsService} from "./services/image-parts.service";
+import { DocumentAnalysisToolbarComponent } from './components/document-analysis-toolbar/document-analysis-toolbar.component';
 
 
 @NgModule({
-  declarations: [ImageOverviewComponent, ImageDocumentAnalysisNavigatorComponent, PartsInImageComponentComponent, DocumentAnalysisComponent, TranscriptionComponentComponent, DocumentAnalysisFiltersComponent],
-  imports: [
-    CommonModule,
-    StoreModule.forFeature('imageRecognition', imageRecognitionReducers),
-    EffectsModule.forFeature([ImageOverviewEffects, DocumentAnalysisEffects]),
-    ImageRecognitionRoutingModule,
-    FontAwesomeModule,
-    SharedModule,
-    NgbCollapseModule,
-    SvgModule,
-    FormsModule,
-    ContextMenuModule
-  ],providers: [
+  declarations: [ImageOverviewComponent, ImageDocumentAnalysisNavigatorComponent, PartsInImageComponentComponent, DocumentAnalysisComponent, TranscriptionComponentComponent, DocumentAnalysisFiltersComponent, DocumentAnalysisToolbarComponent],
+    imports: [
+        CommonModule,
+        StoreModule.forFeature('imageRecognition', imageRecognitionReducers),
+        EffectsModule.forFeature([ImageOverviewEffects, DocumentAnalysisEffects]),
+        ImageRecognitionRoutingModule,
+        FontAwesomeModule,
+        SharedModule,
+        NgbCollapseModule,
+        SvgModule,
+        FormsModule,
+        ContextMenuModule,
+        NgbTooltipModule,
+        NgbButtonsModule
+    ],providers: [
     ImageOverviewService, DocumentAnalysisService, ImagePartsService
   ]
 })

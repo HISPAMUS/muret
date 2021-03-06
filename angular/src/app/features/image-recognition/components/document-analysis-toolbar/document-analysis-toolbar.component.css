@@ -1,0 +1,24 @@
+#docAnalysisToolBar * {
+  color: white;
+  font-weight: lighter;
+}
+
+#docAnalysisToolBar .active {
+  color: #D91E63;
+  font-weight: bold;
+  background-color: #7DE2DB;
+}
+
+label {
+  padding-right: 0;
+  text-align: right;
+}
+label:hover  {
+  background-color: #7DE2DB;
+  cursor: pointer;
+}
+
+#severalSelected {
+  color: #D91E63;
+  text-align: right;
+}
