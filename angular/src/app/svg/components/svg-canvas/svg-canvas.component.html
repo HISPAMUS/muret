@@ -6,6 +6,7 @@
        [attr.width]="scaledImageWidth" [attr.height]="scaledImageHeight"
        [attr.viewBox]="viewBox"
        (mousedown)="onMouseDown($event)" (touchstart)="onTouchStart($event)"
+       (dblclick)="onDblClick($event)"
        (mouseup)="onMouseUp($event)" (touchend)="onTouchEnd($event)"
        (mousemove)="onMouseMove($event)" (touchmove)="onTouchMove($event)"
        (contextmenu)="onContextMenuEvent($event)"
@@ -28,7 +29,7 @@
 
     <!--<g *ngFor="let shape of shapes; trackBy: trackByShapeFn">-->
     <!-- Don't add shapeFn, Force repainting DOM because otherwise it does not create the shape again and it causes problems -->
-    <g *ngFor="let shape of shapes" (dblclick)="onDblClickOnShape(shape)">
+    <g *ngFor="let shape of shapes">
       <ng-container [ngSwitch]="shape.type">
         <ng-container *ngSwitchCase="'Rectangle'">
           <g appRectangle [appRectangle]="shape" [shape]="shape" [editing]="isEditing()" [selected]="isSelected(shape)"></g>

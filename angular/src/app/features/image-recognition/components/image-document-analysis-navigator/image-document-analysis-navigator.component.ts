@@ -18,10 +18,14 @@ export class ImageDocumentAnalysisNavigatorComponent implements OnChanges {
   @Input() imageOverview: ImageOverview;
   @Input() regionTypes: RegionType[];
   @Input() shapes: Shape[];
+  @Input() nextShapeToAdd: 'Rectangle' | 'Line' | 'Text' | 'Polylines';
+  @Input() zoomManager: ZoomManager;
+
   @Output() onNavigatorContextMenu = new EventEmitter<ContextMenuSVGSelectionEvent>();
   @Output() onShapesSelected = new EventEmitter<Shape[]>();
-  @Input() zoomManager: ZoomManager;
-  @Input() mode: 'eSelecting' | 'eEditing' | 'eAdding';
+  @Output() modeChange = new EventEmitter(); // must have this name in order to be input / output
+
+  modeValue: 'eSelecting' | 'eEditing' | 'eAdding';
 
   filteredOutRegionNames: Set<string> = new Set<string>();
 
@@ -30,6 +34,18 @@ export class ImageDocumentAnalysisNavigatorComponent implements OnChanges {
 
   constructor(private imageFilesService: ImageFilesService, private sanitizer: DomSanitizer,
               ) {
+  }
+
+  @Input()
+  get mode() {
+    return this.modeValue;
+  }
+
+  set mode(val) {
+    if (this.modeValue !== val) {
+      this.modeValue = val;
+      this.modeChange.emit(this.modeValue);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {

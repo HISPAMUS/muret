@@ -11,7 +11,7 @@ export class ImageRecognitionToolbarComponent implements OnInit {
   @Output() onDelete = new EventEmitter();
   @Output() onClear = new EventEmitter();
   private modeValue: 'eEditing' | 'eAdding' | 'eSelecting';
-  @Output() modeChange = new EventEmitter();
+  @Output() modeChange = new EventEmitter(); // must have this name in order to be input / output
 
   @Output() onAddComment = new EventEmitter();
   @Output() onDeleteAll = new EventEmitter();
@@ -33,12 +33,11 @@ export class ImageRecognitionToolbarComponent implements OnInit {
   }
 
   set mode(val) {
-    if (this.modeValue !== val) {
+    if (this.modeValue != val) {
       this.modeValue = val;
       this.modeChange.emit(this.modeValue);
     }
   }
-
   deleteSelected() {
     this.onDelete.emit();
   }

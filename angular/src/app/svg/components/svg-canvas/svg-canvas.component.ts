@@ -21,6 +21,7 @@ import {BoundingBox} from '../../../core/model/entities/bounding-box';
 import {Polylines} from '../../model/polylines';
 import {SVGSelectionManager} from "../../model/svgselection-manager";
 import {ContextMenuSVGSelectionEvent} from "../../model/context-menu-s-v-g-selection-event";
+import {ShapeComponent} from "../shape/shape.component";
 
 
 @Component({
@@ -62,7 +63,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   @Output() svgShapeCreated = new EventEmitter<Shape>();
   @Output() svgShapeChanged = new EventEmitter<Shape>();
   @Output() selectedShapesIDChange = new EventEmitter<string[]>(); // TODO @deprecated
-  @Output() modeChange = new EventEmitter();
+  @Output() modeChange = new EventEmitter(); // must have this name in order to be input / output
   @Output() onContextMenu = new EventEmitter<ContextMenuSVGSelectionEvent>();
   @Output() onShapesSelected = new EventEmitter<Shape[]>();
 
@@ -84,6 +85,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   // heightPercentString: string;
   // widthPercentString: string;
   //private selectedComponents: ShapeComponent[];
+  private selectedComponent: ShapeComponent;
   private unsafeBackgroundImage: SafeResourceUrl;
   private shapeWithoutComponent: Rectangle | Line | Text | Polylines;
   private polylinesCreationTimeout: any;
@@ -135,11 +137,21 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   }
 
   set mode(val) {
-    this.modeValue = val;
-    this.modeChange.emit(this.modeValue);
-    this.updateCursor();
+    if (this.modeValue != val) {
+      this.modeValue = val;
+      this.modeChange.emit(this.modeValue);
+      this.updateCursor();
+    }
+
+    if (this.modeValue == 'eSelecting') {
+      if (this.selectionManager && this.selectionManager.hasJustOneSelectedShape()) {
+        this.selectedComponent = this.selectionManager.getSelected()[0].shapeComponent;
+      }
+    } else {
+      this.selectedComponent = null;
+    }
     //TODO this.selectedShapeIDs = null;
-    //this.selectedComponents = null;
+    //
   }
 
   /*febrero2021 @Input()
@@ -282,8 +294,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
     };
   }
 
-  onDrawMove(timeStamp: number, x: number, y: number) {
-   /*TODO switch (this.mode) {
+  onDrawMove(timeStamp: number, x: number, y: number): boolean {
+   switch (this.mode) {
       case 'eAdding':
         if (!this.selectedComponent && this.shapeWithoutComponent) {
           this.selectedComponent = this.shapeWithoutComponent.shapeComponent;
@@ -293,18 +305,19 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
           const svgCoordinate = this.screenCoordinateToSVGCoordinate(timeStamp, x, y);
           this.selectedComponent.draw(svgCoordinate);
         }
-        break;
+        return true;
       case 'eEditing':
         if (this.selectedComponent && this.selectedComponent.isHandleSelected()) {
           const svgCoordinate = this.screenCoordinateToSVGCoordinate(timeStamp, x, y);
           this.selectedComponent.onHandleMouseMove(svgCoordinate.x, svgCoordinate.y);
         }
-        break;
-    }*/
+        return true;
+    }
+    return false;
   }
 
   onDrawEnd(): void {
-   /*TODO switch (this.mode) {
+   switch (this.mode) {
       case 'eAdding':
         this.endShapeDraw();
         break;
@@ -314,7 +327,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
           this.svgShapeChanged.emit(this.selectedComponent.shape);
         }
         break;
-    }*/
+    }
   }
 
   private createShape(coordinate: Coordinate) {
@@ -332,7 +345,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   }
 
   private endShapeDraw() {
-    /*TODO if (this.selectedComponent) {
+    if (this.selectedComponent) {
       if (this.selectedComponent.isDrawStarted()) { // if no drag has been done no shape is inserted
         const shape = this.selectedComponent.shape;
         if (shape instanceof Polylines) {
@@ -352,7 +365,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
           // this.shapes = this.shapes.filter(s => s != null);
         }
       }
-    }*/
+    }
   }
 
   onBackgroundHiddenImageElementLoaded($event: Event) {
@@ -380,6 +393,10 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
 
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
+    if (event.code === 'Escape') {
+      this.mode = 'eSelecting';
+      this.selectionManager.clear();
+    }
    /*TODO if (event.code === 'Escape') {
       if (this.selectedComponent && this.selectedComponent.shape && !this.selectedComponent.shape.data) { // if not inserted yet
         this.shapes = this.shapes.filter(s => s !== this.selectedComponent.shape);
@@ -422,23 +439,28 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
     }
   }
 
-  handleMouse(event: MouseEvent)
-  {
-    if (this.mode === "eSelecting") {
-      this.onSelectEvent(event);
-    } else if (this.mode === "eAdding" || this.mode === "eEditing") {
-      this.onDrawStart(event.target, event.timeStamp, event.offsetX, event.offsetY);
-      event.stopPropagation();
+  onDblClick(event: MouseEvent) {
+    if (this.mode === 'eSelecting') {
+      this.mode = 'eEditing';
+      if (event.target instanceof Shape) {
+        this.selectionManager.replace(event.target);
+      }
+      this.selectedShapesIDChange.emit(this.selectedShapeIDs); // TODO quitar
 
+      event.stopPropagation();
     }
   }
 
-  private findShapeOnMouseEvent(event: MouseEvent): Shape {
-    let shape: Shape = null;
-    if (event.target instanceof SVGGraphicsElement) {
-      shape = this.shapesMap.get(event.target.id);
+
+  handleMouse(event: MouseEvent)
+  {
+    if (this.mode === "eSelecting"  || this.mode === "eEditing") {
+      this.onSelectEvent(event);
+      event.stopPropagation();
+    } else if (this.mode === "eAdding") {
+      this.onDrawStart(event.target, event.timeStamp, event.offsetX, event.offsetY);
+      event.stopPropagation();
     }
-    return shape;
   }
 
   private onSelectEvent(event: MouseEvent) {
@@ -447,12 +469,15 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
       if (shape && shape.selectable && !shape.hidden && shape.id) {
         // @ts-ignore
         if (event.shiftKey) {
+          this.mode = 'eSelecting';
           this.selectionManager.selectRange(shape);
           // @ts-ignore
         } else if (event.metaKey) {
+          this.mode = 'eSelecting';
           this.selectionManager.addOrRemove(shape);
         } else {
           this.selectionManager.replace(shape);
+          this.selectedComponent = shape.shapeComponent;
         }
         //event.stopPropagation();
       } else {
@@ -460,6 +485,15 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
       }
       this.onShapesSelected.emit(this.selectionManager.getSelected());
     }
+  }
+
+
+  private findShapeOnMouseEvent(event: MouseEvent): Shape {
+    let shape: Shape = null;
+    if (event.target instanceof SVGGraphicsElement) {
+      shape = this.shapesMap.get(event.target.id);
+    }
+    return shape;
   }
 
   onContextMenuEvent(event: MouseEvent) {
@@ -514,8 +548,11 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
     }
   }
 
-  onMouseMove($event) {
-    this.onDrawMove($event.timeStamp, $event.offsetX, $event.offsetY);
+  onMouseMove(event: MouseEvent) {
+    event.preventDefault(); // prevent the region type label being selected
+    if (this.onDrawMove(event.timeStamp, event.offsetX, event.offsetY)) {
+      event.stopPropagation();
+    }
   }
 
   onTouchEnd($event) {
@@ -528,13 +565,6 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
     this.onDrawEnd();
   }
 
-  onDblClickOnShape(shape: Shape) {
-    /*if (this.mode === 'eIdle') {
-      this.mode = 'eEditing';
-      this.select(shape);
-      this.selectedShapesIDChange.emit(this.selectedShapeIDs);
-    }*/
-  }
 
   /*private highlightSelectedSVGElement(selectedElement: SVGGraphicsElement) {
     if (this.selectedShapeFillColor) {

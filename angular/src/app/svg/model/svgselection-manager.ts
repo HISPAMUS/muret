@@ -88,15 +88,19 @@ export class SVGSelectionManager {
     });
   }
 
-  getSelected(): Shape[] { // use a copy of the collection to avoid manipulating from outside
+  public getSelected(): Shape[] { // use a copy of the collection to avoid manipulating from outside
     return Array.from(this.selectedElements);
   }
 
-  isSelected(shape: Shape) {
+  public isSelected(shape: Shape): boolean {
     return this.selectedElements.has(shape);
   }
 
-  hasSelectedShapes() {
+  public hasSelectedShapes(): boolean {
     return this.selectedElements.size > 0;
+  }
+
+  public hasJustOneSelectedShape(): boolean {
+    return this.selectedElements.size == 1;
   }
 }

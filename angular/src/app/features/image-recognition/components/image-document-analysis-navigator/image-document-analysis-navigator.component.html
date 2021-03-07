@@ -5,9 +5,10 @@
       <app-svg-canvas #svgCanvasComponent
         [shapes]="shapes" [backgroundImage]="loadedImage"
                       [zoomFactor]="zoomManager.zoomFactor"
-                      [mode]="mode"
+                      [(mode)]="mode"
                       (onContextMenu)="onSVGContextMenu($event)"
                       (onShapesSelected)="onSVGShapesSelected($event)"
+                      [nextShapeToAdd]="nextShapeToAdd"
       >
       </app-svg-canvas>
     </div>
