@@ -53,6 +53,43 @@ public class DocumentAnalysisController extends MuRETBaseController {
         this.m_client = new ClassifierClient(muretConfiguration.getPythonclassifiers());
     }
 
+    protected RegionType getRegionType(int regionTypeID) throws IM3WSException {
+        Optional<RegionType> regionType = regionTypeRepository.findById(regionTypeID);
+        if (!regionType.isPresent()) {
+            throw new IM3WSException("Cannot find a region type with id " + regionTypeID);
+        }
+        return regionType.get();
+    }
+
+
+
+    @PutMapping(path = {"changeRegionsType/{regionTypeID}"})
+    public ChangedRegionTypes changeRegionsType(@PathVariable("regionTypeID") int regionTypeID, @RequestBody LongArray regionIDs)  {
+        try {
+            ArrayList<Region> changedRegions = new ArrayList<>();
+            ArrayList<Long> changedRegionsID = new ArrayList<>();
+            for (long regionID: regionIDs.getValues()) {
+                Region region = getRegion(regionID);
+                RegionType regionType = getRegionType(regionTypeID);
+
+                if (!regionType.equals(region.getRegionType())) {
+                    region.setRegionType(regionType);
+                    changedRegions.add(region);
+                    changedRegionsID.add(region.getId());
+                }
+            }
+
+            regionRepository.saveAll(changedRegions);
+            ChangedRegionTypes result = new ChangedRegionTypes();
+            result.setRegionTypeID(regionTypeID);
+            result.setRegionIDs(new LongArray(changedRegionsID));
+            return result;
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot update region", e);
+
+        }
+    }
+
 
 
     // revisado hasta aquí

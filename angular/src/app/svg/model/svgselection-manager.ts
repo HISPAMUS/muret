@@ -60,7 +60,10 @@ export class SVGSelectionManager {
         this.lastSelectedElementIndex = aux;
       }
       for (let i = this.lastSelectedElementIndex; i<=indexTo; i++) {
-        this.add(this._selectableElements[i]);
+        const e = this._selectableElements[i];
+        if (e.selectable && !e.hidden) {
+          this.add(this._selectableElements[i]);
+        }
       }
       this.lastSelectedElementIndex = indexTo;
     }

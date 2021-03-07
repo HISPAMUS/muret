@@ -2,10 +2,7 @@ package es.ua.dlsi.grfia.im3ws.muret.controller;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Image;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Page;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Region;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Symbol;
+import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.PageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
@@ -52,7 +49,6 @@ public class MuRETBaseController {
         }
         return page.get();
     }
-
     protected Region getRegion(long regionID) throws IM3WSException {
         Optional<Region> region = regionRepository.findById(regionID);
         if (!region.isPresent()) {

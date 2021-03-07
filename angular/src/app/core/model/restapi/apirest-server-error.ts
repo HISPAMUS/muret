@@ -8,3 +8,12 @@ export interface APIRestServerError {
    */
   caller?: any;
 }
+
+
+export function createServerError(message: string, detailedMessage: string): APIRestServerError {
+  const result: APIRestServerError = {
+    message: message,
+    detailedMessage: detailedMessage
+  };
+  return result;
+}

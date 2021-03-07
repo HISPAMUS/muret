@@ -6,13 +6,20 @@ export const selectImageRecognitionState = createFeatureSelector<ImageRecognitio
 
 export const selectImageRecognitionImageOverview = createSelector(
   selectImageRecognitionState,
-  (state: ImageRecognitionState) => state.imageOverview?state.imageOverview.imageOverview:null
+  (state: ImageRecognitionState) => state.imageOverview
 );
 
 /**
  * The pages contain up to symbol information
  */
-export const selectImageRecognitionImageOverviewPagesRegionsSymbols = createSelector(
+export const selectImageRecognitionPagesRegionsSymbols = createSelector(
   selectImageRecognitionState,
-  (state: ImageRecognitionState) => state.imageOverview?state.imageOverview.pagesRegionsSymbols:null
+  (state: ImageRecognitionState) => state.pagesRegionsSymbols
 );
+
+export const selectImageRecognitionRegionTypes = createSelector(
+  selectImageRecognitionState,
+  (state: ImageRecognitionState) => state.regionTypes
+);
+
+

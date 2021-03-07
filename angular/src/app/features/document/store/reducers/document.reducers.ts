@@ -2,7 +2,7 @@ import {DocumentActions, DocumentActionTypes} from '../actions/document.actions'
 import {DocumentState, initialDocumentState} from '../state/document.state';
 import {DocumentExportType} from '../../../../core/model/restapi/document-export';
 import {Section} from "../../../../core/model/entities/section";
-import {APIRestServerError} from "../../../../core/model/restapi/apirest-server-error";
+import {APIRestServerError, createServerError} from "../../../../core/model/restapi/apirest-server-error";
 import {Image} from "../../../../core/model/entities/image";
 import {Document} from "../../../../core/model/entities/document";
 import { klona } from 'klona/lite';
@@ -328,13 +328,5 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
 
 function findSection(sections: Section[], sectionID: number): Section {
   return sections.find(section => section.id === sectionID);
-}
-
-function createServerError(message: string, detailedMessage: string): APIRestServerError {
-  const result: APIRestServerError = {
-    message: message,
-      detailedMessage: detailedMessage
-  };
-  return result;
 }
 

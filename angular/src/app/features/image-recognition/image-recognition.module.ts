@@ -5,10 +5,9 @@ import {ImageRecognitionRoutingModule} from "./image-recognition-routing.module"
 import {StoreModule} from "@ngrx/store";
 import {EffectsModule} from "@ngrx/effects";
 import {imageRecognitionReducers} from "./store/reducers/image-recognition.reducers";
-import {ImageOverviewEffects} from "./store/effects/image-overview-effects.service";
+import {ImageOverviewEffects} from "./store/effects/image-recognition-effects.service";
 import {ImageOverviewService} from "./services/image-overview.service";
 import {DocumentAnalysisService} from "./services/document-analysis.service";
-import {DocumentAnalysisEffects} from "./store/effects/document-analysis.effects";
 import { ImageDocumentAnalysisNavigatorComponent } from './components/image-document-analysis-navigator/image-document-analysis-navigator.component';
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import { PartsInImageComponentComponent } from './components/parts-in-image/parts-in-image-component.component';
@@ -29,7 +28,7 @@ import { DocumentAnalysisToolbarComponent } from './components/document-analysis
     imports: [
         CommonModule,
         StoreModule.forFeature('imageRecognition', imageRecognitionReducers),
-        EffectsModule.forFeature([ImageOverviewEffects, DocumentAnalysisEffects]),
+        EffectsModule.forFeature([ImageOverviewEffects]),
         ImageRecognitionRoutingModule,
         FontAwesomeModule,
         SharedModule,

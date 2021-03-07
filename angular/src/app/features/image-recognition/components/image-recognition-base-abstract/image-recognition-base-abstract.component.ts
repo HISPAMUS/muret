@@ -6,21 +6,15 @@ import {Store} from "@ngrx/store";
 import {
   ImageRecognitionChangeStatus,
   ImageRecognitionGetImageOverview,
-  ImageRecognitionGetPagesRegionsSymbols
-} from "../../store/actions/image-overview.actions";
+  ImageRecognitionGetPagesRegionsSymbols, ImageRecognitionGetRegionTypes
+} from "../../store/actions/image-recognition.actions";
 import {
   selectImageRecognitionImageOverview,
-  selectImageRecognitionImageOverviewPagesRegionsSymbols
+  selectImageRecognitionPagesRegionsSymbols, selectImageRecognitionRegionTypes
 } from "../../store/selectors/image-recognition.selector";
 import {BreadcrumbsUpdateImage} from "../../../../layout/store/actions/breadcrumbs.actions";
 import {RegionType} from "../../../../core/model/entities/region-type";
 import {ImageRecognitionState} from "../../store/state/image-recognition.state";
-import {
-  DocumentAnalysisGetRegionTypes
-} from "../../store/actions/document-analysis.actions";
-import {
-  selectDocumentAnalysisRegionTypes
-} from "../../store/selectors/document-analysis.selector";
 import {Page} from "../../../../core/model/entities/page";
 import {BoundingBox} from "../../../../core/model/entities/bounding-box";
 import {Region} from "../../../../core/model/entities/region";
@@ -48,7 +42,7 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
   private _status: string;
 
   constructor(protected route: ActivatedRoute, protected store: Store<ImageRecognitionState>, protected dialogsService: DialogsService) {
-    this.store.dispatch(new DocumentAnalysisGetRegionTypes());
+    this.store.dispatch(new ImageRecognitionGetRegionTypes());
   }
 
   ngOnInit(): void {
@@ -59,7 +53,7 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
       this.store.dispatch(new ImageRecognitionGetPagesRegionsSymbols(+this.imageID));
     });
 
-    this.regionTypes$ = this.store.select(selectDocumentAnalysisRegionTypes);
+    this.regionTypes$ = this.store.select(selectImageRecognitionRegionTypes);
 
     this.imageOverviewSubscription = this.store.select(selectImageRecognitionImageOverview).subscribe(next => {
       if (next) {
@@ -71,7 +65,7 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
 
   }
   ngAfterViewInit(): void {
-    this.pagesSubscription = this.store.select(selectImageRecognitionImageOverviewPagesRegionsSymbols).subscribe(next => {
+    this.pagesSubscription = this.store.select(selectImageRecognitionPagesRegionsSymbols).subscribe(next => {
       if (next) {
         this.drawPagesAndRegions(next);
       }

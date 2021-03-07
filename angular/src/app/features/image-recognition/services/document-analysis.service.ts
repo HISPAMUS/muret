@@ -9,6 +9,8 @@ import {BoundingBox} from '../../../core/model/entities/bounding-box';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 // import { DocumentAnalysisForm } from '../model/document-analysis-form';
 import { StringResponse } from 'src/app/core/model/restapi/string-response';
+import {ChangedRegionTypes} from "../../../core/model/restapi/changed-region-types";
+import {NumberArray} from "../../../core/model/restapi/number-array";
 
 @Injectable() // non-singleton
 export class DocumentAnalysisService {
@@ -18,6 +20,15 @@ export class DocumentAnalysisService {
     return this.apiRestClientService.getListExcerptProjection$<RegionType>('regionTypes');
   }
 
+  changeRegionsType$(regions: Region[], regionType: RegionType): Observable<ChangedRegionTypes> {
+    const url = `documentanalysis/changeRegionsType/${regionType.id}`
+
+    const regionIDS: NumberArray = {
+      values: regions.map(region => region.id)
+    };
+
+    return this.apiRestClientService.put$<ChangedRegionTypes>(url, regionIDS);
+  }
 
 
   // revisado hasta aquí
