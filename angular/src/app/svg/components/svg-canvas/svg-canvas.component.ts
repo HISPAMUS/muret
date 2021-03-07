@@ -61,9 +61,10 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   @Output() svgMouseEvent = new EventEmitter<Coordinate>(); // only emitted on eIdle state
   @Output() svgShapeCreated = new EventEmitter<Shape>();
   @Output() svgShapeChanged = new EventEmitter<Shape>();
-  @Output() selectedShapesIDChange = new EventEmitter<string[]>();
+  @Output() selectedShapesIDChange = new EventEmitter<string[]>(); // TODO @deprecated
   @Output() modeChange = new EventEmitter();
   @Output() onContextMenu = new EventEmitter<ContextMenuSVGSelectionEvent>();
+  @Output() onShapesSelected = new EventEmitter<Shape[]>();
 
   @ViewChild('canvas', {static: true}) canvas: ElementRef; // with false it fails
   @ViewChild('svgContent', {static: true}) svgContent: ElementRef;
@@ -460,6 +461,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
       } else {
         this.selectionManager.clear();
       }
+      this.onShapesSelected.emit(this.selectionManager.getSelected());
     }
   }
 

@@ -6,7 +6,6 @@ import {Observable} from "rxjs";
 import {map} from "rxjs/operators";
 import {RegionType} from "../../../../core/model/entities/region-type";
 import {Shape} from "../../../../svg/model/shape";
-import {SelectionManager} from "../../../../shared/directives/selection-manager";
 import {ContextMenuSVGSelectionEvent} from "../../../../svg/model/context-menu-s-v-g-selection-event";
 import {ZoomManager} from "../../../../shared/model/zoom-manager";
 
@@ -20,16 +19,15 @@ export class ImageDocumentAnalysisNavigatorComponent implements OnChanges {
   @Input() regionTypes: RegionType[];
   @Input() shapes: Shape[];
   @Output() onNavigatorContextMenu = new EventEmitter<ContextMenuSVGSelectionEvent>();
+  @Output() onShapesSelected = new EventEmitter<Shape[]>();
   @Input() zoomManager: ZoomManager;
 
   filteredOutRegionNames: Set<string> = new Set<string>();
 
   loadedImage$: Observable<SafeResourceUrl>;
-  selectionManager: SelectionManager;
 
   constructor(private imageFilesService: ImageFilesService, private sanitizer: DomSanitizer,
               ) {
-    this.selectionManager = new SelectionManager();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -59,5 +57,9 @@ export class ImageDocumentAnalysisNavigatorComponent implements OnChanges {
 
   onSVGContextMenu(selectedShapes: ContextMenuSVGSelectionEvent) {
     this.onNavigatorContextMenu.emit(selectedShapes);
+  }
+
+  onSVGShapesSelected(shapes: Shape[]) {
+    this.onShapesSelected.emit(shapes);
   }
 }

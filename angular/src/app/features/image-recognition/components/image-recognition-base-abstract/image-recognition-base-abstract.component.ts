@@ -29,6 +29,7 @@ import {Shape} from "../../../../svg/model/shape";
 import {DialogsService} from "../../../../shared/services/dialogs.service";
 import {ZoomManager} from "../../../../shared/model/zoom-manager";
 import {ImageRecognitionProgressStatusChange} from "../../../../core/model/restapi/image-recognition-progress-status-change";
+import {Text} from "../../../../svg/model/text";
 
 @Component({
   selector: 'app-image-recognition-base-abstract-component',
@@ -132,6 +133,33 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
 
   protected drawRegion(region: Region) {
     this.drawBox(region.regionType.name, region.id, region.boundingBox, '#' + region.regionType.hexargb, region);
+  }
+
+  protected addLabelBox(layer: string, id: number, boundingBox: BoundingBox, color: string, data: Region | Page, label: string) {
+    const rect = new Rectangle(); // background
+    //rect.id = layer + id;
+    rect.fromX = boundingBox.fromX;
+    rect.fromY = boundingBox.fromY;
+    rect.width = label.length * 20;
+    rect.height  = 50;
+    rect.fillColor = '#' + color;
+    rect.layer = layer;
+    rect.data = data;
+    rect.selectable = false;
+    // this.documentAnalysisShapes.push(rect); //TODO si lo pongo no va bien la selección
+
+    const t: Text = new Text();
+    t.layer = layer;
+    t.text = label;
+    t.fromX = boundingBox.fromX + 10;
+    t.fromY = boundingBox.fromY + 40;
+    t.strokeColor = '#' + color;
+    t.strokeWidth = 1;
+    t.fillColor = 'black';
+    t.fontSize = 30;
+    t.selectable = false;
+
+    this.documentAnalysisShapes.push(t);
   }
 
   protected onImageOverviewChanged() {

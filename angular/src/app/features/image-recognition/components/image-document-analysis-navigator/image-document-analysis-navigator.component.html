@@ -7,6 +7,7 @@
                       [zoomFactor]="zoomManager.zoomFactor"
                       [mode]="'eSelecting'"
                       (onContextMenu)="onSVGContextMenu($event)"
+                      (onShapesSelected)="onSVGShapesSelected($event)"
       >
       </app-svg-canvas>
     </div>
