@@ -4,9 +4,9 @@
        class="form-group btn-group btn-group-toggle d-flex flex-column align-items-end"
        id="docAnalysisToolBar"
        name="regionTypeRadioButtonGroup" ngbRadioGroup>
-    <label class="btn-toolbar" ngbButtonLabel>
+    <!--<label class="btn-toolbar" ngbButtonLabel>
       <input ngbButton type="radio" name="regionTypeRadioButton" [value]="'page'" (click)="setPage()">Page
-    </label>
+    </label>-->
     <label *ngFor="let regionType of getSortedRegionTypes(); trackBy: trackByRegionTypeFn" class="btn-toolbar" ngbButtonLabel>
       <input ngbTooltip="{{regionType.help}}" ngbButton type="radio" name="regionTypeRadioButton" [value]="regionType.id" (click)="setRegionType(regionType)"> {{beautifyRegionName(regionType)}}
     </label>

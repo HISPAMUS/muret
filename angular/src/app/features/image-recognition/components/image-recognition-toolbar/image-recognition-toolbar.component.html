@@ -1,0 +1,58 @@
+<form>
+  <div class="iconRadioGroup btn-group btn-group-toggle" ngbRadioGroup
+       name="modeRadioButtonGroup" [(ngModel)]="mode">
+
+    <label ngbButtonLabel>
+      <a (click)="zoomOut()"><fa-icon icon="search-minus" class="icons" size="lg"></fa-icon></a>
+    </label>
+
+    <label ngbButtonLabel>
+      <a (click)="zoomIn()"><fa-icon icon="search-plus" class="icons" size="lg"></fa-icon></a>
+    </label>
+
+    <label ngbButtonLabel>
+      <a (click)="zoomFit()"><fa-icon icon="expand" class="icons" size="lg"></fa-icon></a>
+    </label>
+
+    <ng-container *ngIf="!hideModeButtons">
+      <div class="separator"></div>
+
+      <label ngbButtonLabel>
+        <input name="modeRadioButton" ngbButton type="radio" [value]="'eSelecting'" ngbTooltip="View (shortcut: ESC)" placement="bottom">
+        <fa-icon icon="mouse-pointer" class="icons" size="lg"></fa-icon>
+      </label>
+      <label ngbButtonLabel>
+        <input name="modeRadioButton" ngbButton type="radio" [value]="'eEditing'"  ngbTooltip="View (shortcut: e)" placement="bottom">
+        <fa-icon icon="edit" class="icons" size="lg"></fa-icon>
+      </label>
+      <label ngbButtonLabel>
+        <input name="modeRadioButton" ngbButton type="radio" [value]="'eAdding'"  ngbTooltip="View (shortcut: a)" placement="bottom">
+        <fa-icon icon="plus" class="icons" size="lg"></fa-icon>
+      </label>
+      <label ngbButtonLabel>
+        <button [disabled]="!selectionDone" (click)="addCommentToSelected()">
+          <fa-icon icon="comment-dots" class="icons" size="lg"></fa-icon>
+        </button>
+      </label>
+      <label ngbButtonLabel>
+        <button [disabled]="!selectionDone && !isAddingMode()" (click)="deleteSelected()">
+          <fa-icon icon="minus" class="icons" size="lg"></fa-icon>
+        </button>
+      </label>
+
+      <div class="separator"></div>
+
+      <label ngbButtonLabel>
+        <button (click)="clear()">
+          <fa-icon icon="trash" class="icons" size="lg"></fa-icon>
+        </button>
+      </label>
+    </ng-container>
+
+    &nbsp;
+    &nbsp;
+    <!--<label ngbButtonLabel id="labelMode">
+      <h5>{{displayMode()}}</h5>
+    </label>-->
+  </div>
+</form>

@@ -21,10 +21,11 @@ import {FormsModule} from "@angular/forms";
 import {ContextMenuModule} from "ngx-contextmenu";
 import {ImagePartsService} from "./services/image-parts.service";
 import { DocumentAnalysisToolbarComponent } from './components/document-analysis-toolbar/document-analysis-toolbar.component';
+import { ImageRecognitionToolbarComponent } from './components/image-recognition-toolbar/image-recognition-toolbar.component';
 
 
 @NgModule({
-  declarations: [ImageOverviewComponent, ImageDocumentAnalysisNavigatorComponent, PartsInImageComponentComponent, DocumentAnalysisComponent, TranscriptionComponentComponent, DocumentAnalysisFiltersComponent, DocumentAnalysisToolbarComponent],
+  declarations: [ImageOverviewComponent, ImageDocumentAnalysisNavigatorComponent, PartsInImageComponentComponent, DocumentAnalysisComponent, TranscriptionComponentComponent, DocumentAnalysisFiltersComponent, DocumentAnalysisToolbarComponent, ImageRecognitionToolbarComponent],
     imports: [
         CommonModule,
         StoreModule.forFeature('imageRecognition', imageRecognitionReducers),

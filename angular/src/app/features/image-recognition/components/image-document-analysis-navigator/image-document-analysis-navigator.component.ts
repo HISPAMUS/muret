@@ -21,10 +21,12 @@ export class ImageDocumentAnalysisNavigatorComponent implements OnChanges {
   @Output() onNavigatorContextMenu = new EventEmitter<ContextMenuSVGSelectionEvent>();
   @Output() onShapesSelected = new EventEmitter<Shape[]>();
   @Input() zoomManager: ZoomManager;
+  @Input() mode: 'eSelecting' | 'eEditing' | 'eAdding';
 
   filteredOutRegionNames: Set<string> = new Set<string>();
 
   loadedImage$: Observable<SafeResourceUrl>;
+
 
   constructor(private imageFilesService: ImageFilesService, private sanitizer: DomSanitizer,
               ) {

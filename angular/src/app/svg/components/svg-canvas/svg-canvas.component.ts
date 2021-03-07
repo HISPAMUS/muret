@@ -69,7 +69,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   @ViewChild('canvas', {static: true}) canvas: ElementRef; // with false it fails
   @ViewChild('svgContent', {static: true}) svgContent: ElementRef;
 
-  private modeValue: 'eIdle' | 'eAdding' | 'eEditing' | 'eSelecting';
+  private modeValue: 'eAdding' | 'eEditing' | 'eSelecting';
   private isOnDrawProcess: boolean;
 
   // interaction
@@ -101,7 +101,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   constructor(private componentFactoryResolver: ComponentFactoryResolver,
               private sanitizer: DomSanitizer) {
 
-    this.modeValue = 'eIdle';
+    this.modeValue = 'eSelecting';
     this.updateCursor();
   }
 
@@ -208,14 +208,11 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
       case 'eAdding':
         this.changeCursor('cursorCrosshair');
         break;
-      case 'eIdle':
-        this.changeCursor('cursorNotAllowed');
-        break;
       case 'eSelecting':
-        this.changeCursor('cursorCell');
+        this.changeCursor('cursorDefault');
         break;
       case 'eEditing':
-        this.changeCursor('cursorDefault');
+        this.changeCursor('cursorCell');
         break;
     }
   }

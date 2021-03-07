@@ -64,10 +64,10 @@ import { ToastrModule } from 'ngx-toastr';
 import {DialogsModule} from "./dialogs/dialogs.module";
 import {faEllipsisV} from "@fortawesome/free-solid-svg-icons/faEllipsisV";
 import {faArrowsAlt} from "@fortawesome/free-solid-svg-icons/faArrowsAlt";
-import {faClipboardList} from "@fortawesome/free-solid-svg-icons/faClipboardList";
 import {faTasks} from "@fortawesome/free-solid-svg-icons/faTasks";
 import {faEyeSlash} from "@fortawesome/free-solid-svg-icons/faEyeSlash";
 import {faSpinner} from "@fortawesome/free-solid-svg-icons/faSpinner";
+import {faMousePointer} from "@fortawesome/free-solid-svg-icons/faMousePointer";
 
 @NgModule({
   declarations: [
@@ -150,6 +150,7 @@ export class AppModule {
     library.addIcons(faArrowsAlt); // used in document to show drag and drop
     library.addIcons(faEyeSlash); // used in ProgressStatus
     library.addIcons(faSpinner); // used in ProgressStatus
+    library.addIcons(faMousePointer); // used in image recognition toolbar
 
   }
 }

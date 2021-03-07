@@ -8,9 +8,9 @@ import {RegionType} from "../../../../core/model/entities/region-type";
 })
 export class DocumentAnalysisToolbarComponent implements OnInit, OnChanges {
   @Input() regionTypes: RegionType[];
-  @Input() selectedRegion: RegionType | 'page' | 'several';
+  @Input() selectedRegion: RegionType | 'several';
   @Output() onChangeRegion = new EventEmitter<RegionType | 'page'>();
-  selectedRegionTypeID: number | 'page' | 'several';
+  selectedRegionTypeID: number | 'several';
 
   constructor() { }
 
@@ -19,18 +19,12 @@ export class DocumentAnalysisToolbarComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.selectedRegion && this.selectedRegion) {
-      if (this.selectedRegion == 'page') {
-        this.selectedRegionTypeID = 'page';
-      } else if (this.selectedRegion == 'several') {
+      if (this.selectedRegion == 'several') {
         this.selectedRegionTypeID = 'several';
       } else {
         this.selectedRegionTypeID = this.selectedRegion.id;
       }
     }
-  }
-
-  setPage() {
-    this.onChangeRegion.emit('page');
   }
 
   setRegionType(regionType: RegionType) {
