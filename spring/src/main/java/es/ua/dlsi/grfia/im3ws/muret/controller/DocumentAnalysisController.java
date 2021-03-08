@@ -78,7 +78,6 @@ public class DocumentAnalysisController extends MuRETBaseController {
                     changedRegionsID.add(region.getId());
                 }
             }
-
             regionRepository.saveAll(changedRegions);
             ChangedRegionTypes result = new ChangedRegionTypes();
             result.setRegionTypeID(regionTypeID);
@@ -90,9 +89,22 @@ public class DocumentAnalysisController extends MuRETBaseController {
         }
     }
 
+    @PutMapping(path = {"regionBoundingBoxUpdate"})
+    public Region regionUpdate(@RequestBody Region region)  {
+        try {
+            Region persistentRegion = getRegion(region.getId());
 
+            if (region.getBoundingBox() != null) {
+                persistentRegion.setBoundingBox(region.getBoundingBox());
+            }
+            regionRepository.save(persistentRegion);
+            return persistentRegion;
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot update region", e);
 
-    // revisado hasta aquí
+        }
+    }
+
     @PutMapping(path = {"pageBoundingBoxUpdate"})
     public Page pageBoundingBoxUpdate(@RequestBody BoundingBox boundingBox)  {
         try {
@@ -102,30 +114,6 @@ public class DocumentAnalysisController extends MuRETBaseController {
             return page;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot update page bounding boc", e);
-        }
-    }
-
-    @PutMapping(path = {"regionUpdate"})
-    public Region regionUpdate(@RequestBody Region region)  {
-        try {
-            Region persistentRegion = getRegion(region.getId());
-
-            if (region.getBoundingBox() != null) {
-                persistentRegion.setBoundingBox(region.getBoundingBox());
-            }
-            if (region.getRegionType() != null && !Objects.equals(persistentRegion.getRegionType(), region.getRegionType())) {
-                Optional<RegionType> persistentRegionType = regionTypeRepository.findById(region.getRegionType().getId());
-                if (!persistentRegionType.isPresent()) {
-                    throw new IM3WSException("Cannot find a region type with id " + region.getRegionType().getId());
-                }
-
-                persistentRegion.setRegionType(persistentRegionType.get());
-            }
-            regionRepository.save(persistentRegion);
-            return persistentRegion;
-        } catch (Throwable e) {
-            throw ControllerUtils.createServerError(this, "Cannot update region", e);
-
         }
     }
 
@@ -190,23 +178,59 @@ public class DocumentAnalysisController extends MuRETBaseController {
         }
     }
 
-    @DeleteMapping(path = {"deletePage/{pageID}"})
-    public long deletePage(@PathVariable("pageID") long pageID)  {
+    @DeleteMapping(path = {"deletePages"})
+    public LongArray deletePages(@RequestBody LongArray pageIDs)  {
         try {
-            return this.documentAnalysisModel.deletePage(pageID);
+            ArrayList<Page> pages = new ArrayList<>();
+            LongArray result = new LongArray();
+            for (long id: pageIDs.getValues()) {
+                Optional<Page> page = pageRepository.findById(id);
+                if (page.isPresent()) {
+                    if (page.get().getRegions() != null && !page.get().getRegions().isEmpty()) {
+                        throw new IM3WSException("A page has regions inside, it cannot be deleted");
+                    }
+                    pages.add(page.get());
+                    result.add(id);
+                }
+            }
+
+            pageRepository.deleteAll(pages);
+            return result;
         } catch (IM3WSException e) {
             throw ControllerUtils.createServerError(this, "Cannot delete page", e);
         }
     }
 
-    @DeleteMapping(path = {"deleteRegion/{regionID}"})
-    public long deleteRegion(@PathVariable("regionID") long regionID)  {
+    @DeleteMapping(path = {"deleteRegions"})
+    public LongArray deleteRegions(@RequestBody LongArray regionIDs)  {
         try {
-            return this.documentAnalysisModel.deleteRegion(regionID);
+            ArrayList<Region> regions = new ArrayList<>();
+            LongArray result = new LongArray();
+            for (long id: regionIDs.getValues()) {
+                Optional<Region> region = regionRepository.findById(id);
+                if (region.isPresent()) {
+                    if (region.get().getSymbols() != null && !region.get().getSymbols().isEmpty()) {
+                        throw new IM3WSException("A region has symmbols inside, it cannot be deleted");
+                    }
+                    regions.add(region.get());
+                    result.add(id);
+                }
+            }
+
+            regionRepository.deleteAll(regions);
+            return result;
         } catch (IM3WSException e) {
-            throw ControllerUtils.createServerError(this, "Cannot delete region", e);
+            throw ControllerUtils.createServerError(this, "Cannot delete page", e);
         }
     }
+
+    // revisado hasta aquí
+
+
+
+
+
+
 
     @Transactional
     @PostMapping(path = "docAnalyze")

@@ -4,7 +4,25 @@ import { of } from 'rxjs';
 import {catchError, switchMap} from 'rxjs/operators';
 import {ImageOverviewService} from "../../services/image-overview.service";
 import {
-  ImageRecognitionActionTypes, ImageRecognitionChangeStatus, ImageRecognitionChangeStatusSuccess,
+  ImageRecognitionActionTypes,
+  ImageRecognitionChangePageBoundingBox,
+  ImageRecognitionChangePageBoundingBoxSuccess,
+  ImageRecognitionChangeRegionBoundingBox,
+  ImageRecognitionChangeRegionBoundingBoxSuccess,
+  ImageRecognitionChangeStatus,
+  ImageRecognitionChangeStatusSuccess,
+  ImageRecognitionClear,
+  ImageRecognitionClearSuccess,
+  ImageRecognitionCreatePage,
+  ImageRecognitionCreatePages,
+  ImageRecognitionCreatePagesSuccess,
+  ImageRecognitionCreatePageSuccess,
+  ImageRecognitionCreateRegion,
+  ImageRecognitionCreateRegionSuccess,
+  ImageRecognitionDeletePages,
+  ImageRecognitionDeletePagesSuccess,
+  ImageRecognitionDeleteRegions,
+  ImageRecognitionDeleteRegionsSuccess,
   ImageRecognitionGetImageOverview,
   ImageRecognitionGetImageOverviewSuccess,
   ImageRecognitionGetPagesRegionsSymbols,
@@ -19,7 +37,9 @@ import {
   ImageRecognitionLinkPartSuccess,
   ImageRecognitionPutComments,
   ImageRecognitionPutCommentsSuccess,
-  ImageRecognitionServerError, ImageRecognitionUnlinkImageFromPart, ImageRecognitionUnlinkImageFromPartSuccess,
+  ImageRecognitionServerError,
+  ImageRecognitionUnlinkImageFromPart,
+  ImageRecognitionUnlinkImageFromPartSuccess,
   ImageRecognitionUnlinkPart,
   ImageRecognitionUnlinkPartSuccess
 } from "../actions/image-recognition.actions";
@@ -33,6 +53,8 @@ import {
   ImageRecognitionGetRegionTypes, ImageRecognitionGetRegionTypesSuccess
 } from "../actions/image-recognition.actions";
 import {DocumentAnalysisService} from "../../services/document-analysis.service";
+import {Region} from "../../../../core/model/entities/region";
+import {NumberArray} from "../../../../core/model/restapi/number-array";
 
 
 /**
@@ -133,7 +155,6 @@ export class ImageOverviewEffects {
     )));
 
   // ----- Document analysis
-
   @Effect()
   getDocumentAnalsysisRegionTypes$ = this.actions$.pipe(
     ofType<ImageRecognitionGetRegionTypes>(ImageRecognitionActionTypes.ImageRecognitionGetRegionTypes),
@@ -150,4 +171,81 @@ export class ImageOverviewEffects {
       switchMap((changedRegionTypes: ChangedRegionTypes) => of(new ImageRecognitionChangeRegionsTypeSuccess(changedRegionTypes))),
       catchError(err => of(new ImageRecognitionServerError(err)))
     )));
+
+  @Effect()
+  changeRegionBoundingBox$ = this.actions$.pipe(
+    ofType<ImageRecognitionChangeRegionBoundingBox>(ImageRecognitionActionTypes.ImageRecognitionChangeRegionBoundingBox),
+    switchMap((action: ImageRecognitionChangeRegionBoundingBox) => this.documentAnalysisService.updateRegionBoundingBox$(
+      action.region, action.boundingBox.fromX, action.boundingBox.fromY, action.boundingBox.toX, action.boundingBox.toY).pipe(
+      switchMap((region: Region) => of(new ImageRecognitionChangeRegionBoundingBoxSuccess(region))),
+      catchError(err => of(new ImageRecognitionServerError(err)))
+    )));
+
+
+  @Effect()
+  changePageBoundingBox$ = this.actions$.pipe(
+    ofType<ImageRecognitionChangePageBoundingBox>(ImageRecognitionActionTypes.ImageRecognitionChangePageBoundingBox),
+    switchMap((action: ImageRecognitionChangePageBoundingBox) => this.documentAnalysisService.updatePageBoundingBox$(
+      action.page, action.boundingBox.fromX, action.boundingBox.fromY, action.boundingBox.toX, action.boundingBox.toY).pipe(
+      switchMap((page: Page) => of(new ImageRecognitionChangePageBoundingBoxSuccess(page))),
+      catchError(err => of(new ImageRecognitionServerError(err)))
+    )));
+
+
+  @Effect()
+  clear$ = this.actions$.pipe(
+    ofType<ImageRecognitionClear>(ImageRecognitionActionTypes.ImageRecognitionClear),
+    switchMap((action: ImageRecognitionClear) => this.documentAnalysisService.clear(action.imageID).pipe(
+      switchMap(() => of(new ImageRecognitionClearSuccess())),
+      catchError(err => of(new ImageRecognitionServerError(err)))
+    )));
+
+
+  @Effect()
+  createPage$ = this.actions$.pipe(
+    ofType<ImageRecognitionCreatePage>(ImageRecognitionActionTypes.ImageRecognitionCreatePage),
+    switchMap((action: ImageRecognitionCreatePage) => this.documentAnalysisService.createPage$(
+      action.imageID, action.boundingBox.fromX, action.boundingBox.fromY, action.boundingBox.toX, action.boundingBox.toY).pipe(
+      switchMap((pages: Page[]) => of(new ImageRecognitionCreatePageSuccess(pages))),
+      catchError(err => of(new ImageRecognitionServerError(err)))
+    )));
+
+
+  @Effect()
+  createPages$ = this.actions$.pipe(
+    ofType<ImageRecognitionCreatePages>(ImageRecognitionActionTypes.ImageRecognitionCreatePages),
+    switchMap((action: ImageRecognitionCreatePages) => this.documentAnalysisService.createPages$(
+      action.imageID, action.numPages).pipe(
+      switchMap((pages: Page[]) => of(new ImageRecognitionCreatePagesSuccess(pages))),
+      catchError(err => of(new ImageRecognitionServerError(err)))
+    )));
+
+  @Effect()
+  createRegion$ = this.actions$.pipe(
+    ofType<ImageRecognitionCreateRegion>(ImageRecognitionActionTypes.ImageRecognitionCreateRegion),
+    switchMap((action: ImageRecognitionCreateRegion) => this.documentAnalysisService.createRegion$(
+      action.imageID, action.regionType,
+      action.boundingBox.fromX, action.boundingBox.fromY, action.boundingBox.toX, action.boundingBox.toY).pipe(
+      switchMap((pages: Page[]) => of(new ImageRecognitionCreateRegionSuccess(pages))),
+      catchError(err => of(new ImageRecognitionServerError(err)))
+    )));
+
+
+  @Effect()
+  deletePages$ = this.actions$.pipe(
+    ofType<ImageRecognitionDeletePages>(ImageRecognitionActionTypes.ImageRecognitionDeletePages),
+    switchMap((action: ImageRecognitionDeletePages) => this.documentAnalysisService.deletePages$(action.pages).pipe(
+      switchMap((deletedPagesID: NumberArray) => of(new ImageRecognitionDeletePagesSuccess(deletedPagesID))),
+      catchError(err => of(new ImageRecognitionServerError(err)))
+    )));
+
+
+  @Effect()
+  deleteRegions$ = this.actions$.pipe(
+    ofType<ImageRecognitionDeleteRegions>(ImageRecognitionActionTypes.ImageRecognitionDeleteRegions),
+    switchMap((action: ImageRecognitionDeleteRegions) => this.documentAnalysisService.deleteRegions$(action.regions).pipe(
+      switchMap((deletedRegionID) => of(new ImageRecognitionDeleteRegionsSuccess(deletedRegionID))),
+      catchError(err => of(new ImageRecognitionServerError(err)))
+    )));
+
 }

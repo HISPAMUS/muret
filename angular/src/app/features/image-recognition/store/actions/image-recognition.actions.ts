@@ -10,6 +10,8 @@ import {ImageRecognitionProgressStatus} from "../../../../core/model/entities/im
 import {Region} from "../../../../core/model/entities/region";
 import {RegionType} from "../../../../core/model/entities/region-type";
 import {ChangedRegionTypes} from "../../../../core/model/restapi/changed-region-types";
+import {BoundingBox} from "../../../../core/model/entities/bounding-box";
+import {NumberArray} from "../../../../core/model/restapi/number-array";
 
 /**
  * We use the same actions for overview, parts, document analysis ... because they share the state
@@ -44,6 +46,24 @@ export enum ImageRecognitionActionTypes {
   ImageRecognitionGetRegionTypesSuccess = '[Image recognition. Document Analysis] Get region types success',
   ImageRecognitionChangeRegionsType = '[Image Recognition. Document Analysis] Change regions type',
   ImageRecognitionChangeRegionsTypeSuccess = '[Image Recognition. Document Analysis] Change regions type success',
+  ImageRecognitionChangeRegionBoundingBox = '[Image Recognition. Document Analysis] Change region bounding box',
+  ImageRecognitionChangeRegionBoundingBoxSuccess = '[Image Recognition. Document Analysis] Change region bounding box success',
+  ImageRecognitionChangePageBoundingBox = '[Image Recognition. Document Analysis] Change page bounding box',
+  ImageRecognitionChangePageBoundingBoxSuccess = '[Image Recognition. Document Analysis] Change page bounding box success',
+  ImageRecognitionCreatePage = '[Image Recognition. Document Analysis] Create page',
+  ImageRecognitionCreatePageSuccess = '[Image Recognition. Document Analysis] Create page success',
+  ImageRecognitionCreatePages = '[Image Recognition. Document Analysis] Create pages',
+  ImageRecognitionCreatePagesSuccess = '[Image Recognition. Document Analysis] Create pages success',
+  ImageRecognitionCreateRegion = '[Image Recognition. Document Analysis] Create region',
+  ImageRecognitionCreateRegionSuccess = '[Image Recognition. Document Analysis] Create region success',
+  ImageRecognitionClear = '[Image Recognition. Document Analysis] Clear',
+  ImageRecognitionClearSuccess = '[Image Recognition. Document Analysis] Clear success',
+  ImageRecognitionDeletePages = '[Image Recognition. Document Analysis] Delete page',
+  ImageRecognitionDeletePagesSuccess = '[Image Recognition. Document Analysis] Delete page success',
+  ImageRecognitionDeleteRegions = '[Image Recognition. Document Analysis] Delete region',
+  ImageRecognitionDeleteRegionsSuccess = '[Image Recognition. Document Analysis] Delete region success',
+
+
 
 }
 
@@ -183,6 +203,85 @@ export class ImageRecognitionChangeRegionsTypeSuccess implements Action {
   constructor(public changeRegionTypes: ChangedRegionTypes) {}
 }
 
+export class ImageRecognitionChangeRegionBoundingBox implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionChangeRegionBoundingBox;
+  constructor(public region: Region, public boundingBox: BoundingBox) {}
+}
+
+export class ImageRecognitionChangeRegionBoundingBoxSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionChangeRegionBoundingBoxSuccess;
+  constructor(public region: Region) {}
+}
+
+export class ImageRecognitionChangePageBoundingBox implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionChangePageBoundingBox;
+  constructor(public page: Page, public boundingBox: BoundingBox) {}
+}
+
+export class ImageRecognitionChangePageBoundingBoxSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionChangePageBoundingBoxSuccess;
+  constructor(public page: Page) {}
+}
+
+export class ImageRecognitionCreatePage implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionCreatePage;
+  constructor(public imageID: number, public boundingBox: BoundingBox) {}
+}
+
+export class ImageRecognitionCreatePageSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionCreatePageSuccess;
+  constructor(public pages: Page[]) {} // it returns several pagesWithRegions because some regions may have changed its page
+}
+
+export class ImageRecognitionCreatePages implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionCreatePages;
+  constructor(public imageID: number, public numPages: number) {}
+}
+
+export class ImageRecognitionCreatePagesSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionCreatePagesSuccess;
+  constructor(public pages: Page[]) {} // new pagesWithRegions
+}
+
+export class ImageRecognitionCreateRegion implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionCreateRegion;
+  constructor(public imageID: number, public regionType: RegionType, public boundingBox: BoundingBox) {}
+}
+
+export class ImageRecognitionCreateRegionSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionCreateRegionSuccess;
+  constructor(public pages: Page[]) {} // it returns several pagesWithRegions because we don't a priori in which page the region has been created
+}
+
+export class ImageRecognitionDeletePages implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionDeletePages;
+  constructor(public pages: Page[]) {}
+}
+
+export class ImageRecognitionDeletePagesSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionDeletePagesSuccess;
+  constructor(public deletedPageIDs: NumberArray) {}
+}
+
+export class ImageRecognitionDeleteRegions implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionDeleteRegions;
+  constructor(public regions: Region[]) {}
+}
+
+export class ImageRecognitionDeleteRegionsSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionDeleteRegionsSuccess;
+  constructor(public deletedRegionIDs: NumberArray) {}
+}
+
+export class ImageRecognitionClear implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionClear;
+  constructor(public imageID: number) {}
+}
+
+export class ImageRecognitionClearSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionClearSuccess;
+  constructor() {}
+}
 
 
 export type ImageRecognitionActions =
@@ -202,6 +301,14 @@ export type ImageRecognitionActions =
 
   // document analysis
   ImageRecognitionGetRegionTypes | ImageRecognitionGetRegionTypesSuccess |
-  ImageRecognitionChangeRegionsType | ImageRecognitionChangeRegionsTypeSuccess
+  ImageRecognitionChangeRegionsType | ImageRecognitionChangeRegionsTypeSuccess |
+  ImageRecognitionChangeRegionBoundingBox | ImageRecognitionChangeRegionBoundingBoxSuccess |
+  ImageRecognitionChangePageBoundingBox | ImageRecognitionChangePageBoundingBoxSuccess |
+  ImageRecognitionCreatePage | ImageRecognitionCreatePageSuccess |
+  ImageRecognitionCreatePages | ImageRecognitionCreatePagesSuccess |
+  ImageRecognitionCreateRegion | ImageRecognitionCreateRegionSuccess |
+  ImageRecognitionClear | ImageRecognitionClearSuccess |
+  ImageRecognitionDeletePages | ImageRecognitionDeletePagesSuccess |
+  ImageRecognitionDeleteRegions | ImageRecognitionDeleteRegionsSuccess
   ;
 

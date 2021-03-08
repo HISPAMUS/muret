@@ -25,11 +25,16 @@ export class ImageDocumentAnalysisNavigatorComponent implements OnChanges {
   @Output() onShapesSelected = new EventEmitter<Shape[]>();
   @Output() modeChange = new EventEmitter(); // must have this name in order to be input / output
 
+  @Output() onSvgShapeCreated = new EventEmitter<Shape>();
+  @Output() onSvgShapeChanged = new EventEmitter<Shape>();
+
+
   modeValue: 'eSelecting' | 'eEditing' | 'eAdding';
 
   filteredOutRegionNames: Set<string> = new Set<string>();
 
   loadedImage$: Observable<SafeResourceUrl>;
+
 
 
   constructor(private imageFilesService: ImageFilesService, private sanitizer: DomSanitizer,
@@ -79,5 +84,13 @@ export class ImageDocumentAnalysisNavigatorComponent implements OnChanges {
 
   onSVGShapesSelected(shapes: Shape[]) {
     this.onShapesSelected.emit(shapes);
+  }
+
+  svgShapeChanged(shape: Shape) {
+    this.onSvgShapeChanged.emit(shape);
+  }
+
+  svgShapeCreated(shape: Shape) {
+    this.onSvgShapeCreated.emit(shape);
   }
 }

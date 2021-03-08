@@ -9,6 +9,8 @@
                       (onContextMenu)="onSVGContextMenu($event)"
                       (onShapesSelected)="onSVGShapesSelected($event)"
                       [nextShapeToAdd]="nextShapeToAdd"
+                      (svgShapeChanged)="svgShapeChanged($event)"
+                      (svgShapeCreated)="svgShapeCreated($event)"
       >
       </app-svg-canvas>
     </div>

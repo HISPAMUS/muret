@@ -142,6 +142,79 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
       return newState;
     }
 
+    case ImageRecognitionActionTypes.ImageRecognitionClearSuccess: {
+      const newState: ImageRecognitionState = {
+        pagesRegionsSymbols: [],
+        imageOverview: state.imageOverview,
+        regionTypes: state.regionTypes,
+        apiRestServerError: null
+      };
+      return newState;
+    }
+    case ImageRecognitionActionTypes.ImageRecognitionDeletePagesSuccess: {
+      const deletedPageIDS = new Set<number>();
+      action.deletedPageIDs.values.forEach(id => deletedPageIDS.add(id));
+
+      const newState: ImageRecognitionState = {
+        pagesRegionsSymbols: klona(state.pagesRegionsSymbols.filter(page => !deletedPageIDS.has(page.id))),
+        imageOverview: state.imageOverview,
+        regionTypes: state.regionTypes,
+        apiRestServerError: null
+      };
+      return newState;
+    }
+
+    case ImageRecognitionActionTypes.ImageRecognitionCreatePagesSuccess: // the action returns a new whole set of page, regions...
+    case ImageRecognitionActionTypes.ImageRecognitionCreatePageSuccess: {
+      const newState: ImageRecognitionState = {
+        pagesRegionsSymbols: action.pages,
+        imageOverview: state.imageOverview,
+        regionTypes: state.regionTypes,
+        apiRestServerError: null
+      };
+      return newState;
+    }
+    case ImageRecognitionActionTypes.ImageRecognitionDeleteRegionsSuccess: {
+      const deletedRegionIDS = new Set<number>();
+      action.deletedRegionIDs.values.forEach(id => deletedRegionIDS.add(id));
+      const newState: ImageRecognitionState = {
+        pagesRegionsSymbols: klona(state.pagesRegionsSymbols),
+        imageOverview: state.imageOverview,
+        regionTypes: state.regionTypes,
+        apiRestServerError: null
+      };
+
+      newState.pagesRegionsSymbols.forEach(page => {
+        page.regions = klona(page.regions.filter(region => !deletedRegionIDS.has(region.id)))
+      });
+      return newState;
+
+    }
+    case ImageRecognitionActionTypes.ImageRecognitionCreateRegionSuccess: {
+      const newState: ImageRecognitionState = {
+        pagesRegionsSymbols: klona(state.pagesRegionsSymbols),
+        imageOverview: state.imageOverview,
+        regionTypes: state.regionTypes,
+        apiRestServerError: null
+      };
+      action.pages.forEach(page => {
+        const changedPage = newState.pagesRegionsSymbols.find(p => p.id === page.id);
+        if (!changedPage) {
+          return {
+            pagesRegionsSymbols: state.pagesRegionsSymbols,
+            imageOverview: state.imageOverview,
+            regionTypes: state.regionTypes,
+            apiRestServerError: createServerError('Cannot add region', 'Cannot find page with id=' + page.id)
+          }
+        } else {
+          page.regions.forEach(region => {
+            changedPage.regions.push(region);
+          });
+        }
+      });
+      return newState;
+    }
+
     default:
       return state;
   }

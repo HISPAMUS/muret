@@ -20,33 +20,17 @@ export class DocumentAnalysisService {
     return this.apiRestClientService.getListExcerptProjection$<RegionType>('regionTypes');
   }
 
-  changeRegionsType$(regions: Region[], regionType: RegionType): Observable<ChangedRegionTypes> {
-    const url = `documentanalysis/changeRegionsType/${regionType.id}`
-
+  private getRegionIds(regions: Region[]): NumberArray {
     const regionIDS: NumberArray = {
       values: regions.map(region => region.id)
     };
-
-    return this.apiRestClientService.put$<ChangedRegionTypes>(url, regionIDS);
+    return regionIDS;
   }
 
+  changeRegionsType$(regions: Region[], regionType: RegionType): Observable<ChangedRegionTypes> {
+    const url = `documentanalysis/changeRegionsType/${regionType.id}`
 
-  // revisado hasta aquí
-
-
-  public getDocumentAnalysisImageProjection$(id: number): Observable<DocumentAnalysisImageProjection> {
-    return this.apiRestClientService.getProjectionOf$<DocumentAnalysisImageProjection>(id, 'images', 'documentAnalysisImage');
-  }
-
-  public updatePageBoundingBox$(page: Page, fromX: number, fromY: number, toX: number, toY: number): Observable<Page> {
-    const boundingBox: BoundingBox = {
-        id: page.id,
-        fromX,
-        fromY,
-        toX,
-        toY
-    };
-    return this.apiRestClientService.put$<Page>('documentanalysis/pageBoundingBoxUpdate', boundingBox);
+    return this.apiRestClientService.put$<ChangedRegionTypes>(url, this.getRegionIds(regions));
   }
 
   public updateRegionBoundingBox$(region: Region, fromX: number, fromY: number, toX: number, toY: number): Observable<Region> {
@@ -60,22 +44,51 @@ export class DocumentAnalysisService {
 
     const newRegion: Region = {
       id: region.id,
-      boundingBox,
-      part: region.part,
-      regionType: region.regionType
+      boundingBox
     };
 
-    return this.apiRestClientService.put$<Region>('documentanalysis/regionUpdate', newRegion);
+    return this.apiRestClientService.put$<Region>('documentanalysis/regionBoundingBoxUpdate', newRegion);
   }
 
-  updateRegionType$(region: Region, regionType: RegionType): Observable<Region> {
-    const newRegion: Region = {
-      id: region.id,
-      part: region.part,
-      regionType
+  public updatePageBoundingBox$(page: Page, fromX: number, fromY: number, toX: number, toY: number): Observable<Page> {
+    const boundingBox: BoundingBox = {
+      id: page.id,
+      fromX,
+      fromY,
+      toX,
+      toY
+    };
+    return this.apiRestClientService.put$<Page>('documentanalysis/pageBoundingBoxUpdate', boundingBox);
+  }
+
+  createRegion$(imageID: number, regionType: RegionType, fromX: number, fromY: number, toX: number, toY: number): Observable<Page[]> {
+    const boundingBox: BoundingBox = {
+      fromX,
+      fromY,
+      toX,
+      toY
     };
 
-    return this.apiRestClientService.put$<Region>('documentanalysis/regionUpdate', newRegion);
+    const region = {
+      imageID,
+      regionTypeID: regionType.id,
+      boundingBox
+    };
+
+    return this.apiRestClientService.post$<Page[]>('documentanalysis/createRegion', region);
+  }
+
+  clear(imageID: number): Observable<void> {
+    return this.apiRestClientService.delete$('documentanalysis/clear', imageID);
+  }
+
+  deletePages$(page: Page[]): Observable<NumberArray> {
+    //TODO return this.apiRestClientService.delete$<NumberArray>('documentanalysis/deletePages', this.getRegionIds(regions));
+    return null;
+  }
+
+  deleteRegions$(regions: Region[]): Observable<NumberArray> {
+    return this.apiRestClientService.delete$<NumberArray>('documentanalysis/deleteRegions', this.getRegionIds(regions));
   }
 
   createPage$(imageID: number, fromX: number, fromY: number, toX: number, toY: number): Observable<Page[]> {
@@ -103,34 +116,29 @@ export class DocumentAnalysisService {
     return this.apiRestClientService.post$<Page[]>('documentanalysis/createPages', data);
   }
 
-  createRegion$(imageID: number, regionType: RegionType, fromX: number, fromY: number, toX: number, toY: number): Observable<Page[]> {
-    const boundingBox: BoundingBox = {
-      fromX,
-      fromY,
-      toX,
-      toY
+
+  // revisado hasta aquí
+
+
+  public getDocumentAnalysisImageProjection$(id: number): Observable<DocumentAnalysisImageProjection> {
+    return this.apiRestClientService.getProjectionOf$<DocumentAnalysisImageProjection>(id, 'images', 'documentAnalysisImage');
+  }
+
+
+
+
+
+  updateRegionType$(region: Region, regionType: RegionType): Observable<Region> {
+    const newRegion: Region = {
+      id: region.id,
+      part: region.part,
+      regionType
     };
 
-    const region = {
-      imageID,
-      regionTypeID: regionType.id,
-      boundingBox
-    };
-
-    return this.apiRestClientService.post$<Page[]>('documentanalysis/createRegion', region);
+    return this.apiRestClientService.put$<Region>('documentanalysis/regionUpdate', newRegion);
   }
 
-  clear(imageID: number): Observable<void> {
-    return this.apiRestClientService.delete$('documentanalysis/clear', imageID);
-  }
 
-  deletePage$(pageID: number): Observable<number> {
-    return this.apiRestClientService.delete$<number>('documentanalysis/deletePage', pageID);
-  }
-
-  deleteRegion$(regionID: number): Observable<number> {
-    return this.apiRestClientService.delete$<number>('documentanalysis/deleteRegion', regionID);
-  }
 
   getModels$(imageID: number): Observable<ClassifierModel[]> {
     const url = `classifierModels/documentAnalysis/${imageID}`
