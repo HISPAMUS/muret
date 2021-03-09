@@ -214,20 +214,18 @@ public class DocumentAnalysisController extends MuRETBaseController {
     @PostMapping(path = {"deleteRegions"})
     public LongArray deleteRegions(@RequestBody LongArray regionIDs)  {
         try {
-            ArrayList<Region> regions = new ArrayList<>();
             LongArray result = new LongArray();
             for (long id: regionIDs.getValues()) {
                 Optional<Region> region = regionRepository.findById(id);
                 if (region.isPresent()) {
                     if (region.get().getSymbols() != null && !region.get().getSymbols().isEmpty()) {
-                        throw new IM3WSException("A region has symmbols inside, it cannot be deleted");
+                        throw new IM3WSException("A region has symbols inside, it cannot be deleted");
                     }
-                    regions.add(region.get());
+                    documentAnalysisModel.deleteRegion(id);
                     result.add(id);
                 }
             }
 
-            regionRepository.deleteAll(regions);
             return result;
         } catch (IM3WSException e) {
             throw ControllerUtils.createServerError(this, "Cannot delete page", e);

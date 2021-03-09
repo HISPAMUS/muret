@@ -17,6 +17,7 @@ import {RegionType} from "../../../../core/model/entities/region-type";
 })
 export class DocumentAnalysisFiltersComponent implements OnInit, OnChanges, AfterContentInit {
   @Input() regionTypes: RegionType[];
+  @Input() addRegionTypeToFilter: RegionType; // on detecting change of this value, the region type is added to the filter
   @Output() onFilterChange = new EventEmitter<Set<string>>(); // emits the regionTypeFilterOut
   regionTypeFilterOut: Set<string>;
   mainRegionTypes: RegionType[]; // staff, lyrics
@@ -53,6 +54,11 @@ export class DocumentAnalysisFiltersComponent implements OnInit, OnChanges, Afte
           this.regionTypeFilterOut.add(region.name); // check only staff
         }
       });
+    }
+
+    if (changes.addRegionTypeToFilter && this.addRegionTypeToFilter) {
+      this.regionTypeFilterOut.delete(this.addRegionTypeToFilter.name);
+      this.onFilterChange.emit(this.regionTypeFilterOut);
     }
   }
 
@@ -111,4 +117,11 @@ export class DocumentAnalysisFiltersComponent implements OnInit, OnChanges, Afte
     }
   }
 
+  isFilteredOut(regionType: RegionType) {
+    return this.regionTypeFilterOut.has(regionType.name);
+  }
+
+  mustBeChecked(regionType: RegionType) { // if selected in the toolbar to be added it cannot be filtered out - then we disable it
+    return this.addRegionTypeToFilter != null && this.addRegionTypeToFilter.id === regionType.id;
+  }
 }

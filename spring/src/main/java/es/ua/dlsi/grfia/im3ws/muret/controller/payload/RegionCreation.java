@@ -4,7 +4,7 @@ import es.ua.dlsi.grfia.im3ws.muret.entity.BoundingBox;
 
 public class RegionCreation {
     long imageID;
-    int regionTypeID;
+    Integer regionTypeID;
     BoundingBox boundingBox;
 
     public RegionCreation() {
@@ -24,11 +24,11 @@ public class RegionCreation {
         this.imageID = imageID;
     }
 
-    public int getRegionTypeID() {
+    public Integer getRegionTypeID() {
         return regionTypeID;
     }
 
-    public void setRegionTypeID(int regionTypeID) {
+    public void setRegionTypeID(Integer regionTypeID) {
         this.regionTypeID = regionTypeID;
     }
 

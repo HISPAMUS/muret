@@ -82,6 +82,9 @@ export class SVGSelectionManager {
         } else if (a.fromX > b.fromX) {
           return 1;
         } else {
+          if (!a.id || !b.id) {
+            throw new Error('Missing id in shape');
+          }
           return a.id.localeCompare(b.id);
         }
       }

@@ -71,7 +71,7 @@ export class DocumentAnalysisService {
 
     const region = {
       imageID,
-      regionTypeID: regionType.id,
+      regionTypeID: regionType!=null?regionType.id:null,
       boundingBox
     };
 

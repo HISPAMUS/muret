@@ -20,6 +20,7 @@ export class ImageDocumentAnalysisNavigatorComponent implements OnChanges {
   @Input() shapes: Shape[];
   @Input() nextShapeToAdd: 'Rectangle' | 'Line' | 'Text' | 'Polylines';
   @Input() zoomManager: ZoomManager;
+  @Input() addRegionTypeToFilter: RegionType;
 
   @Output() onNavigatorContextMenu = new EventEmitter<ContextMenuSVGSelectionEvent>();
   @Output() onShapesSelected = new EventEmitter<Shape[]>();

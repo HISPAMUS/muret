@@ -1,6 +1,6 @@
 <div id="mainRegionTypesFilter">
   <label *ngFor="let regionType of mainRegionTypes; trackBy: trackByRegionTypeFn" ngbButtonLabel>
-    <input type="checkbox" [checked]="isStaff(regionType)" [name]="regionType.name" (change)="onLayerVisibilityChanged($event)">
+    <input type="checkbox" [checked]="!isFilteredOut(regionType)" [name]="regionType.name" (change)="onLayerVisibilityChanged($event)" [disabled]="mustBeChecked(regionType)">
     {{beautifyRegionName(regionType)}}
   </label>
   <label ngbButtonLabel>
@@ -14,7 +14,7 @@
 </div>
 <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed" id="otherRegionTypesFilter">
     <label *ngFor="let regionType of otherRegionTypes; trackBy: trackByRegionTypeFn" ngbButtonLabel>
-      <input type="checkbox" [checked]="false" [name]="regionType.name" (change)="onLayerVisibilityChanged($event)">
+      <input type="checkbox" [checked]="!isFilteredOut(regionType)" [name]="regionType.name" (change)="onLayerVisibilityChanged($event)" [disabled]="mustBeChecked(regionType)">
       {{beautifyRegionName(regionType)}}
     </label>
 </div>

@@ -281,13 +281,21 @@ public class DocumentAnalysisModel {
     }
 
     @Transactional
-    public Set<Page> createRegion(long imageID, int regionTypeID, BoundingBox boundingBox) throws IM3WSException {
+    public Set<Page> createRegion(long imageID, Integer regionTypeID, BoundingBox boundingBox) throws IM3WSException {
         Image persistentImage = getImage(imageID);
 
-        Optional<RegionType> persistentRegionType = regionTypeRepository.findById(regionTypeID);
-        if (!persistentRegionType.isPresent()) {
-            throw new IM3WSException("Cannot find a region type with id " + regionTypeID);
+        RegionType regionType;
+
+        if (regionTypeID != null) {
+            Optional<RegionType> persistentRegionType = regionTypeRepository.findById(regionTypeID);
+            if (!persistentRegionType.isPresent()) {
+                throw new IM3WSException("Cannot find a region type with id " + regionTypeID);
+            }
+            regionType = persistentRegionType.get();
+        } else {
+            regionType = undefinedRegionType;
         }
+
 
         // if there is not any page, a new page is created spaning the whole image
         Set<Page> pages;
@@ -311,7 +319,7 @@ public class DocumentAnalysisModel {
         }
 
         Region region = new Region();
-        region.setRegionType(persistentRegionType.get());
+        region.setRegionType(regionType);
         region.setPage(parentPage);
         region.setBoundingBox(boundingBox);
         regionRepository.save(region);
