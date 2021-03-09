@@ -178,7 +178,12 @@ public class DocumentAnalysisController extends MuRETBaseController {
         }
     }
 
-    @DeleteMapping(path = {"deletePages"})
+    /**
+     * Use post instead of delete for sending the request body
+     * @param pageIDs
+     * @return
+     */
+    @PostMapping(path = {"deletePages"})
     public LongArray deletePages(@RequestBody LongArray pageIDs)  {
         try {
             ArrayList<Page> pages = new ArrayList<>();
@@ -201,7 +206,12 @@ public class DocumentAnalysisController extends MuRETBaseController {
         }
     }
 
-    @DeleteMapping(path = {"deleteRegions"})
+    /**
+     * Use post instead of delete for sending the request body
+     * @param regionIDs
+     * @return
+     */
+    @PostMapping(path = {"deleteRegions"})
     public LongArray deleteRegions(@RequestBody LongArray regionIDs)  {
         try {
             ArrayList<Region> regions = new ArrayList<>();

@@ -172,13 +172,13 @@ export class DocumentAnalysisEffects {
     switchMap((page: Page[]) => of(new AutomaticDocumentAnalysisSuccess(page))),
       catchError(err => of(new DocumentAnalysisServerError(err)))
     )));
-  
+
   @Effect()
   attemptDocumentWipeout$ = this.actions$.pipe(
     ofType<ClearAllDoc>(DocumentAnalysisActionTypes.DocumentClearAll),
     switchMap((action:ClearAllDoc) => this.documentAnalysisService.attemptDocumentWipeOut$(action.imageID).pipe(
       switchMap((response: StringResponse)=> of(new Clear(action.imageID))),
-      catchError(error=> of(new DocumentAnalysisServerError(error))) 
+      catchError(error=> of(new DocumentAnalysisServerError(error)))
     )));
 
 

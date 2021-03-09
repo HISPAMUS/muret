@@ -83,12 +83,12 @@ export class DocumentAnalysisService {
   }
 
   deletePages$(page: Page[]): Observable<NumberArray> {
-    //TODO return this.apiRestClientService.delete$<NumberArray>('documentanalysis/deletePages', this.getRegionIds(regions));
+    //TODO return this.apiRestClientService.post$<NumberArray>('documentanalysis/deletePages', this.getRegionIds(regions));
     return null;
   }
 
   deleteRegions$(regions: Region[]): Observable<NumberArray> {
-    return this.apiRestClientService.delete$<NumberArray>('documentanalysis/deleteRegions', this.getRegionIds(regions));
+    return this.apiRestClientService.post$<NumberArray>('documentanalysis/deleteRegions', this.getRegionIds(regions));
   }
 
   createPage$(imageID: number, fromX: number, fromY: number, toX: number, toY: number): Observable<Page[]> {
