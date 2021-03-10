@@ -219,7 +219,7 @@ public class DocumentAnalysisController extends MuRETBaseController {
                 Optional<Region> region = regionRepository.findById(id);
                 if (region.isPresent()) {
                     if (region.get().getSymbols() != null && !region.get().getSymbols().isEmpty()) {
-                        throw new IM3WSException("A region has symbols inside, it cannot be deleted");
+                        throw new IM3WSException("A region has " + region.get().getSymbols().size() + " symbols inside, it cannot be deleted");
                     }
                     documentAnalysisModel.deleteRegion(id);
                     result.add(id);
@@ -231,13 +231,6 @@ public class DocumentAnalysisController extends MuRETBaseController {
             throw ControllerUtils.createServerError(this, "Cannot delete page", e);
         }
     }
-
-    // revisado hasta aquí
-
-
-
-
-
 
 
     @Transactional
@@ -254,6 +247,14 @@ public class DocumentAnalysisController extends MuRETBaseController {
             throw ControllerUtils.createServerError(this, "Cannot analyze document", e);
         }
     }
+
+    // revisado hasta aquí
+
+
+
+
+
+
 
     @Transactional
     @DeleteMapping(path={"clearImage/{imageID}"})

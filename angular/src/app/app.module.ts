@@ -68,6 +68,7 @@ import {faTasks} from "@fortawesome/free-solid-svg-icons/faTasks";
 import {faEyeSlash} from "@fortawesome/free-solid-svg-icons/faEyeSlash";
 import {faSpinner} from "@fortawesome/free-solid-svg-icons/faSpinner";
 import {faMousePointer} from "@fortawesome/free-solid-svg-icons/faMousePointer";
+import {faServer} from "@fortawesome/free-solid-svg-icons/faServer";
 
 @NgModule({
   declarations: [
@@ -151,6 +152,7 @@ export class AppModule {
     library.addIcons(faEyeSlash); // used in ProgressStatus
     library.addIcons(faSpinner); // used in ProgressStatus
     library.addIcons(faMousePointer); // used in image recognition toolbar
+    library.addIcons(faServer); // used in classifications
 
   }
 }

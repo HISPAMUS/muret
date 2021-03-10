@@ -88,11 +88,24 @@ public class ClassifierModelsController {
         return document;
     }
 
+    @GetMapping(path={"documentAnalysis/{imageID}"})
+    @Transactional
+    public List<ClassifierModel> getDocumentAnalysisClassifierModels(@PathVariable("imageID") Long imageID) {
+        return requestModels(ClassifierModelTypes.eDocumentAnalysis, imageID);
+    }
+
+
+
+
+    // revisado hasta aquí
     @Transactional
     public List<ClassifierModel> requestModels(ClassifierModelTypes classifierType, Long imageID)
     {
         try {
             Document document = getDocument(imageID);
+            if (document.getNotationType() == null) {
+                throw new IM3WSException("The document has not a notation type");
+            }
             NotationType notationType = document.getNotationType();
             ManuscriptType manuscriptType = document.getManuscriptType();
             Integer documentID = document.getId();
@@ -113,12 +126,6 @@ public class ClassifierModelsController {
     @Transactional
     public List<ClassifierModel>  getAgnosticEnd2EndClassifierModel(@PathVariable("imageID") Long imageID) {
         return requestModels(ClassifierModelTypes.eAgnosticEnd2End, imageID);
-    }
-
-    @GetMapping(path={"documentAnalysis/{imageID}"})
-    @Transactional
-    public List<ClassifierModel> getDocumentAnalysisClassifierModels(@PathVariable("imageID") Long imageID) {
-        return requestModels(ClassifierModelTypes.eDocumentAnalysis, imageID);
     }
 
     @GetMapping(path={"translator/{imageID}"})

@@ -11,6 +11,7 @@ import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 import { StringResponse } from 'src/app/core/model/restapi/string-response';
 import {ChangedRegionTypes} from "../../../core/model/restapi/changed-region-types";
 import {NumberArray} from "../../../core/model/restapi/number-array";
+import {DocumentAnalysisForm} from "../../../core/model/restapi/document-analysis-form";
 
 @Injectable() // non-singleton
 export class DocumentAnalysisService {
@@ -123,6 +124,18 @@ export class DocumentAnalysisService {
   }
 
 
+
+  getModels$(imageID: number): Observable<ClassifierModel[]> {
+    const url = `classifierModels/documentAnalysis/${imageID}`
+    return this.apiRestClientService.get$<ClassifierModel[]>(url);
+  }
+
+  attemptAutomaticAnalysis$(form: DocumentAnalysisForm): Observable<Page[]> {
+     const url = 'documentanalysis/docAnalyze';
+     return this.apiRestClientService.post$<Page[]>(url, form);
+   }
+
+
   // revisado hasta aquí
 
 
@@ -145,16 +158,6 @@ export class DocumentAnalysisService {
   }
 
 
-
-  getModels$(imageID: number): Observable<ClassifierModel[]> {
-    const url = `classifierModels/documentAnalysis/${imageID}`
-    return this.apiRestClientService.get$<ClassifierModel[]>(url);
-  }
-
- /* attemptAutomaticAnalysis$(form: DocumentAnalysisForm): Observable<Page[]> {
-    const url = 'documentanalysis/docAnalyze';
-    return this.apiRestClientService.post$<Page[]>(url, form);
-  }*/
 
   attemptDocumentWipeOut$(id: number): Observable<StringResponse> {
     const url = 'documentanalysis/clearImage';

@@ -23,3 +23,9 @@ export const selectImageRecognitionRegionTypes = createSelector(
 );
 
 
+export const selectImageRecognitionDocumentAnalysisClassifierModels = createSelector(
+  selectImageRecognitionState,
+  (state: ImageRecognitionState) => state.documentAnalysisClassifierModels
+);
+
+

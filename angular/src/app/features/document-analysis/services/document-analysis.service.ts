@@ -7,7 +7,7 @@ import {Page} from '../../../core/model/entities/page';
 import {Region} from '../../../core/model/entities/region';
 import {BoundingBox} from '../../../core/model/entities/bounding-box';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
-import { DocumentAnalysisForm } from '../model/document-analysis-form';
+import { DocumentAnalysisForm } from '../../../core/model/restapi/document-analysis-form';
 import { StringResponse } from 'src/app/core/model/restapi/string-response';
 
 @Injectable() // non-singleton

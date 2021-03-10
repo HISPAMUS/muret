@@ -5,6 +5,8 @@ import {catchError, switchMap} from 'rxjs/operators';
 import {ImageOverviewService} from "../../services/image-overview.service";
 import {
   ImageRecognitionActionTypes,
+  ImageRecognitionAutomaticDocumentAnalysis,
+  ImageRecognitionAutomaticDocumentAnalysisSuccess,
   ImageRecognitionChangePageBoundingBox,
   ImageRecognitionChangePageBoundingBoxSuccess,
   ImageRecognitionChangeRegionBoundingBox,
@@ -23,6 +25,8 @@ import {
   ImageRecognitionDeletePagesSuccess,
   ImageRecognitionDeleteRegions,
   ImageRecognitionDeleteRegionsSuccess,
+  ImageRecognitionGetDocumentAnModels,
+  ImageRecognitionGetDocumentAnModelsSuccess,
   ImageRecognitionGetImageOverview,
   ImageRecognitionGetImageOverviewSuccess,
   ImageRecognitionGetPagesRegionsSymbols,
@@ -55,6 +59,12 @@ import {
 import {DocumentAnalysisService} from "../../services/document-analysis.service";
 import {Region} from "../../../../core/model/entities/region";
 import {NumberArray} from "../../../../core/model/restapi/number-array";
+import {
+  AutomaticDocumentAnalysis, AutomaticDocumentAnalysisSuccess,
+  DocumentAnalysisActionTypes, DocumentAnalysisServerError,
+  GetDocumentAnModels, GetDocumentAnModelsSuccess
+} from "../../../document-analysis/store/actions/document-analysis.actions";
+import {ClassifierModel} from "../../../../core/model/entities/classifier-model";
 
 
 /**
@@ -245,6 +255,23 @@ export class ImageOverviewEffects {
     ofType<ImageRecognitionDeleteRegions>(ImageRecognitionActionTypes.ImageRecognitionDeleteRegions),
     switchMap((action: ImageRecognitionDeleteRegions) => this.documentAnalysisService.deleteRegions$(action.regions).pipe(
       switchMap((deletedRegionID) => of(new ImageRecognitionDeleteRegionsSuccess(deletedRegionID))),
+      catchError(err => of(new ImageRecognitionServerError(err)))
+    )));
+
+  @Effect()
+  getModel$ = this.actions$.pipe(
+    ofType<ImageRecognitionGetDocumentAnModels>(ImageRecognitionActionTypes.ImageRecognitionGetDocumentAnModels),
+    switchMap((action: ImageRecognitionGetDocumentAnModels) => this.documentAnalysisService.getModels$(action.imageID).pipe(
+      switchMap((classifierModels: ClassifierModel[]) => of(new ImageRecognitionGetDocumentAnModelsSuccess(classifierModels))),
+      catchError(err => of(new DocumentAnalysisServerError(err)))
+    )));
+
+
+  @Effect()
+  attemptAutomaticAnalysis$ = this.actions$.pipe(
+    ofType<ImageRecognitionAutomaticDocumentAnalysis>(ImageRecognitionActionTypes.ImageRecognitionAutomaticDocumentAnalysis),
+    switchMap((action: ImageRecognitionAutomaticDocumentAnalysis) => this.documentAnalysisService.attemptAutomaticAnalysis$(action.form).pipe(
+      switchMap((page: Page[]) => of(new ImageRecognitionAutomaticDocumentAnalysisSuccess(page))),
       catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 

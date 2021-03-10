@@ -12,6 +12,8 @@ import {RegionType} from "../../../../core/model/entities/region-type";
 import {ChangedRegionTypes} from "../../../../core/model/restapi/changed-region-types";
 import {BoundingBox} from "../../../../core/model/entities/bounding-box";
 import {NumberArray} from "../../../../core/model/restapi/number-array";
+import {ClassifierModel} from "../../../../core/model/entities/classifier-model";
+import {DocumentAnalysisForm} from "../../../../core/model/restapi/document-analysis-form";
 
 /**
  * We use the same actions for overview, parts, document analysis ... because they share the state
@@ -62,8 +64,10 @@ export enum ImageRecognitionActionTypes {
   ImageRecognitionDeletePagesSuccess = '[Image Recognition. Document Analysis] Delete pages success',
   ImageRecognitionDeleteRegions = '[Image Recognition. Document Analysis] Delete region',
   ImageRecognitionDeleteRegionsSuccess = '[Image Recognition. Document Analysis] Delete region success',
-
-
+  ImageRecognitionGetDocumentAnModels = '[Image Recognition. DocumentAnalysis] Get Models',
+  ImageRecognitionGetDocumentAnModelsSuccess = '[Image Recognition. DocumentAnalysis] Get Models Success',
+  ImageRecognitionAutomaticDocumentAnalysis = '[Image Recognition. DocumentAnalysis] Start automatic analysis',
+  ImageRecognitionAutomaticDocumentAnalysisSuccess = '[Image Recognition. DocumentAnalysis] Automatic analysis success'
 
 }
 
@@ -283,6 +287,25 @@ export class ImageRecognitionClearSuccess implements Action {
   constructor() {}
 }
 
+export class ImageRecognitionGetDocumentAnModels implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionGetDocumentAnModels;
+  constructor(public imageID: number) {}
+}
+
+export class ImageRecognitionGetDocumentAnModelsSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionGetDocumentAnModelsSuccess;
+  constructor(public response: ClassifierModel[]) {}
+}
+
+export class ImageRecognitionAutomaticDocumentAnalysis implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionAutomaticDocumentAnalysis;
+  constructor(public form: DocumentAnalysisForm) {}
+}
+
+export class ImageRecognitionAutomaticDocumentAnalysisSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionAutomaticDocumentAnalysisSuccess;
+  constructor(public pages: Page[]) {}
+}
 
 export type ImageRecognitionActions =
   ImageRecognitionServerError |
@@ -309,6 +332,10 @@ export type ImageRecognitionActions =
   ImageRecognitionCreateRegion | ImageRecognitionCreateRegionSuccess |
   ImageRecognitionClear | ImageRecognitionClearSuccess |
   ImageRecognitionDeletePages | ImageRecognitionDeletePagesSuccess |
-  ImageRecognitionDeleteRegions | ImageRecognitionDeleteRegionsSuccess
+  ImageRecognitionDeleteRegions | ImageRecognitionDeleteRegionsSuccess |
+
+  ImageRecognitionGetDocumentAnModels | ImageRecognitionGetDocumentAnModelsSuccess |
+  ImageRecognitionAutomaticDocumentAnalysis | ImageRecognitionAutomaticDocumentAnalysisSuccess
+
   ;
 

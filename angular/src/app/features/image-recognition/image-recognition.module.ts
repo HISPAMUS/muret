@@ -22,10 +22,11 @@ import {ContextMenuModule} from "ngx-contextmenu";
 import {ImagePartsService} from "./services/image-parts.service";
 import { DocumentAnalysisToolbarComponent } from './components/document-analysis-toolbar/document-analysis-toolbar.component';
 import { ImageRecognitionToolbarComponent } from './components/image-recognition-toolbar/image-recognition-toolbar.component';
+import { DocumentAnalysisClassifiersComponent } from './components/document-analysis-classifiers/document-analysis-classifiers.component';
 
 
 @NgModule({
-  declarations: [ImageOverviewComponent, ImageDocumentAnalysisNavigatorComponent, PartsInImageComponentComponent, DocumentAnalysisComponent, TranscriptionComponentComponent, DocumentAnalysisFiltersComponent, DocumentAnalysisToolbarComponent, ImageRecognitionToolbarComponent],
+  declarations: [ImageOverviewComponent, ImageDocumentAnalysisNavigatorComponent, PartsInImageComponentComponent, DocumentAnalysisComponent, TranscriptionComponentComponent, DocumentAnalysisFiltersComponent, DocumentAnalysisToolbarComponent, ImageRecognitionToolbarComponent, DocumentAnalysisClassifiersComponent],
     imports: [
         CommonModule,
         StoreModule.forFeature('imageRecognition', imageRecognitionReducers),
