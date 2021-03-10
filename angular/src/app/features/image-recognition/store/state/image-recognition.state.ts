@@ -10,6 +10,7 @@ export interface ImageRecognitionState {
   pagesRegionsSymbols: Page[];
   regionTypes: RegionType[];
   documentAnalysisClassifierModels: ClassifierModel[];
+  analyzing: boolean;
 }
 
 export const initialImageRecognitionState: ImageRecognitionState = {
@@ -17,7 +18,8 @@ export const initialImageRecognitionState: ImageRecognitionState = {
   pagesRegionsSymbols: null,
   apiRestServerError: null,
   regionTypes: null,
-  documentAnalysisClassifierModels: null
+  documentAnalysisClassifierModels: null,
+  analyzing: false
 };
 
 export function getInitialState(): ImageRecognitionState {

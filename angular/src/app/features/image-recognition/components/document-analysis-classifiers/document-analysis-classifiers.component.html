@@ -1,11 +1,11 @@
 <div id="classifiers">
-  Automatic:
   <select class="form-control" id="agnosticEnd2EndClassifierModel" [(ngModel)]="danalysisModel" required>
+    <option disabled selected value="undefined">Select a classifier:</option>
     <option *ngFor="let model of documentAnalysisModels$ | async" [value]="model.id">{{model.name}}</option>
   </select>
-  <button class="btn btn-primary" (click)="attemptDocumentAnalysis()">
-    <fa-icon *ngIf="!processing" icon="server" class="icons" size="lg" ngbTooltip="Execute document analysis"></fa-icon>
-    <span *ngIf="processing" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+  <button [disabled]="!danalysisModel" class="btn btn-primary" (click)="attemptDocumentAnalysis()">
+    <fa-icon *ngIf="!(analyzing$ | async)" icon="server" class="icons" size="lg" ngbTooltip="Execute document analysis"></fa-icon>
+    <span *ngIf="analyzing$ |async" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
   </button>
 </div>
 

@@ -29,3 +29,7 @@ export const selectImageRecognitionDocumentAnalysisClassifierModels = createSele
 );
 
 
+export const selectImageRecognitionAnalyzing = createSelector(
+  selectImageRecognitionState,
+  (state: ImageRecognitionState) => state.analyzing
+);
