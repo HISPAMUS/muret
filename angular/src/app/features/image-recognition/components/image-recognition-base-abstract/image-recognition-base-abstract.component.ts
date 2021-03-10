@@ -35,11 +35,13 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
   private _imageOverview: ImageOverview;
   private imageOverviewSubscription: Subscription;
   private pagesSubscription: Subscription;
+  private regionTypesSubscription: Subscription;
   regionTypes$: Observable<RegionType[]>;
   private _documentAnalysisShapes: Shape[];
   zoomManager: ZoomManager = new ZoomManager();
   protected phase: string;
   private _status: string;
+  protected undefinedRegionType: RegionType;
 
   constructor(protected route: ActivatedRoute, protected store: Store<ImageRecognitionState>, protected dialogsService: DialogsService) {
     this.store.dispatch(new ImageRecognitionGetRegionTypes());
@@ -54,6 +56,14 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
     });
 
     this.regionTypes$ = this.store.select(selectImageRecognitionRegionTypes);
+    this.regionTypesSubscription = this.regionTypes$.subscribe(next => {
+      if (next) {
+        this.undefinedRegionType = next.find(regionType => regionType.name === 'undefined');
+        if (!this.undefinedRegionType) {
+          throw new Error('Cannot find a region type with name "Undefined"');
+        }
+      }
+    });
 
     this.imageOverviewSubscription = this.store.select(selectImageRecognitionImageOverview).subscribe(next => {
       if (next) {
@@ -76,6 +86,7 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
   ngOnDestroy() {
     this.imageOverviewSubscription.unsubscribe();
     this.pagesSubscription.unsubscribe();
+    this.regionTypesSubscription.unsubscribe();
   }
 
   get imageOverview() {

@@ -27,6 +27,13 @@ export class DocumentAnalysisService {
     return regionIDS;
   }
 
+  private getPagesIds(pages: Page[]): NumberArray {
+    const pagesIDS: NumberArray = {
+      values: pages.map(page => page.id)
+    };
+    return pagesIDS;
+  }
+
   changeRegionsType$(regions: Region[], regionType: RegionType): Observable<ChangedRegionTypes> {
     const url = `documentanalysis/changeRegionsType/${regionType.id}`
 
@@ -82,9 +89,8 @@ export class DocumentAnalysisService {
     return this.apiRestClientService.delete$('documentanalysis/clear', imageID);
   }
 
-  deletePages$(page: Page[]): Observable<NumberArray> {
-    //TODO return this.apiRestClientService.post$<NumberArray>('documentanalysis/deletePages', this.getRegionIds(regions));
-    return null;
+  deletePages$(pages: Page[]): Observable<NumberArray> {
+    return this.apiRestClientService.post$<NumberArray>('documentanalysis/deletePages', this.getPagesIds(pages));
   }
 
   deleteRegions$(regions: Region[]): Observable<NumberArray> {

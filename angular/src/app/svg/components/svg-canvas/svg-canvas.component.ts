@@ -396,6 +396,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
     if (event.code === 'Escape') {
       this.mode = 'eSelecting';
       this.selectionManager.clear();
+      this.onShapesSelected.emit(null);
     }
    /*TODO if (event.code === 'Escape') {
       if (this.selectedComponent && this.selectedComponent.shape && !this.selectedComponent.shape.data) { // if not inserted yet

@@ -8,9 +8,10 @@ import {RegionType} from "../../../../core/model/entities/region-type";
 })
 export class DocumentAnalysisToolbarComponent implements OnInit, OnChanges {
   @Input() regionTypes: RegionType[];
-  @Input() selectedRegion: RegionType | 'several';
+  @Input() selectedRegion: RegionType | 'page' | 'several';
   @Output() onChangeRegion = new EventEmitter<RegionType | 'page'>();
-  selectedRegionTypeID: number | 'several';
+  selectedRegionTypeID: number | 'page' | 'several';
+  disableRegions: boolean = false; // it comes from the input (when a region is selected), and is used to disable changing a page into a region type
 
   constructor() { }
 
@@ -18,17 +19,27 @@ export class DocumentAnalysisToolbarComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.selectedRegion && this.selectedRegion) {
-      if (this.selectedRegion == 'several') {
-        this.selectedRegionTypeID = 'several';
+    if (changes.selectedRegion) {
+      if (this.selectedRegion) {
+        if (this.selectedRegion == 'several' || this.selectedRegion == 'page') {
+          this.selectedRegionTypeID = this.selectedRegion;
+          this.disableRegions = true;
+        } else {
+          this.selectedRegionTypeID = this.selectedRegion.id;
+          this.disableRegions = false;
+        }
       } else {
-        this.selectedRegionTypeID = this.selectedRegion.id;
+        this.disableRegions = false;
       }
     }
   }
 
   setRegionType(regionType: RegionType) {
     this.onChangeRegion.emit(regionType);
+  }
+
+  setPage() {
+    this.onChangeRegion.emit('page');
   }
 
   trackByRegionTypeFn(index, item: RegionType) {

@@ -58,8 +58,8 @@ export enum ImageRecognitionActionTypes {
   ImageRecognitionCreateRegionSuccess = '[Image Recognition. Document Analysis] Create region success',
   ImageRecognitionClear = '[Image Recognition. Document Analysis] Clear',
   ImageRecognitionClearSuccess = '[Image Recognition. Document Analysis] Clear success',
-  ImageRecognitionDeletePages = '[Image Recognition. Document Analysis] Delete page',
-  ImageRecognitionDeletePagesSuccess = '[Image Recognition. Document Analysis] Delete page success',
+  ImageRecognitionDeletePages = '[Image Recognition. Document Analysis] Delete pages',
+  ImageRecognitionDeletePagesSuccess = '[Image Recognition. Document Analysis] Delete pages success',
   ImageRecognitionDeleteRegions = '[Image Recognition. Document Analysis] Delete region',
   ImageRecognitionDeleteRegionsSuccess = '[Image Recognition. Document Analysis] Delete region success',
 

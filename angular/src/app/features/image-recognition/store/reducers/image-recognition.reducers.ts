@@ -191,7 +191,14 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
 
     }
     case ImageRecognitionActionTypes.ImageRecognitionCreateRegionSuccess: {
-      const newState: ImageRecognitionState = {
+    const newState: ImageRecognitionState = {
+        pagesRegionsSymbols: action.pages,
+        imageOverview: state.imageOverview,
+        regionTypes: state.regionTypes,
+        apiRestServerError: null
+      };
+      return newState;
+      /*const newState: ImageRecognitionState = {
         pagesRegionsSymbols: klona(state.pagesRegionsSymbols),
         imageOverview: state.imageOverview,
         regionTypes: state.regionTypes,
@@ -199,6 +206,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
       };
       action.pages.forEach(page => {
         const changedPage = newState.pagesRegionsSymbols.find(p => p.id === page.id);
+        debugger;
         if (!changedPage) {
           return {
             pagesRegionsSymbols: state.pagesRegionsSymbols,
@@ -212,7 +220,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
           });
         }
       });
-      return newState;
+      return newState;*/
     }
 
     default:
