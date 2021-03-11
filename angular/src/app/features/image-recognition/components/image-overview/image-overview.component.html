@@ -10,9 +10,9 @@
     </div>
     <div class="col-4">
       <ul>
-        <li>Document analysis: <app-image-phase-document-analysis [imageID]="imageID"  [size]="'lg'"></app-image-phase-document-analysis></li>
-        <li>Parts: <app-image-phase-parts [imageID]="imageID"  [size]="'lg'"></app-image-phase-parts></li>
-        <li>Score transcription: <app-image-phase-transcription [imageID]="imageID"  [size]="'lg'"></app-image-phase-transcription></li>
+        <li>Document analysis: <app-image-phase-document-analysis [imageID]="imageID"  [size]="'lg'" [status]="getProgressStatusOfPhase('documentAnalysis')"></app-image-phase-document-analysis></li>
+        <li>Parts: <app-image-phase-parts [imageID]="imageID"  [size]="'lg'" [status]="getProgressStatusOfPhase('parts')"></app-image-phase-parts></li>
+        <li>Score transcription: <app-image-phase-transcription [imageID]="imageID"  [size]="'lg'" [status]="getProgressStatusOfPhase('transcription')"></app-image-phase-transcription></li>
       </ul>
       <form>
         <h5>Comments</h5>

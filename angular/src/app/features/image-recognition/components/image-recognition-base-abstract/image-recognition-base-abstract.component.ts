@@ -189,13 +189,16 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
     this.store.dispatch(new ImageRecognitionChangeStatus(imageRecognitionProgressStatusChange));
   }
 
-  private getProgressStatus(): string {
-    if (this.phase && this._imageOverview && this._imageOverview.imageRecognitionProgressStatuses) {
-      const result = this._imageOverview.imageRecognitionProgressStatuses.find(s => s.phase === this.phase);
+  private getProgressStatusOfPhase(phase: string): string {
+    if (phase && this._imageOverview && this._imageOverview.imageRecognitionProgressStatuses) {
+      const result = this._imageOverview.imageRecognitionProgressStatuses.find(s => s.phase === phase);
       if (result) {
         return result.status;
       }
     }
+  }
+  private getProgressStatus(): string {
+    return this.getProgressStatusOfPhase(this.phase);
   }
 
 }

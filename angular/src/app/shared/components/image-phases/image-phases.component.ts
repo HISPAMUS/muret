@@ -31,7 +31,6 @@ export class ImagePhasesComponent implements OnInit, OnChanges {
   getPhaseStatus(phase: string): string {
     if (this.phaseStatus) {
       const result = this.phaseStatus.get(phase);
-
       return result;
     }
   }
