@@ -21,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.transaction.Transactional;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -84,20 +85,22 @@ public class ClassifierModelsController {
             throw new IM3WSException("Cannot find image with ID " + imageID);
         }
 
-        Document document = image.get().getDocument();
+        Document document = image.get().computeDocument();
         return document;
     }
 
-    @GetMapping(path={"documentAnalysis/{imageID}"})
+    @GetMapping(path={"models/{imageID}"})
     @Transactional
-    public List<ClassifierModel> getDocumentAnalysisClassifierModels(@PathVariable("imageID") Long imageID) {
-        return requestModels(ClassifierModelTypes.eDocumentAnalysis, imageID);
+    public List<ClassifierModel> getModels(@PathVariable("imageID") Long imageID) {
+        ArrayList<ClassifierModel> result = new ArrayList<>();
+        result.addAll(requestModels(ClassifierModelTypes.eDocumentAnalysis, imageID));
+        result.addAll(requestModels(ClassifierModelTypes.eAgnosticSymbols, imageID));
+        result.addAll(requestModels(ClassifierModelTypes.eAgnosticEnd2End, imageID));
+        result.addAll(requestModels(ClassifierModelTypes.eAgnostic2SemanticTranslator, imageID));
+        result.addAll(requestModels(ClassifierModelTypes.eSemanticEnd2End, imageID));
+        return result;
     }
 
-
-
-
-    // revisado hasta aquí
     @Transactional
     public List<ClassifierModel> requestModels(ClassifierModelTypes classifierType, Long imageID)
     {
@@ -115,6 +118,10 @@ public class ClassifierModelsController {
             throw ControllerUtils.createServerError(this, "There was an error retrieving Agnostic End to end models, it is possible that the folder referenced does not exist in the classification server: " + e.getMessage(), e);
         }
     }
+
+
+    // revisado hasta aquí
+
 
     @GetMapping(path = {"symbols/{imageID}"})
     @Transactional

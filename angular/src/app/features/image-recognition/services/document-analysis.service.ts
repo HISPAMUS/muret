@@ -126,7 +126,7 @@ export class DocumentAnalysisService {
 
 
   getModels$(imageID: number): Observable<ClassifierModel[]> {
-    const url = `classifierModels/documentAnalysis/${imageID}`
+    const url = `classifierModels/models/${imageID}`
     return this.apiRestClientService.get$<ClassifierModel[]>(url);
   }
 

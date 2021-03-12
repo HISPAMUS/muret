@@ -64,11 +64,10 @@ export enum ImageRecognitionActionTypes {
   ImageRecognitionDeletePagesSuccess = '[Image Recognition. Document Analysis] Delete pages success',
   ImageRecognitionDeleteRegions = '[Image Recognition. Document Analysis] Delete region',
   ImageRecognitionDeleteRegionsSuccess = '[Image Recognition. Document Analysis] Delete region success',
-  ImageRecognitionGetDocumentAnModels = '[Image Recognition. DocumentAnalysis] Get Models',
-  ImageRecognitionGetDocumentAnModelsSuccess = '[Image Recognition. DocumentAnalysis] Get Models Success',
-  ImageRecognitionAutomaticDocumentAnalysis = '[Image Recognition. DocumentAnalysis] Start automatic analysis',
-  ImageRecognitionAutomaticDocumentAnalysisSuccess = '[Image Recognition. DocumentAnalysis] Automatic analysis success'
-
+  ImageRecognitionAutomaticDocumentAnalysis = '[Image Recognition. Document Analysis] Start automatic analysis',
+  ImageRecognitionAutomaticDocumentAnalysisSuccess = '[Image Recognition. Document Analysis] Automatic analysis success',
+  ImageRecognitionGetClassifierModels = '[Image Recognition] Get Models',
+  ImageRecognitionGetClassifierModelsSuccess = '[Image Recognition] Get Models Success',
 }
 
 export class ImageRecognitionGetImageOverview implements Action {
@@ -287,13 +286,13 @@ export class ImageRecognitionClearSuccess implements Action {
   constructor() {}
 }
 
-export class ImageRecognitionGetDocumentAnModels implements Action {
-  public readonly type = ImageRecognitionActionTypes.ImageRecognitionGetDocumentAnModels;
+export class ImageRecognitionGetClassifierModels implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionGetClassifierModels;
   constructor(public imageID: number) {}
 }
 
-export class ImageRecognitionGetDocumentAnModelsSuccess implements Action {
-  public readonly type = ImageRecognitionActionTypes.ImageRecognitionGetDocumentAnModelsSuccess;
+export class ImageRecognitionGetClassifierModelsSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionGetClassifierModelsSuccess;
   constructor(public response: ClassifierModel[]) {}
 }
 
@@ -334,7 +333,7 @@ export type ImageRecognitionActions =
   ImageRecognitionDeletePages | ImageRecognitionDeletePagesSuccess |
   ImageRecognitionDeleteRegions | ImageRecognitionDeleteRegionsSuccess |
 
-  ImageRecognitionGetDocumentAnModels | ImageRecognitionGetDocumentAnModelsSuccess |
+  ImageRecognitionGetClassifierModels | ImageRecognitionGetClassifierModelsSuccess |
   ImageRecognitionAutomaticDocumentAnalysis | ImageRecognitionAutomaticDocumentAnalysisSuccess
 
   ;

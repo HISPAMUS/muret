@@ -1,11 +1,13 @@
 package es.ua.dlsi.grfia.im3ws.muret.controller.payload;
 
+import java.util.Date;
+
 public class ClassifierModel {
     String id;
-    String last_train;
+    Date last_train; // keep this name because it's obtained from the python server
     String name;
-    String vocabulary;
-    String classifier_type;
+    String vocabulary; //TODO ???
+    ClassifierModelTypes classifier_type; // keep this name because it's obtained from the python server
 
     public ClassifierModel() {
     }
@@ -18,11 +20,11 @@ public class ClassifierModel {
         this.id = id;
     }
 
-    public String getLast_train() {
+    public Date getLast_train() {
         return last_train;
     }
 
-    public void setLast_train(String last_train) {
+    public void setLast_train(Date last_train) {
         this.last_train = last_train;
     }
 
@@ -42,11 +44,11 @@ public class ClassifierModel {
         this.vocabulary = vocabulary;
     }
 
-    public String getClassifier_type() {
+    public ClassifierModelTypes getClassifier_type() {
         return classifier_type;
     }
 
-    public void setClassifier_type(String classifier_type) {
+    public void setClassifier_type(ClassifierModelTypes classifier_type) {
         this.classifier_type = classifier_type;
     }
 }

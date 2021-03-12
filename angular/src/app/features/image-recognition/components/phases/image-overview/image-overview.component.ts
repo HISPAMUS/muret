@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ImageRecognitionBaseAbstractComponent} from "../image-recognition-base-abstract/image-recognition-base-abstract.component";
-import {ImageRecognitionPutComments} from "../../store/actions/image-recognition.actions";
+import {ImageRecognitionPutComments} from "../../../store/actions/image-recognition.actions";
 
 @Component({
   selector: 'app-image-overview',

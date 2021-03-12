@@ -35,7 +35,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         pagesRegionsSymbols: state.pagesRegionsSymbols,
         imageOverview: klona(state.imageOverview),
         regionTypes: state.regionTypes,
-        documentAnalysisClassifierModels: state.documentAnalysisClassifierModels,
+        classifierModels: state.classifierModels,
         analyzing: state.analyzing,
         apiRestServerError: null
       };
@@ -48,7 +48,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         pagesRegionsSymbols: state.pagesRegionsSymbols,
         imageOverview: klona(state.imageOverview),
         regionTypes: state.regionTypes,
-        documentAnalysisClassifierModels: state.documentAnalysisClassifierModels,
+        classifierModels: state.classifierModels,
         analyzing: state.analyzing,
         apiRestServerError: null
       };
@@ -64,7 +64,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         pagesRegionsSymbols: action.pagesRegionsSymbols,
         imageOverview: klona(state.imageOverview),
         regionTypes: state.regionTypes,
-        documentAnalysisClassifierModels: state.documentAnalysisClassifierModels,
+        classifierModels: state.classifierModels,
         analyzing: state.analyzing,
         apiRestServerError: null
       };
@@ -75,7 +75,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         pagesRegionsSymbols: action.pagesRegionsSymbolsAndNewPart.pagesRegionsSymbols,
         imageOverview: klona(state.imageOverview),
         regionTypes: state.regionTypes,
-        documentAnalysisClassifierModels: state.documentAnalysisClassifierModels,
+        classifierModels: state.classifierModels,
         analyzing: state.analyzing,
         apiRestServerError: null
       };
@@ -87,7 +87,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         pagesRegionsSymbols: state.pagesRegionsSymbols,
         imageOverview: klona(state.imageOverview),
         regionTypes: state.regionTypes,
-        documentAnalysisClassifierModels: state.documentAnalysisClassifierModels,
+        classifierModels: state.classifierModels,
         analyzing: state.analyzing,
         apiRestServerError: null
       };
@@ -100,7 +100,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         pagesRegionsSymbols: state.pagesRegionsSymbols,
         imageOverview: klona(state.imageOverview),
         regionTypes: state.regionTypes,
-        documentAnalysisClassifierModels: state.documentAnalysisClassifierModels,
+        classifierModels: state.classifierModels,
         analyzing: state.analyzing,
         apiRestServerError: null
       };
@@ -114,7 +114,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         pagesRegionsSymbols: state.pagesRegionsSymbols,
         imageOverview: klona(state.imageOverview),
         regionTypes: state.regionTypes,
-        documentAnalysisClassifierModels: state.documentAnalysisClassifierModels,
+        classifierModels: state.classifierModels,
         analyzing: state.analyzing,
         apiRestServerError: null
       };
@@ -143,7 +143,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         pagesRegionsSymbols: klona(state.pagesRegionsSymbols),
         imageOverview: state.imageOverview,
         regionTypes: state.regionTypes,
-        documentAnalysisClassifierModels: state.documentAnalysisClassifierModels,
+        classifierModels: state.classifierModels,
         analyzing: state.analyzing,
         apiRestServerError: null
       };
@@ -164,7 +164,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         pagesRegionsSymbols: [],
         imageOverview: state.imageOverview,
         regionTypes: state.regionTypes,
-        documentAnalysisClassifierModels: state.documentAnalysisClassifierModels,
+        classifierModels: state.classifierModels,
         analyzing: state.analyzing,
         apiRestServerError: null
       };
@@ -178,7 +178,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         pagesRegionsSymbols: klona(state.pagesRegionsSymbols.filter(page => !deletedPageIDS.has(page.id))),
         imageOverview: state.imageOverview,
         regionTypes: state.regionTypes,
-        documentAnalysisClassifierModels: state.documentAnalysisClassifierModels,
+        classifierModels: state.classifierModels,
         analyzing: state.analyzing,
         apiRestServerError: null
       };
@@ -191,7 +191,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         pagesRegionsSymbols: action.pages,
         imageOverview: state.imageOverview,
         regionTypes: state.regionTypes,
-        documentAnalysisClassifierModels: state.documentAnalysisClassifierModels,
+        classifierModels: state.classifierModels,
         analyzing: state.analyzing,
         apiRestServerError: null
       };
@@ -204,7 +204,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         pagesRegionsSymbols: klona(state.pagesRegionsSymbols),
         imageOverview: state.imageOverview,
         regionTypes: state.regionTypes,
-        documentAnalysisClassifierModels: state.documentAnalysisClassifierModels,
+        classifierModels: state.classifierModels,
         analyzing: state.analyzing,
         apiRestServerError: null
       };
@@ -220,7 +220,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         pagesRegionsSymbols: action.pages,
         imageOverview: state.imageOverview,
         regionTypes: state.regionTypes,
-        documentAnalysisClassifierModels: state.documentAnalysisClassifierModels,
+        classifierModels: state.classifierModels,
         analyzing: state.analyzing,
         apiRestServerError: null
       };
@@ -249,10 +249,10 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
       });
       return newState;*/
     }
-    case ImageRecognitionActionTypes.ImageRecognitionGetDocumentAnModelsSuccess: {
+    case ImageRecognitionActionTypes.ImageRecognitionGetClassifierModelsSuccess: {
       return {
         ...state,
-        documentAnalysisClassifierModels: action.response
+        classifierModels: action.response
       };
     }
     case ImageRecognitionActionTypes.ImageRecognitionAutomaticDocumentAnalysis: {
@@ -266,7 +266,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         pagesRegionsSymbols: action.pages,
         imageOverview: state.imageOverview,
         regionTypes: state.regionTypes,
-        documentAnalysisClassifierModels: state.documentAnalysisClassifierModels,
+        classifierModels: state.classifierModels,
         analyzing: false,
         apiRestServerError: null
       };

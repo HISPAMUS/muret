@@ -1,29 +1,29 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from "rxjs";
-import {ImageOverview} from "../../../../core/model/restapi/image-overview";
+import {ImageOverview} from "../../../../../core/model/restapi/image-overview";
 import {ActivatedRoute, ParamMap} from "@angular/router";
 import {Store} from "@ngrx/store";
 import {
-  ImageRecognitionChangeStatus,
+  ImageRecognitionChangeStatus, ImageRecognitionGetClassifierModels,
   ImageRecognitionGetImageOverview,
   ImageRecognitionGetPagesRegionsSymbols, ImageRecognitionGetRegionTypes
-} from "../../store/actions/image-recognition.actions";
+} from "../../../store/actions/image-recognition.actions";
 import {
   selectImageRecognitionImageOverview,
   selectImageRecognitionPagesRegionsSymbols, selectImageRecognitionRegionTypes
-} from "../../store/selectors/image-recognition.selector";
-import {BreadcrumbsUpdateImage} from "../../../../layout/store/actions/breadcrumbs.actions";
-import {RegionType} from "../../../../core/model/entities/region-type";
-import {ImageRecognitionState} from "../../store/state/image-recognition.state";
-import {Page} from "../../../../core/model/entities/page";
-import {BoundingBox} from "../../../../core/model/entities/bounding-box";
-import {Region} from "../../../../core/model/entities/region";
-import {Rectangle} from "../../../../svg/model/rectangle";
-import {Shape} from "../../../../svg/model/shape";
-import {DialogsService} from "../../../../shared/services/dialogs.service";
-import {ZoomManager} from "../../../../shared/model/zoom-manager";
-import {ImageRecognitionProgressStatusChange} from "../../../../core/model/restapi/image-recognition-progress-status-change";
-import {Text} from "../../../../svg/model/text";
+} from "../../../store/selectors/image-recognition.selector";
+import {BreadcrumbsUpdateImage} from "../../../../../layout/store/actions/breadcrumbs.actions";
+import {RegionType} from "../../../../../core/model/entities/region-type";
+import {ImageRecognitionState} from "../../../store/state/image-recognition.state";
+import {Page} from "../../../../../core/model/entities/page";
+import {BoundingBox} from "../../../../../core/model/entities/bounding-box";
+import {Region} from "../../../../../core/model/entities/region";
+import {Rectangle} from "../../../../../svg/model/rectangle";
+import {Shape} from "../../../../../svg/model/shape";
+import {DialogsService} from "../../../../../shared/services/dialogs.service";
+import {ZoomManager} from "../../../../../shared/model/zoom-manager";
+import {ImageRecognitionProgressStatusChange} from "../../../../../core/model/restapi/image-recognition-progress-status-change";
+import {Text} from "../../../../../svg/model/text";
 
 @Component({
   selector: 'app-image-recognition-base-abstract-component',
@@ -53,6 +53,7 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
       this.store.dispatch(new ImageRecognitionGetImageOverview(this.imageID))
       this.store.dispatch(new BreadcrumbsUpdateImage(this.imageID));
       this.store.dispatch(new ImageRecognitionGetPagesRegionsSymbols(+this.imageID));
+      this.store.dispatch(new ImageRecognitionGetClassifierModels(+this.imageID)); // then, in each phase (document analysis ...) we'll get the required classifiers
     });
 
     this.regionTypes$ = this.store.select(selectImageRecognitionRegionTypes);

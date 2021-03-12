@@ -1,5 +1,5 @@
 import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
-import {ZoomManager} from "../../../../shared/model/zoom-manager";
+import {ZoomManager} from "../../../../../shared/model/zoom-manager";
 
 @Component({
   selector: 'app-image-recognition-toolbar',

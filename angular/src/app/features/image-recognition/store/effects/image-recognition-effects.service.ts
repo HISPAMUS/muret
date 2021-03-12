@@ -24,9 +24,7 @@ import {
   ImageRecognitionDeletePages,
   ImageRecognitionDeletePagesSuccess,
   ImageRecognitionDeleteRegions,
-  ImageRecognitionDeleteRegionsSuccess,
-  ImageRecognitionGetDocumentAnModels,
-  ImageRecognitionGetDocumentAnModelsSuccess,
+  ImageRecognitionDeleteRegionsSuccess, ImageRecognitionGetClassifierModels, ImageRecognitionGetClassifierModelsSuccess,
   ImageRecognitionGetImageOverview,
   ImageRecognitionGetImageOverviewSuccess,
   ImageRecognitionGetPagesRegionsSymbols,
@@ -260,9 +258,9 @@ export class ImageOverviewEffects {
 
   @Effect()
   getModel$ = this.actions$.pipe(
-    ofType<ImageRecognitionGetDocumentAnModels>(ImageRecognitionActionTypes.ImageRecognitionGetDocumentAnModels),
-    switchMap((action: ImageRecognitionGetDocumentAnModels) => this.documentAnalysisService.getModels$(action.imageID).pipe(
-      switchMap((classifierModels: ClassifierModel[]) => of(new ImageRecognitionGetDocumentAnModelsSuccess(classifierModels))),
+    ofType<ImageRecognitionGetClassifierModels>(ImageRecognitionActionTypes.ImageRecognitionGetClassifierModels),
+    switchMap((action: ImageRecognitionGetClassifierModels) => this.documentAnalysisService.getModels$(action.imageID).pipe(
+      switchMap((classifierModels: ClassifierModel[]) => of(new ImageRecognitionGetClassifierModelsSuccess(classifierModels))),
       catchError(err => of(new DocumentAnalysisServerError(err)))
     )));
 

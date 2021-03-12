@@ -1,13 +1,13 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {ImageFilesService} from "../../../../core/services/image-files.service";
+import {ImageFilesService} from "../../../../../core/services/image-files.service";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
-import {ImageOverview} from "../../../../core/model/restapi/image-overview";
+import {ImageOverview} from "../../../../../core/model/restapi/image-overview";
 import {Observable} from "rxjs";
 import {map} from "rxjs/operators";
-import {RegionType} from "../../../../core/model/entities/region-type";
-import {Shape} from "../../../../svg/model/shape";
-import {ContextMenuSVGSelectionEvent} from "../../../../svg/model/context-menu-s-v-g-selection-event";
-import {ZoomManager} from "../../../../shared/model/zoom-manager";
+import {RegionType} from "../../../../../core/model/entities/region-type";
+import {Shape} from "../../../../../svg/model/shape";
+import {ContextMenuSVGSelectionEvent} from "../../../../../svg/model/context-menu-s-v-g-selection-event";
+import {ZoomManager} from "../../../../../shared/model/zoom-manager";
 
 @Component({
   selector: 'app-image-document-analysis-navigator',

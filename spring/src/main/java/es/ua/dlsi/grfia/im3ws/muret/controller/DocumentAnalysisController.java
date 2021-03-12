@@ -239,7 +239,7 @@ public class DocumentAnalysisController extends MuRETBaseController {
     {
         try {
             Image persistentImage = getImage(request.getImageID());
-            Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.getDocument().getPath(),
+            Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.computeDocument().getPath(),
                     MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());
             AutoDocumentAnalysisModel autoDocumentAnalysisModel = m_client.getDocumentAnalysis(request.getImageID(), imagePath, request.getModelToUse());
             return documentAnalysisModel.createAutomaticDocumentAnalysis(persistentImage, request.getNumPages(), autoDocumentAnalysisModel);

@@ -9,7 +9,7 @@ export interface ImageRecognitionState {
   apiRestServerError: APIRestServerError;
   pagesRegionsSymbols: Page[];
   regionTypes: RegionType[];
-  documentAnalysisClassifierModels: ClassifierModel[];
+  classifierModels: ClassifierModel[];
   analyzing: boolean;
 }
 
@@ -18,7 +18,7 @@ export const initialImageRecognitionState: ImageRecognitionState = {
   pagesRegionsSymbols: null,
   apiRestServerError: null,
   regionTypes: null,
-  documentAnalysisClassifierModels: null,
+  classifierModels: null,
   analyzing: false
 };
 

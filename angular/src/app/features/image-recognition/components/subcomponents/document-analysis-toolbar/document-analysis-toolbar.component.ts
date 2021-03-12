@@ -1,5 +1,5 @@
 import {Component, Input, OnInit, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
-import {RegionType} from "../../../../core/model/entities/region-type";
+import {RegionType} from "../../../../../core/model/entities/region-type";
 
 @Component({
   selector: 'app-document-analysis-toolbar',
