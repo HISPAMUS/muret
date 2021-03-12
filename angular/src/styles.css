@@ -7,6 +7,35 @@
 @import "../node_modules/ngx-lightbox/lightbox.css";
 @import "../node_modules/ngx-toastr/toastr.css";
 
+.btn-group * {
+  color: white;
+  font-weight: lighter;
+}
+
+.btn-group .active {
+  color: #D91E63 !important;
+  font-weight: bold;
+  background-color: #7DE2DB;
+}
+
+.btn-group label {
+  padding-right: 0;
+  text-align: right;
+}
+.btn-group label:hover  {
+  background-color: #7DE2DB;
+  cursor: pointer;
+}
+
+
+
+
+
+
+
+
+/* Revisado hasta aquí */
+
 body {
   font-family: Roboto;
   color: #7DE2DB;

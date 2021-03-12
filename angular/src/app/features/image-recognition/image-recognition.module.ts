@@ -11,7 +11,7 @@ import {DocumentAnalysisService} from "./services/document-analysis.service";
 import { ImageDocumentAnalysisNavigatorComponent } from './components/subcomponents/image-document-analysis-navigator/image-document-analysis-navigator.component';
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import { PartsInImageComponentComponent } from './components/phases/parts-in-image/parts-in-image-component.component';
-import { DocumentAnalysisComponent } from './components/phases/document-analysis/document-analysis.component';
+import { DocumentAnalysisComponent } from './components/phases/document-analysis/document-analysis/document-analysis.component';
 import { TranscriptionComponentComponent } from './components/phases/transcription/transcription/transcription-component.component';
 import {SharedModule} from "../../shared/shared.module";
 import { DocumentAnalysisFiltersComponent } from './components/subcomponents/document-analysis-filters/document-analysis-filters.component';
@@ -20,13 +20,14 @@ import {SvgModule} from "../../svg/svg.module";
 import {FormsModule} from "@angular/forms";
 import {ContextMenuModule} from "ngx-contextmenu";
 import {ImagePartsService} from "./services/image-parts.service";
-import { DocumentAnalysisToolbarComponent } from './components/subcomponents/document-analysis-toolbar/document-analysis-toolbar.component';
+import { DocumentAnalysisToolbarComponent } from './components/phases/document-analysis/document-analysis-toolbar/document-analysis-toolbar.component';
 import { ImageRecognitionToolbarComponent } from './components/subcomponents/image-recognition-toolbar/image-recognition-toolbar.component';
 import { RegionPreviewComponent } from './components/phases/transcription/region-preview/region-preview.component';
-import { MusicRegionAgnosticRepresentationComponent } from './components/phases/transcription/transcription/music-region-agnostic-representation/music-region-agnostic-representation.component';
-import { MusicRegionSemanticRepresentationComponent } from './components/phases/transcription/transcription/music-region-semantic-representation/music-region-semantic-representation.component';
+import { MusicRegionAgnosticRepresentationComponent } from './components/phases/transcription/music-region-agnostic-representation/music-region-agnostic-representation.component';
+import { MusicRegionSemanticRepresentationComponent } from './components/phases/transcription/music-region-semantic-representation/music-region-semantic-representation.component';
 import {ClassifiersComponent} from "./components/subcomponents/classifiers/classifiers.component";
-import { TextRegionSemanticRepresentationComponent } from './components/phases/transcription/transcription/text-region-semantic-representation/text-region-semantic-representation.component';
+import { TextRegionSemanticRepresentationComponent } from './components/phases/transcription/text-region-semantic-representation/text-region-semantic-representation.component';
+import {AgnosticStaffComponent} from "./components/phases/transcription/agnostic-staff/agnostic-staff.component";
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { TextRegionSemanticRepresentationComponent } from './components/phases/t
     MusicRegionAgnosticRepresentationComponent,
     ClassifiersComponent,
     MusicRegionSemanticRepresentationComponent,
-    TextRegionSemanticRepresentationComponent],
+    TextRegionSemanticRepresentationComponent,
+    AgnosticStaffComponent],
     imports: [
         CommonModule,
         StoreModule.forFeature('imageRecognition', imageRecognitionReducers),

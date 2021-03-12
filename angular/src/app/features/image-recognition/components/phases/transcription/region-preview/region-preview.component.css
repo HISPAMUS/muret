@@ -2,3 +2,7 @@
   width: 100%;
   overflow: auto;
 }
+
+#agnosticAddMode * {
+  color: #7DE2DB;
+}

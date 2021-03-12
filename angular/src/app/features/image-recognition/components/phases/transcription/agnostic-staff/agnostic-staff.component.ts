@@ -13,16 +13,11 @@ import {
 } from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
-import {
-  selectAgnosticSymbols,
-  selectSelectedSymbol,
-} from '../../store/selectors/agnostic-representation.selector';
-import {AgnosticSymbol} from '../../../../core/model/entities/agnostic-symbol';
-import {BoundingBox} from '../../../../core/model/entities/bounding-box';
-import {SVGSet} from '../../model/svgset';
-import {SelectSymbol} from '../../store/actions/agnostic-representation.actions';
-import {AgnosticOrSemanticTypeSVGPath} from '../../model/agnostic-or-semantic-type-s-v-g-path';
-import {PositionInStaffService} from '../../../../shared/services/position-in-staff.service';
+import {BoundingBox} from "../../../../../../core/model/entities/bounding-box";
+import {SVGSet} from "../../../../../agnostic-representation/model/svgset";
+import {AgnosticSymbol} from "../../../../../../core/model/entities/agnostic-symbol";
+import {PositionInStaffService} from "../../../../../../shared/services/position-in-staff.service";
+import {AgnosticOrSemanticTypeSVGPath} from "../../../../../agnostic-representation/model/agnostic-or-semantic-type-s-v-g-path";
 
 interface StaffLine {
   index: number;
@@ -33,13 +28,14 @@ const SELECTED_COLOR = 'red';
 const UNSELECTED_COLOR = 'black';
 
 @Component({
-  selector: 'app-agnostic-staff-old',
+  selector: 'app-agnostic-staff',
   templateUrl: './agnostic-staff.component.html',
   styleUrls: ['./agnostic-staff.component.css']
 })
 export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   @Input() regionCropped: BoundingBox; // see ngOnInit below
   @Input() svgAgnosticSymbolSet: SVGSet;
+
 
   modeValue: 'eIdle' | 'eInserting' | 'eEditing' | 'eSelecting';
   @Output() modeChange = new EventEmitter();
@@ -68,10 +64,10 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   private selectedSymbol: AgnosticSymbol;
 
   constructor(private store: Store<any>, private positionInStaffService: PositionInStaffService) {
-    this.agnosticSymbols$ = store.select(selectAgnosticSymbols);
+    /*TODO 2021 this.agnosticSymbols$ = store.select(selectAgnosticSymbols);
     this.selectedSymbolSubscription = store.select(selectSelectedSymbol).subscribe(next => {
       this.selectedSymbol = next as any as AgnosticSymbol;
-    });
+    });*/
 
   }
 
@@ -197,7 +193,7 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private selectSymbolRequest(agnosticSymbol: AgnosticSymbol) {
-    this.store.dispatch(new SelectSymbol(agnosticSymbol.id));
+    //TODO 2021  this.store.dispatch(new SelectSymbol(agnosticSymbol.id));
   }
 
   onSymbolMouseDown(agnosticSymbol: AgnosticSymbol) {
@@ -224,7 +220,7 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private computeViewBox() {
-    /*// this.viewBox = `0 0 ${this.width} ${this.margin * 2 + this.em}`;
+    /*OLD // this.viewBox = `0 0 ${this.width} ${this.margin * 2 + this.em}`;
     // in orderEntities to use the same horizontal scale of the selected region (see AgnosticRepresentationComponent) we use its same x viewBox
     this.width = this.regionCropped.toX - this.regionCropped.fromX;
     this.height = this.margin * 2 + this.em;

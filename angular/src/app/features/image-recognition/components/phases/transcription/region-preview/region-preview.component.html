@@ -1,6 +1,16 @@
 <div class="d-flex justify-content-between">
   <app-classifiers [models]="agnosticSymbolClassifiers" (onExecuteClassifier)="onExecuteClassifier($event)"></app-classifiers>
-  <app-image-recognition-toolbar [mode]="mode" [zoomManager]="zoomManager" [selectionDone]="false"> </app-image-recognition-toolbar>
+  <app-image-recognition-toolbar [(mode)]="mode" [zoomManager]="zoomManager" [selectionDone]="false"> </app-image-recognition-toolbar>
+  <div id="agnosticAddMode" class="btn-group btn-group-toggle" [disabled]="!isAddingMode()"
+       ngbRadioGroup
+       name="addMethodRadioButtonGroup" [(ngModel)]="addMethodType">
+    <label  class="btn-toolbar" ngbButtonLabel>
+      <input ngbButton type="radio" name="addMethodRadioButton" [value]="'boundingbox'"> Bounding box
+    </label>
+    <label  class="btn-toolbar" ngbButtonLabel>
+      <input ngbButton type="radio" name="addMethodRadioButton" [value]="'strokes'"> Strokes
+    </label>
+  </div>
 </div>
 <div id="imageCanvas">
   <app-svg-canvas *ngIf="loadedImage"

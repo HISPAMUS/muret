@@ -27,6 +27,7 @@ export class RegionPreviewComponent implements OnInit, OnChanges {
   zoomManager: ZoomManager;
   mode: 'eAdding' | 'eEditing' | 'eSelecting';
   nextShapeToDraw: 'Rectangle' | 'Polylines';
+  addMethodTypeValue: 'boundingbox' | 'strokes' ;
 
   constructor() {
     this.zoomManager = new ZoomManager();
@@ -166,4 +167,22 @@ export class RegionPreviewComponent implements OnInit, OnChanges {
      */
   }
 
+  isAddingMode() {
+    return this.mode == 'eAdding';
+  }
+
+  get addMethodType() {
+    return this.addMethodTypeValue;
+  }
+
+  set addMethodType(val) {
+    this.addMethodTypeValue = val;
+    if (this.addMethodTypeValue === 'boundingbox') {
+      this.nextShapeToDraw = 'Rectangle';
+    } else if (this.addMethodType === 'strokes') {
+      this.nextShapeToDraw = 'Polylines';
+    } else {
+      throw Error('Invalid add method type: ' + this.addMethodType);
+    }
+  }
 }

@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Observable} from "rxjs";
-import {ClassifierModel} from "../../../../../../../core/model/entities/classifier-model";
+import {ClassifierModel} from "../../../../../../core/model/entities/classifier-model";
 
 @Component({
   selector: 'app-music-region-semantic-representation',

@@ -2,7 +2,6 @@
   <div *ngIf="selectedRegionTypeID != 'several'"
     [(ngModel)]="selectedRegionTypeID"
        class="form-group btn-group btn-group-toggle d-flex flex-column align-items-end"
-       id="docAnalysisToolBar"
        name="regionTypeRadioButtonGroup" ngbRadioGroup>
     <label class="btn-toolbar" ngbButtonLabel>
       <input ngbButton type="radio" name="regionTypeRadioButton" [value]="'page'" (click)="setPage()">Page
