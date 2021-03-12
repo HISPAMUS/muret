@@ -31,22 +31,29 @@ export const selectImageRecognitionClassifierModels = createSelector(
 export const selectImageRecognitionDocumentAnalysisClassifierModels = createSelector(
   selectImageRecognitionState,
   (state: ImageRecognitionState) =>
-    state.classifierModels == null?null:state.classifierModels.filter(classifier => classifier.classifier_type == 'eDocumentAnalysis')
+    state.classifierModels == null ? null :
+      state.classifierModels.filter(classifier => classifier.classifier_type == 'eDocumentAnalysis')
 );
 
 export const selectImageRecognitionAgnosticSymbolsClassifierModels = createSelector(
   selectImageRecognitionState,
-  (state: ImageRecognitionState) => state.classifierModels == null?null:state.classifierModels.filter(classifier => classifier.classifier_type == 'eAgnosticSymbols')
+  (state: ImageRecognitionState) =>
+    state.classifierModels == null ? null :
+      state.classifierModels.filter(classifier => classifier.classifier_type == 'eAgnosticSymbols')
 );
 
 export const selectImageRecognitionAgnosticEnd2EndClassifierModels = createSelector(
   selectImageRecognitionState,
-  (state: ImageRecognitionState) => state.classifierModels == null?null:state.classifierModels.filter(classifier => classifier.classifier_type == 'eAgnosticEnd2End')
+  (state: ImageRecognitionState) =>
+    state.classifierModels == null ? null :
+      state.classifierModels.filter(classifier => classifier.classifier_type == 'eAgnosticEnd2End')
 );
 
 export const selectImageRecognitionSemanticClassifierModels = createSelector(
   selectImageRecognitionState,
-  (state: ImageRecognitionState) => state.classifierModels == null?null:state.classifierModels.filter(classifier => classifier.classifier_type == 'eSemanticEnd2End' || classifier.classifier_type == 'eAgnostic2SemanticTranslator')
+  (state: ImageRecognitionState) =>
+    state.classifierModels == null ? null :
+      state.classifierModels.filter(classifier => (classifier.classifier_type == 'eSemanticEnd2End' || classifier.classifier_type == 'eAgnostic2SemanticTranslator'))
 );
 
 

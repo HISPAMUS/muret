@@ -29,7 +29,7 @@ export class ClassifiersComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.models && this.models && this.models.length > 0) {
       this.sortedModels = this.models.sort((a, b) => {
-        let result = b.last_train.getMilliseconds() - a.last_train.getMilliseconds(); // descending
+        let result = b.last_train.localeCompare(a.last_train);
         if (result == 0) {
           return a.id.localeCompare(b.id);
         } else {

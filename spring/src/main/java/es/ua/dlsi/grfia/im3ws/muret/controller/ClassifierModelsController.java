@@ -22,6 +22,7 @@ import javax.transaction.Transactional;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -96,8 +97,14 @@ public class ClassifierModelsController {
         result.addAll(requestModels(ClassifierModelTypes.eDocumentAnalysis, imageID));
         result.addAll(requestModels(ClassifierModelTypes.eAgnosticSymbols, imageID));
         result.addAll(requestModels(ClassifierModelTypes.eAgnosticEnd2End, imageID));
-        result.addAll(requestModels(ClassifierModelTypes.eAgnostic2SemanticTranslator, imageID));
         result.addAll(requestModels(ClassifierModelTypes.eSemanticEnd2End, imageID));
+        result.addAll(requestModels(ClassifierModelTypes.eAgnostic2SemanticTranslator, imageID));
+        ClassifierModel agnostic2SemanticTransducer = new ClassifierModel();
+        agnostic2SemanticTransducer.setId("a2s_transducer");
+        agnostic2SemanticTransducer.setClassifier_type(ClassifierModelTypes.eAgnostic2SemanticTranslator);
+        agnostic2SemanticTransducer.setLast_train(new Date(0)); // very old
+        agnostic2SemanticTransducer.setName("Agnostic to semantic transducer");
+        result.add(agnostic2SemanticTransducer);
         return result;
     }
 
