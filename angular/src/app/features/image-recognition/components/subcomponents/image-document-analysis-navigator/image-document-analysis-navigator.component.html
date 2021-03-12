@@ -1,5 +1,5 @@
 <div id="documentAnalysisNavigator">
-  <div *ngIf="shapes && loadedImage$ | async as loadedImage; else loading">
+  <div *ngIf="shapes && loadedImage; else loading">
     <div #canvas id="imageCanvas">
       <!-- shape selected, changed, and deselected are forwarded from the canvas -->
       <app-svg-canvas #svgCanvasComponent
@@ -11,6 +11,7 @@
                       [nextShapeToAdd]="nextShapeToAdd"
                       (svgShapeChanged)="svgShapeChanged($event)"
                       (svgShapeCreated)="svgShapeCreated($event)"
+                      [singleSelectionMode]="singleSelectionMode"
       >
       </app-svg-canvas>
     </div>

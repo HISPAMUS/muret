@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-8">
       <app-image-document-analysis-navigator
-        [imageOverview]="imageOverview"
+        [loadedImage]="loadedImage$ | async"
         [regionTypes]="regionTypes$ | async"
         [shapes]="documentAnalysisShapes"
         [zoomManager]="zoomManager"

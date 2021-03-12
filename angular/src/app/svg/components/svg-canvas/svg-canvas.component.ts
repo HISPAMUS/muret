@@ -45,6 +45,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   @Input() shapes: Shape[];
   @Input() zoomFactor: number;
 
+  @Input() singleSelectionMode: boolean; // if this value is set just one symbol can be selected
   /**
    * These values are optional, they can be inferred from the background image (if present). If no image is present, it is compulsory
    */
@@ -58,6 +59,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
    */
   @Input() crop: BoundingBox;
   @Input() nextShapeToAdd: 'Rectangle' | 'Line' | 'Text' | 'Polylines';
+
 
   @Output() svgMouseEvent = new EventEmitter<Coordinate>(); // only emitted on eIdle state
   @Output() svgShapeCreated = new EventEmitter<Shape>();
@@ -102,8 +104,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver,
               private sanitizer: DomSanitizer) {
-
     this.modeValue = 'eSelecting';
+    this.selectionManager = new SVGSelectionManager();
     this.updateCursor();
   }
 
@@ -469,11 +471,11 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
     if (event.button == 0) { // left click
       if (shape && shape.selectable && !shape.hidden && shape.id) {
         // @ts-ignore
-        if (event.shiftKey) {
+        if (!this.singleSelectionMode && event.shiftKey) {
           this.mode = 'eSelecting';
           this.selectionManager.selectRange(shape);
           // @ts-ignore
-        } else if (event.metaKey) {
+        } else if (!this.singleSelectionMode && event.metaKey) {
           this.mode = 'eSelecting';
           this.selectionManager.addOrRemove(shape);
         } else {
@@ -491,7 +493,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
 
   private findShapeOnMouseEvent(event: MouseEvent): Shape {
     let shape: Shape = null;
-    if (event.target instanceof SVGGraphicsElement) {
+    if (this.shapesMap && event.target instanceof SVGGraphicsElement) {
       shape = this.shapesMap.get(event.target.id);
     }
     return shape;
@@ -500,7 +502,9 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   onContextMenuEvent(event: MouseEvent) {
     if (!this.selectionManager.hasSelectedShapes()) {
       const shape = this.findShapeOnMouseEvent(event);
-      this.selectionManager.replace(shape);
+      if (shape) {
+        this.selectionManager.replace(shape);
+      }
     }
     const contextEvent: ContextMenuSVGSelectionEvent = {
       selectedShapes: this.selectionManager.getSelected(),

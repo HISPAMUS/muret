@@ -1,9 +1,6 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {ImageFilesService} from "../../../../../core/services/image-files.service";
-import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
-import {ImageOverview} from "../../../../../core/model/restapi/image-overview";
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {SafeResourceUrl} from "@angular/platform-browser";
 import {Observable} from "rxjs";
-import {map} from "rxjs/operators";
 import {RegionType} from "../../../../../core/model/entities/region-type";
 import {Shape} from "../../../../../svg/model/shape";
 import {ContextMenuSVGSelectionEvent} from "../../../../../svg/model/context-menu-s-v-g-selection-event";
@@ -15,12 +12,13 @@ import {ZoomManager} from "../../../../../shared/model/zoom-manager";
   styleUrls: ['./image-document-analysis-navigator.component.css']
 })
 export class ImageDocumentAnalysisNavigatorComponent implements OnChanges {
-  @Input() imageOverview: ImageOverview;
+  @Input() loadedImage: SafeResourceUrl;
   @Input() regionTypes: RegionType[];
   @Input() shapes: Shape[];
   @Input() nextShapeToAdd: 'Rectangle' | 'Line' | 'Text' | 'Polylines';
   @Input() zoomManager: ZoomManager;
   @Input() addRegionTypeToFilter: RegionType;
+  @Input() singleSelectionMode: boolean; // if this value is set just one symbol can be selected
 
   @Output() onNavigatorContextMenu = new EventEmitter<ContextMenuSVGSelectionEvent>();
   @Output() onShapesSelected = new EventEmitter<Shape[]>();
@@ -34,12 +32,10 @@ export class ImageDocumentAnalysisNavigatorComponent implements OnChanges {
 
   filteredOutRegionNames: Set<string> = new Set<string>();
 
-  loadedImage$: Observable<SafeResourceUrl>;
 
 
 
-  constructor(private imageFilesService: ImageFilesService, private sanitizer: DomSanitizer,
-              ) {
+  constructor() {
   }
 
   @Input()
@@ -55,12 +51,6 @@ export class ImageDocumentAnalysisNavigatorComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.imageOverview && this.imageOverview) { //} && this.imageOverview.documentPath && this.imageOverview.imageID) {
-      this.loadedImage$ = this.imageFilesService.getMasterImageBlob$(this.imageOverview.documentPath, this.imageOverview.imageID).pipe(
-        //map(imageBlob => this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(imageBlob)))
-        map(imageBlob => window.URL.createObjectURL(imageBlob))
-      );
-    }
     if (changes.shapes) {
       this.doFilterOut();
     }

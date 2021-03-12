@@ -1,2 +1,17 @@
-<app-classifiers [models]="agnosticSymbolClassifiers" (onExecuteClassifier)="onExecuteClassifier($event)"></app-classifiers>
-<p>TO-DO Esto u otro según tipo de regiín</p>
+<div class="d-flex justify-content-between">
+  <app-classifiers [models]="agnosticSymbolClassifiers" (onExecuteClassifier)="onExecuteClassifier($event)"></app-classifiers>
+  <app-image-recognition-toolbar [mode]="mode" [zoomManager]="zoomManager" [selectionDone]="false"> </app-image-recognition-toolbar>
+</div>
+<div id="imageCanvas">
+  <app-svg-canvas *ngIf="loadedImage"
+                  [backgroundImage]="loadedImage"
+                  [shapes]="selectedRegionShapes"
+                  [crop]="selectedRegion.boundingBox"
+                  [zoomFactor]="zoomManager.zoomFactor"
+                  [(mode)]="mode"
+                  (svgShapeCreated)="onSymbolCreated($event)"
+                  (svgShapeChanged)="onSymbolShapeChanged($event)"
+                  [nextShapeToAdd]="nextShapeToDraw"
+  >
+  </app-svg-canvas>
+</div>

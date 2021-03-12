@@ -24,6 +24,9 @@ import {DialogsService} from "../../../../../shared/services/dialogs.service";
 import {ZoomManager} from "../../../../../shared/model/zoom-manager";
 import {ImageRecognitionProgressStatusChange} from "../../../../../core/model/restapi/image-recognition-progress-status-change";
 import {Text} from "../../../../../svg/model/text";
+import {map} from "rxjs/operators";
+import {ImageFilesService} from "../../../../../core/services/image-files.service";
+import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-image-recognition-base-abstract-component',
@@ -42,8 +45,12 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
   protected phase: string;
   private _status: string;
   protected undefinedRegionType: RegionType;
+  private loadedImage$: Observable<SafeResourceUrl>;
 
-  constructor(protected route: ActivatedRoute, protected store: Store<ImageRecognitionState>, protected dialogsService: DialogsService) {
+
+  constructor(protected route: ActivatedRoute, protected store: Store<ImageRecognitionState>, protected dialogsService: DialogsService,
+              protected imageFilesService: ImageFilesService, protected sanitizer: DomSanitizer
+  ) {
     this.store.dispatch(new ImageRecognitionGetRegionTypes());
   }
 
@@ -69,6 +76,11 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
     this.imageOverviewSubscription = this.store.select(selectImageRecognitionImageOverview).subscribe(next => {
       if (next) {
         this._imageOverview = next;
+
+        this.loadedImage$ = this.imageFilesService.getMasterImageBlob$(next.documentPath, next.imageID).pipe(
+            //map(imageBlob => this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(imageBlob)))
+            map(imageBlob => window.URL.createObjectURL(imageBlob)));
+
         this._status = this.getProgressStatus();
         this.onImageOverviewChanged();
       }
