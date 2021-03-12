@@ -24,18 +24,19 @@ import { DocumentAnalysisToolbarComponent } from './components/subcomponents/doc
 import { ImageRecognitionToolbarComponent } from './components/subcomponents/image-recognition-toolbar/image-recognition-toolbar.component';
 import { RegionPreviewComponent } from './components/phases/transcription/region-preview/region-preview.component';
 import { MusicRegionAgnosticRepresentationComponent } from './components/phases/transcription/transcription/music-region-agnostic-representation/music-region-agnostic-representation.component';
-import { TextRegionAgnosticRepresentationComponent } from './components/phases/transcription/text-region-agnostic-representation/text-region-agnostic-representation.component';
 import { MusicRegionSemanticRepresentationComponent } from './components/phases/transcription/transcription/music-region-semantic-representation/music-region-semantic-representation.component';
 import {ClassifiersComponent} from "./components/subcomponents/classifiers/classifiers.component";
+import { TextRegionSemanticRepresentationComponent } from './components/phases/transcription/transcription/text-region-semantic-representation/text-region-semantic-representation.component';
 
 
 @NgModule({
   declarations: [ImageOverviewComponent, ImageDocumentAnalysisNavigatorComponent, PartsInImageComponentComponent,
     DocumentAnalysisComponent, TranscriptionComponentComponent, DocumentAnalysisFiltersComponent,
     DocumentAnalysisToolbarComponent, ImageRecognitionToolbarComponent, RegionPreviewComponent,
-    MusicRegionAgnosticRepresentationComponent, TextRegionAgnosticRepresentationComponent,
+    MusicRegionAgnosticRepresentationComponent,
     ClassifiersComponent,
-    MusicRegionSemanticRepresentationComponent],
+    MusicRegionSemanticRepresentationComponent,
+    TextRegionSemanticRepresentationComponent],
     imports: [
         CommonModule,
         StoreModule.forFeature('imageRecognition', imageRecognitionReducers),
