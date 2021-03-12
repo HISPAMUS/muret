@@ -28,6 +28,7 @@ import { MusicRegionSemanticRepresentationComponent } from './components/phases/
 import {ClassifiersComponent} from "./components/subcomponents/classifiers/classifiers.component";
 import { TextRegionSemanticRepresentationComponent } from './components/phases/transcription/text-region-semantic-representation/text-region-semantic-representation.component';
 import {AgnosticStaffComponent} from "./components/phases/transcription/agnostic-staff/agnostic-staff.component";
+import {NotationComponent} from "./components/phases/transcription/notation/notation.component";
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import {AgnosticStaffComponent} from "./components/phases/transcription/agnostic
     ClassifiersComponent,
     MusicRegionSemanticRepresentationComponent,
     TextRegionSemanticRepresentationComponent,
-    AgnosticStaffComponent],
+    AgnosticStaffComponent, NotationComponent
+  ],
     imports: [
         CommonModule,
         StoreModule.forFeature('imageRecognition', imageRecognitionReducers),
