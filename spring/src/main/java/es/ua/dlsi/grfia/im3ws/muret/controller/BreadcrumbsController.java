@@ -99,15 +99,7 @@ public class BreadcrumbsController {
                 throw new IM3WSException("Cannot find image with id " + imageID);
             }
 
-            Document document = null;
-            if (image.get().getDocument() != null) {
-                document = image.get().getDocument();
-            } else {
-                if (image.get().getSection() == null) {
-                    throw new IM3WSException("The image with ID " + imageID + " has not a document or section");
-                }
-                document = image.get().getSection().getDocument();
-            }
+            Document document = image.get().computeDocument();
             List<Breadcrumb> result = getBreadcrumbs(document);
             result.add(new Breadcrumb(imageID, BreadcrumbType.image, image.get().getFilename()));
             return result;

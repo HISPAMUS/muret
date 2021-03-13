@@ -5,6 +5,8 @@ export interface ImageOverview {
   imageID: number;
   documentID: number;
   documentPath: string;
+  notationType: string;
+  manuscriptType: string;
   comments: string;
   hidden: boolean;
   documentParts: Part[]; // already sorted in Spring controller

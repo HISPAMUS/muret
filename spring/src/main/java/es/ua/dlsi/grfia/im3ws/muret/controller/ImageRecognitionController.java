@@ -53,14 +53,11 @@ public class ImageRecognitionController {
 
             ImageOverview result = new ImageOverview();
             result.setImageID(id);
-            Document document = null;
-            if (image.get().getDocument() != null) {
-                document = image.get().getDocument();
-            } else {
-                document = image.get().getSection().getDocument();
-            }
+            Document document = image.get().computeDocument();
             result.setDocumentID(document.getId());
             result.setDocumentPath(document.getPath());
+            result.setManuscriptType(document.getManuscriptType());
+            result.setNotationType(document.getNotationType());
             result.setComments(image.get().getComments());
             ArrayList<Part> sortedParts = new ArrayList<>(document.getParts());
             Collections.sort(sortedParts);

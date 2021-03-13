@@ -52,9 +52,9 @@ public class VerifyAgnosticSemanticTransducer implements CommandLineRunner {
         new AuthenticateForScripts(authenticationManager).authenticate("davidrizo", "nose");
 
         for (Region region: regionRepository.findAll()) {
-            Document document = region.getPage().getImage().getDocument();
+            Document document = region.getPage().getImage().computeDocument();
             if (!document.getCollection().getName().equals("Pruebas")) {
-                if (region.getPage().getImage().getDocument().getNotationType() == NotationType.eModern) {
+                if (region.getPage().getImage().computeDocument().getNotationType() == NotationType.eModern) {
                     System.err.println("TO-DO Cannot work with modern yet");     //TODO moderno
                 } else {
                     checkRegion(region);

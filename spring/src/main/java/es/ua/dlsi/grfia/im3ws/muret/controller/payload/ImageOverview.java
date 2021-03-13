@@ -1,7 +1,9 @@
 package es.ua.dlsi.grfia.im3ws.muret.controller.payload;
 
 import es.ua.dlsi.grfia.im3ws.muret.entity.ImageRecognitionProgressStatus;
+import es.ua.dlsi.grfia.im3ws.muret.entity.ManuscriptType;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Part;
+import es.ua.dlsi.im3.core.score.NotationType;
 
 import java.util.List;
 import java.util.Set;
@@ -18,6 +20,8 @@ public class ImageOverview {
     List<Part> documentParts; // ordered
     Part imagePart;
     boolean hidden;
+    NotationType notationType;
+    ManuscriptType manuscriptType;
     Set<ImageRecognitionProgressStatus> imageRecognitionProgressStatuses;
 
     public ImageOverview() {
@@ -85,5 +89,21 @@ public class ImageOverview {
 
     public void setHidden(boolean hidden) {
         this.hidden = hidden;
+    }
+
+    public NotationType getNotationType() {
+        return notationType;
+    }
+
+    public void setNotationType(NotationType notationType) {
+        this.notationType = notationType;
+    }
+
+    public ManuscriptType getManuscriptType() {
+        return manuscriptType;
+    }
+
+    public void setManuscriptType(ManuscriptType manuscriptType) {
+        this.manuscriptType = manuscriptType;
     }
 }

@@ -331,14 +331,14 @@ public class PartsController extends MuRETBaseController {
             switch (partAssignedToType) {
                 case image:
                     Image image = getImage(targetID);
-                    part = createPart(image.getDocument(), partName);
+                    part = createPart(image.computeDocument(), partName);
                     image.setPart(part);
                     imageRepository.save(image);
                     imageID = ID = image.getId();
                     break;
                 case page:
                     Page page = getPage(targetID);
-                    part = createPart(page.getImage().getDocument(), partName);
+                    part = createPart(page.getImage().computeDocument(), partName);
                     page.setPart(part);
                     pageRepository.save(page);
                     imageID = page.getImage().getId();
@@ -346,8 +346,8 @@ public class PartsController extends MuRETBaseController {
                     break;
                 case region:
                     Region region = getRegion(targetID);
-                    part = createPart(region.getPage().getImage().getDocument(), partName);
-                    part.setDocument(region.getPage().getImage().getDocument());
+                    part = createPart(region.getPage().getImage().computeDocument(), partName);
+                    part.setDocument(region.getPage().getImage().computeDocument());
                     region.setPart(part);
                     regionRepository.save(region);
                     imageID = region.getPage().getImage().getId();
@@ -355,7 +355,7 @@ public class PartsController extends MuRETBaseController {
                     break;
                 case symbol:
                     Symbol symbol = getSymbol(targetID);
-                    part = createPart(symbol.getRegion().getPage().getImage().getDocument(), partName);
+                    part = createPart(symbol.getRegion().getPage().getImage().computeDocument(), partName);
                     symbol.setPart(part);
                     symbolRepository.save(symbol);
                     imageID = symbol.getRegion().getPage().getImage().getId();

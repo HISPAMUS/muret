@@ -124,7 +124,7 @@ public class ImportMEIFromFMT implements CommandLineRunner {
                         throw new Exception("Cannot find image in MuRET named " + jpg);
                     }
 
-                    if (image.get().getDocument().getId() != document.get().getId()) {
+                    if (image.get().computeDocument().getId() != document.get().getId()) {
                         throw new Exception("Filename does not belong to the document");
                     }
 

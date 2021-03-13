@@ -27,6 +27,9 @@ import {Text} from "../../../../../svg/model/text";
 import {map} from "rxjs/operators";
 import {ImageFilesService} from "../../../../../core/services/image-files.service";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
+import {SVGSet} from "../../../../agnostic-representation/model/svgset";
+import {selectCoreSVGAgnosticOrSemanticSymbolSet} from "../../../../../core/store/selectors/core.selector";
+import {CoreGetSVGSet} from "../../../../../core/store/actions/fonts.actions";
 
 @Component({
   selector: 'app-image-recognition-base-abstract-component',
@@ -46,6 +49,7 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
   private _status: string;
   protected undefinedRegionType: RegionType;
   private loadedImage$: Observable<SafeResourceUrl>;
+  svgSet$: Observable<SVGSet>;
 
 
   constructor(protected route: ActivatedRoute, protected store: Store<ImageRecognitionState>, protected dialogsService: DialogsService,
@@ -77,6 +81,8 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
       if (next) {
         this._imageOverview = next;
 
+        this.store.dispatch(new CoreGetSVGSet(next.notationType, next.manuscriptType));
+
         this.loadedImage$ = this.imageFilesService.getMasterImageBlob$(next.documentPath, next.imageID).pipe(
             //map(imageBlob => this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(imageBlob)))
             map(imageBlob => window.URL.createObjectURL(imageBlob)));
@@ -86,6 +92,7 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
       }
     });
 
+    this.svgSet$ = this.store.select(selectCoreSVGAgnosticOrSemanticSymbolSet);
   }
   ngAfterViewInit(): void {
     this.pagesSubscription = this.store.select(selectImageRecognitionPagesRegionsSymbols).subscribe(next => {

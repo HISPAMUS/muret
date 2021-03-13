@@ -58,7 +58,7 @@ public class ImageFilesController extends MuRETBaseController {
         Image image = getImage(imageID);
 
         if (documentPath == null) {
-            documentPath = image.getDocument().getPath();
+            documentPath = image.computeDocument().getPath();
         }
 
         //avoid another query File documentFolder = new File(muretConfiguration.getFolder(), image.get().getDocument().getPath());

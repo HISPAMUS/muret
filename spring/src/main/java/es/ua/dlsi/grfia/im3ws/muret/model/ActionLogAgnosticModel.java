@@ -35,13 +35,13 @@ public class ActionLogAgnosticModel {
     public void log(ActionType actionType, Symbol symbol) {
         Region region = symbol.getRegion();
         Image image = region.getPage().getImage();
-        Document document = image.getDocument();
+        Document document = image.computeDocument();
         actionLogModel.log(actionType, document.getId(), image.getId(), region.getId(), symbol.getId());
     }
 
     public void log(ActionType actionType, Region region) {
         Image image = region.getPage().getImage();
-        Document document = image.getDocument();
+        Document document = image.computeDocument();
         actionLogModel.log(actionType, document.getId(), image.getId(), region.getId(), null);
     }
 

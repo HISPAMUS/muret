@@ -144,7 +144,7 @@ public class Worms2021MuRETDatasets implements CommandLineRunner {
             int nstavesTotal = 0;
             for (Page page: folds[i]) {
                 int nstaves = page.getSortedStaves().size();
-                System.out.println("\t\tPage in " + page.getImage().getFilename() + " " + page.getImage().getDocument().getName() + ": #" + nstaves + " staves");
+                System.out.println("\t\tPage in " + page.getImage().getFilename() + " " + page.getImage().computeDocument().getName() + ": #" + nstaves + " staves");
                 nstavesTotal += nstaves;
             }
             System.out.println("\tTotal staves: #" + nstavesTotal);

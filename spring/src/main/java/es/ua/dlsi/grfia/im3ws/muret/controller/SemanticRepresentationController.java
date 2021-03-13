@@ -54,7 +54,7 @@ public class SemanticRepresentationController extends MuRETBaseController {
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Converting semantic staff frin agnostic {0}", staffID);
 
             Region region = getRegion(staffID);
-            Document document = region.getPage().getImage().getDocument();
+            Document document = region.getPage().getImage().computeDocument();
             //TODO Ahora sólo lo guardo en la región
         /*Part part = partsModel.findPart(region);
         if (part == null) {
@@ -83,7 +83,7 @@ public class SemanticRepresentationController extends MuRETBaseController {
             if (region.getSemanticEncoding() == null || region.getSemanticEncoding().trim().isEmpty()) {
                 throw new IM3WSException("Region has not a semantic encoding yet");
             } else {
-                Document document = region.getPage().getImage().getDocument();
+                Document document = region.getPage().getImage().computeDocument();
                 //TODO Ahora sólo lo guardo en la región
                 /*Part part = partsModel.findPart(region);
                 if (part == null) {
@@ -107,7 +107,7 @@ public class SemanticRepresentationController extends MuRETBaseController {
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Sending semantic encoding for region ID {0}", staffID);
             Region region = getRegion(staffID);
 
-            Document document = region.getPage().getImage().getDocument();
+            Document document = region.getPage().getImage().computeDocument();
 
             //TODO Ahora sólo lo guardo en la región
         /*

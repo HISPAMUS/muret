@@ -36,7 +36,7 @@
     <g>
       <!-- Don't use the trackBy because it does not refresh symbols on having the same id <svg:use *ngFor="let agnosticSymbol of agnosticSymbols; trackBy: trackBySymbolFn"-->
       <!-- use "as" structure for sharing subscriptions -->
-      <ng-container *ngIf="agnosticSymbols$ | async as agnosticSymbols">
+      <ng-container *ngIf="agnosticSymbols">
         <ng-container *ngFor="let agnosticSymbol of agnosticSymbols">
           <svg:use
                    [attr.xlink:href]="'#' + agnosticSymbol.agnosticSymbolType"

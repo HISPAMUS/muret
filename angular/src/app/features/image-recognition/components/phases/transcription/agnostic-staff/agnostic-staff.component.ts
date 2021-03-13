@@ -34,8 +34,9 @@ const UNSELECTED_COLOR = 'black';
 })
 export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   @Input() regionCropped: BoundingBox; // see ngOnInit below
-  @Input() svgAgnosticSymbolSet: SVGSet;
 
+  @Input() svgAgnosticSymbolSet: SVGSet;
+  @Input() agnosticSymbols: AgnosticSymbol[];
 
   modeValue: 'eIdle' | 'eInserting' | 'eEditing' | 'eSelecting';
   @Output() modeChange = new EventEmitter();
@@ -59,7 +60,7 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   private staffBottomLineY: number;
   private staffTopLineY: number;
 
-  agnosticSymbols$: Observable<AgnosticSymbol[]>;
+  //agnosticSymbols$: Observable<AgnosticSymbol[]>;
   private selectedSymbolSubscription: Subscription;
   private selectedSymbol: AgnosticSymbol;
 

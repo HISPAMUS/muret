@@ -29,6 +29,7 @@ import {ClassifiersComponent} from "./components/subcomponents/classifiers/class
 import { TextRegionSemanticRepresentationComponent } from './components/phases/transcription/text-region-semantic-representation/text-region-semantic-representation.component';
 import {AgnosticStaffComponent} from "./components/phases/transcription/agnostic-staff/agnostic-staff.component";
 import {NotationComponent} from "./components/phases/transcription/notation/notation.component";
+import { TextRegionAgnosticRepresentationComponent } from './components/phases/transcription/text-region-agnostic-representation/text-region-agnostic-representation.component';
 
 
 @NgModule({
@@ -39,7 +40,7 @@ import {NotationComponent} from "./components/phases/transcription/notation/nota
     ClassifiersComponent,
     MusicRegionSemanticRepresentationComponent,
     TextRegionSemanticRepresentationComponent,
-    AgnosticStaffComponent, NotationComponent
+    AgnosticStaffComponent, NotationComponent, TextRegionAgnosticRepresentationComponent
   ],
     imports: [
         CommonModule,

@@ -168,7 +168,7 @@ public class AgnosticRepresentationModel {
         if (agnosticSymbol == null) { // if not provided, try to classify
             Image persistentImage = persistentRegion.getPage().getImage();
             long imageID = persistentImage.getId();
-            Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.getDocument().getPath(),
+            Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.computeDocument().getPath(),
                     MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());
 
             try {
@@ -286,7 +286,7 @@ public class AgnosticRepresentationModel {
         Image persistentImage = persistentRegion.getPage().getImage();
 
         long imageID = persistentImage.getId();
-        Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.getDocument().getPath(),
+        Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.computeDocument().getPath(),
                 MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());
 
         List<AgnosticSymbolTypeAndPosition> items = classifierClient.classifyEndToEnd(modelID, imageID, imagePath, persistentRegion.getBoundingBox());
