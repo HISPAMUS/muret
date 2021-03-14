@@ -148,7 +148,7 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy, AfterViewIn
     });
     this.serverErrorSubscription = this.store.select(selectDocumentAnalysisServerError).subscribe(next => {
       if (next) {
-        this.showErrorService.warning(next);
+        this.showErrorService.showServerError(next);
         this.store.dispatch(new ResetDocumentAnalysisServerError());
         this.processing = false;
         this.analysisStatus = 'Analyze';

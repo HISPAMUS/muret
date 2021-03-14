@@ -1,5 +1,5 @@
 import {BrowserModule, HammerModule} from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {ErrorHandler, NgModule} from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
@@ -69,6 +69,7 @@ import {faEyeSlash} from "@fortawesome/free-solid-svg-icons/faEyeSlash";
 import {faSpinner} from "@fortawesome/free-solid-svg-icons/faSpinner";
 import {faMousePointer} from "@fortawesome/free-solid-svg-icons/faMousePointer";
 import {faServer} from "@fortawesome/free-solid-svg-icons/faServer";
+import {GlobalErrorHandler} from "./core/services/global-error-handler.service";
 
 @NgModule({
   declarations: [
@@ -77,7 +78,7 @@ import {faServer} from "@fortawesome/free-solid-svg-icons/faServer";
   imports: [
    // removed dependency and added this module "hammerjs": "^2.0.8",
     HammerModule,
-  BrowserModule,
+    BrowserModule,
     AgGridModule.withComponents([]),
     RouterModule,
     FormsModule,
@@ -113,7 +114,7 @@ import {faServer} from "@fortawesome/free-solid-svg-icons/faServer";
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     NgbModule
   ],
-  providers: [], // don't add here singleton services if using @Injectable( providedIn: 'root'})
+  providers: [{provide: ErrorHandler, useClass: GlobalErrorHandler}], // don't add here singleton services if using @Injectable( providedIn: 'root'})
   bootstrap: [AppComponent]
 })
 export class AppModule {
@@ -140,7 +141,7 @@ export class AppModule {
     library.addIcons(faCaretRight); // used in treeView
     library.addIcons(faCaretDown); // used in treeView
     library.addIcons(faBomb);
-    library.addIcons(faExclamationTriangle); // warning icon
+    library.addIcons(faExclamationTriangle); // showServerError icon
     library.addIcons(faCompressAlt); // used in section
     library.addIcons(faExpandAlt); // used in section
     library.addIcons(faObjectGroup); // used in document thumbnail

@@ -56,7 +56,7 @@ export class NewDocumentComponent implements OnInit, OnDestroy {
 
     this.newDocumentServerError = this.store.select(selectNewDocumentServerError).subscribe(next => {
       if (next) {
-        this.showErrorService.warning(next);
+        this.showErrorService.showServerError(next);
         this.store.dispatch(new ResetNewDocumentServerError());
       }
     });

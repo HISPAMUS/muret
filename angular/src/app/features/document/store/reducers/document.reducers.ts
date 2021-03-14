@@ -2,12 +2,9 @@ import {DocumentActions, DocumentActionTypes} from '../actions/document.actions'
 import {DocumentState, initialDocumentState} from '../state/document.state';
 import {DocumentExportType} from '../../../../core/model/restapi/document-export';
 import {Section} from "../../../../core/model/entities/section";
-import {APIRestServerError, createServerError} from "../../../../core/model/restapi/apirest-server-error";
+//import {//apiRestServerError, createServerError} from "../../../../core/model/restapi/apirest-server-error";
 import {Image} from "../../../../core/model/entities/image";
-import {Document} from "../../../../core/model/entities/document";
 import { klona } from 'klona/lite';
-import {PartsInImage} from "../../../../core/model/restapi/parts-in-image";
-import {imageRecognitionReducers} from "../../../image-recognition/store/reducers/image-recognition.reducers";
 
 
 export function documentReducers(state = initialDocumentState, action: DocumentActions): DocumentState {
@@ -17,20 +14,20 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
       return {
         ...state,
         documentOverview: documentOverview,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
     }
 
     case DocumentActionTypes.DocumentServerError: {
       return {
         ...state,
-        apiRestServerError: action.error
+        //apiRestServerError: action.error
       };
     }
 
     case DocumentActionTypes.DocumentMoveImagesToDefaultSectionSuccess: {
       const newState = klona(state); // deep copy
-      newState.apiRestServerError = null;
+      //newState.//apiRestServerError = null;
       newState.documentOverview.sections = [klona(action.section)];
       newState.documentOverview.sections[0].images = newState.documentOverview.images;
       newState.documentOverview.images = [];
@@ -39,20 +36,22 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
     }
     case DocumentActionTypes.DocumentMoveImagesToSectionSuccess: {
       const newState = klona(state); // deep copy
-      newState.apiRestServerError = null;
+      //newState.//apiRestServerError = null;
 
       let newSection: Section;
       if (action.sectionImages.newSectionID) {
         newSection = findSection(newState.documentOverview.sections, action.sectionImages.newSectionID);
         if (!newSection) {
-          newState.apiRestServerError = createServerError('Cannot update movement image to section', 'Cannot find new section with id ' + action.sectionImages.newSectionID);
+          throw new Error('Cannot find new section with id ' + action.sectionImages.newSectionID);
         }
+          //newState.//apiRestServerError = createServerError('Cannot update movement image to section', 'Cannot find new section with id ' + action.sectionImages.newSectionID);
       } else {
         newSection = null;
       }
 
       if (action.sectionImages.imageIDS.length !== action.sectionImages.previousSectionIDs.length) {
-        newState.apiRestServerError = createServerError('Cannot update movement image to section', 'The image IDS != previous section IDs');
+        //newState.//apiRestServerError = createServerError('Cannot update movement image to section', 'The image IDS != previous section IDs');
+        throw new Error('The image IDS != previous section IDs');
       }
       for (let i=0; i<action.sectionImages.imageIDS.length; i++) {
         const imageID = action.sectionImages.imageIDS[i];
@@ -63,7 +62,8 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
         if (previousSectionID) { // if it was in a section
           const previousSection = findSection(newState.documentOverview.sections, previousSectionID);
           if (!previousSection) {
-            newState.apiRestServerError = createServerError('Cannot update movement image to section', 'Cannot find previous section with id ' + previousSectionID);
+            //newState.//apiRestServerError = createServerError('Cannot update movement image to section', 'Cannot find previous section with id ' + previousSectionID);
+            throw new Error('Cannot find previous section with id ' + previousSectionID);
           }
           changedImage = previousSection.images.find(image => image.id === imageID);
           // remove from previous section (if there was one)
@@ -76,7 +76,8 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
         }
 
         if (!changedImage) {
-          newState.apiRestServerError = createServerError('Cannot update movement image to section', 'Cannot find image with id ' + imageID);
+          //newState.//apiRestServerError = createServerError('Cannot update movement image to section', 'Cannot find image with id ' + imageID);
+          throw new Error('Cannot find image with id ' + imageID);
         } else {
           if (newSection) {
             changedImage.sectionId = newSection.id;
@@ -94,7 +95,7 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
 
     case DocumentActionTypes.DocumentCreateSectionSuccess: {
       const newState = klona(state); // deep copy
-      newState.apiRestServerError = null;
+      //newState.//apiRestServerError = null;
       const newSection = klona(action.section);
       newSection.images = [];// if comes with null value
       newState.documentOverview.sections.push(newSection);
@@ -103,10 +104,11 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
 
     case DocumentActionTypes.DocumentRenameSectionSuccess: {
       const newState = klona(state); // deep copy
-      newState.apiRestServerError = null;
+      //newState.//apiRestServerError = null;
       const changedSection = newState.documentOverview.sections.find(section => section.id === action.section.id);
       if (!changedSection) {
-        newState.apiRestServerError = createServerError('Cannot update renamed section', 'Cannot find section with id ' + action.section.id);
+        //newState.//apiRestServerError = createServerError('Cannot update renamed section', 'Cannot find section with id ' + action.section.id);
+        throw new Error('Cannot find section with id ' + action.section.id);
       } else {
         changedSection.name = action.section.name;
       }
@@ -115,10 +117,11 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
 
     case DocumentActionTypes.DocumentDeleteSectionSuccess: {
       const newState = klona(state); // deep copy
-      newState.apiRestServerError = null;
+      //newState.//apiRestServerError = null;
       const deletedSection = newState.documentOverview.sections.find(section => section.id === action.sectionID);
       if (!deletedSection) {
-        newState.apiRestServerError = createServerError('Cannot update deleted section', 'Cannot find section with id ' + action.sectionID);
+        //newState.//apiRestServerError = createServerError('Cannot update deleted section', 'Cannot find section with id ' + action.sectionID);
+        throw new Error('Cannot find section with id ' + action.sectionID);
       } else {
         // move all the images to the document
         newState.documentOverview.images = newState.documentOverview.images.concat(deletedSection.images);
@@ -129,7 +132,7 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
 
     case DocumentActionTypes.DocumentReorderSectionsSuccess: {
       const newState = klona(state); // deep copy
-      newState.apiRestServerError = null;
+      //newState.//apiRestServerError = null;
       const sectionMap: Map<number, Section> = new Map<number, Section>();
       newState.documentOverview.sections.forEach(section => {
         sectionMap.set(section.id, section);
@@ -141,7 +144,8 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
       action.ordering.values.forEach(id => {
         const section = sectionMap.get(id);
         if (!section) {
-          newState.apiRestServerError = createServerError('Cannot update sections after reordering', 'Cannot find new section with id ' + id);
+          //newState.//apiRestServerError = createServerError('Cannot update sections after reordering', 'Cannot find new section with id ' + id);
+          throw new Error('Cannot find new section with id ' + id);
         } else {
           section.ordering = i;
           newState.documentOverview.sections.push(section);
@@ -154,14 +158,14 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
     case DocumentActionTypes.DocumentGetSectionSuccess: {
       const result: DocumentState = {
         ...state,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
       result.section = action.section;
       return result;
     }
     case DocumentActionTypes.DocumentReorderImagesSuccess: {
       const newState: DocumentState = klona(state);
-      newState.apiRestServerError = null;
+      //newState.//apiRestServerError = null;
       const imageMap: Map<number, Image> = new Map<number, Image>();
 
       newState.section.images.forEach(image => {
@@ -172,7 +176,8 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
       action.ordering.values.forEach(id => {
         const image = imageMap.get(id);
         if (!image) {
-          newState.apiRestServerError = createServerError('Cannot update images after reordering', 'Cannot find new image with id ' + id);
+          //newState.//apiRestServerError = createServerError('Cannot update images after reordering', 'Cannot find new image with id ' + id);
+          throw new Error('Cannot find new image with id ' + id);
         } else {
           image.ordering = i;
           newState.section.images.push(image);
@@ -184,7 +189,7 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
     }
     case DocumentActionTypes.DocumentLinkImagesToNewPartSuccess: {
       const newState: DocumentState = klona(state);
-      newState.apiRestServerError = null;
+      //newState.//apiRestServerError = null;
       newState.documentOverview.parts.push(action.imagesInNewPart.part);
       newState.partsInImages = action.imagesInNewPart.partsInImage;
       return newState;
@@ -194,7 +199,7 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
     case DocumentActionTypes.DocumentLinkImagesToPartSuccess: {
       const result: DocumentState = {
         ...state,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
       result.partsInImages = action.partsInImages;
       return result;
@@ -204,7 +209,7 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
         documentOverview: klona(state.documentOverview),
         section: state.section,
         partsInImages: state.partsInImages,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
       const changedImageIDS: Set<number> = new Set<number>();
       action.imagesVisibility.imageIDS.values.forEach(id => {
@@ -228,21 +233,21 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
     case DocumentActionTypes.ResetDocumentServerError: {
       return {
         ...state,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
     }
     case DocumentActionTypes.DocumentGetDocumentSuccess: {
       return {
         ...state,
         document: action.document,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
     }
     case DocumentActionTypes.DocumentGetImagesSuccess: {
       return {
         ...state,
         images: action.images,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
     }
     case DocumentActionTypes.DocumentExportMusicXML:
@@ -252,7 +257,7 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
         ...state,
         exportedFile: null,
         mei: null,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
     }
     case DocumentActionTypes.DocumentExportMEIPartsFacsimileSuccess: {
@@ -263,7 +268,7 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
           file: action.mei != null ? new Blob([action.mei], {type: 'text/plain'}) : null,
           fileExtension: 'mei',
         },
-        apiRestServerError: null
+        //apiRestServerError: null
       };
     }
     case DocumentActionTypes.DocumentExportMEISuccess: {
@@ -275,7 +280,7 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
           fileExtension: 'mei',
         },
         mei: action.mei,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
     }
     case DocumentActionTypes.DocumentExportMusicXMLSuccess: {
@@ -286,7 +291,7 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
           file: action.payload != null ? new Blob([action.payload], {type: 'application/x-gzip'}) : null,
           fileExtension: 'tgz',
         },
-        apiRestServerError: null
+        //apiRestServerError: null
       };
     }
     case DocumentActionTypes.DocumentExportMensurstrichSuccess: {
@@ -297,14 +302,14 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
           file: action.payload = new Blob([action.payload], {type: 'application/x-gzip'}),
           fileExtension: 'tgz',
         },
-        apiRestServerError: null
+        //apiRestServerError: null
       };
     }
     case DocumentActionTypes.DocumentGetDocumentStatisticsSuccess: {
       return {
         ...state,
         statistics: action.documentStatistics,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
     }
     /*case DocumentActionTypes.PreflightCheckSuccess: {
@@ -317,7 +322,7 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
       return {
         ...state,
         alignmentPreview: action.alignmentPreview,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
     }
     default: {

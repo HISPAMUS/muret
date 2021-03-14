@@ -20,7 +20,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
       if (next) {
-        this.showErrorService.warning(next);
+        this.showErrorService.showServerError(next);
         this.store.dispatch(new ResetAdminDBServerError());
       }
     });

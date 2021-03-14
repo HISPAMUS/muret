@@ -76,7 +76,7 @@ export class AlignmentPreviewComponent implements OnInit, OnDestroy {
 
     this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
       if (next) {
-        this.showErrorService.warning(next);
+        this.showErrorService.showServerError(next);
         this.store.dispatch(new DocumentResetServerError());
       }
     });

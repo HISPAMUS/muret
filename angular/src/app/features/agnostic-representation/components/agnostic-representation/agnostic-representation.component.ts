@@ -147,7 +147,7 @@ export class AgnosticRepresentationComponent implements OnInit, OnDestroy {
 
     this.serverErrorSubscription = this.store.select(selectAgnosticSymbolServerError).subscribe(next => {
       if (next) {
-        this.showErrorService.warning(next);
+        this.showErrorService.showServerError(next);
         this.store.dispatch(new ResetAgnosticRepresentationServerError());
       }
     });

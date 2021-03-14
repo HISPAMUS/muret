@@ -104,7 +104,7 @@ export class TrainingSetsComponent implements OnInit, OnDestroy {
     this.serverErrorSubscription = this.store.select(selectTrainingSetExportersServerError).subscribe(next => {
       this.exporting = false;
       if (next) {
-        this.showErrorService.warning(next);
+        this.showErrorService.showServerError(next);
         this.store.dispatch(new ResetExportServerError());
       }
     });

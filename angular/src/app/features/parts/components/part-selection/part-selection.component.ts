@@ -28,7 +28,7 @@ export class PartSelectionComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.partsServerError = this.store.select(selectPartsServerError).subscribe(next => {
       if (next) {
-        this.showErrorService.warning(next);
+        this.showErrorService.showServerError(next);
         this.store.dispatch(new ResetPartsServerError());
       }
     });

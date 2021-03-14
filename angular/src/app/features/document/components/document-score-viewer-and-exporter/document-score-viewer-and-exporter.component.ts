@@ -111,7 +111,7 @@ export class DocumentScoreViewerAndExporterComponent implements OnInit, OnDestro
     this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
       if (next) {
         this.exportingState.clear();
-        this.showErrorService.warning(next);
+        this.showErrorService.showServerError(next);
         this.store.dispatch(new DocumentResetServerError());
       }
     });
@@ -263,7 +263,7 @@ export class DocumentScoreViewerAndExporterComponent implements OnInit, OnDestro
   }
 
   /*aaa() {
-    this.toastr.warning('Hello world!', 'Toastr fun!');
+    this.toastr.showServerError('Hello world!', 'Toastr fun!');
   }*/
   exportToVHV() {
     window.open("http://verovio.humdrum.org", "_blank");

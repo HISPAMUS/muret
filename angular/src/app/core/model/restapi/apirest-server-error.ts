@@ -10,10 +10,10 @@ export interface APIRestServerError {
 }
 
 
-export function createServerError(message: string, detailedMessage: string): APIRestServerError {
+/*export function createServerError(message: string, detailedMessage: string): APIRestServerError {
   const result: APIRestServerError = {
     message: message,
     detailedMessage: detailedMessage
   };
   return result;
-}
+}*/

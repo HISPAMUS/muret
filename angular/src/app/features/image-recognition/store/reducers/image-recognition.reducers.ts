@@ -2,32 +2,31 @@
 import {ImageRecognitionActions, ImageRecognitionActionTypes} from "../actions/image-recognition.actions";
 import {klona} from "klona";
 import {ImageRecognitionState, initialImageRecognitionState} from "../state/image-recognition.state";
-import {createServerError} from "../../../../core/model/restapi/apirest-server-error";
 
 /**
  * We use the same effects, actions and reducers for overview and parts because they share the state
  */
 export function imageRecognitionReducers(state = initialImageRecognitionState, action: ImageRecognitionActions): ImageRecognitionState {
   switch (action.type) {
-    case ImageRecognitionActionTypes.ImageRecognitionServerError: {
+    /*case ImageRecognitionActionTypes.ImageRecognitionServerError: {
       return {
         ...state,
         analyzing: false,
-        apiRestServerError: action.serverError
+        //apiRestServerError: action.serverError
       };
-    }
+    }*/
     case ImageRecognitionActionTypes.ImageRecognitionGetImageOverviewSuccess: {
       return {
         ...state,
         imageOverview: action.imageOverview,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
     }
     case ImageRecognitionActionTypes.ImageRecognitionGetPagesRegionsSymbolsSuccess: {
       return {
         ...state,
         pagesRegionsSymbols: action.pagesRegionsSymbols,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
     }
     case ImageRecognitionActionTypes.ImageRecognitionPutCommentsSuccess: {
@@ -37,7 +36,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         regionTypes: state.regionTypes,
         classifierModels: state.classifierModels,
         analyzing: state.analyzing,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
       newState.imageOverview.comments = action.comments;
       return newState;
@@ -50,7 +49,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         regionTypes: state.regionTypes,
         classifierModels: state.classifierModels,
         analyzing: state.analyzing,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
       newState.imageOverview.imageRecognitionProgressStatuses = action.statuses;
       return newState;
@@ -66,7 +65,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         regionTypes: state.regionTypes,
         classifierModels: state.classifierModels,
         analyzing: state.analyzing,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
       return newState;
     }
@@ -77,7 +76,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         regionTypes: state.regionTypes,
         classifierModels: state.classifierModels,
         analyzing: state.analyzing,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
       newState.imageOverview.documentParts.push(action.pagesRegionsSymbolsAndNewPart.part);
       return newState;
@@ -89,7 +88,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         regionTypes: state.regionTypes,
         classifierModels: state.classifierModels,
         analyzing: state.analyzing,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
       newState.imageOverview.imagePart = action.part;
       return newState;
@@ -102,7 +101,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         regionTypes: state.regionTypes,
         classifierModels: state.classifierModels,
         analyzing: state.analyzing,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
       newState.imageOverview.imagePart = action.part;
       newState.imageOverview.documentParts.push(action.part);
@@ -116,7 +115,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         regionTypes: state.regionTypes,
         classifierModels: state.classifierModels,
         analyzing: state.analyzing,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
       newState.imageOverview.imagePart = null;
       return newState;
@@ -127,15 +126,16 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
       return {
         ...state,
         regionTypes: action.regionTypes,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
     }
     case ImageRecognitionActionTypes.ImageRecognitionChangeRegionsTypeSuccess: {
       const regionType = state.regionTypes.find(regionType => regionType.id === action.changeRegionTypes.regionTypeID);
       if (!regionType) {
+        throw new Error('Cannot find region type with id "' + action.changeRegionTypes.regionTypeID + '"');
         return {
           ...state,
-          apiRestServerError: createServerError('Region types change', 'Cannot find region type with id ' + action.changeRegionTypes.regionTypeID)
+          //apiRestServerError: createServerError('Region types change', 'Cannot find region type with id ' + action.changeRegionTypes.regionTypeID)
         };
       }
 
@@ -145,7 +145,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         regionTypes: state.regionTypes,
         classifierModels: state.classifierModels,
         analyzing: state.analyzing,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
       const changedRegionTypesSet = new Set<number>();
       action.changeRegionTypes.regionIDs.values.forEach(id => changedRegionTypesSet.add(id));
@@ -166,7 +166,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         regionTypes: state.regionTypes,
         classifierModels: state.classifierModels,
         analyzing: state.analyzing,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
       return newState;
     }
@@ -180,7 +180,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         regionTypes: state.regionTypes,
         classifierModels: state.classifierModels,
         analyzing: state.analyzing,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
       return newState;
     }
@@ -193,7 +193,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         regionTypes: state.regionTypes,
         classifierModels: state.classifierModels,
         analyzing: state.analyzing,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
       return newState;
     }
@@ -206,7 +206,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         regionTypes: state.regionTypes,
         classifierModels: state.classifierModels,
         analyzing: state.analyzing,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
 
       newState.pagesRegionsSymbols.forEach(page => {
@@ -222,14 +222,14 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         regionTypes: state.regionTypes,
         classifierModels: state.classifierModels,
         analyzing: state.analyzing,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
       return newState;
       /*const newState: ImageRecognitionState = {
         pagesRegionsSymbols: klona(state.pagesRegionsSymbols),
         imageOverview: state.imageOverview,
         regionTypes: state.regionTypes,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
       action.pages.forEach(page => {
         const changedPage = newState.pagesRegionsSymbols.find(p => p.id === page.id);
@@ -239,7 +239,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
             pagesRegionsSymbols: state.pagesRegionsSymbols,
             imageOverview: state.imageOverview,
             regionTypes: state.regionTypes,
-            apiRestServerError: createServerError('Cannot add region', 'Cannot find page with id=' + page.id)
+            //apiRestServerError: createServerError('Cannot add region', 'Cannot find page with id=' + page.id)
           }
         } else {
           page.regions.forEach(region => {
@@ -268,7 +268,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         regionTypes: state.regionTypes,
         classifierModels: state.classifierModels,
         analyzing: false,
-        apiRestServerError: null
+        //apiRestServerError: null
       };
       return newState;
     }

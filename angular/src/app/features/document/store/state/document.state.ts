@@ -11,7 +11,7 @@ export interface DocumentState {
   documentOverview: Document, // it contains images unassigned to sections), parts, sections (including images)
   section: Section, // used just in reorder images
   partsInImages: PartsInImage[];
-  apiRestServerError: APIRestServerError;
+  //apiRestServerError: APIRestServerError;
 
 
   // revisado hasta aquí
@@ -28,7 +28,7 @@ export const initialDocumentState: DocumentState = {
   documentOverview: null,
   section: null,
   partsInImages: null,
-  apiRestServerError: null,
+  //apiRestServerError: null,
   // revisado hasta aquí
   document: null,
   images: null,

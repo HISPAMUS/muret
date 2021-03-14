@@ -6,7 +6,7 @@ import {ClassifierModel} from "../../../../core/model/entities/classifier-model"
 
 export interface ImageRecognitionState {
   imageOverview: ImageOverview;
-  apiRestServerError: APIRestServerError;
+  //apiRestServerError: APIRestServerError;
   pagesRegionsSymbols: Page[];
   regionTypes: RegionType[];
   classifierModels: ClassifierModel[];
@@ -16,7 +16,7 @@ export interface ImageRecognitionState {
 export const initialImageRecognitionState: ImageRecognitionState = {
   imageOverview: null,
   pagesRegionsSymbols: null,
-  apiRestServerError: null,
+  //apiRestServerError: null,
   regionTypes: null,
   classifierModels: null,
   analyzing: false

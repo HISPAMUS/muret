@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Effect, ofType, Actions } from '@ngrx/effects';
 import {Observable, of} from 'rxjs';
-import {catchError, switchMap} from 'rxjs/operators';
+import {switchMap} from 'rxjs/operators';
 import {DocumentService} from '../../services/document.service';
 import {
   DocumentExportMEI,
@@ -73,7 +73,7 @@ export class DocumentEffects {
     ofType<DocumentGetOverview>(DocumentActionTypes.DocumentGetOverview),
     switchMap((action: DocumentGetOverview) => this.documentService.getOverview$(action.documentID).pipe(
       switchMap((documentSummary: Document) => of(new DocumentGetOverviewSuccess(documentSummary))),
-      catchError(err => of(new DocumentServerError(err)))
+      //catchError(err => of(new DocumentServerError(err)))
     )));
 
 
@@ -82,7 +82,7 @@ export class DocumentEffects {
     ofType<DocumentMoveImagesToSection>(DocumentActionTypes.DocumentMoveImagesToSection),
     switchMap((action: DocumentMoveImagesToSection) => this.documentService.moveImagesToSection$(action.sectionImages).pipe(
       switchMap((sectionImages) => of(new DocumentMoveImagesToSectionSuccess(sectionImages))),
-      catchError(err => of(new DocumentServerError(err)))
+      //catchError(err => of(new DocumentServerError(err)))
     )));
 
   @Effect()
@@ -90,7 +90,7 @@ export class DocumentEffects {
     ofType<DocumentMoveImagesToDefaultSection>(DocumentActionTypes.DocumentMoveImagesToDefaultSection),
     switchMap((action: DocumentMoveImagesToDefaultSection) => this.documentService.moveImagesToDefaultSection$(action.documentID).pipe(
       switchMap((section) => of(new DocumentMoveImagesToDefaultSectionSuccess(section))),
-      catchError(err => of(new DocumentServerError(err)))
+      //catchError(err => of(new DocumentServerError(err)))
     )));
 
 
@@ -99,7 +99,7 @@ export class DocumentEffects {
     ofType<DocumentCreateSection>(DocumentActionTypes.DocumentCreateSection),
     switchMap((action: DocumentCreateSection) => this.documentService.createSection$(action.documentID, action.name).pipe(
       switchMap((section) => of(new DocumentCreateSectionSuccess(section))),
-      catchError(err => of(new DocumentServerError(err)))
+      //catchError(err => of(new DocumentServerError(err)))
     )));
 
   @Effect()
@@ -107,7 +107,7 @@ export class DocumentEffects {
     ofType<DocumentRenameSection>(DocumentActionTypes.DocumentRenameSection),
     switchMap((action: DocumentRenameSection) => this.documentService.renameSection$(action.section).pipe(
       switchMap((section) => of(new DocumentRenameSectionSuccess(section))),
-      catchError(err => of(new DocumentServerError(err)))
+      //catchError(err => of(new DocumentServerError(err)))
     )));
 
 
@@ -116,7 +116,7 @@ export class DocumentEffects {
     ofType<DocumentDeleteSection>(DocumentActionTypes.DocumentDeleteSection),
     switchMap((action: DocumentDeleteSection) => this.documentService.deleteSection$(action.sectionID).pipe(
       switchMap((sectionID) => of(new DocumentDeleteSectionSuccess(sectionID))),
-      catchError(err => of(new DocumentServerError(err)))
+      //catchError(err => of(new DocumentServerError(err)))
     )));
 
   @Effect()
@@ -124,7 +124,7 @@ export class DocumentEffects {
     ofType<DocumentReorderSections>(DocumentActionTypes.DocumentReorderSections),
     switchMap((action: DocumentReorderSections) => this.documentService.reorderSections$(action.ordering).pipe(
       switchMap((ordering) => of(new DocumentReorderSectionsSuccess(ordering))),
-      catchError(err => of(new DocumentServerError(err)))
+      //catchError(err => of(new DocumentServerError(err)))
     )));
 
 
@@ -133,7 +133,7 @@ export class DocumentEffects {
     ofType<DocumentGetSection>(DocumentActionTypes.DocumentGetSection),
     switchMap((action: DocumentGetSection) => this.documentService.getSection$(action.id).pipe(
       switchMap((section: Section) => of(new DocumentGetSectionSuccess(section))),
-      catchError(err => of(new DocumentServerError(err)))
+      //catchError(err => of(new DocumentServerError(err)))
     )));
 
   @Effect()
@@ -141,7 +141,7 @@ export class DocumentEffects {
     ofType<DocumentReorderImages>(DocumentActionTypes.DocumentReorderImages),
     switchMap((action: DocumentReorderImages) => this.documentService.reorderImages$(action.ordering).pipe(
       switchMap((ordering) => of(new DocumentReorderImagesSuccess(ordering))),
-      catchError(err => of(new DocumentServerError(err)))
+      //catchError(err => of(new DocumentServerError(err)))
     )));
 
   @Effect()
@@ -149,7 +149,7 @@ export class DocumentEffects {
     ofType<DocumentGetPartsInImages>(DocumentActionTypes.DocumentGetPartsInImages),
     switchMap((action: DocumentGetPartsInImages) => this.documentService.getPartsInImages$(action.documentID).pipe(
       switchMap((partsInImages) => of(new DocumentGetPartsInImagesSuccess(partsInImages))),
-      catchError(err => of(new DocumentServerError(err)))
+      //catchError(err => of(new DocumentServerError(err)))
     )));
 
   @Effect()
@@ -157,7 +157,7 @@ export class DocumentEffects {
     ofType<DocumentLinkImagesToPart>(DocumentActionTypes.DocumentLinkImagesToPart),
     switchMap((action: DocumentLinkImagesToPart) => this.documentService.linkImagesToPart$(action.imageIDs, action.partID).pipe(
       switchMap((partsInImages) => of(new DocumentLinkImagesToPartSuccess(partsInImages))),
-      catchError(err => of(new DocumentServerError(err)))
+      //catchError(err => of(new DocumentServerError(err)))
     )));
 
   @Effect()
@@ -165,7 +165,7 @@ export class DocumentEffects {
     ofType<DocumentLinkImagesToNewPart>(DocumentActionTypes.DocumentLinkImagesToNewPart),
     switchMap((action: DocumentLinkImagesToNewPart) => this.documentService.linkImagesToNewPart$(action.imageIDs, action.partName).pipe(
       switchMap((imagesInNewPart) => of(new DocumentLinkImagesToNewPartSuccess(imagesInNewPart))),
-      catchError(err => of(new DocumentServerError(err)))
+      //catchError(err => of(new DocumentServerError(err)))
     )));
 
   @Effect()
@@ -173,7 +173,7 @@ export class DocumentEffects {
     ofType<DocumentUnlinkImagesFromPart>(DocumentActionTypes.DocumentUnlinkImagesFromPart),
     switchMap((action: DocumentUnlinkImagesFromPart) => this.documentService.unlinkImagesFromPart$(action.imageIDs).pipe(
       switchMap((partsInImages) => of(new DocumentUnlinkImagesFromPartSuccess(partsInImages))),
-      catchError(err => of(new DocumentServerError(err)))
+      //catchError(err => of(new DocumentServerError(err)))
     )));
 
   @Effect()
@@ -181,7 +181,7 @@ export class DocumentEffects {
     ofType<DocumentChangeImagesVisibility>(DocumentActionTypes.DocumentChangeImagesVisibility),
     switchMap((action: DocumentChangeImagesVisibility) => this.documentService.changeImagesVisibility$(action.imageIDs, action.hidden).pipe(
       switchMap((imageVisibility) => of(new DocumentChangeImagesVisibilitySuccess(imageVisibility))),
-      catchError(err => of(new DocumentServerError(err)))
+      //catchError(err => of(new DocumentServerError(err)))
     )));
 
   // revisado hasta aquí
@@ -190,7 +190,7 @@ export class DocumentEffects {
     ofType<DocumentGetDocument>(DocumentActionTypes.DocumentGetDocument),
     switchMap((action: DocumentGetDocument) => this.documentService.getDocument$(action.documentID).pipe(
       switchMap((document: Document) => of(new DocumentGetDocumentSuccess(document))),
-      catchError(err => of(new DocumentServerError(err)))
+      //catchError(err => of(new DocumentServerError(err)))
     )));
 
   @Effect()
@@ -198,7 +198,7 @@ export class DocumentEffects {
     ofType<DocumentGetImages>(DocumentActionTypes.DocumentGetImages),
     switchMap((action: DocumentGetImages) => this.documentService.getDocumentImages$(action.documentID).pipe(
       switchMap((images: Image[]) => of(new DocumentGetImagesSuccess(images))),
-      catchError(err => of(new DocumentServerError(err)))
+      //catchError(err => of(new DocumentServerError(err)))
     )));
 
   @Effect()
@@ -207,7 +207,7 @@ export class DocumentEffects {
     switchMap((action: DocumentExportMEIPartsFacsimile) =>
       this.documentService.exportMEIPartsFacsimile$(action.documentID, action.selectedImages, action.forMeasuringPolyphony).pipe(
         switchMap((mei: StringResponse) => of(new DocumentExportMEIPartsFacsimileSuccess(mei.response))),
-      catchError(err => of(new DocumentServerError(err)))
+      //catchError(err => of(new DocumentServerError(err)))
     )));
 
   @Effect()
@@ -215,7 +215,7 @@ export class DocumentEffects {
     ofType<DocumentExportMEI>(DocumentActionTypes.DocumentExportMEI),
     switchMap((action: DocumentExportMEI) => this.documentService.exportMEI$(action.documentID, action.partID, action.selectedImages).pipe(
       switchMap((mei: StringResponse) => of(new DocumentExportMEISuccess(mei.response))),
-      catchError(err => of(new DocumentServerError(err)))
+      //catchError(err => of(new DocumentServerError(err)))
     )));
 
   @Effect()
@@ -223,7 +223,7 @@ export class DocumentEffects {
     ofType<DocumentExportMensurstrich>(DocumentActionTypes.DocumentExportMensurstrich),
     switchMap((action: DocumentExportMensurstrich) => this.documentService.exportMensurstrich$(action.documentID, action.selectedImages).pipe(
       switchMap((payload: Blob) => of(new DocumentExportMensurstrichSuccess(payload))),
-      catchError(err => of(new DocumentServerError(err)))
+      //catchError(err => of(new DocumentServerError(err)))
     )));
 
   @Effect()
@@ -231,7 +231,7 @@ export class DocumentEffects {
     ofType<DocumentExportMusicXML>(DocumentActionTypes.DocumentExportMusicXML),
     switchMap((action: DocumentExportMusicXML) => this.documentService.exportMusicXML$(action.documentID, action.selectedImages).pipe(
       switchMap((payload: Blob) => of(new DocumentExportMusicXMLSuccess(payload))),
-      catchError(err => of(new DocumentServerError(err)))
+      //catchError(err => of(new DocumentServerError(err)))
     )));
 
   @Effect()
@@ -239,7 +239,7 @@ export class DocumentEffects {
     ofType<DocumentGetDocumentStatistics>(DocumentActionTypes.DocumentGetDocumentStatistics),
     switchMap((action: DocumentGetDocumentStatistics) => this.documentService.getDocumentStatistics$(action.documentID).pipe(
       switchMap((documentStatistics: DocumentStatistics) => of(new DocumentGetDocumentStatisticsSuccess(documentStatistics))),
-      catchError(err => of(new DocumentServerError(err)))
+      //catchError(err => of(new DocumentServerError(err)))
     )));
   /**
    * @deprecated Use getAlignmentPreview$
@@ -258,6 +258,6 @@ export class DocumentEffects {
     ofType<DocumentGetAlignmentPreview>(DocumentActionTypes.DocumentGetAlignmentPreview),
     switchMap((action: DocumentGetAlignmentPreview) => this.documentService.getAlignmentPreview$(action.documentID).pipe(
       switchMap((alignmentPreview: AlignmentPreview) => of(new DocumentGetAlignmentPreviewSuccess(alignmentPreview))),
-      catchError(err => of(new DocumentServerError(err)))
+      //catchError(err => of(new DocumentServerError(err)))
     )));
 }

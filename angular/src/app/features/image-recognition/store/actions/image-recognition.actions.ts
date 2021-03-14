@@ -19,7 +19,7 @@ import {DocumentAnalysisForm} from "../../../../core/model/restapi/document-anal
  * We use the same actions for overview, parts, document analysis ... because they share the state
  */
 export enum ImageRecognitionActionTypes {
-  ImageRecognitionServerError = '[ImageRecognition] Server error',
+  //ImageRecognitionServerError = '[ImageRecognition] Server error',
 
   ImageRecognitionGetImageOverview = '[ImageRecognition] Get image overview',
   ImageRecognitionGetImageOverviewSuccess = '[ImageRecognition] Get image overview success',
@@ -81,10 +81,10 @@ export class ImageRecognitionGetImageOverviewSuccess implements Action {
 }
 
 
-export class ImageRecognitionServerError implements Action {
+/*export class ImageRecognitionServerError implements Action {
   public readonly type = ImageRecognitionActionTypes.ImageRecognitionServerError;
   constructor(public serverError: APIRestServerError) {}
-}
+}*/
 
 export class ImageRecognitionGetPagesRegionsSymbolsSuccess implements Action {
   public readonly type = ImageRecognitionActionTypes.ImageRecognitionGetPagesRegionsSymbolsSuccess;
@@ -307,7 +307,7 @@ export class ImageRecognitionAutomaticDocumentAnalysisSuccess implements Action 
 }
 
 export type ImageRecognitionActions =
-  ImageRecognitionServerError |
+  //ImageRecognitionServerError |
   ImageRecognitionGetImageOverview | ImageRecognitionGetImageOverviewSuccess |
   ImageRecognitionGetPagesRegionsSymbols | ImageRecognitionGetPagesRegionsSymbolsSuccess |
   ImageRecognitionPutComments | ImageRecognitionPutCommentsSuccess |

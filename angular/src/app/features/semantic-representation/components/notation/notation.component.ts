@@ -38,7 +38,7 @@ export class NotationComponent implements OnInit, OnChanges, OnDestroy, AfterVie
   ngOnInit() {
     this.serverErrorSubscription = this.store.select(selectSemanticRepresentationServerError).subscribe(next => {
       if (next) {
-        this.showErrorService.warning(next);
+        this.showErrorService.showServerError(next);
         this.store.dispatch(new ResetSemanticRepresentationServerError());
       }
     });

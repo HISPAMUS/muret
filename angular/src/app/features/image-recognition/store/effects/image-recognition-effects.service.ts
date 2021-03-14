@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Effect, ofType, Actions } from '@ngrx/effects';
 import { of } from 'rxjs';
-import {catchError, switchMap} from 'rxjs/operators';
+import {switchMap} from 'rxjs/operators';
 import {ImageOverviewService} from "../../services/image-overview.service";
 import {
   ImageRecognitionActionTypes,
@@ -39,7 +39,6 @@ import {
   ImageRecognitionLinkPartSuccess,
   ImageRecognitionPutComments,
   ImageRecognitionPutCommentsSuccess,
-  ImageRecognitionServerError,
   ImageRecognitionUnlinkImageFromPart,
   ImageRecognitionUnlinkImageFromPartSuccess,
   ImageRecognitionUnlinkPart,
@@ -57,11 +56,6 @@ import {
 import {DocumentAnalysisService} from "../../services/document-analysis.service";
 import {Region} from "../../../../core/model/entities/region";
 import {NumberArray} from "../../../../core/model/restapi/number-array";
-import {
-  AutomaticDocumentAnalysis, AutomaticDocumentAnalysisSuccess,
-  DocumentAnalysisActionTypes, DocumentAnalysisServerError,
-  GetDocumentAnModels, GetDocumentAnModelsSuccess
-} from "../../../document-analysis/store/actions/document-analysis.actions";
 import {ClassifierModel} from "../../../../core/model/entities/classifier-model";
 
 
@@ -83,7 +77,7 @@ export class ImageOverviewEffects {
     ofType<ImageRecognitionGetImageOverview>(ImageRecognitionActionTypes.ImageRecognitionGetImageOverview),
     switchMap((action: ImageRecognitionGetImageOverview) => this.imageOverviewService.getImageOverview$(action.imageID).pipe(
       switchMap((overview) => of(new ImageRecognitionGetImageOverviewSuccess(overview))),
-      catchError(err => of(new ImageRecognitionServerError(err)))
+      //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 
 
@@ -92,7 +86,7 @@ export class ImageOverviewEffects {
     ofType<ImageRecognitionGetPagesRegionsSymbols>(ImageRecognitionActionTypes.ImageRecognitionGetPagesRegionsSymbols),
     switchMap((action: ImageRecognitionGetPagesRegionsSymbols) => this.imageOverviewService.getPagesRegionsSymbols$(action.imageID).pipe(
       switchMap((pageRegionsSymbols: Page[]) => of(new ImageRecognitionGetPagesRegionsSymbolsSuccess(pageRegionsSymbols))),
-      catchError(err => of(new ImageRecognitionServerError(err)))
+      //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 
 
@@ -101,7 +95,7 @@ export class ImageOverviewEffects {
     ofType<ImageRecognitionPutComments>(ImageRecognitionActionTypes.ImageRecognitionPutComments),
     switchMap((action: ImageRecognitionPutComments) => this.imageOverviewService.putComments$(action.imageID, action.comments).pipe(
       switchMap((comments: string) => of(new ImageRecognitionPutCommentsSuccess(comments))),
-      catchError(err => of(new ImageRecognitionServerError(err)))
+      //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 
   @Effect()
@@ -109,7 +103,7 @@ export class ImageOverviewEffects {
     ofType<ImageRecognitionChangeStatus>(ImageRecognitionActionTypes.ImageRecognitionChangeStatus),
     switchMap((action: ImageRecognitionChangeStatus) => this.imageOverviewService.changeProgressStatus$(action.imageRecognitionProgressStatusChange).pipe(
       switchMap((statuses) => of(new ImageRecognitionChangeStatusSuccess(statuses))),
-      catchError(err => of(new ImageRecognitionServerError(err)))
+      //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
   // --------- Parts -------
 
@@ -118,7 +112,7 @@ export class ImageOverviewEffects {
     ofType<ImageRecognitionLinkPart>(ImageRecognitionActionTypes.ImageRecognitionLinkPart),
     switchMap((action: ImageRecognitionLinkPart) => this.imagePartsService.linkToPart$(action.payload).pipe(
       switchMap((pagesRegionsSymbols) => of(new ImageRecognitionLinkPartSuccess(pagesRegionsSymbols))),
-      catchError(err => of(new ImageRecognitionServerError(err)))
+      //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 
   @Effect()
@@ -126,7 +120,7 @@ export class ImageOverviewEffects {
     ofType<ImageRecognitionLinkNewPart>(ImageRecognitionActionTypes.ImageRecognitionLinkNewPart),
     switchMap((action: ImageRecognitionLinkNewPart) => this.imagePartsService.linkToNewPart$(action.payload).pipe(
       switchMap((payload) => of(new ImageRecognitionLinkNewPartSuccess(payload))),
-      catchError(err => of(new ImageRecognitionServerError(err)))
+      //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 
   @Effect()
@@ -134,7 +128,7 @@ export class ImageOverviewEffects {
     ofType<ImageRecognitionUnlinkPart>(ImageRecognitionActionTypes.ImageRecognitionUnlinkPart),
     switchMap((action: ImageRecognitionUnlinkPart) => this.imagePartsService.unlinkFromPart$(action.payload).pipe(
       switchMap((payload) => of(new ImageRecognitionUnlinkPartSuccess(payload))),
-      catchError(err => of(new ImageRecognitionServerError(err)))
+      //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 
 
@@ -143,7 +137,7 @@ export class ImageOverviewEffects {
     ofType<ImageRecognitionLinkImageToPart>(ImageRecognitionActionTypes.ImageRecognitionLinkImageToPart),
     switchMap((action: ImageRecognitionLinkImageToPart) => this.imagePartsService.linkImageToPart$(action.imageID, action.partID).pipe(
       switchMap((part) => of(new ImageRecognitionLinkImageToPartSuccess(part))),
-      catchError(err => of(new ImageRecognitionServerError(err)))
+      //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 
   @Effect()
@@ -151,7 +145,7 @@ export class ImageOverviewEffects {
     ofType<ImageRecognitionLinkImageToNewPart>(ImageRecognitionActionTypes.ImageRecognitionLinkImageToNewPart),
     switchMap((action: ImageRecognitionLinkImageToNewPart) => this.imagePartsService.linkImageToNewPart$(action.imageID, action.partName).pipe(
       switchMap((payload) => of(new ImageRecognitionLinkImageToNewPartSuccess(payload))),
-      catchError(err => of(new ImageRecognitionServerError(err)))
+      //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 
   @Effect()
@@ -159,7 +153,7 @@ export class ImageOverviewEffects {
     ofType<ImageRecognitionUnlinkImageFromPart>(ImageRecognitionActionTypes.ImageRecognitionUnlinkImageFromPart),
     switchMap((action: ImageRecognitionUnlinkImageFromPart) => this.imagePartsService.unlinkImageFromPart$(action.imageID).pipe(
       switchMap(() => of(new ImageRecognitionUnlinkImageFromPartSuccess())),
-      catchError(err => of(new ImageRecognitionServerError(err)))
+      //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 
   // ----- Document analysis
@@ -168,7 +162,7 @@ export class ImageOverviewEffects {
     ofType<ImageRecognitionGetRegionTypes>(ImageRecognitionActionTypes.ImageRecognitionGetRegionTypes),
     switchMap(() => this.documentAnalysisService.getRegionTypes$().pipe(
       switchMap((regionTypes: RegionType[]) => of(new ImageRecognitionGetRegionTypesSuccess(regionTypes))),
-      catchError(err => of(new ImageRecognitionServerError(err)))
+      //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 
 
@@ -177,7 +171,7 @@ export class ImageOverviewEffects {
     ofType<ImageRecognitionChangeRegionsType>(ImageRecognitionActionTypes.ImageRecognitionChangeRegionsType),
     switchMap((action: ImageRecognitionChangeRegionsType) => this.documentAnalysisService.changeRegionsType$(action.regions, action.regionType).pipe(
       switchMap((changedRegionTypes: ChangedRegionTypes) => of(new ImageRecognitionChangeRegionsTypeSuccess(changedRegionTypes))),
-      catchError(err => of(new ImageRecognitionServerError(err)))
+      //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 
   @Effect()
@@ -186,7 +180,7 @@ export class ImageOverviewEffects {
     switchMap((action: ImageRecognitionChangeRegionBoundingBox) => this.documentAnalysisService.updateRegionBoundingBox$(
       action.region, action.boundingBox.fromX, action.boundingBox.fromY, action.boundingBox.toX, action.boundingBox.toY).pipe(
       switchMap((region: Region) => of(new ImageRecognitionChangeRegionBoundingBoxSuccess(region))),
-      catchError(err => of(new ImageRecognitionServerError(err)))
+      //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 
 
@@ -196,7 +190,7 @@ export class ImageOverviewEffects {
     switchMap((action: ImageRecognitionChangePageBoundingBox) => this.documentAnalysisService.updatePageBoundingBox$(
       action.page, action.boundingBox.fromX, action.boundingBox.fromY, action.boundingBox.toX, action.boundingBox.toY).pipe(
       switchMap((page: Page) => of(new ImageRecognitionChangePageBoundingBoxSuccess(page))),
-      catchError(err => of(new ImageRecognitionServerError(err)))
+      //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 
 
@@ -205,7 +199,7 @@ export class ImageOverviewEffects {
     ofType<ImageRecognitionClear>(ImageRecognitionActionTypes.ImageRecognitionClear),
     switchMap((action: ImageRecognitionClear) => this.documentAnalysisService.clear(action.imageID).pipe(
       switchMap(() => of(new ImageRecognitionClearSuccess())),
-      catchError(err => of(new ImageRecognitionServerError(err)))
+      //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 
 
@@ -215,7 +209,7 @@ export class ImageOverviewEffects {
     switchMap((action: ImageRecognitionCreatePage) => this.documentAnalysisService.createPage$(
       action.imageID, action.boundingBox.fromX, action.boundingBox.fromY, action.boundingBox.toX, action.boundingBox.toY).pipe(
       switchMap((pages: Page[]) => of(new ImageRecognitionCreatePageSuccess(pages))),
-      catchError(err => of(new ImageRecognitionServerError(err)))
+      //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 
 
@@ -225,7 +219,7 @@ export class ImageOverviewEffects {
     switchMap((action: ImageRecognitionCreatePages) => this.documentAnalysisService.createPages$(
       action.imageID, action.numPages).pipe(
       switchMap((pages: Page[]) => of(new ImageRecognitionCreatePagesSuccess(pages))),
-      catchError(err => of(new ImageRecognitionServerError(err)))
+      //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 
   @Effect()
@@ -235,7 +229,7 @@ export class ImageOverviewEffects {
       action.imageID, action.regionType,
       action.boundingBox.fromX, action.boundingBox.fromY, action.boundingBox.toX, action.boundingBox.toY).pipe(
       switchMap((pages: Page[]) => of(new ImageRecognitionCreateRegionSuccess(pages))),
-      catchError(err => of(new ImageRecognitionServerError(err)))
+      //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 
 
@@ -244,7 +238,7 @@ export class ImageOverviewEffects {
     ofType<ImageRecognitionDeletePages>(ImageRecognitionActionTypes.ImageRecognitionDeletePages),
     switchMap((action: ImageRecognitionDeletePages) => this.documentAnalysisService.deletePages$(action.pages).pipe(
       switchMap((deletedPagesID: NumberArray) => of(new ImageRecognitionDeletePagesSuccess(deletedPagesID))),
-      catchError(err => of(new ImageRecognitionServerError(err)))
+      //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 
 
@@ -253,7 +247,7 @@ export class ImageOverviewEffects {
     ofType<ImageRecognitionDeleteRegions>(ImageRecognitionActionTypes.ImageRecognitionDeleteRegions),
     switchMap((action: ImageRecognitionDeleteRegions) => this.documentAnalysisService.deleteRegions$(action.regions).pipe(
       switchMap((deletedRegionID) => of(new ImageRecognitionDeleteRegionsSuccess(deletedRegionID))),
-      catchError(err => of(new ImageRecognitionServerError(err)))
+      //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 
   @Effect()
@@ -261,7 +255,7 @@ export class ImageOverviewEffects {
     ofType<ImageRecognitionGetClassifierModels>(ImageRecognitionActionTypes.ImageRecognitionGetClassifierModels),
     switchMap((action: ImageRecognitionGetClassifierModels) => this.documentAnalysisService.getModels$(action.imageID).pipe(
       switchMap((classifierModels: ClassifierModel[]) => of(new ImageRecognitionGetClassifierModelsSuccess(classifierModels))),
-      catchError(err => of(new DocumentAnalysisServerError(err)))
+      //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 
 
@@ -270,7 +264,7 @@ export class ImageOverviewEffects {
     ofType<ImageRecognitionAutomaticDocumentAnalysis>(ImageRecognitionActionTypes.ImageRecognitionAutomaticDocumentAnalysis),
     switchMap((action: ImageRecognitionAutomaticDocumentAnalysis) => this.documentAnalysisService.attemptAutomaticAnalysis$(action.form).pipe(
       switchMap((page: Page[]) => of(new ImageRecognitionAutomaticDocumentAnalysisSuccess(page))),
-      catchError(err => of(new ImageRecognitionServerError(err)))
+      //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 
 }

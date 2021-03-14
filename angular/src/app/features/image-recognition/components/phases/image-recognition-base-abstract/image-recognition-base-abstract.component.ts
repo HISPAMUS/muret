@@ -30,6 +30,7 @@ import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 import {SVGSet} from "../../../../agnostic-representation/model/svgset";
 import {selectCoreSVGAgnosticOrSemanticSymbolSet} from "../../../../../core/store/selectors/core.selector";
 import {CoreGetSVGSet} from "../../../../../core/store/actions/fonts.actions";
+import {ShowErrorService} from "../../../../../core/services/show-error.service";
 
 @Component({
   selector: 'app-image-recognition-base-abstract-component',
@@ -53,7 +54,8 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
 
 
   constructor(protected route: ActivatedRoute, protected store: Store<ImageRecognitionState>, protected dialogsService: DialogsService,
-              protected imageFilesService: ImageFilesService, protected sanitizer: DomSanitizer
+              protected imageFilesService: ImageFilesService, protected sanitizer: DomSanitizer,
+              protected manageErrorsService: ShowErrorService
   ) {
     this.store.dispatch(new ImageRecognitionGetRegionTypes());
   }
