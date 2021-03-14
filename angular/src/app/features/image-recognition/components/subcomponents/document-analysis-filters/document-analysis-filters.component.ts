@@ -58,12 +58,19 @@ export class DocumentAnalysisFiltersComponent implements OnInit, OnChanges, Afte
 
     if (changes.addRegionTypeToFilter && this.addRegionTypeToFilter) {
       this.regionTypeFilterOut.delete(this.addRegionTypeToFilter.name);
-      this.onFilterChange.emit(this.regionTypeFilterOut);
+      this.emitFilterChange();
     }
   }
 
+  private emitFilterChange() {
+    setTimeout(()=>{
+      this.onFilterChange.emit(this.regionTypeFilterOut);
+    });
+  }
+
   ngAfterContentInit(): void {
-    this.onFilterChange.emit(this.regionTypeFilterOut); // to propagate filter
+    //this.onFilterChange.emit(this.regionTypeFilterOut); // to propagate filter
+    this.emitFilterChange();
   }
 
   beautifyRegionName(regionType: RegionType): string {
@@ -81,7 +88,7 @@ export class DocumentAnalysisFiltersComponent implements OnInit, OnChanges, Afte
     } else {
       this.regionTypeFilterOut.add($event.target.name);
     }
-    this.onFilterChange.emit(this.regionTypeFilterOut);
+    this.emitFilterChange();
   }
 
   trackByRegionTypeFn(index, item: RegionType) {
@@ -105,7 +112,7 @@ export class DocumentAnalysisFiltersComponent implements OnInit, OnChanges, Afte
         element["checked"] = false;
       });
     }
-    this.onFilterChange.emit(this.regionTypeFilterOut);
+    this.emitFilterChange();
   }
 
 

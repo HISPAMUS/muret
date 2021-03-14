@@ -3,6 +3,5 @@
           attr.stroke="{{appLine.strokeColor}}"
           attr.stroke-width="{{appLine.strokeWidth}}"
           attr.stroke-dasharray="{{appLine.strokeDashArray}}"
-          *ngIf="!appLine.hidden"
 />
 <svg:text *ngIf="appLine.label" attr.x="{{appLine.fromX+3}}" attr.y="{{ appLine.fromY+8 }}">{{ appLine.label }}</svg:text>

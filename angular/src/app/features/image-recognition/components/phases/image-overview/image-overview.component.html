@@ -1,8 +1,8 @@
 <div class="container" *ngIf="imageOverview">
   <div class="row">
     <div class="col-8">
-      <app-image-document-analysis-navigator
-        [loadedImage]="loadedImage$ | async"
+      <app-image-document-analysis-navigator *ngIf="(loadedImage$ | async) as loadedImage"
+        [loadedImage]="loadedImage"
         [regionTypes]="regionTypes$ | async"
         [shapes]="documentAnalysisShapes"
         [zoomManager]="zoomManager"

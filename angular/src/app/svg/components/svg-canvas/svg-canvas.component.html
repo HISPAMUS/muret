@@ -30,7 +30,7 @@
     <!--<g *ngFor="let shape of shapes; trackBy: trackByShapeFn">-->
     <!-- Don't add shapeFn, Force repainting DOM because otherwise it does not create the shape again and it causes problems -->
     <g *ngFor="let shape of shapes">
-      <ng-container [ngSwitch]="shape.type">
+      <ng-container [ngSwitch]="shape.type" *ngIf="!shape.hidden">
         <ng-container *ngSwitchCase="'Rectangle'">
           <g appRectangle [appRectangle]="shape" [shape]="shape" [editing]="isEditing()" [selected]="isSelected(shape)"></g>
         </ng-container>

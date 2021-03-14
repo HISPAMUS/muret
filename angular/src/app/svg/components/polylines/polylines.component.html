@@ -1,4 +1,4 @@
-<svg:g id="{{appPolylines.id}}" *ngIf="!appPolylines.hidden">
+<svg:g id="{{appPolylines.id}}">
   <svg:polyline *ngFor="let polyline of appPolylines.polylines; trackBy: trackByPolylineFn"
             fill="none"
             attr.stroke-width="{{appPolylines.strokeWidth}}"

@@ -4,7 +4,6 @@
           attr.stroke-width="{{appRectangle.strokeWidth}}"
           attr.stroke-dasharray="{{appRectangle.strokeDashArray}}"
           attr.fill="{{appRectangle.fillColor}}" attr.opacity="{{appRectangle.fillOpacity}}"
-          *ngIf="!appRectangle.hidden"
 />
 <svg:text *ngIf="appRectangle.label" attr.fill="{{appRectangle.labelColor}}" attr.x="{{appRectangle.fromX+3}}" attr.y="{{ appRectangle.fromY+8 }}">{{ appRectangle.label }}</svg:text>
 
