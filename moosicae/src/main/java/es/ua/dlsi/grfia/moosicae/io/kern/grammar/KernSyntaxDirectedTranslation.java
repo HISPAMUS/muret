@@ -983,7 +983,19 @@ public class KernSyntaxDirectedTranslation {
             Logger.getLogger(KernSyntaxDirectedTranslation.class.getName()).log(Level.FINEST,
                     "Alteration display {0}", ctx.getText());
 
-            importingContexts.addObjectToPool(EAlterationDisplayTypes.valueOf(ctx.getText()));
+            EAlterationDisplayTypes eAlterationDisplayTypes = null;
+            switch (ctx.getText()) {
+                case "i":
+                case "I":
+                    eAlterationDisplayTypes = EAlterationDisplayTypes.editorial;
+                    break;
+                case "X":
+                    eAlterationDisplayTypes = EAlterationDisplayTypes.cautionary;
+                    break;
+            }
+            if (eAlterationDisplayTypes != null) {
+                importingContexts.addObjectToPool(eAlterationDisplayTypes);
+            }
         }
 
         @Override

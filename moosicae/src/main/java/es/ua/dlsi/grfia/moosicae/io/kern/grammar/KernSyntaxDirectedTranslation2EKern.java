@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 
 
 /**
+ * @deprecated Use better KernSyntaxDirectedTranslation
  * It translates from **kern to **ekern just using the grammar
  * @author David Rizo - drizo@dlsi.ua.es
  */
@@ -35,6 +36,7 @@ public class KernSyntaxDirectedTranslation2EKern {
 
     public static class Loader extends kernParserBaseListener {
         private static final String SEPARATOR = "·";
+        private final boolean basic;
         private boolean debug;
         private final Parser parser;
         private int spineIndex;
@@ -43,7 +45,9 @@ public class KernSyntaxDirectedTranslation2EKern {
         private LinkedList<String> currentEKernMatrixRow;
         private StringBuilder currentChordStringBuilder;
         private KernSpines kernSpines;
-        public Loader(Parser parser, boolean debug) {
+
+        public Loader(Parser parser, boolean debug, boolean basic) {
+            this.basic = basic;
             this.debug = debug;
             this.parser = parser;
             this.translatedEKernMatrix = new LinkedList<>();
@@ -151,6 +155,21 @@ public class KernSyntaxDirectedTranslation2EKern {
         }
 
         @Override
+        public void exitNullInterpretation(kernParser.NullInterpretationContext ctx) {
+            super.exitNullInterpretation(ctx);
+            output(ctx.getText());
+        }
+
+        private EKernHeaders getCurrentSpineType() {
+            try {
+                return this.kernSpines.getSpineType(this.spineIndex);
+            } catch (IMException e) {
+                createException(e);
+            }
+            return null;
+        }
+
+        @Override
         public void exitHeaderField(kernParser.HeaderFieldContext ctx) {
             super.exitHeaderField(ctx);
 
@@ -199,7 +218,7 @@ public class KernSyntaxDirectedTranslation2EKern {
             if (ctx.barLineType() != null) {
                 stringBuilder.append(ctx.barLineType().getText());
             }
-            if (ctx.fermata() != null) {
+            if (!basic || ctx.fermata() != null) {
                 stringBuilder.append(SEPARATOR);
                 stringBuilder.append(ctx.fermata().getText());
             }
@@ -228,14 +247,17 @@ public class KernSyntaxDirectedTranslation2EKern {
 
             output(ctx.getText());
             this.kernSpines.addOperator(ctx.getText());
-            this.spineIndex ++;
+            this.spineIndex++;
         }
 
 
         @Override
         public void exitVisualTandemInterpretation(kernParser.VisualTandemInterpretationContext ctx) {
             super.exitVisualTandemInterpretation(ctx);
-            output(ctx.getText());
+            if (!basic || ctx.clef() != null || ctx.staff() != null || ctx.key() != null || ctx.keySignature() != null
+                    || ctx.meterSymbol() != null || ctx.timeSignature() != null) {
+                output(ctx.getText());
+            }
         }
 
 
@@ -248,17 +270,17 @@ public class KernSyntaxDirectedTranslation2EKern {
                 stringBuilder.append(terminalNode.getText());
             }
 
-            if (ctx.restPosition() != null) {
+            if (!basic && ctx.restPosition() != null) {
                 stringBuilder.append(SEPARATOR);
                 stringBuilder.append(ctx.restPosition().getText());
             }
 
-            if (ctx.editorialIntervention() != null) {
+            if (!basic && ctx.editorialIntervention() != null) {
                 stringBuilder.append(SEPARATOR);
                 stringBuilder.append(ctx.editorialIntervention().getText());
             }
 
-            if (ctx.fermata() != null) {
+            if (!basic && ctx.fermata() != null) {
                 stringBuilder.append(SEPARATOR);
                 stringBuilder.append(ctx.fermata().getText());
             }
@@ -294,10 +316,18 @@ public class KernSyntaxDirectedTranslation2EKern {
                     stringBuilder.append(pitch.alteration().alterationDisplay().getText());
                 }
             }
-            if (pitch.fermata() != null) {
+            if (!basic && pitch.fermata() != null) {
                 stringBuilder.append(SEPARATOR);
                 stringBuilder.append(pitch.fermata().getText());
             }
+        }
+
+        private boolean exportNoteProperty(String t) {
+            char car = t.charAt(0);
+            return car != 'i' && // if not userAssignable
+                    (!basic || car == '[' || car == ']' || car == '_' // tie
+            || car == '<' || car == '>' ||// staff change
+                            car == 'L' || car == 'J' || car == 'K' || car == 'k'); // beams
         }
 
         @Override
@@ -306,8 +336,10 @@ public class KernSyntaxDirectedTranslation2EKern {
             StringBuilder stringBuilder = new StringBuilder();
             if (ctx.beforeNote() != null) {
                 for (int i = 0; i < ctx.beforeNote().getChildCount(); i++) {
-                    stringBuilder.append(ctx.beforeNote().getChild(i).getText());
-                    stringBuilder.append(SEPARATOR);
+                    if (exportNoteProperty(ctx.beforeNote().getChild(i).getText())) {
+                        stringBuilder.append(ctx.beforeNote().getChild(i).getText());
+                        stringBuilder.append(SEPARATOR);
+                    }
                 }
             }
             if (ctx.duration() != null) {
@@ -317,7 +349,7 @@ public class KernSyntaxDirectedTranslation2EKern {
             outputPitch(ctx.pitch(), stringBuilder);
             if (ctx.afterNote() != null) {
                 for (int i = 0; i < ctx.afterNote().getChildCount(); i++) {
-                    if (!ctx.afterNote().getChild(i).getText().equals("i")) { // if not userAssignable
+                    if (exportNoteProperty(ctx.afterNote().getChild(i).getText())) {
                         stringBuilder.append(SEPARATOR);
                         stringBuilder.append(ctx.afterNote().getChild(i).getText());
                     }
@@ -355,27 +387,33 @@ public class KernSyntaxDirectedTranslation2EKern {
         @Override
         public void exitDynamics(kernParser.DynamicsContext ctx) {
             super.exitDynamics(ctx);
-            this.output(ctx.getText());
+            if (!basic) {
+                this.output(ctx.getText());
+            }
         }
 
         @Override
         public void exitOctaveShift(kernParser.OctaveShiftContext ctx) {
             super.exitOctaveShift(ctx);
-            this.output(ctx.getText());
+            if (!basic) {
+                this.output(ctx.getText());
+            }
         }
 
         @Override
         public void exitFieldComment(kernParser.FieldCommentContext ctx) {
             super.exitFieldComment(ctx);
-            if (ctx.EXCLAMATION() != null || ctx.LAYOUT() != null) {
-                this.output(ctx.getText());
-            } else {
-                this.output("!"); // place holder
+            if (!basic) {
+                if (ctx.EXCLAMATION() != null || ctx.LAYOUT() != null) {
+                    this.output(ctx.getText());
+                } else {
+                    this.output("!"); // place holder
+                }
             }
         }
     }
 
-    private String translateKern(CharStream input, String inputDescription) throws IMException {
+    private String translateKern(CharStream input, String inputDescription, boolean basic) throws IMException {
         ErrorListener errorListener = new ErrorListener();
         try {
             Logger.getLogger(KernSyntaxDirectedTranslation2EKern.class.getName()).log(Level.INFO, "Parsing {0}", inputDescription);
@@ -394,7 +432,7 @@ public class KernSyntaxDirectedTranslation2EKern {
 
             ParseTree tree = parser.start();
             ParseTreeWalker walker = new ParseTreeWalker();
-            Loader loader = new Loader(parser, debug);
+            Loader loader = new Loader(parser, debug, basic);
             walker.walk(loader, tree);
 
             if (errorListener.getNumberErrorsFound() != 0) {
@@ -441,10 +479,10 @@ public class KernSyntaxDirectedTranslation2EKern {
 
     }
 
-    public void translateKern(File inputFile, File outputFile) throws IMException {
+    public void translateKern(File inputFile, File outputFile, boolean basic) throws IMException {
         try {
             CharStream input = CharStreams.fromFileName(inputFile.getAbsolutePath());
-            String translated = translateKern(input, inputFile.getAbsolutePath());
+            String translated = translateKern(input, inputFile.getAbsolutePath(), basic);
             byte[] strToBytes = translated.getBytes();
             Files.write(outputFile.toPath(), strToBytes);
         } catch (IOException e) {
@@ -455,7 +493,7 @@ public class KernSyntaxDirectedTranslation2EKern {
     public String translateKern(InputStream stream) throws IMException {
         try {
             CharStream input = CharStreams.fromStream(stream);
-            return translateKern(input, "Stream");
+            return translateKern(input, "Stream", false);
         } catch (IOException e) {
             throw new IMException(e);
         }
@@ -463,7 +501,7 @@ public class KernSyntaxDirectedTranslation2EKern {
 
     public String translateKern(String string) throws IMException {
         CharStream input = CharStreams.fromString(string);
-        return translateKern(input, string);
+        return translateKern(input, string, false);
     }
 
     public boolean isDebug() {

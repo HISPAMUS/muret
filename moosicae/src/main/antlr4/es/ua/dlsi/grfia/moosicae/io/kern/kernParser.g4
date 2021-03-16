@@ -139,6 +139,7 @@ visualTandemInterpretation:
     TANDEM_TSTART | TANDEM_TEND // sometimes found
     ;
 
+
 rscale: TANDEM_RSCALE COLON number (SLASH number)?;
 
 pedal: TANDEM_PEDAL_START | TANDEM_PEDAL_END;

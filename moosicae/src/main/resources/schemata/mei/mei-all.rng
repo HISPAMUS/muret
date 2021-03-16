@@ -3712,7 +3712,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       <ref name="svg_SVG.Core.attrib"/>
       <ref name="svg_SVG.FilterColor.attrib"/>
       <ref name="svg_SVG.FilterPrimitiveWithIn.attrib"/>
-      <attribute name="order">
+      <attribute name="orderEntities">
         <ref name="svg_NumberOptionalNumber.datatype"/>
       </attribute>
       <attribute name="kernelMatrix"/>
@@ -5843,7 +5843,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@artic">
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="not(contains(., 'marc-stacc')) and not(contains(., 'ten-stacc'))">"<sch:value-of
         select="."/>" contains a deprecated value.</sch:assert>
     </sch:rule>
@@ -5855,7 +5855,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@artic.ges">
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="not(contains(., 'marc-stacc')) and not(contains(., 'ten-stacc'))">"<sch:value-of
         select="."/>" contains a deprecated value.</sch:assert>
     </sch:rule>
@@ -9348,11 +9348,11 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
   <define name="mei_att.arpeg.log.attributes">
     <ref name="mei_att.controlEvent.attributes"/>
     <ref name="mei_att.startId.attributes"/>
-    <ref name="mei_att.arpeg.log.attribute.order"/>
+    <ref name="mei_att.arpeg.log.attribute.orderEntities"/>
   </define>
-  <define name="mei_att.arpeg.log.attribute.order">
+  <define name="mei_att.arpeg.log.attribute.orderEntities">
     <optional>
-      <attribute name="order">
+      <attribute name="orderEntities">
         <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Describes the
           direction in which an arpeggio is to be performed.</a:documentation>
         <choice>
@@ -11275,7 +11275,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           context="mei:lv[mei:curve[@bezier or @bulge or @curvedir or @lform or @lwidth or              @ho or @startho or @endho or @to or @startto or @endto or @vo or @startvo or              @endvo or @x or @y or @x2 or @y2]]">
           <sch:assert
             test="not(@bezier or @bulge or @curvedir or @lform or @lwidth or @ho or @startho or                @endho or @to or @startto or @endto or @vo or @startvo or @endvo or @x or @y or @x2 or @y2)"
-            role="warning">The visual attributes of the lv element (@bezier, @bulge, @curvedir,
+            role="showServerError">The visual attributes of the lv element (@bezier, @bulge, @curvedir,
             @lform, @lwidth, @ho, @startho, @endho, @to, @startto, @endto, @vo, @startvo, @endvo,
             @x, @y, @x2, and @y2) will be overridden by visual attributes of the contained curve
             elements.</sch:assert>
@@ -11692,7 +11692,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           context="mei:slur[mei:curve[@bezier or @bulge or @curvedir or @lform or @lwidth or              @ho or @startho or @endho or @to or @startto or @endto or @vo or @startvo or @endvo or              @x or @y or @x2 or @y2]]">
           <sch:assert
             test="not(@bezier or @bulge or @curvedir or @lform or @lwidth or @ho or @startho or                @endho or @to or @startto or @endto or @vo or @startvo or @endvo or @x or @y or @x2 or @y2)"
-            role="warning">The visual attributes of the slur (@bezier, @bulge, @curvedir, @lform,
+            role="showServerError">The visual attributes of the slur (@bezier, @bulge, @curvedir, @lform,
             @lwidth, @ho, @startho, @endho, @to, @startto, @endto, @vo, @startvo, @endvo, @x, @y,
             @x2, and @y2) will be overridden by visual attributes of the contained curve
             elements.</sch:assert>
@@ -11738,7 +11738,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           context="mei:tie[mei:curve[@bezier or @bulge or @curvedir or @lform or @lwidth or              @ho or @startho or @endho or @to or @startto or @endto or @vo or @startvo or              @endvo or @x or @y or @x2 or @y2]]">
           <sch:assert
             test="not(@bezier or @bulge or @curvedir or @lform or @lwidth or @ho or @startho or                @endho or @to or @startto or @endto or @vo or @startvo or @endvo or @x or @y or @x2 or @y2)"
-            role="warning">The visual attributes of the tie (@bezier, @bulge, @curvedir, @lform,
+            role="showServerError">The visual attributes of the tie (@bezier, @bulge, @curvedir, @lform,
             @lwidth, @ho, @startho, @endho, @to, @startto, @endto, @vo, @startvo, @endvo, @x, @y,
             @x2, and @y2) will be overridden by visual attributes of the contained curve
             elements.</sch:assert>
@@ -12804,9 +12804,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           xmlns:sch="http://purl.oclc.org/dsdl/schematron"
           xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
           xmlns="http://www.tei-c.org/ns/1.0" context="@new">
-          <sch:assert role="warning" test="not(normalize-space(.) eq '')">@new attribute should have
+          <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@new attribute should have
             content.</sch:assert>
-          <sch:assert role="warning"
+          <sch:assert role="showServerError"
             test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:hand/@xml:id">The
             value in @new should correspond to the @xml:id attribute of a hand element.</sch:assert>
         </sch:rule>
@@ -12826,9 +12826,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           xmlns:sch="http://purl.oclc.org/dsdl/schematron"
           xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
           xmlns="http://www.tei-c.org/ns/1.0" context="@old">
-          <sch:assert role="warning" test="not(normalize-space(.) eq '')">@old attribute should have
+          <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@old attribute should have
             content.</sch:assert>
-          <sch:assert role="warning"
+          <sch:assert role="showServerError"
             test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:hand/@xml:id">The
             value in @old should correspond to the @xml:id attribute of a hand element.</sch:assert>
         </sch:rule>
@@ -12906,7 +12906,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
               a formerly cancelled part of the musical text as valid again.</a:documentation>
             <value>navigation</value>
             <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
-              >clarification of the reading order of the musical text.</a:documentation>
+              >clarification of the reading orderEntities of the musical text.</a:documentation>
             <data type="NMTOKEN"/>
           </choice>
         </attribute>
@@ -13170,7 +13170,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@glyph.name">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@glyph.name attribute should
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@glyph.name attribute should
         have content.</sch:assert>
     </sch:rule>
   </pattern>
@@ -13192,7 +13192,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0"
       context="mei:*[@glyph.num and (lower-case(@glyph.auth) eq 'smufl' or @glyph.uri eq 'http://www.smufl.org/')]">
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="matches(normalize-space(@glyph.num), '^(#x|U\+)E([0-9AB][0-9A-F][0-9A-F]|C[0-9A][0-9A-F]|CB[0-9A-F])$')"
         >SMuFL version 1.18 uses the range U+E000 - U+ECBF.</sch:assert>
     </sch:rule>
@@ -13231,9 +13231,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@facs">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@facs attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@facs attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:*[local-name() eq 'surface' or local-name() eq 'zone']/@xml:id"
         >Each value in @facs should correspond to the @xml:id attribute of a surface or zone
         element.</sch:assert>
@@ -13438,7 +13438,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           xmlns:sch="http://purl.oclc.org/dsdl/schematron"
           xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
           xmlns="http://www.tei-c.org/ns/1.0" context="mei:zone/mei:graphic">
-          <sch:assert role="warning" test="count(mei:*) = 0">Graphic child of zone should not have
+          <sch:assert role="showServerError" test="count(mei:*) = 0">Graphic child of zone should not have
             children.</sch:assert>
         </sch:rule>
       </pattern>
@@ -13449,7 +13449,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           xmlns:sch="http://purl.oclc.org/dsdl/schematron"
           xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
           xmlns="http://www.tei-c.org/ns/1.0" context="mei:symbolDef/mei:graphic">
-          <sch:assert role="warning" test="@startid or (@ulx and @uly)">Graphic should have either a
+          <sch:assert role="showServerError" test="@startid or (@ulx and @uly)">Graphic should have either a
             startid attribute or ulx and uly attributes.</sch:assert>
         </sch:rule>
       </pattern>
@@ -13461,9 +13461,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
           xmlns="http://www.tei-c.org/ns/1.0"
           context="mei:graphic[not(ancestor::mei:symbolDef or ancestor::mei:zone)]">
-          <sch:assert role="warning" test="not(@ulx or @uly)">Graphic should not have @ulx or @uly
+          <sch:assert role="showServerError" test="not(@ulx or @uly)">Graphic should not have @ulx or @uly
             attributes.</sch:assert>
-          <sch:assert role="warning" test="not(@ho or @vo)">Graphic should not have @ho or @vo
+          <sch:assert role="showServerError" test="not(@ho or @vo)">Graphic should not have @ho or @vo
             attributes.</sch:assert>
         </sch:rule>
       </pattern>
@@ -14031,9 +14031,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@state">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@state attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@state attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:genState/@xml:id">The
         value in @state should correspond to the @xml:id attribute of a genState
         element.</sch:assert>
@@ -14055,8 +14055,8 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       <optional>
         <attribute name="ordered">
           <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">When set to
-            "true" the child elements are known to be in chronological order. When set to "false" or
-            when not provided, the order of child elements is unknown.</a:documentation>
+            "true" the child elements are known to be in chronological orderEntities. When set to "false" or
+            when not provided, the orderEntities of child elements is unknown.</a:documentation>
           <ref name="mei_data.BOOLEAN"/>
         </attribute>
       </optional>
@@ -14107,7 +14107,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@accid.ges">
-      <sch:assert role="warning" test="not(. eq ../@accid)">The value of @accid.ges should not
+      <sch:assert role="showServerError" test="not(. eq ../@accid)">The value of @accid.ges should not
         duplicate the value of @accid.</sch:assert>
     </sch:rule>
   </pattern>
@@ -14819,9 +14819,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@chordref">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@chordref attribute should
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@chordref attribute should
         have content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:chordDef/@xml:id">The
         value in @chordref should correspond to the @xml:id attribute of a chordDef
         element.</sch:assert>
@@ -15311,7 +15311,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           xmlns:sch="http://purl.oclc.org/dsdl/schematron"
           xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
           xmlns="http://www.tei-c.org/ns/1.0" context="mei:componentList[mei:*[@comptype]]">
-          <sch:assert role="warning"
+          <sch:assert role="showServerError"
             test="count(mei:*[@comptype]) = count(mei:*[local-name() ne 'head'])">When any child
             element has a comptype attribute, it is recommended that comptype appear on all child
             elements.</sch:assert>
@@ -15423,7 +15423,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           xmlns:sch="http://purl.oclc.org/dsdl/schematron"
           xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
           xmlns="http://www.tei-c.org/ns/1.0" context="@context">
-          <sch:assert role="warning" test="not(normalize-space(.) eq '')">@context attribute should
+          <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@context attribute should
             contain an XPath expression.</sch:assert>
         </sch:rule>
       </pattern>
@@ -15568,7 +15568,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           xmlns:sch="http://purl.oclc.org/dsdl/schematron"
           xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
           xmlns="http://www.tei-c.org/ns/1.0" context="mei:category">
-          <sch:assert test="@xml:id" role="warning">To be addressable, the category element must
+          <sch:assert test="@xml:id" role="showServerError">To be addressable, the category element must
             have an xml:id attribute.</sch:assert>
         </sch:rule>
       </pattern>
@@ -15641,7 +15641,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           <sch:assert test="@isodate or mei:date">The date of the change must be recorded in an
             isodate attribute or date element.</sch:assert>
           <sch:assert test="@resp or mei:respStmt[mei:name or mei:corpName or mei:persName]"
-            role="warning">It is recommended that the agent responsible for the change be recorded
+            role="showServerError">It is recommended that the agent responsible for the change be recorded
             in a resp attribute or in a name, corpName, or persName element in the respStmt
             element.</sch:assert>
         </sch:rule>
@@ -15700,7 +15700,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
     <element name="condition">
       <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">The physical
         condition of an item, particularly any variances between the physical make-up of the item
-        and that of other copies of the same item (e.g., missing pages or plates, brittleness, faded
+        and that of other copies of the same item (e.g., missing pagesWithRegions or plates, brittleness, faded
         images, etc.).</a:documentation>
       <ref name="mei_macro.struc-unstrucContent"/>
       <ref name="mei_att.common.attributes"/>
@@ -15752,7 +15752,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           xmlns:sch="http://purl.oclc.org/dsdl/schematron"
           xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
           xmlns="http://www.tei-c.org/ns/1.0" context="mei:contents[mei:label]">
-          <sch:assert role="warning" test="count(mei:label) = count(mei:contentItem)">When labels
+          <sch:assert role="showServerError" test="count(mei:label) = count(mei:contentItem)">When labels
             are used, usually each content item has one.</sch:assert>
         </sch:rule>
       </pattern>
@@ -16080,7 +16080,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
     <element name="fingerprint">
       <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Contains a
         string that uniquely identifies an item, such as those constructed by combining groups of
-        characters transcribed from specified pages of a printed item or a file's
+        characters transcribed from specified pagesWithRegions of a printed item or a file's
         checksum.</a:documentation>
       <text/>
       <ref name="mei_att.common.attributes"/>
@@ -16092,7 +16092,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
   <define name="mei_foliaDesc">
     <element name="foliaDesc">
       <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Describes the
-        order of folia and bifolia making up the text block of a manuscript or
+        orderEntities of folia and bifolia making up the text block of a manuscript or
         print.</a:documentation>
       <zeroOrMore>
         <choice>
@@ -16168,7 +16168,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           xmlns:sch="http://purl.oclc.org/dsdl/schematron"
           xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
           xmlns="http://www.tei-c.org/ns/1.0" context="mei:handList[mei:label]">
-          <sch:assert role="warning" test="count(mei:label) = count(mei:hand)">When labels are used,
+          <sch:assert role="showServerError" test="count(mei:label) = count(mei:hand)">When labels are used,
             usually each hand has one.</sch:assert>
         </sch:rule>
       </pattern>
@@ -17037,9 +17037,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           xmlns:sch="http://purl.oclc.org/dsdl/schematron"
           xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
           xmlns="http://www.tei-c.org/ns/1.0" context="mei:source/@target">
-          <sch:assert role="warning" test="not(normalize-space(.) eq '')">@target attribute should
+          <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@target attribute should
             have content.</sch:assert>
-          <sch:assert role="warning"
+          <sch:assert role="showServerError"
             test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:*[local-name()              eq 'source' or local-name() eq 'manifestation']/@xml:id or matches($i, '^([a-z]+://|\.{1,2}/)')"
             >Each value in @target should correspond to the @xml:id attribute of a source or
             manifestation element or be an external URI.</sch:assert>
@@ -17149,7 +17149,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           xmlns:sch="http://purl.oclc.org/dsdl/schematron"
           xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
           xmlns="http://www.tei-c.org/ns/1.0" context="@context">
-          <sch:assert role="warning" test="not(normalize-space(.) eq '')">@context attribute should
+          <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@context attribute should
             contain an XPath expression.</sch:assert>
         </sch:rule>
       </pattern>
@@ -17229,7 +17229,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           xmlns:sch="http://purl.oclc.org/dsdl/schematron"
           xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
           xmlns="http://www.tei-c.org/ns/1.0" context="mei:termList[mei:label]">
-          <sch:assert role="warning" test="count(mei:label) = count(mei:term)">When labels are used,
+          <sch:assert role="showServerError" test="count(mei:label) = count(mei:term)">When labels are used,
             usually each term has one.</sch:assert>
         </sch:rule>
       </pattern>
@@ -18011,9 +18011,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@instr">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@instr attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@instr attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:instrDef/@xml:id">The
         value in @instr should correspond to the @xml:id attribute of an instrDef
         element.</sch:assert>
@@ -18819,7 +18819,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
   <define name="mei_foliation">
     <element name="foliation">
       <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Describes the
-        numbering system or systems used to count the leaves or pages in a codex.</a:documentation>
+        numbering system or systems used to count the leaves or pagesWithRegions in a codex.</a:documentation>
       <ref name="mei_macro.struc-unstrucContent"/>
       <ref name="mei_att.common.attributes"/>
       <ref name="mei_att.bibl.attributes"/>
@@ -19153,7 +19153,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
     <element name="secFolio">
       <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">(second folio)
         – Marks the word or words taken from a fixed point in a codex (typically the beginning of
-        the second leaf) in order to provide a unique identifier for the item.</a:documentation>
+        the second leaf) in orderEntities to provide a unique identifier for the item.</a:documentation>
       <ref name="mei_macro.struc-unstrucContent"/>
       <ref name="mei_att.common.attributes"/>
       <ref name="mei_att.bibl.attributes"/>
@@ -20768,9 +20768,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@when">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@when attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@when attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:when/@xml:id">A value
         in @when should correspond to the @xml:id attribute of a when element.</sch:assert>
     </sch:rule>
@@ -20820,7 +20820,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           xmlns:sch="http://purl.oclc.org/dsdl/schematron"
           xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
           xmlns="http://www.tei-c.org/ns/1.0" context="mei:clip[@begin or @end]">
-          <sch:assert role="warning" test="@betype or ancestor::mei:*[@betype]">When @begin or @end
+          <sch:assert role="showServerError" test="@betype or ancestor::mei:*[@betype]">When @begin or @end
             is used, @betype should appear on clip or one of its ancestors.</sch:assert>
         </sch:rule>
       </pattern>
@@ -20864,7 +20864,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           xmlns:sch="http://purl.oclc.org/dsdl/schematron"
           xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
           xmlns="http://www.tei-c.org/ns/1.0" context="mei:recording[@begin or @end]">
-          <sch:assert role="warning" test="@betype">When @begin or @end is used, @betype should be
+          <sch:assert role="showServerError" test="@betype">When @begin or @end is used, @betype should be
             present.</sch:assert>
         </sch:rule>
       </pattern>
@@ -20890,7 +20890,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
           xmlns="http://www.tei-c.org/ns/1.0" context="mei:when[@interval]">
           <sch:assert test="@since">@since must be present when @interval is used.</sch:assert>
-          <sch:assert role="warning"
+          <sch:assert role="showServerError"
             test="every $i in tokenize(@since, '\s+') satisfies substring($i,2)=//mei:when/@xml:id"
             >The value in @since should correspond to the @xml:id attribute of a when
             element.</sch:assert>
@@ -20925,7 +20925,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           xmlns:sch="http://purl.oclc.org/dsdl/schematron"
           xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
           xmlns="http://www.tei-c.org/ns/1.0" context="mei:when[@absolute]">
-          <sch:assert role="warning" test="@abstype or ancestor::mei:*[@betype]">When @absolute is
+          <sch:assert role="showServerError" test="@abstype or ancestor::mei:*[@betype]">When @absolute is
             present, @abstype should be present or @betype should be present on an
             ancestor.</sch:assert>
         </sch:rule>
@@ -20985,9 +20985,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           xmlns:sch="http://purl.oclc.org/dsdl/schematron"
           xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
           xmlns="http://www.tei-c.org/ns/1.0" context="@since">
-          <sch:assert role="warning" test="not(normalize-space(.) eq '')">@since attribute should
+          <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@since attribute should
             have content.</sch:assert>
-          <sch:assert role="warning"
+          <sch:assert role="showServerError"
             test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:when/@xml:id">The
             value in @since should correspond to the @xml:id attribute of a when
             element.</sch:assert>
@@ -21152,7 +21152,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
     <optional>
       <attribute name="artic">
         <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Encodes the
-          written articulation(s). Articulations are normally encoded in order from the note head
+          written articulation(s). Articulations are normally encoded in orderEntities from the note head
           outward; that is, away from the stem. See additional notes at att.vis.note. Only
           articulations should be encoded in the artic attribute; for example, fingerings should be
           encoded using the fing element.</a:documentation>
@@ -21186,9 +21186,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="mei:attacca/@target">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@target attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@target attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:*[local-name()                    eq 'section' or local-name() eq 'mdiv']/@xml:id"
         >The value in @target should correspond to the @xml:id attribute of a section or mdiv
         element.</sch:assert>
@@ -21736,9 +21736,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="mei:custos/@target">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@target attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@target attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:note/@xml:id">The value
         in @target should correspond to the @xml:id attribute of a note element.</sch:assert>
     </sch:rule>
@@ -21818,9 +21818,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@data">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@data attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@data attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:*[ancestor::mei:music]/@xml:id"
         >The value in @data should correspond to the @xml:id attribute of a descendant of the music
         element.</sch:assert>
@@ -21854,9 +21854,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@decls">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@decls attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@decls attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:*[ancestor::mei:meiHead]/@xml:id"
         >Each value in @decls should correspond to the @xml:id attribute of an element within the
         metadata header.</sch:assert>
@@ -22142,7 +22142,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0"
       context="@extent[matches(normalize-space(.), '^\d+(\.\d+)?$')]">
-      <sch:assert role="warning" test="../@unit">The @unit attribute is recommended.</sch:assert>
+      <sch:assert role="showServerError" test="../@unit">The @unit attribute is recommended.</sch:assert>
     </sch:rule>
   </pattern>
   <pattern xmlns="http://purl.oclc.org/dsdl/schematron"
@@ -22152,7 +22152,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@extent[matches(., '\d+(\.\d+)?\s')]">
-      <sch:assert role="warning" test="../@unit">Separation into value (@extent) and unit (@unit) is
+      <sch:assert role="showServerError" test="../@unit">Separation into value (@extent) and unit (@unit) is
         recommended.</sch:assert>
     </sch:rule>
   </pattern>
@@ -22216,9 +22216,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@hand">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@hand attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@hand attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:hand/@xml:id">Each
         value in @hand should correspond to the @xml:id attribute of a hand element.</sch:assert>
     </sch:rule>
@@ -22301,9 +22301,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@join">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@join attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@join attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:*/@xml:id">Each value
         in @join should correspond to the @xml:id attribute of an element.</sch:assert>
     </sch:rule>
@@ -22403,9 +22403,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="mei:layer/@def">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@def attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@def attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:layerDef/@xml:id">The
         value in @def should correspond to the @xml:id attribute of a layerDef element.</sch:assert>
     </sch:rule>
@@ -22583,9 +22583,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@copyof">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@copyof attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@copyof attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:*/@xml:id">The value in
         @copyof should correspond to the @xml:id attribute of an element.</sch:assert>
     </sch:rule>
@@ -22610,9 +22610,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@corresp">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@corresp attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@corresp attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:*/@xml:id">Each value
         in @corresp should correspond to the @xml:id attribute of an element.</sch:assert>
     </sch:rule>
@@ -22638,9 +22638,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@follows">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@follows attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@follows attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:*/@xml:id">Each value
         in @follows must correspond to the @xml:id attribute of an element.</sch:assert>
     </sch:rule>
@@ -22665,9 +22665,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@next">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@next attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@next attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:*/@xml:id">Each value
         in @next should correspond to the @xml:id attribute of an element.</sch:assert>
     </sch:rule>
@@ -22693,9 +22693,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@precedes">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@precedes attribute should
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@precedes attribute should
         have content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:*/@xml:id">Each value
         in @precedes must correspond to the @xml:id attribute of an element.</sch:assert>
     </sch:rule>
@@ -22720,9 +22720,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@prev">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@prev attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@prev attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:*/@xml:id">Each value
         in @prev should correspond to the @xml:id attribute of an element.</sch:assert>
     </sch:rule>
@@ -22748,9 +22748,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@sameas">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@sameas attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@sameas attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:*/@xml:id">Each value
         in @sameas should correspond to the @xml:id attribute of an element.</sch:assert>
     </sch:rule>
@@ -22775,9 +22775,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@synch">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@synch attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@synch attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:*/@xml:id">Each value
         in @synch should correspond to the @xml:id attribute of an element.</sch:assert>
     </sch:rule>
@@ -23208,9 +23208,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@nymref">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@nymref attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@nymref attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:*/@xml:id">The value in
         @nymref should correspond to the @xml:id attribute of an element.</sch:assert>
     </sch:rule>
@@ -23311,9 +23311,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@head.altsym">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@head.altsym attribute should
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@head.altsym attribute should
         have content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:symbolDef/@xml:id">The
         value in @head.altsym should correspond to the @xml:id attribute of a symbolDef
         element.</sch:assert>
@@ -23414,7 +23414,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0"
       context="mei:*[(matches(@head.shape, '#x') or matches(@head.shape, 'U+')) and (lower-case(@head.auth) eq 'smufl')]">
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="matches(normalize-space(@head.shape), '^(#x|U\+)E([0-9AB][0-9A-F][0-9A-F]|C[0-9A][0-9A-F]|CB[0-9A-F])$')"
         >SMuFL version 1.18 uses the range U+E000 - U+ECBF.</sch:assert>
     </sch:rule>
@@ -23605,17 +23605,17 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
     <ref name="mei_att.event.attributes"/>
     <ref name="mei_att.width.attributes"/>
   </define>
-  <define name="mei_att.pages.attributes">
-    <ref name="mei_att.pages.attribute.page.height"/>
-    <ref name="mei_att.pages.attribute.page.width"/>
-    <ref name="mei_att.pages.attribute.page.topmar"/>
-    <ref name="mei_att.pages.attribute.page.botmar"/>
-    <ref name="mei_att.pages.attribute.page.leftmar"/>
-    <ref name="mei_att.pages.attribute.page.rightmar"/>
-    <ref name="mei_att.pages.attribute.page.panels"/>
-    <ref name="mei_att.pages.attribute.page.scale"/>
+  <define name="mei_att.pagesWithRegions.attributes">
+    <ref name="mei_att.pagesWithRegions.attribute.page.height"/>
+    <ref name="mei_att.pagesWithRegions.attribute.page.width"/>
+    <ref name="mei_att.pagesWithRegions.attribute.page.topmar"/>
+    <ref name="mei_att.pagesWithRegions.attribute.page.botmar"/>
+    <ref name="mei_att.pagesWithRegions.attribute.page.leftmar"/>
+    <ref name="mei_att.pagesWithRegions.attribute.page.rightmar"/>
+    <ref name="mei_att.pagesWithRegions.attribute.page.panels"/>
+    <ref name="mei_att.pagesWithRegions.attribute.page.scale"/>
   </define>
-  <define name="mei_att.pages.attribute.page.height">
+  <define name="mei_att.pagesWithRegions.attribute.page.height">
     <optional>
       <attribute name="page.height">
         <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Specifies the
@@ -23624,7 +23624,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       </attribute>
     </optional>
   </define>
-  <define name="mei_att.pages.attribute.page.width">
+  <define name="mei_att.pagesWithRegions.attribute.page.width">
     <optional>
       <attribute name="page.width">
         <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Describes the
@@ -23633,7 +23633,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       </attribute>
     </optional>
   </define>
-  <define name="mei_att.pages.attribute.page.topmar">
+  <define name="mei_att.pagesWithRegions.attribute.page.topmar">
     <optional>
       <attribute name="page.topmar">
         <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Indicates the
@@ -23642,7 +23642,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       </attribute>
     </optional>
   </define>
-  <define name="mei_att.pages.attribute.page.botmar">
+  <define name="mei_att.pagesWithRegions.attribute.page.botmar">
     <optional>
       <attribute name="page.botmar">
         <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Indicates the
@@ -23651,7 +23651,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       </attribute>
     </optional>
   </define>
-  <define name="mei_att.pages.attribute.page.leftmar">
+  <define name="mei_att.pagesWithRegions.attribute.page.leftmar">
     <optional>
       <attribute name="page.leftmar">
         <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Indicates the
@@ -23660,7 +23660,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       </attribute>
     </optional>
   </define>
-  <define name="mei_att.pages.attribute.page.rightmar">
+  <define name="mei_att.pagesWithRegions.attribute.page.rightmar">
     <optional>
       <attribute name="page.rightmar">
         <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Indicates the
@@ -23669,16 +23669,16 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       </attribute>
     </optional>
   </define>
-  <define name="mei_att.pages.attribute.page.panels">
+  <define name="mei_att.pagesWithRegions.attribute.page.panels">
     <optional>
       <attribute name="page.panels">
         <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Indicates the
-          number of logical pages to be rendered on a single physical page.</a:documentation>
+          number of logical pagesWithRegions to be rendered on a single physical page.</a:documentation>
         <ref name="mei_data.PAGE.PANELS"/>
       </attribute>
     </optional>
   </define>
-  <define name="mei_att.pages.attribute.page.scale">
+  <define name="mei_att.pagesWithRegions.attribute.page.scale">
     <optional>
       <attribute name="page.scale">
         <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Indicates how
@@ -23817,9 +23817,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@plist">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@plist attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@plist attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:*/@xml:id">Each value
         in @plist should correspond to the @xml:id attribute of an element.</sch:assert>
     </sch:rule>
@@ -24021,9 +24021,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@resp">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@resp attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@resp attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:*[ancestor::mei:meiHead]/@xml:id"
         >The value in @resp should correspond to the @xml:id attribute of an element within the
         metadata header.</sch:assert>
@@ -24074,7 +24074,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
     <optional>
       <attribute name="seq">
         <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Used to
-          assign a sequence number related to the order in which the encoded features carrying this
+          assign a sequence number related to the orderEntities in which the encoded features carrying this
           attribute are believed to have occurred.</a:documentation>
         <data type="positiveInteger"/>
       </attribute>
@@ -24134,9 +24134,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@source">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@source attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@source attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:*[local-name() eq 'source' or local-name() eq 'manifestation']/@xml:id"
         >Each value in @source should correspond to the @xml:id attribute of a source or
         manifestation element.</sch:assert>
@@ -24218,9 +24218,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="mei:staff/@def">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@def attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@def attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:staffDef/@xml:id">The
         value in @def should correspond to the @xml:id attribute of a staffDef element.</sch:assert>
     </sch:rule>
@@ -24304,7 +24304,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
     <optional>
       <attribute name="aboveorder">
         <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Describes
-          vertical order of items printed above a staff, from closest to farthest away from the
+          vertical orderEntities of items printed above a staff, from closest to farthest away from the
           staff.</a:documentation>
         <list>
           <oneOrMore>
@@ -24318,7 +24318,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
     <optional>
       <attribute name="beloworder">
         <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Describes
-          vertical order of items printed below a staff, from closest to farthest away from the
+          vertical orderEntities of items printed below a staff, from closest to farthest away from the
           staff.</a:documentation>
         <list>
           <oneOrMore>
@@ -24332,7 +24332,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
     <optional>
       <attribute name="betweenorder">
         <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Describes
-          vertical order of items printed between staves, from top to bottom.</a:documentation>
+          vertical orderEntities of items printed between staves, from top to bottom.</a:documentation>
         <list>
           <oneOrMore>
             <ref name="mei_data.STAFFITEM"/>
@@ -24395,9 +24395,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@endid">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@endid attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@endid attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:*/@xml:id">The value in
         @endid should correspond to the @xml:id attribute of an element.</sch:assert>
     </sch:rule>
@@ -24422,9 +24422,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@startid">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@startid attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@startid attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:*/@xml:id">The value in
         @startid should correspond to the @xml:id attribute of an element.</sch:assert>
     </sch:rule>
@@ -27232,7 +27232,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           xmlns:sch="http://purl.oclc.org/dsdl/schematron"
           xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
           xmlns="http://www.tei-c.org/ns/1.0" context="mei:biblList[mei:label]">
-          <sch:assert role="warning" test="count(mei:label) = count(mei:bibl)">When labels are used,
+          <sch:assert role="showServerError" test="count(mei:label) = count(mei:bibl)">When labels are used,
             usually each bibliographic item has one.</sch:assert>
         </sch:rule>
       </pattern>
@@ -27278,7 +27278,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
     <element name="biblStruct">
       <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">(structured
         bibliographic citation) – Contains a bibliographic citation in which bibliographic
-        sub-elements must appear in a specified order.</a:documentation>
+        sub-elements must appear in a specified orderEntities.</a:documentation>
       <group>
         <zeroOrMore>
           <ref name="mei_analytic"/>
@@ -28202,7 +28202,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
   <define name="mei_extent">
     <element name="extent">
       <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Used to express
-        size in terms other than physical dimensions, such as number of pages, records, bytes,
+        size in terms other than physical dimensions, such as number of pagesWithRegions, records, bytes,
         physical components, etc.</a:documentation>
       <zeroOrMore>
         <choice>
@@ -28546,7 +28546,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
   <define name="mei_labelAbbr">
     <element name="labelAbbr">
       <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">A label on the
-        pages following the first.</a:documentation>
+        pagesWithRegions following the first.</a:documentation>
       <zeroOrMore>
         <choice>
           <text/>
@@ -28862,7 +28862,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           xmlns:sch="http://purl.oclc.org/dsdl/schematron"
           xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
           xmlns="http://www.tei-c.org/ns/1.0" context="mei:name">
-          <sch:assert role="warning" test="not(mei:geogName or mei:persName or mei:corpName)"
+          <sch:assert role="showServerError" test="not(mei:geogName or mei:persName or mei:corpName)"
             >Recommended practice is to use name elements to capture sub-parts of a generic
             name.</sch:assert>
         </sch:rule>
@@ -29109,7 +29109,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
     <element name="pgFoot">
       <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">(page footer) –
         A running footer on the first page. Also, used to temporarily override a running footer on
-        individual pages.</a:documentation>
+        individual pagesWithRegions.</a:documentation>
       <zeroOrMore>
         <choice>
           <text/>
@@ -29137,7 +29137,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
   <define name="mei_pgFoot2">
     <element name="pgFoot2">
       <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">(page footer 2)
-        – A running footer on the pages following the first.</a:documentation>
+        – A running footer on the pagesWithRegions following the first.</a:documentation>
       <zeroOrMore>
         <choice>
           <text/>
@@ -29171,7 +29171,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
     <element name="pgHead">
       <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">(page header) –
         A running header on the first page. Also, used to temporarily override a running header on
-        individual pages.</a:documentation>
+        individual pagesWithRegions.</a:documentation>
       <zeroOrMore>
         <choice>
           <text/>
@@ -29199,7 +29199,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
   <define name="mei_pgHead2">
     <element name="pgHead2">
       <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">(page header 2)
-        – A running header on the pages following the first.</a:documentation>
+        – A running header on the pagesWithRegions following the first.</a:documentation>
       <zeroOrMore>
         <choice>
           <text/>
@@ -29259,7 +29259,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           context="mei:phrase[mei:curve[@bezier or @bulge or @curvedir or @lform or @lwidth or @ho or              @startho or @endho or @to or @startto or @endto or @vo or @startvo or @endvo or @x or @y or @x2 or @y2]]">
           <sch:assert
             test="not(@bezier or @bulge or @curvedir or @lform or @lwidth or @ho or @startho or @endho or                @to or @startto or @endto or @vo or @startvo or @endvo or @x or @y or @x2 or @y2)"
-            role="warning">The visual attributes of the phrase (@bezier, @bulge, @curvedir, @lform,
+            role="showServerError">The visual attributes of the phrase (@bezier, @bulge, @curvedir, @lform,
             @lwidth, @ho, @startho, @endho, @to, @startto, @endto, @vo, @startvo, @endvo, @x, @y,
             @x2, and @y2) will be overridden by visual attributes of the contained curve
             elements.</sch:assert>
@@ -29528,7 +29528,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
           xmlns="http://www.tei-c.org/ns/1.0" context="mei:respStmt[not(ancestor::mei:change)]">
           <sch:assert
             test="(mei:resp and (mei:name or mei:corpName or mei:persName)) or              count(mei:*[@role]) = count(mei:*) and count(mei:*) &gt; 0"
-            role="warning">At least one element pair (a resp element and a name-like element) is
+            role="showServerError">At least one element pair (a resp element and a name-like element) is
             recommended. Alternatively, each name-like element may have a @role
             attribute.</sch:assert>
         </sch:rule>
@@ -29870,7 +29870,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
   <define name="mei_staff">
     <element name="staff">
       <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">A group of
-        equidistant horizontal lines on which notes are placed in order to represent pitch or a
+        equidistant horizontal lines on which notes are placed in orderEntities to represent pitch or a
         grouping element for individual 'strands' of notes, rests, etc. that may or may not actually
         be rendered on staff lines; that is, both diastematic and non-diastematic
         signs.</a:documentation>
@@ -31138,9 +31138,9 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
       xmlns:sch="http://purl.oclc.org/dsdl/schematron"
       xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
       xmlns="http://www.tei-c.org/ns/1.0" context="@altsym">
-      <sch:assert role="warning" test="not(normalize-space(.) eq '')">@altsym attribute should have
+      <sch:assert role="showServerError" test="not(normalize-space(.) eq '')">@altsym attribute should have
         content.</sch:assert>
-      <sch:assert role="warning"
+      <sch:assert role="showServerError"
         test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:symbolDef/@xml:id">The
         value in @altsym should correspond to the @xml:id attribute of a symbolDef
         element.</sch:assert>
@@ -32789,7 +32789,7 @@ TEI Edition Location: http://www.tei-c.org/Vault/P5//
     <ref name="mei_att.notationStyle.attributes"/>
     <ref name="mei_att.oneLineStaff.attributes"/>
     <ref name="mei_att.optimization.attributes"/>
-    <ref name="mei_att.pages.attributes"/>
+    <ref name="mei_att.pagesWithRegions.attributes"/>
     <ref name="mei_att.spacing.attributes"/>
     <ref name="mei_att.staffItems.attributes"/>
     <ref name="mei_att.systems.attributes"/>

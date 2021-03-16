@@ -538,7 +538,7 @@ public class KernImporterTest {
         File expectedEKern = TestFileUtils.getFile("/testdata/io/kern/" + filename + ".ekrn");
         File generatedEKern = TestFileUtils.createTempFile(filename + ".ekrn");
         KernSyntaxDirectedTranslation2EKern kernSyntaxDirectedTranslation2EKern = new KernSyntaxDirectedTranslation2EKern();
-        kernSyntaxDirectedTranslation2EKern.translateKern(kern, generatedEKern);
+        kernSyntaxDirectedTranslation2EKern.translateKern(kern, generatedEKern, false);
         List<String> ekernExpectedLines = Files.readAllLines(expectedEKern.toPath());
         List<String> ekernGeneratedLines = Files.readAllLines(generatedEKern.toPath());
         assertEquals("ekern translation for " + filename + ".krn", ekernExpectedLines, ekernGeneratedLines);

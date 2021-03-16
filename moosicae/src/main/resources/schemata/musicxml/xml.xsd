@@ -80,7 +80,7 @@
    At the date of issue it can also be found at
    http://www.w3.org/2001/xml.xsd.
    The schema document at that URI may however change in the future,
-   in order to remain compatible with the latest version of XML Schema
+   in orderEntities to remain compatible with the latest version of XML Schema
    itself, or with the XML namespace itself.  In other words, if the XML
    Schema or XML namespaces change, the version of this document at
    http://www.w3.org/2001/xml.xsd will change
