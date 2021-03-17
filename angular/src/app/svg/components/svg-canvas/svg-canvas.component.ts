@@ -145,7 +145,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
       this.updateCursor();
     }
 
-    if (this.modeValue == 'eSelecting') {
+    if (this.modeValue == 'eSelecting' || this.modeValue == 'eEditing') {
       if (this.selectionManager && this.selectionManager.hasJustOneSelectedShape()) {
         this.selectedComponent = this.selectionManager.getSelected()[0].shapeComponent;
       }

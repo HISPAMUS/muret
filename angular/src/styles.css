@@ -96,6 +96,7 @@ hr {
 .cursorSWresize       { cursor: sw-resize; }
 .cursorNESWresize     { cursor: nesw-resize; }
 .cursorNWSEresize     { cursor: nwse-resize; }
+.cursorNEresize       { cursor: ne-resize; }
 
 
 /* Used in Document analysis, agnostic and semantic representations */
