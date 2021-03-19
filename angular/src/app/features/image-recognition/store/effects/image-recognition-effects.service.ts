@@ -30,7 +30,7 @@ import {
   ImageRecognitionDeletePagesSuccess,
   ImageRecognitionDeleteRegions,
   ImageRecognitionDeleteRegionsSuccess,
-  ImageRecognitionDeleteSymbol, ImageRecognitionDeleteSymbolSuccess,
+  ImageRecognitionDeleteSymbols, ImageRecognitionDeleteSymbolsSuccess,
   ImageRecognitionGetClassifierModels,
   ImageRecognitionGetClassifierModelsSuccess,
   ImageRecognitionGetImageOverview,
@@ -304,10 +304,10 @@ export class ImageOverviewEffects {
    */
   @Effect()
   deleteSymbol$ = this.actions$.pipe(
-    ofType<ImageRecognitionDeleteSymbol>(ImageRecognitionActionTypes.ImageRecognitionDeleteSymbol),
-    mergeMap((action: ImageRecognitionDeleteSymbol) =>
-      this.agnosticRepresentationService.deleteSymbol$(action.agnosticSymbolID).pipe(
-        switchMap((deletedSymbolID: number) => of(new ImageRecognitionDeleteSymbolSuccess(deletedSymbolID))),
+    ofType<ImageRecognitionDeleteSymbols>(ImageRecognitionActionTypes.ImageRecognitionDeleteSymbols),
+    mergeMap((action: ImageRecognitionDeleteSymbols) =>
+      this.agnosticRepresentationService.deleteSymbols$(action.agnosticSymbols).pipe(
+        switchMap((deletedSymbolIDs: NumberArray) => of(new ImageRecognitionDeleteSymbolsSuccess(deletedSymbolIDs))),
         //catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
       )));
 

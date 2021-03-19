@@ -35,7 +35,7 @@
         </button>
       </label>
       <label ngbButtonLabel>
-        <button [disabled]="!selectionDone && !isAddingMode()" (click)="deleteSelected()">
+        <button (click)="deleteSelected()" [disabled]="!selectionDone">
           <fa-icon icon="minus" class="icons" size="lg"></fa-icon>
         </button>
       </label>

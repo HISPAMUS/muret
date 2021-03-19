@@ -13,7 +13,7 @@ export interface ImageRecognitionState {
   classifierModels: ClassifierModel[];
   analyzing: boolean;
   selectedRegion?: Region; // used to select agnostic symbols
-  selectedAgnosticSymbol?: AgnosticSymbol;
+  selectedAgnosticSymbols?: AgnosticSymbol[];
 }
 
 export const initialImageRecognitionState: ImageRecognitionState = {
@@ -24,7 +24,7 @@ export const initialImageRecognitionState: ImageRecognitionState = {
   classifierModels: null,
   analyzing: false,
   selectedRegion: null,
-  selectedAgnosticSymbol: null,
+  selectedAgnosticSymbols: null,
 };
 
 export function getInitialState(): ImageRecognitionState {

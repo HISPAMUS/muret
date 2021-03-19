@@ -72,12 +72,12 @@ export enum ImageRecognitionActionTypes {
   ImageRecognitionGetClassifierModelsSuccess = '[Image Recognition] Get Models Success',
 
   ImageRecognitionSelectRegion = '[Image Recognition] Select region',
-  ImageRecognitionSelectAgnosticSymbol = '[Image Recognition. Agnostic representation] Select agnostic symbol',
+  ImageRecognitionSelectAgnosticSymbols = '[Image Recognition. Agnostic representation] Select agnostic symbols',
   ImageRecognitionCreateSymbolFromBoundingBox = '[Image Recognition. AgnosticRepresentation] Create symbol from bounding box',
   ImageRecognitionCreateSymbolFromStrokes = '[Image Recognition. AgnosticRepresentation] Create symbol from strokes',
   ImageRecognitionCreateSymbolSuccess = '[Image Recognition. AgnosticRepresentation] Create symbol success',
-  ImageRecognitionDeleteSymbol = '[Image Recognition. AgnosticRepresentation] Delete symbol',
-  ImageRecognitionDeleteSymbolSuccess = '[Image Recognition. AgnosticRepresentation] Delete symbol success',
+  ImageRecognitionDeleteSymbols = '[Image Recognition. AgnosticRepresentation] Delete symbol',
+  ImageRecognitionDeleteSymbolsSuccess = '[Image Recognition. AgnosticRepresentation] Delete symbol success',
   ImageRecognitionClassifyRegionEndToEnd = '[Image Recognition. AgnosticRepresentation] Classify region end-to-end',
   ImageRecognitionClassifyRegionEndToEndSuccess = '[Image Recognition. AgnosticRepresentation] Classify region end-to-end success',
   ImageRecognitionClearRegionSymbols = '[Image Recognition. AgnosticRepresentation] Clear region symbols',
@@ -328,9 +328,9 @@ export class ImageRecognitionSelectRegion implements Action {
   }
 }
 
-export class ImageRecognitionSelectAgnosticSymbol implements Action {
-  public readonly type = ImageRecognitionActionTypes.ImageRecognitionSelectAgnosticSymbol;
-  constructor(public agnosticSymbol: AgnosticSymbol) {
+export class ImageRecognitionSelectAgnosticSymbols implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionSelectAgnosticSymbols;
+  constructor(public agnosticSymbols: AgnosticSymbol[]) {
   }
 }
 export class ImageRecognitionCreateSymbolFromBoundingBox implements Action {
@@ -351,14 +351,14 @@ export class ImageRecognitionCreateSymbolSuccess implements Action {
   constructor(public symbolCreationResult: SymbolCreationResult) {}
 }
 
-export class ImageRecognitionDeleteSymbol implements Action {
-  public readonly type = ImageRecognitionActionTypes.ImageRecognitionDeleteSymbol;
-  constructor(public agnosticSymbolID: number) {}
+export class ImageRecognitionDeleteSymbols implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionDeleteSymbols;
+  constructor(public agnosticSymbols: AgnosticSymbol[]) {}
 }
 
-export class ImageRecognitionDeleteSymbolSuccess implements Action {
-  public readonly type = ImageRecognitionActionTypes.ImageRecognitionDeleteSymbolSuccess;
-  constructor(public deletedAgnosticSymbolID: number) {}
+export class ImageRecognitionDeleteSymbolsSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionDeleteSymbolsSuccess;
+  constructor(public deletedAgnosticSymbolIDs: NumberArray) {}
 }
 
 export class ImageRecognitionClassifyRegionEndToEnd implements Action {
@@ -413,9 +413,9 @@ export type ImageRecognitionActions =
   ImageRecognitionAutomaticDocumentAnalysis | ImageRecognitionAutomaticDocumentAnalysisSuccess |
 
   // agnostic representation
-  ImageRecognitionSelectRegion | ImageRecognitionSelectAgnosticSymbol |
+  ImageRecognitionSelectRegion | ImageRecognitionSelectAgnosticSymbols |
   ImageRecognitionCreateSymbolFromBoundingBox | ImageRecognitionCreateSymbolFromStrokes | ImageRecognitionCreateSymbolSuccess |
-  ImageRecognitionDeleteSymbol | ImageRecognitionDeleteSymbolSuccess |
+  ImageRecognitionDeleteSymbols | ImageRecognitionDeleteSymbolsSuccess |
   ImageRecognitionClassifyRegionEndToEnd | ImageRecognitionClassifyRegionEndToEndSuccess |
   ImageRecognitionClearRegionSymbols | ImageRecognitionClearRegionSymbolsSuccess
   ;

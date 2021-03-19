@@ -280,10 +280,10 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         selectedRegion: action.region
       };
     }
-    case ImageRecognitionActionTypes.ImageRecognitionSelectAgnosticSymbol: {
+    case ImageRecognitionActionTypes.ImageRecognitionSelectAgnosticSymbols: {
       return {
         ...state,
-        selectedAgnosticSymbol: action.agnosticSymbol
+        selectedAgnosticSymbols: action.agnosticSymbols
       };
     }
     case ImageRecognitionActionTypes.ImageRecognitionCreateSymbolFromBoundingBox:
@@ -322,7 +322,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
       //TODO Coger también los símbolos clasificados para sacar la lista de mejores resultados en la GUI
       return newState;
     }
-    case ImageRecognitionActionTypes.ImageRecognitionDeleteSymbolSuccess: {
+    case ImageRecognitionActionTypes.ImageRecognitionDeleteSymbolsSuccess: {
       const newState: ImageRecognitionState = {
         pagesRegionsSymbols: klona(state.pagesRegionsSymbols),
         imageOverview: state.imageOverview,
@@ -332,19 +332,19 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         //apiRestServerError: null
       };
 
-      //TODO Change action to be able to delete several objects at once
       // find region
+      const deletedSymbols: Set<Number> = new Set<Number>();
+      action.deletedAgnosticSymbolIDs.values.forEach(n => deletedSymbols.add(n));
       let deletedSymbolRegion = null;
       newState.pagesRegionsSymbols.forEach(page => {
         page.regions.forEach(region => {
-          if  (region.id === state.selectedRegion) {
-            region.symbols = region.symbols.filter(symbol => symbol.id != action.deletedAgnosticSymbolID);
+          if  (region.id === state.selectedRegion.id) {
+            region.symbols = region.symbols.filter(symbol => !deletedSymbols.has(symbol.id));
             newState.selectedRegion = region;
           }
         });
       });
 
-      newState.selectedRegion = deletedSymbolRegion;
       return newState;
     }
     case ImageRecognitionActionTypes.ImageRecognitionClearRegionSymbolsSuccess: {

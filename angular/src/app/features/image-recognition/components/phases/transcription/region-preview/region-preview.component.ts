@@ -16,11 +16,12 @@ import {Point} from "../../../../../../core/model/entities/point";
 import {ImageRecognitionState} from "../../../../store/state/image-recognition.state";
 import {Store} from "@ngrx/store";
 import {
-  ImageRecognitionClear, ImageRecognitionClearRegionSymbols,
+  ImageRecognitionClearRegionSymbols,
   ImageRecognitionCreateSymbolFromBoundingBox,
-  ImageRecognitionCreateSymbolFromStrokes
+  ImageRecognitionCreateSymbolFromStrokes, ImageRecognitionDeleteSymbols, ImageRecognitionSelectAgnosticSymbols
 } from "../../../../store/actions/image-recognition.actions";
 import {selectImageRecognitionSelectedRegionAgnosticSymbols} from "../../../../store/selectors/image-recognition.selector";
+import {DialogsService} from "../../../../../../shared/services/dialogs.service";
 
 @Component({
   selector: 'app-region-preview',
@@ -34,14 +35,15 @@ export class RegionPreviewComponent implements OnInit, OnDestroy {
 
   agnosticSymbolsSubscription: Subscription;
 
-  selectedRegionShapes: Shape[];
+  shapesOfSelectedRegion: Shape[];
   zoomManager: ZoomManager;
   mode: 'eAdding' | 'eEditing' | 'eSelecting';
   nextShapeToDraw: 'Rectangle' | 'Polylines';
   addMethodTypeValue: 'boundingbox' | 'strokes' ;
   symbolsClassifierModelID: string;
+  selectedSymbols: AgnosticSymbol[];
 
-  constructor(private store: Store<ImageRecognitionState>) {
+  constructor(private store: Store<ImageRecognitionState>, protected dialogsService: DialogsService) {
     this.zoomManager = new ZoomManager();
     this.mode = 'eSelecting';
     this.nextShapeToDraw = 'Rectangle';
@@ -61,22 +63,22 @@ export class RegionPreviewComponent implements OnInit, OnDestroy {
   }
 
   private drawSelectedRegionSymbols(agnosticSymbols: AgnosticSymbol[]) {
-    this.selectedRegionShapes = new Array();
+    this.shapesOfSelectedRegion = new Array();
     if (agnosticSymbols) {
       agnosticSymbols.forEach(symbol => {
         const color = 'red';
         if (symbol.boundingBox) {
-          this.drawBox(this.selectedRegionShapes, symbol,
+          this.drawBox(this.shapesOfSelectedRegion, symbol,
             symbol.agnosticSymbolType, symbol.id, symbol.boundingBox, color, 1);
         }
 
         if (symbol.strokes) {
-          this.drawStrokes(this.selectedRegionShapes, symbol,
+          this.drawStrokes(this.shapesOfSelectedRegion, symbol,
             symbol.agnosticSymbolType, symbol.id, symbol.strokes, 'yellow');
         }
 
         if (symbol.approximateX) {
-          this.drawLine(this.selectedRegionShapes, symbol,
+          this.drawLine(this.shapesOfSelectedRegion, symbol,
             symbol.agnosticSymbolType, symbol.id, symbol.approximateX, color);
         }
 
@@ -202,5 +204,39 @@ export class RegionPreviewComponent implements OnInit, OnDestroy {
 
   onClear() {
     this.store.dispatch(new ImageRecognitionClearRegionSymbols(this.selectedRegion.id));
+  }
+
+  onShapesSelected(shapes: Shape[]) {
+    if (shapes) {
+      this.selectedSymbols = [];
+      shapes.forEach(shape => {
+        if (shape.data.agnosticSymbolType) {
+          this.selectedSymbols.push(shape.data);
+        }
+      });
+      if (this.selectedSymbols.length > 0) {
+        // besides selecting them, we publish for other components which symbols are selected
+        this.store.dispatch(new ImageRecognitionSelectAgnosticSymbols(this.selectedSymbols));
+      }
+    }
+  }
+
+  onDelete() {
+    if (this.selectedSymbols && this.selectedSymbols.length > 0) {
+        if (this.selectedSymbols.length > 1) {
+          this.dialogsService.showConfirmation('There are ' + this.selectedSymbols.length
+            + ' selected symbols', 'Do you want the delete them?')
+            .subscribe((isConfirmed) => {
+                this.store.dispatch(new ImageRecognitionDeleteSymbols(this.selectedSymbols));
+              }
+            );
+        } else {
+          this.store.dispatch(new ImageRecognitionDeleteSymbols(this.selectedSymbols));
+        }
+    }
+  }
+
+  isSelectionDone() {
+    return this.selectedSymbols && this.selectedSymbols.length > 0;
   }
 }

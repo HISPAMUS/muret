@@ -60,6 +60,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   @Input() crop: BoundingBox;
   @Input() nextShapeToAdd: 'Rectangle' | 'Line' | 'Text' | 'Polylines';
 
+  @Input() selectByX: boolean; // if true, the selection will be done using first the X coordinate
 
   @Output() svgMouseEvent = new EventEmitter<Coordinate>(); // only emitted on eIdle state
   @Output() svgShapeCreated = new EventEmitter<Shape>();
@@ -130,6 +131,10 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
       this.shapes.forEach(shape => {
         this.shapesMap.set(shape.id, shape);
       });
+    }
+
+    if (changes.selectByX) {
+      this.selectionManager.selectByX = true;
     }
   }
 

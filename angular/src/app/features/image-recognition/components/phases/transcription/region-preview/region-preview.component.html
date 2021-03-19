@@ -4,7 +4,8 @@
   >
 
   </app-classifiers>
-  <app-image-recognition-toolbar [(mode)]="mode" [zoomManager]="zoomManager" [selectionDone]="false" (onClear)="onClear()">
+  <app-image-recognition-toolbar [(mode)]="mode" [zoomManager]="zoomManager" [selectionDone]="isSelectionDone()"
+                                 (onClear)="onClear()" (onDelete)="onDelete()">
   </app-image-recognition-toolbar>
   <div id="agnosticAddMode" class="btn-group btn-group-toggle" [disabled]="!isAddingMode()"
        ngbRadioGroup
@@ -20,13 +21,15 @@
 <div id="imageCanvas">
   <app-svg-canvas *ngIf="loadedImage"
                   [backgroundImage]="loadedImage"
-                  [shapes]="selectedRegionShapes"
+                  [shapes]="shapesOfSelectedRegion"
                   [crop]="selectedRegion.boundingBox"
                   [zoomFactor]="zoomManager.zoomFactor"
                   [(mode)]="mode"
                   (svgShapeCreated)="onSymbolCreated($event)"
                   (svgShapeChanged)="onSymbolShapeChanged($event)"
                   [nextShapeToAdd]="nextShapeToDraw"
+                  (onShapesSelected)="onShapesSelected($event)"
+                  [selectByX]="true"
   >
   </app-svg-canvas>
 </div>

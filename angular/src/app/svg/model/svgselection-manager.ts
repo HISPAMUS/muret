@@ -7,10 +7,23 @@ export class SVGSelectionManager {
   private selectedElements: Set<Shape>;
   private _selectableElements: Shape[]; // in orderEntities to be able to select with shift key from an element to another one
   private lastSelectedElementIndex: number = 0;
+  private _selectByX: boolean; // if false, it will select using first the y
 
   constructor() {
     this.selectedElements = new Set<any>();
     this._selectableElements = [];
+  }
+
+
+  get selectByX(): boolean {
+    return this._selectByX;
+  }
+
+  set selectByX(value: boolean) {
+    this._selectByX = value;
+    if (this._selectableElements) {
+      this.selectableElements = this._selectableElements; // invoke sort again
+    }
   }
 
   get selectableElements() {
@@ -72,20 +85,39 @@ export class SVGSelectionManager {
 
   set selectableElements(value: Shape[]) {
     this._selectableElements = value.sort((a,b) => {
-      if (a.fromY < b.fromY) {
-        return -1;
-      } else if (a.fromY > b.fromY) {
-        return 1;
-      } else {
+      if (this._selectByX) {
         if (a.fromX < b.fromX) {
           return -1;
         } else if (a.fromX > b.fromX) {
           return 1;
         } else {
-          if (!a.id || !b.id) {
-            throw new Error('Missing id in shape');
+          if (a.fromY < b.fromY) {
+            return -1;
+          } else if (a.fromY > b.fromY) {
+            return 1;
+          } else {
+            if (!a.id || !b.id) {
+              throw new Error('Missing id in shape');
+            }
+            return a.id.localeCompare(b.id);
           }
-          return a.id.localeCompare(b.id);
+        }
+      } else {
+        if (a.fromY < b.fromY) {
+          return -1;
+        } else if (a.fromY > b.fromY) {
+          return 1;
+        } else {
+          if (a.fromX < b.fromX) {
+            return -1;
+          } else if (a.fromX > b.fromX) {
+            return 1;
+          } else {
+            if (!a.id || !b.id) {
+              throw new Error('Missing id in shape');
+            }
+            return a.id.localeCompare(b.id);
+          }
         }
       }
     });

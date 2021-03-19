@@ -8,6 +8,7 @@ import {Point} from '../../../core/model/entities/point';
 import {ClassifierModel} from '../../../core/model/entities/classifier-model';
 import {SymbolCreationResult} from "../../agnostic-representation/model/symbol-creation-result";
 import {SVGSet} from "../../agnostic-representation/model/svgset";
+import {NumberArray} from "../../../core/model/restapi/number-array";
 
 @Injectable()
 export class AgnosticRepresentationService {
@@ -44,8 +45,14 @@ export class AgnosticRepresentationService {
     return this.apiRestClientService.post$<SymbolCreationResult>('agnostic/createSymbolFromStrokes', symbolCreation);
   }
 
-  deleteSymbol$(symbolID: number): Observable<number> {
-    return this.apiRestClientService.delete$<number>('agnostic/deleteSymbol', symbolID);
+  deleteSymbols$(symbols: AgnosticSymbol[]): Observable<NumberArray> {
+    const symbolIDs: NumberArray = {
+      values: []
+    };
+    symbols.forEach(s => {
+      symbolIDs.values.push(s.id);
+    });
+    return this.apiRestClientService.post$<NumberArray>('agnostic/deleteSymbols', symbolIDs);
   }
 
   classifyRegionEndToEnd$(modelID: string, regionID: number): Observable<AgnosticSymbol[]> {
@@ -60,6 +67,11 @@ export class AgnosticRepresentationService {
   }
 
   // revisado hasta aquí
+  deleteSymbol$(symbolID: number): Observable<number> {
+    return this.apiRestClientService.delete$<number>('agnostic/deleteSymbol', symbolID);
+  }
+
+
   getRegion$(regionID: number): Observable<Region> {
     return this.apiRestClientService.getProjectionOf$<Region>(regionID, 'regions', 'regionWithSymbols');
   }
