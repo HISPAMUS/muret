@@ -21,7 +21,7 @@ export function homeReducers(state = initialHomeState, action: HomeActions):
     }
     case HomeActionTypes.HomeUpdateLastDocumentsSuccess: {
       const newState = {...state, apiRestServerError: null};
-      if (action.lastDocument != null) { // if no error
+      if (action.lastDocument != null && state.lastDocuments) { // if no error
         const documentsWithoutChangedOne: LastDocumentExtract[] =
           state.lastDocuments.filter(document => document.documentID !== action.lastDocument.documentID);
         newState.lastDocuments = [...documentsWithoutChangedOne, action.lastDocument];

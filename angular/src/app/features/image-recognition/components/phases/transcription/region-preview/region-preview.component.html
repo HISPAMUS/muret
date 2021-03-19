@@ -1,6 +1,11 @@
 <div class="d-flex justify-content-between">
-  <app-classifiers [models]="agnosticSymbolClassifiers" (onExecuteClassifier)="onExecuteClassifier($event)"></app-classifiers>
-  <app-image-recognition-toolbar [(mode)]="mode" [zoomManager]="zoomManager" [selectionDone]="false"> </app-image-recognition-toolbar>
+  <app-classifiers [hideClassifyButton]="true" [caption]="'Individual symbol classifier'" [models]="agnosticSymbolClassifiers"
+                   (onSelectedModelIDChange)="onSymbolsClassifierModelID($event)"
+  >
+
+  </app-classifiers>
+  <app-image-recognition-toolbar [(mode)]="mode" [zoomManager]="zoomManager" [selectionDone]="false" (onClear)="onClear()">
+  </app-image-recognition-toolbar>
   <div id="agnosticAddMode" class="btn-group btn-group-toggle" [disabled]="!isAddingMode()"
        ngbRadioGroup
        name="addMethodRadioButtonGroup" [(ngModel)]="addMethodType">

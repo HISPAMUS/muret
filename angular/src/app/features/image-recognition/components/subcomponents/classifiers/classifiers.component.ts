@@ -14,7 +14,10 @@ import {selectImageRecognitionAnalyzing} from "../../../store/selectors/image-re
 export class ClassifiersComponent implements OnInit, OnChanges {
   @Input() models: ClassifierModel[];
   @Output() onExecuteClassifier = new EventEmitter<ClassifierModel>();
-
+  @Input() caption: string;
+  @Input() hideClassifyButton: boolean;
+  @Output() selectedModelID: string;
+  @Output() onSelectedModelIDChange = new EventEmitter<string>();
   selectedModel:string;
   sortedModels: ClassifierModel[];
   analyzing$: Observable<boolean>;
@@ -35,7 +38,10 @@ export class ClassifiersComponent implements OnInit, OnChanges {
         } else {
           return result;
         }
-      })
+      });
+      if (!this.selectedModel) {
+        this.selectedModel = this.sortedModels[0].id;
+      }
     }
   }
 
@@ -47,5 +53,9 @@ export class ClassifiersComponent implements OnInit, OnChanges {
       throw new Error('Cannot find a classifier model with id "' + this.selectedModel + '"');
     }
     this.onExecuteClassifier.emit(classifierModel);
+  }
+
+  onModelChange(modelID: string) {
+    this.onSelectedModelIDChange.emit(modelID);
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Effect, ofType, Actions } from '@ngrx/effects';
 import { of } from 'rxjs';
-import {switchMap} from 'rxjs/operators';
+import {mergeMap, switchMap} from 'rxjs/operators';
 import {ImageOverviewService} from "../../services/image-overview.service";
 import {
   ImageRecognitionActionTypes,
@@ -13,7 +13,9 @@ import {
   ImageRecognitionChangeRegionBoundingBoxSuccess,
   ImageRecognitionChangeStatus,
   ImageRecognitionChangeStatusSuccess,
-  ImageRecognitionClear,
+  ImageRecognitionClassifyRegionEndToEnd,
+  ImageRecognitionClassifyRegionEndToEndSuccess,
+  ImageRecognitionClear, ImageRecognitionClearRegionSymbols, ImageRecognitionClearRegionSymbolsSuccess,
   ImageRecognitionClearSuccess,
   ImageRecognitionCreatePage,
   ImageRecognitionCreatePages,
@@ -21,10 +23,16 @@ import {
   ImageRecognitionCreatePageSuccess,
   ImageRecognitionCreateRegion,
   ImageRecognitionCreateRegionSuccess,
+  ImageRecognitionCreateSymbolFromBoundingBox,
+  ImageRecognitionCreateSymbolFromStrokes,
+  ImageRecognitionCreateSymbolSuccess,
   ImageRecognitionDeletePages,
   ImageRecognitionDeletePagesSuccess,
   ImageRecognitionDeleteRegions,
-  ImageRecognitionDeleteRegionsSuccess, ImageRecognitionGetClassifierModels, ImageRecognitionGetClassifierModelsSuccess,
+  ImageRecognitionDeleteRegionsSuccess,
+  ImageRecognitionDeleteSymbol, ImageRecognitionDeleteSymbolSuccess,
+  ImageRecognitionGetClassifierModels,
+  ImageRecognitionGetClassifierModelsSuccess,
   ImageRecognitionGetImageOverview,
   ImageRecognitionGetImageOverviewSuccess,
   ImageRecognitionGetPagesRegionsSymbols,
@@ -57,6 +65,9 @@ import {DocumentAnalysisService} from "../../services/document-analysis.service"
 import {Region} from "../../../../core/model/entities/region";
 import {NumberArray} from "../../../../core/model/restapi/number-array";
 import {ClassifierModel} from "../../../../core/model/entities/classifier-model";
+import {SymbolCreationResult} from "../../../agnostic-representation/model/symbol-creation-result";
+import {AgnosticRepresentationService} from "../../services/agnostic-representation.service";
+import {AgnosticSymbol} from "../../../../core/model/entities/agnostic-symbol";
 
 
 /**
@@ -68,6 +79,7 @@ export class ImageOverviewEffects {
     private imageOverviewService: ImageOverviewService,
     private imagePartsService: ImagePartsService,
     private documentAnalysisService: DocumentAnalysisService,
+    private agnosticRepresentationService: AgnosticRepresentationService,
     private actions$: Actions,
   ) {}
 
@@ -266,5 +278,55 @@ export class ImageOverviewEffects {
       switchMap((page: Page[]) => of(new ImageRecognitionAutomaticDocumentAnalysisSuccess(page))),
       //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
+
+  // ------------- Agnostic representation
+  @Effect()
+  createSymbolFromBoundingBox$ = this.actions$.pipe(
+    ofType<ImageRecognitionCreateSymbolFromBoundingBox>(ImageRecognitionActionTypes.ImageRecognitionCreateSymbolFromBoundingBox),
+    switchMap((action: ImageRecognitionCreateSymbolFromBoundingBox) =>
+      this.agnosticRepresentationService.createSymbolFromBoundingBox$(action.modelID, action.regionID, action.boundingBox,
+        action.agnosticSymbolType, action.positionInStaff).pipe(
+        switchMap((symbolCreationResult: SymbolCreationResult) => of(new ImageRecognitionCreateSymbolSuccess(symbolCreationResult))),
+        //catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
+      )));
+
+  @Effect()
+  createSymbolFromStrokes$ = this.actions$.pipe(
+    ofType<ImageRecognitionCreateSymbolFromStrokes>(ImageRecognitionActionTypes.ImageRecognitionCreateSymbolFromStrokes),
+    switchMap((action: ImageRecognitionCreateSymbolFromStrokes) =>
+      this.agnosticRepresentationService.createSymbolFromStrokes$(action.modelID, action.regionID, action.points,
+        action.agnosticSymbolType, action.positionInStaff).pipe(
+        switchMap((symbolCreationResult: SymbolCreationResult) => of(new ImageRecognitionCreateSymbolSuccess(symbolCreationResult))),
+        //catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
+      )));
+  /**
+   * Replaced switchMap for mergeMag to avoid sending the event twice
+   */
+  @Effect()
+  deleteSymbol$ = this.actions$.pipe(
+    ofType<ImageRecognitionDeleteSymbol>(ImageRecognitionActionTypes.ImageRecognitionDeleteSymbol),
+    mergeMap((action: ImageRecognitionDeleteSymbol) =>
+      this.agnosticRepresentationService.deleteSymbol$(action.agnosticSymbolID).pipe(
+        switchMap((deletedSymbolID: number) => of(new ImageRecognitionDeleteSymbolSuccess(deletedSymbolID))),
+        //catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
+      )));
+
+  @Effect()
+  classifyRegionEndToEnd$ = this.actions$.pipe(
+    ofType<ImageRecognitionClassifyRegionEndToEnd>(ImageRecognitionActionTypes.ImageRecognitionClassifyRegionEndToEnd),
+    switchMap((action: ImageRecognitionClassifyRegionEndToEnd) =>
+      this.agnosticRepresentationService.classifyRegionEndToEnd$(action.modelID, action.regionID).pipe(
+        switchMap((classifiedSymbols: AgnosticSymbol[]) => of(new ImageRecognitionClassifyRegionEndToEndSuccess(classifiedSymbols))),
+        //catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
+      )));
+
+  @Effect()
+  clearRegionSymbols$ = this.actions$.pipe(
+    ofType<ImageRecognitionClearRegionSymbols>(ImageRecognitionActionTypes.ImageRecognitionClearRegionSymbols),
+    switchMap((action: ImageRecognitionClearRegionSymbols) =>
+      this.agnosticRepresentationService.clearRegionSymbols$(action.regionID).pipe(
+        switchMap((deleted: boolean) => of(new ImageRecognitionClearRegionSymbolsSuccess(deleted))), // it should always return true
+        //catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
+      )));
 
 }

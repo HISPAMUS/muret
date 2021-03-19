@@ -1,8 +1,9 @@
 import {ImageOverview} from "../../../../core/model/restapi/image-overview";
-import {APIRestServerError} from "../../../../core/model/restapi/apirest-server-error";
 import {Page} from "../../../../core/model/entities/page";
 import {RegionType} from "../../../../core/model/entities/region-type";
 import {ClassifierModel} from "../../../../core/model/entities/classifier-model";
+import {Region} from "../../../../core/model/entities/region";
+import {AgnosticSymbol} from "../../../../core/model/entities/agnostic-symbol";
 
 export interface ImageRecognitionState {
   imageOverview: ImageOverview;
@@ -11,6 +12,8 @@ export interface ImageRecognitionState {
   regionTypes: RegionType[];
   classifierModels: ClassifierModel[];
   analyzing: boolean;
+  selectedRegion?: Region; // used to select agnostic symbols
+  selectedAgnosticSymbol?: AgnosticSymbol;
 }
 
 export const initialImageRecognitionState: ImageRecognitionState = {
@@ -19,7 +22,9 @@ export const initialImageRecognitionState: ImageRecognitionState = {
   //apiRestServerError: null,
   regionTypes: null,
   classifierModels: null,
-  analyzing: false
+  analyzing: false,
+  selectedRegion: null,
+  selectedAgnosticSymbol: null,
 };
 
 export function getInitialState(): ImageRecognitionState {

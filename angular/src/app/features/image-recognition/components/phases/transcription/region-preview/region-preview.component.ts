@@ -1,5 +1,5 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {Observable} from "rxjs";
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {Observable, Subscription} from "rxjs";
 import {ClassifierModel} from "../../../../../../core/model/entities/classifier-model";
 import {Shape} from "../../../../../../svg/model/shape";
 import {Region} from "../../../../../../core/model/entities/region";
@@ -12,37 +12,52 @@ import {Polyline} from "../../../../../../svg/model/polyline";
 import {BoundingBox} from "../../../../../../core/model/entities/bounding-box";
 import {Rectangle} from "../../../../../../svg/model/rectangle";
 import {Line} from "../../../../../../svg/model/line";
+import {Point} from "../../../../../../core/model/entities/point";
+import {ImageRecognitionState} from "../../../../store/state/image-recognition.state";
+import {Store} from "@ngrx/store";
+import {
+  ImageRecognitionClear, ImageRecognitionClearRegionSymbols,
+  ImageRecognitionCreateSymbolFromBoundingBox,
+  ImageRecognitionCreateSymbolFromStrokes
+} from "../../../../store/actions/image-recognition.actions";
+import {selectImageRecognitionSelectedRegionAgnosticSymbols} from "../../../../store/selectors/image-recognition.selector";
 
 @Component({
   selector: 'app-region-preview',
   templateUrl: './region-preview.component.html',
   styleUrls: ['./region-preview.component.css']
 })
-export class RegionPreviewComponent implements OnInit, OnChanges {
+export class RegionPreviewComponent implements OnInit, OnDestroy {
   @Input() agnosticSymbolClassifiers: Observable<ClassifierModel[]>;
   @Input() loadedImage: SafeResourceUrl;
   @Input() selectedRegion: Region;
+
+  agnosticSymbolsSubscription: Subscription;
 
   selectedRegionShapes: Shape[];
   zoomManager: ZoomManager;
   mode: 'eAdding' | 'eEditing' | 'eSelecting';
   nextShapeToDraw: 'Rectangle' | 'Polylines';
   addMethodTypeValue: 'boundingbox' | 'strokes' ;
+  symbolsClassifierModelID: string;
 
-  constructor() {
+  constructor(private store: Store<ImageRecognitionState>) {
     this.zoomManager = new ZoomManager();
     this.mode = 'eSelecting';
     this.nextShapeToDraw = 'Rectangle';
+    this.addMethodType = 'boundingbox';
   }
 
   ngOnInit(): void {
+    this.agnosticSymbolsSubscription = this.store.select(selectImageRecognitionSelectedRegionAgnosticSymbols).subscribe(next => {
+      if (next) {
+        this.drawSelectedRegionSymbols(next);
+      }
+    });
   }
 
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.selectedRegion && this.selectedRegion) {
-      this.drawSelectedRegionSymbols(this.selectedRegion.symbols);
-    }
+  ngOnDestroy(): void {
+    this.agnosticSymbolsSubscription.unsubscribe();
   }
 
   private drawSelectedRegionSymbols(agnosticSymbols: AgnosticSymbol[]) {
@@ -121,35 +136,29 @@ export class RegionPreviewComponent implements OnInit, OnChanges {
     return line;
   }
 
-
-
-  onExecuteClassifier(classifierModel: ClassifierModel) {
-
-  }
-
   onSymbolCreated(shape: Shape) {
-    /*    if (shape instanceof Rectangle) {
+    if (shape instanceof Rectangle) {
       const rect = shape;
-      this.creatingBoundingBox = {
+      const bbox: BoundingBox = {
         fromX: rect.fromX,
         fromY: rect.fromY,
         toX: rect.fromX + rect.width,
         toY: rect.fromY + rect.height
       };
 
-      this.store.dispatch(new CreateSymbolFromBoundingBox(this.symbolsClassifierModelID,
-        this.selectedRegion.id, this.creatingBoundingBox, null, null));
-      this.endToEndButtonLabel = 'Classifying...';
-      this.processing = true;
+      this.store.dispatch(new ImageRecognitionCreateSymbolFromBoundingBox(this.symbolsClassifierModelID,
+        this.selectedRegion.id, bbox, null, null));
+      //TODO 2021 this.endToEndButtonLabel = 'Classifying...';
+      //TODO 2021 this.processing = true;
     } else if (shape instanceof Polylines) {
       // console.log('shape: ' + shape.polylines.length);
-      this.creatingStrokes = shape.polylines.map(polyline => polyline.pointsValue);
-      this.store.dispatch(new CreateSymbolFromStrokes( this.symbolsClassifierModelID,
-        this.selectedRegion.id, this.creatingStrokes, null, null
+      const creatingStrokes: Point[][] = shape.polylines.map(polyline => polyline.pointsValue);
+      this.store.dispatch(new ImageRecognitionCreateSymbolFromStrokes( this.symbolsClassifierModelID,
+        this.selectedRegion.id, creatingStrokes, null, null
       ));
     } else {
       throw new Error('Unsupported shape type: ' + shape.constructor.name);
-    }*/
+    }
   }
 
   onSymbolShapeChanged(shape: Shape) {
@@ -184,5 +193,14 @@ export class RegionPreviewComponent implements OnInit, OnChanges {
     } else {
       throw Error('Invalid add method type: ' + this.addMethodType);
     }
+  }
+
+  onSymbolsClassifierModelID(modelID: string) {
+    this.symbolsClassifierModelID = modelID;
+
+  }
+
+  onClear() {
+    this.store.dispatch(new ImageRecognitionClearRegionSymbols(this.selectedRegion.id));
   }
 }

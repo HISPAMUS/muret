@@ -30,6 +30,7 @@ import { TextRegionSemanticRepresentationComponent } from './components/phases/t
 import {AgnosticStaffComponent} from "./components/phases/transcription/agnostic-staff/agnostic-staff.component";
 import {NotationComponent} from "./components/phases/transcription/notation/notation.component";
 import { TextRegionAgnosticRepresentationComponent } from './components/phases/transcription/text-region-agnostic-representation/text-region-agnostic-representation.component';
+import {AgnosticRepresentationService} from "./services/agnostic-representation.service";
 
 
 @NgModule({
@@ -56,7 +57,7 @@ import { TextRegionAgnosticRepresentationComponent } from './components/phases/t
         NgbTooltipModule,
         NgbButtonsModule
     ],providers: [
-    ImageOverviewService, DocumentAnalysisService, ImagePartsService
+    ImageOverviewService, DocumentAnalysisService, ImagePartsService, AgnosticRepresentationService
   ]
 })
 export class ImageRecognitionModule { }

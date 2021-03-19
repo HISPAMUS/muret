@@ -272,6 +272,130 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
       };
       return newState;
     }
+
+    /// ---------- agnostic recognition
+    case ImageRecognitionActionTypes.ImageRecognitionSelectRegion: {
+      return {
+        ...state,
+        selectedRegion: action.region
+      };
+    }
+    case ImageRecognitionActionTypes.ImageRecognitionSelectAgnosticSymbol: {
+      return {
+        ...state,
+        selectedAgnosticSymbol: action.agnosticSymbol
+      };
+    }
+    case ImageRecognitionActionTypes.ImageRecognitionCreateSymbolFromBoundingBox:
+    case ImageRecognitionActionTypes.ImageRecognitionCreateSymbolFromStrokes: {
+      return {
+        ...state,
+        analyzing: true
+      };
+    }
+    case ImageRecognitionActionTypes.ImageRecognitionCreateSymbolSuccess: {
+      const newState: ImageRecognitionState = {
+        pagesRegionsSymbols: klona(state.pagesRegionsSymbols),
+        imageOverview: state.imageOverview,
+        regionTypes: state.regionTypes,
+        classifierModels: state.classifierModels,
+        analyzing: false,
+        //apiRestServerError: null
+      };
+
+      const page = newState.pagesRegionsSymbols.find(page => page.id == action.symbolCreationResult.pageID);
+      if (!page) {
+        throw new Error('Cannot find page ID = ' + action.symbolCreationResult.pageID);
+      }
+
+      const region = page.regions.find(region => region.id == action.symbolCreationResult.regionID);
+      if (!region) {
+        throw new Error('Cannot find region ID = ' + action.symbolCreationResult.regionID);
+      }
+
+      if (!region.symbols) {
+        region.symbols = [];
+      }
+
+      region.symbols.push(action.symbolCreationResult.agnosticSymbol);
+      newState.selectedRegion = region;
+      //TODO Coger también los símbolos clasificados para sacar la lista de mejores resultados en la GUI
+      return newState;
+    }
+    case ImageRecognitionActionTypes.ImageRecognitionDeleteSymbolSuccess: {
+      const newState: ImageRecognitionState = {
+        pagesRegionsSymbols: klona(state.pagesRegionsSymbols),
+        imageOverview: state.imageOverview,
+        regionTypes: state.regionTypes,
+        classifierModels: state.classifierModels,
+        analyzing: false,
+        //apiRestServerError: null
+      };
+
+      //TODO Change action to be able to delete several objects at once
+      // find region
+      let deletedSymbolRegion = null;
+      newState.pagesRegionsSymbols.forEach(page => {
+        page.regions.forEach(region => {
+          if  (region.id === state.selectedRegion) {
+            region.symbols = region.symbols.filter(symbol => symbol.id != action.deletedAgnosticSymbolID);
+            newState.selectedRegion = region;
+          }
+        });
+      });
+
+      newState.selectedRegion = deletedSymbolRegion;
+      return newState;
+    }
+    case ImageRecognitionActionTypes.ImageRecognitionClearRegionSymbolsSuccess: {
+      const newState: ImageRecognitionState = {
+        pagesRegionsSymbols: klona(state.pagesRegionsSymbols),
+        imageOverview: state.imageOverview,
+        regionTypes: state.regionTypes,
+        classifierModels: state.classifierModels,
+        analyzing: false,
+        //apiRestServerError: null
+      };
+
+      //TODO Change action to be able to delete several objects at once
+      newState.pagesRegionsSymbols.forEach(page => {
+        page.regions.forEach(region => {
+          if  (region.id === state.selectedRegion.id) {
+            region.symbols = [];
+            newState.selectedRegion = region;
+          }
+        });
+      });
+
+      return newState;
+    }
+    case ImageRecognitionActionTypes.ImageRecognitionClassifyRegionEndToEnd: {
+      return {
+        ...state,
+        analyzing: true
+      };
+    }
+    case ImageRecognitionActionTypes.ImageRecognitionClassifyRegionEndToEndSuccess: {
+      const newState: ImageRecognitionState = {
+        pagesRegionsSymbols: klona(state.pagesRegionsSymbols),
+        imageOverview: state.imageOverview,
+        regionTypes: state.regionTypes,
+        classifierModels: state.classifierModels,
+        analyzing: false,
+        //apiRestServerError: null
+      };
+
+      newState.pagesRegionsSymbols.forEach(page => {
+        page.regions.forEach(region => {
+          if  (region.id === state.selectedRegion.id) {
+            region.symbols = action.classifiedSymbols;
+            newState.selectedRegion = region;
+          }
+        });
+      });
+
+      return newState;
+    }
     default:
       return state;
   }

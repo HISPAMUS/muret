@@ -1,2 +1,2 @@
-<app-classifiers [models]="semanticClassifiers" (onExecuteClassifier)="onExecuteClassifier($event)"></app-classifiers>
+<app-classifiers [caption]="'Select a semantic classifier'" [models]="semanticClassifiers" (onExecuteClassifier)="onExecuteClassifier($event)"></app-classifiers>
 <app-notation *ngIf="notation" [notation]="notation"></app-notation>

@@ -37,6 +37,43 @@ public class AgnosticRepresentationController extends MuRETBaseController {
         this.agnosticRepresentationModel = agnosticRepresentationModel;
     }
 
+    /**
+     * @param symbolCreationFromBoundingBox
+     * @return Created symbol
+     * @throws IM3WSException
+     */
+    @PostMapping(path = {"createSymbolFromBoundingBox"})
+    public SymbolCreationResult createSymbolFromBoundingBox(@RequestBody SymbolCreationFromBoundingBox symbolCreationFromBoundingBox) {
+        SymbolCreationResult result = null;
+        try {
+            result = this.agnosticRepresentationModel.createSymbol(symbolCreationFromBoundingBox.getModelID(), symbolCreationFromBoundingBox.getRegionID(), symbolCreationFromBoundingBox.getBoundingBox(),
+                    symbolCreationFromBoundingBox.getAgnosticSymbolType(), symbolCreationFromBoundingBox.getPositionInStaff());
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot create symbol using a bounding box", e);
+
+        }
+        return result;
+        //TODO ModelID
+    }
+
+    /**
+     * @param symbolCreationFromStrokes
+     * @return Created symbol
+     * @throws IM3WSException
+     */
+    @PostMapping(path = {"createSymbolFromStrokes"})
+    public SymbolCreationResult createSymbolFromStrokes(@RequestBody SymbolCreationFromStrokes symbolCreationFromStrokes) {
+        try {
+            return this.agnosticRepresentationModel.createSymbol(symbolCreationFromStrokes.getModelID(), symbolCreationFromStrokes.getRegionID(), symbolCreationFromStrokes.getPoints(),
+                    symbolCreationFromStrokes.getAgnosticSymbolType(), symbolCreationFromStrokes.getPositionInStaff());
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot create symbol from strokes", e);
+
+        }
+    }
+
+
+    // revisado hasta aquí ------
     @Transactional
     @GetMapping(path = {"changeAgnosticSymbol/{symbolID}/{agnosticSymbolTypeString}/{positionInStaffString}"})
     public Symbol changeAgnosticSymbol(@PathVariable("symbolID") Long symbolID,
@@ -113,42 +150,6 @@ public class AgnosticRepresentationController extends MuRETBaseController {
         return this.agnosticRepresentationModel.classifySymbol(symbolCreationFromStrokes.getRegionID(), symbolCreationFromStrokes.getPoints());
     }*/
 
-    /**
-     * @param symbolCreationFromBoundingBox
-     * @return Created symbol
-     * @throws IM3WSException
-     */
-    @PostMapping(path = {"createSymbolFromBoundingBox"})
-    public SymbolCreationResult createSymbolFromBoundingBox(@RequestBody SymbolCreationFromBoundingBox symbolCreationFromBoundingBox) {
-        //TODO - poner el modelo correcto desde el frontend
-        SymbolCreationResult result = null;
-        try {
-            result = this.agnosticRepresentationModel.createSymbol(symbolCreationFromBoundingBox.getModelID(), symbolCreationFromBoundingBox.getRegionID(), symbolCreationFromBoundingBox.getBoundingBox(),
-                    symbolCreationFromBoundingBox.getAgnosticSymbolType(), symbolCreationFromBoundingBox.getPositionInStaff());
-        } catch (Throwable e) {
-            throw ControllerUtils.createServerError(this, "Cannot create symbol using a bounding box", e);
-
-        }
-        return result;
-        //TODO ModelID
-    }
-
-    /**
-     * @param symbolCreationFromStrokes
-     * @return Created symbol
-     * @throws IM3WSException
-     */
-    @PostMapping(path = {"createSymbolFromStrokes"})
-    public SymbolCreationResult createSymbolFromStrokes(@RequestBody SymbolCreationFromStrokes symbolCreationFromStrokes) {
-        try {
-            return this.agnosticRepresentationModel.createSymbol(symbolCreationFromStrokes.getModelID(), symbolCreationFromStrokes.getRegionID(), symbolCreationFromStrokes.getPoints(),
-                    symbolCreationFromStrokes.getAgnosticSymbolType(), symbolCreationFromStrokes.getPositionInStaff());
-        } catch (Throwable e) {
-            throw ControllerUtils.createServerError(this, "Cannot create symbol from strokes", e);
-
-        }
-        //TODO ModelID
-    }
 
     @GetMapping(path = {"classifyRegionEndToEnd/{modelID}/{regionID}"})
     public List<Symbol> classifyRegionEndToEnd(@PathVariable(name="modelID") String modelID, @PathVariable(name="regionID") Long regionID) {

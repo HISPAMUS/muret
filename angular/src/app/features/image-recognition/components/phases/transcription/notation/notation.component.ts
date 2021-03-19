@@ -27,24 +27,16 @@ export class NotationComponent implements OnInit, OnChanges, OnDestroy, AfterVie
   @Output() onItemSelected = new EventEmitter<string>();
 
   notationAsSVG: any;
-  private serverErrorSubscription: Subscription;
 
   @ViewChild("verovioDiv") verovioDiv: ElementRef;
 
   constructor(private notationService: NotationService, private store: Store<any>, private showErrorService: ShowErrorService) { }
 
   ngOnInit() {
-    /*this.serverErrorSubscription = this.store.select(selectSemanticRepresentationServerError).subscribe(next => {
-      if (next) {
-        this.showErrorService.showServerError(next);
-        this.store.dispatch(new ResetSemanticRepresentationServerError());
-      }
-    });*/
   }
 
 
   ngOnDestroy(): void {
-    this.serverErrorSubscription.unsubscribe();
   }
 
   ngOnChanges(changes: SimpleChanges): void {

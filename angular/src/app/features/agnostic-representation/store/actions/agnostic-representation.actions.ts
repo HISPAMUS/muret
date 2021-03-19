@@ -102,7 +102,7 @@ export class ChangeSymbolComments implements Action {
 }
 
 export class ClassifySymbolFromStrokes implements Action {
-  public readonly type = AgnosticRepresentationActionTypes.ClassifySymbolFromStrokes;
+  public readonly type = AgnosticRepresentationActionTypes.ClassifySymbolFromStrocreatingBoundingBoxkes;
   constructor(public regionID: number, public points: Point[][]) {}
 }
 
@@ -195,7 +195,8 @@ export type AgnosticRepresentationActions =
   InitRegion | GetRegion | GetRegionSuccess | SelectSymbol | DeselectSymbol |
   ChangeSymbol | ChangeSymbolComments | ChangeSymbolBoundingBox | ChangeSymbolSuccess |
   // ClassifySymbolFromBoundingBox | ClassifySymbolFromStrokes | ClassifySymbolSuccess |
-  CreateSymbolFromBoundingBox | CreateSymbolFromStrokes | CreateSymbolSuccess | DeleteSymbol | DeleteSymbolSuccess |
+  CreateSymbolFromBoundingBox | CreateSymbolFromStrokes | CreateSymbolSuccess |
+  DeleteSymbol | DeleteSymbolSuccess |
   ClassifyRegionEndToEnd | ClassifyRegionEndToEndSuccess |
   ClearRegionSymbols | ClearRegionSymbolsSuccess |
   GetSymbolClassifierModels | GetSymbolClassifierModelsSuccess |

@@ -1,10 +1,11 @@
 <div id="classifiers">
-  <select class="form-control" [(ngModel)]="selectedModel" required>
-    <option disabled selected value="undefined">Select a classifier:</option>
+  <select class="form-control" [(ngModel)]="selectedModel" required (ngModelChange)="onModelChange($event)">
+    <option disabled value="undefined">{{caption}}</option>
     <option *ngFor="let model of sortedModels" [value]="model.id">{{model.name}}</option>
   </select>
-  <button [disabled]="!selectedModel" class="btn btn-primary" (click)="executeClassifier()">
+  <button *ngIf="!hideClassifyButton" [disabled]="!selectedModel" class="btn btn-primary" (click)="executeClassifier()">
     <fa-icon *ngIf="!(analyzing$ | async)" icon="server" class="icons" size="lg" ngbTooltip="Execute document analysis"></fa-icon>
     <span *ngIf="analyzing$ |async" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
   </button>
+  <span *ngIf="hideClassifyButton && analyzing$ |async" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
 </div>

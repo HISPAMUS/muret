@@ -198,7 +198,7 @@ public class AgnosticRepresentationModel {
         persistentRegion.getSymbols().add(persistentSymbol);
         //regionRepository.save(persistentRegion);
 
-        SymbolCreationResult result = new SymbolCreationResult(persistentSymbol, otherPossibilities);
+        SymbolCreationResult result = new SymbolCreationResult(persistentRegion.getPage().getId(), persistentRegion.getId(), persistentSymbol, otherPossibilities);
         return result;
     }
 

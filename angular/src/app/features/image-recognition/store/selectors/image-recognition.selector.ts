@@ -61,3 +61,20 @@ export const selectImageRecognitionAnalyzing = createSelector(
   selectImageRecognitionState,
   (state: ImageRecognitionState) => state.analyzing
 );
+
+// --- agnostic -----
+export const selectImageRecognitionSelectedRegion = createSelector(
+  selectImageRecognitionState,
+  (state: ImageRecognitionState) => state.selectedRegion
+);
+
+export const selectImageRecognitionSelectedRegionAgnosticSymbols = createSelector(
+  selectImageRecognitionState,
+  (state: ImageRecognitionState) => state.selectedRegion ? state.selectedRegion.symbols : null
+);
+
+
+export const selectImageRecognitionSelectedAgnosticSymbol = createSelector(
+  selectImageRecognitionState,
+  (state: ImageRecognitionState) => state.selectedAgnosticSymbol
+);

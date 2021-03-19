@@ -112,7 +112,9 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnDestroy(): void {
-    this.selectedSymbolSubscription.unsubscribe();
+    if (this.selectedSymbolSubscription) {
+      this.selectedSymbolSubscription.unsubscribe();
+    }
   }
 
   trackByShapeFn(index, item: StaffLine) {
