@@ -13,9 +13,14 @@ import {
   ImageRecognitionChangeRegionBoundingBoxSuccess,
   ImageRecognitionChangeStatus,
   ImageRecognitionChangeStatusSuccess,
+  ImageRecognitionChangeSymbol,
+  ImageRecognitionChangeSymbolBoundingBox, ImageRecognitionChangeSymbolComments,
+  ImageRecognitionChangeSymbolSuccess,
   ImageRecognitionClassifyRegionEndToEnd,
   ImageRecognitionClassifyRegionEndToEndSuccess,
-  ImageRecognitionClear, ImageRecognitionClearRegionSymbols, ImageRecognitionClearRegionSymbolsSuccess,
+  ImageRecognitionClear,
+  ImageRecognitionClearRegionSymbols,
+  ImageRecognitionClearRegionSymbolsSuccess,
   ImageRecognitionClearSuccess,
   ImageRecognitionCreatePage,
   ImageRecognitionCreatePages,
@@ -30,7 +35,8 @@ import {
   ImageRecognitionDeletePagesSuccess,
   ImageRecognitionDeleteRegions,
   ImageRecognitionDeleteRegionsSuccess,
-  ImageRecognitionDeleteSymbols, ImageRecognitionDeleteSymbolsSuccess,
+  ImageRecognitionDeleteSymbols,
+  ImageRecognitionDeleteSymbolsSuccess,
   ImageRecognitionGetClassifierModels,
   ImageRecognitionGetClassifierModelsSuccess,
   ImageRecognitionGetImageOverview,
@@ -326,6 +332,36 @@ export class ImageOverviewEffects {
     switchMap((action: ImageRecognitionClearRegionSymbols) =>
       this.agnosticRepresentationService.clearRegionSymbols$(action.regionID).pipe(
         switchMap((deleted: boolean) => of(new ImageRecognitionClearRegionSymbolsSuccess(deleted))), // it should always return true
+        //catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
+      )));
+
+  @Effect()
+  changeSymbol$ = this.actions$.pipe(
+    ofType<ImageRecognitionChangeSymbol>(ImageRecognitionActionTypes.ImageRecognitionChangeSymbol),
+    switchMap((action: ImageRecognitionChangeSymbol) =>
+      this.agnosticRepresentationService.changeSymbol$(action.agnosticSymbol, action.agnosticSymbolType, action.positionInStaff).pipe(
+        switchMap((agnosticSymbol: AgnosticSymbol) => of(new ImageRecognitionChangeSymbolSuccess(agnosticSymbol))),
+        //catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
+      )));
+
+  @Effect()
+  changeSymbolBoundingBox$ = this.actions$.pipe(
+    ofType<ImageRecognitionChangeSymbolBoundingBox>(ImageRecognitionActionTypes.ImageRecognitionChangeSymbolBoundingBox),
+    switchMap((action: ImageRecognitionChangeSymbolBoundingBox) =>
+      this.agnosticRepresentationService.changeSymbolBoundingBox$(action.agnosticSymbol,
+        action.boundingBox.fromX, action.boundingBox.fromY,
+        action.boundingBox.toX, action.boundingBox.toY).pipe(
+        switchMap((agnosticSymbol: AgnosticSymbol) => of(new ImageRecognitionChangeSymbolSuccess(agnosticSymbol))),
+        //catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
+      )));
+
+  @Effect()
+  changeSymbolComments$ = this.actions$.pipe(
+    ofType<ImageRecognitionChangeSymbolComments>(ImageRecognitionActionTypes.ImageRecognitionChangeSymbolComments),
+    switchMap((action: ImageRecognitionChangeSymbolComments) =>
+      this.agnosticRepresentationService.changeSymbolComments$(action.agnosticSymbol,
+        action.comments).pipe(
+        switchMap((agnosticSymbol: AgnosticSymbol) => of(new ImageRecognitionChangeSymbolSuccess(agnosticSymbol))),
         //catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
       )));
 

@@ -13,3 +13,4 @@ export interface AgnosticSymbol extends Entity {
   comments?: string;
   part?: Part;
 }
+

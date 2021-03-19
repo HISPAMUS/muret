@@ -154,7 +154,9 @@ public class AgnosticRepresentationModel {
 
         Symbol s = symbol.get();
         actionLogAgnosticModel.logChangeSymbolBoundingBox(s);
-
+        if (boundingBox != null) {
+            s.setApproximateX(null);
+        }
         s.setBoundingBox(boundingBox);
         symbolRepository.save(s);
         return symbol.get();

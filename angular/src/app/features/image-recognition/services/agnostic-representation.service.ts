@@ -66,16 +66,6 @@ export class AgnosticRepresentationService {
     }
   }
 
-  // revisado hasta aquí
-  deleteSymbol$(symbolID: number): Observable<number> {
-    return this.apiRestClientService.delete$<number>('agnostic/deleteSymbol', symbolID);
-  }
-
-
-  getRegion$(regionID: number): Observable<Region> {
-    return this.apiRestClientService.getProjectionOf$<Region>(regionID, 'regions', 'regionWithSymbols');
-  }
-
   changeSymbol$(agnosticSymbol: AgnosticSymbol, agnosticSymbolType: string, positionInStaff: string): Observable<AgnosticSymbol> {
     const url = `agnostic/changeAgnosticSymbol/${agnosticSymbol.id}/${agnosticSymbolType}/${positionInStaff}`;
     return this.apiRestClientService.get$<AgnosticSymbol>(url);
@@ -94,57 +84,11 @@ export class AgnosticRepresentationService {
     return this.apiRestClientService.put$<AgnosticSymbol>('agnostic/symbolBoundingBoxUpdate', boundingBox);
   }
 
-  changeSymbolComments$(symbol: AgnosticSymbol, comments: string) {
+  changeSymbolComments$(symbol: AgnosticSymbol, comments: string): Observable<AgnosticSymbol> {
     const params = {
       id: symbol.id,
       comments
     };
     return this.apiRestClientService.put$<AgnosticSymbol>('agnostic/symbolCommentsUpdate', params);
   }
-
-
-
-  /*classifySymbolFromBoundingBox$(regionID: number, boundingBox: BoundingBox, agnosticOrSemanticSymbolType: string):
-  Observable<AgnosticOrSemanticSymbolAndPosition[]> {
-    const symbolCreation = {
-      regionID,
-      agnosticOrSemanticSymbolType,
-      boundingBox
-    };
-
-    return this.apiRestClientService.post$<AgnosticOrSemanticSymbolAndPosition[]>('agnostic/classifySymbolFromBoundingBox', symbolCreation);
-  }
-
-  classifySymbolFromStrokes$(regionID: number, points: Point[][], agnosticOrSemanticSymbolType: string): Observable<AgnosticOrSemanticSymbolAndPosition[]> {
-    const symbolCreation = {
-      regionID,
-      agnosticOrSemanticSymbolType,
-      points
-    };
-
-    return this.apiRestClientService.post$<AgnosticOrSemanticSymbolAndPosition[]>('agnostic/classifySymbolFromStrokes', symbolCreation);
-  }*/
-
-
-
-  /*getSymbolClassifierModel$(collectionID: number, documentID: number,
-                            notationType: string, manuscriptType: string): Observable<ClassifierModel[]> {
-    const url = `classifierModels/symbols/${collectionID}/${documentID}/${notationType}/${manuscriptType}`;
-    return this.apiRestClientService.get$<ClassifierModel[]>(url);
-  }*/
-  getSymbolClassifierModel$(imageID: number): Observable<ClassifierModel[]> {
-    const url = `classifierModels/symbols/${imageID}`;
-    return this.apiRestClientService.get$<ClassifierModel[]>(url);
-  }
-
-  /* getAgnosticEnd2EndClassifierModel$(collectionID: number, documentID: number,
-                                     notationType: string, manuscriptType: string): Observable<ClassifierModel[]> {
-    const url = `classifierModels/agnosticEnd2End/${collectionID}/${documentID}/${notationType}/${manuscriptType}`;
-    return this.apiRestClientService.get$<ClassifierModel[]>(url);
-  } */
-  getAgnosticEnd2EndClassifierModel$(imageID: number): Observable<ClassifierModel[]> {
-    const url = `classifierModels/agnosticEnd2End/${imageID}`;
-    return this.apiRestClientService.get$<ClassifierModel[]>(url);
-  }
-
 }

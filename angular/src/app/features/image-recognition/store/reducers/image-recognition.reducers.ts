@@ -332,10 +332,8 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         //apiRestServerError: null
       };
 
-      // find region
       const deletedSymbols: Set<Number> = new Set<Number>();
       action.deletedAgnosticSymbolIDs.values.forEach(n => deletedSymbols.add(n));
-      let deletedSymbolRegion = null;
       newState.pagesRegionsSymbols.forEach(page => {
         page.regions.forEach(region => {
           if  (region.id === state.selectedRegion.id) {
@@ -357,7 +355,6 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         //apiRestServerError: null
       };
 
-      //TODO Change action to be able to delete several objects at once
       newState.pagesRegionsSymbols.forEach(page => {
         page.regions.forEach(region => {
           if  (region.id === state.selectedRegion.id) {
@@ -396,7 +393,33 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
 
       return newState;
     }
+    case ImageRecognitionActionTypes.ImageRecognitionChangeSymbolSuccess: {
+      const newState: ImageRecognitionState = {
+        pagesRegionsSymbols: klona(state.pagesRegionsSymbols),
+        imageOverview: state.imageOverview,
+        regionTypes: state.regionTypes,
+        classifierModels: state.classifierModels,
+        analyzing: false,
+        //apiRestServerError: null
+      };
+
+      newState.pagesRegionsSymbols.forEach(page => {
+        page.regions.forEach(region => {
+          if  (region.id === state.selectedRegion.id) {
+            const index = region.symbols.findIndex(s => s.id === action.agnosticSymbol.id);
+            if (index == -1) {
+              throw new Error('Cannot find agnostic symbol with id = ' + action.agnosticSymbol.id);
+            }
+            region.symbols[index] = action.agnosticSymbol;
+            newState.selectedRegion = region;
+          }
+        });
+      });
+
+      return newState;
+    }
     default:
       return state;
   }
+
 }

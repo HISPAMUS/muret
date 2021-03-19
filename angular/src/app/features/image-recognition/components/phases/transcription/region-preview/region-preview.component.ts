@@ -16,11 +16,11 @@ import {Point} from "../../../../../../core/model/entities/point";
 import {ImageRecognitionState} from "../../../../store/state/image-recognition.state";
 import {Store} from "@ngrx/store";
 import {
+  ImageRecognitionChangeSymbolBoundingBox,
   ImageRecognitionClearRegionSymbols,
   ImageRecognitionCreateSymbolFromBoundingBox,
   ImageRecognitionCreateSymbolFromStrokes, ImageRecognitionDeleteSymbols, ImageRecognitionSelectAgnosticSymbols
 } from "../../../../store/actions/image-recognition.actions";
-import {selectImageRecognitionSelectedRegionAgnosticSymbols} from "../../../../store/selectors/image-recognition.selector";
 import {DialogsService} from "../../../../../../shared/services/dialogs.service";
 
 @Component({
@@ -28,12 +28,10 @@ import {DialogsService} from "../../../../../../shared/services/dialogs.service"
   templateUrl: './region-preview.component.html',
   styleUrls: ['./region-preview.component.css']
 })
-export class RegionPreviewComponent implements OnInit, OnDestroy {
+export class RegionPreviewComponent implements OnInit, OnChanges {
   @Input() agnosticSymbolClassifiers: Observable<ClassifierModel[]>;
   @Input() loadedImage: SafeResourceUrl;
   @Input() selectedRegion: Region;
-
-  agnosticSymbolsSubscription: Subscription;
 
   shapesOfSelectedRegion: Shape[];
   zoomManager: ZoomManager;
@@ -51,37 +49,70 @@ export class RegionPreviewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.agnosticSymbolsSubscription = this.store.select(selectImageRecognitionSelectedRegionAgnosticSymbols).subscribe(next => {
-      if (next) {
-        this.drawSelectedRegionSymbols(next);
-      }
-    });
   }
 
-  ngOnDestroy(): void {
-    this.agnosticSymbolsSubscription.unsubscribe();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.selectedRegion && this.selectedRegion) {
+      this.drawSelectedRegionSymbols(this.selectedRegion.symbols);
+    }
   }
+
 
   private drawSelectedRegionSymbols(agnosticSymbols: AgnosticSymbol[]) {
     this.shapesOfSelectedRegion = new Array();
     if (agnosticSymbols) {
-      agnosticSymbols.forEach(symbol => {
-        const color = 'red';
-        if (symbol.boundingBox) {
-          this.drawBox(this.shapesOfSelectedRegion, symbol,
-            symbol.agnosticSymbolType, symbol.id, symbol.boundingBox, color, 1);
+      // first sort symbols in reverse order
+      const sortedSymbols: AgnosticSymbol[] = agnosticSymbols.slice().sort((a,b) => {
+        const ax = a.boundingBox ? a.boundingBox.fromX : a.approximateX;
+        const bx = b.boundingBox ? b.boundingBox.fromX : b.approximateX;
+        if (ax < bx) {
+          return 1;
+        } else if (ax > bx) {
+          return -1;
+        } else {
+          return a.id - b.id;
         }
+      });
 
+      let lastX = this.selectedRegion.boundingBox.toX;
+      /*console.log('SORTED:');
+      sortedSymbols.forEach(symbol => {
+        console.log('id=' + symbol.id);
+        console.log('type=' + symbol.agnosticSymbolType);
+        console.log('appx=' + symbol.approximateX);
+        if (symbol.boundingBox) {
+          console.log('bbox=' + symbol.boundingBox.fromX);
+        }
+        console.log('----')
+      });*/
+      sortedSymbols.forEach(symbol => {
+        const color = 'red';
         if (symbol.strokes) {
           this.drawStrokes(this.shapesOfSelectedRegion, symbol,
             symbol.agnosticSymbolType, symbol.id, symbol.strokes, 'yellow');
         }
 
-        if (symbol.approximateX) {
+        if (symbol.boundingBox) {
+          this.drawBox(this.shapesOfSelectedRegion, symbol,
+            symbol.agnosticSymbolType, symbol.id, symbol.boundingBox, color, 1);
+
+          lastX = symbol.boundingBox.fromY;
+        } else if (symbol.approximateX) {
           this.drawLine(this.shapesOfSelectedRegion, symbol,
             symbol.agnosticSymbolType, symbol.id, symbol.approximateX, color);
-        }
 
+          const bbox: BoundingBox = {
+            fromX: symbol.approximateX,
+            fromY: this.selectedRegion.boundingBox.fromY + 2,
+            toX: lastX - 2,
+            toY: this.selectedRegion.boundingBox.toY - 2
+          };
+
+          this.drawBox(this.shapesOfSelectedRegion, symbol,
+            symbol.agnosticSymbolType, symbol.id, bbox, color, 1);
+
+          lastX = symbol.approximateX;
+        }
       });
     }
   }
@@ -163,11 +194,11 @@ export class RegionPreviewComponent implements OnInit, OnDestroy {
     }
   }
 
+  //TODO Comments
   onSymbolShapeChanged(shape: Shape) {
-    /*
-        // currently we only support bounding box change
+    // currently we only support bounding box change
     if (shape instanceof Rectangle) {
-      this.store.dispatch(new ChangeSymbolBoundingBox(shape.data, {
+      this.store.dispatch(new ImageRecognitionChangeSymbolBoundingBox(shape.data, {
         fromX: shape.fromX,
         fromY: shape.fromY,
         id: shape.data.id,
@@ -175,7 +206,6 @@ export class RegionPreviewComponent implements OnInit, OnDestroy {
         toY: shape.fromY + shape.height
       }));
     }
-     */
   }
 
   isAddingMode() {

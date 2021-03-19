@@ -82,7 +82,10 @@ export enum ImageRecognitionActionTypes {
   ImageRecognitionClassifyRegionEndToEndSuccess = '[Image Recognition. AgnosticRepresentation] Classify region end-to-end success',
   ImageRecognitionClearRegionSymbols = '[Image Recognition. AgnosticRepresentation] Clear region symbols',
   ImageRecognitionClearRegionSymbolsSuccess = '[Image Recognition. AgnosticRepresentation] Clear region symbols success',
-
+  ImageRecognitionChangeSymbol = '[Image Recognition. AgnosticRepresentation] Change symbol',
+  ImageRecognitionChangeSymbolBoundingBox = '[Image Recognition. AgnosticRepresentation] Change symbol bounding box',
+  ImageRecognitionChangeSymbolComments = '[Image Recognition. AgnosticRepresentation] Change symbol comments',
+  ImageRecognitionChangeSymbolSuccess = '[Image Recognition. AgnosticRepresentation] Change symbol success',
 }
 
 export class ImageRecognitionGetImageOverview implements Action {
@@ -382,6 +385,27 @@ export class ImageRecognitionClearRegionSymbolsSuccess implements Action {
 }
 
 
+export class ImageRecognitionChangeSymbol implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionChangeSymbol;
+  constructor(public agnosticSymbol: AgnosticSymbol, public agnosticSymbolType: string, public positionInStaff: string) {}
+}
+
+export class ImageRecognitionChangeSymbolSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionChangeSymbolSuccess;
+  constructor(public agnosticSymbol: AgnosticSymbol) {}
+}
+
+export class ImageRecognitionChangeSymbolBoundingBox implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionChangeSymbolBoundingBox;
+  constructor(public agnosticSymbol: AgnosticSymbol, public boundingBox: BoundingBox) {}
+}
+
+export class ImageRecognitionChangeSymbolComments implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionChangeSymbolComments;
+  constructor(public agnosticSymbol: AgnosticSymbol, public comments: string) {}
+}
+
+
 export type ImageRecognitionActions =
   //ImageRecognitionServerError |
   ImageRecognitionGetImageOverview | ImageRecognitionGetImageOverviewSuccess |
@@ -417,6 +441,7 @@ export type ImageRecognitionActions =
   ImageRecognitionCreateSymbolFromBoundingBox | ImageRecognitionCreateSymbolFromStrokes | ImageRecognitionCreateSymbolSuccess |
   ImageRecognitionDeleteSymbols | ImageRecognitionDeleteSymbolsSuccess |
   ImageRecognitionClassifyRegionEndToEnd | ImageRecognitionClassifyRegionEndToEndSuccess |
-  ImageRecognitionClearRegionSymbols | ImageRecognitionClearRegionSymbolsSuccess
+  ImageRecognitionClearRegionSymbols | ImageRecognitionClearRegionSymbolsSuccess |
+  ImageRecognitionChangeSymbol | ImageRecognitionChangeSymbolComments | ImageRecognitionChangeSymbolBoundingBox | ImageRecognitionChangeSymbolSuccess
   ;
 
