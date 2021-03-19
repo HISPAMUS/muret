@@ -96,7 +96,7 @@ export class RegionPreviewComponent implements OnInit, OnChanges {
           this.drawBox(this.shapesOfSelectedRegion, symbol,
             symbol.agnosticSymbolType, symbol.id, symbol.boundingBox, color, 1);
 
-          lastX = symbol.boundingBox.fromY;
+          lastX = symbol.boundingBox.fromX;
         } else if (symbol.approximateX) {
           this.drawLine(this.shapesOfSelectedRegion, symbol,
             symbol.agnosticSymbolType, symbol.id, symbol.approximateX, color);

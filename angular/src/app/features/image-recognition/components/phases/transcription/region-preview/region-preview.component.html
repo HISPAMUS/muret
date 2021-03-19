@@ -1,9 +1,4 @@
 <div class="d-flex justify-content-between">
-  <app-classifiers [hideClassifyButton]="true" [caption]="'Individual symbol classifier'" [models]="agnosticSymbolClassifiers"
-                   (onSelectedModelIDChange)="onSymbolsClassifierModelID($event)"
-  >
-
-  </app-classifiers>
   <app-image-recognition-toolbar [(mode)]="mode" [zoomManager]="zoomManager" [selectionDone]="isSelectionDone()"
                                  (onClear)="onClear()" (onDelete)="onDelete()">
   </app-image-recognition-toolbar>
@@ -17,6 +12,13 @@
       <input ngbButton type="radio" name="addMethodRadioButton" [value]="'strokes'"> Strokes
     </label>
   </div>
+
+  <app-classifiers *ngIf="isAddingMode()" [hideClassifyButton]="true" [caption]="'Individual symbol classifier'" [models]="agnosticSymbolClassifiers"
+                   (onSelectedModelIDChange)="onSymbolsClassifierModelID($event)"
+  >
+
+  </app-classifiers>
+
 </div>
 <div id="imageCanvas">
   <app-svg-canvas *ngIf="loadedImage"
