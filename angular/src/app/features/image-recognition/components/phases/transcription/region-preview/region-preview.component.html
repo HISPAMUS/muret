@@ -25,6 +25,7 @@
                   [crop]="selectedRegion.boundingBox"
                   [zoomFactor]="zoomManager.zoomFactor"
                   [(mode)]="mode"
+                  [singleSelectionInEditMode]="true"
                   (svgShapeCreated)="onSymbolCreated($event)"
                   (svgShapeChanged)="onSymbolShapeChanged($event)"
                   [nextShapeToAdd]="nextShapeToDraw"

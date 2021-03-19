@@ -45,6 +45,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   @Input() shapes: Shape[];
   @Input() zoomFactor: number;
 
+  @Input() singleSelectionInEditMode: boolean; // if this value is set just one symbol can be selected in editing mode
+
   @Input() singleSelectionMode: boolean; // if this value is set just one symbol can be selected
   /**
    * These values are optional, they can be inferred from the background image (if present). If no image is present, it is compulsory
@@ -150,6 +152,9 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
       this.updateCursor();
     }
 
+    if (this.modeValue == 'eEditing' && this.singleSelectionInEditMode) {
+      this.selectionManager.leaveJustOneSelected();
+    }
     if (this.modeValue == 'eSelecting' || this.modeValue == 'eEditing') {
       if (this.selectionManager && this.selectionManager.hasJustOneSelectedShape()) {
         this.selectedComponent = this.selectionManager.getSelected()[0].shapeComponent;
@@ -476,11 +481,12 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
     if (event.button == 0) { // left click
       if (shape && shape.selectable && !shape.hidden && shape.id) {
         // @ts-ignore
-        if (!this.singleSelectionMode && event.shiftKey) {
+        const singleSelection =  this.singleSelectionMode || this.singleSelectionInEditMode && this.modeValue == 'eEditing';
+        if (!singleSelection && event.shiftKey) {
           this.mode = 'eSelecting';
           this.selectionManager.selectRange(shape);
           // @ts-ignore
-        } else if (!this.singleSelectionMode && event.metaKey) {
+        } else if (!singleSelection && event.metaKey) {
           this.mode = 'eSelecting';
           this.selectionManager.addOrRemove(shape);
         } else {

@@ -269,4 +269,5 @@ export class RegionPreviewComponent implements OnInit, OnChanges {
   isSelectionDone() {
     return this.selectedSymbols && this.selectedSymbols.length > 0;
   }
+
 }

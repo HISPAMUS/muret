@@ -138,4 +138,11 @@ export class SVGSelectionManager {
   public hasJustOneSelectedShape(): boolean {
     return this.selectedElements.size == 1;
   }
+
+  public leaveJustOneSelected() {
+    if (this.selectedElements.size > 1) {
+      const first = this.selectedElements.values().next().value;
+      this.replace(first);
+    }
+  }
 }
