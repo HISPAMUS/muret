@@ -1,0 +1,64 @@
+import { Component, OnInit } from '@angular/core';
+import {ImageRecognitionBaseAbstractComponent} from "../../image-recognition-base-abstract/image-recognition-base-abstract.component";
+import {ActivatedRoute} from "@angular/router";
+import {Store} from "@ngrx/store";
+import {ImageRecognitionState} from "../../../../store/state/image-recognition.state";
+import {DialogsService} from "../../../../../../shared/services/dialogs.service";
+import {ContextMenuService} from "ngx-contextmenu";
+import {Observable} from "rxjs";
+import {ClassifierModel} from "../../../../../../core/model/entities/classifier-model";
+import {
+  selectImageRecognitionAgnosticEnd2EndClassifierModels,
+  selectImageRecognitionAgnosticSymbolsClassifierModels,
+  selectImageRecognitionSelectedRegion,
+  selectImageRecognitionSemanticClassifierModels
+} from "../../../../store/selectors/image-recognition.selector";
+import {ImageFilesService} from "../../../../../../core/services/image-files.service";
+import {DomSanitizer} from "@angular/platform-browser";
+import {Region} from "../../../../../../core/model/entities/region";
+import {Shape} from "../../../../../../svg/model/shape";
+import {ShowErrorService} from "../../../../../../core/services/show-error.service";
+import {
+  ImageRecognitionSelectRegion
+} from "../../../../store/actions/image-recognition.actions";
+
+@Component({
+  selector: 'app-transcription-component',
+  templateUrl: './transcription-component.component.html',
+  styleUrls: ['./transcription-component.component.css']
+})
+export class TranscriptionComponentComponent extends ImageRecognitionBaseAbstractComponent implements OnInit {
+
+  private regionInteractionType: string;
+  selectedRegion$: Observable<Region>;
+
+  constructor(route: ActivatedRoute, store: Store<ImageRecognitionState>, dialogsService: DialogsService, private contextMenuService: ContextMenuService,
+              protected imageFilesService: ImageFilesService, protected sanitizer: DomSanitizer, protected manageErrorsService: ShowErrorService) {
+    super(route, store, dialogsService, imageFilesService, sanitizer, manageErrorsService);
+    this.phase = 'transcription';
+  }
+
+  protected isPageSelectable(): boolean {
+    return false;
+  }
+
+  ngOnInit() {
+    super.ngOnInit();
+    // the dispatch to get all the classifiers is found in the base class
+    this.selectedRegion$ = this.store.select(selectImageRecognitionSelectedRegion);
+  }
+
+  onShapesSelected(shapes: Shape[]) {
+    // this.region = null;
+    this.regionInteractionType = null;
+    if (shapes) {
+      const regionShape = shapes.find(shape => shape.data && shape.data.regionType); // if it is a region
+      if (regionShape) {
+        const selectedRegion = regionShape.data;
+        this.regionInteractionType = selectedRegion.regionType.regionInteractionType.name;
+        // this.region = region; Must use observables to orchestrate all dependencies (agnostic symbols...)
+        this.store.dispatch(new ImageRecognitionSelectRegion(selectedRegion));
+      }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+label {
+  color: #7DE2DB;
+  /*margin-top: .5em;*/
+}
+
+label:hover {
+  background-color: #7DE2DB;
+  cursor: pointer;
+}
+
+label:hover * {
+  color: #103339;
+}
+
+/* status */
+.hidden {
+  color: lightgrey;
+}
+
+.working {
+  color: #D91E63;
+}
+
+.done {
+  color: chartreuse;
+}
+
+
+.selectedStyle {
+  background-color: #7DE2DB;
+  color: white;
+}
+
+
+/*input[type=radio] + .icons {
+  color: red;
+  background-color: yellow;
+}*/

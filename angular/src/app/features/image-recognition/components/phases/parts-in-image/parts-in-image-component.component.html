@@ -1,0 +1,45 @@
+<div class="container" *ngIf="imageOverview">
+  <div class="row">
+    <div class="col d-flex justify-content-between">
+      <app-image-recognition-toolbar [hideModeButtons]="true" [zoomManager]="zoomManager" [mode]="'eSelecting'"></app-image-recognition-toolbar>
+      <div class="col">
+        <p class="text-center" *ngIf="imageOverview.imagePart">Whole image linked to {{imageOverview.imagePart.name}}. <a [routerLink]="" (click)="unlinkImageFromPart()">Unlink part</a></p>
+        <p class="text-center" *ngIf="!imageOverview.imagePart"><a [routerLink]="" (click)="linkImageToPart()">Link whole image to part</a></p>
+      </div>
+      <app-document-phases [selectedPhase]="'parts'" [imageID]="imageID" [size]="'lg'"></app-document-phases>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <app-image-document-analysis-navigator *ngIf="(loadedImage$ | async) as loadedImage"
+        [loadedImage]="loadedImage"
+        [regionTypes]="regionTypes$ | async"
+        [shapes]="documentAnalysisShapes"
+        (onNavigatorContextMenu)="onContextMenu($event)"
+        [contextMenu]="contextMenu"
+        [zoomManager]="zoomManager"
+        [mode]="'eSelecting'"
+      ></app-image-document-analysis-navigator>
+      <p>Use right button to change the parts of the selected items</p>
+    </div>
+  </div>
+</div>
+
+
+<context-menu *ngIf="imageOverview">
+  <ng-template contextMenuItem><strong>Link selected to part:</strong></ng-template>
+  <ng-template contextMenuItem (execute)="linkToPart(part)" *ngFor="let part of imageOverview.documentParts; trackBy: partTracking">
+    {{part.name}}
+  </ng-template>
+  <ng-template contextMenuItem (execute)="linkToNewPart()">
+    Create new part...
+  </ng-template>
+  <ng-template contextMenuItem divider="true"></ng-template>
+  <ng-template contextMenuItem (execute)="unlinkPart()">
+    Unlink part
+  </ng-template>
+</context-menu>
+
+<!-- Positioned absolute -->
+<app-progress-status (statusChange)="onStatusChange($event)" [(status)]="status"></app-progress-status>
+

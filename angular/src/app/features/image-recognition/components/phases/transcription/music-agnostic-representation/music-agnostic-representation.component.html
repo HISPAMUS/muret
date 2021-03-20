@@ -1,0 +1,29 @@
+<app-region-preview [selectedRegion]="region"
+                    [agnosticSymbolClassifiers]="agnosticSymbolClassifiers$ | async"
+                    [loadedImage]="loadedImage"
+                    [(mode)]="mode"
+                    [(selectedShapes)]="selectedAgnosticShapes"
+>
+</app-region-preview>
+
+<app-classifiers [caption]="'Select an agnostic end to end classifier'" [models]="agnosticEndToEndClassifiers$ |async" (onExecuteClassifier)="onExecuteAgnosticClassifier($event, region)"></app-classifiers>
+<app-agnostic-staff *ngIf="region"
+                    [regionCropped]="region.boundingBox"
+                    [agnosticSymbols]="region.symbols"
+                    [svgAgnosticSymbolSet]="svgSet"
+                    [(mode)]="mode"
+                    [(selectedShapes)]="selectedAgnosticShapes"
+>
+</app-agnostic-staff>
+
+<div class="d-flex">
+  <app-change-pitch (onChangeLineSpace)="onChangeLineSpace($event)" (onMovePitch)="onMovePitch($event)"></app-change-pitch>
+  <app-agnostic-or-semantic-toolbar
+    [filters]="agnosticToolbarFilters"
+    [svgAgnosticOrSemanticSymbolSet]="svgSet"
+    (agnosticOrSemanticSymbolSelected)="onAgnosticSymbolTypeSelected($event)"
+    [selectedAgnosticOrSemanticSymbolType]="selectedAgnosticSymbolType"
+    [filter]="classifiedSymbols"
+  >
+  </app-agnostic-or-semantic-toolbar>
+</div>

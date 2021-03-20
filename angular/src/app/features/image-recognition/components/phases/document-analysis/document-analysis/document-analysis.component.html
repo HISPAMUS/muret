@@ -1,0 +1,40 @@
+<div class="container-fluid" *ngIf="imageOverview">
+  <div class="row">
+    <div class="col d-flex justify-content-between">
+      <app-image-recognition-toolbar
+        [zoomManager]="zoomManager"
+        [(mode)]="mode"
+        (modeChange)="onModeChange($event)"
+        [selectionDone]="isSelectionDone()"
+        (onDelete)="onDelete()"
+        (onClear)="onClear()"></app-image-recognition-toolbar>
+      <app-classifiers [title]="'Select a document analysis classifier'" [models]="documentAnalysisModels$ | async" (onExecuteClassifier)="attemptDocumentAnalysis($event)">
+      </app-classifiers>
+      <app-document-phases [selectedPhase]="'documentAnalysis'"  [imageID]="imageID" [size]="'lg'"></app-document-phases>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-1">
+      <app-document-analysis-toolbar [regionTypes]="regionTypes$ | async" [selectedRegion]="selectedRegionType" (onChangeRegion)="changeRegionType($event)"></app-document-analysis-toolbar>
+    </div>
+    <div class="col-11">
+      <app-image-document-analysis-navigator *ngIf="(loadedImage$ | async) as loadedImage"
+        [(mode)]="mode"
+        [loadedImage]="loadedImage"
+        [regionTypes]="regionTypes$ | async"
+        [shapes]="documentAnalysisShapes"
+        (onNavigatorContextMenu)="onContextMenu($event)"
+        [contextMenu]="contextMenu"
+        [zoomManager]="zoomManager"
+        (onShapesSelected)="onDocumentAnalysisShapesSelected($event)"
+        [nextShapeToAdd]="'Rectangle'"
+        (onSvgShapeCreated)="onSVGShapeCreated($event)"
+        (onSvgShapeChanged)="onSVGShapeChanged($event)"
+        [addRegionTypeToFilter]="selectedRegionType"
+      ></app-image-document-analysis-navigator>
+    </div>
+  </div>
+</div>
+
+<!-- Positioned absolute -->
+<app-progress-status (statusChange)="onStatusChange($event)" [(status)]="status"></app-progress-status>
