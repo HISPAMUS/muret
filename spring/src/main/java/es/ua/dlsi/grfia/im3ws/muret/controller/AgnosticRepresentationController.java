@@ -106,9 +106,7 @@ public class AgnosticRepresentationController extends MuRETBaseController {
     public LongArray deleteSymbols(@RequestBody LongArray symbolIDs) {
 
         try {
-            for (long id: symbolIDs.getValues()) {
-                this.agnosticRepresentationModel.deleteSymbol(id);
-            }
+            this.agnosticRepresentationModel.deleteSymbols(symbolIDs);
             return symbolIDs;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this,"Cannot delete symbols", e);

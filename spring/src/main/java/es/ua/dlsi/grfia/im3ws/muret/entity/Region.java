@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import es.ua.dlsi.im3.core.score.NotationType;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -203,10 +204,15 @@ public class Region extends Auditable implements IAssignableToPart, IDelimitedWi
         this.symbols.remove(symbol);
     }
 
+    public void removeSymbols(List<Symbol> symbolsToDelete) {
+        this.symbols.removeAll(symbolsToDelete);
+    }
+
     @Transient
     @JsonIgnore
     public List<Symbol> getSortedSymbols() {
         List<Symbol> sortedRegions = getSymbols().stream().sorted(Symbol.getHorizontalPositionComparator()).collect(Collectors.toList());
         return sortedRegions;
     }
+
 }

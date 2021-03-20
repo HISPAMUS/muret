@@ -232,9 +232,6 @@ export class RegionPreviewComponent implements OnInit, OnChanges {
 
   }
 
-  onClear() {
-    this.store.dispatch(new ImageRecognitionClearRegionSymbols(this.selectedRegion.id));
-  }
 
   onShapesSelected(shapes: Shape[]) {
     if (shapes) {
@@ -257,13 +254,25 @@ export class RegionPreviewComponent implements OnInit, OnChanges {
           this.dialogsService.showConfirmation('There are ' + this.selectedSymbols.length
             + ' selected symbols', 'Do you want the delete them?')
             .subscribe((isConfirmed) => {
-                this.store.dispatch(new ImageRecognitionDeleteSymbols(this.selectedSymbols));
+                if (isConfirmed) {
+                  this.store.dispatch(new ImageRecognitionDeleteSymbols(this.selectedSymbols));
+                }
               }
             );
         } else {
           this.store.dispatch(new ImageRecognitionDeleteSymbols(this.selectedSymbols));
         }
     }
+  }
+
+  onClear() {
+    this.dialogsService.showConfirmation('Clear agnostic representation' , 'Do you want to delete all symbols?')
+      .subscribe((isConfirmed) => {
+          if (isConfirmed) {
+            this.store.dispatch(new ImageRecognitionClearRegionSymbols(this.selectedRegion.id));
+          }
+        }
+      );
   }
 
   isSelectionDone() {

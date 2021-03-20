@@ -3,6 +3,7 @@ package es.ua.dlsi.grfia.im3ws.muret.model;
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.AgnosticSymbolTypeAndPosition;
+import es.ua.dlsi.grfia.im3ws.muret.controller.payload.LongArray;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.SymbolCreationResult;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -86,7 +88,6 @@ public class AgnosticRepresentationModel {
         }
         return persistentRegion.get();
     }
-
 
     class BBoxStrokes {
         CalcoStrokes calcoStrokes;
@@ -241,12 +242,38 @@ public class AgnosticRepresentationModel {
         return result;
     }
 
-    /**
-     *
-     * @param symbolID
-     * @return Deleted symbol ID
-     * @throws IM3WSException
-     */
+    @Transactional
+    public void deleteSymbols(LongArray symbolIDs) throws IM3WSException {
+        ArrayList<Symbol> symbolsToDelete = new ArrayList<>();
+        Region persistentRegion = null; // all symbols belong to the same region
+        for (long id : symbolIDs.getValues()) {
+            Optional<Symbol> persistentSymbol = symbolRepository.findById(id);
+            if (!persistentSymbol.isPresent()) {
+                throw new IM3WSException("Cannot find symbol with ID=" + id);
+            }
+            if (persistentRegion == null) {
+                persistentRegion = getRegion(persistentSymbol.get().getRegion().getId());
+            }
+
+            symbolsToDelete.add(persistentSymbol.get());
+        }
+
+        for (Symbol symbol: symbolsToDelete) {
+            this.actionLogAgnosticModel.logSymbolDelete(symbol);
+        }
+
+        if (persistentRegion != null) {
+            persistentRegion.removeSymbols(symbolsToDelete);
+        }
+    }
+
+
+        /**
+         *
+         * @param symbolID
+         * @return Deleted symbol ID
+         * @throws IM3WSException
+         */
     @Transactional
     public long deleteSymbol(long symbolID) throws IM3WSException {
         Optional<Symbol> persistentSymbol = symbolRepository.findById(symbolID);

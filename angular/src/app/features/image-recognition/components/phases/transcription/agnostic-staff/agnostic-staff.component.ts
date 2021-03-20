@@ -18,6 +18,10 @@ import {SVGSet} from "../../../../../agnostic-representation/model/svgset";
 import {AgnosticSymbol} from "../../../../../../core/model/entities/agnostic-symbol";
 import {PositionInStaffService} from "../../../../../../shared/services/position-in-staff.service";
 import {AgnosticOrSemanticTypeSVGPath} from "../../../../../agnostic-representation/model/agnostic-or-semantic-type-s-v-g-path";
+import {
+  selectImageRecognitionSelectedAgnosticSymbol,
+  selectImageRecognitionSelectedRegionAgnosticSymbols
+} from "../../../../store/selectors/image-recognition.selector";
 
 interface StaffLine {
   index: number;
@@ -60,15 +64,19 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   private staffBottomLineY: number;
   private staffTopLineY: number;
 
-  //agnosticSymbols$: Observable<AgnosticSymbol[]>;
   private selectedSymbolSubscription: Subscription;
-  private selectedSymbol: AgnosticSymbol;
+  private selectedSymbolIDs: Set<number> = new Set<number>();
 
   constructor(private store: Store<any>, private positionInStaffService: PositionInStaffService) {
-    /*TODO 2021 this.agnosticSymbols$ = store.select(selectAgnosticSymbols);
-    this.selectedSymbolSubscription = store.select(selectSelectedSymbol).subscribe(next => {
-      this.selectedSymbol = next as any as AgnosticSymbol;
-    });*/
+    this.selectedSymbolSubscription = store.select(selectImageRecognitionSelectedAgnosticSymbol).subscribe(next => {
+      this.selectedSymbolIDs.clear();
+      if (next) {
+        next.forEach(agnosticSymbol => {
+          this.selectedSymbolIDs.add(agnosticSymbol.id);
+        });
+      }
+      // = next as any as AgnosticSymbol;
+    });
 
   }
 
@@ -188,7 +196,7 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   getColor(symbol: AgnosticSymbol): string {
-    if (this.selectedSymbol === symbol) {
+    if (this.selectedSymbolIDs.has(symbol.id)) {
       return SELECTED_COLOR;
     } else {
       return UNSELECTED_COLOR;
