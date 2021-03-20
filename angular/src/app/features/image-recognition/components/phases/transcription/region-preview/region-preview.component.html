@@ -31,7 +31,8 @@
                   (svgShapeCreated)="onSymbolCreated($event)"
                   (svgShapeChanged)="onSymbolShapeChanged($event)"
                   [nextShapeToAdd]="nextShapeToDraw"
-                  (onShapesSelected)="onShapesSelected($event)"
+                  (selectedShapesChange)="onShapesSelected($event)"
+                  [selectedShapes]="selectedShapes"
                   [selectByX]="true"
   >
   </app-svg-canvas>

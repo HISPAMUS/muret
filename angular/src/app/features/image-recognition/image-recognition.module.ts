@@ -23,7 +23,6 @@ import {ImagePartsService} from "./services/image-parts.service";
 import { DocumentAnalysisToolbarComponent } from './components/phases/document-analysis/document-analysis-toolbar/document-analysis-toolbar.component';
 import { ImageRecognitionToolbarComponent } from './components/subcomponents/image-recognition-toolbar/image-recognition-toolbar.component';
 import { RegionPreviewComponent } from './components/phases/transcription/region-preview/region-preview.component';
-import { MusicRegionAgnosticRepresentationComponent } from './components/phases/transcription/music-region-agnostic-representation/music-region-agnostic-representation.component';
 import { MusicRegionSemanticRepresentationComponent } from './components/phases/transcription/music-region-semantic-representation/music-region-semantic-representation.component';
 import {ClassifiersComponent} from "./components/subcomponents/classifiers/classifiers.component";
 import { TextRegionSemanticRepresentationComponent } from './components/phases/transcription/text-region-semantic-representation/text-region-semantic-representation.component';
@@ -31,17 +30,17 @@ import {AgnosticStaffComponent} from "./components/phases/transcription/agnostic
 import {NotationComponent} from "./components/phases/transcription/notation/notation.component";
 import { TextRegionAgnosticRepresentationComponent } from './components/phases/transcription/text-region-agnostic-representation/text-region-agnostic-representation.component';
 import {AgnosticRepresentationService} from "./services/agnostic-representation.service";
+import { MusicAgnosticRepresentationComponent } from './components/phases/transcription/music-agnostic-representation/music-agnostic-representation.component';
 
 
 @NgModule({
   declarations: [ImageOverviewComponent, ImageDocumentAnalysisNavigatorComponent, PartsInImageComponentComponent,
     DocumentAnalysisComponent, TranscriptionComponentComponent, DocumentAnalysisFiltersComponent,
     DocumentAnalysisToolbarComponent, ImageRecognitionToolbarComponent, RegionPreviewComponent,
-    MusicRegionAgnosticRepresentationComponent,
     ClassifiersComponent,
     MusicRegionSemanticRepresentationComponent,
     TextRegionSemanticRepresentationComponent,
-    AgnosticStaffComponent, NotationComponent, TextRegionAgnosticRepresentationComponent
+    AgnosticStaffComponent, NotationComponent, TextRegionAgnosticRepresentationComponent, MusicAgnosticRepresentationComponent
   ],
     imports: [
         CommonModule,

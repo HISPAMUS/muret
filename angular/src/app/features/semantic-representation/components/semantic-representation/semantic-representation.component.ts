@@ -184,7 +184,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
     });
 
     this.agnosticSymbolsSubscription = this.store.select(selectAgnosticSymbols).subscribe(next => {
-      // required to draw the required symbols when the selectedRegion is available
+      // required to draw the required symbols when the region is available
       this.selectedRegionSymbols = next;
     });
 
@@ -251,7 +251,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
         this.drawSelectedRegionSymbols(this.selectedRegionSymbols);
 
         this.store.dispatch(new GetNotation(this.selectedRegion, false, 'verovio')); // TODO
-        // this.store.dispatch(new GetRegionPart(this.selectedRegion));
+        // this.store.dispatch(new GetRegionPart(this.region));
       } else {
         this.store.dispatch(new ClearNotation());
       }
@@ -506,15 +506,15 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
 
 
     /*clearRegionPart() {
-      this.store.dispatch(new UpdateRegionPart(this.selectedRegion, null));
+      this.store.dispatch(new UpdateRegionPart(this.region, null));
     }
 
     updateRegionPart($event: Part) {
-      this.store.dispatch(new UpdateRegionPart(this.selectedRegion, $event));
+      this.store.dispatch(new UpdateRegionPart(this.region, $event));
     }
 
     createRegionPart($event: string) {
-      this.store.dispatch(new PartsCreateRegionPart(this.selectedRegion, $event));
+      this.store.dispatch(new PartsCreateRegionPart(this.region, $event));
       /// this.store.dispatch(new GetImageDocumentParts(+this.imageID)); // to update the drop down
     }*/
 
@@ -551,7 +551,7 @@ export class SemanticRepresentationComponent implements OnInit, OnDestroy {
   }
 
   getUseOfPartsAssignedToRegion(): PartUsedIn {
-    // console.log('Looking for region ' + this.selectedRegion.id + ' in UOP ' + this.usesOfParts);
+    // console.log('Looking for region ' + this.region.id + ' in UOP ' + this.usesOfParts);
     if (this.usesOfParts != null && this.selectedRegion != null) {
       return this.usesOfParts.uses.find(
         partUses => partUses.regions.filter(partUseRegion => partUseRegion.id === this.selectedRegion.id).length > 0);

@@ -48,7 +48,7 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
         const symbolsWithoutChangedOne: AgnosticSymbol[] =
           state.agnosticSymbols.filter(symbol => symbol.id !== action.agnosticSymbol.id);
         newState.agnosticSymbols = [...symbolsWithoutChangedOne, action.agnosticSymbol];
-        // invalid - cannot change immutable object - newState.selectedRegion.symbols = newState.agnosticSymbols; // it is the same object
+        // invalid - cannot change immutable object - newState.region.symbols = newState.agnosticSymbols; // it is the same object
         newState.selectedRegion = {
           id: state.selectedRegion.id,
           boundingBox: state.selectedRegion.boundingBox,
@@ -61,7 +61,7 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
     }
    case AgnosticRepresentationActionTypes.CreateSymbolSuccess: {
       const newState = {...state, apiRestServerError: null};
-      // invalid - cannot change immutable object - newState.selectedRegion.symbols = newState.agnosticSymbols; // same object
+      // invalid - cannot change immutable object - newState.region.symbols = newState.agnosticSymbols; // same object
      newState.selectedRegion = {
        id: state.selectedRegion.id,
        boundingBox: state.selectedRegion.boundingBox,
@@ -100,7 +100,7 @@ export function agnosticRepresentationReducers(state = initialAgnosticRepresenta
         newState.agnosticSymbols = newState.agnosticSymbols.filter(symbol => symbol.id !== action.deletedAgnosticSymbolID);
       }
 
-      // invalid - cannot change immutable object - newState.selectedRegion.symbols = newState.agnosticSymbols; // same object
+      // invalid - cannot change immutable object - newState.region.symbols = newState.agnosticSymbols; // same object
       newState.selectedRegion = {
         id: state.selectedRegion.id,
         boundingBox: state.selectedRegion.boundingBox,

@@ -36,12 +36,21 @@ export class SVGSelectionManager {
     } else {
       this.add(item);
     }
-    this.lastSelectedElementIndex = this._selectableElements.indexOf(item);
+  }
+
+  public addAll(shapes: Shape[]) {
+    if (shapes) {
+      shapes.forEach(shape => {
+        this.add(shape);
+      });
+    }
   }
 
   public add(item: Shape) {
     this.selectedElements.add(item);
     item.highlightSelected();
+    this.lastSelectedElementIndex = this._selectableElements.indexOf(item);
+
     //item.onSelected.emit();
   }
 
@@ -145,4 +154,5 @@ export class SVGSelectionManager {
       this.replace(first);
     }
   }
+
 }

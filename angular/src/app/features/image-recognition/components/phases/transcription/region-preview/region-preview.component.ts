@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Observable, Subscription} from "rxjs";
 import {ClassifierModel} from "../../../../../../core/model/entities/classifier-model";
 import {Shape} from "../../../../../../svg/model/shape";
@@ -22,33 +22,62 @@ import {
   ImageRecognitionCreateSymbolFromStrokes, ImageRecognitionDeleteSymbols, ImageRecognitionSelectAgnosticSymbols
 } from "../../../../store/actions/image-recognition.actions";
 import {DialogsService} from "../../../../../../shared/services/dialogs.service";
+import {selectImageRecognitionSelectedAgnosticSymbol} from "../../../../store/selectors/image-recognition.selector";
 
 @Component({
   selector: 'app-region-preview',
   templateUrl: './region-preview.component.html',
   styleUrls: ['./region-preview.component.css']
 })
-export class RegionPreviewComponent implements OnInit, OnChanges {
+export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
   @Input() agnosticSymbolClassifiers: Observable<ClassifierModel[]>;
   @Input() loadedImage: SafeResourceUrl;
   @Input() selectedRegion: Region;
+  @Output() modeChange = new EventEmitter(); // must have this name in order to be input / output
+  @Output() selectedShapesChange = new EventEmitter();
+
+  modeValue: 'eAdding' | 'eEditing' | 'eSelecting';
+  selectedShapesValue: Shape[];
 
   shapesOfSelectedRegion: Shape[];
   zoomManager: ZoomManager;
-  mode: 'eAdding' | 'eEditing' | 'eSelecting';
   nextShapeToDraw: 'Rectangle' | 'Polylines';
   addMethodTypeValue: 'boundingbox' | 'strokes' ;
   symbolsClassifierModelID: string;
   selectedSymbols: AgnosticSymbol[];
+  private selectedSymbolSubscription: Subscription;
+
 
   constructor(private store: Store<ImageRecognitionState>, protected dialogsService: DialogsService) {
     this.zoomManager = new ZoomManager();
-    this.mode = 'eSelecting';
+    this.modeValue = 'eSelecting';
     this.nextShapeToDraw = 'Rectangle';
     this.addMethodType = 'boundingbox';
+    this.selectedShapesValue = [];
   }
 
   ngOnInit(): void {
+    this.selectedSymbolSubscription = this.store.select(selectImageRecognitionSelectedAgnosticSymbol).subscribe(next => {
+      if (next) {
+        // this selection comes from outside (e.g. from agnostic-staff.ts) or from here (selectedShapesChange) -
+        // we don't change it directly for having all changes just here
+        this.selectedSymbols = next;
+        const selectedShapes: Shape[] = [];
+        this.selectedSymbols.forEach(symbol => {
+          this.shapesOfSelectedRegion.forEach(shape => {
+            if (shape.data == symbol) {
+              selectedShapes.push(shape);
+            }
+          });
+        });
+        this.selectedShapes = selectedShapes;
+      }
+    });
+
+  }
+
+  ngOnDestroy(): void {
+    this.selectedSymbolSubscription.unsubscribe();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -57,6 +86,30 @@ export class RegionPreviewComponent implements OnInit, OnChanges {
     }
   }
 
+  @Input()
+  get mode() {
+    return this.modeValue;
+  }
+
+  set mode(val) {
+    if (this.modeValue != val) {
+      this.modeValue = val;
+      this.modeChange.emit(this.modeValue);
+    }
+  }
+
+
+  @Input()
+  get selectedShapes() {
+    return this.selectedShapesValue;
+  }
+
+  set selectedShapes(val) {
+    if (this.selectedShapesValue != val) {
+      this.selectedShapesValue = val;
+      this.selectedShapesChange.emit(this.selectedShapesValue);
+    }
+  }
 
   private drawSelectedRegionSymbols(agnosticSymbols: AgnosticSymbol[]) {
     this.shapesOfSelectedRegion = new Array();
@@ -234,16 +287,17 @@ export class RegionPreviewComponent implements OnInit, OnChanges {
 
 
   onShapesSelected(shapes: Shape[]) {
+    this.selectedShapes = shapes;
     if (shapes) {
-      this.selectedSymbols = [];
+      const selectedSymbols: AgnosticSymbol[] = [];
       shapes.forEach(shape => {
         if (shape.data.agnosticSymbolType) {
-          this.selectedSymbols.push(shape.data);
+          selectedSymbols.push(shape.data);
         }
       });
-      if (this.selectedSymbols.length > 0) {
+      if (selectedSymbols.length > 0) {
         // besides selecting them, we publish for other components which symbols are selected
-        this.store.dispatch(new ImageRecognitionSelectAgnosticSymbols(this.selectedSymbols));
+        this.store.dispatch(new ImageRecognitionSelectAgnosticSymbols(selectedSymbols));
       }
     }
   }

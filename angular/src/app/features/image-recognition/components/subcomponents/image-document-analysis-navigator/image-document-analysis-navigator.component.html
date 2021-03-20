@@ -7,7 +7,7 @@
                       [zoomFactor]="zoomManager.zoomFactor"
                       [(mode)]="mode"
                       (onContextMenu)="onSVGContextMenu($event)"
-                      (onShapesSelected)="onSVGShapesSelected($event)"
+                      (selectedShapesChange)="onSVGShapesSelected($event)"
                       [nextShapeToAdd]="nextShapeToAdd"
                       (svgShapeChanged)="svgShapeChanged($event)"
                       (svgShapeCreated)="svgShapeCreated($event)"

@@ -20,8 +20,9 @@ import {PositionInStaffService} from "../../../../../../shared/services/position
 import {AgnosticOrSemanticTypeSVGPath} from "../../../../../agnostic-representation/model/agnostic-or-semantic-type-s-v-g-path";
 import {
   selectImageRecognitionSelectedAgnosticSymbol,
-  selectImageRecognitionSelectedRegionAgnosticSymbols
 } from "../../../../store/selectors/image-recognition.selector";
+import {ImageRecognitionSelectAgnosticSymbols} from "../../../../store/actions/image-recognition.actions";
+import {Shape} from "../../../../../../svg/model/shape";
 
 interface StaffLine {
   index: number;
@@ -38,13 +39,17 @@ const UNSELECTED_COLOR = 'black';
 })
 export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   @Input() regionCropped: BoundingBox; // see ngOnInit below
-
   @Input() svgAgnosticSymbolSet: SVGSet;
   @Input() agnosticSymbols: AgnosticSymbol[];
-
-  modeValue: 'eIdle' | 'eInserting' | 'eEditing' | 'eSelecting';
-  @Output() modeChange = new EventEmitter();
   @Output() commentClicked = new EventEmitter<AgnosticSymbol>();
+
+  @Output() modeChange = new EventEmitter(); // must have this name in order to be input / output
+  @Output() selectedShapesChange = new EventEmitter();
+
+  modeValue: 'eAdding' | 'eEditing' | 'eSelecting';
+  selectedShapesValue: Shape[];
+
+
   symbolHeight = 50; // 87.5px // TODO
   annotationHeight = 25; // TODO
   em = 50; // TODO variable - ver también el cálculo del tamaño de los use en el svg
@@ -68,6 +73,7 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   private selectedSymbolIDs: Set<number> = new Set<number>();
 
   constructor(private store: Store<any>, private positionInStaffService: PositionInStaffService) {
+    this.modeValue = 'eSelecting';
     this.selectedSymbolSubscription = store.select(selectImageRecognitionSelectedAgnosticSymbol).subscribe(next => {
       this.selectedSymbolIDs.clear();
       if (next) {
@@ -78,18 +84,6 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
       // = next as any as AgnosticSymbol;
     });
 
-  }
-
-  @Input()
-  get mode() {
-    return this.modeValue;
-  }
-
-  set mode(val) {
-    if (this.modeValue !== val) {
-      this.modeValue = val;
-      this.modeChange.emit(this.modeValue);
-    }
   }
 
   ngOnInit() {
@@ -120,8 +114,31 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnDestroy(): void {
-    if (this.selectedSymbolSubscription) {
-      this.selectedSymbolSubscription.unsubscribe();
+    this.selectedSymbolSubscription.unsubscribe();
+  }
+
+  @Input()
+  get mode() {
+    return this.modeValue;
+  }
+
+  set mode(val) {
+    if (this.modeValue != val) {
+      this.modeValue = val;
+      this.modeChange.emit(this.modeValue);
+    }
+  }
+
+
+  @Input()
+  get selectedShapes() {
+    return this.selectedShapesValue;
+  }
+
+  set selectedShapes(val) {
+    if (this.selectedShapesValue != val) {
+      this.selectedShapesValue = val;
+      this.selectedShapesChange.emit(this.selectedShapesValue);
     }
   }
 
@@ -204,20 +221,16 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private selectSymbolRequest(agnosticSymbol: AgnosticSymbol) {
-    //TODO 2021  this.store.dispatch(new SelectSymbol(agnosticSymbol.id));
+    const selected: AgnosticSymbol[] = [agnosticSymbol];
+    this.store.dispatch(new ImageRecognitionSelectAgnosticSymbols(selected));
   }
 
   onSymbolMouseDown(agnosticSymbol: AgnosticSymbol) {
-    if (this.mode === 'eEditing') {
-      this.selectSymbolRequest(agnosticSymbol);
-    }
+    this.selectSymbolRequest(agnosticSymbol);
   }
 
   onDblClick(agnosticSymbol: AgnosticSymbol) {
-    if (this.mode === 'eIdle') {
-      this.mode = 'eEditing';
-      this.selectSymbolRequest(agnosticSymbol);
-    }
+    this.selectSymbolRequest(agnosticSymbol);
   }
 
   getX(agnosticSymbol: AgnosticSymbol) {

@@ -7,6 +7,7 @@ import {GetNotation} from "../../../../../semantic-representation/store/actions/
 import {Store} from "@ngrx/store";
 import {ImageRecognitionState} from "../../../../store/state/image-recognition.state";
 import {selectNotation} from "../../../../../semantic-representation/store/selectors/semantic-representation.selector";
+import {selectImageRecognitionSemanticClassifierModels} from "../../../../store/selectors/image-recognition.selector";
 
 @Component({
   selector: 'app-music-region-semantic-representation',
@@ -14,12 +15,13 @@ import {selectNotation} from "../../../../../semantic-representation/store/selec
   styleUrls: ['./music-region-semantic-representation.component.css']
 })
 export class MusicRegionSemanticRepresentationComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() semanticClassifiers: Observable<ClassifierModel[]>;
   @Input() region: Region;
+  semanticClassifiers$: Observable<ClassifierModel[]>;
   notation: Notation;
   notationSubscription: Subscription;
 
   constructor(private store: Store<ImageRecognitionState>) {
+    this.semanticClassifiers$ = this.store.select(selectImageRecognitionSemanticClassifierModels);
   }
 
   ngOnInit(): void {

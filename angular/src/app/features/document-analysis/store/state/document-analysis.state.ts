@@ -19,7 +19,7 @@ export interface DocumentAnalysisState {
   imagePart: Part;
   pages: Page[];
   documentType: DocumentType;
-//  selectedRegion: Region;
+//  region: Region;
 //  selectedPage: Page;
   documentAnalysisClassifierModels: ClassifierModel[];
   apiRestServerError: APIRestServerError;
@@ -37,7 +37,7 @@ export const initialDocumentAnalysisState: DocumentAnalysisState = {
   documentType: null,
   documentAnalysisClassifierModels: null,
   apiRestServerError: null
-  // selectedRegion: null,
+  // region: null,
   // selectedPage: null
 };
 

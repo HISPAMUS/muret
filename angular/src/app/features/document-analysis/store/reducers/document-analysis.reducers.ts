@@ -67,7 +67,7 @@ export function documentAnalysisReducers(state = initialDocumentAnalysisState, a
     case DocumentAnalysisActionTypes.SelectRegion: {
       return {
         ...state,
-        selectedRegion: action.region
+        region: action.region
       };
     }*/
     case DocumentAnalysisActionTypes.ChangePageBoundingBoxSuccess: {
