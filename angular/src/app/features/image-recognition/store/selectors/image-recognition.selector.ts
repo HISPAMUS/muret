@@ -74,7 +74,7 @@ export const selectImageRecognitionSelectedRegionAgnosticSymbols = createSelecto
 );
 
 
-export const selectImageRecognitionSelectedAgnosticSymbol = createSelector(
+export const selectImageRecognitionSelectedAgnosticSymbols = createSelector(
   selectImageRecognitionState,
   (state: ImageRecognitionState) => state.selectedAgnosticSymbols
 );

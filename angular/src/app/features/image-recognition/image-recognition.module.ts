@@ -31,6 +31,7 @@ import {NotationComponent} from "./components/phases/transcription/notation/nota
 import { TextRegionAgnosticRepresentationComponent } from './components/phases/transcription/text-region-agnostic-representation/text-region-agnostic-representation.component';
 import {AgnosticRepresentationService} from "./services/agnostic-representation.service";
 import { MusicAgnosticRepresentationComponent } from './components/phases/transcription/music-agnostic-representation/music-agnostic-representation.component';
+import { ChangePitchComponent } from './components/phases/transcription/change-pitch/change-pitch.component';
 
 
 @NgModule({
@@ -40,7 +41,7 @@ import { MusicAgnosticRepresentationComponent } from './components/phases/transc
     ClassifiersComponent,
     MusicRegionSemanticRepresentationComponent,
     TextRegionSemanticRepresentationComponent,
-    AgnosticStaffComponent, NotationComponent, TextRegionAgnosticRepresentationComponent, MusicAgnosticRepresentationComponent
+    AgnosticStaffComponent, NotationComponent, TextRegionAgnosticRepresentationComponent, MusicAgnosticRepresentationComponent, ChangePitchComponent
   ],
     imports: [
         CommonModule,

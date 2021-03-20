@@ -165,8 +165,8 @@
                                             [mode]="mode" [classifier]="classifier" (classifierChanged)="onClassifierChanged($event)"
                                             [svgAgnosticOrSemanticSymbolSet]="svgSet$ | async"
                                             (agnosticOrSemanticSymbolSelected)="onAgnosticSymbolTypeSelected($event)"
-                                            (pitchDown)="movePitchDownSelectedSymbol()"
-                                            (pitchUp)="movePitchUpSelectedSymbol()"
+                                            (pitchDown)="movePitchDown()"
+                                            (pitchUp)="movePitchUp()"
                                             [frequentSymbols]="frequentSymbols"
           >
           </app-agnostic-or-semantic-toolbar>-->

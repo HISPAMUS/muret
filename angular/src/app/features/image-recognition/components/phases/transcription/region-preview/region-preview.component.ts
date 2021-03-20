@@ -22,7 +22,7 @@ import {
   ImageRecognitionCreateSymbolFromStrokes, ImageRecognitionDeleteSymbols, ImageRecognitionSelectAgnosticSymbols
 } from "../../../../store/actions/image-recognition.actions";
 import {DialogsService} from "../../../../../../shared/services/dialogs.service";
-import {selectImageRecognitionSelectedAgnosticSymbol} from "../../../../store/selectors/image-recognition.selector";
+import {selectImageRecognitionSelectedAgnosticSymbols} from "../../../../store/selectors/image-recognition.selector";
 
 @Component({
   selector: 'app-region-preview',
@@ -57,7 +57,7 @@ export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.selectedSymbolSubscription = this.store.select(selectImageRecognitionSelectedAgnosticSymbol).subscribe(next => {
+    this.selectedSymbolSubscription = this.store.select(selectImageRecognitionSelectedAgnosticSymbols).subscribe(next => {
       if (next) {
         // this selection comes from outside (e.g. from agnostic-staff.ts) or from here (selectedShapesChange) -
         // we don't change it directly for having all changes just here

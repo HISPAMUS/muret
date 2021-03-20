@@ -1,6 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
-import {selectDocumentAPIRestErrorSelector} from '../../../document/store/selectors/document.selector';
 import {AdminDashboardState} from '../../store/state/admindb.state';
 import {Store} from '@ngrx/store';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
@@ -18,12 +17,12 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
+    /*this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
       if (next) {
         this.showErrorService.showServerError(next);
         this.store.dispatch(new ResetAdminDBServerError());
       }
-    });
+    });*/
 
   }
 

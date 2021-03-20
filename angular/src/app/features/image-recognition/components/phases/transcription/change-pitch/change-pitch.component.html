@@ -1,0 +1,23 @@
+<div class="d-flex">
+  <div>
+    <button type="button" class="btn btn-primary" title="Move pitch up" (click)="movePitchUp()">
+      <fa-icon icon="angle-up"  size="2x"></fa-icon>
+    </button>
+    <p>Move pitch</p>
+    <button type="button" class="btn btn-primary" title="Move pitch down"  (click)="movePitchDown()">
+      <fa-icon icon="angle-down" size="2x"></fa-icon>
+    </button>
+  </div>
+  <div>
+    <div class="btn-toolbar" role="toolbar" aria-label="Vertical lines position toolbar">
+      <button class="btn btn-link" *ngFor="let linespace of lines" (click)="changeLineSpace(linespace)">{{linespace}}</button>
+    </div>
+    <div class="btn-toolbar" role="toolbar" aria-label="Vertical spaces position toolbar">
+      &nbsp;&nbsp;&nbsp; <!-- force a small displacement -->
+      <button class="btn btn-link" *ngFor="let linespace of spaces" (click)="changeLineSpace(linespace)">{{linespace}}</button>
+    </div>
+  </div>
+</div>
+
+
+

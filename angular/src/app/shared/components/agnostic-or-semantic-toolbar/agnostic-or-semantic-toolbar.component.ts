@@ -16,7 +16,7 @@ export class AgnosticOrSemanticToolbarComponent implements OnInit, OnDestroy {
   @Input() filter: AgnosticOrSemanticSymbolAndPosition[];
 
   @Input() svgAgnosticOrSemanticSymbolSet: SVGSet;
-  @Input() mode: 'eIdle' | 'eAdding' | 'eSelecting' | 'eEditing';
+  @Input() mode: 'eIdle' | 'eAdding' | 'eSelecting' | 'eEditing'; // @deprecated
   @Input() frequentSymbols: Map<string, number>; // key = agnostic key value, value = frequency
 
   @Output() agnosticOrSemanticSymbolSelected = new EventEmitter<AgnosticOrSemanticTypeSVGPath>();
@@ -66,11 +66,11 @@ export class AgnosticOrSemanticToolbarComponent implements OnInit, OnDestroy {
     return this.mode === 'eAdding';
   }
 
-  movePitchDownSelectedSymbol() {
+  movePitchDown() {
     this.pitchDown.emit();
   }
 
-  movePitchUpSelectedSymbol() {
+  movePitchUp() {
     this.pitchUp.emit();
   }*/
 

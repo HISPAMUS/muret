@@ -12,7 +12,7 @@ import {
   AlignmentPreviewPart,
   AlignmentPreviewPitch, AlignmentPreviewProblem, AlignmentPreviewStaff
 } from '../../../../core/model/restapi/alignment-preview';
-import {selectAlignmentPreview, selectDocumentAPIRestErrorSelector} from '../../store/selectors/document.selector';
+import {selectAlignmentPreview} from '../../store/selectors/document.selector';
 import {Shape} from '../../../../svg/model/shape';
 import {Text} from '../../../../svg/model/text';
 import {Rectangle} from '../../../../svg/model/rectangle';
@@ -74,12 +74,12 @@ export class AlignmentPreviewComponent implements OnInit, OnDestroy {
       this.constructPianoRoll();
     });
 
-    this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
+    /*this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
       if (next) {
         this.showErrorService.showServerError(next);
         this.store.dispatch(new DocumentResetServerError());
       }
-    });
+    });*/
   }
 
   ngOnDestroy(): void {

@@ -3,7 +3,7 @@ import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {DocumentState} from '../../store/state/document.state';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
-import {selectDocument, selectDocumentAPIRestErrorSelector} from '../../store/selectors/document.selector';
+import {selectDocument} from '../../store/selectors/document.selector';
 import {DocumentGetDocument, DocumentResetServerError} from '../../store/actions/document.actions';
 import {Observable, Subscription} from 'rxjs';
 import {Document} from '../../../../core/model/entities/document';
@@ -38,12 +38,12 @@ export class InstrumentsComponent implements OnInit, OnDestroy {
       // The use of parts and document should already be loaded at document component
       // this.store.dispatch(new GetUsesOfParts(this.documentID));
     });
-    this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
+    /*this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
       if (next) {
         this.showErrorService.showServerError(next);
         this.store.dispatch(new DocumentResetServerError());
       }
-    });
+    });*/
   }
 
   ngOnDestroy(): void {

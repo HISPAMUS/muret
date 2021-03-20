@@ -19,7 +19,7 @@ import {AgnosticSymbol} from "../../../../../../core/model/entities/agnostic-sym
 import {PositionInStaffService} from "../../../../../../shared/services/position-in-staff.service";
 import {AgnosticOrSemanticTypeSVGPath} from "../../../../../agnostic-representation/model/agnostic-or-semantic-type-s-v-g-path";
 import {
-  selectImageRecognitionSelectedAgnosticSymbol,
+  selectImageRecognitionSelectedAgnosticSymbols,
 } from "../../../../store/selectors/image-recognition.selector";
 import {ImageRecognitionSelectAgnosticSymbols} from "../../../../store/actions/image-recognition.actions";
 import {Shape} from "../../../../../../svg/model/shape";
@@ -74,7 +74,7 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
 
   constructor(private store: Store<any>, private positionInStaffService: PositionInStaffService) {
     this.modeValue = 'eSelecting';
-    this.selectedSymbolSubscription = store.select(selectImageRecognitionSelectedAgnosticSymbol).subscribe(next => {
+    this.selectedSymbolSubscription = store.select(selectImageRecognitionSelectedAgnosticSymbols).subscribe(next => {
       this.selectedSymbolIDs.clear();
       if (next) {
         next.forEach(agnosticSymbol => {

@@ -62,7 +62,7 @@ export const selectMEI = createSelector(
   (state: DocumentState) => state.mei
 );
 
-export const selectDocumentAPIRestErrorSelector = createSelector(
+/*export const selectDocumentAPIRestErrorSelector = createSelector(
   documentState,
   (state: DocumentState) => state.apiRestServerError
-)
+)*/

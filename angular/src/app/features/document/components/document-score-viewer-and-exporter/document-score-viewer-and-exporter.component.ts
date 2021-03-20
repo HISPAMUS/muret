@@ -11,7 +11,6 @@ import {
 } from '../../store/actions/document.actions';
 import {
   selectDocument,
-  selectDocumentAPIRestErrorSelector,
   selectExportedFile,
   selectImages
 } from '../../store/selectors/document.selector';
@@ -108,13 +107,13 @@ export class DocumentScoreViewerAndExporterComponent implements OnInit, OnDestro
         }
     });
 
-    this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
+    /*this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
       if (next) {
         this.exportingState.clear();
         this.showErrorService.showServerError(next);
         this.store.dispatch(new DocumentResetServerError());
       }
-    });
+    });*/
   }
 
   ngOnDestroy(): void {

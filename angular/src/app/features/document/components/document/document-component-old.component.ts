@@ -9,7 +9,6 @@ import {
   selectImages,
   selectDocument,
   selectDocumentStatistics,
-  selectDocumentAPIRestErrorSelector
 } from '../../store/selectors/document.selector';
 import {
   DocumentGetImages,
@@ -61,12 +60,12 @@ export class DocumentComponentOld implements OnInit, OnDestroy {
 
     });
 
-    this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
+    /*this.serverErrorSubscription = this.store.select(selectDocumentAPIRestErrorSelector).subscribe(next => {
       if (next) {
         this.showErrorService.showServerError(next);
         this.store.dispatch(new DocumentResetServerError());
       }
-    });
+    });*/
 
   }
 
