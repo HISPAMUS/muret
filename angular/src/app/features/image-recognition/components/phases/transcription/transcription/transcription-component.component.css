@@ -1,3 +1,13 @@
-#transcriptionSteps > div {
-  margin-bottom: 2rem;
+#leftColumn {
+  max-height: 90vh; /* note the menu has 10vh */
+}
+
+#imageNavigator {
+  max-height: 40vh;
+  overflow: auto;
+}
+
+#tools {
+  max-height: 50vh;
+  overflow: auto;
 }

@@ -1,8 +1,8 @@
 header {
   background: linear-gradient(to bottom, #103339, #0003 10%,#103339); /* background when scroll is in the top */
-  height: 80px;
+  height: 10vh;
 }
 
 #main {
-  margin-top: 80px; /* header height */
+  margin-top: 10vh; /* header height */
 }

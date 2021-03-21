@@ -33,6 +33,7 @@ import {AgnosticRepresentationService} from "./services/agnostic-representation.
 import { MusicAgnosticRepresentationComponent } from './components/phases/transcription/music-agnostic-representation/music-agnostic-representation.component';
 import { ChangePitchComponent } from './components/phases/transcription/change-pitch/change-pitch.component';
 import {SemanticRepresentationService} from "./services/semantic-representation.service";
+import { AgnosticToolbarComponent } from './components/phases/transcription/agnostic-toolbar/agnostic-toolbar.component';
 
 
 @NgModule({
@@ -42,7 +43,7 @@ import {SemanticRepresentationService} from "./services/semantic-representation.
     ClassifiersComponent,
     MusicRegionSemanticRepresentationComponent,
     TextRegionSemanticRepresentationComponent,
-    AgnosticStaffComponent, NotationComponent, TextRegionAgnosticRepresentationComponent, MusicAgnosticRepresentationComponent, ChangePitchComponent
+    AgnosticStaffComponent, NotationComponent, TextRegionAgnosticRepresentationComponent, MusicAgnosticRepresentationComponent, ChangePitchComponent, AgnosticToolbarComponent
   ],
     imports: [
         CommonModule,

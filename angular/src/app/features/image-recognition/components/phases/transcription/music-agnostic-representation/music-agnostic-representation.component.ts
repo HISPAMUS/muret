@@ -32,24 +32,14 @@ export class MusicAgnosticRepresentationComponent implements OnInit, OnDestroy {
   @Input() loadedImage: SafeResourceUrl;
   @Input() svgSet: SVGSet;
 
-  agnosticToolbarFilters: Array<KeyValue<string, string>> = // map<values, titles> - initialized in constructor
-    [
-      {key: "clefsmeters", value: "Clefs Meters"},
-      {key: "note.", value: "Notes"},
-      {key: "note.beam", value: "Beamed notes"},
-      {key: "rest", value: "Rests"},
-      {key: "accidental.", value: "Accidentals"},
-      {key: "other", value: "Other"}
-    ];
-
   agnosticSymbolClassifiers$: Observable<ClassifierModel[]>;
   agnosticEndToEndClassifiers$: Observable<ClassifierModel[]>;
+  private selectedAgnosticSymbolsSubscription: Subscription;
 
   mode: 'eInserting' | 'eEditing' | 'eSelecting';
   selectedAgnosticShapes: Shape[] = [];
-  selectedAgnosticSymbolType: string;
-  classifiedSymbols: AgnosticOrSemanticSymbolAndPosition[];
-  private selectedAgnosticSymbolsSubscription: Subscription;
+
+
   private selectedAgnosticSymbols: AgnosticSymbol[];
 
   constructor(private store: Store<ImageRecognitionState>, private positionInStaffService: PositionInStaffService) {
@@ -60,10 +50,6 @@ export class MusicAgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.selectedAgnosticSymbolsSubscription = this.store.select(selectImageRecognitionSelectedAgnosticSymbols).subscribe(next => {
       if (next) {
         this.selectedAgnosticSymbols = next;
-        //TODO Cojo sólo el primero
-        if (this.selectedAgnosticSymbols.length > 0) {
-          this.selectedAgnosticSymbolType = this.selectedAgnosticSymbols[0].agnosticSymbolType;
-        }
       }
     });
   }
@@ -79,14 +65,6 @@ export class MusicAgnosticRepresentationComponent implements OnInit, OnDestroy {
     this.store.dispatch(new ImageRecognitionClassifyRegionEndToEnd(classifierModel.id, region.id));
   }
 
-
-  onAgnosticSymbolTypeSelected(agnosticOrSemanticTypeSVGPath: AgnosticOrSemanticTypeSVGPath) {
-    if (this.selectedAgnosticSymbols && this.selectedAgnosticSymbols.length > 0) {
-      //TODO Cambiar varios símbolos - ahora cambiamos sólo el primero
-      const selectedSymbol = this.selectedAgnosticSymbols[0];
-      this.store.dispatch(new ImageRecognitionChangeSymbol(selectedSymbol, agnosticOrSemanticTypeSVGPath.agnosticOrSemanticTypeString, selectedSymbol.positionInStaff));
-    }
-  }
 
   onChangeLineSpace(lineSpace: string) {
     if (this.selectedAgnosticSymbols && this.selectedAgnosticSymbols.length > 0) {

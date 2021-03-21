@@ -1,17 +1,23 @@
 <div class="container-fluid" *ngIf="imageOverview && (loadedImage$ | async) as loadedImage">
-  <div class="row">
-    <div class="col-3">
-      <app-image-document-analysis-navigator
-        [loadedImage]="loadedImage"
-        [regionTypes]="regionTypes$ | async"
-        [shapes]="documentAnalysisShapes"
-        [zoomManager]="zoomManager"
-        [singleSelectionMode]="true"
-        [mode]="'eSelecting'"
-        (onShapesSelected)="onShapesSelected($event)"
-      ></app-image-document-analysis-navigator>
-    </div>
-    <div class="col-9" id="transcriptionSteps" *ngIf="selectedRegion$ | async as selectedRegion">
+  <div class="row" id="leftColumn">
+    <div class="col-3">  <!-- left column -->
+      <div id="imageNavigator">
+        <h3 class="text-center">{{imageOverview.filename}}</h3>
+        <app-image-document-analysis-navigator
+          [loadedImage]="loadedImage"
+          [regionTypes]="regionTypes$ | async"
+          [shapes]="documentAnalysisShapes"
+          [zoomManager]="zoomManager"
+          [singleSelectionMode]="true"
+          [mode]="'eSelecting'"
+          (onShapesSelected)="onShapesSelected($event)"
+        ></app-image-document-analysis-navigator>
+      </div>
+      <div id="tools">
+        <app-agnostic-toolbar [svgSet]="svgSet$ | async"></app-agnostic-toolbar>
+      </div>
+    </div> <!-- left column -->
+    <div class="col-9" *ngIf="selectedRegion$ | async as selectedRegion"> <!-- right column -->
       <div class="d-flex justify-content-between">
         <button class="btn-primary">TO-DO Whole process</button>
         <app-document-phases [selectedPhase]="'transcription'" [imageID]="imageID"  [size]="'lg'"></app-document-phases>
@@ -40,10 +46,10 @@
           <p> Chord regions not supported yet</p>
         </ng-container>
       </container-element>
-    </div>
-  </div>
-</div>
 
+    </div>  <!-- right column -->
+  </div> <!-- row -->
+</div>
 
 <!-- Positioned absolute -->
 <app-progress-status (statusChange)="onStatusChange($event)" [(status)]="status"></app-progress-status>

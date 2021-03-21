@@ -18,12 +18,4 @@
 
 <div class="d-flex">
   <app-change-pitch (onChangeLineSpace)="onChangeLineSpace($event)" (onMovePitch)="onMovePitch($event)"></app-change-pitch>
-  <app-agnostic-or-semantic-toolbar
-    [filters]="agnosticToolbarFilters"
-    [svgAgnosticOrSemanticSymbolSet]="svgSet"
-    (agnosticOrSemanticSymbolSelected)="onAgnosticSymbolTypeSelected($event)"
-    [selectedAgnosticOrSemanticSymbolType]="selectedAgnosticSymbolType"
-    [filter]="classifiedSymbols"
-  >
-  </app-agnostic-or-semantic-toolbar>
 </div>
