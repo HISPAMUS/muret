@@ -78,3 +78,10 @@ export const selectImageRecognitionSelectedAgnosticSymbols = createSelector(
   selectImageRecognitionState,
   (state: ImageRecognitionState) => state.selectedAgnosticSymbols
 );
+
+// --- semantic ---
+
+export const selectImageRecognitionNotation = createSelector(
+  selectImageRecognitionState,
+  (state: ImageRecognitionState) => state.notation
+);

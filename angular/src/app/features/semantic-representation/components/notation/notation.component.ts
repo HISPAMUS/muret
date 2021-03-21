@@ -9,8 +9,8 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {NotationService} from '../../services/notation.service';
-import {Notation} from '../../services/notation';
+import {NotationService} from '../../../../shared/services/notation.service';
+import {Notation} from '../../../../shared/services/notation';
 import {selectSemanticRepresentationServerError} from '../../store/selectors/semantic-representation.selector';
 import {ResetSemanticRepresentationServerError} from '../../store/actions/semantic-representation.actions';
 import {Store} from '@ngrx/store';

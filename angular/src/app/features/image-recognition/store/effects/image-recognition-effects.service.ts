@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Effect, ofType, Actions } from '@ngrx/effects';
 import { of } from 'rxjs';
-import {mergeMap, switchMap} from 'rxjs/operators';
+import {catchError, mergeMap, switchMap} from 'rxjs/operators';
 import {ImageOverviewService} from "../../services/image-overview.service";
 import {
   ImageRecognitionActionTypes,
   ImageRecognitionAutomaticDocumentAnalysis,
   ImageRecognitionAutomaticDocumentAnalysisSuccess,
+  ImageRecognitionChangeNotationType, ImageRecognitionChangeNotationTypeSuccess,
   ImageRecognitionChangePageBoundingBox,
   ImageRecognitionChangePageBoundingBoxSuccess,
   ImageRecognitionChangeRegionBoundingBox,
@@ -14,7 +15,8 @@ import {
   ImageRecognitionChangeStatus,
   ImageRecognitionChangeStatusSuccess,
   ImageRecognitionChangeSymbol,
-  ImageRecognitionChangeSymbolBoundingBox, ImageRecognitionChangeSymbolComments,
+  ImageRecognitionChangeSymbolBoundingBox,
+  ImageRecognitionChangeSymbolComments,
   ImageRecognitionChangeSymbolSuccess,
   ImageRecognitionClassifyRegionEndToEnd,
   ImageRecognitionClassifyRegionEndToEndSuccess,
@@ -22,6 +24,8 @@ import {
   ImageRecognitionClearRegionSymbols,
   ImageRecognitionClearRegionSymbolsSuccess,
   ImageRecognitionClearSuccess,
+  ImageRecognitionConvertAgnostic2Semantic,
+  ImageRecognitionConvertAgnostic2SemanticSuccess,
   ImageRecognitionCreatePage,
   ImageRecognitionCreatePages,
   ImageRecognitionCreatePagesSuccess,
@@ -41,6 +45,7 @@ import {
   ImageRecognitionGetClassifierModelsSuccess,
   ImageRecognitionGetImageOverview,
   ImageRecognitionGetImageOverviewSuccess,
+  ImageRecognitionGetNotation, ImageRecognitionGetNotationSuccess,
   ImageRecognitionGetPagesRegionsSymbols,
   ImageRecognitionGetPagesRegionsSymbolsSuccess,
   ImageRecognitionLinkImageToNewPart,
@@ -53,6 +58,7 @@ import {
   ImageRecognitionLinkPartSuccess,
   ImageRecognitionPutComments,
   ImageRecognitionPutCommentsSuccess,
+  ImageRecognitionSendSemanticEncoding, ImageRecognitionSendSemanticEncodingSuccess,
   ImageRecognitionUnlinkImageFromPart,
   ImageRecognitionUnlinkImageFromPartSuccess,
   ImageRecognitionUnlinkPart,
@@ -74,6 +80,9 @@ import {ClassifierModel} from "../../../../core/model/entities/classifier-model"
 import {SymbolCreationResult} from "../../../agnostic-representation/model/symbol-creation-result";
 import {AgnosticRepresentationService} from "../../services/agnostic-representation.service";
 import {AgnosticSymbol} from "../../../../core/model/entities/agnostic-symbol";
+import {Notation} from "../../../../shared/services/notation";
+import {SemanticRepresentationService} from "../../services/semantic-representation.service";
+import {ChangeNotationTypeSuccess} from "../../../semantic-representation/store/actions/semantic-representation.actions";
 
 
 /**
@@ -86,6 +95,7 @@ export class ImageOverviewEffects {
     private imagePartsService: ImagePartsService,
     private documentAnalysisService: DocumentAnalysisService,
     private agnosticRepresentationService: AgnosticRepresentationService,
+    private semanticRepresentationService: SemanticRepresentationService,
     private actions$: Actions,
   ) {}
 
@@ -363,6 +373,44 @@ export class ImageOverviewEffects {
         action.comments).pipe(
         switchMap((agnosticSymbol: AgnosticSymbol) => of(new ImageRecognitionChangeSymbolSuccess(agnosticSymbol))),
         //catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
+      )));
+
+  // ------ semantic representation
+  @Effect()
+  convertAgnostic2Semantic$ = this.actions$.pipe(
+    ofType<ImageRecognitionConvertAgnostic2Semantic>(ImageRecognitionActionTypes.ImageRecognitionConvertAgnostic2Semantic),
+    switchMap((action: ImageRecognitionConvertAgnostic2Semantic) =>
+      this.semanticRepresentationService.agnostic2Semantic$(action.classifierModelID, action.region, action.mensustriche, action.renderer).pipe(
+        switchMap((notation: Notation) => of(new ImageRecognitionConvertAgnostic2SemanticSuccess(notation))),
+        //catchError(err => of(new SemanticRepresentationServerError(err)))
+      )));
+
+  @Effect()
+  getNotation$ = this.actions$.pipe(
+    ofType<ImageRecognitionGetNotation>(ImageRecognitionActionTypes.ImageRecognitionGetNotation),
+    switchMap((action: ImageRecognitionGetNotation) =>
+      this.semanticRepresentationService.getNotation$(action.region, action.mensustriche, action.renderer).pipe(
+        switchMap((notation: Notation) => of(new ImageRecognitionGetNotationSuccess(notation))),
+        //catchError(err => of(new SemanticRepresentationServerError(err)))
+      )));
+
+  @Effect()
+  sendSemanticEncoding$ = this.actions$.pipe(
+    ofType<ImageRecognitionSendSemanticEncoding>(ImageRecognitionActionTypes.ImageRecognitionSendSemanticEncoding),
+    switchMap((action: ImageRecognitionSendSemanticEncoding) =>
+      this.semanticRepresentationService.sendSemanticEncoding$(action.region, action.semanticEncoding,
+        action.mensustriche, action.renderer).pipe(
+        switchMap((notation: Notation) => of(new ImageRecognitionSendSemanticEncodingSuccess(notation))),
+        //catchError(err => of(new SemanticRepresentationServerError(err)))
+      )));
+
+  @Effect()
+  changeNotationType$ = this.actions$.pipe(
+    ofType<ImageRecognitionChangeNotationType>(ImageRecognitionActionTypes.ImageRecognitionChangeNotationType),
+    switchMap((action: ImageRecognitionChangeNotationType) =>
+      this.semanticRepresentationService.changeNotationType$(action.region.id, action.notationType).pipe(
+        switchMap((region: Region) => of(new ImageRecognitionChangeNotationTypeSuccess(region))),
+        //catchError(err => of(new SemanticRepresentationServerError(err)))
       )));
 
 }

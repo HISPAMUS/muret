@@ -49,7 +49,7 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
   protected phase: string;
   private _status: string;
   protected undefinedRegionType: RegionType;
-  private loadedImage$: Observable<SafeResourceUrl>;
+  loadedImage$: Observable<SafeResourceUrl>;
   svgSet$: Observable<SVGSet>;
 
 

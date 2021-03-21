@@ -15,7 +15,7 @@ import {
   GetTranslationModelsSuccess,
   SemanticRepresentationServerError, ChangeNotationType, ChangeNotationTypeSuccess
 } from '../actions/semantic-representation.actions';
-import {Notation} from '../../services/notation';
+import {Notation} from '../../../../shared/services/notation';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 import {Region} from "../../../../core/model/entities/region";
 

@@ -2,6 +2,7 @@
 import {ImageRecognitionActions, ImageRecognitionActionTypes} from "../actions/image-recognition.actions";
 import {klona} from "klona";
 import {ImageRecognitionState, initialImageRecognitionState} from "../state/image-recognition.state";
+import {SemanticRepresentationActionTypes} from "../../../semantic-representation/store/actions/semantic-representation.actions";
 
 /**
  * We use the same effects, actions and reducers for overview and parts because they share the state
@@ -277,6 +278,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
     case ImageRecognitionActionTypes.ImageRecognitionSelectRegion: {
       return {
         ...state,
+        notation: null,
         selectedRegion: action.region
       };
     }
@@ -416,6 +418,36 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         });
       });
 
+      return newState;
+    }
+    // ---- semantic
+    case ImageRecognitionActionTypes.ImageRecognitionConvertAgnostic2SemanticSuccess:
+    case ImageRecognitionActionTypes.ImageRecognitionGetNotationSuccess:
+    case ImageRecognitionActionTypes.ImageRecognitionSendSemanticEncodingSuccess: {
+      const newState = {
+        //apiRestServerError: null,
+        ...state
+      };
+      newState.notation = action.notation;
+      return newState;
+    }
+    case ImageRecognitionActionTypes.ImageRecognitionChangeNotationTypeSuccess: {
+      const newState: ImageRecognitionState = {
+        pagesRegionsSymbols: klona(state.pagesRegionsSymbols),
+        imageOverview: state.imageOverview,
+        regionTypes: state.regionTypes,
+        classifierModels: state.classifierModels,
+        analyzing: false,
+        //apiRestServerError: null
+      };
+
+      newState.pagesRegionsSymbols.forEach(page => {
+        page.regions.forEach(region => {
+          if (region.id === action.region.id) {
+            region.notationType = action.region.notationType;
+            newState.selectedRegion = region;
+          }
+        })});
       return newState;
     }
     default:

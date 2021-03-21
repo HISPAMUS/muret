@@ -4,6 +4,7 @@ import {RegionType} from "../../../../core/model/entities/region-type";
 import {ClassifierModel} from "../../../../core/model/entities/classifier-model";
 import {Region} from "../../../../core/model/entities/region";
 import {AgnosticSymbol} from "../../../../core/model/entities/agnostic-symbol";
+import {Notation} from "../../../../shared/services/notation";
 
 export interface ImageRecognitionState {
   imageOverview: ImageOverview;
@@ -14,6 +15,7 @@ export interface ImageRecognitionState {
   analyzing: boolean;
   selectedRegion?: Region; // used to select agnostic symbols
   selectedAgnosticSymbols?: AgnosticSymbol[];
+  notation?: Notation;
 }
 
 export const initialImageRecognitionState: ImageRecognitionState = {
@@ -25,6 +27,7 @@ export const initialImageRecognitionState: ImageRecognitionState = {
   analyzing: false,
   selectedRegion: null,
   selectedAgnosticSymbols: null,
+  notation: null
 };
 
 export function getInitialState(): ImageRecognitionState {

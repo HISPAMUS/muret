@@ -16,6 +16,20 @@ import {DocumentAnalysisForm} from "../../../../core/model/restapi/document-anal
 import {Point} from "../../../../core/model/entities/point";
 import {SymbolCreationResult} from "../../../agnostic-representation/model/symbol-creation-result";
 import {AgnosticSymbol} from "../../../../core/model/entities/agnostic-symbol";
+import {Notation} from "../../../../shared/services/notation";
+import {
+  ChangeNotationType, ChangeNotationTypeSuccess,
+  ClearNotation,
+  ConvertAgnostic2Semantic,
+  ConvertAgnostic2SemanticSuccess, DeselectSymbol,
+  GetNotation,
+  GetNotationSuccess,
+  GetTranslationModels,
+  GetTranslationModelsSuccess, SelectSymbol,
+  SemanticRepresentationActionTypes,
+  SendSemanticEncoding,
+  SendSemanticEncodingSuccess
+} from "../../../semantic-representation/store/actions/semantic-representation.actions";
 
 /**
  * We use the same actions for overview, parts, document analysis ... because they share the state
@@ -86,6 +100,16 @@ export enum ImageRecognitionActionTypes {
   ImageRecognitionChangeSymbolBoundingBox = '[Image Recognition. AgnosticRepresentation] Change symbol bounding box',
   ImageRecognitionChangeSymbolComments = '[Image Recognition. AgnosticRepresentation] Change symbol comments',
   ImageRecognitionChangeSymbolSuccess = '[Image Recognition. AgnosticRepresentation] Change symbol success',
+
+  ImageRecognitionConvertAgnostic2Semantic = '[Image Recognition. SemanticRepresentation] Convert agnostic to semantic',
+  ImageRecognitionConvertAgnostic2SemanticSuccess = '[Image Recognition. SemanticRepresentation] Convert agnostic to semantic success',
+  ImageRecognitionGetNotation = '[Image Recognition. SemanticRepresentation] Get notation',
+  ImageRecognitionGetNotationSuccess = '[Image Recognition. SemanticRepresentation] Get notation success',
+  ImageRecognitionSendSemanticEncoding = '[Image Recognition. SemanticRepresentation] Send semantic encoding',
+  ImageRecognitionSendSemanticEncodingSuccess = '[Image Recognition. SemanticRepresentation] Send semantic encoding success',
+  ImageRecognitionChangeNotationType = '[Image Recognition. SemanticRepresentation] Change notation type',
+  ImageRecognitionChangeNotationTypeSuccess = '[Image Recognition. SemanticRepresentation] Change notation type success'
+
 }
 
 export class ImageRecognitionGetImageOverview implements Action {
@@ -405,6 +429,46 @@ export class ImageRecognitionChangeSymbolComments implements Action {
   constructor(public agnosticSymbol: AgnosticSymbol, public comments: string) {}
 }
 
+// ---- semantic
+export class ImageRecognitionConvertAgnostic2Semantic implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionConvertAgnostic2Semantic;
+  constructor(public classifierModelID: string, public region: Region, public mensustriche: boolean, public renderer: 'verovio' | 'im3') {}
+}
+
+export class ImageRecognitionConvertAgnostic2SemanticSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionConvertAgnostic2SemanticSuccess;
+  constructor(public notation: Notation) {}
+}
+
+export class ImageRecognitionGetNotation implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionGetNotation;
+  constructor(public region: Region, public mensustriche: boolean, public renderer: 'verovio' | 'im3') {}
+}
+
+export class ImageRecognitionGetNotationSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionGetNotationSuccess;
+  constructor(public notation: Notation) {}
+}
+
+export class ImageRecognitionSendSemanticEncoding implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionSendSemanticEncoding;
+  constructor(public region: Region, public semanticEncoding: string, public mensustriche: boolean, public renderer: 'verovio' | 'im3') {}
+}
+
+export class ImageRecognitionSendSemanticEncodingSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionSendSemanticEncodingSuccess;
+  constructor(public notation: Notation) {}
+}
+
+export class ImageRecognitionChangeNotationType implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionChangeNotationType;
+  constructor(public region: Region, public notationType: string) {}
+}
+
+export class ImageRecognitionChangeNotationTypeSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionChangeNotationTypeSuccess;
+  constructor(public region: Region) {}
+}
 
 export type ImageRecognitionActions =
   //ImageRecognitionServerError |
@@ -442,6 +506,11 @@ export type ImageRecognitionActions =
   ImageRecognitionDeleteSymbols | ImageRecognitionDeleteSymbolsSuccess |
   ImageRecognitionClassifyRegionEndToEnd | ImageRecognitionClassifyRegionEndToEndSuccess |
   ImageRecognitionClearRegionSymbols | ImageRecognitionClearRegionSymbolsSuccess |
-  ImageRecognitionChangeSymbol | ImageRecognitionChangeSymbolComments | ImageRecognitionChangeSymbolBoundingBox | ImageRecognitionChangeSymbolSuccess
+  ImageRecognitionChangeSymbol | ImageRecognitionChangeSymbolComments | ImageRecognitionChangeSymbolBoundingBox | ImageRecognitionChangeSymbolSuccess |
+
+  // semantic representation
+  ImageRecognitionConvertAgnostic2Semantic | ImageRecognitionConvertAgnostic2SemanticSuccess | ImageRecognitionGetNotation | ImageRecognitionGetNotationSuccess |
+  ImageRecognitionSendSemanticEncoding | ImageRecognitionSendSemanticEncodingSuccess |
+  ImageRecognitionChangeNotationType | ImageRecognitionChangeNotationTypeSuccess
   ;
 

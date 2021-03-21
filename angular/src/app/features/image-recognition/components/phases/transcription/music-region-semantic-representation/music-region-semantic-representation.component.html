@@ -1,2 +1,10 @@
-<app-classifiers [caption]="'Select a semantic classifier'" [models]="semanticClassifiers$ | async" (onExecuteClassifier)="onExecuteClassifier($event)"></app-classifiers>
+<div class="d-flex">
+  <app-classifiers [caption]="'Select a semantic classifier'" [models]="semanticClassifiers$ | async" (onExecuteClassifier)="onExecuteClassifier($event)"></app-classifiers>
+  <div>
+    Notation type:
+    <select name="specialNotation" [(ngModel)]="specialNotationType" (ngModelChange)="changeSpecialNotationType($event)">
+      <option [ngValue]="notationType" *ngFor="let notationType of notationTypes">{{notationType}}</option>
+    </select>
+  </div>
+</div>
 <app-notation *ngIf="notation" [notation]="notation"></app-notation>

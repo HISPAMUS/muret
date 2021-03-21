@@ -35,6 +35,7 @@ import java.util.logging.Logger;
 @RequestMapping("classifierModels")
 @RestController
 public class ClassifierModelsController {
+    public static final String AGNOSTIC2SEMANTIC_TRANSDUCER = "a2s_transducer";
     @Autowired
     private final ImageRepository imageRepository;
 
@@ -98,13 +99,14 @@ public class ClassifierModelsController {
         result.addAll(requestModels(ClassifierModelTypes.eAgnosticSymbols, imageID));
         result.addAll(requestModels(ClassifierModelTypes.eAgnosticEnd2End, imageID));
         result.addAll(requestModels(ClassifierModelTypes.eSemanticEnd2End, imageID));
-        result.addAll(requestModels(ClassifierModelTypes.eAgnostic2SemanticTranslator, imageID));
+
         ClassifierModel agnostic2SemanticTransducer = new ClassifierModel();
-        agnostic2SemanticTransducer.setId("a2s_transducer");
+        agnostic2SemanticTransducer.setId(AGNOSTIC2SEMANTIC_TRANSDUCER);
         agnostic2SemanticTransducer.setClassifier_type(ClassifierModelTypes.eAgnostic2SemanticTranslator);
         agnostic2SemanticTransducer.setLast_train(new Date(0)); // very old
         agnostic2SemanticTransducer.setName("Agnostic to semantic transducer");
         result.add(agnostic2SemanticTransducer);
+        result.addAll(requestModels(ClassifierModelTypes.eAgnostic2SemanticTranslator, imageID));
         return result;
     }
 

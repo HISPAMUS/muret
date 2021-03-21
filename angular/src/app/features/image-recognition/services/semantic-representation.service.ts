@@ -12,17 +12,13 @@ export class SemanticRepresentationService {
   /**
    * It returns the encoding
    */
-  agnostic2Semantic$(region: Region, mensustriche: boolean, renderer: 'verovio' | 'im3'): Observable<Notation> {
-    const url = `semantic/agnostic2semantic/${region.id}/${mensustriche}/${renderer}`;
-    return this.apiRestClientService.get$<Notation>(url);
-
-  }
-
-  /**
-   * It returns the encoding
-   */
   getNotation$(region: Region, mensustriche: boolean, renderer: 'verovio' | 'im3'): Observable<Notation> {
     const url = `semantic/notation/${region.id}/${mensustriche}/${renderer}`;
+    return this.apiRestClientService.get$<Notation>(url);
+  }
+
+  agnostic2Semantic$(modelID: string, region: Region, mensustriche: boolean, renderer: 'verovio' | 'im3'): Observable<Notation> {
+    const url = `semantic/agnostic2semantic/${modelID}/${region.id}/${mensustriche}/${renderer}`;
     return this.apiRestClientService.get$<Notation>(url);
   }
 
@@ -40,12 +36,6 @@ export class SemanticRepresentationService {
     }
   }
 
-  //TODO Add result type to this method
-  getTranslationModels$(imageID: number) {
-    const url = `classifierModels/translator/${imageID}`;
-    return this.apiRestClientService.get$(url);
-  }
-
   changeNotationType$(regionID: number, notationType: string): Observable<Region> {
     if (notationType) {
       const url = `semantic/changeNotationType/${regionID}/${notationType}`;
@@ -55,6 +45,19 @@ export class SemanticRepresentationService {
       return this.apiRestClientService.delete$(url, regionID);
     }
   }
+
+  // hasta aquí
+  /**
+   * It returns the encoding
+   */
+
+  //TODO Add result type to this method
+  getTranslationModels$(imageID: number) {
+    const url = `classifierModels/translator/${imageID}`;
+    return this.apiRestClientService.get$(url);
+  }
+
+
 
 
 }

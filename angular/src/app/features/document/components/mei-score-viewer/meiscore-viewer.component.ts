@@ -1,5 +1,5 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {NotationService} from '../../../semantic-representation/services/notation.service';
+import {NotationService} from '../../../../shared/services/notation.service';
 import {Observable, Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {DocumentState} from '../../store/state/document.state';

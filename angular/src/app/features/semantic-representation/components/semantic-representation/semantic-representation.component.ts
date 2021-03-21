@@ -16,7 +16,7 @@ import {
   selectSemanticRepresentationServerError,
   selectTranslationModels
 } from '../../store/selectors/semantic-representation.selector';
-import {Notation} from '../../services/notation';
+import {Notation} from '../../../../shared/services/notation';
 import {Shape} from '../../../../svg/model/shape';
 import {selectAgnosticSymbols} from '../../../agnostic-representation/store/selectors/agnostic-representation.selector';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnostic-symbol';

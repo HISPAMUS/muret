@@ -11,8 +11,8 @@ import {
 } from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
-import {Notation} from "../../../../../semantic-representation/services/notation";
-import {NotationService} from "../../../../../semantic-representation/services/notation.service";
+import {Notation} from "../../../../../../shared/services/notation";
+import {NotationService} from "../../../../../../shared/services/notation.service";
 import {ShowErrorService} from "../../../../../../core/services/show-error.service";
 
 // Verovio integration based on the code in https://github.com/deanmalone/PianoPlay

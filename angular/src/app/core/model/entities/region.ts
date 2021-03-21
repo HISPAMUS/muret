@@ -9,6 +9,7 @@ export interface Region extends Entity {
   regionType?: RegionType;
   symbols?: AgnosticSymbol[];
   part?: Part;
+  semanticEncoding?: string;
   notationType?: string; // when it's different from the document notation type
 }
 

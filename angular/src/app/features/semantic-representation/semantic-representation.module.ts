@@ -11,7 +11,6 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {SemanticRepresentationRoutingModule} from './semantic-representation-routing.module';
 import { NotationComponent } from './components/notation/notation.component';
 import {SharedModule} from '../../shared/shared.module';
-import {NotationService} from './services/notation.service';
 import {NgbCollapseModule} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule} from '@angular/forms';
 import {AgGridModule} from 'ag-grid-angular';
@@ -32,7 +31,7 @@ import {AgGridModule} from 'ag-grid-angular';
 
   ],
   providers: [
-    SemanticRepresentationService, NotationService
+    SemanticRepresentationService
   ]
 })
 export class SemanticRepresentationModule { }

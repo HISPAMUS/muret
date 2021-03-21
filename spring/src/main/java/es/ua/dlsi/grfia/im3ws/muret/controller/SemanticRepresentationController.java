@@ -7,7 +7,6 @@ import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Renderer;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Document;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Part;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Region;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Symbol;
 import es.ua.dlsi.grfia.im3ws.muret.model.*;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.PageRepository;
@@ -21,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static es.ua.dlsi.grfia.im3ws.muret.controller.ClassifierModelsController.AGNOSTIC2SEMANTIC_TRANSDUCER;
 // !!! Important: no controller should throw any exception
 
 /**
@@ -47,23 +48,27 @@ public class SemanticRepresentationController extends MuRETBaseController {
      * @param staffID
      * @throws IM3WSException
      */
-    @GetMapping(path = {"agnostic2semantic/{staffID}/{mensurstrich}/{renderer}"})
+    @GetMapping(path = {"agnostic2semantic/{String classifierModelID}/{staffID}/{mensurstrich}/{renderer}"})
     @Transactional
-    public Notation agnostic2semantic(@PathVariable(name="staffID") Long staffID, @PathVariable(name="mensurstrich") boolean mensurstrich, @PathVariable(name="renderer") Renderer renderer)  {
+    public Notation agnostic2semantic(@PathVariable(name="String classifierModelID") String classifierModelID, @PathVariable(name="staffID") Long staffID, @PathVariable(name="mensurstrich") boolean mensurstrich, @PathVariable(name="renderer") Renderer renderer)  {
         try {
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Converting semantic staff frin agnostic {0}", staffID);
-
             Region region = getRegion(staffID);
             Document document = region.getPage().getImage().computeDocument();
-            //TODO Ahora sólo lo guardo en la región
-        /*Part part = partsModel.findPart(region);
-        if (part == null) {
-            throw new IM3WSException("The staff has not an associated part yet");
-        }*/
-            Part part = null;
-            String partName = "";
-            Notation result = semanticRepresentationModel.computeAndSaveSemanticFromAgnostic(document, partName, region, mensurstrich, renderer);
-            return result;
+
+            if (classifierModelID.equals(AGNOSTIC2SEMANTIC_TRANSDUCER)) {
+                //TODO Ahora sólo lo guardo en la región
+                /*Part part = partsModel.findPart(region);
+                if (part == null) {
+                    throw new IM3WSException("The staff has not an associated part yet");
+                }*/
+                Part part = null;
+                String partName = "";
+                Notation result = semanticRepresentationModel.computeAndSaveSemanticFromAgnostic(document, partName, region, mensurstrich, renderer);
+                return result;
+            } else {
+                throw new IM3WSException("Unsupported classifier: " + classifierModelID);
+            }
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot convert agnostic to semantic", e);
         }
@@ -157,12 +162,13 @@ public class SemanticRepresentationController extends MuRETBaseController {
 
     @DeleteMapping(path = {"clearNotationType/{regionID}"})
     @Transactional
-    public void clearNotationType(@PathVariable(name="regionID") Long regionID)  {
+    public Region clearNotationType(@PathVariable(name="regionID") Long regionID)  {
         try {
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Clearing notation type for region ID {0}", regionID);
             Region region = getRegion(regionID);
             region.setNotationType(null);
             regionRepository.save(region);
+            return region;
         } catch (IM3WSException e) {
             throw ControllerUtils.createServerError(this, "Cannot clear notation type", e);
         }

@@ -32,6 +32,7 @@ import { TextRegionAgnosticRepresentationComponent } from './components/phases/t
 import {AgnosticRepresentationService} from "./services/agnostic-representation.service";
 import { MusicAgnosticRepresentationComponent } from './components/phases/transcription/music-agnostic-representation/music-agnostic-representation.component';
 import { ChangePitchComponent } from './components/phases/transcription/change-pitch/change-pitch.component';
+import {SemanticRepresentationService} from "./services/semantic-representation.service";
 
 
 @NgModule({
@@ -57,7 +58,7 @@ import { ChangePitchComponent } from './components/phases/transcription/change-p
         NgbTooltipModule,
         NgbButtonsModule
     ],providers: [
-    ImageOverviewService, DocumentAnalysisService, ImagePartsService, AgnosticRepresentationService
+    ImageOverviewService, DocumentAnalysisService, ImagePartsService, AgnosticRepresentationService, SemanticRepresentationService
   ]
 })
 export class ImageRecognitionModule { }

@@ -21,6 +21,8 @@ import {ImagePhaseTranscriptionComponent} from "./components/image-phase/image-p
 import {ImagePhaseDocumentAnalysisComponent} from "./components/image-phase/image-phase-document-analysis.component";
 import {ImagePhaseOverviewComponent} from "./components/image-phase/image-phase-overview.component";
 import { ProgressStatusComponent } from './components/progress-status/progress-status.component';
+import {SemanticRepresentationService} from "../features/semantic-representation/services/semantic-representation.service";
+import {NotationService} from "./services/notation.service";
 
 @NgModule({
   imports: [
@@ -68,7 +70,7 @@ import { ProgressStatusComponent } from './components/progress-status/progress-s
         ImagePhaseTranscriptionComponent,
         ProgressStatusComponent
     ],
-  providers: []
+  providers: [NotationService]
 })
 export class SharedModule {
 }
