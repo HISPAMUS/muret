@@ -34,7 +34,7 @@ export class ChangePitchComponent implements OnInit {
     this.onMovePitch.emit(displacement);
   }
 
-  @HostListener('window:keydown', ['$event']) // keydown to prevent scroll
+ /* @HostListener('window:keydown', ['$event']) // keydown to prevent scroll
   keyEvent(event: KeyboardEvent) {
       switch (event.code) {
         case 'ArrowDown':
@@ -48,5 +48,5 @@ export class ChangePitchComponent implements OnInit {
           this.movePitchUp();
           break;
       }
-  }
+  }*/
 }

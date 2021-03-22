@@ -6,6 +6,7 @@ import {ImageRecognitionState} from "../../../../store/state/image-recognition.s
 import {Subscription} from "rxjs";
 import {Region} from "../../../../../../core/model/entities/region";
 import {
+  selectImageRecognitionSelectedAgnosticSymbols,
   selectImageRecognitionSelectedNotationSymbol,
   selectImageRecognitionSelectedRegion
 } from "../../../../store/selectors/image-recognition.selector";
@@ -27,7 +28,7 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
 
   columnDefs = [
     {headerName: '**smens/**skern', field: 'smens' },
-    {headerName: 'Agnostic symbols', field: 'agnosticSymbols' }
+    //{headerName: 'Agnostic symbols', field: 'agnosticSymbols' }
   ];
 
   private gridApi;
@@ -36,9 +37,10 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
   private regionSubscription: Subscription;
   private selectedRegion: Region;
   private selectedNotationSymbolSubscription: Subscription;
+  private selectedAgnosticSymbolsSubscription: Subscription;
   agnosticIDs: number[];
   agnosticIDMap: Map<number, number>; // key = agnostic ID, value = usable ID (the one drawn in the agnostic view to identify the object visually)
-  agnosticGridRow: Map<string, number>; // key = agnostic ID, value = row in the grid
+  agnosticGridRow: Map<number, number>; // key = agnostic ID, value = row in the grid
 
   constructor(private dialogsService: DialogsService, private store: Store<ImageRecognitionState>) {
     this.defaultColDef = {
@@ -71,12 +73,20 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
         this.onNotationSymbolSelected(next);
       }
     });
+
+    this.selectedAgnosticSymbolsSubscription = this.store.select(selectImageRecognitionSelectedAgnosticSymbols).subscribe(next => {
+      //TODO sólo seleccionamos el primero
+      if (next && next.length > 0) {
+        this.onAgnosticSymbolSelected(next[0].id);
+      }
+    });
   }
 
 
   ngOnDestroy(): void {
     this.regionSubscription.unsubscribe();
     this.selectedNotationSymbolSubscription.unsubscribe();
+    this.selectedAgnosticSymbolsSubscription.unsubscribe();
   }
 
   addRow() {
@@ -182,7 +192,7 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
   }
 
   private drawSemanticEncoding(semanticEncoding: string) {
-    this.agnosticGridRow = new Map<string, number>();
+    this.agnosticGridRow = new Map<number, number>();
     const newItems = [];
     const lines = semanticEncoding.split('\n');
     let rowNumber = 0;
@@ -192,13 +202,13 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
         const agnosticIDS = columns[1];
         newItems.push({
           smens: columns[0],
-          agnosticSymbols: this.findAgnosticID(agnosticIDS) // replaces the actual symbol ID for a more usable one
+          //agnosticSymbols: this.findAgnosticID(agnosticIDS) // replaces the actual symbol ID for a more usable one
         });
 
         if (agnosticIDS) {
           const IDS: string[] = agnosticIDS.split(',');
           IDS.forEach(id => {
-            this.agnosticGridRow.set(id, rowNumber);
+            this.agnosticGridRow.set(+id, rowNumber);
           });
         }
         rowNumber++;
@@ -244,11 +254,13 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
     }
   }
 
-  onAgnosticSymbolSelected($event: string) {
-    if ($event) {
-      const line = this.agnosticGridRow.get($event);
+  onAgnosticSymbolSelected(agnosticID: number) {
+    if (agnosticID) {
+      const line = this.agnosticGridRow.get(agnosticID);
       if (line) {
-        this.selectGridRow(line);
+        // this way the grid and the semantic notation are selected
+        this.store.dispatch(new ImageRecognitionSelectNotationSymbol('L' + line));
+        // this.selectGridRow(line);
       }
     }
   }
@@ -260,7 +272,6 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
   private selectAgnosticSymbolRelatedToLine(rowIndex: number) {
     this.agnosticGridRow.forEach((rowNumber, agnosticID) => {
       if (rowIndex === rowNumber) {
-        debugger;
         const selectedAgnosticSymbol = this.selectedRegion.symbols.find(symbol => symbol.id == +agnosticID);
         if (selectedAgnosticSymbol) {
           this.store.dispatch(new ImageRecognitionSelectAgnosticSymbols([selectedAgnosticSymbol]))

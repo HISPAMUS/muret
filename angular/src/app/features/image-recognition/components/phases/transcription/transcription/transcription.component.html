@@ -64,5 +64,9 @@
   </div> <!-- row -->
 </div>
 
+<div>
+  <span>Image ID: {{imageID}}</span> | <span *ngIf="selectedRegion$ |async as region">Selected region ID: {{region.id}}</span>
+</div>
+
 <!-- Positioned absolute -->
 <app-progress-status (statusChange)="onStatusChange($event)" [(status)]="status"></app-progress-status>

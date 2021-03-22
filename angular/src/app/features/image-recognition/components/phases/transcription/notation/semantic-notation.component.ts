@@ -63,14 +63,16 @@ export class SemanticNotationComponent implements OnInit, OnChanges, OnDestroy, 
   }
 
   private changeSelectedItem(id: string, add: boolean) {
-    const selectedItem: HTMLElement = this.verovioDiv.nativeElement.querySelector('#' + id) as HTMLElement;
-    if (selectedItem) {
-      if (add) {
-        if (!selectedItem.classList.contains('selectedVerovioItem')) {
-          selectedItem.classList.add('selectedVerovioItem');
+    if (this.verovioDiv.nativeElement) {
+      const selectedItem: HTMLElement = this.verovioDiv.nativeElement.querySelector('#' + id) as HTMLElement;
+      if (selectedItem) {
+        if (add) {
+          if (!selectedItem.classList.contains('selectedVerovioItem')) {
+            selectedItem.classList.add('selectedVerovioItem');
+          }
+        } else {
+          selectedItem.classList.remove('selectedVerovioItem');
         }
-      } else {
-        selectedItem.classList.remove('selectedVerovioItem');
       }
     }
   }
