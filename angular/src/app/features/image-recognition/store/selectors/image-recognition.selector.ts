@@ -85,3 +85,8 @@ export const selectImageRecognitionNotation = createSelector(
   selectImageRecognitionState,
   (state: ImageRecognitionState) => state.notation
 );
+
+export const selectImageRecognitionSelectedNotationSymbol = createSelector(
+  selectImageRecognitionState,
+  (state: ImageRecognitionState) => state.selectedNotationSymbolID
+);

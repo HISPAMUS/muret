@@ -1,6 +1,3 @@
-<div class="card-title">
-  <h5>MEI:</h5>
-</div>
-<div *ngIf="hasNotation()" class="card-body">
-  <textarea cols="80" rows="20">{{notation?.content}}</textarea>
+<div *ngIf="notation$ | async as notation" class="card-body">
+  <textarea *ngIf="notation.notationResponseType != null" cols="80" rows="20">{{notation.content}}</textarea>
 </div>

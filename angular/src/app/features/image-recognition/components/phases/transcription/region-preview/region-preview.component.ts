@@ -327,14 +327,16 @@ export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private selectShapesFromAgnosticSymbols() {
-    const selectedShapes: Shape[] = [];
-    this.selectedSymbols.forEach(symbol => {
-      this.shapesOfSelectedRegion.forEach(shape => {
-        if (shape.data.id == symbol.id) { // we use id because sometimes, when the agnostic symbol is changed it is not synchronized
-          selectedShapes.push(shape);
-        }
+    if (this.selectedSymbols) {
+      const selectedShapes: Shape[] = [];
+      this.selectedSymbols.forEach(symbol => {
+        this.shapesOfSelectedRegion.forEach(shape => {
+          if (shape.data.id == symbol.id) { // we use id because sometimes, when the agnostic symbol is changed it is not synchronized
+            selectedShapes.push(shape);
+          }
+        });
       });
-    });
-    this.selectedShapes = selectedShapes;
+      this.selectedShapes = selectedShapes;
+    }
   }
 }

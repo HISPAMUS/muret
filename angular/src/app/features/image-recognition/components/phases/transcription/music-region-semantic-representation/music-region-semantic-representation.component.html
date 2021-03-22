@@ -7,4 +7,4 @@
     </select>
   </div>
 </div>
-<app-notation *ngIf="notation" [notation]="notation" [selectedItem]="selectedSemanticSymbolID" (onItemSelected)="onNotationSymbolSelected($event)"></app-notation>
+<app-semantic-notation *ngIf="notation$ |async as notation" [notation]="notation"></app-semantic-notation>

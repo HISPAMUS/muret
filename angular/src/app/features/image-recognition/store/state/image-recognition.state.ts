@@ -16,6 +16,7 @@ export interface ImageRecognitionState {
   selectedRegion?: Region; // used to select agnostic symbols
   selectedAgnosticSymbols?: AgnosticSymbol[];
   notation?: Notation;
+  selectedNotationSymbolID?: string;
 }
 
 export const initialImageRecognitionState: ImageRecognitionState = {
@@ -27,7 +28,8 @@ export const initialImageRecognitionState: ImageRecognitionState = {
   analyzing: false,
   selectedRegion: null,
   selectedAgnosticSymbols: null,
-  notation: null
+  notation: null,
+  selectedNotationSymbolID: null
 };
 
 export function getInitialState(): ImageRecognitionState {

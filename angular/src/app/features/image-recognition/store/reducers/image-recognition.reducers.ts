@@ -451,6 +451,13 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         })});
       return newState;
     }
+    case ImageRecognitionActionTypes.ImageRecognitionSelectNotationSymbol: {
+      return {
+        ...state,
+        selectedNotationSymbolID: action.notationSymbolID
+      };
+    }
+
     default:
       return state;
   }

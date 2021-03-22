@@ -10,33 +10,44 @@ import {
   ViewChild
 } from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Subscription} from 'rxjs';
 import {Notation} from "../../../../../../shared/services/notation";
 import {NotationService} from "../../../../../../shared/services/notation.service";
 import {ShowErrorService} from "../../../../../../core/services/show-error.service";
+import {ImageRecognitionState} from "../../../../store/state/image-recognition.state";
+import {ImageRecognitionSelectNotationSymbol} from "../../../../store/actions/image-recognition.actions";
+import {Subscription} from "rxjs";
+import {selectImageRecognitionSelectedNotationSymbol} from "../../../../store/selectors/image-recognition.selector";
 
 // Verovio integration based on the code in https://github.com/deanmalone/PianoPlay
 @Component({
-  selector: 'app-notation',
-  templateUrl: './notation.component.html',
-  styleUrls: ['./notation.component.css']
+  selector: 'app-semantic-notation',
+  templateUrl: './semantic-notation.component.html',
+  styleUrls: ['./semantic-notation.component.css']
 })
-export class NotationComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
+export class SemanticNotationComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
   @Input() notation: Notation;
-  @Input() selectedItem: string;
-  @Output() onItemSelected = new EventEmitter<string>();
 
   notationAsSVG: any;
 
   @ViewChild("verovioDiv") verovioDiv: ElementRef;
 
-  constructor(private notationService: NotationService, private store: Store<any>, private showErrorService: ShowErrorService) { }
+  private selectedNotationSymbolSubscription: Subscription;
+  private lastSelectedNotationSymbolID: string;
+
+  constructor(private notationService: NotationService, private store: Store<ImageRecognitionState>, private showErrorService: ShowErrorService) { }
 
   ngOnInit() {
+    this.selectedNotationSymbolSubscription = this.store.select(selectImageRecognitionSelectedNotationSymbol).subscribe(next => {
+      if (next) {
+        this.onNotationSymbolSelected(next);
+      }
+    });
+
   }
 
 
   ngOnDestroy(): void {
+    this.selectedNotationSymbolSubscription.unsubscribe();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -48,9 +59,6 @@ export class NotationComponent implements OnInit, OnChanges, OnDestroy, AfterVie
       } else {
         throw new Error('Unsupported notation type: ' + this.notation.notationResponseType);
       }
-    } else if (changes.selectedItem) {
-      this.changeSelectedItem(changes.selectedItem.previousValue, false);
-      this.changeSelectedItem(changes.selectedItem.currentValue, true);
     }
   }
 
@@ -76,13 +84,24 @@ export class NotationComponent implements OnInit, OnChanges, OnDestroy, AfterVie
     // the this accesibility is lost
     this.verovioDiv.nativeElement.querySelectorAll('g').forEach( (item) => {
       if (item.id && item.id.startsWith('L')) { // the ID of elements starts with an L (see Semantic2IMCore) convert method
-        item.addEventListener('mouseover', (event) => {
+        item.addEventListener('mousedown', (event) => {
           if (item.id) {
-            this.onItemSelected.emit(item.id);
+            this.onItemSelected(item.id);
           }
         });
       }
     });
   }
 
+  private onItemSelected(id: string) {
+    this.store.dispatch(new ImageRecognitionSelectNotationSymbol(id));
+  }
+
+  private onNotationSymbolSelected(notationSymbolID: string) {
+    if (this.lastSelectedNotationSymbolID) {
+      this.changeSelectedItem(this.lastSelectedNotationSymbolID, false);
+    }
+    this.changeSelectedItem(notationSymbolID, true);
+    this.lastSelectedNotationSymbolID = notationSymbolID;
+  }
 }

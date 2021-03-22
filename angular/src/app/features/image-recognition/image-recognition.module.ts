@@ -27,7 +27,7 @@ import { MusicRegionSemanticRepresentationComponent } from './components/phases/
 import {ClassifiersComponent} from "./components/subcomponents/classifiers/classifiers.component";
 import { TextRegionSemanticRepresentationComponent } from './components/phases/transcription/text-region-semantic-representation/text-region-semantic-representation.component';
 import {AgnosticStaffComponent} from "./components/phases/transcription/agnostic-staff/agnostic-staff.component";
-import {NotationComponent} from "./components/phases/transcription/notation/notation.component";
+import {SemanticNotationComponent} from "./components/phases/transcription/notation/semantic-notation.component";
 import { TextRegionAgnosticRepresentationComponent } from './components/phases/transcription/text-region-agnostic-representation/text-region-agnostic-representation.component';
 import {AgnosticRepresentationService} from "./services/agnostic-representation.service";
 import { MusicAgnosticRepresentationComponent } from './components/phases/transcription/music-agnostic-representation/music-agnostic-representation.component';
@@ -48,7 +48,7 @@ import { SemanticToolbarComponent } from './components/phases/transcription/sema
     ClassifiersComponent,
     MusicRegionSemanticRepresentationComponent,
     TextRegionSemanticRepresentationComponent,
-    AgnosticStaffComponent, NotationComponent, TextRegionAgnosticRepresentationComponent, MusicAgnosticRepresentationComponent, ChangePitchComponent, AgnosticToolbarComponent, TranscriptionToolsComponent, SemanticKernMensGridComponent, MEIPreviewComponent, SemanticToolbarComponent
+    AgnosticStaffComponent, SemanticNotationComponent, TextRegionAgnosticRepresentationComponent, MusicAgnosticRepresentationComponent, ChangePitchComponent, AgnosticToolbarComponent, TranscriptionToolsComponent, SemanticKernMensGridComponent, MEIPreviewComponent, SemanticToolbarComponent
   ],
   imports: [
     CommonModule,

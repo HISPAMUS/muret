@@ -1,10 +1,10 @@
-<div class="card-title">
-  <h5>Use **skern or **smens here:</h5>
-</div>
-<div class="card-body">
-  <button class="btn-primary" (click)="insertFirstRow()">Insert first/top row</button>
-  <button class="btn-primary" (click)="addRow()">Add row below</button>
-  <button class="btn-secondary" (click)="removeSelectedRow()">Remove row</button>
+  <a (click)="insertFirstRow()">Insert first/top row</a> |
+  <a (click)="addRow()">Add row below</a> |
+  <a (click)="removeSelectedRow()">Remove row</a> |
+  <a (click)="clearSemanticEncoding()">
+    Clear
+  </a>
+
   <ag-grid-angular
     style="width: 500px; height: 500px;"
     class="ag-theme-balham"
@@ -14,14 +14,9 @@
     [columnDefs]="columnDefs"
     (gridReady)="onGridReady($event)"
     (rowSelected)="onGridRowSelected($event)"
+    (cellValueChanged)="onCellValueChanged($event)"
   >
   </ag-grid-angular>
 
   <!--<textarea cols="80" rows="20" [ngModel]="semanticEncoding" (ngModelChange)="manualInputChanged($event)">
   </textarea>-->
-</div>
-<div class="card-deck">
-  <button class="btn-secondary" (click)="sendSemanticEncoding()">
-    Send semantic encoding
-  </button>
-</div>

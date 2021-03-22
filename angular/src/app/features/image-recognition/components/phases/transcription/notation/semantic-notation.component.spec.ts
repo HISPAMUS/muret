@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { NotationComponent } from './notation.component';
+import { SemanticNotationComponent } from './semantic-notation.component';
 
 describe('NotationComponent', () => {
-  let component: NotationComponent;
-  let fixture: ComponentFixture<NotationComponent>;
+  let component: SemanticNotationComponent;
+  let fixture: ComponentFixture<SemanticNotationComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NotationComponent ]
+      declarations: [ SemanticNotationComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NotationComponent);
+    fixture = TestBed.createComponent(SemanticNotationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

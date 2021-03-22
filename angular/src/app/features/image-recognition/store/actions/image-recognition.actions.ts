@@ -108,8 +108,9 @@ export enum ImageRecognitionActionTypes {
   ImageRecognitionSendSemanticEncoding = '[Image Recognition. SemanticRepresentation] Send semantic encoding',
   ImageRecognitionSendSemanticEncodingSuccess = '[Image Recognition. SemanticRepresentation] Send semantic encoding success',
   ImageRecognitionChangeNotationType = '[Image Recognition. SemanticRepresentation] Change notation type',
-  ImageRecognitionChangeNotationTypeSuccess = '[Image Recognition. SemanticRepresentation] Change notation type success'
+  ImageRecognitionChangeNotationTypeSuccess = '[Image Recognition. SemanticRepresentation] Change notation type success',
 
+  ImageRecognitionSelectNotationSymbol = '[Image Recognition] Select notation symbol'
 }
 
 export class ImageRecognitionGetImageOverview implements Action {
@@ -470,6 +471,13 @@ export class ImageRecognitionChangeNotationTypeSuccess implements Action {
   constructor(public region: Region) {}
 }
 
+export class ImageRecognitionSelectNotationSymbol implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionSelectNotationSymbol;
+  constructor(public notationSymbolID: string) {
+  }
+}
+
+
 export type ImageRecognitionActions =
   //ImageRecognitionServerError |
   ImageRecognitionGetImageOverview | ImageRecognitionGetImageOverviewSuccess |
@@ -511,6 +519,7 @@ export type ImageRecognitionActions =
   // semantic representation
   ImageRecognitionConvertAgnostic2Semantic | ImageRecognitionConvertAgnostic2SemanticSuccess | ImageRecognitionGetNotation | ImageRecognitionGetNotationSuccess |
   ImageRecognitionSendSemanticEncoding | ImageRecognitionSendSemanticEncodingSuccess |
-  ImageRecognitionChangeNotationType | ImageRecognitionChangeNotationTypeSuccess
+  ImageRecognitionChangeNotationType | ImageRecognitionChangeNotationTypeSuccess |
+  ImageRecognitionSelectNotationSymbol
   ;
 

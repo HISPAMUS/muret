@@ -1,7 +1,9 @@
 #statusBar {
-  width: 100vw;
   position: fixed;
-  bottom: 0;
+  right: 1rem;
+  bottom: 1rem;
+  background-color: #103339;
+  opacity: 0.7;
 }
 
 .selected {

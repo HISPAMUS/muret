@@ -93,9 +93,9 @@ export class ImageRecognitionToolbarComponent implements OnInit {
           this.onDelete.emit();
         }
         break;
-      case 'Escape':
+      /*case 'Escape':
         this.mode = 'eSelecting';
-        break;
+        break;*/
       case 'KeyA':
         if (event.altKey) {
           this.mode = 'eAdding';

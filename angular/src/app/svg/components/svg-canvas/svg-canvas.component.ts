@@ -416,17 +416,10 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
 
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
-    if (event.code === 'Escape') {
+    /*if (event.code === 'Escape') {
       this.mode = 'eSelecting';
       this.selectionManager.clear();
       this.selectedShapesChange.emit(null);
-    }
-   /*TODO if (event.code === 'Escape') {
-      if (this.selectedComponent && this.selectedComponent.shape && !this.selectedComponent.shape.data) { // if not inserted yet
-        this.shapes = this.shapes.filter(s => s !== this.selectedComponent.shape);
-      }
-      this.selectedComponent = null;
-      this.selectedShapeIDs = null;
     }*/
   }
 
