@@ -1,6 +1,6 @@
 <div class="container-fluid" *ngIf="imageOverview && (loadedImage$ | async) as loadedImage">
   <div class="row">
-    <div class="col-3"  id="leftColumn">  <!-- left column -->
+    <aside class="col-3"  id="leftColumn">  <!-- left column -->
       <div id="imageNavigator" [ngClass]="imageNavigatorHeight">
         <!--<h3 class="text-center">{{imageOverview.filename}}</h3>-->
         <app-image-document-analysis-navigator
@@ -16,10 +16,11 @@
           <a (click)="toggleLeftLayout()">{{changeLeftLayoutLabel}}</a>
         </div>
       </div>
+      <hr>
       <div id="tools" [ngClass]="toolsHeight">
-        <app-agnostic-toolbar [svgSet]="svgSet$ | async"></app-agnostic-toolbar>
+        <app-transcription-tools [svgSet]="svgSet$ | async"></app-transcription-tools>
       </div>
-    </div> <!-- left column -->
+    </aside> <!-- left column -->
     <div class="col-9"> <!-- right column -->
       <div class="d-flex justify-content-between">
         <button class="btn-primary">TO-DO Whole process</button>

@@ -34,6 +34,11 @@ import { MusicAgnosticRepresentationComponent } from './components/phases/transc
 import { ChangePitchComponent } from './components/phases/transcription/change-pitch/change-pitch.component';
 import {SemanticRepresentationService} from "./services/semantic-representation.service";
 import { AgnosticToolbarComponent } from './components/phases/transcription/agnostic-toolbar/agnostic-toolbar.component';
+import { TranscriptionToolsComponent } from './components/phases/transcription/transcription-tools/transcription-tools.component';
+import {AgGridModule} from "ag-grid-angular";
+import { SemanticKernMensGridComponent } from './components/phases/transcription/semantic-kern-mens-grid/semantic-kern-mens-grid.component';
+import { MEIPreviewComponent } from './components/phases/transcription/meipreview/meipreview.component';
+import { SemanticToolbarComponent } from './components/phases/transcription/semantic-toolbar/semantic-toolbar.component';
 
 
 @NgModule({
@@ -43,22 +48,23 @@ import { AgnosticToolbarComponent } from './components/phases/transcription/agno
     ClassifiersComponent,
     MusicRegionSemanticRepresentationComponent,
     TextRegionSemanticRepresentationComponent,
-    AgnosticStaffComponent, NotationComponent, TextRegionAgnosticRepresentationComponent, MusicAgnosticRepresentationComponent, ChangePitchComponent, AgnosticToolbarComponent
+    AgnosticStaffComponent, NotationComponent, TextRegionAgnosticRepresentationComponent, MusicAgnosticRepresentationComponent, ChangePitchComponent, AgnosticToolbarComponent, TranscriptionToolsComponent, SemanticKernMensGridComponent, MEIPreviewComponent, SemanticToolbarComponent
   ],
-    imports: [
-        CommonModule,
-        StoreModule.forFeature('imageRecognition', imageRecognitionReducers),
-        EffectsModule.forFeature([ImageOverviewEffects]),
-        ImageRecognitionRoutingModule,
-        FontAwesomeModule,
-        SharedModule,
-        NgbCollapseModule,
-        SvgModule,
-        FormsModule,
-        ContextMenuModule,
-        NgbTooltipModule,
-        NgbButtonsModule
-    ],providers: [
+  imports: [
+    CommonModule,
+    StoreModule.forFeature('imageRecognition', imageRecognitionReducers),
+    EffectsModule.forFeature([ImageOverviewEffects]),
+    ImageRecognitionRoutingModule,
+    FontAwesomeModule,
+    SharedModule,
+    NgbCollapseModule,
+    SvgModule,
+    FormsModule,
+    ContextMenuModule,
+    NgbTooltipModule,
+    NgbButtonsModule,
+    AgGridModule
+  ],providers: [
     ImageOverviewService, DocumentAnalysisService, ImagePartsService, AgnosticRepresentationService, SemanticRepresentationService
   ]
 })

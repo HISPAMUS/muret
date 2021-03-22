@@ -14,3 +14,8 @@
 #agnosticOrSemanticSymbolFilter .active * {
   color: #D91E63;
 }
+
+.btn {
+  font-size: small;
+  padding: 6px;
+}

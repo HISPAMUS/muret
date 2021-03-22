@@ -1,0 +1,38 @@
+<div>
+  <button class="btn btn-secondary" (click)="showAgnostic()"
+          [attr.aria-expanded]="isAgnosticSelected()" aria-controls="agnosticPanel">
+    Agnostic
+  </button>
+  <button class="btn btn-secondary" (click)="showManualEntry()"
+          [attr.aria-expanded]="isManualEntrySelected()" aria-controls="manualEntryPanel">
+    **skern/mens
+  </button>
+  <button class="btn btn-secondary" (click)="showMEI()"
+          [attr.aria-expanded]="isMEISelected()" aria-controls="meiPanel">
+    MEI
+  </button>
+  <!--<button class="btn btn-primary" (click)="showSemanticToolbar()"
+          [attr.aria-expanded]="isToolbarSelected()" aria-controls="toolbarPanel">
+    Semantic Toolbar
+  </button>-->
+</div>
+<div>
+  <div id="agnosticEntryPanel" [ngbCollapse]="isAgnosticCollapsed()">
+    <app-agnostic-toolbar [svgSet]="svgSet"></app-agnostic-toolbar>
+  </div>
+  <div id="manualEntryPanel" [ngbCollapse]="isManualEntryCollapsed()">
+    <app-semantic-kern-mens-grid></app-semantic-kern-mens-grid>
+  </div>
+
+  <div id="meiPanel" [ngbCollapse]="isMEICollapsed()">
+    <app-meipreview></app-meipreview>
+  </div>
+
+  <!--<div id="semanticToolbar" class="card" [ngbCollapse]="isSemanticToolbarCollapsed()">
+    <app-semantic-toolbar></app-semantic-toolbar>
+  </div>-->
+
+
+</div>
+
+
