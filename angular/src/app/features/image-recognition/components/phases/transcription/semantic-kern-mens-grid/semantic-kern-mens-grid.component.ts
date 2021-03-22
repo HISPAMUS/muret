@@ -6,6 +6,7 @@ import {ImageRecognitionState} from "../../../../store/state/image-recognition.s
 import {Subscription} from "rxjs";
 import {Region} from "../../../../../../core/model/entities/region";
 import {
+  selectImageRecognitionNotation,
   selectImageRecognitionSelectedAgnosticSymbols,
   selectImageRecognitionSelectedNotationSymbol,
   selectImageRecognitionSelectedRegion
@@ -36,6 +37,7 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
 
   private regionSubscription: Subscription;
   private selectedRegion: Region;
+  private notationSubscription: Subscription;
   private selectedNotationSymbolSubscription: Subscription;
   private selectedAgnosticSymbolsSubscription: Subscription;
   agnosticIDs: number[];
@@ -56,15 +58,20 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.regionSubscription = this.store.select(selectImageRecognitionSelectedRegion).subscribe(next => {
+      if (next) {
+        this.selectedRegion = next;
+        if (this.selectedRegion.semanticEncoding) {
+          this.registerAgnosticIDS(next.symbols);
+        }
+      }
+    });
+
+    this.notationSubscription = this.store.select(selectImageRecognitionNotation).subscribe(next => {
       if (this.gridApi) {
         this.gridApi.setRowData([]);
       }
       if (next) {
-        this.selectedRegion = next;
-        if (this.selectedRegion.semanticEncoding) {
-          this.drawSemanticEncoding(next.semanticEncoding);
-          this.registerAgnosticIDS(next.symbols);
-        }
+        this.drawSemanticEncoding(next.semanticEncoding);
       }
     });
 
@@ -87,6 +94,7 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
     this.regionSubscription.unsubscribe();
     this.selectedNotationSymbolSubscription.unsubscribe();
     this.selectedAgnosticSymbolsSubscription.unsubscribe();
+    this.notationSubscription.unsubscribe();
   }
 
   addRow() {
@@ -168,7 +176,7 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
     this.dialogsService.showConfirmation('Clear semantic encoding?', 'This action cannot be undone')
       .subscribe((isConfirmed) => {
         if (isConfirmed) {
-          this.store.dispatch(new SendSemanticEncoding(this.selectedRegion, '', false, 'verovio'));
+          this.store.dispatch(new ImageRecognitionSendSemanticEncoding(this.selectedRegion, '', false, 'verovio'));
         }
       });
   }

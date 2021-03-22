@@ -429,7 +429,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         //apiRestServerError: null,
         ...state
       };
-      newState.notation = action.notation;
+      newState.notation = action.notation; // the notation contains the selected region semantic encoding - we don't use the one in the region
       return newState;
     }
     case ImageRecognitionActionTypes.ImageRecognitionChangeNotationTypeSuccess: {

@@ -18,6 +18,7 @@ export const selectSemanticRepresentationServerError = createSelector(
   (stateSemantic: SemanticRepresentationState) => stateSemantic.apiRestServerError
 );
 
+
 /*TODO export const selectSelectedSymbol = createSelector (
   semanticRepresentationState,
   (state: SemanticRepresentationState) =>
