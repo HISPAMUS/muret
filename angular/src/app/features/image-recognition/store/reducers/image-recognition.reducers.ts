@@ -414,6 +414,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
             }
             region.symbols[index] = action.agnosticSymbol;
             newState.selectedRegion = region;
+            newState.selectedAgnosticSymbols = [action.agnosticSymbol];
           }
         });
       });

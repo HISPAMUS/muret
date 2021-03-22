@@ -12,7 +12,7 @@ import { ImageDocumentAnalysisNavigatorComponent } from './components/subcompone
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import { PartsInImageComponentComponent } from './components/phases/parts-in-image/parts-in-image-component.component';
 import { DocumentAnalysisComponent } from './components/phases/document-analysis/document-analysis/document-analysis.component';
-import { TranscriptionComponentComponent } from './components/phases/transcription/transcription/transcription-component.component';
+import { TranscriptionComponent } from './components/phases/transcription/transcription/transcription.component';
 import {SharedModule} from "../../shared/shared.module";
 import { DocumentAnalysisFiltersComponent } from './components/subcomponents/document-analysis-filters/document-analysis-filters.component';
 import {NgbButtonsModule, NgbCollapseModule, NgbTooltipModule} from "@ng-bootstrap/ng-bootstrap";
@@ -43,7 +43,7 @@ import { SemanticToolbarComponent } from './components/phases/transcription/sema
 
 @NgModule({
   declarations: [ImageOverviewComponent, ImageDocumentAnalysisNavigatorComponent, PartsInImageComponentComponent,
-    DocumentAnalysisComponent, TranscriptionComponentComponent, DocumentAnalysisFiltersComponent,
+    DocumentAnalysisComponent, TranscriptionComponent, DocumentAnalysisFiltersComponent,
     DocumentAnalysisToolbarComponent, ImageRecognitionToolbarComponent, RegionPreviewComponent,
     ClassifiersComponent,
     MusicRegionSemanticRepresentationComponent,

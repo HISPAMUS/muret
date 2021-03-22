@@ -63,15 +63,7 @@ export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
         // this selection comes from outside (e.g. from agnostic-staff.ts) or from here (selectedShapesChange) -
         // we don't change it directly for having all changes just here
         this.selectedSymbols = next;
-        const selectedShapes: Shape[] = [];
-        this.selectedSymbols.forEach(symbol => {
-          this.shapesOfSelectedRegion.forEach(shape => {
-            if (shape.data == symbol) {
-              selectedShapes.push(shape);
-            }
-          });
-        });
-        this.selectedShapes = selectedShapes;
+        this.selectShapesFromAgnosticSymbols();
       }
     });
 
@@ -84,6 +76,7 @@ export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges) {
     if (changes.selectedRegion && this.selectedRegion) {
       this.drawSelectedRegionSymbols(this.selectedRegion.symbols);
+      this.selectShapesFromAgnosticSymbols(); // when changing a symbol we need to review the selections
     }
   }
 
@@ -286,7 +279,6 @@ export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
 
   }
 
-
   onShapesSelected(shapes: Shape[]) {
     this.selectedShapes = shapes;
     if (shapes) {
@@ -334,4 +326,15 @@ export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
     return this.selectedSymbols && this.selectedSymbols.length > 0;
   }
 
+  private selectShapesFromAgnosticSymbols() {
+    const selectedShapes: Shape[] = [];
+    this.selectedSymbols.forEach(symbol => {
+      this.shapesOfSelectedRegion.forEach(shape => {
+        if (shape.data.id == symbol.id) { // we use id because sometimes, when the agnostic symbol is changed it is not synchronized
+          selectedShapes.push(shape);
+        }
+      });
+    });
+    this.selectedShapes = selectedShapes;
+  }
 }

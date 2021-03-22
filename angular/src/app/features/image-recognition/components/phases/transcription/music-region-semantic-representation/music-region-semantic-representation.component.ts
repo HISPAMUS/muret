@@ -27,6 +27,7 @@ export class MusicRegionSemanticRepresentationComponent implements OnInit, OnCha
   notationSubscription: Subscription;
   notationTypes: string[] = ['Same as whole document', 'ePlainChant', 'eMensural', 'eModern']; //TODO Get from server;
   specialNotationType: any;
+  selectedSemanticSymbolID: string;
 
   constructor(private store: Store<ImageRecognitionState>) {
     this.semanticClassifiers$ = this.store.select(selectImageRecognitionSemanticClassifierModels);
@@ -78,4 +79,13 @@ export class MusicRegionSemanticRepresentationComponent implements OnInit, OnCha
 
     this.store.dispatch(new ImageRecognitionChangeNotationType(this.region, notationType));
   }
+
+  onNotationSymbolSelected($event: string) {
+    /*if (this.gridApi) {
+      const selectedLine = $event.substr(1);
+      this.selectGridRow(+selectedLine);
+      this.selectAgnosticSymbolRelatedToLine(+selectedLine);
+    }*/
+  }
+
 }

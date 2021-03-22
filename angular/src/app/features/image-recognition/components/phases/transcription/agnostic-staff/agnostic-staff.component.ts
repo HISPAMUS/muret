@@ -12,7 +12,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Observable, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {BoundingBox} from "../../../../../../core/model/entities/bounding-box";
 import {SVGSet} from "../../../../../agnostic-representation/model/svgset";
 import {AgnosticSymbol} from "../../../../../../core/model/entities/agnostic-symbol";
@@ -202,15 +202,6 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
     return result;
   }
 
-
-  onMouseDown($event) {
-  }
-
-  onMouseUp($event) {
-  }
-
-  onMouseMove($event) {
-  }
 
   getColor(symbol: AgnosticSymbol): string {
     if (this.selectedSymbolIDs.has(symbol.id)) {

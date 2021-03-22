@@ -20,10 +20,10 @@ import {
 
 @Component({
   selector: 'app-transcription-component',
-  templateUrl: './transcription-component.component.html',
-  styleUrls: ['./transcription-component.component.css']
+  templateUrl: './transcription.component.html',
+  styleUrls: ['./transcription.component.css']
 })
-export class TranscriptionComponentComponent extends ImageRecognitionBaseAbstractComponent implements OnInit {
+export class TranscriptionComponent extends ImageRecognitionBaseAbstractComponent implements OnInit {
 
   private regionInteractionType: string;
   selectedRegion$: Observable<Region>;

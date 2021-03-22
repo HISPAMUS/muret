@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TranscriptionComponentComponent } from './transcription-component.component';
+import { TranscriptionComponent } from './transcription.component';
 
 describe('TranscriptionComponentComponent', () => {
-  let component: TranscriptionComponentComponent;
-  let fixture: ComponentFixture<TranscriptionComponentComponent>;
+  let component: TranscriptionComponent;
+  let fixture: ComponentFixture<TranscriptionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TranscriptionComponentComponent ]
+      declarations: [ TranscriptionComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TranscriptionComponentComponent);
+    fixture = TestBed.createComponent(TranscriptionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
