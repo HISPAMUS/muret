@@ -6,12 +6,8 @@ import {ImageRecognitionState} from "../../../../store/state/image-recognition.s
 import {DialogsService} from "../../../../../../shared/services/dialogs.service";
 import {ContextMenuService} from "ngx-contextmenu";
 import {Observable} from "rxjs";
-import {ClassifierModel} from "../../../../../../core/model/entities/classifier-model";
 import {
-  selectImageRecognitionAgnosticEnd2EndClassifierModels,
-  selectImageRecognitionAgnosticSymbolsClassifierModels,
   selectImageRecognitionSelectedRegion,
-  selectImageRecognitionSemanticClassifierModels
 } from "../../../../store/selectors/image-recognition.selector";
 import {ImageFilesService} from "../../../../../../core/services/image-files.service";
 import {DomSanitizer} from "@angular/platform-browser";
@@ -31,11 +27,17 @@ export class TranscriptionComponentComponent extends ImageRecognitionBaseAbstrac
 
   private regionInteractionType: string;
   selectedRegion$: Observable<Region>;
+  changeLeftLayoutLabel: string;
+  imageNavigatorHeight: string;
+  toolsHeight: string;
 
   constructor(route: ActivatedRoute, store: Store<ImageRecognitionState>, dialogsService: DialogsService, private contextMenuService: ContextMenuService,
               protected imageFilesService: ImageFilesService, protected sanitizer: DomSanitizer, protected manageErrorsService: ShowErrorService) {
     super(route, store, dialogsService, imageFilesService, sanitizer, manageErrorsService);
     this.phase = 'transcription';
+    this.changeLeftLayoutLabel = 'Enlarge image preview';
+    this.imageNavigatorHeight = 'smallLeft';
+    this.toolsHeight = 'bigLeft';
   }
 
   protected isPageSelectable(): boolean {
@@ -59,6 +61,18 @@ export class TranscriptionComponentComponent extends ImageRecognitionBaseAbstrac
         // this.region = region; Must use observables to orchestrate all dependencies (agnostic symbols...)
         this.store.dispatch(new ImageRecognitionSelectRegion(selectedRegion));
       }
+    }
+  }
+
+  toggleLeftLayout() {
+    if (this.changeLeftLayoutLabel == 'Enlarge image preview') {
+      this.changeLeftLayoutLabel = 'Enlarge tools';
+      this.imageNavigatorHeight = 'bigLeft';
+      this.toolsHeight = 'smallLeft';
+    } else {
+      this.changeLeftLayoutLabel = 'Enlarge image preview';
+      this.imageNavigatorHeight = 'smallLeft';
+      this.toolsHeight = 'bigLeft';
     }
   }
 }

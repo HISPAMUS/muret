@@ -1,8 +1,8 @@
 <div class="container-fluid" *ngIf="imageOverview && (loadedImage$ | async) as loadedImage">
-  <div class="row" id="leftColumn">
-    <div class="col-3">  <!-- left column -->
-      <div id="imageNavigator">
-        <h3 class="text-center">{{imageOverview.filename}}</h3>
+  <div class="row">
+    <div class="col-3"  id="leftColumn">  <!-- left column -->
+      <div id="imageNavigator" [ngClass]="imageNavigatorHeight">
+        <!--<h3 class="text-center">{{imageOverview.filename}}</h3>-->
         <app-image-document-analysis-navigator
           [loadedImage]="loadedImage"
           [regionTypes]="regionTypes$ | async"
@@ -12,40 +12,45 @@
           [mode]="'eSelecting'"
           (onShapesSelected)="onShapesSelected($event)"
         ></app-image-document-analysis-navigator>
+        <div class="changeLeftLayout d-flex align-items-center justify-content-center">
+          <a (click)="toggleLeftLayout()">{{changeLeftLayoutLabel}}</a>
+        </div>
       </div>
-      <div id="tools">
+      <div id="tools" [ngClass]="toolsHeight">
         <app-agnostic-toolbar [svgSet]="svgSet$ | async"></app-agnostic-toolbar>
       </div>
     </div> <!-- left column -->
-    <div class="col-9" *ngIf="selectedRegion$ | async as selectedRegion"> <!-- right column -->
+    <div class="col-9"> <!-- right column -->
       <div class="d-flex justify-content-between">
         <button class="btn-primary">TO-DO Whole process</button>
         <app-document-phases [selectedPhase]="'transcription'" [imageID]="imageID"  [size]="'lg'"></app-document-phases>
       </div>
 
-      <container-element [ngSwitch]="regionInteractionType">
-        <ng-container *ngSwitchCase="'Music'">
-          <app-music-agnostic-representation
-            [region]="selectedRegion"
-            [loadedImage]="loadedImage"
-            [svgSet]="svgSet$ | async"
-          >
-          </app-music-agnostic-representation>
-          <hr>
-          <app-music-region-semantic-representation
-            [region]="selectedRegion">
-          </app-music-region-semantic-representation>
-        </ng-container>
+      <ng-container *ngIf="selectedRegion$ | async as selectedRegion">
+        <container-element [ngSwitch]="regionInteractionType">
+          <ng-container *ngSwitchCase="'Music'">
+            <app-music-agnostic-representation
+              [region]="selectedRegion"
+              [loadedImage]="loadedImage"
+              [svgSet]="svgSet$ | async"
+            >
+            </app-music-agnostic-representation>
+            <hr>
+            <app-music-region-semantic-representation
+              [region]="selectedRegion">
+            </app-music-region-semantic-representation>
+          </ng-container>
 
-        <ng-container *ngSwitchCase="'Text'">
-          <app-text-region-agnostic-representation></app-text-region-agnostic-representation>
-          <app-text-region-semantic-representation></app-text-region-semantic-representation>
-        </ng-container>
+          <ng-container *ngSwitchCase="'Text'">
+            <app-text-region-agnostic-representation></app-text-region-agnostic-representation>
+            <app-text-region-semantic-representation></app-text-region-semantic-representation>
+          </ng-container>
 
-        <ng-container *ngSwitchCase="'Chord'">
-          <p> Chord regions not supported yet</p>
-        </ng-container>
-      </container-element>
+          <ng-container *ngSwitchCase="'Chord'">
+            <p> Chord regions not supported yet</p>
+          </ng-container>
+        </container-element>
+      </ng-container>
 
     </div>  <!-- right column -->
   </div> <!-- row -->
