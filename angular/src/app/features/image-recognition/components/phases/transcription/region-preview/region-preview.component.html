@@ -2,7 +2,7 @@
   <app-image-recognition-toolbar [(mode)]="mode" [zoomManager]="zoomManager" [selectionDone]="isSelectionDone()"
                                  (onClear)="onClear()" (onDelete)="onDelete()">
   </app-image-recognition-toolbar>
-  <div id="agnosticAddMode" class="btn-group btn-group-toggle" [disabled]="!isAddingMode()"
+  <div id="agnosticAddMode" class="btn-group btn-group-toggle" [hidden]="!isAddingMode()"
        ngbRadioGroup
        name="addMethodRadioButtonGroup" [(ngModel)]="addMethodType">
     <label  class="btn-toolbar" ngbButtonLabel>
@@ -19,6 +19,7 @@
 
   </app-classifiers>
 
+  <app-document-phases [selectedPhase]="'transcription'" [imageID]="imageID"  [size]="'lg'"></app-document-phases>
 </div>
 <div id="imageCanvas">
   <app-svg-canvas *ngIf="loadedImage"

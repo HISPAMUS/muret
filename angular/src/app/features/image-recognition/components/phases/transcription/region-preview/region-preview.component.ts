@@ -30,6 +30,7 @@ import {selectImageRecognitionSelectedAgnosticSymbols} from "../../../../store/s
   styleUrls: ['./region-preview.component.css']
 })
 export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
+  @Input() imageID: number;
   @Input() agnosticSymbolClassifiers: Observable<ClassifierModel[]>;
   @Input() loadedImage: SafeResourceUrl;
   @Input() selectedRegion: Region;

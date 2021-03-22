@@ -22,15 +22,12 @@
       </div>
     </aside> <!-- left column -->
     <div class="col-9"> <!-- right column -->
-      <div class="d-flex justify-content-between">
-        <button class="btn-primary">TO-DO Whole process</button>
-        <app-document-phases [selectedPhase]="'transcription'" [imageID]="imageID"  [size]="'lg'"></app-document-phases>
-      </div>
-
-      <ng-container *ngIf="selectedRegion$ | async as selectedRegion">
+      <!-- phases are shown in the region preview -->
+      <ng-container *ngIf="selectedRegion$ | async as selectedRegion; else noSelectedRegion">
         <container-element [ngSwitch]="regionInteractionType">
           <ng-container *ngSwitchCase="'Music'">
             <app-music-agnostic-representation
+              [imageID]="imageID"
               [region]="selectedRegion"
               [loadedImage]="loadedImage"
               [svgSet]="svgSet$ | async"
@@ -52,6 +49,16 @@
           </ng-container>
         </container-element>
       </ng-container>
+
+      <ng-template #noSelectedRegion> <!-- when a region is shown, the phases are shown in RegionPreviewComponent -->
+        <div class="d-flex justify-content-between">
+          <div>
+            <h3>Transcription phase</h3>
+            <p>Select a region to transcribe</p>
+          </div>
+          <app-document-phases [selectedPhase]="'transcription'" [imageID]="imageID"  [size]="'lg'"></app-document-phases>
+        </div>
+      </ng-template>
 
     </div>  <!-- right column -->
   </div> <!-- row -->

@@ -15,12 +15,8 @@ import {
   ImageRecognitionChangeSymbol,
   ImageRecognitionClassifyRegionEndToEnd
 } from "../../../../store/actions/image-recognition.actions";
-import {AgnosticOrSemanticTypeSVGPath} from "../../../../../agnostic-representation/model/agnostic-or-semantic-type-s-v-g-path";
-import {AgnosticOrSemanticSymbolAndPosition} from "../../../../../agnostic-representation/model/agnostic-or-semantic-symbol-and-position";
 import {AgnosticSymbol} from "../../../../../../core/model/entities/agnostic-symbol";
-import {ChangeSymbol} from "../../../../../agnostic-representation/store/actions/agnostic-representation.actions";
 import {PositionInStaffService} from "../../../../../../shared/services/position-in-staff.service";
-import {KeyValue} from "@angular/common";
 
 @Component({
   selector: 'app-music-agnostic-representation',
@@ -28,6 +24,7 @@ import {KeyValue} from "@angular/common";
   styleUrls: ['./music-agnostic-representation.component.css']
 })
 export class MusicAgnosticRepresentationComponent implements OnInit, OnDestroy {
+  @Input() imageID: number;
   @Input() region: Region;
   @Input() loadedImage: SafeResourceUrl;
   @Input() svgSet: SVGSet;
