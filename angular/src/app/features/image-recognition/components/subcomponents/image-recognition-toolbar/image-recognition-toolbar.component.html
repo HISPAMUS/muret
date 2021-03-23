@@ -29,11 +29,11 @@
         <input name="modeRadioButton" ngbButton type="radio" [value]="'eAdding'"  ngbTooltip="View (shortcut: a)" placement="bottom">
         <fa-icon icon="plus" class="icons" size="lg"></fa-icon>
       </label>
-      <label ngbButtonLabel>
+      <!--<label ngbButtonLabel>
         <button [disabled]="!selectionDone" (click)="addCommentToSelected()">
           <fa-icon icon="comment-dots" class="icons" size="lg"></fa-icon>
         </button>
-      </label>
+      </label>-->
       <label ngbButtonLabel>
         <button (click)="deleteSelected()" [disabled]="!selectionDone">
           <fa-icon icon="minus" class="icons" size="lg"></fa-icon>

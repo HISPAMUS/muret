@@ -1,6 +1,7 @@
 #imageCanvas {
   width: 100%;
   overflow: auto;
+  margin-bottom: 1rem;
 }
 
 #agnosticAddMode * {

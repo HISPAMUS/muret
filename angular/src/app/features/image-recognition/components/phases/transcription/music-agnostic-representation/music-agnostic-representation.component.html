@@ -7,7 +7,14 @@
 >
 </app-region-preview>
 
-<app-classifiers [caption]="'Select an agnostic end to end classifier'" [models]="agnosticEndToEndClassifiers$ |async" (onExecuteClassifier)="onExecuteAgnosticClassifier($event, region)"></app-classifiers>
+<div class="d-flex justify-content-between align-items-end">
+  <div class="d-flex">
+    <p>Agnostic</p>
+    <app-classifiers [caption]="'Select an agnostic end to end classifier'" [models]="agnosticEndToEndClassifiers$ |async" (onExecuteClassifier)="onExecuteAgnosticClassifier($event, region)"></app-classifiers>
+  </div>
+  <app-change-pitch (onChangeLineSpace)="onChangeLineSpace($event)" (onMovePitch)="onMovePitch($event)"></app-change-pitch>
+</div>
+
 <app-agnostic-staff *ngIf="region"
                     [regionCropped]="region.boundingBox"
                     [agnosticSymbols]="region.symbols"
@@ -17,6 +24,3 @@
 >
 </app-agnostic-staff>
 
-<div class="d-flex">
-  <app-change-pitch (onChangeLineSpace)="onChangeLineSpace($event)" (onMovePitch)="onMovePitch($event)"></app-change-pitch>
-</div>

@@ -1,10 +1,13 @@
-<div class="d-flex">
-  <app-classifiers [caption]="'Select a semantic classifier'" [models]="semanticClassifiers$ | async" (onExecuteClassifier)="onExecuteClassifier($event)"></app-classifiers>
-  <div>
-    Notation type:
-    <select name="specialNotation" [(ngModel)]="specialNotationType" (ngModelChange)="changeSpecialNotationType($event)">
-      <option [ngValue]="notationType" *ngFor="let notationType of notationTypes">{{notationType}}</option>
-    </select>
+<div class="d-flex justify-content-between" id="semantic">
+  <div class="d-flex">
+    <p>Semantic</p>
+    <app-classifiers [caption]="'Select a semantic classifier'" [models]="semanticClassifiers$ | async" (onExecuteClassifier)="onExecuteClassifier($event)"></app-classifiers>
+  </div>
+  <div class="d-flex">
+      <p>Special notation type:</p>
+      <select name="specialNotation" [(ngModel)]="specialNotationType" (ngModelChange)="changeSpecialNotationType($event)">
+        <option [ngValue]="notationType" *ngFor="let notationType of notationTypes">{{notationType}}</option>
+      </select>
   </div>
 </div>
 <app-semantic-notation *ngIf="notation$ |async as notation" [notation]="notation"></app-semantic-notation>

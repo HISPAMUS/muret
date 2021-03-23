@@ -1,0 +1,12 @@
+#linesSpaces {
+  margin-bottom: 0.5rem;
+  height: 2.5rem;
+}
+
+#linesSpaces div {
+  height: 1rem;
+}
+
+p {
+  margin: 0.25rem;
+}

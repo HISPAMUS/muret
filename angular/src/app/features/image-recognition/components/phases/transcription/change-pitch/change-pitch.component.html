@@ -3,12 +3,12 @@
     <button type="button" class="btn btn-primary" title="Move pitch down"  (click)="movePitchDown()">
       <fa-icon icon="angle-down" size="1x"></fa-icon>
     </button>
-    <p>&nbsp;Move pitch&nbsp;</p>
+    <p>Move pitch</p>
     <button type="button" class="btn btn-primary" title="Move pitch up" (click)="movePitchUp()">
       <fa-icon icon="angle-up"  size="1x"></fa-icon>
     </button>
   </div>
-  <div>
+  <div id="linesSpaces">
     <div class="btn-toolbar" role="toolbar" aria-label="Vertical lines position toolbar">
       <button class="btn btn-link" *ngFor="let linespace of lines" (click)="changeLineSpace(linespace)">{{linespace}}</button>
     </div>

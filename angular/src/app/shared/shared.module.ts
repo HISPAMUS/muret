@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import {StateComponent} from './components/state/state.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {SimpleModalModule} from 'ngx-simple-modal';
-import { CrudToolbarComponent } from './components/crud-toolbar/crud-toolbar.component';
 import {NgbButtonsModule, NgbTooltipModule} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { SafePipe } from './pipes/safe.pipe';
@@ -22,6 +21,7 @@ import {ImagePhaseDocumentAnalysisComponent} from "./components/image-phase/imag
 import {ImagePhaseOverviewComponent} from "./components/image-phase/image-phase-overview.component";
 import { ProgressStatusComponent } from './components/progress-status/progress-status.component';
 import {NotationService} from "./services/notation.service";
+import {CrudToolbarComponent} from "./components/crud-toolbar-old/crud-toolbar.component";
 
 @NgModule({
   imports: [
