@@ -8,12 +8,14 @@
   </div>
   <!--<img class="mt-0 pt-0" [defaultImage]="loadingImage" [lazyLoad]="loadedImage$ | async">-->
   <img appSelectable [selectionManager]="selectionManager" [modelID]="imageID" (onSelected)="onSelect()" (onDeselected)="onDeselect()"
-       [defaultImage]="loadingImage"
-       [lazyLoad]="loadedImage$ | async"
        [ngClass]="imageClass"
        [contextMenu]="contextualMenu"
        [class]="hidden?'hidden':''"
+       loading="lazy"
+       [defaultImage]="loadingImage"
+       [lazyLoad]="loadedImage$ | async"
   >
+
   <app-image-parts [documentParts]="documentParts" [imagePartIds]="imagePartIds"></app-image-parts>
 </div>
 

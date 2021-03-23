@@ -10,7 +10,6 @@ import {Document} from "../../../../core/model/entities/document";
 import {DocumentGetOverview, DocumentGetPartsInImages} from "../../store/actions/document.actions";
 import {selectDocumentOverview, selectDocumentPartsInImages} from "../../store/selectors/document.selector";
 import {SelectionManager} from "../../../../shared/directives/selection-manager";
-import {CdkDragDrop} from "@angular/cdk/drag-drop";
 import {Section} from "../../../../core/model/entities/section";
 import {compareOrdering} from "../../../../core/model/entities/iordered";
 import {PartsInImage} from "../../../../core/model/restapi/parts-in-image";

@@ -287,7 +287,8 @@ public class DocumentController {
                 throw new IM3WSException("Cannot find a document with id " + id);
             }
 
-            return getPartsInImages(document.get());
+            HashSet<PartsInImage> result = getPartsInImages(document.get());
+            return result;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot create statistics", e);
         }
