@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Part} from "../../../../core/model/entities/part";
 import {ImageFilesService} from "../../../../core/services/image-files.service";
 import {map} from "rxjs/operators";
@@ -20,6 +20,9 @@ import {SectionImages} from "../../../../core/model/restapi/section-images";
 import {NumberArray} from "../../../../core/model/restapi/number-array";
 import {DialogsService} from "../../../../shared/services/dialogs.service";
 import {ImageRecognitionProgressStatus} from "../../../../core/model/entities/image-recognition-progress-status";
+import {Router} from "@angular/router";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {MEIScoreViewerComponent} from "../mei-score-viewer/meiscore-viewer.component";
 
 @Component({
   selector: 'app-document-thumbnail',
@@ -27,6 +30,7 @@ import {ImageRecognitionProgressStatus} from "../../../../core/model/entities/im
   styleUrls: ['./document-thumbnail.component.css']
 })
 export class DocumentThumbnailComponent implements OnInit {
+  @Input() documentID: string;
   @Input() documentPath: string;
   @Input() section: Section;
   @Input() sections: Section[];
@@ -45,7 +49,8 @@ export class DocumentThumbnailComponent implements OnInit {
 
   constructor(private imageFilesService: ImageFilesService, private sanitizer: DomSanitizer, private lightbox: Lightbox,
               private lighboxConfig: LightboxConfig, private store: Store<DocumentState>,
-              private dialogsService: DialogsService
+              private dialogsService: DialogsService, private router: Router,
+              private modalService: NgbModal
   ) {
     lighboxConfig.fitImageInViewPort = true;
     this.imageClass = '';
@@ -149,5 +154,20 @@ export class DocumentThumbnailComponent implements OnInit {
 
   hide() {
     this.store.dispatch(new DocumentChangeImagesVisibility(this.getSelectedImageIds(), true));
+  }
+
+  export() {
+    //TODO We should better export the action for being processed by the document
+    //this.store.dispatch(new DocumentSelectImagesForExport(this.getSelectedImageIds()));
+    const modalRef = this.modalService.open(MEIScoreViewerComponent,
+      {
+        size: 'xl',
+        animation: true,
+        centered: true,
+        keyboard: true,
+        scrollable: true,
+        }
+      ); // css in styles.css
+    modalRef.componentInstance.init(this.getSelectedImageIds(), this.documentPath);
   }
 }

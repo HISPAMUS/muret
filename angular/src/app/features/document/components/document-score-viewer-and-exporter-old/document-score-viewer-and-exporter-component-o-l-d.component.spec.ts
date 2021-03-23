@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { DocumentScoreViewerAndExporterComponent } from './document-score-viewer-and-exporter.component';
+import { DocumentScoreViewerAndExporterComponentOLD } from './document-score-viewer-and-exporter-component-o-l-d.component';
 
 describe('DocumentScoreViewerComponent', () => {
-  let component: DocumentScoreViewerAndExporterComponent;
-  let fixture: ComponentFixture<DocumentScoreViewerAndExporterComponent>;
+  let component: DocumentScoreViewerAndExporterComponentOLD;
+  let fixture: ComponentFixture<DocumentScoreViewerAndExporterComponentOLD>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ DocumentScoreViewerAndExporterComponent ]
+      declarations: [ DocumentScoreViewerAndExporterComponentOLD ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DocumentScoreViewerAndExporterComponent);
+    fixture = TestBed.createComponent(DocumentScoreViewerAndExporterComponentOLD);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

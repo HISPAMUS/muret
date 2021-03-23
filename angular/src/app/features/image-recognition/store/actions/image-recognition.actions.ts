@@ -14,7 +14,6 @@ import {NumberArray} from "../../../../core/model/restapi/number-array";
 import {ClassifierModel} from "../../../../core/model/entities/classifier-model";
 import {DocumentAnalysisForm} from "../../../../core/model/restapi/document-analysis-form";
 import {Point} from "../../../../core/model/entities/point";
-import {SymbolCreationResult} from "../../../agnostic-representation/model/symbol-creation-result";
 import {AgnosticSymbol} from "../../../../core/model/entities/agnostic-symbol";
 import {Notation} from "../../../../shared/services/notation";
 import {
@@ -29,7 +28,8 @@ import {
   SemanticRepresentationActionTypes,
   SendSemanticEncoding,
   SendSemanticEncodingSuccess
-} from "../../../semantic-representation/store/actions/semantic-representation.actions";
+} from "../../../semantic-representation-old/store/actions/semantic-representation.actions";
+import {SymbolCreationResult} from "../../../agnostic-representation-old/model/symbol-creation-result";
 
 /**
  * We use the same actions for overview, parts, document analysis ... because they share the state

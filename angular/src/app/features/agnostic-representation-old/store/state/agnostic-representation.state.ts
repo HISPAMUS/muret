@@ -1,6 +1,6 @@
 import {Region} from '../../../../core/model/entities/region';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnostic-symbol';
-import {AgnosticOrSemanticSymbolAndPosition} from '../../model/agnostic-or-semantic-symbol-and-position';
+import {AgnosticOrSemanticSymbolAndPosition} from '../../../../core/model/restapi/agnostic-or-semantic-symbol-and-position';
 import {ClassifierModel} from '../../../../core/model/entities/classifier-model';
 import {APIRestServerError} from '../../../../core/model/restapi/apirest-server-error';
 

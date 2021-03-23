@@ -451,6 +451,83 @@ public class DocumentController {
         }
     }
 
+    //TODO Move to another controller
+    @PostMapping(path = {"/exportFullScoreMEI"})
+    @Transactional
+    public StringResponse exportFullScoreMEI(@RequestBody LongArray selectedImages) {
+        try {
+            return exportMEI(null, selectedImages);
+        } catch (IM3WSException e) {
+            throw ControllerUtils.createServerError(this, "Cannot export MEI", e);
+        }
+    }
+
+    @PostMapping(path = {"/exportPartMEI/{partID}"})
+    @Transactional
+    public StringResponse exportPartMEI(@PathVariable("partID") Long partID, @RequestBody LongArray selectedImages)  {
+        try {
+            return exportMEI(partID, selectedImages);
+        } catch (IM3WSException e) {
+            throw ControllerUtils.createServerError(this, "Cannot export parts MEI", e);
+        }
+    }
+
+    private Document getDocumentOfSelectedImages(LongArray selectedImages) throws IM3WSException {
+        if (selectedImages.getValues().isEmpty()) {
+            throw new IM3WSException("No selected images");
+        }
+
+        // get the document the first image belongs to
+        Optional<Image> image = imageRepository.findById(selectedImages.getValues().get(0));
+        if (!image.isPresent()) {
+            throw new IM3WSException("Cannot find image with id = " + selectedImages.getValues().get(0));
+        }
+        Document document = image.get().computeDocument();
+        return document;
+    }
+
+    private StringResponse exportMEI(Long partID, LongArray selectedImages) throws IM3WSException {
+        Part part = null;
+
+
+        if (partID != null) {
+            Optional<Part> opart = partRepository.findById(partID);
+            if (!opart.isPresent()) {
+                throw new IM3WSException("Cannot find a part with id " + partID);
+            }
+            part = opart.get();
+        }
+
+        try {
+            Document document = getDocumentOfSelectedImages(selectedImages);
+            return new StringResponse(notationModel.exportMEI(documentModel, document, part, false, true, selectedImages.getValues()));
+        } catch (IM3Exception e) {
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Error exporting MEI", e);
+            throw new IM3WSException(e);
+        }
+    }
+
+    private StringResponse exportMEIPartsFacsimile(LongArray selectedImages, boolean exportMeasuringPolyphony) {
+        try {
+            Document document = getDocumentOfSelectedImages(selectedImages);
+            return new StringResponse(notationModel.exportMEI(documentModel, document, null, true, !exportMeasuringPolyphony, selectedImages.getValues()));
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot export MEI with facsimile", e);
+        }
+    }
+    @PostMapping(path = {"/exportMEIPartsFacsimile"})
+    @Transactional
+    public StringResponse exportMEIPartsFacsimile(@RequestBody LongArray selectedImages) {
+        return exportMEIPartsFacsimile(selectedImages, false);
+    }
+
+    @PostMapping(path = {"/exportMeasuringPolyphony"})
+    @Transactional
+    public StringResponse exportMeasuringPolyphony(@RequestBody LongArray selectedImages) {
+        return exportMEIPartsFacsimile(selectedImages, true);
+    }
+
+
     // revisado hasta aquí
 
     @PostMapping(path = {"/new"})
@@ -633,80 +710,11 @@ public class DocumentController {
         }
     }
 
-    @GetMapping(path = {"/exportFullScoreMEI/{documentID}/{selectedImages}"})
-    @Transactional
-    public StringResponse exportFullScoreMEI(@PathVariable("documentID") Integer documentID, @PathVariable("selectedImages") String selectedImages) {
-        try {
-            return exportMEI(documentID, null, selectedImages);
-        } catch (IM3WSException e) {
-            throw ControllerUtils.createServerError(this, "Cannot export MEI", e);
-        }
-    }
-
-    @GetMapping(path = {"/exportPartMEI/{documentID}/{partID}/{selectedImages}"})
-    @Transactional
-    public StringResponse exportPartMEI(@PathVariable("documentID") Integer documentID, @PathVariable("partID") Long partID, @PathVariable("selectedImages") String selectedImages)  {
-        try {
-            return exportMEI(documentID, partID, selectedImages);
-        } catch (IM3WSException e) {
-            throw ControllerUtils.createServerError(this, "Cannot export parts MEI", e);
-        }
-    }
-
-    private StringResponse exportMEI(Integer documentID, Long partID, String selectedImages) throws IM3WSException {
-        Optional<Document> document = documentRepository.findById(documentID);
-        if (!document.isPresent()) {
-            throw new IM3WSException("Cannot find a document with id " + documentID);
-        }
-
-        Part part = null;
-
-        if (partID != null) {
-            Optional<Part> opart = partRepository.findById(partID);
-            if (!opart.isPresent()) {
-                throw new IM3WSException("Cannot find a part with id " + partID);
-            }
-            part = opart.get();
-        }
-
-        Set<Long> idsOfSelectedImages = findSelectedImages(selectedImages);
-        try {
-            return new StringResponse(notationModel.exportMEI(documentModel, document.get(), part, false, true, idsOfSelectedImages));
-        } catch (IM3Exception e) {
-            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Error exporting MEI", e);
-            throw new IM3WSException(e);
-        }
-    }
-
-    private StringResponse exportMEIPartsFacsimile(Integer documentID, String selectedImages, boolean exportMeasuringPolyphony) {
-        try {
-            Optional<Document> document = documentRepository.findById(documentID);
-            if (!document.isPresent()) {
-                throw new IM3WSException("Cannot find a document with id " + documentID);
-            }
-
-            Set<Long> idsOfSelectedImages = findSelectedImages(selectedImages);
-            return new StringResponse(notationModel.exportMEI(documentModel, document.get(), null, true, !exportMeasuringPolyphony, idsOfSelectedImages));
-        } catch (Throwable e) {
-            throw ControllerUtils.createServerError(this, "Cannot export MEI with facsimile", e);
-        }
-    }
-    @GetMapping(path = {"/exportMEIPartsFacsimile/{documentID}/{selectedImages}"})
-    @Transactional
-    public StringResponse exportMEIPartsFacsimile(@PathVariable("documentID") Integer documentID, @PathVariable("selectedImages") String selectedImages) {
-        return exportMEIPartsFacsimile(documentID, selectedImages, false);
-    }
-
-    @GetMapping(path = {"/exportMeasuringPolyphony/{documentID}/{selectedImages}"})
-    @Transactional
-    public StringResponse exportMeasuringPolyphony(@PathVariable("documentID") Integer documentID, @PathVariable("selectedImages") String selectedImages) {
-        return exportMEIPartsFacsimile(documentID, selectedImages, true);
-    }
-
+    //TODO
     @RequestMapping(value="/exportMensurstrich/{documentID}/{selectedImages}", method= RequestMethod.GET, produces="application/x-gzip")
     @ResponseBody
     @Transactional
-    public ResponseEntity<?> exportMensurstrich(@PathVariable Integer documentID, @PathVariable("selectedImages") String selectedImages)  {
+    public ResponseEntity<?> exportMensurstrich(@PathVariable Integer documentID, @RequestBody LongArray selectedImages)  {
         try {
             Optional<Document> document = documentRepository.findById(documentID);
             if (!document.isPresent()) {
@@ -725,8 +733,7 @@ public class DocumentController {
             prefixes.add("content");
             files.add(tmpDirectory);
 
-            Set<Long> idsOfSelectedImages = findSelectedImages(selectedImages);
-            notationModel.generateMensurstrich(documentModel, tmpDirectory, document.get(), idsOfSelectedImages);
+            notationModel.generateMensurstrich(documentModel, tmpDirectory, document.get(), selectedImages.getValues());
 
             fileCompressors.tgzFolders(tgz, files, prefixes);
 
@@ -741,10 +748,11 @@ public class DocumentController {
         }
     }
 
-    @RequestMapping(value="/exportMusicXML/{documentID}/{selectedImages}", method= RequestMethod.GET, produces="application/x-gzip")
+    //TODO
+    @RequestMapping(value="/exportMusicXML/{documentID}", method= RequestMethod.GET, produces="application/x-gzip")
     @ResponseBody
     @Transactional
-    public ResponseEntity<?> exportMusicXML(@PathVariable Integer documentID, @PathVariable("selectedImages") String selectedImages) throws IM3WSException {
+    public ResponseEntity<?> exportMusicXML(@PathVariable Integer documentID, @RequestBody LongArray selectedImages) throws IM3WSException {
         try {
             Optional<Document> document = documentRepository.findById(documentID);
             if (!document.isPresent()) {
@@ -762,8 +770,7 @@ public class DocumentController {
             prefixes.add("content");
             files.add(tmpDirectory);
 
-            Set<Long> idsOfSelectedImages = findSelectedImages(selectedImages);
-            notationModel.generateMusicXML(documentModel, tmpDirectory, document.get(), idsOfSelectedImages);
+            notationModel.generateMusicXML(documentModel, tmpDirectory, document.get(), selectedImages.getValues());
 
             fileCompressors.tgzFolders(tgz, files, prefixes);
 
@@ -778,15 +785,6 @@ public class DocumentController {
         }
     }
 
-    private Set<Long> findSelectedImages(String selectedImages) {
-        String [] imageIDStr = selectedImages.split(",");
-        TreeSet<Long> result = new TreeSet<>();
-        for (String imageID: imageIDStr) {
-            result.add(Long.parseLong(imageID));
-        }
-        return result;
-    }
-
     /**
      * @deprecated Use the AlignmentPreviewController
       * @param documentID
@@ -797,14 +795,15 @@ public class DocumentController {
     @GetMapping(path = {"/preflightCheck/{documentID}/{selectedImages}"})
     @Transactional
     public PreflightCkeckResult exportPartMEI(@PathVariable("documentID") Integer documentID, @PathVariable("selectedImages") String selectedImages) throws IM3WSException {
-        Optional<Document> document = documentRepository.findById(documentID);
+        /*Optional<Document> document = documentRepository.findById(documentID);
         if (!document.isPresent()) {
             throw new IM3WSException("Cannot find a document with id " + documentID);
         }
 
         Set<Long> idsOfSelectedImages = findSelectedImages(selectedImages);
 
-        return notationModel.preflightCheck(document.get(), idsOfSelectedImages);
+        return notationModel.preflightCheck(document.get(), idsOfSelectedImages);*/
+        return null;
     }
 
 

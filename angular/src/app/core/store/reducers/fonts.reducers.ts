@@ -5,11 +5,11 @@ import {FontsState, initialFontsState} from "../state/fonts.state";
 export function fontsReducers(state = initialFontsState, action: FontsActions):
   FontsState {
   switch (action.type) {
-    case FontsActionTypes.FontsServerError:
+    /*case FontsActionTypes.FontsServerError:
       return {
         ...state,
         apiRestServerError: action.serverError
-      };
+      };*/
     case FontsActionTypes.GetSVGSetSucccess: {
       const newState = {...state, apiRestServerError: null};
       newState.svgAgnosticOrSemanticSymbolsSet = action.svgSet;

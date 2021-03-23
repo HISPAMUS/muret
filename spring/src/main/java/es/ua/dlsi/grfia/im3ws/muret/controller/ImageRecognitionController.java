@@ -53,6 +53,7 @@ public class ImageRecognitionController {
 
             ImageOverview result = new ImageOverview();
             result.setImageID(id);
+            result.setFilename(image.get().getFilename());
             Document document = image.get().computeDocument();
             result.setDocumentID(document.getId());
             result.setDocumentPath(document.getPath());

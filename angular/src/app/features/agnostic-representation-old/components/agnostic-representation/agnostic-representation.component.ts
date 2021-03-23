@@ -9,11 +9,11 @@ import {AgnosticSymbol} from '../../../../core/model/entities/agnostic-symbol';
 import {
   selectFileName,
   selectDocumentType,
-} from '../../../document-analysis/store/selectors/document-analysis.selector';
+} from '../../../document-analysis-old/store/selectors/document-analysis.selector';
 import {Store} from '@ngrx/store';
 import {
   GetImageProjection
-} from '../../../document-analysis/store/actions/document-analysis.actions';
+} from '../../../document-analysis-old/store/actions/document-analysis.actions';
 import {
   ChangeSymbol,
   ChangeSymbolBoundingBox, ChangeSymbolComments, ClassifyRegionEndToEnd, ClearRegionSymbols,
@@ -32,10 +32,10 @@ import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {Polylines} from '../../../../svg/model/polylines';
 import {Strokes} from '../../../../core/model/entities/strokes';
 import {Polyline} from '../../../../svg/model/polyline';
-import {SVGSet} from '../../model/svgset';
-import {AgnosticOrSemanticSymbolAndPosition} from '../../model/agnostic-or-semantic-symbol-and-position';
+import {SVGSet} from '../../../../core/model/restapi/svgset';
+import {AgnosticOrSemanticSymbolAndPosition} from '../../../../core/model/restapi/agnostic-or-semantic-symbol-and-position';
 import {Point} from '../../../../core/model/entities/point';
-import {AgnosticOrSemanticTypeSVGPath} from '../../model/agnostic-or-semantic-type-s-v-g-path';
+import {AgnosticOrSemanticTypeSVGPath} from '../../../../core/model/restapi/agnostic-or-semantic-type-s-v-g-path';
 import {PositionInStaffService} from '../../../../shared/services/position-in-staff.service';
 import {Line} from '../../../../svg/model/line';
 import {ClassifierModel} from '../../../../core/model/entities/classifier-model';

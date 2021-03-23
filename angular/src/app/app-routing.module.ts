@@ -41,23 +41,23 @@ const routes = [
   {
     canActivate: [AuthGuard],
     path: 'newdocument',
-    loadChildren: () => import('./features/new-document/new-document.module').then(m => m.NewDocumentModule)
+    loadChildren: () => import('./features/new-document-old/new-document.module').then(m => m.NewDocumentModule)
   },
   {
     canActivate: [AuthGuard],
     path: 'documentanalysis',
-    loadChildren: () => import('./features/document-analysis/document-analysis.module').then(m => m.DocumentAnalysisModule)
+    loadChildren: () => import('./features/document-analysis-old/document-analysis.module').then(m => m.DocumentAnalysisModule)
   },
   {
     canActivate: [AuthGuard],
     path: 'agnosticrepresentation',
-    loadChildren: () => import('./features/agnostic-representation/agnostic-representation.module').
+    loadChildren: () => import('./features/agnostic-representation-old/agnostic-representation.module').
       then(m => m.AgnosticRepresentationModule)
   },
   {
     canActivate: [AuthGuard],
     path: 'semanticrepresentation',
-    loadChildren: () => import('./features/semantic-representation/semantic-representation.module').
+    loadChildren: () => import('./features/semantic-representation-old/semantic-representation.module').
       then(m => m.SemanticRepresentationModule)
   },
   {
@@ -68,7 +68,7 @@ const routes = [
   {
     canActivate: [AuthGuard],
     path: 'admin',
-    loadChildren: () => import('./features/admin-dashboard/admin-dashboard.module').then( m => m.AdminDashboardModule)
+    loadChildren: () => import('./features/admin-dashboard-old/admin-dashboard.module').then( m => m.AdminDashboardModule)
   }
 ];
 

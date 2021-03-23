@@ -166,7 +166,7 @@ public class NotationModel {
      * @return
      * @throws IM3Exception
      */
-    public Pair<ScoreSong, ScorePart> exportScoreSong(DocumentModel documentModel, Document document, Part specificPart, boolean partsAndFacsimile, Set<Long> idsOfSelectedImages) throws IM3Exception {
+    public Pair<ScoreSong, ScorePart> exportScoreSong(DocumentModel documentModel, Document document, Part specificPart, boolean partsAndFacsimile, Collection<Long> idsOfSelectedImages) throws IM3Exception {
         // This method is aligned with DocumentModel.generateIIIFManifestFile in order to correctly generate
         ScoreSong song = new ScoreSong();
         song.addTitle(document.getName());
@@ -412,7 +412,7 @@ public class NotationModel {
      * @return
      * @throws IM3Exception
      */
-    public String exportMEI(DocumentModel documentModel, Document document, Part specificPart, boolean partsAndFacsimile, boolean includeRhythm, Set<Long> idsOfSelectedImages) throws IM3Exception {
+    public String exportMEI(DocumentModel documentModel, Document document, Part specificPart, boolean partsAndFacsimile, boolean includeRhythm, Collection<Long> idsOfSelectedImages) throws IM3Exception {
 
         Pair<ScoreSong, ScorePart> pair = exportScoreSong(documentModel, document, specificPart, partsAndFacsimile, idsOfSelectedImages);
         ScoreSong song = pair.getX();
@@ -440,7 +440,7 @@ public class NotationModel {
         );
     }
 
-    public void generateMensurstrich(DocumentModel documentModel, Path tgz, Document document, Set<Long> idsOfSelectedImages) throws IM3Exception {
+    public void generateMensurstrich(DocumentModel documentModel, Path tgz, Document document, Collection<Long> idsOfSelectedImages) throws IM3Exception {
         Pair<ScoreSong, ScorePart> pair = exportScoreSong(documentModel, document, null, false, idsOfSelectedImages);
         ScoreSong mensural = pair.getX();
 
@@ -475,7 +475,7 @@ public class NotationModel {
         svgExporterMerged.exportLayout(svgOutputMerged, horizontalLayoutMerged);
     }
 
-    public void generateMusicXML(DocumentModel documentModel, Path tgz, Document document, Set<Long> idsOfSelectedImages) throws IM3Exception {
+    public void generateMusicXML(DocumentModel documentModel, Path tgz, Document document, Collection<Long> idsOfSelectedImages) throws IM3Exception {
         //TODO ¿Si no es mensural?
         Pair<ScoreSong, ScorePart> pair = exportScoreSong(documentModel, document, null, false, idsOfSelectedImages);
         ScoreSong mensural = pair.getX();

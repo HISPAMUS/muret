@@ -104,6 +104,26 @@ export class DocumentService {
     return this.apiRestClientService.getDetailsExcerptProjection$<Section>('documents', 'parts', documentID);
   }*/
 
+  exportMEIPartsFacsimile$(selectedImages: NumberArray, forMeasuringPolyphony: boolean) {
+    let url: string;
+    if (forMeasuringPolyphony) {
+      url = `document/exportMeasuringPolyphony`;
+    } else {
+      url = `document/exportMEIPartsFacsimile`;
+    }
+    return this.apiRestClientService.post$<StringResponse>(url, selectedImages);
+  }
+
+  exportMEI$(optionalPartID: number, selectedImages: NumberArray): Observable<StringResponse> {
+    let url: string;
+    if (optionalPartID) {
+      url = `document/exportPartMEI/${optionalPartID}`;
+    } else {
+      url = `document/exportFullScoreMEI`;
+    }
+    return this.apiRestClientService.post$<StringResponse>(url, selectedImages);
+  }
+
   // revisado hasta aquí
 
   public getDocument$(id: number): Observable<Document> {
@@ -123,27 +143,7 @@ export class DocumentService {
     return this.apiRestClientService.url + '/document/uploadDocumentImages';
   }
 
-  exportMEIPartsFacsimile$(documentID: number, selectedImages: Array<number>, forMeasuringPolyphony: boolean) {
-    const selectedImagesString = selectedImages.join(',');
-    let url: string;
-    if (forMeasuringPolyphony) {
-      url = `document/exportMeasuringPolyphony/${documentID}/${selectedImagesString}`;
-    } else {
-      url = `document/exportMEIPartsFacsimile/${documentID}/${selectedImagesString}`;
-    }
-    return this.apiRestClientService.get$<StringResponse>(url);
-  }
 
-  exportMEI$(documentID: number, partID: number, selectedImages: Array<number>): Observable<StringResponse> {
-    const selectedImagesString = selectedImages.join(',');
-    let url: string;
-    if (partID) {
-      url = `document/exportPartMEI/${documentID}/${partID}/${selectedImagesString}`;
-    } else {
-      url = `document/exportFullScoreMEI/${documentID}/${selectedImagesString}`;
-    }
-    return this.apiRestClientService.get$<StringResponse>(url);
-  }
 
   exportMensurstrich$(documentID: number, selectedImages: Array<number>): Observable<Blob> {
     const selectedImagesString = selectedImages.join(',');

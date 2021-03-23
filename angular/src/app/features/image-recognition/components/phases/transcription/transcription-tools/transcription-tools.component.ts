@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {SVGSet} from "../../../../../agnostic-representation/model/svgset";
+import {SVGSet} from "../../../../../../core/model/restapi/svgset";
 
 @Component({
   selector: 'app-transcription-tools',

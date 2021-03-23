@@ -14,15 +14,15 @@ import {
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {BoundingBox} from "../../../../../../core/model/entities/bounding-box";
-import {SVGSet} from "../../../../../agnostic-representation/model/svgset";
 import {AgnosticSymbol} from "../../../../../../core/model/entities/agnostic-symbol";
 import {PositionInStaffService} from "../../../../../../shared/services/position-in-staff.service";
-import {AgnosticOrSemanticTypeSVGPath} from "../../../../../agnostic-representation/model/agnostic-or-semantic-type-s-v-g-path";
 import {
   selectImageRecognitionSelectedAgnosticSymbols,
 } from "../../../../store/selectors/image-recognition.selector";
 import {ImageRecognitionSelectAgnosticSymbols} from "../../../../store/actions/image-recognition.actions";
 import {Shape} from "../../../../../../svg/model/shape";
+import {SVGSet} from "../../../../../../core/model/restapi/svgset";
+import {AgnosticOrSemanticTypeSVGPath} from "../../../../../../core/model/restapi/agnostic-or-semantic-type-s-v-g-path";
 
 interface StaffLine {
   index: number;

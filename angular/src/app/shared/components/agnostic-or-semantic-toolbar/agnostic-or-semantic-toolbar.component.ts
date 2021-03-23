@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {SVGSet} from "../../../features/agnostic-representation/model/svgset";
-import {AgnosticOrSemanticSymbolAndPosition} from "../../../features/agnostic-representation/model/agnostic-or-semantic-symbol-and-position";
-import {AgnosticOrSemanticTypeSVGPath} from "../../../features/agnostic-representation/model/agnostic-or-semantic-type-s-v-g-path";
-import {AgnosticRepresentationState} from "../../../features/agnostic-representation/store/state/agnostic-representation.state";
 import {KeyValue} from "@angular/common";
+import {AgnosticOrSemanticSymbolAndPosition} from "../../../core/model/restapi/agnostic-or-semantic-symbol-and-position";
+import {SVGSet} from "../../../core/model/restapi/svgset";
+import {AgnosticOrSemanticTypeSVGPath} from "../../../core/model/restapi/agnostic-or-semantic-type-s-v-g-path";
+import {AgnosticRepresentationState} from "../../../features/agnostic-representation-old/store/state/agnostic-representation.state";
 
 @Component({
   selector: 'app-agnostic-or-semantic-toolbar',

@@ -8,8 +8,8 @@ import {map} from 'rxjs/operators';
 import {Document} from '../../../../core/model/entities/document';
 import {Lightbox, LightboxConfig} from 'ngx-lightbox';
 import {Store} from '@ngrx/store';
-import {PartsState} from '../../../parts/store/state/parts.state';
 import {findPartsUsed, UsesOfAllParts} from '../../../../core/model/restapi/uses-of-all-parts';
+import {PartsState} from "../../../parts-old/store/state/parts.state";
 
 /**
  * When entering here the usesOfParts should be loaded by the document

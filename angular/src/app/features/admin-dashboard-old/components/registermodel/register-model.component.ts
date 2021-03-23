@@ -5,11 +5,11 @@ import { NewClassifier } from '../../model/new-classifier';
 import { Observable, Subscription } from 'rxjs';
 import { Collection } from 'src/app/core/model/entities/collection';
 import { Store } from '@ngrx/store';
-import { NewDocumentState } from 'src/app/features/new-document/store/state/new-document.state';
-import { selectNewDocumentCollections } from 'src/app/features/new-document/store/selectors/new-document.selector';
-import { GetCollections } from 'src/app/features/new-document/store/actions/new-document.actions';
 import { Document } from 'src/app/core/model/entities/document';
 import { DialogsService } from 'src/app/shared/services/dialogs.service';
+import {NewDocumentState} from "../../../new-document-old/store/state/new-document.state";
+import {selectNewDocumentCollections} from "../../../new-document-old/store/selectors/new-document.selector";
+import {GetCollections} from "../../../new-document-old/store/actions/new-document.actions";
 
 @Component({
   selector: 'app-register-model',

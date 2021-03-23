@@ -77,12 +77,12 @@ import {DocumentAnalysisService} from "../../services/document-analysis.service"
 import {Region} from "../../../../core/model/entities/region";
 import {NumberArray} from "../../../../core/model/restapi/number-array";
 import {ClassifierModel} from "../../../../core/model/entities/classifier-model";
-import {SymbolCreationResult} from "../../../agnostic-representation/model/symbol-creation-result";
+import {SymbolCreationResult} from "../../../agnostic-representation-old/model/symbol-creation-result";
 import {AgnosticRepresentationService} from "../../services/agnostic-representation.service";
 import {AgnosticSymbol} from "../../../../core/model/entities/agnostic-symbol";
 import {Notation} from "../../../../shared/services/notation";
 import {SemanticRepresentationService} from "../../services/semantic-representation.service";
-import {ChangeNotationTypeSuccess} from "../../../semantic-representation/store/actions/semantic-representation.actions";
+import {ChangeNotationTypeSuccess} from "../../../semantic-representation-old/store/actions/semantic-representation.actions";
 
 
 /**

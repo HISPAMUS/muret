@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {DocumentComponentOld} from './components/document/document-component-old.component';
-import {UploadImagesComponent} from './components/upload-images/upload-images.component';
-import {DocumentScoreViewerAndExporterComponent} from './components/document-score-viewer-and-exporter/document-score-viewer-and-exporter.component';
-import {InstrumentsComponent} from './components/instruments/instruments.component';
-import {AlignmentPreviewComponent} from './components/alignment-preview/alignment-preview.component';
-import {MEIScoreViewerComponent} from './components/mei-score-viewer/meiscore-viewer.component';
+import {DocumentComponentOld} from './components/document-old/document-component-old.component';
 import {DocumentComponent} from "./components/document/document.component";
 import {ReorderSectionsComponent} from "./components/reorder-sections/reorder-sections.component";
 import {ReorderImagesComponent} from "./components/reorder-images/reorder-images.component";
+import {InstrumentsComponent} from "./components/instruments-old/instruments.component";
+import {UploadImagesComponent} from "./components/upload-images-old/upload-images.component";
+import {DocumentScoreViewerAndExporterComponentOLD} from "./components/document-score-viewer-and-exporter-old/document-score-viewer-and-exporter-component-o-l-d.component";
+import {MEIScoreViewerComponent} from "./components/mei-score-viewer/meiscore-viewer.component";
+import {AlignmentPreviewComponent} from "./components/alignment-preview-old/alignment-preview.component";
 
 const routes: Routes = [
   { path: 'old/:id', component: DocumentComponentOld },
@@ -17,8 +17,8 @@ const routes: Routes = [
   { path: 'reorderImages/:id', component: ReorderImagesComponent },
   { path: 'instruments/:id', component: InstrumentsComponent },
   { path: 'uploadImages/:id', component: UploadImagesComponent },
-  { path: 'documentScoreViewAndExport/:id', component: DocumentScoreViewerAndExporterComponent },
-  { path: 'meiScoreView/:id', component: MEIScoreViewerComponent },
+  { path: 'documentScoreViewAndExportOLD/:id', component: DocumentScoreViewerAndExporterComponentOLD },
+  //used as a modal dialog { path: 'meiScoreView', component: MEIScoreViewerComponent },
   { path: 'alignmentPreview/:id', component: AlignmentPreviewComponent },
 ];
 

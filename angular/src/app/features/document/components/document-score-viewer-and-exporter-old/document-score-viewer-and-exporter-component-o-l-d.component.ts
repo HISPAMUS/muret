@@ -11,19 +11,19 @@ import {
 } from '../../store/actions/document.actions';
 import {
   selectDocument,
-  selectExportedFile,
+  selectDocumentExportedFile,
   selectImages
 } from '../../store/selectors/document.selector';
 import {Observable, Subscription} from 'rxjs';
 import {saveAs} from 'file-saver';
 import {Document} from '../../../../core/model/entities/document';
-import {selectUsesOfParts} from '../../../parts/store/selectors/parts.selector';
 import {findPartsUsed, UsesOfAllParts} from '../../../../core/model/restapi/uses-of-all-parts';
-import {GetUsesOfParts} from '../../../parts/store/actions/parts.actions';
 import {Image} from '../../../../core/model/entities/image';
 import {DocumentExport, DocumentExportType} from '../../../../core/model/restapi/document-export';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
+import {GetUsesOfParts} from "../../../parts-old/store/actions/parts.actions";
+import {selectUsesOfParts} from "../../../parts-old/store/selectors/parts.selector";
 
 interface SelectedImage {
   checked: boolean;
@@ -31,12 +31,12 @@ interface SelectedImage {
 }
 
 @Component({
-  selector: 'app-document-score-viewer',
-  templateUrl: './document-score-viewer-and-exporter.component.html',
-  styleUrls: ['./document-score-viewer-and-exporter.component.css']
+  selector: 'app-document-score-viewer-old',
+  templateUrl: './document-score-viewer-and-exporter-component-o-l-d.component.html',
+  styleUrls: ['./document-score-viewer-and-exporter-component-o-l-d.component.css']
 })
 // don't use here REDUX for the FileUploader
-export class DocumentScoreViewerAndExporterComponent implements OnInit, OnDestroy {
+export class DocumentScoreViewerAndExporterComponentOLD implements OnInit, OnDestroy {
   private documentID: number;
   // private meiSubscription: Subscription;
   document$: Observable<Document>;
@@ -91,7 +91,7 @@ export class DocumentScoreViewerAndExporterComponent implements OnInit, OnDestro
 
     // this.preflightCheckResults$ = this.store.select(selectPreflightCheckResults); // remove
 
-    this.exportingSubscription = this.store.select(selectExportedFile).subscribe(next => {
+    this.exportingSubscription = this.store.select(selectDocumentExportedFile).subscribe(next => {
       if (next && this.exportingState.get(next.type)) {
           if (next.type === DocumentExportType.mei_score && this.generatingMEIVisualization) {
             this.exportingState.set(next.type, false);
@@ -121,7 +121,7 @@ export class DocumentScoreViewerAndExporterComponent implements OnInit, OnDestro
     this.usesOfPartsSubscription.unsubscribe();
     this.imageSubscription.unsubscribe();
     this.exportingSubscription.unsubscribe();
-    this.serverErrorSubscription.unsubscribe();
+    //this.serverErrorSubscription.unsubscribe();
   }
 
   /*saveFile() {
@@ -148,18 +148,18 @@ export class DocumentScoreViewerAndExporterComponent implements OnInit, OnDestro
   exportMEI() {
     this.generatingMEIVisualization = false;
     this.exportingState.set(DocumentExportType.mei_score, true);
-    this.store.dispatch(new DocumentExportMEI(this.documentID, null, this.getIDOfSelectedImages()));
+    //OLD Before refactoring 2021 this.store.dispatch(new DocumentExportMEI(this.documentID, null, this.getIDOfSelectedImages()));
   }
 
   visualizeMEI() {
     this.generatingMEIVisualization = true;
     this.exportingState.set(DocumentExportType.mei_score, true);
-    this.store.dispatch(new DocumentExportMEI(this.documentID, null, this.getIDOfSelectedImages()));
+    //OLD Before refactoring 2021 this.store.dispatch(new DocumentExportMEI(this.documentID, null, this.getIDOfSelectedImages()));
   }
 
   exportPartsAndFacsimile(forMeasuringPolyphony: boolean) {
     this.exportingState.set(DocumentExportType.mei_parts_facsimile, true);
-    this.store.dispatch(new DocumentExportMEIPartsFacsimile(this.documentID, this.getIDOfSelectedImages(), forMeasuringPolyphony));
+    //OLD Before refactoring 2021 this.store.dispatch(new DocumentExportMEIPartsFacsimile(this.documentID, this.getIDOfSelectedImages(), forMeasuringPolyphony));
   }
 
   exportFullMensurstrich() {
@@ -258,7 +258,7 @@ export class DocumentScoreViewerAndExporterComponent implements OnInit, OnDestro
 
   private openMEIRenderingScreen() {
     // the MEI content and file are stored in the store
-    this.router.navigate(['/document/meiScoreView', this.documentID]);
+    this.router.navigate(['/document/meiScoreView']);
   }
 
   /*aaa() {

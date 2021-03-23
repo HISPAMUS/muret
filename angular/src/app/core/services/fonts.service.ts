@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Observable} from "rxjs";
-import {SVGSet} from "../../features/agnostic-representation/model/svgset";
 import {ApiRestClientService} from "./api-rest-client.service";
+import {SVGSet} from "../model/restapi/svgset";
 
 @Injectable({
   providedIn: 'root'

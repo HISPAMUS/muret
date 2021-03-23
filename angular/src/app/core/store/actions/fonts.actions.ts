@@ -1,10 +1,10 @@
 import { Action } from '@ngrx/store';
-import {SVGSet} from "../../../features/agnostic-representation/model/svgset";
 import {APIRestServerError} from "../../model/restapi/apirest-server-error";
+import {SVGSet} from "../../model/restapi/svgset";
 
 export enum FontsActionTypes
 {
-  FontsServerError = '[Fonts] Server error',
+  //FontsServerError = '[Fonts] Server error',
   GetSVGSet = '[Fonts] Get SVG set',
   GetSVGSetSucccess = '[Fonts] Get SVG set success',
 }
@@ -20,10 +20,10 @@ export class GetSVGSetSucccess implements Action {
 }
 
 
-export class FontsServerError implements Action {
+/*export class FontsServerError implements Action {
   public readonly type = FontsActionTypes.FontsServerError;
   constructor(public serverError: APIRestServerError) {}
-}
+}*/
 
-export type FontsActions = CoreGetSVGSet | GetSVGSetSucccess | FontsServerError;
+export type FontsActions = CoreGetSVGSet | GetSVGSetSucccess; // | FontsServerError;
 

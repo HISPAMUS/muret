@@ -1,6 +1,5 @@
 import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-import {GetImageProjection} from '../../../document-analysis/store/actions/document-analysis.actions';
 import {Store} from '@ngrx/store';
 import {Subscription, Observable} from 'rxjs';
 import {Region} from '../../../../core/model/entities/region';
@@ -18,36 +17,34 @@ import {
 } from '../../store/selectors/semantic-representation.selector';
 import {Notation} from '../../../../shared/services/notation';
 import {Shape} from '../../../../svg/model/shape';
-import {selectAgnosticSymbols} from '../../../agnostic-representation/store/selectors/agnostic-representation.selector';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnostic-symbol';
 import {Rectangle} from '../../../../svg/model/rectangle';
 import {Part} from '../../../../core/model/entities/part';
-import {
-  GetRegion
-} from '../../../agnostic-representation/store/actions/agnostic-representation.actions';
-import {selectUsesOfParts} from '../../../parts/store/selectors/parts.selector';
 import {PartUse, PartUsedIn, UsesOfAllParts} from '../../../../core/model/restapi/uses-of-all-parts';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
-import {
-  CreateImagePart, CreateRegionPart,
-  GetUsesOfParts,
-  PartsLinkPartToImage,
-  LinkPartToRegion,
-  UnlinkPartToImage, UnlinkPartToRegion
-} from '../../../parts/store/actions/parts.actions';
-import {
-  selectImageDocumentID,
-  selectFileName,
-  selectDocumentType
-} from '../../../document-analysis/store/selectors/document-analysis.selector';
+
 import {ModalOptions} from '../../../../dialogs/options-dialog/options-dialog.component';
 import { ClassifierModel } from 'src/app/core/model/entities/classifier-model';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
 import { LinkType } from 'src/app/layout/components/breadcrumbs/breadcrumbType';
-import {SVGSet} from "../../../agnostic-representation/model/svgset";
 import {selectCoreSVGAgnosticOrSemanticSymbolSet} from "../../../../core/store/selectors/core.selector";
 import {CoreGetSVGSet} from "../../../../core/store/actions/fonts.actions";
 import {KeyValue} from "@angular/common";
+import {
+  selectDocumentType,
+  selectImageDocumentID
+} from "../../../document-analysis-old/store/selectors/document-analysis.selector";
+import {GetImageProjection} from "../../../document-analysis-old/store/actions/document-analysis.actions";
+import {GetRegion} from "../../../agnostic-representation-old/store/actions/agnostic-representation.actions";
+import {selectAgnosticSymbols} from "../../../agnostic-representation-old/store/selectors/agnostic-representation.selector";
+import {selectUsesOfParts} from "../../../parts-old/store/selectors/parts.selector";
+import {
+  CreateImagePart, CreateRegionPart,
+  GetUsesOfParts, LinkPartToRegion,
+  PartsLinkPartToImage,
+  UnlinkPartToImage, UnlinkPartToRegion
+} from "../../../parts-old/store/actions/parts.actions";
+import {SVGSet} from "../../../../core/model/restapi/svgset";
 
 @Component({
   selector: 'app-semantic-representation',

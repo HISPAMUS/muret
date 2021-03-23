@@ -100,7 +100,7 @@ export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
   set selectedShapes(val) {
     if (this.selectedShapesValue != val) {
       this.selectedShapesValue = val;
-      // this.selectedShapesChange.emit(this.selectedShapesValue);
+      // this.selectedShapesChange.emit(this.selectedShapesValue); Commented out because shapes are just selected from SVG, not from here
     }
   }
 

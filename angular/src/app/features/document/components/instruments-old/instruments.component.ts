@@ -10,9 +10,9 @@ import {Document} from '../../../../core/model/entities/document';
 import {PartUsedIn, UsesOfAllParts} from '../../../../core/model/restapi/uses-of-all-parts';
 import {NumberPair} from '../../../../core/model/restapi/number-pair';
 import {Part} from '../../../../core/model/entities/part';
-import {CreatePart, DeletePart, GetUsesOfParts, RenamePart} from '../../../parts/store/actions/parts.actions';
-import {selectUsesOfParts} from '../../../parts/store/selectors/parts.selector';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
+import {selectUsesOfParts} from "../../../parts-old/store/selectors/parts.selector";
+import {CreatePart, DeletePart, RenamePart} from "../../../parts-old/store/actions/parts.actions";
 
 @Component({
   selector: 'app-instruments',

@@ -1,6 +1,22 @@
-<div id="scoreView" class="row">
-  <div class="col-12">
-    <div [innerHTML]="notationAsSVG | safe: 'html'">
+<div class="container-fluid"  *ngIf="notationAsSVG; else loading">
+  <div class="row">
+    <div class="col d-flex align-content-between">
+      <div>
+        <button (click)="downloadMEI()">Download MEI file</button>
+        <button (click)="exportMPEditor()">Export parts and facsimile for <a href="https://editor.measuringpolyphony.org/#/" target="_blank">MPEditor</a></button>
+      </div>
+      <p>Press 'ESC' to exit</p>
+    </div>
+  </div>
+  <div id="scoreView" class="row">
+    <div class="col">
+      <div [innerHTML]="notationAsSVG | safe: 'html'">
+      </div>
     </div>
   </div>
 </div>
+
+<ng-template #loading>
+  <div class="jumbotron">Generating Verovio SVG ...</div>
+  <p>Press 'ESC' to exit</p>
+</ng-template>

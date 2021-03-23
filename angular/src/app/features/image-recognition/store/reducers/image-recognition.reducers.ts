@@ -2,7 +2,7 @@
 import {ImageRecognitionActions, ImageRecognitionActionTypes} from "../actions/image-recognition.actions";
 import {klona} from "klona";
 import {ImageRecognitionState, initialImageRecognitionState} from "../state/image-recognition.state";
-import {SemanticRepresentationActionTypes} from "../../../semantic-representation/store/actions/semantic-representation.actions";
+import {SemanticRepresentationActionTypes} from "../../../semantic-representation-old/store/actions/semantic-representation.actions";
 
 /**
  * We use the same effects, actions and reducers for overview and parts because they share the state

@@ -43,6 +43,7 @@ export enum DocumentActionTypes {
   DocumentChangeImagesVisibility = '[Document] Change images visibility',
   DocumentChangeImagesVisibilitySuccess = '[Document] Change images visibility success',
 
+  //DocumentSelectImagesForExport = '[Document] Select images',
 
   // revisado hasta aquí
   ResetDocumentServerError = '[Document] Reset Server error',
@@ -219,6 +220,33 @@ export class DocumentChangeImagesVisibilitySuccess implements Action {
   constructor(public imagesVisibility: ImagesVisibility) {}
 }
 
+export class DocumentExportMEI implements Action {
+  public readonly type = DocumentActionTypes.DocumentExportMEI;
+  constructor(public optionalPartID: number, public selectedImages: NumberArray) {}
+}
+
+export class DocumentExportMEISuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentExportMEISuccess;
+  constructor(public mei: string) {}
+}
+
+export class DocumentExportMEIPartsFacsimile implements Action {
+  public readonly type = DocumentActionTypes.DocumentExportMEIPartsFacsimile;
+  constructor(public selectedImages: NumberArray, public forMeasuringPolyphony: boolean) {}
+}
+
+export class DocumentExportMEIPartsFacsimileSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentExportMEIPartsFacsimileSuccess;
+  constructor(public mei: string) {}
+}
+
+/*
+export class DocumentSelectImagesForExport implements Action {
+  public readonly type = DocumentActionTypes.DocumentSelectImagesForExport;
+  constructor(public imagesID: NumberArray) {}
+}*/
+
+
 
 // revisado hasta aquí
 
@@ -256,25 +284,6 @@ export class DocumentGetImagesSuccess implements Action {
   constructor(public images: Image[]) {}
 }
 
-export class DocumentExportMEI implements Action {
-  public readonly type = DocumentActionTypes.DocumentExportMEI;
-  constructor(public documentID: number, public partID: number, public selectedImages: Array<number>) {}
-}
-
-export class DocumentExportMEISuccess implements Action {
-  public readonly type = DocumentActionTypes.DocumentExportMEISuccess;
-  constructor(public mei: string) {}
-}
-
-export class DocumentExportMEIPartsFacsimile implements Action {
-  public readonly type = DocumentActionTypes.DocumentExportMEIPartsFacsimile;
-  constructor(public documentID: number, public selectedImages: Array<number>, public forMeasuringPolyphony: boolean) {}
-}
-
-export class DocumentExportMEIPartsFacsimileSuccess implements Action {
-  public readonly type = DocumentActionTypes.DocumentExportMEIPartsFacsimileSuccess;
-  constructor(public mei: string) {}
-}
 
 export class DocumentExportMensurstrich implements Action {
   public readonly type = DocumentActionTypes.DocumentExportMensurstrich;
@@ -352,6 +361,7 @@ export type DocumentActions =
   DocumentLinkImagesToNewPart | DocumentLinkImagesToNewPartSuccess |
   DocumentUnlinkImagesFromPart |   DocumentUnlinkImagesFromPartSuccess |
   DocumentChangeImagesVisibility | DocumentChangeImagesVisibilitySuccess |
+  //DocumentSelectImagesForExport |
 
   // revisado hasta aquí
   DocumentResetServerError | DocumentServerError |

@@ -19,9 +19,9 @@ import {
 } from '../../store/selectors/agnostic-representation.selector';
 import {AgnosticSymbol} from '../../../../core/model/entities/agnostic-symbol';
 import {BoundingBox} from '../../../../core/model/entities/bounding-box';
-import {SVGSet} from '../../model/svgset';
+import {SVGSet} from '../../../../core/model/restapi/svgset';
 import {SelectSymbol} from '../../store/actions/agnostic-representation.actions';
-import {AgnosticOrSemanticTypeSVGPath} from '../../model/agnostic-or-semantic-type-s-v-g-path';
+import {AgnosticOrSemanticTypeSVGPath} from '../../../../core/model/restapi/agnostic-or-semantic-type-s-v-g-path';
 import {PositionInStaffService} from '../../../../shared/services/position-in-staff.service';
 
 interface StaffLine {

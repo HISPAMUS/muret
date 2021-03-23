@@ -4,9 +4,9 @@
     <h4 *ngIf="!section">Unassigned to section</h4>
     <div class="d-flex align-items-end flex-column">
       <nav *ngIf="!compressed">
-        <a class="nav-link" href="#">Parts</a>
+        <!--<a class="nav-link" href="#">Parts</a>
         <a class="nav-link" href="#">Alignment</a>
-        <a class="nav-link" href="#">Score view</a>
+        <a class="nav-link" href="#">Score view</a>-->
         <button class="btn-primary" *ngIf="includeNewSection" (click)="createSection()">New section...</button>
         <br><br>
         <button class="btn-secondary" *ngIf="includeNewSection" (click)="moveAllToDefaultSection()">Move all to default section...</button>
@@ -20,6 +20,7 @@
   </div>
   <div id="thumbnails" *ngIf="!compressed" class="d-flex align-items-end flex-row flex-wrap">
     <app-document-thumbnail [selectionManager]="selectionManager"
+                            [documentID]="documentID"
                             *ngFor="let image of sortedImages; trackBy: imageTracking"
                             [documentPath]="documentPath"
                             [section]="section"

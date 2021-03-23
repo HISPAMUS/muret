@@ -3,3 +3,14 @@
   overflow: auto;
 }
 
+p {
+  color: #103339;
+  font-weight: bold;
+  text-align: right;
+  padding-right: 3rem;
+  margin-left: auto;
+}
+
+a {
+  color: blue;
+}

@@ -184,6 +184,23 @@ export class DocumentEffects {
       //catchError(err => of(new DocumentServerError(err)))
     )));
 
+  @Effect()
+  exportMEIPartsFacsimile$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentExportMEIPartsFacsimile>(DocumentActionTypes.DocumentExportMEIPartsFacsimile),
+    switchMap((action: DocumentExportMEIPartsFacsimile) =>
+      this.documentService.exportMEIPartsFacsimile$(action.selectedImages, action.forMeasuringPolyphony).pipe(
+        switchMap((mei: StringResponse) => of(new DocumentExportMEIPartsFacsimileSuccess(mei.response))),
+        //catchError(err => of(new DocumentServerError(err)))
+      )));
+
+  @Effect()
+  exportMEI$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentExportMEI>(DocumentActionTypes.DocumentExportMEI),
+    switchMap((action: DocumentExportMEI) => this.documentService.exportMEI$(action.optionalPartID, action.selectedImages).pipe(
+      switchMap((mei: StringResponse) => of(new DocumentExportMEISuccess(mei.response))),
+      //catchError(err => of(new DocumentServerError(err)))
+    )));
+
   // revisado hasta aquí
   @Effect()
   getDocument$: Observable<Action> = this.actions$.pipe(
@@ -201,22 +218,7 @@ export class DocumentEffects {
       //catchError(err => of(new DocumentServerError(err)))
     )));
 
-  @Effect()
-  exportMEIPartsFacsimile$: Observable<Action> = this.actions$.pipe(
-    ofType<DocumentExportMEIPartsFacsimile>(DocumentActionTypes.DocumentExportMEIPartsFacsimile),
-    switchMap((action: DocumentExportMEIPartsFacsimile) =>
-      this.documentService.exportMEIPartsFacsimile$(action.documentID, action.selectedImages, action.forMeasuringPolyphony).pipe(
-        switchMap((mei: StringResponse) => of(new DocumentExportMEIPartsFacsimileSuccess(mei.response))),
-      //catchError(err => of(new DocumentServerError(err)))
-    )));
 
-  @Effect()
-  exportMEI$: Observable<Action> = this.actions$.pipe(
-    ofType<DocumentExportMEI>(DocumentActionTypes.DocumentExportMEI),
-    switchMap((action: DocumentExportMEI) => this.documentService.exportMEI$(action.documentID, action.partID, action.selectedImages).pipe(
-      switchMap((mei: StringResponse) => of(new DocumentExportMEISuccess(mei.response))),
-      //catchError(err => of(new DocumentServerError(err)))
-    )));
 
   @Effect()
   exportMensurstrich$: Observable<Action> = this.actions$.pipe(

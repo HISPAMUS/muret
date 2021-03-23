@@ -17,14 +17,14 @@ import {
 } from '../../store/actions/document.actions';
 import {DialogsService} from '../../../../shared/services/dialogs.service';
 import {DocumentStatistics} from '../../../../core/model/restapi/document-statistics';
-import {GetUsesOfParts} from '../../../parts/store/actions/parts.actions';
-import {selectUsesOfParts} from '../../../parts/store/selectors/parts.selector';
 import {UsesOfAllParts} from '../../../../core/model/restapi/uses-of-all-parts';
-import { AgnosticRepresentationState } from 'src/app/features/agnostic-representation/store/state/agnostic-representation.state';
-import { ResetSelectedRegion } from 'src/app/features/agnostic-representation/store/actions/agnostic-representation.actions';
 import {ShowErrorService} from '../../../../core/services/show-error.service';
 import { LinkType } from 'src/app/layout/components/breadcrumbs/breadcrumbType';
 import {BreadcrumbsUpdateDocument} from "../../../../layout/store/actions/breadcrumbs.actions";
+import {AgnosticRepresentationState} from "../../../agnostic-representation-old/store/state/agnostic-representation.state";
+import {selectUsesOfParts} from "../../../parts-old/store/selectors/parts.selector";
+import {GetUsesOfParts} from "../../../parts-old/store/actions/parts.actions";
+import {ResetSelectedRegion} from "../../../agnostic-representation-old/store/actions/agnostic-representation.actions";
 
 @Component({
   selector: 'app-document-old',

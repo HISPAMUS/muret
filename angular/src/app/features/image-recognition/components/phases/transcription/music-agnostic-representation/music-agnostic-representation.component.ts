@@ -10,7 +10,7 @@ import {
   selectImageRecognitionAgnosticSymbolsClassifierModels, selectImageRecognitionSelectedAgnosticSymbols
 } from "../../../../store/selectors/image-recognition.selector";
 import {Shape} from "../../../../../../svg/model/shape";
-import {SVGSet} from "../../../../../agnostic-representation/model/svgset";
+import {SVGSet} from "../../../../../../core/model/restapi/svgset";
 import {
   ImageRecognitionChangeSymbol,
   ImageRecognitionClassifyRegionEndToEnd

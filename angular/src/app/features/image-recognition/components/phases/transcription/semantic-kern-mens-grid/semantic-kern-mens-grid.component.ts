@@ -1,5 +1,4 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {SendSemanticEncoding} from "../../../../../semantic-representation/store/actions/semantic-representation.actions";
 import {DialogsService} from "../../../../../../shared/services/dialogs.service";
 import {Store} from "@ngrx/store";
 import {ImageRecognitionState} from "../../../../store/state/image-recognition.state";

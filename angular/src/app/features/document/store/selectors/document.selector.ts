@@ -20,6 +20,28 @@ export const selectDocumentPartsInImages = createSelector(
   (state: DocumentState) => state.partsInImages
 );
 
+export const selectDocumentExportedFile = createSelector(
+  documentState,
+  (state: DocumentState) => state.exportedMEIFile
+);
+
+export const selectDocumentExportedMPEditorFile = createSelector(
+  documentState,
+  (state: DocumentState) => state.exportedMPEditorFile
+);
+
+
+export const selectDocumentMEI = createSelector(
+  documentState,
+  (state: DocumentState) => state.mei
+);
+
+/*
+export const selectDocumentSelectedImagesForExport = createSelector(
+  documentState,
+  (state: DocumentState) => state.selectedImagesIDForExport
+);
+*/
 
 // revisado hasta aquí
 export const selectDocument = createSelector(
@@ -52,15 +74,6 @@ export const selectAlignmentPreview = createSelector(
   (state: DocumentState) => state.alignmentPreview
 );
 
-export const selectExportedFile = createSelector(
-  documentState,
-  (state: DocumentState) => state.exportedFile
-);
-
-export const selectMEI = createSelector(
-  documentState,
-  (state: DocumentState) => state.mei
-);
 
 /*export const selectDocumentAPIRestErrorSelector = createSelector(
   documentState,

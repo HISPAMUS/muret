@@ -1,5 +1,4 @@
 import {Component, OnInit, EventEmitter, Output, HostListener} from '@angular/core';
-import {DeselectSymbol} from "../../../../../agnostic-representation/store/actions/agnostic-representation.actions";
 
 @Component({
   selector: 'app-change-pitch',

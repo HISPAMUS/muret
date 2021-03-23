@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {ApiRestClientService} from '../../../core/services/api-rest-client.service';
 import {Observable} from 'rxjs';
 import {Region} from '../../../core/model/entities/region';
-import {SVGSet} from '../model/svgset';
+import {SVGSet} from '../../../core/model/restapi/svgset';
 import {AgnosticSymbol} from '../../../core/model/entities/agnostic-symbol';
 import {BoundingBox} from '../../../core/model/entities/bounding-box';
 import {Point} from '../../../core/model/entities/point';

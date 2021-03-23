@@ -19,6 +19,7 @@ public class SKernMensSemanticImporter implements ISemanticImporter {
     @Override
     public SemanticEncoding importString(NotationType notationType, String string) throws IM3Exception {
         SKernMensImporter importer = new SKernMensImporter();
+        importer.setNotationType(notationType);
         HumdrumMatrix humdrumMatrix = importer.importSKernMens(string, true);
         return humdrumMatrix2SemanticEncoding(notationType, humdrumMatrix);
     }

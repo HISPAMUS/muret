@@ -229,6 +229,47 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
       });
       return result;
     }
+    case DocumentActionTypes.DocumentExportMEIPartsFacsimile:
+    case DocumentActionTypes.DocumentExportMusicXML:
+    case DocumentActionTypes.DocumentExportMensurstrich:
+    case DocumentActionTypes.DocumentExportMEI: {
+      return {
+        ...state,
+        exportedMEIFile: null,
+        mei: null,
+        //apiRestServerError: null
+      };
+    }
+    case DocumentActionTypes.DocumentExportMEIPartsFacsimileSuccess: {
+      return {
+        ...state,
+        exportedMPEditorFile: {
+          type: DocumentExportType.mei_parts_facsimile,
+          file: action.mei != null ? new Blob([action.mei], {type: 'text/plain'}) : null,
+          fileExtension: 'mei',
+        },
+        //apiRestServerError: null
+      };
+    }
+    case DocumentActionTypes.DocumentExportMEISuccess: {
+      return {
+        ...state,
+        exportedMEIFile: {
+          type: DocumentExportType.mei_score,
+          file: action.mei != null ? new Blob([action.mei], {type: 'text/plain'}) : null,
+          fileExtension: 'mei',
+        },
+        mei: action.mei,
+        //apiRestServerError: null
+      };
+    }
+    /*case DocumentActionTypes.DocumentSelectImagesForExport: {
+      return {
+        ...state,
+        selectedImagesIDForExport: action.imagesID
+      };
+    }*/
+
     // revisado hasta aquí
     case DocumentActionTypes.ResetDocumentServerError: {
       return {
@@ -250,43 +291,11 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
         //apiRestServerError: null
       };
     }
-    case DocumentActionTypes.DocumentExportMusicXML:
-    case DocumentActionTypes.DocumentExportMensurstrich:
-    case DocumentActionTypes.DocumentExportMEI: {
-      return {
-        ...state,
-        exportedFile: null,
-        mei: null,
-        //apiRestServerError: null
-      };
-    }
-    case DocumentActionTypes.DocumentExportMEIPartsFacsimileSuccess: {
-      return {
-        ...state,
-        exportedFile: {
-          type: DocumentExportType.mei_parts_facsimile,
-          file: action.mei != null ? new Blob([action.mei], {type: 'text/plain'}) : null,
-          fileExtension: 'mei',
-        },
-        //apiRestServerError: null
-      };
-    }
-    case DocumentActionTypes.DocumentExportMEISuccess: {
-      return {
-        ...state,
-        exportedFile: {
-          type: DocumentExportType.mei_score,
-          file: action.mei != null ? new Blob([action.mei], {type: 'text/plain'}) : null,
-          fileExtension: 'mei',
-        },
-        mei: action.mei,
-        //apiRestServerError: null
-      };
-    }
+
     case DocumentActionTypes.DocumentExportMusicXMLSuccess: {
       return {
         ...state,
-        exportedFile: {
+        exportedMEIFile: {
           type: DocumentExportType.musicxml,
           file: action.payload != null ? new Blob([action.payload], {type: 'application/x-gzip'}) : null,
           fileExtension: 'tgz',
@@ -297,7 +306,7 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
     case DocumentActionTypes.DocumentExportMensurstrichSuccess: {
       return {
         ...state,
-        exportedFile: {
+        exportedMEIFile: {
           type: DocumentExportType.mensurstrich_svg,
           file: action.payload = new Blob([action.payload], {type: 'application/x-gzip'}),
           fileExtension: 'tgz',

@@ -106,7 +106,11 @@ public class ClassifierModelsController {
         agnostic2SemanticTransducer.setLast_train(new Date(0)); // very old
         agnostic2SemanticTransducer.setName("Agnostic to semantic transducer");
         result.add(agnostic2SemanticTransducer);
-        result.addAll(requestModels(ClassifierModelTypes.eAgnostic2SemanticTranslator, imageID));
+        List<ClassifierModel> a2sNeural = requestModels(ClassifierModelTypes.eAgnostic2SemanticTranslator, imageID);
+        for (ClassifierModel n: a2sNeural) {
+            n.setName(n.getName() + "(it looses agnostic ids)");
+        }
+        result.addAll(a2sNeural);
         return result;
     }
 

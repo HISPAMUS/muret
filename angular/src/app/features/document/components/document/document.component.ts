@@ -79,5 +79,18 @@ export class DocumentComponent implements OnInit, OnDestroy {
   sortSections(sections: Section[]) {
     return sections.slice().sort(compareOrdering);
   }
+
+  viewAndExport() {
+    this.router.navigate(['/document/documentScoreViewAndExport', this.documentID]);
+  }
+
+  editInstruments() {
+    this.router.navigate(['/document/instruments', this.documentID]);
+  }
+
+  viewAlignmentPreview() {
+    this.router.navigate(['/document/alignmentPreview', this.documentID]);
+  }
+
 }
 

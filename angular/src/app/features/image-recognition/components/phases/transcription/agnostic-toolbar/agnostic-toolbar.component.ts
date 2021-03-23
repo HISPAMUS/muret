@@ -1,14 +1,14 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {SVGSet} from "../../../../../agnostic-representation/model/svgset";
 import {KeyValue} from "@angular/common";
-import {AgnosticOrSemanticSymbolAndPosition} from "../../../../../agnostic-representation/model/agnostic-or-semantic-symbol-and-position";
 import {Store} from "@ngrx/store";
 import {ImageRecognitionState} from "../../../../store/state/image-recognition.state";
 import {Subscription} from "rxjs";
 import {selectImageRecognitionSelectedAgnosticSymbols} from "../../../../store/selectors/image-recognition.selector";
-import {AgnosticOrSemanticTypeSVGPath} from "../../../../../agnostic-representation/model/agnostic-or-semantic-type-s-v-g-path";
 import {ImageRecognitionChangeSymbol} from "../../../../store/actions/image-recognition.actions";
 import {AgnosticSymbol} from "../../../../../../core/model/entities/agnostic-symbol";
+import {SVGSet} from "../../../../../../core/model/restapi/svgset";
+import {AgnosticOrSemanticTypeSVGPath} from "../../../../../../core/model/restapi/agnostic-or-semantic-type-s-v-g-path";
+import {AgnosticOrSemanticSymbolAndPosition} from "../../../../../../core/model/restapi/agnostic-or-semantic-symbol-and-position";
 
 @Component({
   selector: 'app-agnostic-toolbar',

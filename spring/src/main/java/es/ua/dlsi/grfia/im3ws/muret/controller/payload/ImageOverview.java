@@ -14,6 +14,7 @@ import java.util.Set;
  */
 public class ImageOverview {
     Long imageID;
+    String filename;
     Integer documentID;
     String documentPath;
     String comments;
@@ -105,5 +106,13 @@ public class ImageOverview {
 
     public void setManuscriptType(ManuscriptType manuscriptType) {
         this.manuscriptType = manuscriptType;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 }

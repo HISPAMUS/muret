@@ -6,9 +6,9 @@ import {AgnosticSymbol} from '../../../core/model/entities/agnostic-symbol';
 import {BoundingBox} from '../../../core/model/entities/bounding-box';
 import {Point} from '../../../core/model/entities/point';
 import {ClassifierModel} from '../../../core/model/entities/classifier-model';
-import {SymbolCreationResult} from "../../agnostic-representation/model/symbol-creation-result";
-import {SVGSet} from "../../agnostic-representation/model/svgset";
 import {NumberArray} from "../../../core/model/restapi/number-array";
+import {SVGSet} from "../../../core/model/restapi/svgset";
+import {SymbolCreationResult} from "../../agnostic-representation-old/model/symbol-creation-result";
 
 @Injectable()
 export class AgnosticRepresentationService {

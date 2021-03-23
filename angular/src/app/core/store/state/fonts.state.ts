@@ -1,12 +1,11 @@
-import {SVGSet} from "../../../features/agnostic-representation/model/svgset";
-import {APIRestServerError} from "../../model/restapi/apirest-server-error";
+import {SVGSet} from "../../model/restapi/svgset";
 
 export interface FontsState {
   svgAgnosticOrSemanticSymbolsSet: SVGSet;
-  apiRestServerError: APIRestServerError;
+  //apiRestServerError: APIRestServerError;
 }
 
 export const initialFontsState: FontsState = {
   svgAgnosticOrSemanticSymbolsSet: null,
-  apiRestServerError: null
+  //apiRestServerError: null
 };

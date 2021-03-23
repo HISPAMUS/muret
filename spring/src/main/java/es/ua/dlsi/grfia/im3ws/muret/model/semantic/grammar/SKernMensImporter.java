@@ -31,6 +31,11 @@ import java.util.logging.Logger;
  */
 public class SKernMensImporter {
     private boolean debug;
+    private NotationType notationType;
+
+    public void setNotationType(NotationType notationType) {
+        this.notationType = notationType;
+    }
 
     public static class Loader extends sKernMensParserBaseListener {
         private final Parser parser;
@@ -61,6 +66,10 @@ public class SKernMensImporter {
             this.inLigature = false;
             this.debug = debug;
             this.parser = parser;
+        }
+
+        public void setNotationType(NotationType notationType) {
+            this.notationType = notationType;
         }
 
         @Override
@@ -833,6 +842,7 @@ public class SKernMensImporter {
             }
             ParseTreeWalker walker = new ParseTreeWalker();
             Loader loader = new Loader(parser, debug);
+            loader.setNotationType(notationType);
             walker.walk(loader, tree);
             if (errorListener.getNumberErrorsFound() != 0) {
                 throw new ImportException(errorListener.getNumberErrorsFound() + " errors found in "

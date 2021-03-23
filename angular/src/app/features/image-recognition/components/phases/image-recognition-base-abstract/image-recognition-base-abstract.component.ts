@@ -27,10 +27,10 @@ import {Text} from "../../../../../svg/model/text";
 import {map} from "rxjs/operators";
 import {ImageFilesService} from "../../../../../core/services/image-files.service";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
-import {SVGSet} from "../../../../agnostic-representation/model/svgset";
 import {selectCoreSVGAgnosticOrSemanticSymbolSet} from "../../../../../core/store/selectors/core.selector";
 import {CoreGetSVGSet} from "../../../../../core/store/actions/fonts.actions";
 import {ShowErrorService} from "../../../../../core/services/show-error.service";
+import {SVGSet} from "../../../../../core/model/restapi/svgset";
 
 @Component({
   selector: 'app-image-recognition-base-abstract-component',

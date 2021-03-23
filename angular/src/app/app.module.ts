@@ -12,10 +12,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {ExportModule} from './features/export/export.module';
 import {LoggerModule, NgxLoggerLevel} from 'ngx-logger';
 import {DocumentsModule} from './features/documents/documents.module';
-import {NewDocumentModule} from './features/new-document/new-document.module';
-import {DocumentAnalysisModule} from './features/document-analysis/document-analysis.module';
-import {AgnosticRepresentationModule} from './features/agnostic-representation/agnostic-representation.module';
-import {SemanticRepresentationModule} from './features/semantic-representation/semantic-representation.module';
 import {SharedModule} from './shared/shared.module';
 import {LazyLoadImageModule} from 'ng-lazyload-image';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -56,8 +52,6 @@ import {faCaretDown} from '@fortawesome/free-solid-svg-icons/faCaretDown';
 import {faBomb} from '@fortawesome/free-solid-svg-icons/faBomb';
 import {faExclamationTriangle} from '@fortawesome/free-solid-svg-icons/faExclamationTriangle';
 import {AgGridModule} from 'ag-grid-angular';
-import {PartsModule} from './features/parts/parts.module';
-import { AdminDashboardModule } from './features/admin-dashboard/admin-dashboard.module';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
@@ -70,6 +64,12 @@ import {faSpinner} from "@fortawesome/free-solid-svg-icons/faSpinner";
 import {faMousePointer} from "@fortawesome/free-solid-svg-icons/faMousePointer";
 import {faServer} from "@fortawesome/free-solid-svg-icons/faServer";
 import {GlobalErrorHandler} from "./core/services/global-error-handler.service";
+import {PartsModule} from "./features/parts-old/parts.module";
+import {DocumentAnalysisModule} from "./features/document-analysis-old/document-analysis.module";
+import {AgnosticRepresentationModule} from "./features/agnostic-representation-old/agnostic-representation.module";
+import {SemanticRepresentationModule} from "./features/semantic-representation-old/semantic-representation.module";
+import {AdminDashboardModule} from "./features/admin-dashboard-old/admin-dashboard.module";
+import {NewDocumentModule} from "./features/new-document-old/new-document.module";
 
 @NgModule({
   declarations: [

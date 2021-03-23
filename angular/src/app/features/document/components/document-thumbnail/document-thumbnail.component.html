@@ -19,7 +19,11 @@
 
 <context-menu>
   <ng-template contextMenuItem (execute)="preview()">
-    Preview...
+    Preview image...
+  </ng-template>
+  <ng-template contextMenuItem divider="true"></ng-template>
+  <ng-template contextMenuItem (execute)="export()">
+    Engrave and export (MEI)...
   </ng-template>
   <ng-template contextMenuItem divider="true"></ng-template>
   <ng-template *ngIf="hidden" contextMenuItem (execute)="unhide()">
