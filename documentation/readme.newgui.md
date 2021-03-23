@@ -13,7 +13,7 @@ The following class diagram contains the whole hierarchy, however it's not alway
 
 ## Routing and permissions
 The routing mechanism has been used. All elements are grouped into components, each one with its own routing.
-Guards are used to prevent unauthorized users from entering restricted pages.
+Guards are used to prevent unauthorized users from entering restricted pagesWithRegions.
 
 ![Guard mechanism sequence diagram](out/puml/angular/guard_sequence.svg)
 
@@ -97,8 +97,8 @@ It only contains information about the breadcrumbs.
 
 | **Action** | **`BreadcrumbsService` method** | **API Rest method** | **`BreadcrumbsState` properties on succes** | **Properties on failure** | 
 | --- | ----------- | ----------- | ----------- | ----- | 
-| `BreadcrumbsUpdateCollection(collectionID: number)` | `getCollectionBreadcrumbs$(collectionID)` | `/breadcrumbs/collection` | `breadcrumbs` | `serverError`| 
-| `BreadcrumbsUpdateDocument(documentID: number)` | `getDocumentBreadcrumbs$(documentID)` | `/breadcrumbs/document` | `breadcrumbs` | `serverError`| 
+| `BreadcrumbsUpdateCollection(collectionID: number)` | `getCollectionBreadcrumbs$$(collectionID)` | `/breadcrumbs/collection` | `breadcrumbs` | `serverError`| 
+| `BreadcrumbsUpdateDocument(documentID: number)` | `getDocumentBreadcrumbs$$(documentID)` | `/breadcrumbs/document` | `breadcrumbs` | `serverError`| 
 
 
 ![Home store component](out/puml/angular/home_store_component.svg)
@@ -174,6 +174,11 @@ This feature deals with all functionalities related to the whole document: previ
 It shows the preview of the document. It delegates almost all functionalities to other components in the same feature.
 
 ![Document component](out/puml/angular/document_component.svg)
+
+## Features: ImageRecognition
+It includes all recognition phases of the image: document analysis, agnostic and semantic.
+
+TO-DO Pasar phases a aquí
 
 -----
 # Shared

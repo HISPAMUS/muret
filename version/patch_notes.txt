@@ -1,3 +1,10 @@
+0.15
+    MAJOR UPDATES
+    - Complete redesign of MuRET (still with pending issues)
+
+    MINOR UPDATES
+
+------
 0.14
     MAJOR UPDATES
     -
@@ -12,7 +19,7 @@
     MAJOR UPDATES
     - Training set with agnostic and semantic information now includes the image and the region bounding box (issue #182)
     - FMT MEI MEI import script
-    - Refactoring of modules in order to prepare the semantic visual toolbar
+    - Refactoring of modules in orderEntities to prepare the semantic visual toolbar
     - Migration to Angular 11
     - In semantic mode, the selected item in the **skern/**smens grid is bidirectionally highlighted in the score
     - When the agnostic symbol is selected, the associated semantic symbol in the grid and in the notation is highlighted. When a semantic element is selected, the related agnostic element is also highlighted
@@ -28,7 +35,7 @@
         * the MEI zone of symbols include as label the agnostic symbol string
         * a IIIF manifest is generated and installed in the site muret.dlsi.ua.es/IIIF, with images served by a new Cantaloupe IIIF server at muret.dlsi.ua.es/images
         (in current version, for compatibility with MPEditor @ Measuring Polyphony, the page beginning facsimile references are pointing to the surface element
-        instead of the page zone - this will be fixed when MPEditor currently handles this situation that does not allow correctly encoding images that include two pages)
+        instead of the page zone - this will be fixed when MPEditor currently handles this situation that does not allow correctly encoding images that include two pagesWithRegions)
     - New button added for exporting MEI files for the Measuring Polyphony project editor, that does not include rhythmic interpretations (issue #173)
 
     MINOR UPDATES
@@ -96,7 +103,7 @@
 --------------------------------------------------------------------------------------------------------------------------------------------
 0.6
     MAJOR UPDATES
-    - The training set exporting screen allows the selection of collections, subcollections and documents
+    - The training set exporting screen allows the selectionManager of collections, subcollections and documents
     - Classifier model removal added
     - The "preflight check" has been upgraded to a "alignment preview" screen that shows both warnings (regions without parts, without clefs...), and visually allows to locate possible incorrect durations
     - Show all server errors in client using a "toast" popup
@@ -105,7 +112,7 @@
 
 
     MINOR UPDATES
-    - System is prepared in order to deal correctly with the order of images, pages, regions and symbols in screens such as the training set exporting
+    - System is prepared in orderEntities to deal correctly with the orderEntities of images, pagesWithRegions, regions and symbols in screens such as the training set exporting
     - The score view is no longer in the same screen as the export one
     - Custos are now correctly rendered
     - Key changes are drawn in semantic mode
@@ -145,7 +152,7 @@ MAJOR UPDATES
 
 MINOR UPDATES
     - Agnostic to semantic transducer includes correctly the colored notes and mensuration changes
-    - The staffDef includes the modusmaior and modusminor in order to correctly render the score in Verovio
+    - The staffDef includes the modusmaior and modusminor in orderEntities to correctly render the score in Verovio
     - Improvements in the document analysis usability
 
 --------------------------------------------------------------------------------------------------------------------------------------------

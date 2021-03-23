@@ -490,17 +490,15 @@ HomeModule --> HomeComponent
 ' -----------------------------------------------------------------------------------------------------------
 ```puml
 @startuml document_component
-[DocumentComponent] -- documentID
 [DocumentComponent] -- section
 [DocumentComponent] -- sections
 [DocumentComponent] -- includeNewSection
-[DocumentComponent] -- documentParts
-[DocumentComponent] -- documentPath
+[DocumentComponent] -- imageOverview
 [DocumentComponent] -- images
 [DocumentComponent] -- selectionManager
 [DocumentComponent] -- partsInImages
 
-documentID )-- [SectionComponent]
+imageOverview )-- [SectionComponent]
 section )-- [SectionComponent]
 sections )-- [SectionComponent]
 includeNewSection )-- [SectionComponent]
@@ -545,6 +543,11 @@ SectionComponent.imagePartIds )-- [DocumentThumbnailComponent]
 
 DocumentThumbnailComponent.documentParts )-- [ImagePartsComponent]
 DocumentThumbnailComponent.imagePartIds )-- [ImagePartsComponent]
+
+() "imageID" as DocumentThumbnailComponent.imageID
+ DocumentThumbnailComponent.imageID -- [DocumentThumbnailComponent]
+
+DocumentThumbnailComponent.imageID )-- [ImagePhasesComponent]
 
 [appSelectableContainer] --( selectionManager
 selectionManager )-- [appSelectable]

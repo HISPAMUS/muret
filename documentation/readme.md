@@ -24,7 +24,7 @@ The following structure has been used inside the `app` module:
     + document
       * AlignmentPreviewComponent
       * DocumentComponentOld
-      * DocumentScoreViewerAndExporterComponent
+      * DocumentScoreViewerAndExporterComponentOLD
       * ImageThumbnailComponent
       * InstrumentsComponent
       * MeiScoreViewerComponent
@@ -44,7 +44,7 @@ The following structure has been used inside the `app` module:
     + parts
         * PartSelectionComponent
     + semantic-representation
-        * NotationComponent
+        * SemanticNotationComponent
         * SemanticRepresentationComponent
 * layout
   + LayoutComponent
@@ -129,12 +129,12 @@ package "documents" #LightPink {
 }     
 
 package "semantic-representation" #LightPink {
-    [NotationComponent]
+    [SemanticNotationComponent]
     
     [SemanticRepresentationComponent] 
         [SemanticRepresentationComponent] ....> [ImagePreviewComponent]
         [SemanticRepresentationComponent] ....> [ImageComponent]
-        [SemanticRepresentationComponent] ....> [NotationComponent]
+        [SemanticRepresentationComponent] ....> [SemanticNotationComponent]
 }                               
 
 [BreadcrumbsComponent] #LightGray
