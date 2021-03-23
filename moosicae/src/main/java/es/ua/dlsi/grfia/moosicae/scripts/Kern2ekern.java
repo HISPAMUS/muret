@@ -44,7 +44,11 @@ public class Kern2ekern { // actually Bkern2ekern
         }
         Collection<File> files = FileUtils.listFiles(folder, new String[]{extension}, true);
         for (File krnFile: files) {
-            convert(krnFile, basic);
+            try {
+                convert(krnFile, basic);
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
         }
     }
 
