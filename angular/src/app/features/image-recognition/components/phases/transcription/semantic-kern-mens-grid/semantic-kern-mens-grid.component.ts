@@ -274,7 +274,13 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
   }
 
   private selectGridRow(selectedLine: number) {
-    this.gridApi.getRowNode(selectedLine).setSelected(true);
+    if (this.gridApi) {
+      const rowNode = this.gridApi.getRowNode(selectedLine);
+      if (rowNode) {
+        rowNode.setSelected(true);
+      }
+    }
+
   }
 
   private selectAgnosticSymbolRelatedToLine(rowIndex: number) {

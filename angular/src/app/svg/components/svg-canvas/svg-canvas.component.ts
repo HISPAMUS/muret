@@ -70,8 +70,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   @Output() selectedShapesIDChange = new EventEmitter<string[]>(); // TODO @deprecated
   @Output() modeChange = new EventEmitter(); // must have this name in order to be input / output
   @Output() onContextMenu = new EventEmitter<ContextMenuSVGSelectionEvent>();
-  @Output() selectedShapesChange = new EventEmitter<Shape[]>(); // keep this name for having input / output
-  @Input() selectedShapes: Shape[];
+  @Output() selectedShapesChange = new EventEmitter<Shape[]>(true); // keep this name for having input / output -- async to avoid ExpressionChangedAfterItHasBeenCheckedError
+  @Input() selectedShapes: Shape[] = [];
 
   @ViewChild('canvas', {static: true}) canvas: ElementRef; // with false it fails
   @ViewChild('svgContent', {static: true}) svgContent: ElementRef;
@@ -162,9 +162,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
 
     if (this.modeValue == 'eEditing' && this.singleSelectionInEditMode) {
       this.selectionManager.leaveJustOneSelected();
-      setTimeout( () => { // setTimeout solves the ExpressionChangedAfterItHasBeenCheckedError:  error
-        this.selectedShapesChange.emit(this.selectionManager.getSelected());
-      });
+      this.emitSelectedShapes();
     }
     if (this.modeValue == 'eSelecting' || this.modeValue == 'eEditing') {
       if (this.selectionManager && this.selectionManager.hasJustOneSelectedShape()) {
@@ -501,7 +499,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
       } else {
         this.selectionManager.clear();
       }
-      this.selectedShapesChange.emit(this.selectionManager.getSelected());
+      this.emitSelectedShapes();
     }
   }
 
@@ -597,5 +595,8 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
     }
   }*/
 
+  private emitSelectedShapes() {
+    this.selectedShapesChange.emit(this.selectionManager.getSelected());
+  }
 }
 

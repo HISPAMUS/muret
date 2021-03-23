@@ -35,10 +35,10 @@ export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
   @Input() loadedImage: SafeResourceUrl;
   @Input() selectedRegion: Region;
   @Output() modeChange = new EventEmitter(); // must have this name in order to be input / output
-  @Output() selectedShapesChange = new EventEmitter();
+  @Output() selectedShapesChange = new EventEmitter(true); // keep this name for having input / output -- async to avoid ExpressionChangedAfterItHasBeenCheckedError
 
   modeValue: 'eAdding' | 'eEditing' | 'eSelecting';
-  selectedShapesValue: Shape[];
+  selectedShapesValue: Shape[] = [];
 
   shapesOfSelectedRegion: Shape[];
   zoomManager: ZoomManager;
@@ -54,7 +54,6 @@ export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
     this.modeValue = 'eSelecting';
     this.nextShapeToDraw = 'Rectangle';
     this.addMethodType = 'boundingbox';
-    this.selectedShapesValue = [];
   }
 
   ngOnInit(): void {
@@ -101,7 +100,7 @@ export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
   set selectedShapes(val) {
     if (this.selectedShapesValue != val) {
       this.selectedShapesValue = val;
-      this.selectedShapesChange.emit(this.selectedShapesValue);
+      // this.selectedShapesChange.emit(this.selectedShapesValue);
     }
   }
 
