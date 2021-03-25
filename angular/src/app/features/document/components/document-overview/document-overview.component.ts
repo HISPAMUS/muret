@@ -36,12 +36,6 @@ export class DocumentOverviewComponent implements OnInit, OnDestroy {
 
   constructor(protected router: Router, protected route: ActivatedRoute, protected store: Store<DocumentState>,
               protected dialogsService: DialogsService) {
-    this.userIDSubscription = this.store.select(selectAuthUserID).subscribe(next => {
-      if (next) {
-        this.store.dispatch(new HomeUpdateLastDocuments(next, this.documentID));
-      }
-    });
-
     this.documentOverviewSubscription = this.store.select(selectDocumentOverview).subscribe(next => {
       if (next) {
         this.documentOverview = next;
@@ -59,11 +53,19 @@ export class DocumentOverviewComponent implements OnInit, OnDestroy {
         this.store.dispatch(new BreadcrumbsUpdateDocument(this.documentID));
         this.store.dispatch(new DocumentGetDocumentStatistics(this.documentID));
         this.onDocumentIDChanged(this.documentID);
+
+        this.userIDSubscription = this.store.select(selectAuthUserID).subscribe(next => {
+          if (next) {
+            this.store.dispatch(new HomeUpdateLastDocuments(next, this.documentID));
+          }
+        });
       });
   }
 
   ngOnDestroy(): void {
-    this.userIDSubscription.unsubscribe();
+    if (this.userIDSubscription) {
+      this.userIDSubscription.unsubscribe();
+    }
     this.documentOverviewSubscription.unsubscribe();
   }
 
