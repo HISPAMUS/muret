@@ -36,6 +36,11 @@ export const selectDocumentMEI = createSelector(
   (state: DocumentState) => state.mei
 );
 
+export const selectDocumentStatistics = createSelector(
+  documentState,
+  (state: DocumentState) => state.statistics
+);
+
 /*
 export const selectDocumentSelectedImagesForExport = createSelector(
   documentState,
@@ -59,10 +64,6 @@ export const selectImages = createSelector(
   (state: DocumentState) => state.mei
 );
 */
-export const selectDocumentStatistics = createSelector(
-  documentState,
-  (state: DocumentState) => state.statistics
-);
 
 /*export const selectPreflightCheckResults = createSelector(
   documentState,

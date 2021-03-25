@@ -170,7 +170,7 @@ This feature deals with all functionalities related to the whole document: previ
 
 ![Document store component](out/puml/angular/document_store_component.svg)
 
-### features.documents.DocumentComponent
+### features.documents.DocumentPieceComponent
 It shows the preview of the document. It delegates almost all functionalities to other components in the same feature.
 
 ![Document component](out/puml/angular/document_component.svg)

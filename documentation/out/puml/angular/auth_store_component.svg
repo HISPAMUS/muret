@@ -28,7 +28,7 @@ entity selectAuthAuthErrorMessage--><ellipse cx="722.5" cy="254" fill="#FEFECE" 
 entity TokenInterceptorService--><ellipse cx="1398.5" cy="372" fill="#FEFECE" filter="url(#f1sebxwk1o63dw)" rx="8" ry="8" style="stroke:#A80036;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="167" x="1315" y="402.5352">TokenInterceptorService</text><!--MD5=[826ab927a0742f468322359ed8b39d35]
 entity HomeComponent--><rect fill="#FEFECE" filter="url(#f1sebxwk1o63dw)" height="46.4883" style="stroke:#A80036;stroke-width:1.5;" width="161" x="2063" y="349"/><rect fill="#FEFECE" height="10" style="stroke:#A80036;stroke-width:1.5;" width="15" x="2204" y="354"/><rect fill="#FEFECE" height="2" style="stroke:#A80036;stroke-width:1.5;" width="4" x="2202" y="356"/><rect fill="#FEFECE" height="2" style="stroke:#A80036;stroke-width:1.5;" width="4" x="2202" y="360"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="121" x="2078" y="382.5352">HomeComponent</text><!--MD5=[ba4a44f7397835fa22bf3b8f4f24c905]
 entity CollectionsComponent--><rect fill="#FEFECE" filter="url(#f1sebxwk1o63dw)" height="46.4883" style="stroke:#A80036;stroke-width:1.5;" width="197" x="2259" y="349"/><rect fill="#FEFECE" height="10" style="stroke:#A80036;stroke-width:1.5;" width="15" x="2436" y="354"/><rect fill="#FEFECE" height="2" style="stroke:#A80036;stroke-width:1.5;" width="4" x="2434" y="356"/><rect fill="#FEFECE" height="2" style="stroke:#A80036;stroke-width:1.5;" width="4" x="2434" y="360"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="157" x="2274" y="382.5352">CollectionsComponent</text><!--MD5=[422d10d901d47f36978e82d8272e9edf]
-entity DocumentComponent--><rect fill="#FEFECE" filter="url(#f1sebxwk1o63dw)" height="46.4883" style="stroke:#A80036;stroke-width:1.5;" width="191" x="2491" y="349"/><rect fill="#FEFECE" height="10" style="stroke:#A80036;stroke-width:1.5;" width="15" x="2662" y="354"/><rect fill="#FEFECE" height="2" style="stroke:#A80036;stroke-width:1.5;" width="4" x="2660" y="356"/><rect fill="#FEFECE" height="2" style="stroke:#A80036;stroke-width:1.5;" width="4" x="2660" y="360"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="151" x="2506" y="382.5352">DocumentComponent</text><!--MD5=[bc0751fee534c27e48ded623d7831d01]
+entity DocumentPieceComponent--><rect fill="#FEFECE" filter="url(#f1sebxwk1o63dw)" height="46.4883" style="stroke:#A80036;stroke-width:1.5;" width="191" x="2491" y="349"/><rect fill="#FEFECE" height="10" style="stroke:#A80036;stroke-width:1.5;" width="15" x="2662" y="354"/><rect fill="#FEFECE" height="2" style="stroke:#A80036;stroke-width:1.5;" width="4" x="2660" y="356"/><rect fill="#FEFECE" height="2" style="stroke:#A80036;stroke-width:1.5;" width="4" x="2660" y="360"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="151" x="2506" y="382.5352">DocumentPieceComponent</text><!--MD5=[bc0751fee534c27e48ded623d7831d01]
 link AuthLogIn to Auth Store--><path d="M1178.67,35.81 C1190.28,41.77 1211,52.01 1229.5,59 C1304.95,87.51 1394.88,112.37 1451.83,127.03 " fill="none" id="AuthLogIn-Auth Store" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[54353f87a141d5e895a7adb101014b77]
 link AuthLogOut to Auth Store--><path d="M1305.61,35.73 C1332.79,49.83 1414.61,92.28 1465.66,118.77 " fill="none" id="AuthLogOut-Auth Store" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[e569cc872c01ff4a6ecb2f1b02af1015]
 link AuthGetStatus to Auth Store--><path d="M1442.84,39.27 C1453.61,55.96 1478.27,94.16 1494.11,118.71 " fill="none" id="AuthGetStatus-Auth Store" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[bdf8dbdfd072e17b614ec82d519021d8]
@@ -58,7 +58,7 @@ reverse link selectAuthResetPWDStatus to ResetPasswordComponent--><path d="M1631
 reverse link selectAuthIsAdmin to HomeComponent--><path d="M2153.23,268.4 C2151.37,288.05 2147.87,324.92 2145.62,348.69 " fill="none" id="selectAuthIsAdmin-backto-HomeComponent" style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#A80036" points="2153.71,263.34,2148.8562,271.9097,2153.2252,268.3164,2156.8185,272.6854,2153.71,263.34" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[58ae435923924d921df3fd41a3bc2a4d]
 reverse link selectAuthUserID to HomeComponent--><path d="M2333.98,262.69 C2303.55,279.99 2228.73,322.53 2182.44,348.86 " fill="none" id="selectAuthUserID-backto-HomeComponent" style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#A80036" points="2338.47,260.13,2328.6681,261.0911,2334.1209,262.5969,2332.6151,268.0496,2338.47,260.13" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[7ff6cd6b189ddfbddd682d023f3f2922]
 reverse link selectAuthUserID to CollectionsComponent--><path d="M2348.66,268.4 C2350.35,288.05 2353.53,324.92 2355.58,348.69 " fill="none" id="selectAuthUserID-backto-CollectionsComponent" style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#A80036" points="2348.22,263.34,2345.0078,272.6503,2348.6494,268.3215,2352.9782,271.9632,2348.22,263.34" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[a8aba0d8522937a517312a52a2381192]
-reverse link selectAuthUserID to DocumentComponent--><path d="M2361.2,261.65 C2395.38,278.24 2485.63,322.04 2540.97,348.9 " fill="none" id="selectAuthUserID-backto-DocumentComponent" style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#A80036" points="2356.58,259.41,2362.928,266.9402,2361.0775,261.5945,2366.4232,259.7441,2356.58,259.41" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[fe8272908396191d46d8fe7b611ca12d]
+reverse link selectAuthUserID to DocumentPieceComponent--><path d="M2361.2,261.65 C2395.38,278.24 2485.63,322.04 2540.97,348.9 " fill="none" id="selectAuthUserID-backto-DocumentPieceComponent" style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#A80036" points="2356.58,259.41,2362.928,266.9402,2361.0775,261.5945,2366.4232,259.7441,2356.58,259.41" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[fe8272908396191d46d8fe7b611ca12d]
 @startuml auth_store_component
     ' Auth
     [Auth Store]
@@ -93,7 +93,7 @@ reverse link selectAuthUserID to DocumentComponent--><path d="M2361.2,261.65 C23
     selectAuthIsAdmin <.. [HomeComponent]
     selectAuthUserID <.. [HomeComponent]
     selectAuthUserID <.. [CollectionsComponent]
-    selectAuthUserID <.. [DocumentComponent]
+    selectAuthUserID <.. [DocumentPieceComponent]
 @enduml
 
 @startuml auth_store_component
@@ -129,7 +129,7 @@ reverse link selectAuthUserID to DocumentComponent--><path d="M2361.2,261.65 C23
     selectAuthIsAdmin <.. [HomeComponent]
     selectAuthUserID <.. [HomeComponent]
     selectAuthUserID <.. [CollectionsComponent]
-    selectAuthUserID <.. [DocumentComponent]
+    selectAuthUserID <.. [DocumentPieceComponent]
 @enduml
 
 PlantUML version 1.2021.00(Sun Jan 10 11:25:05 CET 2021)

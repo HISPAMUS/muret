@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DocumentComponent } from './document.component';
+import { ImagesTableComponent } from './images-table.component';
 
-describe('DocumentComponent', () => {
-  let component: DocumentComponent;
-  let fixture: ComponentFixture<DocumentComponent>;
+describe('ImagesTableComponent', () => {
+  let component: ImagesTableComponent;
+  let fixture: ComponentFixture<ImagesTableComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DocumentComponent ]
+      declarations: [ ImagesTableComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DocumentComponent);
+    fixture = TestBed.createComponent(ImagesTableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

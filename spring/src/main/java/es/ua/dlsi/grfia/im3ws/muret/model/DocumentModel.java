@@ -92,7 +92,7 @@ public class DocumentModel {
                     null,
                     null,
                     null,
-                    document.getCollection(),  null
+                    document.getCollection(),  null, DocumentType.piece //TODO Document type
             );
 
             return documentRepository.save(newDocument);

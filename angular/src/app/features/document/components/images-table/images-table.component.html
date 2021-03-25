@@ -1,0 +1,25 @@
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Section</th>
+    <th scope="col">File name</th>
+    <th scope="col">Document analysis</th>
+    <th scope="col">Parts</th>
+    <th scope="col">Transcription</th>
+    <!--<th scope="col" sortable="lastChangedDate" (sort)="onSort($event)">Last changed date</th> TODO-->
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let image of imageRows; trackBy: imageTracking">
+    <th scope="row">{{ image.id }}</th>
+    <td>{{image.sectionName}}</td>
+    <td><a href [routerLink]="['/imageRecognition/overview', image.id]">{{image.filename}}</a></td> <!-- TODO Colors like thumbnail view -->
+    <td><a [routerLink]="['/imageRecognition/documentAnalysis', image.id]">{{image.documentAnalysisProgress}}</a></td>
+    <td><a [routerLink]="['/imageRecognition/parts', image.id]">{{image.partsProgress}}</a></td>
+    <td><a [routerLink]="['/imageRecognition/transcription', image.id]">{{image.transcriptionProgress}}</a></td>
+    <!--<td><ngb-highlight [result]="getImageStateString(image) | number" [term]="service.searchTerm"></ngb-highlight></td>-->
+    <!--<td><ngb-highlight [result]="image. | number" [term]="service.searchTerm"></ngb-highlight></td>-->
+  </tr>
+  </tbody>
+</table>

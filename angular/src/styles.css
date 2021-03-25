@@ -7,6 +7,10 @@
 @import "../node_modules/ngx-lightbox/lightbox.css";
 @import "../node_modules/ngx-toastr/toastr.css";
 
+.table {
+  color: white;
+}
+
 .btn-group * {
   color: white;
   font-weight: lighter;

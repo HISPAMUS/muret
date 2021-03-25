@@ -16,6 +16,7 @@ export interface DocumentState {
   exportedMPEditorFile?: DocumentExport;
   mei?: string;
   selectedImagesIDForExport?: NumberArray;
+  statistics?: DocumentStatistics;
 
   //apiRestServerError: APIRestServerError;
 
@@ -23,7 +24,6 @@ export interface DocumentState {
   // revisado hasta aquí
   document?: Document;
   images?: Image[];
-  statistics?: DocumentStatistics;
   alignmentPreview?: AlignmentPreview;
 
 }
@@ -36,12 +36,12 @@ export const initialDocumentState: DocumentState = {
   exportedMPEditorFile: null,
   mei: null,
   selectedImagesIDForExport: null,
+  statistics: null,
 
   //apiRestServerError: null,
   // revisado hasta aquí
   document: null,
   images: null,
-  statistics: null,
   alignmentPreview: null,
 
 };

@@ -11,10 +11,9 @@ import {DocumentEffects} from './store/effects/document.effects';
 import {documentReducers} from './store/reducers/document.reducers';
 import {FileUploadModule} from 'ng2-file-upload';
 import {SharedModule} from '../../shared/shared.module';
-import {NgbDropdownModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbDropdownModule, NgbPaginationModule, NgbTypeaheadModule} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule} from '@angular/forms';
 import {SvgModule} from '../../svg/svg.module';
-import { DocumentComponent } from './components/document/document.component';
 import { SectionComponent } from './components/section/section.component';
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import { DocumentThumbnailComponent } from './components/document-thumbnail/document-thumbnail.component';
@@ -32,9 +31,14 @@ import {InstrumentsComponent} from "./components/instruments-old/instruments.com
 import {AlignmentPreviewComponent} from "./components/alignment-preview-old/alignment-preview.component";
 import {MEIScoreViewerComponent} from "./components/mei-score-viewer/meiscore-viewer.component";
 import {ImageThumbnailComponent} from "./components/image-thumbnail-old/image-thumbnail.component";
+import { DocumentCompilationComponent } from './components/document-types/document-compilation/document-compilation.component';
+import { DocumentIncipitsComponent } from './components/document-types/document-incipits/document-incipits.component';
+import { DocumentOverviewComponent } from './components/document-overview/document-overview.component';
+import {DocumentPieceComponent} from "./components/document-types/document-piece/document-piece.component";
+import { ImagesTableComponent } from './components/images-table/images-table.component';
 
 @NgModule({
-  declarations: [DocumentComponentOld, ImageThumbnailComponent, UploadImagesComponent, DocumentScoreViewerAndExporterComponentOLD, InstrumentsComponent, AlignmentPreviewComponent, MEIScoreViewerComponent, DocumentComponent, SectionComponent, DocumentThumbnailComponent, ImagePartsComponent, ReorderSectionsComponent, ReorderImagesComponent],
+  declarations: [DocumentComponentOld, ImageThumbnailComponent, UploadImagesComponent, DocumentScoreViewerAndExporterComponentOLD, InstrumentsComponent, AlignmentPreviewComponent, MEIScoreViewerComponent, DocumentPieceComponent, SectionComponent, DocumentThumbnailComponent, ImagePartsComponent, ReorderSectionsComponent, ReorderImagesComponent, DocumentCompilationComponent, DocumentIncipitsComponent, DocumentOverviewComponent, ImagesTableComponent],
   imports: [
     CommonModule,
     DocumentRoutingModule,
@@ -52,7 +56,9 @@ import {ImageThumbnailComponent} from "./components/image-thumbnail-old/image-th
     ContextMenuModule.forRoot({
       useBootstrap4: true,
     }),
-    DragDropModule
+    DragDropModule,
+    NgbTypeaheadModule,
+    NgbPaginationModule
   ],
   providers: [
     DocumentService

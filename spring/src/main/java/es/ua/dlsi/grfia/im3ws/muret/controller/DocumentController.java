@@ -290,7 +290,7 @@ public class DocumentController {
             HashSet<PartsInImage> result = getPartsInImages(document.get());
             return result;
         } catch (Throwable e) {
-            throw ControllerUtils.createServerError(this, "Cannot create statistics", e);
+            throw ControllerUtils.createServerError(this, "Cannot get parts in images", e);
         }
     }
 
@@ -537,6 +537,31 @@ public class DocumentController {
     }
 
 
+    @GetMapping(path = {"/statistics/{id}"})
+    @Transactional
+    public DocumentStatistics getDocumentStatistics(@PathVariable("id") Integer id)  {
+        try {
+            Optional<Document> document = documentRepository.findById(id);
+            if (!document.isPresent()) {
+                throw new IM3WSException("Cannot find a document with id " + id);
+            }
+
+            //TODO All this could be done in just one query with a union
+            int documentID = document.get().getId();
+            DocumentStatistics documentStatistics = new DocumentStatistics();
+            documentStatistics.setAgnosticSymbols(documentRepository.getNumberOfAgnosticSymbols(documentID));
+            documentStatistics.setImages(document.get().getImages().size());
+            documentStatistics.setPages(documentRepository.getNumberOfPages(documentID));
+            documentStatistics.setRegions(documentRepository.getNumberOfRegions(documentID));
+            documentStatistics.setStaves(documentRepository.getNumberOfStaves(documentID));
+
+            return documentStatistics;
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot create statistics", e);
+        }
+    }
+
+
     // --- TODO usado hasta aquí ----
 
     // angular ng2-file-upload uploads files one by one
@@ -621,30 +646,6 @@ public class DocumentController {
                 .collect(Collectors.toList());
     }*/
 
-
-    @GetMapping(path = {"/statistics/{id}"})
-    @Transactional
-    public DocumentStatistics getDocumentStatistics(@PathVariable("id") Integer id)  {
-        try {
-            Optional<Document> document = documentRepository.findById(id);
-            if (!document.isPresent()) {
-                throw new IM3WSException("Cannot find a document with id " + id);
-            }
-
-            //TODO All this could be done in just one query with a union
-            int documentID = document.get().getId();
-            DocumentStatistics documentStatistics = new DocumentStatistics();
-            documentStatistics.setAgnosticSymbols(documentRepository.getNumberOfAgnosticSymbols(documentID));
-            documentStatistics.setImages(document.get().getImages().size());
-            documentStatistics.setPages(documentRepository.getNumberOfPages(documentID));
-            documentStatistics.setRegions(documentRepository.getNumberOfRegions(documentID));
-            documentStatistics.setStaves(documentRepository.getNumberOfStaves(documentID));
-
-            return documentStatistics;
-        } catch (Throwable e) {
-            throw ControllerUtils.createServerError(this, "Cannot create statistics", e);
-        }
-    }
 
     @PutMapping("/composer/{documentID}")
     public void putComposer(@PathVariable int documentID, @RequestBody StringBody composer)  {

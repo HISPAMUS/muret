@@ -34,7 +34,7 @@
     selectAuthIsAdmin <.. [HomeComponent]
     selectAuthUserID <.. [HomeComponent]
     selectAuthUserID <.. [CollectionsComponent]
-    selectAuthUserID <.. [DocumentComponent]
+    selectAuthUserID <.. [DocumentPieceComponent]
 @enduml
 ```
 
@@ -92,7 +92,7 @@
 
     [HomeComponent] ..> HomeGetLastDocuments
     [DocumentsComponent] ..> HomeUpdateLastDocuments
-    [DocumentComponent] ..> HomeUpdateLastDocuments
+    [DocumentPieceComponent] ..> HomeUpdateLastDocuments
     selectHomeLastDocuments <.. [HomeComponent]
 @enduml
 ```
@@ -163,7 +163,7 @@
     [Document Store] -- selectDocumentPartsInImages
     
 
-    [DocumentComponent] ..> DocumentGetOverview
+    [DocumentPieceComponent] ..> DocumentGetOverview
     [ReorderSectionsComponent] ..> DocumentGetOverview
     [DocumentThumbnailComponent] ..> DocumentMoveImagesToSection
     [SectionComponent] ..> DocumentNewSection
@@ -172,13 +172,13 @@
     [ReorderSectionsComponent] ..> DocumentReorderSections
     [ReorderImagesComponent] ..> DocumentGetSection
     [ReorderImagesComponent] ..> DocumentReorderImages
-    [DocumentComponent] ..> DocumentGetPartsInImages
+    [DocumentPieceComponent] ..> DocumentGetPartsInImages
     [SectionComponent] ..> DocumentMoveImagesToDefaultSection
 
-    selectDocumentOverview <.. [DocumentComponent]
+    selectDocumentOverview <.. [DocumentPieceComponent]
     selectDocumentOverview <.. [ReorderSectionsComponent]
     selectDocumentSection <.. [ReorderImagesComponent]
-    selectDocumentPartsInImages <.. [DocumentComponent]
+    selectDocumentPartsInImages <.. [DocumentPieceComponent]
 @enduml
 ```
 
@@ -490,13 +490,13 @@ HomeModule --> HomeComponent
 ' -----------------------------------------------------------------------------------------------------------
 ```puml
 @startuml document_component
-[DocumentComponent] -- section
-[DocumentComponent] -- sections
-[DocumentComponent] -- includeNewSection
-[DocumentComponent] -- imageOverview
-[DocumentComponent] -- images
-[DocumentComponent] -- selectionManager
-[DocumentComponent] -- partsInImages
+[DocumentPieceComponent] -- section
+[DocumentPieceComponent] -- sections
+[DocumentPieceComponent] -- includeNewSection
+[DocumentPieceComponent] -- imageOverview
+[DocumentPieceComponent] -- images
+[DocumentPieceComponent] -- selectionManager
+[DocumentPieceComponent] -- partsInImages
 
 imageOverview )-- [SectionComponent]
 section )-- [SectionComponent]
@@ -552,7 +552,7 @@ DocumentThumbnailComponent.imageID )-- [ImagePhasesComponent]
 [appSelectableContainer] --( selectionManager
 selectionManager )-- [appSelectable]
 
-[appSelectableContainer] <- [DocumentComponent]
+[appSelectableContainer] <- [DocumentPieceComponent]
 selectionManager <- [DocumentThumbnailComponent]: getSelected()
 
 () "onSelected" as DocumentThumbnailComponent.onSelected
@@ -603,13 +603,13 @@ SelectableDirective *--> SelectionManager
 ```puml
 @startuml selectable_sequence
 actor User
-boundary DocumentComponent
+boundary DocumentPieceComponent
 create entity SelectionManager
-DocumentComponent -> SelectionManager
+DocumentPieceComponent -> SelectionManager
 create control appSelectableContainer
-DocumentComponent -> appSelectableContainer : selectionManager
+DocumentPieceComponent -> appSelectableContainer : selectionManager
 create boundary SectionComponent
-DocumentComponent -> SectionComponent : selectionManager
+DocumentPieceComponent -> SectionComponent : selectionManager
 create boundary DocumentThumbnailComponent
 SectionComponent -> DocumentThumbnailComponent : selectionManager
 create control appSelectable

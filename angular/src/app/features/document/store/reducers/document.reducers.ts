@@ -263,6 +263,21 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
         //apiRestServerError: null
       };
     }
+    case DocumentActionTypes.DocumentGetDocumentStatistics: {
+      return {
+        ...state,
+        statistics: null,
+        //apiRestServerError: null
+      };
+    }
+    case DocumentActionTypes.DocumentGetDocumentStatisticsSuccess: {
+      return {
+        ...state,
+        statistics: action.documentStatistics,
+        //apiRestServerError: null
+      };
+    }
+
     /*case DocumentActionTypes.DocumentSelectImagesForExport: {
       return {
         ...state,
@@ -311,13 +326,6 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
           file: action.payload = new Blob([action.payload], {type: 'application/x-gzip'}),
           fileExtension: 'tgz',
         },
-        //apiRestServerError: null
-      };
-    }
-    case DocumentActionTypes.DocumentGetDocumentStatisticsSuccess: {
-      return {
-        ...state,
-        statistics: action.documentStatistics,
         //apiRestServerError: null
       };
     }

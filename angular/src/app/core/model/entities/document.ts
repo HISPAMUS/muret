@@ -13,6 +13,7 @@ export interface Document extends Entity {
   comments: string;
   notationType: string;
   manuscriptType: string;
+  documentType: string;
   state: State;
   composer: string;
   collection: Collection;

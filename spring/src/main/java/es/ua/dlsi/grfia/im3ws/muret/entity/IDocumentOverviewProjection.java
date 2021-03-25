@@ -1,5 +1,6 @@
 package es.ua.dlsi.grfia.im3ws.muret.entity;
 
+import es.ua.dlsi.im3.core.score.NotationType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
@@ -24,4 +25,7 @@ public interface IDocumentOverviewProjection {
     List<IPartProjection> getParts();
     List<ISectionProjection> getSections();
     List<IImageProjection> getImages();
+    DocumentType getDocumentType();
+    NotationType getNotationType();
+    ManuscriptType getManuscriptType();
 }

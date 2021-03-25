@@ -201,6 +201,15 @@ export class DocumentEffects {
       //catchError(err => of(new DocumentServerError(err)))
     )));
 
+  @Effect()
+  getDocumentStatistics$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentGetDocumentStatistics>(DocumentActionTypes.DocumentGetDocumentStatistics),
+    switchMap((action: DocumentGetDocumentStatistics) => this.documentService.getDocumentStatistics$(action.documentID).pipe(
+      switchMap((documentStatistics: DocumentStatistics) => of(new DocumentGetDocumentStatisticsSuccess(documentStatistics))),
+      //catchError(err => of(new DocumentServerError(err)))
+    )));
+
+
   // revisado hasta aquí
   @Effect()
   getDocument$: Observable<Action> = this.actions$.pipe(
@@ -236,13 +245,6 @@ export class DocumentEffects {
       //catchError(err => of(new DocumentServerError(err)))
     )));
 
-  @Effect()
-  getDocumentStatistics$: Observable<Action> = this.actions$.pipe(
-    ofType<DocumentGetDocumentStatistics>(DocumentActionTypes.DocumentGetDocumentStatistics),
-    switchMap((action: DocumentGetDocumentStatistics) => this.documentService.getDocumentStatistics$(action.documentID).pipe(
-      switchMap((documentStatistics: DocumentStatistics) => of(new DocumentGetDocumentStatisticsSuccess(documentStatistics))),
-      //catchError(err => of(new DocumentServerError(err)))
-    )));
   /**
    * @deprecated Use getAlignmentPreview$
    */

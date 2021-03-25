@@ -38,6 +38,10 @@ public class Document extends Auditable implements IID<Integer>  {
     @Enumerated(EnumType.STRING)
     private ManuscriptType manuscriptType;
 
+    @Column (name="document_type")
+    @Enumerated(EnumType.STRING)
+    private DocumentType documentType;
+
     @Lob
     @Column (name = "thumbnail_base64_encoding", columnDefinition = "LONGTEXT")
     private String thumbnailBase64Encoding;
@@ -70,7 +74,7 @@ public class Document extends Auditable implements IID<Integer>  {
     public Document() {
     }
 
-    public Document(String name, String path, String composer, Date creationDate, Date lastModifiedDate, User createdBy, User lastModifiedBy , String thumbnailBase64Encoding, String comments, NotationType notationType, ManuscriptType manuscriptType, State state, List<Image> images, List<Part> parts, Collection collection, List<Section> sections) {
+    public Document(String name, String path, String composer, Date creationDate, Date lastModifiedDate, User createdBy, User lastModifiedBy , String thumbnailBase64Encoding, String comments, NotationType notationType, ManuscriptType manuscriptType, State state, List<Image> images, List<Part> parts, Collection collection, List<Section> sections, DocumentType documentType) {
         this.name = name;
         this.composer = composer;
         this.notationType = notationType;
@@ -87,6 +91,7 @@ public class Document extends Auditable implements IID<Integer>  {
         this.parts = parts;
         this.collection = collection;
         this.sections = sections;
+        this.documentType = documentType;
     }
     @Override
     public Integer getId() {
@@ -215,5 +220,13 @@ public class Document extends Auditable implements IID<Integer>  {
             max = Math.max(part.getOrdering(), max);
         }
         return max+1;
+    }
+
+    public DocumentType getDocumentType() {
+        return documentType;
+    }
+
+    public void setDocumentType(DocumentType documentType) {
+        this.documentType = documentType;
     }
 }
