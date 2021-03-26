@@ -13,7 +13,8 @@ export class DocumentAnalysisToolbarComponent implements OnInit, OnChanges {
   selectedRegionTypeID: number | 'page' | 'several';
   disableRegions: boolean = false; // it comes from the input (when a region is selected), and is used to disable changing a page into a region type
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }
@@ -32,10 +33,22 @@ export class DocumentAnalysisToolbarComponent implements OnInit, OnChanges {
         this.disableRegions = false;
       }
     }
+
+    if (changes.regionTypes && this.regionTypes && !this.selectedRegionTypeID) {
+      // initialize selecting staff
+      this.selectedRegionTypeID = 2; // staff
+      const staffRegionType = this.regionTypes.find(regionType => regionType.id === 2);
+      if (!staffRegionType) {
+        throw new Error('Cannot find region type staff with id = 2');
+      }
+      this.setRegionType(staffRegionType);
+    }
   }
 
   setRegionType(regionType: RegionType) {
-    this.onChangeRegion.emit(regionType);
+    setTimeout(()=>{
+      this.onChangeRegion.emit(regionType);
+    });
   }
 
   setPage() {
