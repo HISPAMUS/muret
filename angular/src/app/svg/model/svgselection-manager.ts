@@ -145,7 +145,7 @@ export class SVGSelectionManager {
   }
 
   public hasJustOneSelectedShape(): boolean {
-    return this.selectedElements.size == 1;
+    return this.selectedElements.size === 1;
   }
 
   public leaveJustOneSelected() {

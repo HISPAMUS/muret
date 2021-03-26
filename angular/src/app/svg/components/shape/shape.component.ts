@@ -52,4 +52,12 @@ export class ShapeComponent implements OnInit {
     // it will be overriden by specific shapes
     this.drawStarted = true;
   }
+
+  getSelectedHandle() {
+    return this.handleSelected;
+  }
+
+  setSelectedHandle(handle: string) {
+    this.handleSelected = handle;
+  }
 }

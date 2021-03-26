@@ -118,10 +118,8 @@ export class DocumentAnalysisComponent extends ImageRecognitionBaseAbstractCompo
           const s: SelectedRegionOrPage = {};
           if (shape.data.regionType) {
             s.region = shape.data;
-          } else if (shape.data.regions) {
-            s.page = shape.data;
           } else {
-            throw new Error('Shape should be a region or a page');
+            s.page = shape.data;
           }
           selectedRegions.push(s);
         }

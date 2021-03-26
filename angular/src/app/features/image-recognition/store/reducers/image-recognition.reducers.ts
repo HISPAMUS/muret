@@ -3,11 +3,23 @@ import {ImageRecognitionActions, ImageRecognitionActionTypes} from "../actions/i
 import {klona} from "klona";
 import {ImageRecognitionState, initialImageRecognitionState} from "../state/image-recognition.state";
 import {SemanticRepresentationActionTypes} from "../../../semantic-representation-old/store/actions/semantic-representation.actions";
+import {Page} from "../../../../core/model/entities/page";
+import {Region} from "../../../../core/model/entities/region";
 
 /**
  * We use the same effects, actions and reducers for overview and parts because they share the state
  */
 export function imageRecognitionReducers(state = initialImageRecognitionState, action: ImageRecognitionActions): ImageRecognitionState {
+  /*function findRegionWithId(pagesRegionsSymbols: Page[], id: number): Region {
+    pagesRegionsSymbols.forEach(page => {
+      const region = page.regions.find(region => region.id === id);
+      if (region) {
+        return region;
+      }
+    })
+    return null;
+  }*/
+
   switch (action.type) {
     /*case ImageRecognitionActionTypes.ImageRecognitionServerError: {
       return {
@@ -223,8 +235,18 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         regionTypes: state.regionTypes,
         classifierModels: state.classifierModels,
         analyzing: state.analyzing,
+        selectedRegion: null,
         //apiRestServerError: null
       };
+
+      /*action.pages.forEach(page => {
+        const newRegion = page.regions.find(region => !findRegionWithId(state.pagesRegionsSymbols, region.id));
+        if (newRegion) {
+          newState.selectedRegion = newRegion;
+        }
+      });*/
+
+
       return newState;
       /*const newState: ImageRecognitionState = {
         pagesRegionsSymbols: klona(state.pagesRegionsSymbols),
@@ -321,6 +343,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
 
       region.symbols.push(action.symbolCreationResult.agnosticSymbol);
       newState.selectedRegion = region;
+      newState.selectedAgnosticSymbols = [];
       //TODO Coger también los símbolos clasificados para sacar la lista de mejores resultados en la GUI
       return newState;
     }

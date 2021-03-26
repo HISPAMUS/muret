@@ -140,12 +140,12 @@ export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
 
         if (symbol.boundingBox) {
           this.drawBox(this.shapesOfSelectedRegion, symbol,
-            symbol.agnosticSymbolType, symbol.id, symbol.boundingBox, color, 1);
+            symbol.agnosticSymbolType, symbol.id, symbol.boundingBox, color, 1, null);
 
           lastX = symbol.boundingBox.fromX;
         } else if (symbol.approximateX) {
-          this.drawLine(this.shapesOfSelectedRegion, symbol,
-            symbol.agnosticSymbolType, symbol.id, symbol.approximateX, color);
+          /*this.drawLine(this.shapesOfSelectedRegion, symbol,
+            symbol.agnosticSymbolType, symbol.id, symbol.approximateX, color);*/
 
           const bbox: BoundingBox = {
             fromX: symbol.approximateX,
@@ -155,7 +155,7 @@ export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
           };
 
           this.drawBox(this.shapesOfSelectedRegion, symbol,
-            symbol.agnosticSymbolType, symbol.id, bbox, color, 1);
+            symbol.agnosticSymbolType, symbol.id, bbox, color, 1, '5');
 
           lastX = symbol.approximateX;
         }
@@ -183,7 +183,7 @@ export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
 
 
   private drawBox(shapes: Shape[], modelObject: AgnosticSymbol,
-                  layer: string, id: number, boundingBox: BoundingBox, color: string, strokeWidth: number): Rectangle {
+                  layer: string, id: number, boundingBox: BoundingBox, color: string, strokeWidth: number, strokeDashArray: string): Rectangle {
     const rect = new Rectangle();
     rect.id = layer + id;
     rect.fromX = boundingBox.fromX;
@@ -195,6 +195,7 @@ export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
     rect.strokeWidth = strokeWidth;
     rect.layer = layer;
     rect.data = modelObject;
+    rect.strokeDashArray = strokeDashArray;
     shapes.push(rect);
     return rect;
   }

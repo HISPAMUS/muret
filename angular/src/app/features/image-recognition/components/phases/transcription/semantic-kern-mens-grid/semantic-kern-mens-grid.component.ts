@@ -262,7 +262,7 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
   }
 
   onAgnosticSymbolSelected(agnosticID: number) {
-    if (agnosticID) {
+    if (agnosticID && this.agnosticGridRow) {
       const line = this.agnosticGridRow.get(agnosticID);
       if (line) {
         // this way the grid and the semantic notation are selected

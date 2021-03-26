@@ -71,11 +71,11 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   @Output() modeChange = new EventEmitter(); // must have this name in order to be input / output
   @Output() onContextMenu = new EventEmitter<ContextMenuSVGSelectionEvent>();
   @Output() selectedShapesChange = new EventEmitter<Shape[]>(true); // keep this name for having input / output -- async to avoid ExpressionChangedAfterItHasBeenCheckedError
-  @Input() selectedShapes: Shape[] = [];
 
   @ViewChild('canvas', {static: true}) canvas: ElementRef; // with false it fails
   @ViewChild('svgContent', {static: true}) svgContent: ElementRef;
 
+  private selectedShapesValue: Shape[] = [];
   private modeValue: 'eAdding' | 'eEditing' | 'eSelecting';
   private isOnDrawProcess: boolean;
 
@@ -91,9 +91,9 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   // heightPercentString: string;
   // widthPercentString: string;
   //private selectedComponents: ShapeComponent[];
-  private selectedComponent: ShapeComponent;
+  //2021 private selectedComponent: ShapeComponent;
   private unsafeBackgroundImage: SafeResourceUrl;
-  private shapeWithoutComponent: Rectangle | Line | Text | Polylines;
+  private newAddingShape: Rectangle | Line | Text | Polylines; // shape being added now
   private polylinesCreationTimeout: any;
   private proportion: number;
   private TIMEOUT = 500;
@@ -126,25 +126,60 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   ngOnChanges(changes: SimpleChanges): void {
     this.computeViewBox(); // it costs less to compute the change than checking if it has changed
     this.computeScaledImageSize();
-
     if (changes.shapes && this.shapes) {
       this.shapesMap = new Map<string, Shape>();
+
+      let previouslySelectedIDs: Set<string> = new Set<string>();
+      if (this.selectionManager && this.selectionManager.getSelected().length > 0) {
+        this.selectionManager.getSelected().forEach(shape => {
+          previouslySelectedIDs.add(shape.id);
+        });
+      }
+
       this.selectionManager = new SVGSelectionManager();
       this.selectionManager.selectableElements = this.shapes;
       this.shapes.forEach(shape => {
         this.shapesMap.set(shape.id, shape);
+        if (previouslySelectedIDs.has(shape.id)) {
+          this.selectionManager.add(shape);
+        }
       });
+
     }
 
     if (changes.selectByX) {
       this.selectionManager.selectByX = true;
     }
+  }
 
-    if (changes.selectedShapes) {
-      this.selectionManager.clear();
-      if (this.selectedShapes) {
-        this.selectionManager.addAll(this.selectedShapes);
-      }
+  ngAfterContentChecked(): void {
+    /*febrero2021 if (this.mode === 'eEditing') {
+      this.selectedComponent = this.findEventTargetComponent(this.selectedShapeIDValue);
+    }*/
+  }
+
+  private getSelectedComponent(): ShapeComponent {
+    if (this.newAddingShape) {
+      return this.newAddingShape.shapeComponent;
+    } else if (this.selectionManager && this.selectionManager.hasJustOneSelectedShape()) {
+      const selectedShape = this.selectionManager.getSelected()[0];
+      return this.selectionManager.getSelected()[0].shapeComponent;
+    } else {
+      return null;
+    }
+  }
+
+  @Input()
+  get selectedShapes() {
+    return this.selectedShapesValue;
+  }
+
+  set selectedShapes(val: Shape[]) {
+    this.selectedShapesValue = val;
+    this.selectionManager.clear();
+    if (this.selectedShapes) {
+      // in order to avoid synchronization problems of object, we select it using the ID
+      this.selectionManager.addAll(this.selectedShapes);
     }
   }
 
@@ -160,17 +195,20 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
       this.updateCursor();
     }
 
-    if (this.modeValue == 'eEditing' && this.singleSelectionInEditMode) {
+    if (this.modeValue == 'eEditing' && this.singleSelectionInEditMode && !this.selectionManager.hasJustOneSelectedShape()) {
       this.selectionManager.leaveJustOneSelected();
       this.emitSelectedShapes();
+    } else if (this.modeValue == 'eAdding') {
+      this.selectionManager.clear();
+      this.emitSelectedShapes();
     }
-    if (this.modeValue == 'eSelecting' || this.modeValue == 'eEditing') {
+   /*2021 if (this.modeValue == 'eSelecting' || this.modeValue == 'eEditing') {
       if (this.selectionManager && this.selectionManager.hasJustOneSelectedShape()) {
         this.selectedComponent = this.selectionManager.getSelected()[0].shapeComponent;
       }
     } else {
       this.selectedComponent = null;
-    }
+    }*/
     //TODO this.selectedShapeIDs = null;
     //
   }
@@ -180,13 +218,13 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
     return this.selectionManager.getSelected().map(shape => shape.id);
   }*/
 
-  private findShape(id: string): Shape {
+ /* private findShape(id: string): Shape {
     const result = this.shapesMap.get(id);
     if (!result) {
       throw new Error('Cannot find shape with id=' + id);
     }
     return result;
-  }
+  }*/
 
 
   /*private select(shape: Shape) {
@@ -197,6 +235,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
     }
   }*/
 
+  //@deprecated
   set selectedShapeIDs(ids: string[]) {
    /* this.selectionManager.clear();
     if (this.shapes) {
@@ -209,11 +248,6 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
     }*/
   }
 
-  ngAfterContentChecked(): void {
-    /*febrero2021 if (this.mode === 'eEditing') {
-      this.selectedComponent = this.findEventTargetComponent(this.selectedShapeIDValue);
-    }*/
-  }
 
   private computeViewBox() {
     if (this.crop) {
@@ -259,13 +293,12 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
     const svgCoordinate = this.screenCoordinateToSVGCoordinate(timeStamp, x, y);
     switch (this.mode) {
       case 'eAdding':
-        this.selectedShapeIDs = null;
+        /// this.selectedShapeIDs = null;
         if (this.polylinesCreationTimeout) {
           clearTimeout(this.polylinesCreationTimeout);
           this.polylinesCreationTimeout = null;
         } else {
           if (!this.isOnDrawProcess) {
-            // console.log("creating shape")
             this.createShape(svgCoordinate);
             this.originX = svgCoordinate.x;
             this.originY = svgCoordinate.y;
@@ -280,10 +313,10 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
         this.selectedShapesIDChange.emit(this.selectedShapeIDs);
         break;*/
       case 'eEditing':
-        this.selectedShapeIDs = null;
+        // 2021 this.selectedShapeIDs = null;
         // when auth clicks over a svg shape, it is sent to this method as event
-        this.selectedShapeIDs = target.id;
-        this.selectedShapesIDChange.emit(this.selectedShapeIDs);
+        // 2021 this.selectedShapeIDs = target.id;
+        //2021 this.selectedShapesIDChange.emit(this.selectedShapeIDs);
         break;
     }
   }
@@ -316,21 +349,22 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   }
 
   onDrawMove(timeStamp: number, x: number, y: number): boolean {
-   switch (this.mode) {
+    const selectedComponent = this.getSelectedComponent();
+    switch (this.mode) {
       case 'eAdding':
-        if (!this.selectedComponent && this.shapeWithoutComponent) {
-          this.selectedComponent = this.shapeWithoutComponent.shapeComponent;
-          this.shapeWithoutComponent = null;
-        }
-        if (this.selectedComponent && !this.polylinesCreationTimeout) {
+        /*2021 if (!this.selectedComponent && this.newAddingShape) {
+          this.selectedComponent = this.newAddingShape.shapeComponent;
+          this.newAddingShape = null;
+        }*/
+        if (selectedComponent && !this.polylinesCreationTimeout) {
           const svgCoordinate = this.screenCoordinateToSVGCoordinate(timeStamp, x, y);
-          this.selectedComponent.draw(svgCoordinate);
+          selectedComponent.draw(svgCoordinate);
         }
         return true;
       case 'eEditing':
-        if (this.selectedComponent && this.selectedComponent.isHandleSelected()) {
+        if (selectedComponent && selectedComponent.isHandleSelected()) {
           const svgCoordinate = this.screenCoordinateToSVGCoordinate(timeStamp, x, y);
-          this.selectedComponent.onHandleMouseMove(svgCoordinate.x, svgCoordinate.y);
+          selectedComponent.onHandleMouseMove(svgCoordinate.x, svgCoordinate.y);
         }
         return true;
     }
@@ -338,14 +372,15 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   }
 
   onDrawEnd(): void {
-   switch (this.mode) {
+    const selectedComponent = this.getSelectedComponent();
+    switch (this.mode) {
       case 'eAdding':
         this.endShapeDraw();
         break;
       case 'eEditing':
-        if (this.selectedComponent && this.selectedComponent.isHandleSelected()) {
-          this.selectedComponent.deselectHandle();
-          this.svgShapeChanged.emit(this.selectedComponent.shape);
+        if (selectedComponent && selectedComponent.isHandleSelected()) {
+          selectedComponent.deselectHandle();
+          this.svgShapeChanged.emit(selectedComponent.shape);
         }
         break;
     }
@@ -362,26 +397,28 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
     shape.originX = coordinate.x;
     this.shapes.push(shape);
 
-    this.shapeWithoutComponent = shape;
+    this.newAddingShape = shape;
   }
 
   private endShapeDraw() {
-    if (this.selectedComponent) {
-      if (this.selectedComponent.isDrawStarted()) { // if no drag has been done no shape is inserted
-        const shape = this.selectedComponent.shape;
+    const selectedComponent = this.getSelectedComponent();
+    if (selectedComponent) {
+      if (selectedComponent.isDrawStarted()) { // if no drag has been done no shape is inserted
+        const shape = selectedComponent.shape;
         if (shape instanceof Polylines) {
           shape.startNewPolyline = true;
           this.polylinesCreationTimeout = setTimeout(() => {
             this.isOnDrawProcess = false;
-            this.selectedShapeIDs = null;
+            //2021 this.selectedShapeIDs = null;
             this.svgShapeCreated.emit(shape);
             this.polylinesCreationTimeout = null;
-            this.selectedComponent = null;
+            //2021 this.selectedComponent = null;
           }, this.TIMEOUT);
         } else {
           this.selectedShapeIDs = null;
+          this.newAddingShape = null;
           this.svgShapeCreated.emit(shape);
-          this.selectedComponent = null;
+          //2021 this.selectedComponent = null;
           this.isOnDrawProcess = false;
           // this.shapes = this.shapes.filter(s => s != null);
         }
@@ -456,13 +493,13 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
 
   onDblClick(event: MouseEvent) {
     if (this.mode === 'eSelecting') {
+      event.stopPropagation();
       this.mode = 'eEditing';
       if (event.target instanceof Shape) {
         this.selectionManager.replace(event.target);
       }
-      this.selectedShapesIDChange.emit(this.selectedShapeIDs); // TODO quitar
+      ///2021 this.selectedShapesIDChange.emit(this.selectedShapeIDs); // TODO quitar
 
-      event.stopPropagation();
     }
   }
 
@@ -493,7 +530,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
           this.selectionManager.addOrRemove(shape);
         } else {
           this.selectionManager.replace(shape);
-          this.selectedComponent = shape.shapeComponent;
+          //2021 this.selectedComponent = shape.shapeComponent;
         }
         //event.stopPropagation();
       } else {
