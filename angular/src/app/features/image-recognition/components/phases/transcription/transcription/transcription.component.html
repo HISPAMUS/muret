@@ -3,6 +3,7 @@
     <aside class="col-3"  id="leftColumn">  <!-- left column -->
       <div id="imageNavigator" [ngClass]="imageNavigatorHeight">
         <!--<h3 class="text-center">{{imageOverview.filename}}</h3>-->
+        <p id="doubleClickBBoxes">Double click for changing the bounding boxes</p>
         <app-image-document-analysis-navigator
           [loadedImage]="loadedImage"
           [regionTypes]="regionTypes$ | async"
@@ -10,7 +11,8 @@
           [zoomManager]="zoomManager"
           [singleSelectionMode]="true"
           [mode]="'eSelecting'"
-          (onShapesSelected)="onShapesSelected($event)"
+          (onShapesSelected)="onRegionShapeSelected($event)"
+          (onSvgShapeChanged)="onRegionShapeChanged($event)"
         ></app-image-document-analysis-navigator>
         <div class="changeLeftLayout d-flex align-items-center justify-content-center">
           <a (click)="toggleLeftLayout()">{{changeLeftLayoutLabel}}</a>

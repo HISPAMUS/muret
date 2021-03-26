@@ -172,21 +172,9 @@ export class DocumentAnalysisComponent extends ImageRecognitionBaseAbstractCompo
     const rectangle = shape as Rectangle;
 
     if (shape.layer === 'page') {
-      this.store.dispatch(new ImageRecognitionChangePageBoundingBox(shape.data, {
-        fromX: rectangle.fromX,
-        fromY: rectangle.fromY,
-        id: rectangle.data.id,
-        toX: rectangle.fromX + rectangle.width,
-        toY: rectangle.fromY + rectangle.height
-      }));
+      this.store.dispatch(new ImageRecognitionChangePageBoundingBox(shape.data, rectangle.toBoundingBox()));
     } else {
-      this.store.dispatch(new ImageRecognitionChangeRegionBoundingBox(shape.data, {
-        fromX: rectangle.fromX,
-        fromY: rectangle.fromY,
-        id: rectangle.data.id,
-        toX: rectangle.fromX + rectangle.width,
-        toY: rectangle.fromY + rectangle.height
-      }));
+      this.store.dispatch(new ImageRecognitionChangeRegionBoundingBox(shape.data, rectangle.toBoundingBox()));
     }
   }
 

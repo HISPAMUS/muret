@@ -1,3 +1,6 @@
+#doubleClickBBoxes {
+  font-size: small;
+}
 #leftColumn {
   max-height: 90vh; /* note the menu has 10vh */
 }

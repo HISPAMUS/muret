@@ -4,6 +4,7 @@ import {ImageOverview} from "../../../../../core/model/restapi/image-overview";
 import {ActivatedRoute, ParamMap} from "@angular/router";
 import {Store} from "@ngrx/store";
 import {
+  ImageRecognitionChangeRegionBoundingBox,
   ImageRecognitionChangeStatus, ImageRecognitionGetClassifierModels,
   ImageRecognitionGetImageOverview,
   ImageRecognitionGetPagesRegionsSymbols, ImageRecognitionGetRegionTypes
@@ -221,6 +222,10 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
   }
   private getProgressStatus(): string {
     return this.getProgressStatusOfPhase(this.phase);
+  }
+  onRegionShapeChanged(shape: Shape) {
+    const rectangle = shape as any as Rectangle;
+    this.store.dispatch(new ImageRecognitionChangeRegionBoundingBox(rectangle.data, rectangle.toBoundingBox()));
   }
 
 }

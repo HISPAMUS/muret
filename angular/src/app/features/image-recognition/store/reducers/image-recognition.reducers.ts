@@ -2,9 +2,6 @@
 import {ImageRecognitionActions, ImageRecognitionActionTypes} from "../actions/image-recognition.actions";
 import {klona} from "klona";
 import {ImageRecognitionState, initialImageRecognitionState} from "../state/image-recognition.state";
-import {SemanticRepresentationActionTypes} from "../../../semantic-representation-old/store/actions/semantic-representation.actions";
-import {Page} from "../../../../core/model/entities/page";
-import {Region} from "../../../../core/model/entities/region";
 
 /**
  * We use the same effects, actions and reducers for overview and parts because they share the state
@@ -142,6 +139,38 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         //apiRestServerError: null
       };
     }
+    case ImageRecognitionActionTypes.ImageRecognitionChangePageBoundingBoxSuccess: {
+      const newState: ImageRecognitionState = {
+        ...state,
+        pagesRegionsSymbols: klona(state.pagesRegionsSymbols),
+        //apiRestServerError: null
+      };
+      const changedPage = newState.pagesRegionsSymbols.find(page => page.id == action.page.id);
+      if (!changedPage) {
+        throw new Error('Cannot find page with ID: ' + action.page.id);
+      }
+      changedPage.boundingBox = action.page.boundingBox;
+      return newState;
+    }
+    case ImageRecognitionActionTypes.ImageRecognitionChangeRegionBoundingBoxSuccess: {
+      const newState: ImageRecognitionState = {
+        pagesRegionsSymbols: klona(state.pagesRegionsSymbols),
+        imageOverview: state.imageOverview,
+        regionTypes: state.regionTypes,
+        classifierModels: state.classifierModels,
+        analyzing: state.analyzing,
+        //apiRestServerError: null
+      };
+      newState.pagesRegionsSymbols.forEach(page => {
+        const region = page.regions.find(r => r.id == action.region.id);
+        if (region) {
+          region.boundingBox = action.region.boundingBox;
+          newState.selectedRegion = region;
+        }
+      });
+      return newState;
+    }
+
     case ImageRecognitionActionTypes.ImageRecognitionChangeRegionsTypeSuccess: {
       const regionType = state.regionTypes.find(regionType => regionType.id === action.changeRegionTypes.regionTypeID);
       if (!regionType) {

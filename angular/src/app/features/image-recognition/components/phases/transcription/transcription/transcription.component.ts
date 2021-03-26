@@ -15,8 +15,10 @@ import {Region} from "../../../../../../core/model/entities/region";
 import {Shape} from "../../../../../../svg/model/shape";
 import {ShowErrorService} from "../../../../../../core/services/show-error.service";
 import {
+  ImageRecognitionChangeRegionBoundingBox,
   ImageRecognitionSelectRegion
 } from "../../../../store/actions/image-recognition.actions";
+import {Rectangle} from "../../../../../../svg/model/rectangle";
 
 @Component({
   selector: 'app-transcription-component',
@@ -50,7 +52,7 @@ export class TranscriptionComponent extends ImageRecognitionBaseAbstractComponen
     this.selectedRegion$ = this.store.select(selectImageRecognitionSelectedRegion);
   }
 
-  onShapesSelected(shapes: Shape[]) {
+  onRegionShapeSelected(shapes: Shape[]) {
     // this.region = null;
     this.regionInteractionType = null;
     if (shapes) {
@@ -75,4 +77,5 @@ export class TranscriptionComponent extends ImageRecognitionBaseAbstractComponen
       this.toolsHeight = 'bigLeft';
     }
   }
+
 }
