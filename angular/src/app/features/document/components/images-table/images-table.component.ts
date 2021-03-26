@@ -9,6 +9,7 @@ interface ImageTableRow { // view of the image in the table
   documentAnalysisProgress: string;
   partsProgress: string;
   transcriptionProgress: string;
+  hidden: boolean
 }
 
 @Component({
@@ -39,9 +40,9 @@ export class ImagesTableComponent implements OnInit, OnChanges {
 
   private loadImages(sectionName: string, images: Image[]) {
     images.forEach(image => {
-      let documentAnalysisProgress = '-';
-      let partsProgress = '-';
-      let transcriptionProgress = '-';
+      let documentAnalysisProgress = 'open';
+      let partsProgress = 'open';
+      let transcriptionProgress = 'open';
       if (image.imageRecognitionProgressStatuses) {
         image.imageRecognitionProgressStatuses.forEach(progress => {
           switch (progress.phase) {
@@ -66,7 +67,8 @@ export class ImagesTableComponent implements OnInit, OnChanges {
         filename: image.filename,
         documentAnalysisProgress: documentAnalysisProgress,
         partsProgress: partsProgress,
-        transcriptionProgress: transcriptionProgress
+        transcriptionProgress: transcriptionProgress,
+        hidden: image.hidden
       }
       this.imageRows.push(row);
     });
@@ -75,7 +77,4 @@ export class ImagesTableComponent implements OnInit, OnChanges {
   imageTracking(index, item): number {
     return index;
   }
-
-
-
 }

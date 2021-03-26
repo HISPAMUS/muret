@@ -1,13 +1,13 @@
-<div class="container" *ngIf="documentOverview">
+<div class="container" *ngIf="documentOverview; else loadingOverview">
   <div class="row">
     <div class="col">
       <h2>{{documentOverview.name}}</h2>
       <h3>{{documentOverview.composer}}</h3>
       <p>{{documentOverview.documentType}} | {{documentOverview.notationType}} | {{documentOverview.manuscriptType}}</p>
-      <hr>
+      <!--<hr>
       <div *ngIf="statistics$ | async as statistics; else loadingStatistics">
         <p>#{{statistics.images}} images, #{{statistics.pages}} pagesWithRegions, #{{statistics.regions}} regions (#{{statistics.staves}} staves), #{{statistics.agnosticSymbols}} agnostic symbols</p>
-      </div>
+      </div>-->
       <p *ngIf="hasOtherView(documentOverview)"><a (click)="openDocument()">Open thumnbail view</a></p>
     </div>
   </div>
@@ -20,4 +20,9 @@
 
 <ng-template #loadingStatistics>
   <p>Loading statistics...</p>
+</ng-template>
+
+
+<ng-template #loadingOverview>
+  <p>Loading document ...</p>
 </ng-template>

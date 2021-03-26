@@ -22,6 +22,7 @@ import {ImagePhaseOverviewComponent} from "./components/image-phase/image-phase-
 import { ProgressStatusComponent } from './components/progress-status/progress-status.component';
 import {NotationService} from "./services/notation.service";
 import {CrudToolbarComponent} from "./components/crud-toolbar-old/crud-toolbar.component";
+import { ImageShowHideComponent } from './components/image-show-hide/image-show-hide.component';
 
 @NgModule({
   imports: [
@@ -52,7 +53,8 @@ import {CrudToolbarComponent} from "./components/crud-toolbar-old/crud-toolbar.c
     ImagePhaseDocumentAnalysisComponent,
     ImagePhasePartsComponent,
     ImagePhaseTranscriptionComponent,
-    ProgressStatusComponent
+    ProgressStatusComponent,
+    ImageShowHideComponent
   ],
     exports: [
         StateComponent,
@@ -67,7 +69,8 @@ import {CrudToolbarComponent} from "./components/crud-toolbar-old/crud-toolbar.c
         ImagePhaseDocumentAnalysisComponent,
         ImagePhasePartsComponent,
         ImagePhaseTranscriptionComponent,
-        ProgressStatusComponent
+        ProgressStatusComponent,
+        ImageShowHideComponent
     ],
   providers: [NotationService]
 })

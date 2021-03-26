@@ -11,10 +11,15 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let image of imageRows; trackBy: imageTracking">
+  <tr *ngFor="let image of imageRows; trackBy: imageTracking" [ngClass]="image.hidden?'hidden':'visible'">
     <th scope="row">{{ image.id }}</th>
     <td>{{image.sectionName}}</td>
-    <td><a href [routerLink]="['/imageRecognition/overview', image.id]">{{image.filename}}</a></td> <!-- TODO Colors like thumbnail view -->
+    <td>
+      <app-image-show-hide [imageID]="image.id" [hidden]="image.hidden"></app-image-show-hide>
+      &nbsp;
+      <a href [routerLink]="['/imageRecognition/overview', image.id]">{{image.filename}}</a>
+    </td>
+    <!-- TODO Colors like thumbnail view -->
     <td><a [routerLink]="['/imageRecognition/documentAnalysis', image.id]">{{image.documentAnalysisProgress}}</a></td>
     <td><a [routerLink]="['/imageRecognition/parts', image.id]">{{image.partsProgress}}</a></td>
     <td><a [routerLink]="['/imageRecognition/transcription', image.id]">{{image.transcriptionProgress}}</a></td>

@@ -1,0 +1,11 @@
+.hidden {
+  color: #999999;
+}
+
+.hidden a {
+  color: #999999;
+}
+
+.visible {
+  color: white;
+}

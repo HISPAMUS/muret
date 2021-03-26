@@ -32,7 +32,7 @@ export class DocumentOverviewComponent implements OnInit, OnDestroy {
 
   protected documentID: number;
   documentOverview: Document;
-  private statistics$: Observable<DocumentStatistics>;
+  // private statistics$: Observable<DocumentStatistics>;
 
   constructor(protected router: Router, protected route: ActivatedRoute, protected store: Store<DocumentState>,
               protected dialogsService: DialogsService) {
@@ -43,7 +43,7 @@ export class DocumentOverviewComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.statistics$ = this.store.select(selectDocumentStatistics);
+    // this.statistics$ = this.store.select(selectDocumentStatistics);
   }
 
   ngOnInit(): void {
@@ -51,7 +51,7 @@ export class DocumentOverviewComponent implements OnInit, OnDestroy {
         this.documentID = +this.route.snapshot.paramMap.get('id'); // + converts the string to number
         this.store.dispatch(new DocumentGetOverview(this.documentID));
         this.store.dispatch(new BreadcrumbsUpdateDocument(this.documentID));
-        this.store.dispatch(new DocumentGetDocumentStatistics(this.documentID));
+        //TODO Muy lento para grandes colecciones - mejorarlo this.store.dispatch(new DocumentGetDocumentStatistics(this.documentID));
         this.onDocumentIDChanged(this.documentID);
 
         this.userIDSubscription = this.store.select(selectAuthUserID).subscribe(next => {

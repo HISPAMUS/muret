@@ -1,0 +1,6 @@
+<a *ngIf="!hidden"(click)="hideImage()">
+  <fa-icon icon="eye" class="icons" size="1x" ngbTooltip="Hide image"></fa-icon>
+</a>
+<a *ngIf="hidden" (click)="unhideImage()">
+  <fa-icon icon="eye-slash" class="icons" size="1x" ngbTooltip="Unhide image"></fa-icon>
+</a>
