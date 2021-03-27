@@ -79,5 +79,8 @@ export class DocumentPieceComponent extends DocumentOverviewComponent {
     this.orderedParts = documentOverview.parts.slice().sort(compareOrdering); // must use slide to use a copy
   }
 
+  openDocumentOverview() {
+    this.router.navigate(['/document', this.documentID]);
+  }
 }
 

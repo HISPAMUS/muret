@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.im3ws.muret.controller;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
+import es.ua.dlsi.grfia.im3ws.controller.StringResponse;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.*;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.model.DocumentModel;
@@ -98,7 +99,7 @@ public class ImageRecognitionController {
      * @return
      */
     @PutMapping("/comments/{imageID}")
-    public String putComments(@PathVariable("imageID") long imageID, @RequestBody(required=false) String comments)  {
+    public StringResponse putComments(@PathVariable("imageID") long imageID, @RequestBody(required=false) String comments)  {
         try {
             Optional<Image> image = imageRepository.findById(imageID);
             if (!image.isPresent()) {
@@ -107,7 +108,7 @@ public class ImageRecognitionController {
 
             image.get().setComments(comments);
             imageRepository.save(image.get());
-            return image.get().getComments();
+            return new StringResponse(image.get().getComments());
         } catch (IM3WSException e) {
             throw ControllerUtils.createServerError(this, "Cannot put comments", e);
         }

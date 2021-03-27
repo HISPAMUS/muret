@@ -19,6 +19,7 @@ public interface IImageProjection {
     String getFilename();
     Integer getOrdering();
     boolean isHidden();
+    String getComments();
 
     Set<ImageRecognitionProgressStatus> getImageRecognitionProgressStatuses();
 

@@ -48,7 +48,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
         analyzing: state.analyzing,
         //apiRestServerError: null
       };
-      newState.imageOverview.comments = action.comments;
+      newState.imageOverview.comments = action.comments.response;
       return newState;
     }
 

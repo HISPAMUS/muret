@@ -30,6 +30,7 @@ import {
   SendSemanticEncodingSuccess
 } from "../../../semantic-representation-old/store/actions/semantic-representation.actions";
 import {SymbolCreationResult} from "../../../agnostic-representation-old/model/symbol-creation-result";
+import {StringResponse} from "../../../../core/model/restapi/string-response";
 
 /**
  * We use the same actions for overview, parts, document analysis ... because they share the state
@@ -146,7 +147,7 @@ export class ImageRecognitionPutComments implements Action {
 
 export class ImageRecognitionPutCommentsSuccess implements Action {
   public readonly type = ImageRecognitionActionTypes.ImageRecognitionPutCommentsSuccess;
-  constructor(public comments: string) {}
+  constructor(public comments: StringResponse) {}
 }
 
 

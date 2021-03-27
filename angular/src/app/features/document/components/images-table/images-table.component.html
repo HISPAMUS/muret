@@ -7,6 +7,7 @@
     <th scope="col">Document analysis</th>
     <th scope="col">Parts</th>
     <th scope="col">Transcription</th>
+    <th scope="col">Comments</th>
     <!--<th scope="col" sortable="lastChangedDate" (sort)="onSort($event)">Last changed date</th> TODO-->
   </tr>
   </thead>
@@ -23,6 +24,7 @@
     <td><a [routerLink]="['/imageRecognition/documentAnalysis', image.id]">{{image.documentAnalysisProgress}}</a></td>
     <td><a [routerLink]="['/imageRecognition/parts', image.id]">{{image.partsProgress}}</a></td>
     <td><a [routerLink]="['/imageRecognition/transcription', image.id]">{{image.transcriptionProgress}}</a></td>
+    <td>{{image.comments}}</td>
     <!--<td><ngb-highlight [result]="getImageStateString(image) | number" [term]="service.searchTerm"></ngb-highlight></td>-->
     <!--<td><ngb-highlight [result]="image. | number" [term]="service.searchTerm"></ngb-highlight></td>-->
   </tr>

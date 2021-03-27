@@ -10,6 +10,7 @@ interface ImageTableRow { // view of the image in the table
   partsProgress: string;
   transcriptionProgress: string;
   hidden: boolean
+  comments: string;
 }
 
 @Component({
@@ -32,7 +33,7 @@ export class ImagesTableComponent implements OnInit, OnChanges {
       this.loadImages('Default section', this.document.images);
       if (this.document.sections) {
         this.document.sections.forEach(section => {
-          this.loadImages(section.name, this.document.images);
+          this.loadImages(section.name, section.images);
         });
       }
     }
@@ -68,7 +69,8 @@ export class ImagesTableComponent implements OnInit, OnChanges {
         documentAnalysisProgress: documentAnalysisProgress,
         partsProgress: partsProgress,
         transcriptionProgress: transcriptionProgress,
-        hidden: image.hidden
+        hidden: image.hidden,
+        comments: image.comments
       }
       this.imageRows.push(row);
     });

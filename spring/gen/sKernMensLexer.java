@@ -1,4 +1,4 @@
-// Generated from /Users/drizo/cmg/investigacion/software/github/repositorioHispamus/muret/spring/src/main/antlr4/es/ua/dlsi/grfia/im3ws/muret/model/semantic/grammar/sKernMensLexer.g4 by ANTLR 4.8
+// Generated from /Users/drizo/cmg/investigacion/software/github/repositorioHispamus/muret/spring/src/main/antlr4/es/ua/dlsi/grfia/im3ws/muret/model/semantic/grammar/sKernMensLexer.g4 by ANTLR 4.9.1
 
 import java.util.ArrayList;
 
@@ -13,7 +13,7 @@ import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class sKernMensLexer extends Lexer {
-	static { RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.9.1", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -69,11 +69,11 @@ public class sKernMensLexer extends Lexer {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
 			null, null, "'@'", "'A'", "'B'", "'C'", "'D'", "'E'", "'F'", "'G'", "'I'", 
 			"'J'", "'L'", "'M'", "'O'", "'P'", "'Q'", "'R'", "'S'", "'X'", "'Y'", 
-			"'T'", "'U'", "'i'", "'m'", "'n'", "'p'", null, "'s'", null, "'u'", "'v'", 
-			"'x'", "'y'", null, "'0'", "'1'", "'2'", "'3'", "'4'", "'5'", "'6'", 
-			"'7'", "'8'", "'9'", null, "'['", "']'", "'#'", "'-'", "'='", "'.'", 
-			"'|'", "'`'", "'''", "'^'", "'~'", "'<'", "'>'", "'/'", "'\\'", "'_'", 
-			"'('", "')'", "':'", "';'", "','"
+			"'T'", "'U'", "'i'", "'m'", "'n'", "'p'", "'r'", "'s'", "'t'", "'u'", 
+			"'v'", "'x'", "'y'", null, "'0'", "'1'", "'2'", "'3'", "'4'", "'5'", 
+			"'6'", "'7'", "'8'", "'9'", null, "'['", "']'", "'#'", "'-'", "'='", 
+			"'.'", "'|'", "'`'", "'''", "'^'", "'~'", "'<'", "'>'", "'/'", "'\\'", 
+			"'_'", "'('", "')'", "':'", "';'", "','"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
@@ -374,7 +374,7 @@ public class sKernMensLexer extends Lexer {
 		"\u0129\u012a\7V\2\2\u012aI\3\2\2\2\u012b\u012c\7W\2\2\u012cK\3\2\2\2\u012d"+
 		"\u012e\7k\2\2\u012eM\3\2\2\2\u012f\u0130\7o\2\2\u0130O\3\2\2\2\u0131\u0132"+
 		"\7p\2\2\u0132Q\3\2\2\2\u0133\u0134\7r\2\2\u0134S\3\2\2\2\u0135\u0136\7"+
-		"t\2\2\u0136U\3\2\2\2\u0137\u0138\7u\2\2\u0138W\3\2\2\2\u0139\u013a\7t"+
+		"t\2\2\u0136U\3\2\2\2\u0137\u0138\7u\2\2\u0138W\3\2\2\2\u0139\u013a\7v"+
 		"\2\2\u013aY\3\2\2\2\u013b\u013c\7w\2\2\u013c[\3\2\2\2\u013d\u013e\7x\2"+
 		"\2\u013e]\3\2\2\2\u013f\u0140\7z\2\2\u0140_\3\2\2\2\u0141\u0142\7{\2\2"+
 		"\u0142a\3\2\2\2\u0143\u0144\4ci\2\u0144c\3\2\2\2\u0145\u0146\7\62\2\2"+

@@ -15,10 +15,8 @@ import {Region} from "../../../../../../core/model/entities/region";
 import {Shape} from "../../../../../../svg/model/shape";
 import {ShowErrorService} from "../../../../../../core/services/show-error.service";
 import {
-  ImageRecognitionChangeRegionBoundingBox,
   ImageRecognitionSelectRegion
 } from "../../../../store/actions/image-recognition.actions";
-import {Rectangle} from "../../../../../../svg/model/rectangle";
 
 @Component({
   selector: 'app-transcription-component',

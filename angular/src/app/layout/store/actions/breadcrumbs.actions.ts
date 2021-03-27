@@ -4,14 +4,21 @@ import {APIRestServerError} from "../../../core/model/restapi/apirest-server-err
 import {DocumentsActionTypes} from "../../../features/documents/store/actions/documents.actions";
 
 export enum BreadcrumbsActionTypes {
+  BreadcrumbsClear = '[Breadcrumbs] Clear',
   BreadcrumbsUpdateCollection = '[Breadcrumbs] Update collection',
   BreadcrumbsUpdateCollectionSuccess = '[Breadcrumbs] Update collection success',
   BreadcrumbsUpdateDocument = '[Breadcrumbs] Update document',
   BreadcrumbsUpdateDocumentSuccess = '[Breadcrumbs] Update document success',
   BreadcrumbsUpdateImage = '[Breadcrumbs] Update image',
   BreadcrumbsUpdateImageSuccess = '[Breadcrumbs] Update image success',
-  BreadcrumbsServerError = '[Breadcrumbs] Server error',
+  //BreadcrumbsServerError = '[Breadcrumbs] Server error',
 }
+
+export class BreadcrumbsClear implements Action {
+  public readonly type = BreadcrumbsActionTypes.BreadcrumbsClear;
+  constructor() {}
+}
+
 
 export class BreadcrumbsUpdateCollection implements Action {
   public readonly type = BreadcrumbsActionTypes.BreadcrumbsUpdateCollection;
@@ -45,12 +52,13 @@ export class BreadcrumbsUpdateImageSuccess implements Action {
 }
 
 
-export class BreadcrumbsServerError implements Action {
+/*export class BreadcrumbsServerError implements Action {
   public readonly type = BreadcrumbsActionTypes.BreadcrumbsServerError;
   constructor(public serverError: APIRestServerError) {}
-}
+}*/
 
 export type BreadcrumbsActions =
-  BreadcrumbsUpdateCollection | BreadcrumbsUpdateDocument | BreadcrumbsServerError |
+  BreadcrumbsClear |
+  BreadcrumbsUpdateCollection | BreadcrumbsUpdateDocument | //BreadcrumbsServerError |
   BreadcrumbsUpdateCollectionSuccess | BreadcrumbsUpdateDocumentSuccess |
   BreadcrumbsUpdateImage | BreadcrumbsUpdateImageSuccess;

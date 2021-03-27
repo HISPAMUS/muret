@@ -83,6 +83,7 @@ import {AgnosticSymbol} from "../../../../core/model/entities/agnostic-symbol";
 import {Notation} from "../../../../shared/services/notation";
 import {SemanticRepresentationService} from "../../services/semantic-representation.service";
 import {ChangeNotationTypeSuccess} from "../../../semantic-representation-old/store/actions/semantic-representation.actions";
+import {StringResponse} from "../../../../core/model/restapi/string-response";
 
 
 /**
@@ -122,7 +123,7 @@ export class ImageOverviewEffects {
   putComments$ = this.actions$.pipe(
     ofType<ImageRecognitionPutComments>(ImageRecognitionActionTypes.ImageRecognitionPutComments),
     switchMap((action: ImageRecognitionPutComments) => this.imageOverviewService.putComments$(action.imageID, action.comments).pipe(
-      switchMap((comments: string) => of(new ImageRecognitionPutCommentsSuccess(comments))),
+      switchMap((comments: StringResponse) => of(new ImageRecognitionPutCommentsSuccess(comments))),
       //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 

@@ -13,6 +13,7 @@ export interface Image extends Entity, IOrdered {
   pages: Page[];
   state: State; // deprecated
   part: Part;
+  comments: string;
   imageRecognitionProgressStatuses: ImageRecognitionProgressStatus[];
 }
 

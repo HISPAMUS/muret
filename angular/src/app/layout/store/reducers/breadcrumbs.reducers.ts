@@ -4,20 +4,27 @@ import {BreadcrumbsState, initialBreadcrumbsState} from '../state/breadcrumbs.st
 export function breadcrumbsReducers(state = initialBreadcrumbsState, action: BreadcrumbsActions):
 BreadcrumbsState {
   switch (action.type) {
+    case BreadcrumbsActionTypes.BreadcrumbsClear: {
+      return {
+        ...state,
+        breadcrumbs: null,
+        //serverError: null
+      };
+    }
     case BreadcrumbsActionTypes.BreadcrumbsUpdateCollectionSuccess:
     case BreadcrumbsActionTypes.BreadcrumbsUpdateImageSuccess:
     case BreadcrumbsActionTypes.BreadcrumbsUpdateDocumentSuccess: {
       return {
         ...state,
         breadcrumbs: action.breadcrumbs,
-        serverError: null
+        //serverError: null
       };
     }
-    case BreadcrumbsActionTypes.BreadcrumbsServerError:
+    /*case BreadcrumbsActionTypes.BreadcrumbsServerError:
       return {
         ...state,
         serverError: action.serverError
-      };
+      };*/
     default: {
       return state;
     }

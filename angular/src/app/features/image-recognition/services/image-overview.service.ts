@@ -5,6 +5,7 @@ import {Observable} from "rxjs";
 import {Page} from "../../../core/model/entities/page";
 import {ImageRecognitionProgressStatusChange} from "../../../core/model/restapi/image-recognition-progress-status-change";
 import {ImageRecognitionProgressStatus} from "../../../core/model/entities/image-recognition-progress-status";
+import {StringResponse} from "../../../core/model/restapi/string-response";
 
 @Injectable() // non-singleton
 export class ImageOverviewService {
@@ -29,9 +30,9 @@ export class ImageOverviewService {
   /**
    * It returns the comments set
    */
-  putComments$(imageID: number, comments: string): Observable<String> {
+  putComments$(imageID: number, comments: string): Observable<StringResponse> {
     const url = `imageRecognition/comments/${imageID}`
-    return this.apiRestClientService.put$<String>(url, comments);
+    return this.apiRestClientService.put$<StringResponse>(url, comments);
   }
 
   /**

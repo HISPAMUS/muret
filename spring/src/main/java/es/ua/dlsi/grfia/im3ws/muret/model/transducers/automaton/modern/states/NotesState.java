@@ -43,6 +43,8 @@ public class NotesState extends CommonNotesState {
                 return new FiguresColoration(Figures.EIGHTH, null);
             case sixteenth:
                 return new FiguresColoration(Figures.SIXTEENTH, null);
+            case thirtySecond:
+                return new FiguresColoration(Figures.THIRTY_SECOND, null);
             default:
                 throw new IM3RuntimeException("Unsupported figure " + value);
         }
