@@ -11,6 +11,7 @@ import {Region} from "../../../../../../core/model/entities/region";
 import {Shape} from "../../../../../../svg/model/shape";
 import {RegionType} from "../../../../../../core/model/entities/region-type";
 import {
+  ImageRecognitionApplyRotation,
   ImageRecognitionAutomaticDocumentAnalysis,
   ImageRecognitionChangePageBoundingBox,
   ImageRecognitionChangeRegionBoundingBox,
@@ -18,7 +19,7 @@ import {
   ImageRecognitionClear,
   ImageRecognitionCreatePage,
   ImageRecognitionCreateRegion, ImageRecognitionDeletePages,
-  ImageRecognitionDeleteRegions
+  ImageRecognitionDeleteRegions, ImageRecognitionRevertRotation
 } from "../../../../store/actions/image-recognition.actions";
 import {Rectangle} from "../../../../../../svg/model/rectangle";
 import {SelectedRegionOrPage} from "./selected-region-or-page";
@@ -28,6 +29,7 @@ import {selectImageRecognitionDocumentAnalysisClassifierModels} from "../../../.
 import {ImageFilesService} from "../../../../../../core/services/image-files.service";
 import {DomSanitizer} from "@angular/platform-browser";
 import {ShowErrorService} from "../../../../../../core/services/show-error.service";
+import {Options} from "@angular-slider/ngx-slider";
 
 
 @Component({
@@ -41,6 +43,14 @@ export class DocumentAnalysisComponent extends ImageRecognitionBaseAbstractCompo
   private selectedShapes: Shape[];
   mode: 'eAdding' | 'eEditing' | 'eSelecting';
   documentAnalysisModels$: Observable<ClassifierModel[]>;
+  sliderImageRotation: number = 0;
+  sliderOptions: Options = {
+    floor: -50, // divide by 10
+    ceil: 50,
+     translate: (value: number): string => {
+      return value / 10 + 'º';
+    },
+  };
 
   constructor(route: ActivatedRoute, store: Store<ImageRecognitionState>, dialogsService: DialogsService, private contextMenuService: ContextMenuService,
               protected imageFilesService: ImageFilesService, protected sanitizer: DomSanitizer, protected manageErrorsService: ShowErrorService) {
@@ -53,6 +63,11 @@ export class DocumentAnalysisComponent extends ImageRecognitionBaseAbstractCompo
     super.ngOnInit();
     // the dispatch to get all the classifiers is found in the base class
     this.documentAnalysisModels$ = this.store.select(selectImageRecognitionDocumentAnalysisClassifierModels);
+  }
+
+  onImageOverviewChanged() {
+    super.onImageOverviewChanged(); // e.g. after applying rotation
+    this.sliderImageRotation = 0;
   }
 
   protected isPageSelectable(): boolean {
@@ -256,6 +271,18 @@ export class DocumentAnalysisComponent extends ImageRecognitionBaseAbstractCompo
           });
         }
       });
+  }
+
+  getImageRotation() {
+    return this.sliderImageRotation / 10;
+  }
+
+  onSaveRotation() {
+    this.store.dispatch(new ImageRecognitionApplyRotation(this.imageID, this.getImageRotation()));
+  }
+
+  onRevertRotation() {
+    this.store.dispatch(new ImageRecognitionRevertRotation(this.imageID));
   }
 }
 

@@ -39,6 +39,7 @@ import {AgGridModule} from "ag-grid-angular";
 import { SemanticKernMensGridComponent } from './components/phases/transcription/semantic-kern-mens-grid/semantic-kern-mens-grid.component';
 import { MEIPreviewComponent } from './components/phases/transcription/meipreview/meipreview.component';
 import { SemanticToolbarComponent } from './components/phases/transcription/semantic-toolbar/semantic-toolbar.component';
+import {NgxSliderModule} from "@angular-slider/ngx-slider";
 
 
 @NgModule({
@@ -50,21 +51,22 @@ import { SemanticToolbarComponent } from './components/phases/transcription/sema
     TextRegionSemanticRepresentationComponent,
     AgnosticStaffComponent, SemanticNotationComponent, TextRegionAgnosticRepresentationComponent, MusicAgnosticRepresentationComponent, ChangePitchComponent, AgnosticToolbarComponent, TranscriptionToolsComponent, SemanticKernMensGridComponent, MEIPreviewComponent, SemanticToolbarComponent
   ],
-  imports: [
-    CommonModule,
-    StoreModule.forFeature('imageRecognition', imageRecognitionReducers),
-    EffectsModule.forFeature([ImageOverviewEffects]),
-    ImageRecognitionRoutingModule,
-    FontAwesomeModule,
-    SharedModule,
-    NgbCollapseModule,
-    SvgModule,
-    FormsModule,
-    ContextMenuModule,
-    NgbTooltipModule,
-    NgbButtonsModule,
-    AgGridModule
-  ],providers: [
+    imports: [
+        CommonModule,
+        StoreModule.forFeature('imageRecognition', imageRecognitionReducers),
+        EffectsModule.forFeature([ImageOverviewEffects]),
+        ImageRecognitionRoutingModule,
+        FontAwesomeModule,
+        SharedModule,
+        NgbCollapseModule,
+        SvgModule,
+        FormsModule,
+        ContextMenuModule,
+        NgbTooltipModule,
+        NgbButtonsModule,
+        AgGridModule,
+        NgxSliderModule
+    ],providers: [
     ImageOverviewService, DocumentAnalysisService, ImagePartsService, AgnosticRepresentationService, SemanticRepresentationService
   ]
 })

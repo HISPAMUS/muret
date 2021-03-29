@@ -135,7 +135,16 @@ export class DocumentAnalysisService {
      return this.apiRestClientService.post$<Page[]>(url, form);
    }
 
+  rotateImage$(imageID: number, degrees: number) {
+    const url = `imagefiles/rotateImage/${imageID}/${degrees}`;
+    return this.apiRestClientService.put$(url, null);
+  }
 
+
+  revertRotation$(imageID: number) {
+    const url = `imagefiles/revertRotation/${imageID}`;
+    return this.apiRestClientService.put$(url, null);
+  }
   // revisado hasta aquí
 
 

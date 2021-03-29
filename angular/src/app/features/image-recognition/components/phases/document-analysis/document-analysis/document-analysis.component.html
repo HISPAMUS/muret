@@ -8,6 +8,11 @@
         [selectionDone]="isSelectionDone()"
         (onDelete)="onDelete()"
         (onClear)="onClear()"></app-image-recognition-toolbar>
+      <div id="slider" class="d-flex align-items-center">
+        <button class="btn-secondary" (click)="onRevertRotation()">Revert</button>
+        <ngx-slider [(value)]="sliderImageRotation" [options]="sliderOptions"></ngx-slider>
+        <button class="btn-secondary" (click)="onSaveRotation()">Save</button>
+      </div>
       <app-classifiers [title]="'Select a document analysis classifier'" [models]="documentAnalysisModels$ | async" (onExecuteClassifier)="attemptDocumentAnalysis($event)">
       </app-classifiers>
       <app-document-phases [selectedPhase]="'documentAnalysis'"  [imageID]="imageID" [size]="'lg'"></app-document-phases>
@@ -31,6 +36,7 @@
         (onSvgShapeCreated)="onSVGShapeCreated($event)"
         (onSvgShapeChanged)="onSVGShapeChanged($event)"
         [addRegionTypeToFilter]="selectedRegionType"
+        [imageRotation]="getImageRotation()"
       ></app-image-document-analysis-navigator>
     </div>
   </div>

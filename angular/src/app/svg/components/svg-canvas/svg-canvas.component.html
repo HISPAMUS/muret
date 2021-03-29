@@ -1,6 +1,8 @@
 <div #svgContent>
   <!-- hidden - used to get the size of the image -->
-  <img (load)="onBackgroundHiddenImageElementLoaded($event)" id="backgroundHiddenImageElement" *ngIf="backgroundImage" [src]="unsafeBackgroundImage"/>
+  <img (load)="onBackgroundHiddenImageElementLoaded($event)" id="backgroundHiddenImageElement" *ngIf="backgroundImage" [src]="unsafeBackgroundImage"
+       [ngStyle]="{'transform': 'rotate(' + imageRotation + 'deg)'}"
+  />
 
   <svg id="canvas" version="1.1" [ngClass]="cursorClass" #canvas xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
        [attr.width]="scaledImageWidth" [attr.height]="scaledImageHeight"
@@ -23,7 +25,9 @@
     (mousemove)="onMouseMove($event)" (touchmove)="onTouchMove($event)"-->
 
     <image *ngIf="backgroundImage" [attr.xlink:href]="backgroundImage" preserveAspectRatio="xMinYMin slice"
-           [attr.width]="viewPortWidth" [attr.height]="viewPortHeight"/>
+           [attr.width]="viewPortWidth" [attr.height]="viewPortHeight"
+           [ngStyle]="{'transform': 'rotate(' + imageRotation + 'deg)'}"
+    />
 
     <!-- width and height compulsory for Firefox and Safari -->
 

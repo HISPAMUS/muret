@@ -1,5 +1,9 @@
 // recall the inmutability of state
-import {ImageRecognitionActions, ImageRecognitionActionTypes} from "../actions/image-recognition.actions";
+import {
+  ImageRecognitionActions,
+  ImageRecognitionActionTypes,
+  ImageRecognitionApplyRotationSuccess
+} from "../actions/image-recognition.actions";
 import {klona} from "klona";
 import {ImageRecognitionState, initialImageRecognitionState} from "../state/image-recognition.state";
 
@@ -325,6 +329,15 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
       return newState;
     }
 
+    case ImageRecognitionActionTypes.ImageRecognitionApplyRotationSuccess:
+    case ImageRecognitionActionTypes.ImageRecognitionRevertRotationSuccess: {
+      const newState: ImageRecognitionState = {
+        ...state,
+        imageOverview: klona(state.imageOverview), // force reload
+        //apiRestServerError: null
+      };
+      return newState;
+    }
     /// ---------- agnostic recognition
     case ImageRecognitionActionTypes.ImageRecognitionSelectRegion: {
       return {

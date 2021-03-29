@@ -83,6 +83,10 @@ export enum ImageRecognitionActionTypes {
   ImageRecognitionDeleteRegionsSuccess = '[Image Recognition. Document Analysis] Delete region success',
   ImageRecognitionAutomaticDocumentAnalysis = '[Image Recognition. Document Analysis] Start automatic analysis',
   ImageRecognitionAutomaticDocumentAnalysisSuccess = '[Image Recognition. Document Analysis] Automatic analysis success',
+  ImageRecognitionApplyRotation = '[Image Recognition. Document Analysis] Apply rotation',
+  ImageRecognitionApplyRotationSuccess = '[Image Recognition. Document Analysis] Apply rotation success',
+  ImageRecognitionRevertRotation = '[Image Recognition. Document Analysis] Revert rotation',
+  ImageRecognitionRevertRotationSuccess = '[Image Recognition. Document Analysis] Apply revert rotation success',
   ImageRecognitionGetClassifierModels = '[Image Recognition] Get Models',
   ImageRecognitionGetClassifierModelsSuccess = '[Image Recognition] Get Models Success',
 
@@ -350,6 +354,29 @@ export class ImageRecognitionAutomaticDocumentAnalysisSuccess implements Action 
   constructor(public pages: Page[]) {}
 }
 
+export class ImageRecognitionApplyRotation implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionApplyRotation;
+  constructor(public imageID: number, public rotationDegrees: number) {}
+}
+
+export class ImageRecognitionApplyRotationSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionApplyRotationSuccess;
+  constructor() {}
+}
+
+
+export class ImageRecognitionRevertRotation implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionRevertRotation;
+  constructor(public imageID: number) {}
+}
+
+export class ImageRecognitionRevertRotationSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionRevertRotationSuccess;
+  constructor() {}
+}
+
+
+
 // ------- Agnostic representation
 export class ImageRecognitionSelectRegion implements Action {
   public readonly type = ImageRecognitionActionTypes.ImageRecognitionSelectRegion;
@@ -508,6 +535,9 @@ export type ImageRecognitionActions =
 
   ImageRecognitionGetClassifierModels | ImageRecognitionGetClassifierModelsSuccess |
   ImageRecognitionAutomaticDocumentAnalysis | ImageRecognitionAutomaticDocumentAnalysisSuccess |
+
+  ImageRecognitionApplyRotation | ImageRecognitionApplyRotationSuccess |
+  ImageRecognitionRevertRotation | ImageRecognitionRevertRotationSuccess |
 
   // agnostic representation
   ImageRecognitionSelectRegion | ImageRecognitionSelectAgnosticSymbols |

@@ -1,4 +1,4 @@
-import {DocumentActions, DocumentActionTypes} from '../actions/document.actions';
+import {DocumentActions, DocumentActionTypes, DocumentGetOverview} from '../actions/document.actions';
 import {DocumentState, initialDocumentState} from '../state/document.state';
 import {DocumentExportType} from '../../../../core/model/restapi/document-export';
 import {Section} from "../../../../core/model/entities/section";
@@ -9,6 +9,16 @@ import { klona } from 'klona/lite';
 
 export function documentReducers(state = initialDocumentState, action: DocumentActions): DocumentState {
   switch (action.type) {
+    case DocumentActionTypes.DocumentGetOverview: {
+      if (state.documentOverview && state.documentOverview.id != action.documentID) {
+        return {
+          ...state,
+          documentOverview: null // if user is asking for other document reset it
+        };
+      } else {
+        return state;
+      }
+    }
     case DocumentActionTypes.DocumentGetOverviewSuccess: {
       const documentOverview = klona(action.documentOverview); // deep copy
       return {

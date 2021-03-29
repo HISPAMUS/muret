@@ -1,0 +1,9 @@
+#slider {
+  width: 400px;
+}
+
+#slider > * {
+  margin-right: 1rem;
+}
+
+

@@ -4,7 +4,7 @@ import { of } from 'rxjs';
 import {catchError, mergeMap, switchMap} from 'rxjs/operators';
 import {ImageOverviewService} from "../../services/image-overview.service";
 import {
-  ImageRecognitionActionTypes,
+  ImageRecognitionActionTypes, ImageRecognitionApplyRotation, ImageRecognitionApplyRotationSuccess,
   ImageRecognitionAutomaticDocumentAnalysis,
   ImageRecognitionAutomaticDocumentAnalysisSuccess,
   ImageRecognitionChangeNotationType, ImageRecognitionChangeNotationTypeSuccess,
@@ -57,7 +57,7 @@ import {
   ImageRecognitionLinkPart,
   ImageRecognitionLinkPartSuccess,
   ImageRecognitionPutComments,
-  ImageRecognitionPutCommentsSuccess,
+  ImageRecognitionPutCommentsSuccess, ImageRecognitionRevertRotation, ImageRecognitionRevertRotationSuccess,
   ImageRecognitionSendSemanticEncoding, ImageRecognitionSendSemanticEncodingSuccess,
   ImageRecognitionUnlinkImageFromPart,
   ImageRecognitionUnlinkImageFromPartSuccess,
@@ -293,6 +293,21 @@ export class ImageOverviewEffects {
     ofType<ImageRecognitionAutomaticDocumentAnalysis>(ImageRecognitionActionTypes.ImageRecognitionAutomaticDocumentAnalysis),
     switchMap((action: ImageRecognitionAutomaticDocumentAnalysis) => this.documentAnalysisService.attemptAutomaticAnalysis$(action.form).pipe(
       switchMap((page: Page[]) => of(new ImageRecognitionAutomaticDocumentAnalysisSuccess(page))),
+      //catchError(err => of(new ImageRecognitionServerError(err)))
+    )));
+
+  @Effect()
+  rotateImage$ = this.actions$.pipe(
+    ofType<ImageRecognitionApplyRotation>(ImageRecognitionActionTypes.ImageRecognitionApplyRotation),
+    switchMap((action: ImageRecognitionApplyRotation) => this.documentAnalysisService.rotateImage$(action.imageID, action.rotationDegrees).pipe(
+      switchMap(() => of(new ImageRecognitionApplyRotationSuccess())),
+      //catchError(err => of(new ImageRecognitionServerError(err)))
+    )));
+  @Effect()
+  revertRotation$ = this.actions$.pipe(
+    ofType<ImageRecognitionRevertRotation>(ImageRecognitionActionTypes.ImageRecognitionRevertRotation),
+    switchMap((action: ImageRecognitionRevertRotation) => this.documentAnalysisService.revertRotation$(action.imageID).pipe(
+      switchMap(() => of(new ImageRecognitionRevertRotationSuccess())),
       //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 

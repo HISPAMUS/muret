@@ -7,6 +7,7 @@ import es.ua.dlsi.grfia.im3ws.muret.controller.payload.RegionCreation;
 import es.ua.dlsi.grfia.im3ws.muret.entity.BoundingBox;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Image;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Page;
+import es.ua.dlsi.grfia.im3ws.muret.model.ClassifierClient;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.PageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
@@ -23,6 +24,8 @@ import javax.imageio.stream.ImageInputStream;
 import javax.transaction.Transactional;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 // !!! Important: no controller should throw any exception
 
@@ -30,9 +33,12 @@ import java.util.List;
 @RestController
 public class ImageFilesController extends MuRETBaseController {
 
+    private final ClassifierClient classifierClient;
+
     @Autowired
     public ImageFilesController(MURETConfiguration muretConfiguration, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository) {
         super(muretConfiguration, imageRepository, pageRepository, regionRepository, symbolRepository);
+        classifierClient = new ClassifierClient(muretConfiguration.getPythonclassifiers());
     }
 
     /**
@@ -54,9 +60,7 @@ public class ImageFilesController extends MuRETBaseController {
 
     }
 
-    private File getImageFile(String documentPath, Long imageID, String imagesRelativePath) throws IM3WSException {
-        Image image = getImage(imageID);
-
+    private File getImageFile(String documentPath, Image image, String imagesRelativePath) throws IM3WSException {
         if (documentPath == null) {
             documentPath = image.computeDocument().getPath();
         }
@@ -66,9 +70,13 @@ public class ImageFilesController extends MuRETBaseController {
         File masterImagesFolder = new File(documentFolder, imagesRelativePath);
         File imageFile = new File(masterImagesFolder, image.getFilename());
         if (!imageFile.exists()) {
-            throw new IM3WSException("Image '" + imageFile.getAbsolutePath() + "' for image with ID=" + imageID + " does not exist");
+            throw new IM3WSException("Image '" + imageFile.getAbsolutePath() + "' for image with ID=" + image.getId() + " does not exist");
         }
         return imageFile;
+    }
+    private File getImageFile(String documentPath, Long imageID, String imagesRelativePath) throws IM3WSException {
+        Image image = getImage(imageID);
+        return getImageFile(documentPath, image, imagesRelativePath);
     }
 
     @GetMapping(value = "{documentPath}/master/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
@@ -121,7 +129,7 @@ public class ImageFilesController extends MuRETBaseController {
 
     @GetMapping(value = "croppedImage/{imageID}/{fromX}/{fromY}/{toX}/{toY}", produces = MediaType.IMAGE_JPEG_VALUE)
     @Transactional
-    public ResponseEntity<InputStreamResource> getCroppedMasterImageBlob$(@PathVariable("imageID") Long imageID,
+    public ResponseEntity<InputStreamResource> getCroppedMasterImageBlob(@PathVariable("imageID") Long imageID,
             @PathVariable("fromX") int fromX, @PathVariable("fromY") int fromY,
             @PathVariable("toX") int toX, @PathVariable("toY") int toY) {
 
@@ -143,6 +151,57 @@ public class ImageFilesController extends MuRETBaseController {
                     .body(inputStreamResource);
         } catch (Throwable t) {
             throw ControllerUtils.createServerError(this, "Cannot get cropped master image", t);
+        }
+    }
+
+    @PutMapping(value = "rotateImage/{imageID}/{degrees}")
+    @Transactional
+    public void rotateImage(@PathVariable("imageID") Long imageID, @PathVariable("degrees") double degrees) {
+        try {
+            Image image = getImage(imageID);
+            File imageFile = getImageFile(null, image, MURETConfiguration.MASTER_IMAGES);
+
+            BufferedImage bufferedImage = ImageIO.read(imageFile);
+            File backup = new File(imageFile.getAbsolutePath() + "_backup");
+            if (!backup.exists()) {
+                // just save the first rotation
+                ImageIO.write(bufferedImage, "JPG", backup);
+            }
+            BufferedImage rotatedImage = ImageUtils.getInstance().rotate(bufferedImage, degrees);
+            ImageIO.write(rotatedImage, "JPG", imageFile);
+
+            // now notify the image has changed to the server
+            notifyServerImageChanged(image);
+        } catch (Throwable t) {
+            throw ControllerUtils.createServerError(this, "Cannot rotate image", t);
+        }
+    }
+
+    private void notifyServerImageChanged(Image image) {
+        Path imagePath = Paths.get(muretConfiguration.getFolder(), image.computeDocument().getPath(),
+                MURETConfiguration.MASTER_IMAGES, image.getFilename());
+
+        classifierClient.uploadImage(image.getId(), imagePath);
+    }
+
+    @PutMapping(value = "revertRotation/{imageID}")
+    @Transactional
+    public void revertRotation(@PathVariable("imageID") Long imageID) {
+        try {
+            Image image = getImage(imageID);
+            File imageFile = getImageFile(null, image, MURETConfiguration.MASTER_IMAGES);
+
+            File backup = new File(imageFile.getAbsolutePath() + "_backup");
+            if (backup.exists()) {
+                // just save the first rotation
+                BufferedImage bufferedImage = ImageIO.read(backup);
+                ImageIO.write(bufferedImage, "JPG", imageFile);
+            }
+            // now notify the image has changed to the server
+            notifyServerImageChanged(image);
+
+        } catch (Throwable t) {
+            throw ControllerUtils.createServerError(this, "Cannot rotate image", t);
         }
     }
 }
