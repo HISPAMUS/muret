@@ -151,6 +151,18 @@ public class AgnosticRepresentationController extends MuRETBaseController {
         }
     }
 
+    @PostMapping(path = {"regionExternalReferenceUpdate/{regionID}"})
+    public Region regionExternalReferenceUpdate(@PathVariable("regionID") Long regionID, @RequestBody StringBody externalRef) {
+        try {
+            Region region = getRegion(regionID);
+            region.setExternalReference(externalRef.getValue());
+            regionRepository.save(region);
+            return region;
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot update comments", e);
+
+        }
+    }
 
     // revisado hasta aquí ------
 

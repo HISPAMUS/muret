@@ -4,14 +4,19 @@ import { of } from 'rxjs';
 import {catchError, mergeMap, switchMap} from 'rxjs/operators';
 import {ImageOverviewService} from "../../services/image-overview.service";
 import {
-  ImageRecognitionActionTypes, ImageRecognitionApplyRotation, ImageRecognitionApplyRotationSuccess,
+  ImageRecognitionActionTypes,
+  ImageRecognitionApplyRotation,
+  ImageRecognitionApplyRotationSuccess,
   ImageRecognitionAutomaticDocumentAnalysis,
   ImageRecognitionAutomaticDocumentAnalysisSuccess,
-  ImageRecognitionChangeNotationType, ImageRecognitionChangeNotationTypeSuccess,
+  ImageRecognitionChangeNotationType,
+  ImageRecognitionChangeNotationTypeSuccess,
   ImageRecognitionChangePageBoundingBox,
   ImageRecognitionChangePageBoundingBoxSuccess,
   ImageRecognitionChangeRegionBoundingBox,
   ImageRecognitionChangeRegionBoundingBoxSuccess,
+  ImageRecognitionChangeRegionExternalReference,
+  ImageRecognitionChangeRegionExternalReferenceSuccess,
   ImageRecognitionChangeStatus,
   ImageRecognitionChangeStatusSuccess,
   ImageRecognitionChangeSymbol,
@@ -45,7 +50,8 @@ import {
   ImageRecognitionGetClassifierModelsSuccess,
   ImageRecognitionGetImageOverview,
   ImageRecognitionGetImageOverviewSuccess,
-  ImageRecognitionGetNotation, ImageRecognitionGetNotationSuccess,
+  ImageRecognitionGetNotation,
+  ImageRecognitionGetNotationSuccess,
   ImageRecognitionGetPagesRegionsSymbols,
   ImageRecognitionGetPagesRegionsSymbolsSuccess,
   ImageRecognitionLinkImageToNewPart,
@@ -57,8 +63,11 @@ import {
   ImageRecognitionLinkPart,
   ImageRecognitionLinkPartSuccess,
   ImageRecognitionPutComments,
-  ImageRecognitionPutCommentsSuccess, ImageRecognitionRevertRotation, ImageRecognitionRevertRotationSuccess,
-  ImageRecognitionSendSemanticEncoding, ImageRecognitionSendSemanticEncodingSuccess,
+  ImageRecognitionPutCommentsSuccess,
+  ImageRecognitionRevertRotation,
+  ImageRecognitionRevertRotationSuccess,
+  ImageRecognitionSendSemanticEncoding,
+  ImageRecognitionSendSemanticEncodingSuccess,
   ImageRecognitionUnlinkImageFromPart,
   ImageRecognitionUnlinkImageFromPartSuccess,
   ImageRecognitionUnlinkPart,
@@ -390,7 +399,15 @@ export class ImageOverviewEffects {
         switchMap((agnosticSymbol: AgnosticSymbol) => of(new ImageRecognitionChangeSymbolSuccess(agnosticSymbol))),
         //catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
       )));
-
+  @Effect()
+  changeRegionExternalReference$ = this.actions$.pipe(
+    ofType<ImageRecognitionChangeRegionExternalReference>(ImageRecognitionActionTypes.ImageRecognitionChangeRegionExternalReference),
+    switchMap((action: ImageRecognitionChangeRegionExternalReference) =>
+      this.agnosticRepresentationService.changeRegionExternalReference$(action.region,
+        action.externalReference).pipe(
+        switchMap((region: Region) => of(new ImageRecognitionChangeRegionExternalReferenceSuccess(region))),
+        //catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
+      )));
   // ------ semantic representation
   @Effect()
   convertAgnostic2Semantic$ = this.actions$.pipe(

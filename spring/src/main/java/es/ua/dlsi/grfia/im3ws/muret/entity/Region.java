@@ -78,10 +78,16 @@ public class Region extends Auditable implements IAssignableToPart, IDelimitedWi
     @Enumerated(EnumType.STRING)
     private NotationType notationType;
 
+    /**
+     * Used mostly in incipits mode
+     */
+    @Column (name = "external_reference")
+    private String externalReference;
+
     public Region() {
     }
 
-    public Region(Page page, BoundingBox boundingBox, String comments, RegionType regionType, Set<Symbol> symbols, Part part, String semanticEncoding, NotationType notationType) {
+    public Region(Page page, BoundingBox boundingBox, String comments, RegionType regionType, Set<Symbol> symbols, Part part, String semanticEncoding, NotationType notationType, String externalReference) {
         this.boundingBox = boundingBox;
         this.page = page;
         this.regionType = regionType;
@@ -90,6 +96,7 @@ public class Region extends Auditable implements IAssignableToPart, IDelimitedWi
         this.part = part;
         this.semanticEncoding = semanticEncoding;
         this.notationType = notationType;
+        this.externalReference = externalReference;
     }
 
     public Region(Page page, RegionType regionType, int fromX, int fromY, int toX, int toY, Part part) {
@@ -215,4 +222,11 @@ public class Region extends Auditable implements IAssignableToPart, IDelimitedWi
         return sortedRegions;
     }
 
+    public String getExternalReference() {
+        return externalReference;
+    }
+
+    public void setExternalReference(String externalReference) {
+        this.externalReference = externalReference;
+    }
 }

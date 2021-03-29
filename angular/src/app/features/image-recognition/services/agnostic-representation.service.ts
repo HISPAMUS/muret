@@ -91,4 +91,13 @@ export class AgnosticRepresentationService {
     };
     return this.apiRestClientService.put$<AgnosticSymbol>('agnostic/symbolCommentsUpdate', params);
   }
+
+  changeRegionExternalReference$(region: Region, externalReference: string): Observable<Region> {
+    const params = {
+      value: externalReference
+    };
+    const url = `agnostic/regionExternalReferenceUpdate/${region.id}`;
+    return this.apiRestClientService.post$<AgnosticSymbol>(url, params);
+
+  }
 }

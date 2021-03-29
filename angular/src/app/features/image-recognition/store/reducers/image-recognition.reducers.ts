@@ -486,6 +486,27 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
 
       return newState;
     }
+    case ImageRecognitionActionTypes.ImageRecognitionChangeRegionExternalReferenceSuccess: {
+      const newState: ImageRecognitionState = {
+        pagesRegionsSymbols: klona(state.pagesRegionsSymbols),
+        imageOverview: state.imageOverview,
+        regionTypes: state.regionTypes,
+        classifierModels: state.classifierModels,
+        analyzing: false,
+        //apiRestServerError: null
+      };
+
+      newState.pagesRegionsSymbols.forEach(page => {
+        page.regions.forEach(region => {
+          if  (region.id === action.region.id) {
+            region.externalReference = action.region.externalReference;
+            newState.selectedRegion = region;
+          }
+        });
+      });
+
+      return newState;
+    }
     // ---- semantic
     case ImageRecognitionActionTypes.ImageRecognitionConvertAgnostic2SemanticSuccess:
     case ImageRecognitionActionTypes.ImageRecognitionGetNotationSuccess:

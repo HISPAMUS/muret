@@ -13,6 +13,11 @@
     </label>
   </div>
 
+  <div class="d-flex">
+    <input placeholder="External reference (optional)" [(ngModel)]="selectedRegionExternalReference"/>
+    <button [hidden]="!externalReferenceChanged()" class="btn-secondary" (click)="sendExternalReference()">Apply</button>
+  </div>
+
   <app-classifiers *ngIf="isAddingMode()" [hideClassifyButton]="true" [caption]="'Individual symbol classifier'" [models]="agnosticSymbolClassifiers"
                    (onSelectedModelIDChange)="onSymbolsClassifierModelID($event)"
   >

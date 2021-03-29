@@ -27,3 +27,10 @@
 .smallLeft {
   height: 30vh; /* recall the menu bar has 10vh */
 }
+
+#statusImageData {
+  font-size: 8px;
+  position: fixed;
+  bottom: 0;
+  right: 1rem;
+}

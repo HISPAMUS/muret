@@ -16,6 +16,7 @@ import {Point} from "../../../../../../core/model/entities/point";
 import {ImageRecognitionState} from "../../../../store/state/image-recognition.state";
 import {Store} from "@ngrx/store";
 import {
+  ImageRecognitionChangeRegionExternalReference,
   ImageRecognitionChangeSymbolBoundingBox,
   ImageRecognitionClearRegionSymbols,
   ImageRecognitionCreateSymbolFromBoundingBox,
@@ -37,6 +38,7 @@ export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
   @Output() modeChange = new EventEmitter(); // must have this name in order to be input / output
   @Output() selectedShapesChange = new EventEmitter(true); // keep this name for having input / output -- async to avoid ExpressionChangedAfterItHasBeenCheckedError
 
+  selectedRegionExternalReference: string;
   modeValue: 'eAdding' | 'eEditing' | 'eSelecting';
   selectedShapesValue: Shape[] = [];
 
@@ -76,6 +78,7 @@ export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.selectedRegion && this.selectedRegion) {
       this.drawSelectedRegionSymbols(this.selectedRegion.symbols);
       this.selectShapesFromAgnosticSymbols(); // when changing a symbol we need to review the selections
+      this.selectedRegionExternalReference = this.selectedRegion.externalReference;
     }
   }
 
@@ -242,6 +245,7 @@ export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   //TODO Comments
+
   onSymbolShapeChanged(shape: Shape) {
     // currently we only support bounding box change
     if (shape instanceof Rectangle) {
@@ -338,5 +342,13 @@ export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
       });
       this.selectedShapes = selectedShapes;
     }
+  }
+
+  sendExternalReference() {
+    this.store.dispatch(new ImageRecognitionChangeRegionExternalReference(this.selectedRegion, this.selectedRegionExternalReference));
+  }
+
+  externalReferenceChanged() {
+    return this.selectedRegion && this.selectedRegion.externalReference != this.selectedRegionExternalReference;
   }
 }

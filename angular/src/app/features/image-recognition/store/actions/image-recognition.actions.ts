@@ -105,6 +105,8 @@ export enum ImageRecognitionActionTypes {
   ImageRecognitionChangeSymbolBoundingBox = '[Image Recognition. AgnosticRepresentation] Change symbol bounding box',
   ImageRecognitionChangeSymbolComments = '[Image Recognition. AgnosticRepresentation] Change symbol comments',
   ImageRecognitionChangeSymbolSuccess = '[Image Recognition. AgnosticRepresentation] Change symbol success',
+  ImageRecognitionChangeRegionExternalReference = '[Image Recognition. AgnosticRepresentation] Change region external reference comments',
+  ImageRecognitionChangeRegionExternalReferenceSuccess = '[Image Recognition. AgnosticRepresentation] Change region external reference success',
 
   ImageRecognitionConvertAgnostic2Semantic = '[Image Recognition. SemanticRepresentation] Convert agnostic to semantic',
   ImageRecognitionConvertAgnostic2SemanticSuccess = '[Image Recognition. SemanticRepresentation] Convert agnostic to semantic success',
@@ -458,6 +460,19 @@ export class ImageRecognitionChangeSymbolComments implements Action {
   constructor(public agnosticSymbol: AgnosticSymbol, public comments: string) {}
 }
 
+
+export class ImageRecognitionChangeRegionExternalReference implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionChangeRegionExternalReference;
+  constructor(public region: Region, public externalReference: string) {}
+}
+
+
+export class ImageRecognitionChangeRegionExternalReferenceSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionChangeRegionExternalReferenceSuccess;
+  constructor(public region: Region) {}
+}
+
+
 // ---- semantic
 export class ImageRecognitionConvertAgnostic2Semantic implements Action {
   public readonly type = ImageRecognitionActionTypes.ImageRecognitionConvertAgnostic2Semantic;
@@ -546,6 +561,7 @@ export type ImageRecognitionActions =
   ImageRecognitionClassifyRegionEndToEnd | ImageRecognitionClassifyRegionEndToEndSuccess |
   ImageRecognitionClearRegionSymbols | ImageRecognitionClearRegionSymbolsSuccess |
   ImageRecognitionChangeSymbol | ImageRecognitionChangeSymbolComments | ImageRecognitionChangeSymbolBoundingBox | ImageRecognitionChangeSymbolSuccess |
+  ImageRecognitionChangeRegionExternalReference | ImageRecognitionChangeRegionExternalReferenceSuccess |
 
   // semantic representation
   ImageRecognitionConvertAgnostic2Semantic | ImageRecognitionConvertAgnostic2SemanticSuccess | ImageRecognitionGetNotation | ImageRecognitionGetNotationSuccess |

@@ -11,6 +11,7 @@ export interface Region extends Entity {
   part?: Part;
   semanticEncoding?: string;
   notationType?: string; // when it's different from the document notation type
+  externalReference?: string;
 }
 
 
