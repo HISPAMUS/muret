@@ -3,7 +3,7 @@ import {ImageRecognitionProgressStatus} from "../entities/image-recognition-prog
 
 export interface ImageOverview {
   imageID: number;
-  imageWidth: number;
+  //imageWidth: number;
   filename: string;
   documentID: number;
   documentPath: string;

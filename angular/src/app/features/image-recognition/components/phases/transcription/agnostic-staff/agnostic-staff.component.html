@@ -3,6 +3,7 @@
 
         width="100%" [attr.height.px]="height"
   [attr.viewBox]="viewBox" preserveAspectRatio="xMidYMid meet" overflow="visible"
+       (mousemove)="onSymbolMouseMove($event)" (mouseup)="onSymbolMouseUp()"
   >
     <ng-container *ngIf="svgAgnosticSymbolSet">
       <svg:symbol *ngFor="let path of svgAgnosticSymbolSet.paths; trackBy: trackByAgnosticSymbolTypeFn"
@@ -38,22 +39,23 @@
       <!-- use "as" structure for sharing subscriptions -->
       <ng-container *ngIf="agnosticSymbols">
         <ng-container *ngFor="let agnosticSymbol of agnosticSymbols">
-          <svg:use
-                   [attr.xlink:href]="'#' + agnosticSymbol.agnosticSymbolType"
-                   [attr.x]="getX(agnosticSymbol)"
-                   [attr.y]="computeAgnosticStaffSymbolY(agnosticSymbol)"
-                   style="opacity:1.0" [attr.height]="symbolHeight"
-                   (mousedown)="onSymbolMouseDown(agnosticSymbol)"
-                   [attr.fill]="getColor(agnosticSymbol)"
-                   (dblclick)="onDblClick(agnosticSymbol)"
-          />
+          <g (mousedown)="onSymbolMouseDown(agnosticSymbol)">
+            <svg:use
+                     [attr.xlink:href]="'#' + agnosticSymbol.agnosticSymbolType"
+                     [attr.x]="getX(agnosticSymbol)"
+                     [attr.y]="computeAgnosticStaffSymbolY(agnosticSymbol)"
+                     style="opacity:1.0" [attr.height]="symbolHeight"
+                     [attr.fill]="getColor(agnosticSymbol)"
+                     (dblclick)="onDblClick(agnosticSymbol)"
+            />
 
-          <svg:line *ngFor="let ledgerLineY of getLedgerLines(agnosticSymbol); trackBy: trackByLedgerLineFn()"
-                    attr.x1="{{getX(agnosticSymbol) - LEDGER_LINE_OFFSET}}" attr.y1="{{ledgerLineY}}"
-                    attr.x2="{{getX(agnosticSymbol) + LEDGER_LINE_WIDTH}}" attr.y2="{{ledgerLineY}}"
-                    stroke="black"
-                    stroke-width="1"
-          />
+            <svg:line *ngFor="let ledgerLineY of getLedgerLines(agnosticSymbol); trackBy: trackByLedgerLineFn"
+                      attr.x1="{{getX(agnosticSymbol) - LEDGER_LINE_OFFSET}}" attr.y1="{{ledgerLineY}}"
+                      attr.x2="{{getX(agnosticSymbol) + LEDGER_LINE_WIDTH}}" attr.y2="{{ledgerLineY}}"
+                      stroke="black"
+                      stroke-width="1"
+            />
+          </g>
 
           <svg:use *ngIf="hasComment(agnosticSymbol)" xlink:href="#annotation" [attr.x]="getX(agnosticSymbol)" [attr.y]="5"
                    fill="blue" [attr.height]="annotationHeight"

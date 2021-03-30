@@ -19,7 +19,10 @@ import {PositionInStaffService} from "../../../../../../shared/services/position
 import {
   selectImageRecognitionSelectedAgnosticSymbols,
 } from "../../../../store/selectors/image-recognition.selector";
-import {ImageRecognitionSelectAgnosticSymbols} from "../../../../store/actions/image-recognition.actions";
+import {
+  ImageRecognitionChangeSymbolX,
+  ImageRecognitionSelectAgnosticSymbols
+} from "../../../../store/actions/image-recognition.actions";
 import {Shape} from "../../../../../../svg/model/shape";
 import {SVGSet} from "../../../../../../core/model/restapi/svgset";
 import {AgnosticOrSemanticTypeSVGPath} from "../../../../../../core/model/restapi/agnostic-or-semantic-type-s-v-g-path";
@@ -71,6 +74,10 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
 
   private selectedSymbolSubscription: Subscription;
   private selectedSymbolIDs: Set<number> = new Set<number>();
+
+  private movingSymbolOriginalX: number;
+  private movingSymbolX: number;
+  private movingSymbol: AgnosticSymbol;
 
   constructor(private store: Store<any>, private positionInStaffService: PositionInStaffService) {
     this.modeValue = 'eSelecting';
@@ -216,23 +223,12 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
     this.store.dispatch(new ImageRecognitionSelectAgnosticSymbols(selected));
   }
 
-  onSymbolMouseDown(agnosticSymbol: AgnosticSymbol) {
-    this.selectSymbolRequest(agnosticSymbol);
-  }
-
   onDblClick(agnosticSymbol: AgnosticSymbol) {
     this.selectSymbolRequest(agnosticSymbol);
   }
 
-  getX(agnosticSymbol: AgnosticSymbol) {
-    let x: number;
-    if (agnosticSymbol.boundingBox) {
-      x = agnosticSymbol.boundingBox.fromX;
-    } else {
-      x = agnosticSymbol.approximateX;
-    }
-    return this.width * (x - this.regionCropped.fromX) / (this.regionCropped.toX - this.regionCropped.fromX);
-  }
+
+
 
   private computeViewBox() {
     /*OLD // this.viewBox = `0 0 ${this.width} ${this.margin * 2 + this.em}`;
@@ -264,4 +260,57 @@ export class AgnosticStaffComponent implements OnInit, OnDestroy, OnChanges {
   doCommentClicked(agnosticSymbol: AgnosticSymbol) {
     this.commentClicked.emit(agnosticSymbol);
   }
+
+  getAgnosticX(agnosticSymbol: AgnosticSymbol) {
+    let x: number;
+    if (agnosticSymbol.boundingBox) {
+      x = agnosticSymbol.boundingBox.fromX;
+    } else {
+      x = agnosticSymbol.approximateX;
+    }
+    return x;
+  }
+  getX(agnosticSymbol: AgnosticSymbol) {
+    if (this.movingSymbol == agnosticSymbol && this.movingSymbolX) {
+      return this.movingSymbolX;
+    } else {
+      const x = this.getAgnosticX(agnosticSymbol);
+      return this.width * (x - this.regionCropped.fromX) / (this.regionCropped.toX - this.regionCropped.fromX);
+    }
+  }
+
+  onSymbolMouseDown(agnosticSymbol: AgnosticSymbol) {
+    this.selectSymbolRequest(agnosticSymbol);
+    this.movingSymbol = agnosticSymbol;
+    this.movingSymbolOriginalX = this.getX(this.movingSymbol);
+
+    // console.log('---------');
+    // console.log('---------');
+    // console.log('DOWN Agnostic x: ' + this.getAgnosticX(this.movingSymbol));
+    // console.log('DOWN Screen x: ' + this.getX(this.movingSymbol));
+
+  }
+
+  onSymbolMouseMove(mouseEvent: MouseEvent) {
+    this.movingSymbolX = mouseEvent.offsetX;
+  }
+
+  onSymbolMouseUp() {
+    //console.log('UP Agnostic x: ' + this.getAgnosticX(this.movingSymbol));
+    //console.log('UP Screen x: ' + this.getX(this.movingSymbol));
+
+   if (this.movingSymbolX && this.movingSymbolOriginalX && Math.abs(this.movingSymbolX - this.movingSymbolOriginalX) > 5) { //
+
+     //return this.width * (x - this.regionCropped.fromX) / (this.regionCropped.toX - this.regionCropped.fromX);
+      const newX = (this.regionCropped.toX - this.regionCropped.fromX) * this.movingSymbolX / this.width + this.regionCropped.fromX;
+      this.store.dispatch(new ImageRecognitionChangeSymbolX(this.movingSymbol, newX));
+      //console.log('CAMBIA a ' + newX);
+      //return this.width * (x - this.regionCropped.fromX) / (this.regionCropped.toX - this.regionCropped.fromX);
+    }
+
+    this.movingSymbol = null;
+    this.movingSymbolX = null;
+    this.movingSymbolOriginalX = null;
+  }
+
 }

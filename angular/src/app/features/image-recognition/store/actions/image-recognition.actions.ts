@@ -16,19 +16,6 @@ import {DocumentAnalysisForm} from "../../../../core/model/restapi/document-anal
 import {Point} from "../../../../core/model/entities/point";
 import {AgnosticSymbol} from "../../../../core/model/entities/agnostic-symbol";
 import {Notation} from "../../../../shared/services/notation";
-import {
-  ChangeNotationType, ChangeNotationTypeSuccess,
-  ClearNotation,
-  ConvertAgnostic2Semantic,
-  ConvertAgnostic2SemanticSuccess, DeselectSymbol,
-  GetNotation,
-  GetNotationSuccess,
-  GetTranslationModels,
-  GetTranslationModelsSuccess, SelectSymbol,
-  SemanticRepresentationActionTypes,
-  SendSemanticEncoding,
-  SendSemanticEncodingSuccess
-} from "../../../semantic-representation-old/store/actions/semantic-representation.actions";
 import {SymbolCreationResult} from "../../../agnostic-representation-old/model/symbol-creation-result";
 import {StringResponse} from "../../../../core/model/restapi/string-response";
 
@@ -107,6 +94,8 @@ export enum ImageRecognitionActionTypes {
   ImageRecognitionChangeSymbolSuccess = '[Image Recognition. AgnosticRepresentation] Change symbol success',
   ImageRecognitionChangeRegionExternalReference = '[Image Recognition. AgnosticRepresentation] Change region external reference comments',
   ImageRecognitionChangeRegionExternalReferenceSuccess = '[Image Recognition. AgnosticRepresentation] Change region external reference success',
+  ImageRecognitionChangeSymbolX = '[Image Recognition. AgnosticRepresentation] Change symbol X',
+  ImageRecognitionChangeSymbolXSuccess = '[Image Recognition. AgnosticRepresentation] Change symbol X success',
 
   ImageRecognitionConvertAgnostic2Semantic = '[Image Recognition. SemanticRepresentation] Convert agnostic to semantic',
   ImageRecognitionConvertAgnostic2SemanticSuccess = '[Image Recognition. SemanticRepresentation] Convert agnostic to semantic success',
@@ -472,6 +461,16 @@ export class ImageRecognitionChangeRegionExternalReferenceSuccess implements Act
   constructor(public region: Region) {}
 }
 
+export class ImageRecognitionChangeSymbolX implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionChangeSymbolX;
+  constructor(public symbol: AgnosticSymbol, public newX: number) {}
+}
+
+export class ImageRecognitionChangeSymbolXSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionChangeSymbolXSuccess;
+  constructor(public agnosticSymbol: AgnosticSymbol) {}
+}
+
 
 // ---- semantic
 export class ImageRecognitionConvertAgnostic2Semantic implements Action {
@@ -562,6 +561,7 @@ export type ImageRecognitionActions =
   ImageRecognitionClearRegionSymbols | ImageRecognitionClearRegionSymbolsSuccess |
   ImageRecognitionChangeSymbol | ImageRecognitionChangeSymbolComments | ImageRecognitionChangeSymbolBoundingBox | ImageRecognitionChangeSymbolSuccess |
   ImageRecognitionChangeRegionExternalReference | ImageRecognitionChangeRegionExternalReferenceSuccess |
+  ImageRecognitionChangeSymbolX | ImageRecognitionChangeSymbolXSuccess |
 
   // semantic representation
   ImageRecognitionConvertAgnostic2Semantic | ImageRecognitionConvertAgnostic2SemanticSuccess | ImageRecognitionGetNotation | ImageRecognitionGetNotationSuccess |

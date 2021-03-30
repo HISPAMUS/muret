@@ -100,4 +100,12 @@ export class AgnosticRepresentationService {
     return this.apiRestClientService.post$<AgnosticSymbol>(url, params);
 
   }
+
+  changeSymbolX$(symbol: AgnosticSymbol, newX: number): Observable<AgnosticSymbol> {
+    const intX = ~~newX; // cast to int
+    const url = `agnostic/changeSymbolX/${symbol.id}/${intX}`;
+    return this.apiRestClientService.post$<AgnosticSymbol>(url, null);
+
+  }
+  ImageRecognitionChangeSymbolXSuccess
 }

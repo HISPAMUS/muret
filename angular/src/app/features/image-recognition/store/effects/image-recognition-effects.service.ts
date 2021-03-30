@@ -22,7 +22,7 @@ import {
   ImageRecognitionChangeSymbol,
   ImageRecognitionChangeSymbolBoundingBox,
   ImageRecognitionChangeSymbolComments,
-  ImageRecognitionChangeSymbolSuccess,
+  ImageRecognitionChangeSymbolSuccess, ImageRecognitionChangeSymbolX, ImageRecognitionChangeSymbolXSuccess,
   ImageRecognitionClassifyRegionEndToEnd,
   ImageRecognitionClassifyRegionEndToEndSuccess,
   ImageRecognitionClear,
@@ -406,6 +406,15 @@ export class ImageOverviewEffects {
       this.agnosticRepresentationService.changeRegionExternalReference$(action.region,
         action.externalReference).pipe(
         switchMap((region: Region) => of(new ImageRecognitionChangeRegionExternalReferenceSuccess(region))),
+        //catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
+      )));
+  @Effect()
+  changeSymbolX$ = this.actions$.pipe(
+    ofType<ImageRecognitionChangeSymbolX>(ImageRecognitionActionTypes.ImageRecognitionChangeSymbolX),
+    switchMap((action: ImageRecognitionChangeSymbolX) =>
+      this.agnosticRepresentationService.changeSymbolX$(action.symbol,
+        action.newX).pipe(
+        switchMap((symbol: AgnosticSymbol) => of(new ImageRecognitionChangeSymbolXSuccess(symbol))),
         //catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
       )));
   // ------ semantic representation

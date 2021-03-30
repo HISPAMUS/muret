@@ -460,6 +460,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
 
       return newState;
     }
+    case ImageRecognitionActionTypes.ImageRecognitionChangeSymbolXSuccess:
     case ImageRecognitionActionTypes.ImageRecognitionChangeSymbolSuccess: {
       const newState: ImageRecognitionState = {
         pagesRegionsSymbols: klona(state.pagesRegionsSymbols),
