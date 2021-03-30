@@ -4,6 +4,7 @@
       <div id="imageNavigator" [ngClass]="imageNavigatorHeight">
         <!--<h3 class="text-center">{{imageOverview.filename}}</h3>-->
         <p id="doubleClickBBoxes">Double click for changing the bounding boxes</p>
+        <app-image-recognition-toolbar [zoomManager]="zoomManager" [hideModeButtons]="true"></app-image-recognition-toolbar>
         <app-image-document-analysis-navigator
           [loadedImage]="loadedImage"
           [regionTypes]="regionTypes$ | async"
