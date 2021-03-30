@@ -13,7 +13,7 @@
     </label>
   </div>
 
-  <div class="d-flex">
+  <div *ngIf="!hideExternalReference()" class="d-flex">
     <input placeholder="External reference (optional)" [(ngModel)]="selectedRegionExternalReference"/>
     <button [hidden]="!externalReferenceChanged()" class="btn-secondary" (click)="sendExternalReference()">Apply</button>
   </div>

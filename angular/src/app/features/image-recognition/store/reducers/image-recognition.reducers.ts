@@ -385,7 +385,7 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
 
       region.symbols.push(action.symbolCreationResult.agnosticSymbol);
       newState.selectedRegion = region;
-      newState.selectedAgnosticSymbols = [];
+      newState.selectedAgnosticSymbols = [action.symbolCreationResult.agnosticSymbol]; // select created symbol
       //TODO Coger también los símbolos clasificados para sacar la lista de mejores resultados en la GUI
       return newState;
     }

@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.im3ws.muret.model;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
+import es.ua.dlsi.grfia.im3ws.muret.controller.ClassifierModelsController;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.AgnosticSymbolTypeAndPosition;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.LongArray;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.SymbolCreationResult;
@@ -168,7 +169,8 @@ public class AgnosticRepresentationModel {
         Region persistentRegion = getRegion(regionID);
 
         List<AgnosticSymbolTypeAndPosition> otherPossibilities = null;
-        if (agnosticSymbol == null) { // if not provided, try to classify
+        if (modelID != null && !modelID.equals(ClassifierModelsController.MANUALSYMBOL_CLASSIFIER)  // if not manual classifier
+        && agnosticSymbol == null) { // if not provided, try to classify
             Image persistentImage = persistentRegion.getPage().getImage();
             long imageID = persistentImage.getId();
             Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.computeDocument().getPath(),

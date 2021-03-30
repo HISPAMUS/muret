@@ -32,7 +32,7 @@ import {selectImageRecognitionSelectedAgnosticSymbols} from "../../../../store/s
 })
 export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
   @Input() imageID: number;
-  @Input() agnosticSymbolClassifiers: Observable<ClassifierModel[]>;
+  @Input() agnosticSymbolClassifiers: ClassifierModel;
   @Input() loadedImage: SafeResourceUrl;
   @Input() selectedRegion: Region;
   @Output() modeChange = new EventEmitter(); // must have this name in order to be input / output
@@ -335,7 +335,7 @@ export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
       const selectedShapes: Shape[] = [];
       this.selectedSymbols.forEach(symbol => {
         this.shapesOfSelectedRegion.forEach(shape => {
-          if (shape.data.id == symbol.id) { // we use id because sometimes, when the agnostic symbol is changed it is not synchronized
+          if (shape.data && shape.data.id == symbol.id) { // we use id because sometimes, when the agnostic symbol is changed it is not synchronized
             selectedShapes.push(shape);
           }
         });
@@ -350,5 +350,9 @@ export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
 
   externalReferenceChanged() {
     return this.selectedRegion && this.selectedRegion.externalReference != this.selectedRegionExternalReference;
+  }
+
+  hideExternalReference() {
+    return this.modeValue === 'eAdding';
   }
 }

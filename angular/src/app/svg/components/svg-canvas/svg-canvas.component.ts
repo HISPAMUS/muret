@@ -106,6 +106,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   private lastSelectedElement: SVGGraphicsElement;
   private selectionManager: SVGSelectionManager;
   private shapesMap: Map<string, Shape>;
+  private addingShape: boolean;
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver,
               private sanitizer: DomSanitizer) {
@@ -294,6 +295,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
     const svgCoordinate = this.screenCoordinateToSVGCoordinate(timeStamp, x, y);
     switch (this.mode) {
       case 'eAdding':
+        this.addingShape = true;
         /// this.selectedShapeIDs = null;
         if (this.polylinesCreationTimeout) {
           clearTimeout(this.polylinesCreationTimeout);
@@ -357,7 +359,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
           this.selectedComponent = this.newAddingShape.shapeComponent;
           this.newAddingShape = null;
         }*/
-        if (selectedComponent && !this.polylinesCreationTimeout) {
+        if (selectedComponent && !this.polylinesCreationTimeout && this.addingShape) {
           const svgCoordinate = this.screenCoordinateToSVGCoordinate(timeStamp, x, y);
           selectedComponent.draw(svgCoordinate);
         }
@@ -402,6 +404,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   }
 
   private endShapeDraw() {
+    this.addingShape = false;
     const selectedComponent = this.getSelectedComponent();
     if (selectedComponent) {
       if (selectedComponent.isDrawStarted()) { // if no drag has been done no shape is inserted

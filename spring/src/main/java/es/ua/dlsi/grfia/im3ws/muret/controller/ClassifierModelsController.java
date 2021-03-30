@@ -36,6 +36,7 @@ import java.util.logging.Logger;
 @RestController
 public class ClassifierModelsController {
     public static final String AGNOSTIC2SEMANTIC_TRANSDUCER = "a2s_transducer";
+    public static final String MANUALSYMBOL_CLASSIFIER = "symbol_manual";
     @Autowired
     private final ImageRepository imageRepository;
 
@@ -96,7 +97,15 @@ public class ClassifierModelsController {
     public List<ClassifierModel> getModels(@PathVariable("imageID") Long imageID) {
         ArrayList<ClassifierModel> result = new ArrayList<>();
         result.addAll(requestModels(ClassifierModelTypes.eDocumentAnalysis, imageID));
+
+        ClassifierModel manualSymbolClassifier = new ClassifierModel();
+        manualSymbolClassifier.setId(MANUALSYMBOL_CLASSIFIER);
+        manualSymbolClassifier.setClassifier_type(ClassifierModelTypes.eAgnosticSymbols);
+        manualSymbolClassifier.setLast_train(new Date(0)); // very old
+        manualSymbolClassifier.setName("Manual");
+        result.add(manualSymbolClassifier);
         result.addAll(requestModels(ClassifierModelTypes.eAgnosticSymbols, imageID));
+
         result.addAll(requestModels(ClassifierModelTypes.eAgnosticEnd2End, imageID));
         result.addAll(requestModels(ClassifierModelTypes.eSemanticEnd2End, imageID));
 
@@ -111,6 +120,8 @@ public class ClassifierModelsController {
             n.setName(n.getName() + "(it looses agnostic ids)");
         }
         result.addAll(a2sNeural);
+
+
         return result;
     }
 
