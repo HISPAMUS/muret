@@ -57,6 +57,7 @@ public class ImageRecognitionController {
             result.setFilename(image.get().getFilename());
             Document document = image.get().computeDocument();
             result.setDocumentID(document.getId());
+            result.setImageWidth(image.get().getWidth());
             result.setDocumentPath(document.getPath());
             result.setManuscriptType(document.getManuscriptType());
             result.setNotationType(document.getNotationType());

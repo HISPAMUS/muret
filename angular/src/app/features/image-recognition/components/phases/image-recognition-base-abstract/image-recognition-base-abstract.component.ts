@@ -147,7 +147,7 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
     rect.height  = boundingBox.toY - boundingBox.fromY;
     rect.fillColor = 'transparent';
     rect.strokeColor = color;
-    rect.strokeWidth = 9;
+    rect.strokeWidth = this.imageOverview.imageWidth / 200; // it also implies the size of the rectangle angles - 200 set empirically
     rect.layer = layer;
     rect.data = data;
     this._documentAnalysisShapes.push(rect);
