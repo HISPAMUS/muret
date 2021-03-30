@@ -53,8 +53,8 @@ public class ReadScoController  {
 
             AgnosticEncoding agnosticEncoding = new AgnosticEncoding();
             for (AgnosticSymbolTypeAndPosition item: symbols) {
-                System.out.println("Symbol");
-                System.out.println(item);
+                //System.out.println("Symbol");
+                //System.out.println(item);
                 AgnosticSymbolType agnosticSymbolType = AgnosticSymbolTypeFactory.parseString(item.getShape());
                 PositionInStaff positionInStaff = PositionInStaff.parseString(item.getPosition());
                 AgnosticSymbol agnosticSymbol = new AgnosticSymbol(AgnosticVersion.v2, agnosticSymbolType, positionInStaff);

@@ -59,6 +59,7 @@ public class ModernAgnostic2SemanticTransducer extends Agnostic2SemanticTransduc
         transitions.add(new Transition<>(keysig, new Rest(), notes)); //TODO no está esto bien del todo.. ver 2º 7 3º pentagrama RISM
         transitions.add(new Transition<>(keysig, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
 
+        // transitions.add(new Transition<>(timesig, new VerticalSeparator(), timesig));
         transitions.add(new Transition<>(timesig, new Accidental(), noteacc));
         transitions.add(new Transition<>(timesig, new Note(), notes));
         transitions.add(new Transition<>(timesig, new Rest(), notes));

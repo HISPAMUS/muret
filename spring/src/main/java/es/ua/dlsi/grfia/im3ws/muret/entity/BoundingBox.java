@@ -150,4 +150,8 @@ public class BoundingBox {
         this.toX = Math.min(this.toX, boundingBox.toX);
         this.toY = Math.min(this.toY, boundingBox.toY);
     }
+
+    public boolean overlapsX(BoundingBox boundingBox) {
+        return this.containsCenterOfInX(boundingBox) || boundingBox.containsCenterOfInX(this);
+    }
 }

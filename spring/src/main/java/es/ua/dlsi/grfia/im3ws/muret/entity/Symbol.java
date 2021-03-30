@@ -202,4 +202,13 @@ public class Symbol extends Auditable implements IAssignableToPart, IDelimitedWi
             return null;
         }
     }
+
+    @Transient
+    public boolean isVerticallyStacked(Symbol symbol) {
+        if (this.getBoundingBox() != null && symbol.getBoundingBox() != null) {
+            return this.getBoundingBox().overlapsX(symbol.getBoundingBox());
+        } else {
+            return false;
+        }
+    }
 }
