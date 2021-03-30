@@ -320,16 +320,48 @@ public class AgnosticRepresentationModel {
 
         List<AgnosticSymbolTypeAndPosition> items = classifierClient.classifyEndToEnd(modelID, imageID, imagePath, persistentRegion.getBoundingBox());
         if (items != null) {
+            Integer lastX = null;
             for (AgnosticSymbolTypeAndPosition item : items) {
                 /*BoundingBox symbolBB = new BoundingBox(persistentRegion.getBoundingBox().getFromX()+ item.getStart(),
                         persistentRegion.getBoundingBox().getFromY(), persistentRegion.getBoundingBox().getFromX() + item.getEnd(),
                         persistentRegion.getBoundingBox().getToY());*/
                 AgnosticSymbolType agnosticSymbolType = AgnosticSymbolTypeFactory.parseString(item.getShape());
-                PositionInStaff positionInStaff = PositionInStaff.parseString(item.getPosition());
+
+                //URGENT Patch quitarlo - PossitionInStaff imcore3 #MuRET - remove /digit:4 or similar
+                // See below
+                String positionStr = item.getPosition();
+                int barra = positionStr.indexOf("/");
+                if (barra != -1) {
+                    System.err.println("Incorrect token from position in staff: " +  positionStr + ", PARCHE: divido en dos");
+                    positionStr = positionStr.substring(0, barra);
+                }
+
+                PositionInStaff positionInStaff = PositionInStaff.parseString(positionStr);
                 AgnosticSymbol agnosticSymbol = new AgnosticSymbol(AgnosticVersion.v2, agnosticSymbolType, positionInStaff);
                 Symbol symbol = new Symbol(persistentRegion, agnosticSymbol, null, null, null, null, null);
-                symbol.setApproximateX(persistentRegion.getBoundingBox().getFromX() + item.getStart());
+
+                //TODO Patch to avoid clustering some elements (clef, keysig, meter) in the beginning
+                int approx;
+                if (lastX != null && item.getStart() - lastX < 20) {
+                    approx = lastX + 20;
+                } else {
+                    approx = item.getStart();
+                }
+                lastX = approx;
+                symbol.setApproximateX(persistentRegion.getBoundingBox().getFromX() + approx);
                 persistentRegion.getSymbols().add(symbol);
+
+                //URGENT Patch quitarlo -
+                // /digit:4 means a 4 digit below
+                if (barra != -1) {
+                    positionInStaff = PositionInStaff.fromLine(2);
+                    String as =  item.getPosition().substring(barra+1); // note the position contains wrongly an agnostic type
+                    agnosticSymbol = new AgnosticSymbol(AgnosticVersion.v2, AgnosticSymbolTypeFactory.parseString(as), positionInStaff);
+                    symbol = new Symbol(persistentRegion, agnosticSymbol, null, null, null, null, null);
+                    symbol.setApproximateX(persistentRegion.getBoundingBox().getFromX() + approx); // same x
+                    persistentRegion.getSymbols().add(symbol);
+                }
+
             }
         }
 
