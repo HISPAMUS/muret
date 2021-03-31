@@ -21,7 +21,7 @@
       </div>
       <hr>
       <div id="tools" [ngClass]="toolsHeight">
-        <app-transcription-tools [svgSet]="svgSet$ | async"></app-transcription-tools>
+        <app-transcription-tools [svgSet]="svgSet$ | async" (linkingModeChanged)="onLinkingMode"></app-transcription-tools>
       </div>
     </aside> <!-- left column -->
     <div class="col-9"> <!-- right column -->

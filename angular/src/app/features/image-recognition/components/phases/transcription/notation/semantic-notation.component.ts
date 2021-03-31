@@ -38,9 +38,7 @@ export class SemanticNotationComponent implements OnInit, OnChanges, OnDestroy, 
 
   ngOnInit() {
     this.selectedNotationSymbolSubscription = this.store.select(selectImageRecognitionSelectedNotationSymbol).subscribe(next => {
-      if (next) {
-        this.onNotationSymbolSelected(next);
-      }
+      this.onNotationSymbolSelected(next);
     });
 
   }
@@ -103,7 +101,9 @@ export class SemanticNotationComponent implements OnInit, OnChanges, OnDestroy, 
     if (this.lastSelectedNotationSymbolID) {
       this.changeSelectedItem(this.lastSelectedNotationSymbolID, false);
     }
-    this.changeSelectedItem(notationSymbolID, true);
+    if (notationSymbolID) {
+      this.changeSelectedItem(notationSymbolID, true);
+    }
     this.lastSelectedNotationSymbolID = notationSymbolID;
   }
 }

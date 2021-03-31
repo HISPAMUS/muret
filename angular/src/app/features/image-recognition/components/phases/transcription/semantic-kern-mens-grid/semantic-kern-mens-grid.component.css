@@ -20,3 +20,9 @@ a {
   margin-top: 1rem;
   margin-left: 2rem;
 }
+
+#linkButton * {
+  margin-left: 1rem;
+  font-size: small;
+  text-align: center;
+}

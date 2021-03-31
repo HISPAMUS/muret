@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {SVGSet} from "../../../../../../core/model/restapi/svgset";
 
 @Component({
@@ -63,4 +63,5 @@ export class TranscriptionToolsComponent implements OnInit {
   showSemanticToolbar() {
     this.encodingPaneType = 'toolbar';
   }
+
 }

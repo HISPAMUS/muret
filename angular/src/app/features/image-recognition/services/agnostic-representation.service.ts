@@ -28,7 +28,6 @@ export class AgnosticRepresentationService {
       positionInStaff,
       boundingBox
     };
-
     return this.apiRestClientService.post$<SymbolCreationResult>('agnostic/createSymbolFromBoundingBox', symbolCreation);
   }
 

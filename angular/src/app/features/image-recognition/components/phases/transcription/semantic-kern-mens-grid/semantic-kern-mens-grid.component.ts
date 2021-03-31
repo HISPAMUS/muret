@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, EventEmitter, Output} from '@angular/core';
 import {DialogsService} from "../../../../../../shared/services/dialogs.service";
 import {Store} from "@ngrx/store";
 import {ImageRecognitionState} from "../../../../store/state/image-recognition.state";
@@ -15,7 +15,6 @@ import {
   ImageRecognitionSendSemanticEncoding
 } from "../../../../store/actions/image-recognition.actions";
 import {AgnosticSymbol} from "../../../../../../core/model/entities/agnostic-symbol";
-import {Router} from "@angular/router";
 import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
@@ -24,13 +23,15 @@ import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
   styleUrls: ['./semantic-kern-mens-grid.component.css']
 })
 export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
+  @Output() linkingModeChanged = new EventEmitter<boolean>();
+
   defaultColDef: { resizable: boolean; editable: boolean };
   rowData = [
   ];
 
   columnDefs = [
     {headerName: '**smens/**skern', field: 'smens' },
-    //{headerName: 'Agnostic symbols', field: 'agnosticSymbols' }
+    {headerName: 'Agnostic symbols', field: 'agnosticSymbols' }
   ];
 
   private gridApi;
@@ -41,9 +42,11 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
   private notationSubscription: Subscription;
   private selectedNotationSymbolSubscription: Subscription;
   private selectedAgnosticSymbolsSubscription: Subscription;
-  agnosticIDs: number[];
+  //agnosticIDs: number[];
   agnosticIDMap: Map<number, number>; // key = agnostic ID, value = usable ID (the one drawn in the agnostic view to identify the object visually)
   agnosticGridRow: Map<number, number>; // key = agnostic ID, value = row in the grid
+  private selectedAgnosticSymbols: AgnosticSymbol[];
+  linkingMode: boolean = false;
 
   constructor(private dialogsService: DialogsService, private store: Store<ImageRecognitionState>, public config: NgbTooltipConfig) {
     config.placement = 'left';
@@ -80,15 +83,14 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
     });
 
     this.selectedNotationSymbolSubscription = this.store.select(selectImageRecognitionSelectedNotationSymbol).subscribe(next => {
-      if (next) {
-        this.onNotationSymbolSelected(next);
-      }
+      this.onNotationSymbolSelected(next);
     });
 
     this.selectedAgnosticSymbolsSubscription = this.store.select(selectImageRecognitionSelectedAgnosticSymbols).subscribe(next => {
-      //TODO sólo seleccionamos el primero
-      if (next && next.length > 0) {
-        this.onAgnosticSymbolSelected(next[0].id);
+      //TODO sólo seleccionamos el primero para aplicar modificaciones, guardamos todos para el enlace de ids con el semántico (ver linkSemanticToAgnostic)
+      this.selectedAgnosticSymbols = next;
+      if (next && next.length > 0 && !this.linkingMode) {
+        this.onAgnosticSymbolSelected(next[0].id); //TODO seleccionar varios símbolos
       }
     });
   }
@@ -138,7 +140,7 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
    * Converts 2,3 to 30404,304123
    * (i.e. the 'usable' ids to the actual ones
    */
-  private convertToSymbolIDS(agnosticSymbols: string) {
+  /*private convertToSymbolIDS(agnosticSymbols: string) {
     if (agnosticSymbols) {
       let result: string = null;
       const usableIDS: string [] = agnosticSymbols.split(',');
@@ -153,7 +155,7 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
     } else {
       return null;
     }
-  }
+  }*/
 
   /**
    * It builds the semantic encoding from the grid. It replaces the 'usable' id for the actual one
@@ -162,7 +164,8 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
     let result = '';
     this.gridApi.forEachNode(node => {
       if (node.data.agnosticSymbols) {
-        result += (node.data.smens + '@' + this.convertToSymbolIDS(node.data.agnosticSymbols) + '\n');
+        //result += (node.data.smens + '@' + this.convertToSymbolIDS(node.data.agnosticSymbols) + '\n');
+        result += (node.data.smens + '@' + node.data.agnosticSymbols.split(',') + '\n');
       } else {
         result += (node.data.smens + '\n');
       }
@@ -214,7 +217,7 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
         const agnosticIDS = columns[1];
         newItems.push({
           smens: columns[0],
-          //agnosticSymbols: this.findAgnosticID(agnosticIDS) // replaces the actual symbol ID for a more usable one
+          agnosticSymbols: agnosticIDS, // this.findAgnosticID(agnosticIDS) // replaces the actual symbol ID for a more usable one
         });
 
         if (agnosticIDS) {
@@ -232,12 +235,12 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
   }
 
   private registerAgnosticIDS(next: AgnosticSymbol[]) {
-    this.agnosticIDs = new Array();
+    //this.agnosticIDs = new Array();
     this.agnosticIDMap = new Map<number, number>();
     let cont = 0;
     if (next) {
       next.forEach(value => {
-        this.agnosticIDs.push(value.id);
+        //this.agnosticIDs.push(value.id);
         this.agnosticIDMap.set(value.id, cont);
         cont++;
       });
@@ -253,6 +256,8 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
   // In orderEntities to select the agnostic element, the this.selectedAgnosticSymbolID field is used, but the
 
   onGridRowSelected($event: any) {
+    this.linkingMode = false;
+    this.onLinkingModeChanged(false);
     if ($event && $event.node.selected) {
       this.store.dispatch(new ImageRecognitionSelectNotationSymbol('L' + $event.rowIndex));
       this.selectAgnosticSymbolRelatedToLine($event.rowIndex);
@@ -261,8 +266,12 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
 
   onNotationSymbolSelected(notationSymbolID: string) {
     if (this.gridApi) {
-      const selectedLine = notationSymbolID.substr(1);
-      this.selectGridRow(+selectedLine);
+      if (notationSymbolID) {
+        const selectedLine = notationSymbolID.substr(1);
+        this.selectGridRow(+selectedLine);
+      } else {
+        this.clearGridSelection();
+      }
     }
   }
 
@@ -273,8 +282,15 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
         // this way the grid and the semantic notation are selected
         this.store.dispatch(new ImageRecognitionSelectNotationSymbol('L' + line));
         // this.selectGridRow(line);
+      } else {
+        // deselect
+        this.store.dispatch(new ImageRecognitionSelectNotationSymbol(null));
       }
     }
+  }
+
+  private clearGridSelection() {
+    this.gridApi.deselectAll();
   }
 
   private selectGridRow(selectedLine: number) {
@@ -288,10 +304,12 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
   }
 
   private selectAgnosticSymbolRelatedToLine(rowIndex: number) {
+    let symbolSelected: boolean = false;
     this.agnosticGridRow.forEach((rowNumber, agnosticID) => {
       if (rowIndex === rowNumber) {
         const selectedAgnosticSymbol = this.selectedRegion.symbols.find(symbol => symbol.id == +agnosticID);
         if (selectedAgnosticSymbol) {
+          symbolSelected = true;
           this.store.dispatch(new ImageRecognitionSelectAgnosticSymbols([selectedAgnosticSymbol]))
         } else {
           throw new Error('Agnostic ID not found: ' + agnosticID);
@@ -299,9 +317,55 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
         return;
       }
     });
+    if (!symbolSelected) {
+      // deselect
+      this.store.dispatch(new ImageRecognitionSelectAgnosticSymbols([]));
+    }
   }
 
   linkSemanticToAgnostic() {
+    const selectedNodes = this.gridApi.getSelectedNodes();
+    if (selectedNodes && this.selectedAgnosticSymbols) {
+      const agnosticIDS: string = this.selectedAgnosticSymbols.map(value => value.id).join(',');
+      if (agnosticIDS !== selectedNodes[0].data.agnosticSymbols) {
+        selectedNodes[0].data.agnosticSymbols = agnosticIDS;
+        this.sendSemanticEncoding();
+      }
+    }
+  }
 
+  unlinkSemanticToAgnostic() {
+    const selectedNodes = this.gridApi.getSelectedNodes();
+    if (selectedNodes && this.selectedAgnosticSymbols) {
+      selectedNodes[0].data.agnosticSymbols = null;
+      this.sendSemanticEncoding();
+    }
+  }
+
+  hasAgnosticSymbolsSelected() {
+    return this.selectedAgnosticSymbols && this.selectedAgnosticSymbols.length > 0;
+  }
+
+  onLinkingModeChanged(newMode: boolean) {
+    if (this.linkingMode != newMode) {
+      this.linkingMode = newMode;
+      if (!this.linkingMode) {
+        this.linkSemanticToAgnostic();
+      }
+      this.emitLinkingModeChange();
+    }
+  }
+
+  hasRowSelected() {
+    if (this.gridApi) {
+      const selectedNodes = this.gridApi.getSelectedNodes();
+      return selectedNodes && selectedNodes.length > 0;
+    } else {
+      return false;
+    }
+  }
+
+  private emitLinkingModeChange() {
+    this.linkingModeChanged.emit(this.linkingMode);
   }
 }

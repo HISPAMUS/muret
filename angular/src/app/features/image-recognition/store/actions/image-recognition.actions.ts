@@ -105,8 +105,10 @@ export enum ImageRecognitionActionTypes {
   ImageRecognitionSendSemanticEncodingSuccess = '[Image Recognition. SemanticRepresentation] Send semantic encoding success',
   ImageRecognitionChangeNotationType = '[Image Recognition. SemanticRepresentation] Change notation type',
   ImageRecognitionChangeNotationTypeSuccess = '[Image Recognition. SemanticRepresentation] Change notation type success',
+  ImageRecognitionSelectNotationSymbol = '[Image Recognition] Select notation symbol',
+  ImageRecognitionLinkSymbolsAgnosticSemantic = '[Image Recognition. SemanticRepresentation] Link symbols agnostic semantic ',
+  ImageRecognitionLinkSymbolsAgnosticSemanticSuccess = '[Image Recognition. SemanticRepresentation] Link symbols agnostic semantic success'
 
-  ImageRecognitionSelectNotationSymbol = '[Image Recognition] Select notation symbol'
 }
 
 export class ImageRecognitionGetImageOverview implements Action {
@@ -520,6 +522,18 @@ export class ImageRecognitionSelectNotationSymbol implements Action {
 }
 
 
+export class ImageRecognitionLinkSymbolsAgnosticSemantic implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionLinkSymbolsAgnosticSemantic;
+  constructor(public selectedRegion: Region, public semanticEncoding: string) {
+  }
+}
+
+export class ImageRecognitionLinkSymbolsAgnosticSemanticSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionLinkSymbolsAgnosticSemanticSuccess;
+  constructor(public semanticEncoding: String) {
+  }
+}
+
 export type ImageRecognitionActions =
   //ImageRecognitionServerError |
   ImageRecognitionGetImageOverview | ImageRecognitionGetImageOverviewSuccess |
@@ -567,6 +581,8 @@ export type ImageRecognitionActions =
   ImageRecognitionConvertAgnostic2Semantic | ImageRecognitionConvertAgnostic2SemanticSuccess | ImageRecognitionGetNotation | ImageRecognitionGetNotationSuccess |
   ImageRecognitionSendSemanticEncoding | ImageRecognitionSendSemanticEncodingSuccess |
   ImageRecognitionChangeNotationType | ImageRecognitionChangeNotationTypeSuccess |
-  ImageRecognitionSelectNotationSymbol
+  ImageRecognitionSelectNotationSymbol |
+  ImageRecognitionLinkSymbolsAgnosticSemantic | ImageRecognitionLinkSymbolsAgnosticSemanticSuccess
+
   ;
 

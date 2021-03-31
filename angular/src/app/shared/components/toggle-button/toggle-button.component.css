@@ -1,0 +1,12 @@
+button {
+  border-width: 0;
+  background-color: transparent;
+}
+
+.checked {
+  color: #7DE2DB;
+}
+
+.unchecked {
+  color: #D91E63;
+}

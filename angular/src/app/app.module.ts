@@ -72,6 +72,7 @@ import {AdminDashboardModule} from "./features/admin-dashboard-old/admin-dashboa
 import {NewDocumentModule} from "./features/new-document-old/new-document.module";
 import {faPlusSquare} from "@fortawesome/free-solid-svg-icons/faPlusSquare";
 import {faLink} from "@fortawesome/free-solid-svg-icons/faLink";
+import {faUnlink} from "@fortawesome/free-solid-svg-icons/faUnlink";
 
 @NgModule({
   declarations: [
@@ -158,6 +159,7 @@ export class AppModule {
     library.addIcons(faServer); // used in classifications
     library.addIcons(faPlusSquare); // used in kern / mens grid
     library.addIcons(faLink); // used in kern / mens grid
+    library.addIcons(faUnlink); // used in kern / mens grid
 
   }
 }

@@ -16,6 +16,7 @@ export class ClassifiersComponent implements OnInit, OnChanges {
   @Output() onExecuteClassifier = new EventEmitter<ClassifierModel>();
   @Input() caption: string;
   @Input() hideClassifyButton: boolean;
+
   @Output() selectedModelID: string;
   @Output() onSelectedModelIDChange = new EventEmitter<string>();
   selectedModel:string;
@@ -41,6 +42,7 @@ export class ClassifiersComponent implements OnInit, OnChanges {
       });
       if (!this.selectedModel) {
         this.selectedModel = this.sortedModels[0].id;
+        this.onModelChange(this.selectedModel);
       }
     }
   }

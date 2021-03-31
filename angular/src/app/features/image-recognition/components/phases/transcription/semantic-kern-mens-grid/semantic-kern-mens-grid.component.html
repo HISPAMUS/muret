@@ -27,8 +27,20 @@
       <label ngbButtonLabel>
         <a (click)="clearSemanticEncoding()" ngbTooltip="Clear semantic encoding"><fa-icon icon="trash" class="icons" size="1x"></fa-icon></a>
       </label>
+      <label *ngIf="hasRowSelected()" id="linkButton">
+        <app-toggle-button
+          [checkedTooltip]="'Select agnostic boxes on preview. Press here to finish'"
+          [uncheckedTooltip]="'Link to agnostic'"
+          (checkedChange)="onLinkingModeChanged($event)"
+          [checkedIcon]="'check'"
+          [uncheckedIcon]="'link'"
+          [tooltipPosition]="'left'"
+          [(checked)]="linkingMode"
+        >
+        </app-toggle-button>
+      </label>
       <label ngbButtonLabel>
-        <a (click)="linkSemanticToAgnostic()" ngbTooltip="Link row to selected agnostic symbols (unlink on no selected agnostic symbol)"><fa-icon icon="link" class="icons" size="1x"></fa-icon></a>
+        <a (click)="unlinkSemanticToAgnostic()" ngbTooltip="Unlink row from any agnostic symbol"><fa-icon icon="unlink" class="icons" size="1x"></fa-icon></a>
       </label>
 
     </div>
