@@ -83,4 +83,8 @@ export class DocumentOverviewComponent implements OnInit, OnDestroy {
   hasOtherView(documentOverview: Document) {
     return documentOverview.documentType == 'piece';
   }
+
+  uploadImages() {
+    this.router.navigate(['/document/uploadImages', this.documentID]);
+  }
 }

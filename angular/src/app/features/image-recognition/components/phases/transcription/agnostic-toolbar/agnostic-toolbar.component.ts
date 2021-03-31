@@ -23,11 +23,12 @@ export class AgnosticToolbarComponent implements OnInit, OnDestroy {
 
   agnosticToolbarFilters: Array<KeyValue<string, string>> = // map<values, titles> - initialized in constructor
     [
-      {key: "clefsmeters", value: "Clefs Meters"},
+      //{key: "frequent", value: "Frequent"},
+      {key: "clefsmeters", value: "Clefs | Meters"},
       {key: "note.", value: "Notes"},
       {key: "note.beam", value: "Beamed notes"},
-      {key: "rest", value: "Rests"},
-      {key: "accidental.", value: "Accidentals"},
+      {key: "rest", value: "Rests | Accidentals"},
+      //{key: "accidental.", value: "Accidentals"},
       {key: "other", value: "Other"}
     ];
 

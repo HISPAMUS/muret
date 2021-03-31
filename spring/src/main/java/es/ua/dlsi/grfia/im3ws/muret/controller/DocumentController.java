@@ -528,44 +528,8 @@ public class DocumentController {
         return exportMEIPartsFacsimile(selectedImages, true);
     }
 
-
-    // revisado hasta aquí
-
-    @PostMapping(path = {"/new"})
-    public Document newDocument(@RequestBody Document document) throws IM3WSException {
-        return documentModel.newDocument(document);
-    }
-
-
-    @GetMapping(path = {"/statistics/{id}"})
-    @Transactional
-    public DocumentStatistics getDocumentStatistics(@PathVariable("id") Integer id)  {
-        try {
-            Optional<Document> document = documentRepository.findById(id);
-            if (!document.isPresent()) {
-                throw new IM3WSException("Cannot find a document with id " + id);
-            }
-
-            //TODO All this could be done in just one query with a union
-            int documentID = document.get().getId();
-            DocumentStatistics documentStatistics = new DocumentStatistics();
-            documentStatistics.setAgnosticSymbols(documentRepository.getNumberOfAgnosticSymbols(documentID));
-            documentStatistics.setImages(document.get().getImages().size());
-            documentStatistics.setPages(documentRepository.getNumberOfPages(documentID));
-            documentStatistics.setRegions(documentRepository.getNumberOfRegions(documentID));
-            documentStatistics.setStaves(documentRepository.getNumberOfStaves(documentID));
-
-            return documentStatistics;
-        } catch (Throwable e) {
-            throw ControllerUtils.createServerError(this, "Cannot create statistics", e);
-        }
-    }
-
-
-    // --- TODO usado hasta aquí ----
-
-    // angular ng2-file-upload uploads files one by one
     @PostMapping("uploadDocumentImages")
+    @Transactional
     public UploadFileResponse uploadDocumentImage(@RequestParam("documentid") Integer documentid, @RequestParam("file") MultipartFile file) {
         try {
             //Logger.getLogger(this.getClass().getName()).log(Level.INFO, "User ID: " + AuditorAwareImpl.getCurrentUser().getId().toString());
@@ -626,6 +590,7 @@ public class DocumentController {
         //TODO Ordenación
         Image image = new Image(fileName, null, fullImage.getWidth(), fullImage.getHeight(), document.get(), null, null, null, null);
         image.setCreatedBy(AuditorAwareImpl.getCurrentUser());
+        image.setOrdering(document.get().computeNextImageOrdering());
         imageRepository.save(image);
     }
 
@@ -633,6 +598,43 @@ public class DocumentController {
     private void createSecondaryImage(Path inputImagePath, Path outputImagePath, int height) throws IM3Exception {
         ImageUtils.getInstance().scaleToFitHeight(inputImagePath.toFile(), outputImagePath.toFile(), height);
     }
+
+    // revisado hasta aquí
+
+    @PostMapping(path = {"/new"})
+    public Document newDocument(@RequestBody Document document) throws IM3WSException {
+        return documentModel.newDocument(document);
+    }
+
+
+    @GetMapping(path = {"/statistics/{id}"})
+    @Transactional
+    public DocumentStatistics getDocumentStatistics(@PathVariable("id") Integer id)  {
+        try {
+            Optional<Document> document = documentRepository.findById(id);
+            if (!document.isPresent()) {
+                throw new IM3WSException("Cannot find a document with id " + id);
+            }
+
+            //TODO All this could be done in just one query with a union
+            int documentID = document.get().getId();
+            DocumentStatistics documentStatistics = new DocumentStatistics();
+            documentStatistics.setAgnosticSymbols(documentRepository.getNumberOfAgnosticSymbols(documentID));
+            documentStatistics.setImages(document.get().getImages().size());
+            documentStatistics.setPages(documentRepository.getNumberOfPages(documentID));
+            documentStatistics.setRegions(documentRepository.getNumberOfRegions(documentID));
+            documentStatistics.setStaves(documentRepository.getNumberOfStaves(documentID));
+
+            return documentStatistics;
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot create statistics", e);
+        }
+    }
+
+
+    // --- TODO usado hasta aquí ----
+
+    // angular ng2-file-upload uploads files one by one
 
     // angular ng2-file-upload uses file as parameter name
     /*@PostMapping("documentImages")

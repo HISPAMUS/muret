@@ -222,6 +222,14 @@ public class Document extends Auditable implements IID<Integer>  {
         return max+1;
     }
 
+    public Integer computeNextImageOrdering() {
+        int max = 0;
+        for (Image image: images) {
+            max = Math.max(image.getOrdering(), max);
+        }
+        return max+1;
+    }
+
     public DocumentType getDocumentType() {
         return documentType;
     }
@@ -229,4 +237,5 @@ public class Document extends Auditable implements IID<Integer>  {
     public void setDocumentType(DocumentType documentType) {
         this.documentType = documentType;
     }
+
 }
