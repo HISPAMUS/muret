@@ -1,22 +1,39 @@
-  <a (click)="insertFirstRow()">Insert first/top row</a> |
-  <a (click)="addRow()">Add row below</a> |
-  <a (click)="removeSelectedRow()">Remove row</a> |
-  <a (click)="clearSemanticEncoding()">
-    Clear
-  </a>
+  <div class="d-flex" id="skmComponent">
+    <div id="mensTable">
+      <ag-grid-angular
+        style="width: 500px; height: 500px;"
+        class="ag-theme-balham"
+        [rowSelection]="'single'"
+        [defaultColDef]="defaultColDef"
+        [rowData]="rowData"
+        [columnDefs]="columnDefs"
+        (gridReady)="onGridReady($event)"
+        (rowSelected)="onGridRowSelected($event)"
+        (cellValueChanged)="onCellValueChanged($event)"
+      >
+      </ag-grid-angular>
+    </div>
 
-  <ag-grid-angular
-    style="width: 500px; height: 500px;"
-    class="ag-theme-balham"
-    [rowSelection]="'single'"
-    [defaultColDef]="defaultColDef"
-    [rowData]="rowData"
-    [columnDefs]="columnDefs"
-    (gridReady)="onGridReady($event)"
-    (rowSelected)="onGridRowSelected($event)"
-    (cellValueChanged)="onCellValueChanged($event)"
-  >
-  </ag-grid-angular>
+    <div id="mensTableToolbar" class="d-flex flex-column">
+      <label ngbButtonLabel>
+        <a (click)="insertFirstRow()" ngbTooltip="Insert first / top row"><fa-icon icon="plus-square" class="icons" size="1x"></fa-icon></a>
+      </label>
+      <label ngbButtonLabel>
+        <a (click)="addRow()" ngbTooltip="Add row below"><fa-icon icon="plus" class="icons" size="1x"></fa-icon></a>
+      </label>
+      <label ngbButtonLabel>
+        <a (click)="removeSelectedRow()" ngbTooltip="Remove row"><fa-icon icon="minus" class="icons" size="1x"></fa-icon></a>
+      </label>
+      <label ngbButtonLabel>
+        <a (click)="clearSemanticEncoding()" ngbTooltip="Clear semantic encoding"><fa-icon icon="trash" class="icons" size="1x"></fa-icon></a>
+      </label>
+      <label ngbButtonLabel>
+        <a (click)="linkSemanticToAgnostic()" ngbTooltip="Link row to selected agnostic symbols (unlink on no selected agnostic symbol)"><fa-icon icon="link" class="icons" size="1x"></fa-icon></a>
+      </label>
+
+    </div>
+  </div>
+
 
   <!--<textarea cols="80" rows="20" [ngModel]="semanticEncoding" (ngModelChange)="manualInputChanged($event)">
   </textarea>-->

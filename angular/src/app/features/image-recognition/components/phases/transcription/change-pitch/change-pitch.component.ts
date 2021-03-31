@@ -1,4 +1,5 @@
 import {Component, OnInit, EventEmitter, Output, HostListener} from '@angular/core';
+import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-change-pitch',
@@ -12,7 +13,10 @@ export class ChangePitchComponent implements OnInit {
   lines = ['L5', 'L4', 'L3', 'L2', 'L1'];
   spaces = ['S4', 'S3', 'S2', 'S1'];
 
-  constructor() { }
+  constructor(public config: NgbTooltipConfig) {
+    config.placement = 'left';
+    config.triggers = 'hover';
+  }
 
   ngOnInit(): void {
   }

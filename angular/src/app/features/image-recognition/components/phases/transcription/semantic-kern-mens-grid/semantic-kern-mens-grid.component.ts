@@ -15,6 +15,8 @@ import {
   ImageRecognitionSendSemanticEncoding
 } from "../../../../store/actions/image-recognition.actions";
 import {AgnosticSymbol} from "../../../../../../core/model/entities/agnostic-symbol";
+import {Router} from "@angular/router";
+import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-semantic-kern-mens-grid',
@@ -43,7 +45,10 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
   agnosticIDMap: Map<number, number>; // key = agnostic ID, value = usable ID (the one drawn in the agnostic view to identify the object visually)
   agnosticGridRow: Map<number, number>; // key = agnostic ID, value = row in the grid
 
-  constructor(private dialogsService: DialogsService, private store: Store<ImageRecognitionState>) {
+  constructor(private dialogsService: DialogsService, private store: Store<ImageRecognitionState>, public config: NgbTooltipConfig) {
+    config.placement = 'left';
+    config.triggers = 'hover';
+
     this.defaultColDef = {
       editable: true,
       resizable: true
@@ -296,4 +301,7 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
     });
   }
 
+  linkSemanticToAgnostic() {
+
+  }
 }

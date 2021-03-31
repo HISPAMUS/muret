@@ -5,3 +5,18 @@ a {
   padding-left: 0.25em;
   padding-right: 0.25em;
 }
+
+#mensTable {
+  max-height: 25rem;
+  overflow: auto;
+  max-width: 15rem;
+}
+
+#mensTableToolbar a {
+  color: #D91E63;
+}
+
+#skmComponent {
+  margin-top: 1rem;
+  margin-left: 2rem;
+}

@@ -1,5 +1,6 @@
 import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
 import {ZoomManager} from "../../../../../shared/model/zoom-manager";
+import {NgbTooltipConfig} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-image-recognition-toolbar',
@@ -19,8 +20,9 @@ export class ImageRecognitionToolbarComponent implements OnInit {
   @Input() hideModeButtons: boolean;
   @Input() zoomManager: ZoomManager;
 
-  constructor() {
-    // ------- menus --------
+  constructor(public config: NgbTooltipConfig) {
+    config.placement = 'bottom';
+    config.triggers = 'hover';
   }
 
   ngOnInit() {
@@ -62,7 +64,7 @@ export class ImageRecognitionToolbarComponent implements OnInit {
     }
   }
 
-  zoomFit() {
+  resetZoom() {
     if (this.zoomManager) {
       this.zoomManager.resetZoom();
     }
