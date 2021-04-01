@@ -1,0 +1,15 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <!-- currently we don't have sections here -->
+      <div *ngIf="documentOverview" id="document">
+        <ul>
+          <li *ngFor="let image of documentOverview.images; trackBy: imageTracking">
+            {{image.filename}}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
