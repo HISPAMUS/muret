@@ -4,19 +4,14 @@ import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.model.*;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.io.ExportException;
-import es.ua.dlsi.im3.core.score.Segment;
-import es.ua.dlsi.im3.core.score.Staff;
 import es.ua.dlsi.im3.core.utils.FileCompressors;
-import es.ua.dlsi.im3.omr.encoding.Encoder;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticEncoding;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticExporter;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticToken;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
-import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Clef;
 import es.ua.dlsi.im3.omr.encoding.semantic.KernSemanticExporter;
-import es.ua.dlsi.im3.omr.encoding.semantic.SemanticExporter;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -128,7 +123,7 @@ public class AgnosticSemanticTrainingSetExporter extends AbstractTrainingSetExpo
         documentJSON.put("regions", jsonSystems);
 
         FileWriter file = new FileWriter(outputJSonFile);
-        String jsonString = documentJSON.toJSONString();
+        String jsonString = documentJSON.toString();
         file.write(jsonString);
         file.close();
     }
@@ -163,7 +158,7 @@ public class AgnosticSemanticTrainingSetExporter extends AbstractTrainingSetExpo
                 JSONTagging.putBoundingBox(systemJSON, region.getBoundingBox());
                 systemJSON.put("agnostic", agnosticSequence);
                 systemJSON.put("semantic", removeIDS(region.getSemanticEncoding()));
-                jsonSystems.add(systemJSON);
+                jsonSystems.put(systemJSON);
 
             }
         }

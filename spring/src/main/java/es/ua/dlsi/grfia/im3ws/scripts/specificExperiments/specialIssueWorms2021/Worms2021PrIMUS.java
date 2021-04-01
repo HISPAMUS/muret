@@ -13,8 +13,8 @@ import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticEncoding;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -35,16 +35,6 @@ public class Worms2021PrIMUS {
     private static final int [] SIZES = {100, 500, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000,
             10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000};
     public static final void main(String [] args) throws Exception {
-
-        JSONObject jsonObject = new JSONObject();
-        String text = "Text with special character /";
-        System.out.println(text);
-        System.out.println("After escaping.");
-        text = jsonObject.escape(text);
-        System.out.println(text);
-        if (text != null) {
-            return;
-        }
 
         if (args.length == 0) {
             System.out.println("Using default parameters");
@@ -103,9 +93,6 @@ public class Worms2021PrIMUS {
                 File outFolderSize = new File(outputFolder, "size_" + SIZES[s]);
                 exportFold(i, maximumFoldSize, folds[i], new File(outFolderSize, Worms2021MuRETDatasets.AGNOSTIC_SEMANTIC), new File(outFolderSize, Worms2021MuRETDatasets.CONTEXTUAL_AGNOSTIC_SEMANTIC));
             }
-
-            System.err.println("ABORTING FOR THE TEST");
-            return;
         }
     }
 
@@ -145,7 +132,7 @@ public class Worms2021PrIMUS {
 
     private static void writeJSON(File outputJSonFile, JSONObject documentJSON) throws IOException {
         FileWriter file = new FileWriter(outputJSonFile);
-        String jsonString = documentJSON.toJSONString();
+        String jsonString = documentJSON.toString();
         file.write(jsonString);
         file.close();
     }
@@ -159,7 +146,7 @@ public class Worms2021PrIMUS {
         systemJSON.put("image_name", filename);
         systemJSON.put("agnostic", agnosticSequence);
         systemJSON.put("semantic", semanticEncoding.generateKernSemanticString(NotationType.eModern));
-        jsonSystems.add(systemJSON);
+        jsonSystems.put(systemJSON);
     }
 
     private static Encoder importFile(File file) throws IM3Exception {

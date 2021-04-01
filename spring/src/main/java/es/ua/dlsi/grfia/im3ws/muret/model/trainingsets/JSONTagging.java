@@ -11,8 +11,8 @@ import es.ua.dlsi.im3.core.io.ExportException;
 import es.ua.dlsi.im3.core.score.PositionInStaff;
 import es.ua.dlsi.im3.core.score.PositionsInStaff;
 import es.ua.dlsi.im3.core.utils.FileCompressors;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
@@ -106,7 +106,7 @@ public class JSONTagging extends AbstractTrainingSetExporter {
             for (AgnosticOrSemanticSymbolTypeSVGPath agnosticOrSemanticSymbolTypeSVGPath : paths) {
                 for (PositionInStaff position : positions) {
                     String item = agnosticOrSemanticSymbolTypeSVGPath.getAgnosticOrSemanticTypeString() + ":" + position.toString();
-                    jsonArray.add(item);
+                    jsonArray.put(item);
                 }
             }
             jsonDictionary.put("agnostic_dictionary", jsonArray);
@@ -144,7 +144,7 @@ public class JSONTagging extends AbstractTrainingSetExporter {
 
             for (Page page : pages) {
                 JSONObject jsonPage = new JSONObject();
-                jsonPages.add(jsonPage);
+                jsonPages.put(jsonPage);
                 jsonPage.put("id", page.getId());
                 putBoundingBox(jsonPage, page.getBoundingBox());
 
@@ -154,7 +154,7 @@ public class JSONTagging extends AbstractTrainingSetExporter {
                     jsonPage.put("regions", jsonRegions);
                     for (Region region : regions) {
                         JSONObject jsonRegion = new JSONObject();
-                        jsonRegions.add(jsonRegion);
+                        jsonRegions.put(jsonRegion);
                         jsonRegion.put("id", region.getId());
                         if (region.getRegionType() != null) {
                             jsonRegion.put("type", region.getRegionType().getName());
@@ -175,7 +175,7 @@ public class JSONTagging extends AbstractTrainingSetExporter {
 
                             for (Symbol symbol : symbols) {
                                 JSONObject jsonSymbol = new JSONObject();
-                                jsonSymbols.add(jsonSymbol);
+                                jsonSymbols.put(jsonSymbol);
                                 jsonSymbol.put("id", symbol.getId());
                                 jsonSymbol.put("agnostic_symbol_type", symbol.getAgnosticSymbolType());
                                 jsonSymbol.put("position_in_staff", symbol.getPositionInStaff());
@@ -192,7 +192,7 @@ public class JSONTagging extends AbstractTrainingSetExporter {
                                     jsonSymbol.put("strokes", jsonStrokes);
 
                                     for (Stroke stroke: symbol.getStrokes().getStrokeList()) {
-                                        jsonStrokes.add(stroke.toString());
+                                        jsonStrokes.put(stroke.toString());
                                     }
                                 }
                             }
@@ -205,7 +205,7 @@ public class JSONTagging extends AbstractTrainingSetExporter {
 
         Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Writing JSon file {0}", outputJSonFile);
         FileWriter file = new FileWriter(outputJSonFile);
-        String jsonString = jsonImage.toJSONString();
+        String jsonString = jsonImage.toString();
         file.write(jsonString);
         file.close();
         Logger.getLogger(this.getClass().getName()).log(Level.FINE, "JSon file created {0}", outputJSonFile);

@@ -8,8 +8,8 @@ import es.ua.dlsi.grfia.im3ws.muret.repository.CollectionRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.DocumentRepository;
 import es.ua.dlsi.grfia.im3ws.scripts.AuthenticateForScripts;
 import es.ua.dlsi.im3.core.IM3Exception;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -88,9 +88,9 @@ public class Worms2021MuRETDatasets implements CommandLineRunner {
             }
             documentJSON.put("regions", jsonSystems);
 
-            System.out.println("\t#" + jsonSystems.size() + " regions");
+            System.out.println("\t#" + jsonSystems.length() + " regions");
             FileWriter file = new FileWriter(outputJSonFile);
-            String jsonString = documentJSON.toJSONString();
+            String jsonString = documentJSON.toString();
             file.write(jsonString);
             file.close();
         }
@@ -171,7 +171,7 @@ public class Worms2021MuRETDatasets implements CommandLineRunner {
 
         new AuthenticateForScripts(authenticationManager).consoleAuthenticate();
 
-        //doExport("Zaragoza", new File(args[0], "zaragoza"));
+        doExport("Zaragoza", new File(args[0], "zaragoza"));
         doExport("Música tradicional", new File(args[0], "FMT"));
     }
 

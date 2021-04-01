@@ -76,6 +76,7 @@
             <artifactId>jing</artifactId>
             <version>20091111</version>
         </dependency>
+        <!-- Jackson repeated in Spring -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>

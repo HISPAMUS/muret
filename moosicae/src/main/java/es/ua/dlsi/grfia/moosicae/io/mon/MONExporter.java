@@ -7,7 +7,6 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IScore;
 import es.ua.dlsi.grfia.moosicae.io.BaseExporter;
-import es.ua.dlsi.grfia.moosicae.io.IExporter;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
