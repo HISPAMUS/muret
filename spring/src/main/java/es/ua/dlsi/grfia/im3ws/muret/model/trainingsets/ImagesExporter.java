@@ -78,7 +78,7 @@ public class ImagesExporter extends AbstractTrainingSetExporter {
         Path tmpDirectory = Files.createTempDirectory(imagesDocumentFolder.getName());
 
         Path documentFolder = documentModel.getDocumentFolder(document);
-        for (Image image: document.getImages()) {
+        for (Image image: document.computeAllImagesSorted()) {
             Path imagePath = Paths.get(documentFolder.toFile().getPath(), MURETConfiguration.MASTER_IMAGES, image.getFilename());
             File imageFile = imagePath.toFile();
             if (!imageFile.exists()) {

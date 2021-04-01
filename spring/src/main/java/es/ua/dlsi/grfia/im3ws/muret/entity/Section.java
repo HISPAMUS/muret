@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,6 +13,16 @@ import java.util.Objects;
  */
 @Entity
 public class Section extends Auditable implements IID<Long>, IOrdered {
+    public static final Comparator<? super Section> COMPARATOR = (Comparator<Section>) (o1, o2) -> {
+        if (o1.ordering != null && o2.getOrdering() != null) {
+            int diff = o1.ordering - o2.ordering;
+            if (diff != 0) {
+                return diff;
+            }
+        }
+        return o1.id.compareTo(o2.id);
+    };
+
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)

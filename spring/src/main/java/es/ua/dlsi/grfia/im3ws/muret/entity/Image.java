@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 
 import javax.persistence.*;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,6 +17,15 @@ import java.util.stream.Collectors;
  */
 @Entity
 public class Image extends Auditable implements IAssignableToPart, IID<Long>, IOrdered {
+    public static final Comparator<? super Image> COMPARATOR = (Comparator<Image>) (o1, o2) -> {
+        if (o1.ordering != null && o2.ordering != null) {
+            int diff = o1.ordering - o2.ordering;
+            if (diff != 0) {
+                return diff;
+            }
+        }
+        return o1.filename.compareTo(o2.filename);
+    };
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)

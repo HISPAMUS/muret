@@ -2,7 +2,6 @@ package es.ua.dlsi.grfia.im3ws.scripts.specificExperiments.specialIssueWorms2021
 
 import java.io.File;
 
-import es.ua.dlsi.grfia.im3ws.muret.model.trainingsets.JSONTagging;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.score.NotationType;
 import es.ua.dlsi.im3.core.score.ScoreSong;
@@ -36,6 +35,17 @@ public class Worms2021PrIMUS {
     private static final int [] SIZES = {100, 500, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000,
             10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000};
     public static final void main(String [] args) throws Exception {
+
+        JSONObject jsonObject = new JSONObject();
+        String text = "Text with special character /";
+        System.out.println(text);
+        System.out.println("After escaping.");
+        text = jsonObject.escape(text);
+        System.out.println(text);
+        if (text != null) {
+            return;
+        }
+
         if (args.length == 0) {
             System.out.println("Using default parameters");
             args = new String[] {System.getProperty("user.home") + "/cmg/experiments/primusKern/CameraPrIMuS_2020/Corpus", "/tmp/worms2021/primus"};
@@ -93,6 +103,9 @@ public class Worms2021PrIMUS {
                 File outFolderSize = new File(outputFolder, "size_" + SIZES[s]);
                 exportFold(i, maximumFoldSize, folds[i], new File(outFolderSize, Worms2021MuRETDatasets.AGNOSTIC_SEMANTIC), new File(outFolderSize, Worms2021MuRETDatasets.CONTEXTUAL_AGNOSTIC_SEMANTIC));
             }
+
+            System.err.println("ABORTING FOR THE TEST");
+            return;
         }
     }
 

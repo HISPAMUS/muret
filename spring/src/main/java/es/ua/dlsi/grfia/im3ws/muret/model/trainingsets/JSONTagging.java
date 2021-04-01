@@ -68,7 +68,7 @@ public class JSONTagging extends AbstractTrainingSetExporter {
                 File documentFolder = new File(directory.toFile(), document.getPath());
                 documentFolder.mkdirs();
 
-                for (Image image: document.getImages()) {
+                for (Image image: document.computeAllImagesSorted()) {
                     Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Exporting JSON for image " + image.getFilename());
                     File outputJSonFile = new File(documentFolder, image.getFilename() + ".json");
                     generate(image, outputJSonFile);

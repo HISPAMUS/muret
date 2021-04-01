@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -133,8 +134,9 @@ public class AgnosticSymbolImagesTextFile extends AbstractTrainingSetExporter {
         writer.write(sb.toString());
 
         int nimage = 1;
-        for (Image image: document.getImages()) {
-            System.out.println("\tExporting image " + nimage + " of " + document.getImages().size());
+        List<Image> images = document.computeAllImagesSorted();
+        for (Image image: images) {
+            System.out.println("\tExporting image " + nimage + " of " + images.size());
             nimage++;
             //Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Exporting image " + image.getFilename());
 

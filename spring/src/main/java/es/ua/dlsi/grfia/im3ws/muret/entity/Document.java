@@ -6,6 +6,7 @@ import es.ua.dlsi.im3.core.score.NotationType;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.List;
 
@@ -238,4 +239,27 @@ public class Document extends Auditable implements IID<Integer>  {
         this.documentType = documentType;
     }
 
+    /**
+     * It returns images directly linked to the document and in sections, sorted inside each section
+     * @return
+     */
+    public List<Image> computeAllImagesSorted() {
+        LinkedList<Image> result = new LinkedList<>(this.images);
+
+        result.sort(Image.COMPARATOR);
+        if (this.sections != null) {
+            for (Section section : this.computeAllSectionsSorted()) {
+                LinkedList<Image> sectionImages = new LinkedList<>(section.getImages());
+                sectionImages.sort(Image.COMPARATOR);
+                result.addAll(sectionImages);
+            }
+        }
+        return result;
+    }
+
+    private List<Section> computeAllSectionsSorted() {
+        LinkedList<Section> result = new LinkedList<>(this.sections);
+        result.sort(Section.COMPARATOR);
+        return result;
+    }
 }
