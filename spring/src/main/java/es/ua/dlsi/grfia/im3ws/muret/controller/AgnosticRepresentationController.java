@@ -167,25 +167,19 @@ public class AgnosticRepresentationController extends MuRETBaseController {
 
 
     @PostMapping(path = {"changeSymbolX/{symbolID}/{newX}"})
-    public Symbol regionExternalReferenceUpdate(@PathVariable("symbolID") Long symbolID, @PathVariable("newX") int newX) {
+    @Transactional
+    public Symbol changeSymbolX(@PathVariable("symbolID") Long symbolID, @PathVariable("newX") int newX) {
         try {
             Symbol symbol = getSymbol(symbolID);
-            if (symbol.getBoundingBox() != null) {
-                int width = symbol.getBoundingBox().getWidth();
-                symbol.getBoundingBox().setFromX(newX);
-                symbol.getBoundingBox().setToX(newX + width);
-            } else if (symbol.getApproximateX() != null) {
-                symbol.setApproximateX(newX);
-            } else {
-                throw new IM3Exception("Symbol " + symbolID + " does not have either bounding box or approximate X");
-            }
-            symbolRepository.save(symbol);
-            return symbol;
+            Symbol result = agnosticRepresentationModel.changeSymbolX(symbol, newX);
+            return result;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot update comments", e);
 
         }
     }
+
+
     // revisado hasta aquí ------
 
     /*@GetMapping(path = {"changeAgnosticPositionInStaff/{symbolID}/{difference}"})

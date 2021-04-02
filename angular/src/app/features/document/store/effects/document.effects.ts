@@ -49,7 +49,7 @@ import {
   DocumentUnlinkImagesFromPart,
   DocumentUnlinkImagesFromPartSuccess,
   DocumentChangeImagesVisibility,
-  DocumentChangeImagesVisibilitySuccess,
+  DocumentChangeImagesVisibilitySuccess, DocumentLogOpen, DocumentLogOpenSuccess,
 } from '../actions/document.actions';
 import {Document} from '../../../../core/model/entities/document';
 import {Image} from '../../../../core/model/entities/image';
@@ -67,6 +67,14 @@ export class DocumentEffects {
     private imageFilesService: ImageFilesService,
     private actions$: Actions,
   ) {}
+
+  @Effect()
+  logOpen$ = this.actions$.pipe(
+    ofType<DocumentLogOpen>(DocumentActionTypes.DocumentLogOpen),
+    switchMap((action: DocumentLogOpen) => this.documentService.getOpen$(action.documentID).pipe(
+      switchMap(() => of(new DocumentLogOpenSuccess())),
+      //catchError(err => of(new DocumentServerError(err)))
+    )));
 
   @Effect()
   getDocumentOverview$: Observable<Action> = this.actions$.pipe(

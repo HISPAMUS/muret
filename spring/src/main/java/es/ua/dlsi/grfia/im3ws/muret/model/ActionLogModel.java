@@ -39,7 +39,7 @@ public class ActionLogModel {
         return actionTypeRepository;
     }
 
-    public void log(ActionType actionType, Integer documentID, Long imageID, Long regionID, Long symbolID) {
+    public void log(ActionType actionType, Integer documentID, Long sectionID, Long imageID, Long pageID, Long regionID, Long symbolID, String classifierID) {
         try {
             Action action = new Action();
             action.setActionType(actionType);
@@ -47,9 +47,12 @@ public class ActionLogModel {
             action.setUser(getUser());
 
             action.setDocumentID(documentID);
+            action.setSectionID(sectionID);
             action.setImageID(imageID);
+            action.setPageID(pageID);
             action.setRegionID(regionID);
             action.setSymbolID(symbolID);
+            action.setClassifierID(classifierID);
 
             actionRepository.save(action);
         } catch (Throwable t) {
@@ -58,4 +61,19 @@ public class ActionLogModel {
         }
     }
 
+    public void log(ActionType actionType, Integer documentID) {
+        try {
+            Action action = new Action();
+            action.setActionType(actionType);
+            action.setTimestamp(new Date());
+            action.setUser(getUser());
+
+            action.setDocumentID(documentID);
+
+            actionRepository.save(action);
+        } catch (Throwable t) {
+            // we cannot block operation because the log has not been saved
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Cannot log action", t);
+        }
+    }
 }

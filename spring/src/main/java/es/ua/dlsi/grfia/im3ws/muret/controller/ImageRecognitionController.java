@@ -7,6 +7,7 @@ import es.ua.dlsi.grfia.im3ws.muret.controller.payload.*;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.model.DocumentModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.ImageRecognitionModel;
+import es.ua.dlsi.grfia.im3ws.muret.model.actionlogs.ActionLogsDocument;
 import es.ua.dlsi.grfia.im3ws.muret.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,17 +30,20 @@ public class ImageRecognitionController {
     private final ImageRepository imageRepository;
     ImageRecognitionProgressStatusRepository imageRecognitionProgressStatusRepository;
     private final StateRepository stateRepository;
+    ActionLogsDocument actionLogsDocument;
 
     @Autowired
     public ImageRecognitionController(DocumentModel documentModel,
                                       MURETConfiguration muretConfiguration, DocumentRepository documentRepository,
                                       ImageRepository imageRepository, StateRepository stateRepository,
-                                      ImageRecognitionProgressStatusRepository imageRecognitionProgressStatusRepository) {
+                                      ImageRecognitionProgressStatusRepository imageRecognitionProgressStatusRepository,
+                                      ActionLogsDocument actionLogsDocument) {
         this.muretConfiguration = muretConfiguration;
         this.documentRepository = documentRepository;
         this.imageRepository = imageRepository;
         this.stateRepository = stateRepository;
         this.imageRecognitionProgressStatusRepository = imageRecognitionProgressStatusRepository;
+        this.actionLogsDocument = actionLogsDocument;
     }
 
 
@@ -68,6 +72,7 @@ public class ImageRecognitionController {
             result.setImagePart(image.get().getPart());
             result.setHidden(image.get().isHidden());
             result.setImageRecognitionProgressStatuses(image.get().getImageRecognitionProgressStatuses());
+            actionLogsDocument.logOpenImage(image.get());
             return result;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot create statistics", e);

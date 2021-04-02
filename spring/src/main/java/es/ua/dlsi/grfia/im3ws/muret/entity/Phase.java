@@ -1,5 +1,9 @@
 package es.ua.dlsi.grfia.im3ws.muret.entity;
 
 public enum Phase {
-    eDocumentAnalysis, eAgnostic, eSemantic
+    d, // document
+    p, // parts
+    da, // document analysis
+    a, // agnostic
+    s // semantic
 }

@@ -13,7 +13,7 @@ import static javax.persistence.TemporalType.TIMESTAMP;
  * @author drizo
  */
 @Entity
-public class Action implements IID<Long>  {
+public class Action implements IID<Long>, Comparable<Action>  {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,14 +34,23 @@ public class Action implements IID<Long>  {
     @Column (name="document_id")
     Integer documentID;
 
+    @Column (name="section_id")
+    Long sectionID;
+
     @Column (name="image_id")
     Long imageID;
+
+    @Column (name="page_id")
+    Long pageID;
 
     @Column (name="region_id")
     Long regionID;
 
     @Column (name="symbol_id")
     Long symbolID;
+
+    @Column (name="classifier_id")
+    String classifierID;
 
     public Action() {
     }
@@ -109,5 +118,43 @@ public class Action implements IID<Long>  {
 
     public void setSymbolID(Long symbolID) {
         this.symbolID = symbolID;
+    }
+
+    public Long getSectionID() {
+        return sectionID;
+    }
+
+    public void setSectionID(Long sectionID) {
+        this.sectionID = sectionID;
+    }
+
+    public Long getPageID() {
+        return pageID;
+    }
+
+    public void setPageID(Long pageID) {
+        this.pageID = pageID;
+    }
+
+    public String getClassifierID() {
+        return classifierID;
+    }
+
+    public void setClassifierID(String classifierID) {
+        this.classifierID = classifierID;
+    }
+
+    @Override
+    public int compareTo(Action o) {
+        if (this == o) {
+            return 0;
+        }
+
+        int diff = this.timestamp.compareTo(o.getTimestamp());
+        if (diff == 0) {
+            return hashCode() - o.hashCode();
+        } else {
+            return diff;
+        }
     }
 }

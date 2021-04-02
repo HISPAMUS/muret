@@ -8,6 +8,7 @@ import es.ua.dlsi.grfia.im3ws.muret.entity.Document;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Part;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Region;
 import es.ua.dlsi.grfia.im3ws.muret.model.*;
+import es.ua.dlsi.grfia.im3ws.muret.model.actionlogs.ActionLogsSemantic;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.PageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
@@ -34,14 +35,16 @@ public class SemanticRepresentationController extends MuRETBaseController {
     SemanticRepresentationModel semanticRepresentationModel;
     PartsModel partsModel;
     private final NotationModel notationModel;
+    ActionLogsSemantic actionLogsSemantic;
 
     @Autowired
-    public SemanticRepresentationController(MURETConfiguration muretConfiguration, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository, DocumentModel documentModel) {
+    public SemanticRepresentationController(MURETConfiguration muretConfiguration, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository, DocumentModel documentModel, ActionLogsSemantic actionLogsSemantic) {
         super(muretConfiguration, imageRepository, pageRepository, regionRepository, symbolRepository);
         this.documentModel = documentModel;
         this.semanticRepresentationModel = new SemanticRepresentationModel(documentModel, regionRepository);
         this.partsModel = new PartsModel();
         this.notationModel = new NotationModel();
+        this.actionLogsSemantic = actionLogsSemantic;
     }
 
     /**
@@ -65,6 +68,7 @@ public class SemanticRepresentationController extends MuRETBaseController {
                 Part part = null;
                 String partName = "";
                 Notation result = semanticRepresentationModel.computeAndSaveSemanticFromAgnostic(document, partName, region, mensurstrich, renderer);
+                actionLogsSemantic.logTransduce(region, classifierModelID);
                 return result;
             } else {
                 throw new IM3WSException("Unsupported classifier: " + classifierModelID);
@@ -125,6 +129,7 @@ public class SemanticRepresentationController extends MuRETBaseController {
             String partName = "";
 
             Notation result = semanticRepresentationModel.sendSemanticEncoding(document, partName, region, mensustriche, renderer, semanticEncoding);
+            actionLogsSemantic.logChange(region);
             return result;
         } catch (IM3WSException | IM3Exception e) {
             throw ControllerUtils.createServerError(this, "Cannot send semantic encoding", e);
@@ -139,6 +144,7 @@ public class SemanticRepresentationController extends MuRETBaseController {
             Region region = getRegion(staffID);
             region.setSemanticEncoding(null);
             regionRepository.save(region);
+            actionLogsSemantic.logClear(region);
         } catch (IM3WSException e) {
             throw ControllerUtils.createServerError(this, "Cannot clear semantic encoding", e);
         }

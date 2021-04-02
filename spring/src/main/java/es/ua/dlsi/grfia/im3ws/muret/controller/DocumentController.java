@@ -9,6 +9,8 @@ import es.ua.dlsi.grfia.im3ws.muret.controller.payload.*;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.model.NotationModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.DocumentModel;
+import es.ua.dlsi.grfia.im3ws.muret.model.actionlogs.ActionLogsDocument;
+import es.ua.dlsi.grfia.im3ws.muret.model.actionlogs.ActionLogsParts;
 import es.ua.dlsi.grfia.im3ws.muret.repository.*;
 import es.ua.dlsi.grfia.im3ws.service.FileStorageService;
 import es.ua.dlsi.grfia.im3ws.service.Utils;
@@ -28,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.print.Doc;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -59,6 +62,9 @@ public class DocumentController {
     private final DocumentModel documentModel;
     private final NotationModel notationModel;
 
+    ActionLogsDocument actionLogsDocument;
+    ActionLogsParts actionLogsParts;
+
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -66,7 +72,8 @@ public class DocumentController {
     @Autowired
     public DocumentController(DocumentModel documentModel, FileStorageService fileStorageService,
                               MURETConfiguration muretConfiguration, DocumentRepository documentRepository, ImageRepository imageRepository,
-                              StateRepository stateRepository, PartRepository partRepository, SectionRepository sectionRepository) {
+                              StateRepository stateRepository, PartRepository partRepository, SectionRepository sectionRepository,
+                              ActionLogsDocument actionLogsDocument, ActionLogsParts actionLogsParts) {
         this.documentModel = documentModel;
         this.fileStorageService = fileStorageService;
         this.muretConfiguration = muretConfiguration;
@@ -76,6 +83,8 @@ public class DocumentController {
         this.partRepository = partRepository;
         this.sectionRepository = sectionRepository;
         this.notationModel = new NotationModel();
+        this.actionLogsDocument = actionLogsDocument;
+        this.actionLogsParts = actionLogsParts;
     }
 
     private <O extends IOrdered, R extends CrudRepository> void updateOrdering(R repository, List<O> entities) {
@@ -110,17 +119,35 @@ public class DocumentController {
         return orderingLong;
     }
 
+    @GetMapping(path = {"/logOpen/{documentID}"})
+    @Transactional
+    public void logOpen(@PathVariable("documentID") Integer documentID) {
+        try {
+            Optional<Document> document = documentRepository.findById(documentID);
+            if (!document.isPresent()) {
+                throw new IM3WSException("Cannot find document with id=" + documentID);
+            }
+            actionLogsDocument.logOpenDocument(document.get());
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this, "Cannot log document open", e);
+        }
+    }
+
     @PutMapping(path = {"/moveImagesToSection"})
     @javax.transaction.Transactional
     public SectionImages moveImageToSection(@RequestBody SectionImages sectionImages) {
         try {
             java.util.Collection<Image> images = new ArrayList<>();
+            Document document = null;
             Long [] previousSectionIDs = new Long[sectionImages.getImageIDS().length];
             for (int i=0; i<sectionImages.getImageIDS().length; i++) {
                 Long id = sectionImages.getImageIDS()[i];
                 Optional<Image> image = imageRepository.findById(id);
                 if (!image.isPresent()) {
                     throw new IM3WSException("Cannot find an image with ID= " + id);
+                }
+                if (document == null) {
+                    document = image.get().computeDocument();
                 }
                 if (image.get().getSection() == null) {
                     previousSectionIDs[i] = null;
@@ -145,6 +172,7 @@ public class DocumentController {
 
             imageRepository.saveAll(images);
             sectionImages.setPreviousSectionIDs(previousSectionIDs);
+            actionLogsDocument.logMoveImagesToSection(document);
             return sectionImages;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot move image to section", e);
@@ -173,6 +201,7 @@ public class DocumentController {
                 ordering++;
             }
             imageRepository.saveAll(document.get().getImages());
+            actionLogsDocument.logMoveImagesToSection(document.get());
             return savedSection;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot create default section and move images", e);
@@ -198,6 +227,7 @@ public class DocumentController {
             }
             section.setOrdering(max+1);
             Section createdSection = sectionRepository.save(section);
+            actionLogsDocument.logCreateSection(document.get());
             return createdSection;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot create new section", e);
@@ -230,6 +260,13 @@ public class DocumentController {
     @Transactional
     public NumberArray<Long> reorderSections(@RequestBody LongArray ordering) {
         try {
+            if (!ordering.getValues().isEmpty()) {
+                Optional<Section> section = sectionRepository.findById(ordering.getValues().get(0));
+                if (!section.isPresent()) {
+                    throw new IM3WSException("Cannot find section with id " + ordering.getValues().get(0));
+                }
+                actionLogsDocument.logReorderSection(section.get().getDocument());
+            }
             return setOrdering(sectionRepository, ordering, "section");
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot save sections reordering", e);
@@ -243,6 +280,14 @@ public class DocumentController {
     @Transactional
     public NumberArray<Long> reorderImages(@RequestBody LongArray ordering) {
         try {
+            if (!ordering.getValues().isEmpty()) {
+                Optional<Image> image = imageRepository.findById(ordering.getValues().get(0));
+                if (!image.isPresent()) {
+                    throw new IM3WSException("Cannot find image with id " + ordering.getValues().get(0));
+                }
+                actionLogsDocument.logReorderImages(image.get().computeDocument());
+            }
+
             return setOrdering(imageRepository, ordering, "image");
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot save image reordering", e);
@@ -271,6 +316,7 @@ public class DocumentController {
                 changedImages.add(image);
             }
             imageRepository.saveAll(changedImages);
+            actionLogsDocument.logDeleteSection(optionalSection.get());
             sectionRepository.delete(optionalSection.get());
             return sectionID;
         } catch (Throwable e) {
@@ -346,6 +392,7 @@ public class DocumentController {
             }
 
             Part part = optionalPart.get();
+            actionLogsParts.logLinkPart(part.getDocument());
             return linkImagesToPart(imageIds, part);
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot linl images to part", e);
@@ -370,6 +417,7 @@ public class DocumentController {
                 changedImages.add(image);
             }
             imageRepository.saveAll(changedImages);
+            actionLogsParts.logLinkPart(document);
             return getPartsInImages(document);
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot linl images to part", e);
@@ -399,6 +447,7 @@ public class DocumentController {
             imagesInNewPart.setPart(savedPart);
             HashSet<PartsInImage> partsInImages = linkImagesToPart(imageIds, savedPart);
             imagesInNewPart.setPartsInImage(partsInImages);
+            actionLogsParts.logLinkPart(part.getDocument());
             return imagesInNewPart;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot create part and link to image", e);
@@ -563,6 +612,7 @@ public class DocumentController {
                 }
             }
 
+            actionLogsDocument.logUploadFiles(document.get());
             return new UploadFileResponse(fileName, file.getContentType(), file.getSize());
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot upload file", e);

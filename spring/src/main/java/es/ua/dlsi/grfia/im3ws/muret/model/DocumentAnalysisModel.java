@@ -243,21 +243,15 @@ public class DocumentAnalysisModel {
         return newPages;
     }
 
-    public List<Page> createPages(long imageID, int numPages) throws IM3WSException {
-        Image persistentImage = getImage(imageID);
-        return createPages(persistentImage, numPages);
-    }
 
 
     @Transactional
     /**
      * It moves the current regions to the new page if its center is contained inside the new page
      */
-    public Set<Page> createPage(long imageID, BoundingBox boundingBox) throws IM3WSException {
-        Image persistentImage = getImage(imageID);
-
+    public Set<Page> createPage(Image image, BoundingBox boundingBox) throws IM3WSException {
         List<Region> regionsToBeMoved = new ArrayList<>();
-        for (Page previousPage : persistentImage.getPages()) { // new page has not been inserted
+        for (Page previousPage : image.getPages()) { // new page has not been inserted
             for (Region region : previousPage.getRegions()) {
                 if (boundingBox.containsCenterOf(region.getBoundingBox())) {
                     regionsToBeMoved.add(region);
@@ -267,9 +261,9 @@ public class DocumentAnalysisModel {
 
         Page persistentPage = new Page();
         persistentPage.setBoundingBox(boundingBox);
-        persistentPage.setImage(persistentImage);
+        persistentPage.setImage(image);
         persistentPage = pageRepository.save(persistentPage);
-        persistentImage.getPages().add(persistentPage);
+        image.getPages().add(persistentPage);
 
         for (Region region : regionsToBeMoved) {
             region.setPage(persistentPage);
@@ -277,13 +271,11 @@ public class DocumentAnalysisModel {
 
 
         regionRepository.saveAll(regionsToBeMoved);
-        return persistentImage.getPages();
+        return image.getPages();
     }
 
     @Transactional
-    public Set<Page> createRegion(long imageID, Integer regionTypeID, BoundingBox boundingBox) throws IM3WSException {
-        Image persistentImage = getImage(imageID);
-
+    public Set<Page> createRegion(Image persistentImage, Integer regionTypeID, BoundingBox boundingBox) throws IM3WSException {
         RegionType regionType;
 
         if (regionTypeID != null) {
@@ -300,7 +292,7 @@ public class DocumentAnalysisModel {
         // if there is not any page, a new page is created spaning the whole image
         Set<Page> pages;
         if (persistentImage.getPages() == null || persistentImage.getPages().isEmpty()) {
-            pages = this.createPage(imageID, new BoundingBox(0, 0, persistentImage.getWidth(), persistentImage.getHeight()));
+            pages = this.createPage(persistentImage, new BoundingBox(0, 0, persistentImage.getWidth(), persistentImage.getHeight()));
         } else {
             pages = persistentImage.getPages();
         }

@@ -19,6 +19,12 @@ export class DocumentService {
 
   constructor(private apiRestClientService: ApiRestClientService) { }
 
+  getOpen$(documentID) {
+    const url = `document/logOpen/${documentID}`;
+    return this.apiRestClientService.get$(url);
+  }
+
+
   public getOverview$(documentID: number): Observable<Document> {
     return this.apiRestClientService.getProjectionOf$<Document>(documentID, 'documents', 'overview');
   }

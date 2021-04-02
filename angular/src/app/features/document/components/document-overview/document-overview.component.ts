@@ -2,7 +2,11 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {Store} from "@ngrx/store";
 import {DocumentState} from "../../store/state/document.state";
-import {DocumentGetDocumentStatistics, DocumentGetOverview} from "../../store/actions/document.actions";
+import {
+  DocumentGetDocumentStatistics,
+  DocumentGetOverview,
+  DocumentLogOpen
+} from "../../store/actions/document.actions";
 import {BreadcrumbsUpdateDocument} from "../../../../layout/store/actions/breadcrumbs.actions";
 import {selectAuthUserID} from "../../../../auth/store/selectors/auth.selector";
 import {HomeUpdateLastDocuments} from "../../../home/store/actions/home.actions";
@@ -49,6 +53,7 @@ export class DocumentOverviewComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
       this.route.paramMap.subscribe((params: ParamMap) => {
         this.documentID = +this.route.snapshot.paramMap.get('id'); // + converts the string to number
+        this.store.dispatch(new DocumentLogOpen(this.documentID));
         this.store.dispatch(new DocumentGetOverview(this.documentID));
         this.store.dispatch(new BreadcrumbsUpdateDocument(this.documentID));
         //TODO Muy lento para grandes colecciones - mejorarlo this.store.dispatch(new DocumentGetDocumentStatistics(this.documentID));

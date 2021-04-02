@@ -6,6 +6,7 @@ import es.ua.dlsi.grfia.im3ws.muret.controller.payload.*;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.model.ImageRecognitionModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.PartsModel;
+import es.ua.dlsi.grfia.im3ws.muret.model.actionlogs.ActionLogsParts;
 import es.ua.dlsi.grfia.im3ws.muret.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
@@ -28,13 +29,15 @@ public class PartsController extends MuRETBaseController {
     private final DocumentRepository documentRepository;
     private final PartRepository partRepository;
     PartsModel partsModel;
+    ActionLogsParts actionLogsParts;
 
     @Autowired
-    public PartsController(MURETConfiguration muretConfiguration, DocumentRepository documentRepository, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository, PartRepository partRepository) {
+    public PartsController(MURETConfiguration muretConfiguration, DocumentRepository documentRepository, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository, PartRepository partRepository, ActionLogsParts actionLogsParts) {
         super(muretConfiguration, imageRepository, pageRepository, regionRepository, symbolRepository);
         partsModel = new PartsModel();
         this.documentRepository = documentRepository;
         this.partRepository = partRepository;
+        this.actionLogsParts = actionLogsParts;
     }
 
     @PutMapping(path = {"linkToPart"})
@@ -47,6 +50,7 @@ public class PartsController extends MuRETBaseController {
         Part part = getPart(partLinking.getPartID());
 
         linkToPart(partLinking, part);
+        actionLogsParts.logLinkPart(image.computeDocument());
         return new ImageRecognitionModel().getPagesRegionsSymbols(image);
     }
 
@@ -103,6 +107,7 @@ public class PartsController extends MuRETBaseController {
         PagesRegionsSymbolsAndNewPart pagesRegionsSymbolsAndNewPart = new PagesRegionsSymbolsAndNewPart();
         pagesRegionsSymbolsAndNewPart.setPart(savedPart);
         pagesRegionsSymbolsAndNewPart.setPagesRegionsSymbols(new ImageRecognitionModel().getPagesRegionsSymbols(image));
+        actionLogsParts.logLinkPart(document.get());
         return pagesRegionsSymbolsAndNewPart;
     }
 
@@ -140,6 +145,7 @@ public class PartsController extends MuRETBaseController {
                     throw new IM3WSException("Invalid assignable to part type: " + partLinking.getPartAssignedTo());
             }
         }
+        actionLogsParts.logLinkPart(image.computeDocument());
         return new ImageRecognitionModel().getPagesRegionsSymbols(image);
     }
 
@@ -152,6 +158,7 @@ public class PartsController extends MuRETBaseController {
         Part part = getPart(partID);
         image.setPart(part);
         imageRepository.save(image);
+        actionLogsParts.logLinkPart(image.computeDocument());
         return part;
     }
 
@@ -169,6 +176,7 @@ public class PartsController extends MuRETBaseController {
         Part savedPart = partRepository.save(part);
         image.setPart(savedPart);
         imageRepository.save(image);
+        actionLogsParts.logLinkPart(document);
         return savedPart;
     }
     @PutMapping(path = {"unlinkImageFromPart/{imageID}"})
@@ -179,6 +187,7 @@ public class PartsController extends MuRETBaseController {
         Image image = getImage(imageID);
         image.setPart(null);
         imageRepository.save(image);
+        actionLogsParts.logLinkPart(image.computeDocument());
     }
 
     // revisado hasta aquí

@@ -81,6 +81,7 @@ public class TrainingSetsController {
             Path tgz = exporter.generate(muretFolder, documentArrayList);
 
             String filename = tgz.getFileName().toString();
+            //TODO Copiado en ActionController
             BinaryOutputWrapper output = new BinaryOutputWrapper("application/x-gzip");
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Adding to output file name {0}", filename);
             output.setFilename(filename);

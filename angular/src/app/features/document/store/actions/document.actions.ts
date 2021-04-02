@@ -13,6 +13,8 @@ import {ImagesInNewPart} from "../../../../core/model/restapi/images-in-new-part
 import {ImagesVisibility} from "../../../../core/model/restapi/images-visibility";
 
 export enum DocumentActionTypes {
+  DocumentLogOpen = '[Document] Open',
+  DocumentLogOpenSuccess = '[Document] Open success',
   DocumentGetOverview = '[Document] Get Overview',
   DocumentGetOverviewSuccess = '[Document] Get Overview success',
   DocumentMoveImagesToSection = '[Document] Move image to section',
@@ -65,9 +67,18 @@ export enum DocumentActionTypes {
   DocumentGetAlignmentPreview = '[Document] Get alignment preview',
   DocumentGetAlignmentPreviewSuccess = '[Document] Get alignment preview success',
   DocumentGetCroppedImage = '[Document] Get cropped image',
-  DocumentGetCroppedImageSuccess = '[Document] Get cropped image success',
+  DocumentGetCroppedImageSuccess = '[Document] Get cropped image success'
 }
 
+export class DocumentLogOpen implements Action {
+  public readonly type = DocumentActionTypes.DocumentLogOpen;
+  constructor(public documentID: number) {}
+}
+
+export class DocumentLogOpenSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentLogOpenSuccess;
+  constructor() {}
+}
 
 export class DocumentGetOverview implements Action {
   public readonly type = DocumentActionTypes.DocumentGetOverview;
@@ -347,6 +358,7 @@ export class DocumentGetCroppedImageSuccess implements Action {
 }
 
 export type DocumentActions =
+  DocumentLogOpen | DocumentLogOpenSuccess |
   DocumentGetOverview | DocumentGetOverviewSuccess |
   DocumentMoveImagesToSection | DocumentMoveImagesToSectionSuccess |
   DocumentCreateSection | DocumentCreateSectionSuccess |

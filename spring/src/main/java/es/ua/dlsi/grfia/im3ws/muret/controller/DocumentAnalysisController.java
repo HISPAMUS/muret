@@ -8,20 +8,15 @@ import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticRepresentationModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.ClassifierClient;
 import es.ua.dlsi.grfia.im3ws.muret.model.DocumentAnalysisModel;
-import es.ua.dlsi.grfia.im3ws.muret.model.SemanticRepresentationModel;
+import es.ua.dlsi.grfia.im3ws.muret.model.actionlogs.ActionLogsDocumentAnalysis;
 import es.ua.dlsi.grfia.im3ws.muret.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 // !!! Important: no controller should throw any exception
 
 /**
@@ -41,9 +36,11 @@ public class DocumentAnalysisController extends MuRETBaseController {
 
     private final ClassifierClient m_client;
 
+    ActionLogsDocumentAnalysis actionLogsDocumentAnalysis;
+
     @Autowired
     public DocumentAnalysisController(MURETConfiguration muretConfiguration, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository, RegionTypeRepository regionTypeRepository, DocumentAnalysisModel documentAnalysisModel, AgnosticRepresentationModel agnosticModel,
-                                      RegionRepository regionrepository) {
+                                      RegionRepository regionrepository, ActionLogsDocumentAnalysis actionLogsDocumentAnalysis) {
         super(muretConfiguration, imageRepository, pageRepository, regionRepository, symbolRepository);
         this.regionTypeRepository = regionTypeRepository;
         this.documentAnalysisModel = documentAnalysisModel;
@@ -51,6 +48,7 @@ public class DocumentAnalysisController extends MuRETBaseController {
         this.agnosticModel = agnosticModel;
         this.regionRepository = regionrepository;
         this.m_client = new ClassifierClient(muretConfiguration.getPythonclassifiers());
+        this.actionLogsDocumentAnalysis = actionLogsDocumentAnalysis;
     }
 
     protected RegionType getRegionType(int regionTypeID) throws IM3WSException {
@@ -64,6 +62,7 @@ public class DocumentAnalysisController extends MuRETBaseController {
 
 
     @PutMapping(path = {"changeRegionsType/{regionTypeID}"})
+    @Transactional
     public ChangedRegionTypes changeRegionsType(@PathVariable("regionTypeID") int regionTypeID, @RequestBody LongArray regionIDs)  {
         try {
             ArrayList<Region> changedRegions = new ArrayList<>();
@@ -74,6 +73,7 @@ public class DocumentAnalysisController extends MuRETBaseController {
 
                 if (!regionType.equals(region.getRegionType())) {
                     region.setRegionType(regionType);
+                    actionLogsDocumentAnalysis.logChangeRegionType(region);
                     changedRegions.add(region);
                     changedRegionsID.add(region.getId());
                 }
@@ -90,6 +90,7 @@ public class DocumentAnalysisController extends MuRETBaseController {
     }
 
     @PutMapping(path = {"regionBoundingBoxUpdate"})
+    @Transactional
     public Region regionUpdate(@RequestBody Region region)  {
         try {
             Region persistentRegion = getRegion(region.getId());
@@ -98,6 +99,7 @@ public class DocumentAnalysisController extends MuRETBaseController {
                 persistentRegion.setBoundingBox(region.getBoundingBox());
             }
             regionRepository.save(persistentRegion);
+            actionLogsDocumentAnalysis.logResizeRegion(persistentRegion);
             return persistentRegion;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot update region", e);
@@ -106,11 +108,13 @@ public class DocumentAnalysisController extends MuRETBaseController {
     }
 
     @PutMapping(path = {"pageBoundingBoxUpdate"})
+    @Transactional
     public Page pageBoundingBoxUpdate(@RequestBody BoundingBox boundingBox)  {
         try {
             Page page = getPage(boundingBox.getId());
             page.setBoundingBox(boundingBox);
             pageRepository.save(page);
+            actionLogsDocumentAnalysis.logResizePage(page);
             return page;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot update page bounding boc", e);
@@ -123,6 +127,7 @@ public class DocumentAnalysisController extends MuRETBaseController {
         try {
             Image persistentImage = getImage(imageID);
             this.documentAnalysisModel.clear(persistentImage);
+            actionLogsDocumentAnalysis.logClear(persistentImage);
         } catch (IM3WSException e) {
             throw ControllerUtils.createServerError(this, "Cannot clear document analysis", e);
 
@@ -136,9 +141,12 @@ public class DocumentAnalysisController extends MuRETBaseController {
      * @throws IM3WSException
      */
     @PostMapping(path = {"createPage"})
+    @Transactional
     public Set<Page> createPage(@RequestBody PageCreation pageCreation)  {
         try {
-            Set<Page> createdPages = this.documentAnalysisModel.createPage(pageCreation.getImageID(), pageCreation.getBoundingBox());
+            Image image = getImage(pageCreation.getImageID());
+            Set<Page> createdPages = this.documentAnalysisModel.createPage(image, pageCreation.getBoundingBox());
+            actionLogsDocumentAnalysis.logCreatePage(image);
             return createdPages;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot create page", e);
@@ -154,7 +162,9 @@ public class DocumentAnalysisController extends MuRETBaseController {
     @Transactional
     public List<Page> createPages(@RequestBody PagesCreation pageCreation)  {
         try {
-            List<Page> createdPages = this.documentAnalysisModel.createPages(pageCreation.getImageID(), pageCreation.getNumPages());
+            Image image = getImage(pageCreation.getImageID());
+            List<Page> createdPages = this.documentAnalysisModel.createPages(image, pageCreation.getNumPages());
+            actionLogsDocumentAnalysis.logCreatePage(image);
             return createdPages;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot create pages", e);
@@ -169,9 +179,12 @@ public class DocumentAnalysisController extends MuRETBaseController {
      * @throws IM3WSException
      */
     @PostMapping(path = {"createRegion"})
+    @Transactional
     public Set<Page> createRegion(@RequestBody RegionCreation regionCreation)  {
         try {
-            Set<Page> pages = this.documentAnalysisModel.createRegion(regionCreation.getImageID(), regionCreation.getRegionTypeID(), regionCreation.getBoundingBox());
+            Image image = getImage(regionCreation.getImageID());
+            Set<Page> pages = this.documentAnalysisModel.createRegion(image, regionCreation.getRegionTypeID(), regionCreation.getBoundingBox());
+            actionLogsDocumentAnalysis.logCreateRegion(image);
             return pages;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot create region", e);
@@ -184,6 +197,7 @@ public class DocumentAnalysisController extends MuRETBaseController {
      * @return
      */
     @PostMapping(path = {"deletePages"})
+    @Transactional
     public LongArray deletePages(@RequestBody LongArray pageIDs)  {
         try {
             ArrayList<Page> pages = new ArrayList<>();
@@ -197,6 +211,7 @@ public class DocumentAnalysisController extends MuRETBaseController {
                     pages.add(page.get());
                     result.add(id);
                 }
+                actionLogsDocumentAnalysis.logDeletePage(page.get());
             }
 
             pageRepository.deleteAll(pages);
@@ -212,6 +227,7 @@ public class DocumentAnalysisController extends MuRETBaseController {
      * @return
      */
     @PostMapping(path = {"deleteRegions"})
+    @Transactional
     public LongArray deleteRegions(@RequestBody LongArray regionIDs)  {
         try {
             LongArray result = new LongArray();
@@ -222,6 +238,7 @@ public class DocumentAnalysisController extends MuRETBaseController {
                         throw new IM3WSException("A region has " + region.get().getSymbols().size() + " symbols inside, it cannot be deleted");
                     }
                     documentAnalysisModel.deleteRegion(id);
+                    actionLogsDocumentAnalysis.logDeleteRegion(region.get());
                     result.add(id);
                 }
             }
@@ -242,6 +259,7 @@ public class DocumentAnalysisController extends MuRETBaseController {
             Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.computeDocument().getPath(),
                     MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());
             AutoDocumentAnalysisModel autoDocumentAnalysisModel = m_client.getDocumentAnalysis(request.getImageID(), imagePath, request.getModelToUse());
+            actionLogsDocumentAnalysis.logAutomatic(persistentImage, request.getModelToUse());
             return documentAnalysisModel.createAutomaticDocumentAnalysis(persistentImage, request.getNumPages(), autoDocumentAnalysisModel);
         } catch (IM3WSException e) {
             throw ControllerUtils.createServerError(this, "Cannot analyze document", e);

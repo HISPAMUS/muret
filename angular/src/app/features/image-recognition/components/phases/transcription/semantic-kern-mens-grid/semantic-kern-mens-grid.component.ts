@@ -133,6 +133,7 @@ export class SemanticKernMensGridComponent implements OnInit, OnDestroy {
   removeSelectedRow() {
     const selectedData = this.gridApi.getSelectedRows();
     const res = this.gridApi.updateRowData({ remove: selectedData });
+    this.sendSemanticEncoding();
   }
 
 

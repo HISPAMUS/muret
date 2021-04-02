@@ -33,6 +33,7 @@ public class MuRETBaseController {
         this.regionRepository = regionRepository;
     }
 
+
     protected Image getImage(long imageID) throws IM3WSException {
         //Logger.getLogger(this.getClass().getName()).log(Level.INFO, "ID: "+ imageID);
         Optional<Image> image = imageRepository.findById(imageID);

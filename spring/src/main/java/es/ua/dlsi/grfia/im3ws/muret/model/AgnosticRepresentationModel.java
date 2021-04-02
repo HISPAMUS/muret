@@ -7,6 +7,7 @@ import es.ua.dlsi.grfia.im3ws.muret.controller.payload.AgnosticSymbolTypeAndPosi
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.LongArray;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.SymbolCreationResult;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
+import es.ua.dlsi.grfia.im3ws.muret.model.actionlogs.ActionLogsAgnostic;
 import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.SymbolRepository;
 import es.ua.dlsi.im3.core.IM3Exception;
@@ -39,12 +40,12 @@ public class AgnosticRepresentationModel {
     private final SymbolRepository symbolRepository;
     private final ClassifierClient classifierClient;
     private final MURETConfiguration muretConfiguration;
-    private final ActionLogAgnosticModel actionLogAgnosticModel;
+    private final ActionLogsAgnostic actionLogAgnosticModel;
 
 
 
     @Autowired
-    public AgnosticRepresentationModel(MURETConfiguration muretConfiguration, RegionRepository regionRepository, SymbolRepository symbolRepository, ActionLogAgnosticModel actionLogAgnosticModel) {
+    public AgnosticRepresentationModel(MURETConfiguration muretConfiguration, RegionRepository regionRepository, SymbolRepository symbolRepository, ActionLogsAgnostic actionLogAgnosticModel) {
         this.muretConfiguration = muretConfiguration;
         this.regionRepository = regionRepository;
         this.symbolRepository = symbolRepository;
@@ -231,7 +232,7 @@ public class AgnosticRepresentationModel {
                     PositionInStaff.parseString(positionInStaffStr));
             result = createSymbol(modelID, regionID, boundingBox, null, agnosticSymbol);
         }
-        actionLogAgnosticModel.logCreateSymbolFromBoundingBox(result.getAgnosticSymbol());
+        actionLogAgnosticModel.logCreateSymbolFromBoundingBox(result.getAgnosticSymbol(), modelID);
         return result;
     }
 
@@ -240,7 +241,7 @@ public class AgnosticRepresentationModel {
     public SymbolCreationResult createSymbol(String modelID, long regionID, es.ua.dlsi.grfia.im3ws.muret.controller.payload.Point[][] points, String agnosticSymbolType, String positionInStaffStr) throws IM3WSException, IM3Exception {
         BBoxStrokes bBoxStrokes = new BBoxStrokes(points);
         SymbolCreationResult result = createSymbol(modelID, regionID, bBoxStrokes.getBoundingBox(), bBoxStrokes.getCalcoStrokes(), agnosticSymbolType, positionInStaffStr);
-        actionLogAgnosticModel.logCreateSymbolFromStrokes(result.getAgnosticSymbol());
+        actionLogAgnosticModel.logCreateSymbolFromStrokes(result.getAgnosticSymbol(), modelID);
         return result;
     }
 
@@ -367,7 +368,7 @@ public class AgnosticRepresentationModel {
             }
         }
 
-        actionLogAgnosticModel.logEndToEnd(persistentRegion);
+        actionLogAgnosticModel.logEndToEnd(persistentRegion, modelID);
         return persistentRegion.getSortedSymbols();
 
 
@@ -402,6 +403,19 @@ public class AgnosticRepresentationModel {
         return true;
     }
 
-
+    public Symbol changeSymbolX(Symbol symbol, int newX) throws IM3WSException, IM3Exception {
+        if (symbol.getBoundingBox() != null) {
+            int width = symbol.getBoundingBox().getWidth();
+            symbol.getBoundingBox().setFromX(newX);
+            symbol.getBoundingBox().setToX(newX + width);
+        } else if (symbol.getApproximateX() != null) {
+            symbol.setApproximateX(newX);
+        } else {
+            throw new IM3Exception("Symbol " + symbol.getId() + " does not have either bounding box or approximate X");
+        }
+        symbolRepository.save(symbol);
+        actionLogAgnosticModel.logChangeHorizontalPosition(symbol);
+        return symbol;
+    }
 
 }
