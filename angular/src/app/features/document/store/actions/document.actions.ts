@@ -11,6 +11,7 @@ import {PartsInImage} from "../../../../core/model/restapi/parts-in-image";
 import {NumberArray} from "../../../../core/model/restapi/number-array";
 import {ImagesInNewPart} from "../../../../core/model/restapi/images-in-new-part";
 import {ImagesVisibility} from "../../../../core/model/restapi/images-visibility";
+import {ExportActionTypes} from "../../../export/store/actions/export.actions";
 
 export enum DocumentActionTypes {
   DocumentLogOpen = '[Document] Open',
@@ -46,6 +47,9 @@ export enum DocumentActionTypes {
   DocumentChangeImagesVisibilitySuccess = '[Document] Change images visibility success',
 
   //DocumentSelectImagesForExport = '[Document] Select images',
+
+  DocumentDownloadActionLogs = '[Document] Download action logs',
+  DocumentDownloadActionLogsSuccess = '[Document] Download action logs success',
 
   // revisado hasta aquí
   ResetDocumentServerError = '[Document] Reset Server error',
@@ -259,6 +263,17 @@ export class DocumentSelectImagesForExport implements Action {
 
 
 
+export class DocumentDownloadActionLogs implements Action {
+  public readonly type = DocumentActionTypes.DocumentDownloadActionLogs;
+  constructor(public documentID: number) {}
+}
+
+export class DocumentDownloadActionLogsSuccess implements Action {
+  public readonly type = DocumentActionTypes.DocumentDownloadActionLogsSuccess;
+  constructor(public payload: Blob) {}
+}
+
+
 // revisado hasta aquí
 
 
@@ -357,6 +372,7 @@ export class DocumentGetCroppedImageSuccess implements Action {
   constructor(public url: string) {}
 }
 
+
 export type DocumentActions =
   DocumentLogOpen | DocumentLogOpenSuccess |
   DocumentGetOverview | DocumentGetOverviewSuccess |
@@ -373,6 +389,7 @@ export type DocumentActions =
   DocumentLinkImagesToNewPart | DocumentLinkImagesToNewPartSuccess |
   DocumentUnlinkImagesFromPart |   DocumentUnlinkImagesFromPartSuccess |
   DocumentChangeImagesVisibility | DocumentChangeImagesVisibilitySuccess |
+  DocumentDownloadActionLogs | DocumentDownloadActionLogsSuccess |
   //DocumentSelectImagesForExport |
 
   // revisado hasta aquí

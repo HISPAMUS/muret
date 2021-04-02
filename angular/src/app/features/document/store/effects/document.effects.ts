@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Effect, ofType, Actions } from '@ngrx/effects';
 import {Observable, of} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
+import {catchError, switchMap} from 'rxjs/operators';
 import {DocumentService} from '../../services/document.service';
 import {
   DocumentExportMEI,
@@ -49,7 +49,11 @@ import {
   DocumentUnlinkImagesFromPart,
   DocumentUnlinkImagesFromPartSuccess,
   DocumentChangeImagesVisibility,
-  DocumentChangeImagesVisibilitySuccess, DocumentLogOpen, DocumentLogOpenSuccess,
+  DocumentChangeImagesVisibilitySuccess,
+  DocumentLogOpen,
+  DocumentLogOpenSuccess,
+  DocumentDownloadActionLogs,
+  DocumentDownloadActionLogsSuccess,
 } from '../actions/document.actions';
 import {Document} from '../../../../core/model/entities/document';
 import {Image} from '../../../../core/model/entities/image';
@@ -216,6 +220,15 @@ export class DocumentEffects {
       switchMap((documentStatistics: DocumentStatistics) => of(new DocumentGetDocumentStatisticsSuccess(documentStatistics))),
       //catchError(err => of(new DocumentServerError(err)))
     )));
+
+  @Effect()
+  downloadActionLogs = this.actions$.pipe(
+    ofType<DocumentDownloadActionLogs>(DocumentActionTypes.DocumentDownloadActionLogs),
+    switchMap((action: DocumentDownloadActionLogs) =>
+      this.documentService.downloadActionLogs$(action.documentID).pipe(
+        switchMap((exportedBlob) => of(new DocumentDownloadActionLogsSuccess(exportedBlob))),
+        //catchError(err => of(new ExportServerError(err)))
+      )));
 
 
   // revisado hasta aquí

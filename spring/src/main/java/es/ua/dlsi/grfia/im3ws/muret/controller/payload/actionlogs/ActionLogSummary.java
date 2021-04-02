@@ -30,15 +30,21 @@ public class ActionLogSummary {
         for (Iterator<Action> actionIterator = sorted.iterator(); actionIterator.hasNext();) {
             Action action = actionIterator.next();
             if (action.getActionType().getId() == ActionLogsDocument.OPEN_DOCUMENT_ID) {
+                if (lastSession != null && lastSession.getActions().size() > 1) {
+                    sessions.add(lastSession); // don't add sessions with just an open action
+                }
                 // start a new session
                 ActionLogSession actionLogSession = new ActionLogSession();
-                sessions.add(actionLogSession);
                 lastSession = actionLogSession;
             } else if (lastSession == null) {
                 throw new IM3Exception("There is not an opened session");
             }
 
             lastSession.addAction(action);
+        }
+
+        if (lastSession != null && lastSession.getActions().size() > 1) {
+            sessions.add(lastSession);
         }
     }
 

@@ -294,6 +294,13 @@ export function documentReducers(state = initialDocumentState, action: DocumentA
         selectedImagesIDForExport: action.imagesID
       };
     }*/
+    case DocumentActionTypes.DocumentDownloadActionLogsSuccess: {
+      return {
+        ...state,
+        actionLogsFile: action.payload
+        //apiRestServerError: null
+      };
+    }
 
     // revisado hasta aquí
     case DocumentActionTypes.ResetDocumentServerError: {

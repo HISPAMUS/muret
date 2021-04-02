@@ -17,7 +17,7 @@ export interface DocumentState {
   mei?: string;
   selectedImagesIDForExport?: NumberArray;
   statistics?: DocumentStatistics;
-
+  actionLogsFile?: Blob;
   //apiRestServerError: APIRestServerError;
 
 

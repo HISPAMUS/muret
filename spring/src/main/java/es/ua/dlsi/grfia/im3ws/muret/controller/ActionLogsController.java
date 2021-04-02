@@ -29,18 +29,23 @@ import java.util.zip.GZIPOutputStream;
  */
 @RequestMapping("actionlogs")
 @RestController
-public class ActionController extends MuRETBaseController {
+public class ActionLogsController extends MuRETBaseController {
     private final ActionRepository actionRepository;
     private final DocumentRepository documentRepository;
+    private final UserRepository userRepository;
+    private final ActionTypeRepository actionTypeRepository;
 
     @Autowired
-    public ActionController(MURETConfiguration muretConfiguration, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository, DocumentRepository documentRepository, ActionRepository actionRepository) {
+    public ActionLogsController(MURETConfiguration muretConfiguration, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository, DocumentRepository documentRepository, ActionRepository actionRepository,
+                                UserRepository userRepository, ActionTypeRepository actionTypeRepository) {
         super(muretConfiguration, imageRepository, pageRepository, regionRepository, symbolRepository);
         this.actionRepository = actionRepository;
         this.documentRepository = documentRepository;
+        this.userRepository = userRepository;
+        this.actionTypeRepository = actionTypeRepository;
     }
 
-    @GetMapping(path = {"/document/{id}"})
+    @GetMapping(path = {"/document/{documentID}"})
     @Transactional(readOnly = true)
     public ActionLogSummary getActionSummary(@PathVariable("documentID") Integer id)  {
         try {
@@ -56,29 +61,52 @@ public class ActionController extends MuRETBaseController {
         }
     }
 
-    @GetMapping(path = {"/documentcsv/{id}"}, produces="application/x-gzip")
+    @GetMapping(path = {"/documentcsv/{documentID}"}, produces="application/x-gzip")
     @Transactional(readOnly = true)
     @ResponseBody
-    public ResponseEntity<?> getActionSummaryInCSV(@PathVariable("documentID") Integer id)  {
+    public ResponseEntity<?> getActionSummaryInCSV(@PathVariable("documentID") Integer documentID)  {
         try {
-            ActionLogSummary actionLogSummary = getActionSummary(id);
+            ActionLogSummary actionLogSummary = getActionSummary(documentID);
 
-            String filename = "action_logs_" + id;
+            HashMap<Integer, User> userHashMap = new HashMap<>();
+            HashMap<Integer, ActionType> actionTypeHashMap = new HashMap<>();
+            String filename = "action_logs_" + documentID;
             Path csvOutputFile = Files.createTempFile(filename, ".csv");
             try (PrintWriter pw = new PrintWriter(csvOutputFile.toFile())) {
                 // header
-                pw.println("ActionID,UserID,Duration in seconds,DocumentID,SectionID,ImageID,PageID,RegionID,SymbolID,ClassifierID");
-
+                pw.println("ActionID,User,Phase,Action type,Document ID, Duration in seconds,DocumentID,SectionID,ImageID,PageID,RegionID,SymbolID,ClassifierID");
                 for (ActionLogSession session: actionLogSummary.getSessions()) {
                     for (ActionWithDuration action : session.getActions()) {
+                        User user = userHashMap.get(action.getUserID());
+                        if (user == null) {
+                            Optional<User> usr = userRepository.findById(action.getUserID());
+                            if (!usr.isPresent()) {
+                                throw new IM3WSException("Cannot find user with ID = " + action.getUserID());
+                            }
+                            user = usr.get();
+                        }
+                        ActionType actionType = actionTypeHashMap.get(action.getActionTypeID());
+                        if (actionType == null) {
+                            Optional<ActionType> usr = actionTypeRepository.findById(action.getActionTypeID());
+                            if (!usr.isPresent()) {
+                                throw new IM3WSException("Cannot find action type with ID = " + action.getActionTypeID());
+                            }
+                            actionType = usr.get();
+                        }
                         StringBuilder record = new StringBuilder();
                         record.append(action.getActionID());
                         record.append(',');
-                        record.append(action.getUserID());
+                        record.append(user.getUsername());
                         record.append(',');
-                        record.append(action.getDurationInSeconds());
+                        record.append(actionType.getPhase().name());
+                        record.append(',');
+                        record.append(actionType.getName());
                         record.append(',');
                         record.append(action.getDocumentID());
+                        record.append(',');
+                        if (action.getDurationInSeconds() != null) {
+                            record.append(action.getDurationInSeconds());
+                        }
                         record.append(',');
                         if (action.getSectionID() != null) {
                             record.append(action.getSectionID());
@@ -120,7 +148,7 @@ public class ActionController extends MuRETBaseController {
             output.setData(data);
             return new ResponseEntity<>(output.getData(), output.getHeaders(), HttpStatus.OK);
         } catch (Throwable e) {
-            throw ControllerUtils.createServerError(this, "Cannot get parts in images", e);
+            throw ControllerUtils.createServerError(this, "Cannot generate action logs gz", e);
         }
     }
 

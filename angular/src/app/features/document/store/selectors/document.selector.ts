@@ -48,6 +48,12 @@ export const selectDocumentSelectedImagesForExport = createSelector(
 );
 */
 
+export const selectDocumentActionLogsFile = createSelector(
+  documentState,
+  (state: DocumentState) => state.actionLogsFile
+);
+
+
 // revisado hasta aquí
 export const selectDocument = createSelector(
   documentState,

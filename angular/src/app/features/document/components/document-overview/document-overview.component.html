@@ -8,7 +8,10 @@
       <div *ngIf="statistics$ | async as statistics; else loadingStatistics">
         <p>#{{statistics.images}} images, #{{statistics.pages}} pagesWithRegions, #{{statistics.regions}} regions (#{{statistics.staves}} staves), #{{statistics.agnosticSymbols}} agnostic symbols</p>
       </div>-->
-      <p *ngIf="hasOtherView(documentOverview)"><a (click)="openDocument()">Open thumnbail view</a></p>
+      <div class="d-flex justify-content-between">
+        <p *ngIf="hasOtherView(documentOverview)"><a (click)="openDocument()">Open thumnbail view</a></p>
+        <p> <a (click)="downloadActionLogs()">Download action logs</a></p>
+      </div>
     </div>
   </div>
   <div class="row">

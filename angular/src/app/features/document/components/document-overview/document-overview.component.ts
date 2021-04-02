@@ -3,6 +3,7 @@ import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {Store} from "@ngrx/store";
 import {DocumentState} from "../../store/state/document.state";
 import {
+  DocumentDownloadActionLogs,
   DocumentGetDocumentStatistics,
   DocumentGetOverview,
   DocumentLogOpen
@@ -12,10 +13,14 @@ import {selectAuthUserID} from "../../../../auth/store/selectors/auth.selector";
 import {HomeUpdateLastDocuments} from "../../../home/store/actions/home.actions";
 import {Observable, Subscription} from "rxjs";
 import {DialogsService} from "../../../../shared/services/dialogs.service";
-import {selectDocumentOverview, selectDocumentStatistics} from "../../store/selectors/document.selector";
+import {
+  selectDocumentActionLogsFile,
+  selectDocumentOverview,
+  selectDocumentStatistics
+} from "../../store/selectors/document.selector";
 import {Document} from "../../../../core/model/entities/document";
 import {DocumentStatistics} from "../../../../core/model/restapi/document-statistics";
-
+import saveAs from 'file-saver';
 
 interface ImageTableRow { // view of the image in the table
   id: number;
@@ -33,10 +38,12 @@ interface ImageTableRow { // view of the image in the table
 export class DocumentOverviewComponent implements OnInit, OnDestroy {
   private userIDSubscription: Subscription;
   private documentOverviewSubscription: Subscription;
+  private documentActionLogsFileSubscription: Subscription;
 
   protected documentID: number;
   documentOverview: Document;
   // private statistics$: Observable<DocumentStatistics>;
+  private downloadingActionLogs: boolean = false;
 
   constructor(protected router: Router, protected route: ActivatedRoute, protected store: Store<DocumentState>,
               protected dialogsService: DialogsService) {
@@ -47,6 +54,15 @@ export class DocumentOverviewComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.documentActionLogsFileSubscription = this.store.select(selectDocumentActionLogsFile).subscribe(next => {
+      if (next) {
+        if (this.downloadingActionLogs) {
+          this.downloadingActionLogs = false;
+          const blob1 = new Blob([next], {type: 'application/x-gzip'});
+          saveAs.saveAs(blob1, 'document_' + this.documentID + '_actionlogs.csv'); // TODO file name
+        }
+      }
+    });
     // this.statistics$ = this.store.select(selectDocumentStatistics);
   }
 
@@ -65,6 +81,8 @@ export class DocumentOverviewComponent implements OnInit, OnDestroy {
           }
         });
       });
+
+
   }
 
   ngOnDestroy(): void {
@@ -91,5 +109,10 @@ export class DocumentOverviewComponent implements OnInit, OnDestroy {
 
   uploadImages() {
     this.router.navigate(['/document/uploadImages', this.documentID]);
+  }
+
+  downloadActionLogs() {
+    this.downloadingActionLogs = true;
+    this.store.dispatch(new DocumentDownloadActionLogs(this.documentID));
   }
 }

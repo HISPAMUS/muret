@@ -130,6 +130,11 @@ export class DocumentService {
     return this.apiRestClientService.post$<StringResponse>(url, selectedImages);
   }
 
+  downloadActionLogs$(documentID: number): Observable<Blob> {
+    const url = `actionlogs/documentcsv/${documentID}`;
+    return this.apiRestClientService.getBlob$(url);
+  }
+
   // revisado hasta aquí
 
   public getDocument$(id: number): Observable<Document> {
