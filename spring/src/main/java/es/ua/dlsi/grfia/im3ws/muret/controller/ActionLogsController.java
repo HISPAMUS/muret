@@ -74,7 +74,7 @@ public class ActionLogsController extends MuRETBaseController {
             Path csvOutputFile = Files.createTempFile(filename, ".csv");
             try (PrintWriter pw = new PrintWriter(csvOutputFile.toFile())) {
                 // header
-                pw.println("ActionID,User,Phase,Action type,Document ID, Duration in seconds,DocumentID,SectionID,ImageID,PageID,RegionID,SymbolID,ClassifierID");
+                pw.println("ActionID,User,Phase,Action type,Duration in seconds,DocumentID,SectionID,ImageID,PageID,RegionID,SymbolID,ClassifierID");
                 for (ActionLogSession session: actionLogSummary.getSessions()) {
                     for (ActionWithDuration action : session.getActions()) {
                         User user = userHashMap.get(action.getUserID());
@@ -102,11 +102,11 @@ public class ActionLogsController extends MuRETBaseController {
                         record.append(',');
                         record.append(actionType.getName());
                         record.append(',');
-                        record.append(action.getDocumentID());
-                        record.append(',');
                         if (action.getDurationInSeconds() != null) {
                             record.append(action.getDurationInSeconds());
                         }
+                        record.append(',');
+                        record.append(action.getDocumentID());
                         record.append(',');
                         if (action.getSectionID() != null) {
                             record.append(action.getSectionID());
