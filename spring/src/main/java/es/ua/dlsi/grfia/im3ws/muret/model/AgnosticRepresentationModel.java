@@ -26,6 +26,7 @@ import javax.transaction.Transactional;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -322,6 +323,19 @@ public class AgnosticRepresentationModel {
                 MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());
 
         List<AgnosticSymbolTypeAndPosition> items = classifierClient.classifyEndToEnd(modelID, imageID, imagePath, persistentRegion.getBoundingBox());
+        items.sort(new Comparator<AgnosticSymbolTypeAndPosition>() {
+            @Override
+            public int compare(AgnosticSymbolTypeAndPosition o1, AgnosticSymbolTypeAndPosition o2) {
+                int diff = o1.getStart() - o2.getStart();
+                if (diff == 0) {
+                    diff = o1.getEnd() - o2.getEnd();
+                }
+                if (diff == 0) {
+                    diff = o1.hashCode() - o2.hashCode();
+                }
+                return diff;
+            }
+        });
         if (items != null) {
             Integer lastX = null;
             for (AgnosticSymbolTypeAndPosition item : items) {
@@ -345,8 +359,8 @@ public class AgnosticRepresentationModel {
 
                 //TODO Patch to avoid clustering some elements (clef, keysig, meter) in the beginning
                 int approx;
-                if (lastX != null && item.getStart() - lastX < 20) {
-                    approx = lastX + 20;
+                if (lastX != null && Math.abs(item.getStart() - lastX) < 10) {
+                    approx = lastX + 10;
                 } else {
                     approx = item.getStart();
                 }
