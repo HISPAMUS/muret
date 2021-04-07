@@ -95,7 +95,7 @@ export class AgnosticOrSemanticToolbarComponent implements OnInit, OnDestroy {
         case 'note.':
           this.buttonWidth = 55;
           return this.svgAgnosticOrSemanticSymbolSet.paths.filter(value => value.agnosticOrSemanticTypeString.includes(this.symbolsFilter)
-            && !value.agnosticOrSemanticTypeString.includes('beam'));
+            && !value.agnosticOrSemanticTypeString.includes('beam') || value.agnosticOrSemanticTypeString.includes('ligature') || value.agnosticOrSemanticTypeString.includes('appoggiatura'));
         case 'other':
           return this.svgAgnosticOrSemanticSymbolSet.paths.filter(value => value.agnosticOrSemanticTypeString.includes('defect') ||
             value.agnosticOrSemanticTypeString.includes('fermata') || value.agnosticOrSemanticTypeString.includes('digit') ||

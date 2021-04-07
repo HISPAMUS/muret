@@ -1,3 +1,5 @@
 #agnosticStaff {
   background-color: floralwhite;
+  overflow: auto;
+  width: 100%;
 }
