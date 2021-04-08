@@ -100,7 +100,7 @@ export class AgnosticOrSemanticToolbarComponent implements OnInit, OnDestroy {
           return this.svgAgnosticOrSemanticSymbolSet.paths.filter(value => value.agnosticOrSemanticTypeString.includes('defect') ||
             value.agnosticOrSemanticTypeString.includes('fermata') || value.agnosticOrSemanticTypeString.includes('digit') ||
             value.agnosticOrSemanticTypeString.includes('slur') || value.agnosticOrSemanticTypeString.includes('dot') && !value.agnosticOrSemanticTypeString.includes('meter') ||
-            value.agnosticOrSemanticTypeString.includes('breath') || value.agnosticOrSemanticTypeString.includes('colon') || value.agnosticOrSemanticTypeString.includes('verticalLine'));
+            value.agnosticOrSemanticTypeString.includes('breath') || value.agnosticOrSemanticTypeString.includes('colon') || value.agnosticOrSemanticTypeString.includes('verticalLine') || value.agnosticOrSemanticTypeString.includes('custos'));
         case 'clefsmeters':
           return this.svgAgnosticOrSemanticSymbolSet.paths.filter(value => value.agnosticOrSemanticTypeString.includes('clef') ||
             value.agnosticOrSemanticTypeString.includes('metersign'));
