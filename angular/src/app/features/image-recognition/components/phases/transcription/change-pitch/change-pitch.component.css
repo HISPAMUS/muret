@@ -10,3 +10,8 @@
 p {
   margin: 0.25rem;
 }
+
+#linesSpaces button {
+  padding: 0;
+  margin: 0.25rem;
+}
