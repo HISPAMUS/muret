@@ -1,14 +1,20 @@
+0.16
+    MINOR UPDATES
+    - Update to Verovio 3.3.0 to correct (issue #194)
+    - Change several selected agnostic symbols at once (issue #202)
+    - Allow encoding of accidentals in custos - issue #195 (still pending of Verovio update)
+    - Reduce the size of MEI window (issue #197)
+    - Add missing ligature, custos, 32th beamed notes buttons to agnostic toolbar (issues #190, #191)
+    - Resize direct vertical position links (issue #200)
+    - Make mensural accidental MEI encoding consistent with VHV (issue #192)
+
+------
+
 0.15
     MAJOR UPDATES
     - Complete redesign of MuRET (still with pending issues)
-
-    MINOR UPDATES
-
 ------
 0.14
-    MAJOR UPDATES
-    -
-
     MINOR UPDATES
     - Delete key for agnostic mode is now backspace without the need of pressing the cmd in Mac computers
     - Update to Verovio 3.0.2 to correct issue #30
