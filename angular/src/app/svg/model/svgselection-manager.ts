@@ -93,6 +93,7 @@ export class SVGSelectionManager {
 
 
   set selectableElements(value: Shape[]) {
+    console.log('Sorting...');
     this._selectableElements = value.sort((a,b) => {
       if (this._selectByX) {
         if (a.fromX < b.fromX) {

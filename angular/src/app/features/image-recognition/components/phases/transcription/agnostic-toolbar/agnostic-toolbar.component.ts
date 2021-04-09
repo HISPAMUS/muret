@@ -4,11 +4,11 @@ import {Store} from "@ngrx/store";
 import {ImageRecognitionState} from "../../../../store/state/image-recognition.state";
 import {Subscription} from "rxjs";
 import {selectImageRecognitionSelectedAgnosticSymbols} from "../../../../store/selectors/image-recognition.selector";
-import {ImageRecognitionChangeSymbol} from "../../../../store/actions/image-recognition.actions";
 import {AgnosticSymbol} from "../../../../../../core/model/entities/agnostic-symbol";
 import {SVGSet} from "../../../../../../core/model/restapi/svgset";
 import {AgnosticOrSemanticTypeSVGPath} from "../../../../../../core/model/restapi/agnostic-or-semantic-type-s-v-g-path";
 import {AgnosticOrSemanticSymbolAndPosition} from "../../../../../../core/model/restapi/agnostic-or-semantic-symbol-and-position";
+import {ImageRecognitionChangeSymbolsType} from "../../../../store/actions/image-recognition.actions";
 
 @Component({
   selector: 'app-agnostic-toolbar',
@@ -53,9 +53,7 @@ export class AgnosticToolbarComponent implements OnInit, OnDestroy {
 
   onAgnosticSymbolTypeSelected(agnosticOrSemanticTypeSVGPath: AgnosticOrSemanticTypeSVGPath) {
     if (this.selectedAgnosticSymbols && this.selectedAgnosticSymbols.length > 0) {
-      //TODO Cambiar varios símbolos - ahora cambiamos sólo el primero
-      const selectedSymbol = this.selectedAgnosticSymbols[0];
-      this.store.dispatch(new ImageRecognitionChangeSymbol(selectedSymbol, agnosticOrSemanticTypeSVGPath.agnosticOrSemanticTypeString, selectedSymbol.positionInStaff));
+      this.store.dispatch(new ImageRecognitionChangeSymbolsType(this.selectedAgnosticSymbols, agnosticOrSemanticTypeSVGPath.agnosticOrSemanticTypeString));
     }
   }
 

@@ -25,10 +25,7 @@ import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -134,7 +131,76 @@ public class AgnosticRepresentationModel {
         }
     }
 
+    public List<Symbol> changeAgnosticSymbolType(LongArray symbolIDs, String agnosticSymbolTypeString) throws IM3WSException, IM3Exception {
+        AgnosticSymbolType agnosticSymbolType = AgnosticSymbolTypeFactory.parseString(agnosticSymbolTypeString);
 
+        LinkedList<Symbol> result = new LinkedList<>();
+        for (Long symbolID: symbolIDs.getValues()) {
+            Optional<Symbol> symbol = symbolRepository.findById(symbolID);
+            if (!symbol.isPresent()) {
+                throw new IM3WSException("Cannot find a symbol with id " + symbolID);
+            }
+
+            Symbol s = symbol.get();
+            actionLogAgnosticModel.logChangeSymbolType(s);
+            s.setAgnosticSymbol(new AgnosticSymbol(AgnosticVersion.v2, agnosticSymbolType, s.getAgnosticSymbol().getPositionInStaff()));
+            result.add(s);
+        }
+        //return symbolRepository.update(symbol.get());
+        symbolRepository.saveAll(result);
+        return result;
+    }
+
+    public List<Symbol> changeAgnosticSymbolPosition(LongArray symbolIDs, String positionInStaffString) throws IM3WSException, IM3Exception {
+        PositionInStaff positionInStaff = PositionInStaff.parseString(positionInStaffString);
+
+        LinkedList<Symbol> result = new LinkedList<>();
+        for (Long symbolID: symbolIDs.getValues()) {
+            Optional<Symbol> symbol = symbolRepository.findById(symbolID);
+            if (!symbol.isPresent()) {
+                throw new IM3WSException("Cannot find a symbol with id " + symbolID);
+            }
+
+            Symbol s = symbol.get();
+            actionLogAgnosticModel.logChangeVerticalPosition(s);
+            AgnosticSymbolType agnosticSymbolType = AgnosticSymbolTypeFactory.parseString(s.getAgnosticSymbolType());
+            s.setAgnosticSymbol(new AgnosticSymbol(AgnosticVersion.v2, agnosticSymbolType, positionInStaff));
+            result.add(s);
+        }
+        //return symbolRepository.update(symbol.get());
+        symbolRepository.saveAll(result);
+        return result;
+    }
+
+    public List<Symbol> moveAgnosticSymbolPosition(LongArray symbolIDs, int difference) throws IM3WSException, IM3Exception {
+        LinkedList<Symbol> result = new LinkedList<>();
+        for (Long symbolID: symbolIDs.getValues()) {
+            Optional<Symbol> symbol = symbolRepository.findById(symbolID);
+            if (!symbol.isPresent()) {
+                throw new IM3WSException("Cannot find a symbol with id " + symbolID);
+            }
+
+            Symbol s = symbol.get();
+            actionLogAgnosticModel.logChangeVerticalPosition(s);
+            AgnosticSymbolType agnosticSymbolType = AgnosticSymbolTypeFactory.parseString(s.getAgnosticSymbolType());
+            s.getAgnosticSymbol().changeRelativePosition(difference);
+            s.setAgnosticSymbol(new AgnosticSymbol(AgnosticVersion.v2, agnosticSymbolType, s.getAgnosticSymbol().getPositionInStaff()));
+            result.add(s);
+        }
+        //return symbolRepository.update(symbol.get());
+        symbolRepository.saveAll(result);
+        return result;
+    }
+
+    /**
+     * @deprecated Use changeAgnosticSymbolType and changeAgnosticSymbolPosition
+     * @param symbolID
+     * @param agnosticSymbolTypeString
+     * @param positionInStaffString
+     * @return
+     * @throws IM3WSException
+     * @throws IM3Exception
+     */
     public Symbol changeAgnosticSymbol(Long symbolID, String agnosticSymbolTypeString, String positionInStaffString) throws IM3WSException, IM3Exception {
         Optional<Symbol> symbol = symbolRepository.findById(symbolID);
         if (!symbol.isPresent()) {

@@ -12,8 +12,8 @@ import {
 import {Shape} from "../../../../../../svg/model/shape";
 import {SVGSet} from "../../../../../../core/model/restapi/svgset";
 import {
-  ImageRecognitionChangeSymbol,
-  ImageRecognitionClassifyRegionEndToEnd
+  ImageRecognitionChangeSymbolsPosition,
+  ImageRecognitionClassifyRegionEndToEnd, ImageRecognitionMoveSymbolsPosition
 } from "../../../../store/actions/image-recognition.actions";
 import {AgnosticSymbol} from "../../../../../../core/model/entities/agnostic-symbol";
 import {PositionInStaffService} from "../../../../../../shared/services/position-in-staff.service";
@@ -65,20 +65,13 @@ export class MusicAgnosticRepresentationComponent implements OnInit, OnDestroy {
 
   onChangeLineSpace(lineSpace: string) {
     if (this.selectedAgnosticSymbols && this.selectedAgnosticSymbols.length > 0) {
-      //TODO Cambiar varios símbolos - ahora cambiamos sólo el primero
-      const selectedSymbol = this.selectedAgnosticSymbols[0];
-      this.store.dispatch(new ImageRecognitionChangeSymbol(selectedSymbol, selectedSymbol.agnosticSymbolType, lineSpace));
+      this.store.dispatch(new ImageRecognitionChangeSymbolsPosition(this.selectedAgnosticSymbols, lineSpace));
     }
   }
 
   onMovePitch(displacement: number) {
     if (this.selectedAgnosticSymbols && this.selectedAgnosticSymbols.length > 0) {
-      //TODO Cambiar varios símbolos - ahora cambiamos sólo el primero
-      const selectedSymbol = this.selectedAgnosticSymbols[0];
-      const positionInStaff = selectedSymbol.positionInStaff;
-      const newPositionInStaff = this.positionInStaffService.movePitch(positionInStaff, displacement);
-
-      this.store.dispatch(new ImageRecognitionChangeSymbol(selectedSymbol, selectedSymbol.agnosticSymbolType, newPositionInStaff));
+      this.store.dispatch(new ImageRecognitionMoveSymbolsPosition(this.selectedAgnosticSymbols, displacement));
     }
   }
 }

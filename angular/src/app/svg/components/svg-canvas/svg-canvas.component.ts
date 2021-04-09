@@ -128,7 +128,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   ngOnChanges(changes: SimpleChanges): void {
     this.computeViewBox(); // it costs less to compute the change than checking if it has changed
     this.computeScaledImageSize();
-    if (changes.shapes && this.shapes) {
+    if (changes.shapes && this.shapes) { //TODO This event has been received twice, check why
       this.shapesMap = new Map<string, Shape>();
 
       let previouslySelectedIDs: Set<string> = new Set<string>();
@@ -138,7 +138,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
         });
       }
 
-      this.selectionManager = new SVGSelectionManager();
+      this.selectionManager.selectByX = this.selectByX;
       this.selectionManager.selectableElements = this.shapes;
       this.shapes.forEach(shape => {
         this.shapesMap.set(shape.id, shape);

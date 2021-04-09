@@ -114,8 +114,16 @@ public class AgnosticRepresentationController extends MuRETBaseController {
 
         }
     }
+
+    /**
+     * @deprecated Use changeAgnosticSymbolType or changeAgnosticSymbolPosition
+     * @param symbolID
+     * @param agnosticSymbolTypeString
+     * @param positionInStaffString
+     * @return
+     */
     @Transactional
-    @GetMapping(path = {"changeAgnosticSymbol/{symbolID}/{agnosticSymbolTypeString}/{positionInStaffString}"})
+    @GetMapping(path = {"changeAgnosticSymbol/{agnosticSymbolTypeString}/{positionInStaffString}"})
     public Symbol changeAgnosticSymbol(@PathVariable("symbolID") Long symbolID,
                                        @PathVariable("agnosticSymbolTypeString") String agnosticSymbolTypeString,
                                        @PathVariable("positionInStaffString") String positionInStaffString
@@ -124,6 +132,39 @@ public class AgnosticRepresentationController extends MuRETBaseController {
             return this.agnosticRepresentationModel.changeAgnosticSymbol(symbolID, agnosticSymbolTypeString, positionInStaffString);
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this,"Cannot update symbol bounding box", e);
+
+        }
+    }
+
+    @Transactional
+    @PutMapping(path = {"changeAgnosticSymbolsType/{agnosticSymbolTypeString}"})
+    public List<Symbol> changeAgnosticSymbolType(@PathVariable("agnosticSymbolTypeString") String agnosticSymbolTypeString, @RequestBody LongArray ids) {
+        try {
+            return this.agnosticRepresentationModel.changeAgnosticSymbolType(ids, agnosticSymbolTypeString);
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this,"Cannot update symbols type", e);
+
+        }
+    }
+
+    @Transactional
+    @PutMapping(path = {"changeAgnosticSymbolsPosition/{positionInStaffString}"})
+    public List<Symbol> changeAgnosticSymbolPosition(@PathVariable("positionInStaffString") String positionInStaffString, @RequestBody LongArray ids) {
+        try {
+            return this.agnosticRepresentationModel.changeAgnosticSymbolPosition(ids, positionInStaffString);
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this,"Cannot update symbols position in staff", e);
+
+        }
+    }
+
+    @Transactional
+    @PutMapping(path = {"moveAgnosticSymbolsPosition/{difference}"})
+    public List<Symbol> moveAgnosticSymbolPosition(@PathVariable("difference") int differece, @RequestBody LongArray ids) {
+        try {
+            return this.agnosticRepresentationModel.moveAgnosticSymbolPosition(ids, differece);
+        } catch (Throwable e) {
+            throw ControllerUtils.createServerError(this,"Cannot update symbols position in staff", e);
 
         }
     }

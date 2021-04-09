@@ -6,6 +6,9 @@ import {
 } from "../actions/image-recognition.actions";
 import {klona} from "klona";
 import {ImageRecognitionState, initialImageRecognitionState} from "../state/image-recognition.state";
+import {Symbols} from "@angular/compiler-cli/src/metadata/symbols";
+import {AgnosticSymbol} from "../../../../core/model/entities/agnostic-symbol";
+import {Region} from "../../../../core/model/entities/region";
 
 /**
  * We use the same effects, actions and reducers for overview and parts because they share the state
@@ -460,8 +463,31 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
 
       return newState;
     }
-    case ImageRecognitionActionTypes.ImageRecognitionChangeSymbolXSuccess:
-    case ImageRecognitionActionTypes.ImageRecognitionChangeSymbolSuccess: {
+    case ImageRecognitionActionTypes.ImageRecognitionChangeSymbolXSuccess: {
+      const newState: ImageRecognitionState = {
+        pagesRegionsSymbols: klona(state.pagesRegionsSymbols),
+        imageOverview: state.imageOverview,
+        regionTypes: state.regionTypes,
+        classifierModels: state.classifierModels,
+        analyzing: false,
+        //apiRestServerError: null
+      };
+      newState.pagesRegionsSymbols.forEach(page => {
+        page.regions.forEach(region => {
+          if  (region.id === state.selectedRegion.id) {
+            const index = region.symbols.findIndex(s => s.id === action.agnosticSymbol.id);
+            if (index == -1) {
+              throw new Error('Cannot find agnostic symbol with id = ' + action.agnosticSymbol.id);
+            }
+            region.symbols[index] = action.agnosticSymbol;
+            newState.selectedRegion = region;
+            newState.selectedAgnosticSymbols = [action.agnosticSymbol];
+          }
+        });
+      });
+      return newState;
+    }
+    case ImageRecognitionActionTypes.ImageRecognitionChangeSymbolsSuccess: {
       const newState: ImageRecognitionState = {
         pagesRegionsSymbols: klona(state.pagesRegionsSymbols),
         imageOverview: state.imageOverview,
@@ -474,13 +500,16 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
       newState.pagesRegionsSymbols.forEach(page => {
         page.regions.forEach(region => {
           if  (region.id === state.selectedRegion.id) {
-            const index = region.symbols.findIndex(s => s.id === action.agnosticSymbol.id);
-            if (index == -1) {
-              throw new Error('Cannot find agnostic symbol with id = ' + action.agnosticSymbol.id);
-            }
-            region.symbols[index] = action.agnosticSymbol;
-            newState.selectedRegion = region;
-            newState.selectedAgnosticSymbols = [action.agnosticSymbol];
+            newState.selectedAgnosticSymbols = [];
+              action.agnosticSymbols.forEach(agnosticSymbol => {
+                const index = region.symbols.findIndex(s => s.id === agnosticSymbol.id);
+                if (index == -1) {
+                  throw new Error('Cannot find agnostic symbol with id = ' + agnosticSymbol.id);
+                }
+                region.symbols[index] = agnosticSymbol;
+                newState.selectedAgnosticSymbols.push(agnosticSymbol);
+              });
+              newState.selectedRegion = region;
           }
         });
       });

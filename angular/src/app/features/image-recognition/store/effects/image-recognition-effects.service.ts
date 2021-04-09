@@ -19,10 +19,9 @@ import {
   ImageRecognitionChangeRegionExternalReferenceSuccess,
   ImageRecognitionChangeStatus,
   ImageRecognitionChangeStatusSuccess,
-  ImageRecognitionChangeSymbol,
   ImageRecognitionChangeSymbolBoundingBox,
-  ImageRecognitionChangeSymbolComments,
-  ImageRecognitionChangeSymbolSuccess, ImageRecognitionChangeSymbolX, ImageRecognitionChangeSymbolXSuccess,
+  ImageRecognitionChangeSymbolComments, ImageRecognitionChangeSymbolsPosition, ImageRecognitionChangeSymbolsType,
+  ImageRecognitionChangeSymbolsSuccess, ImageRecognitionChangeSymbolX, ImageRecognitionChangeSymbolXSuccess,
   ImageRecognitionClassifyRegionEndToEnd,
   ImageRecognitionClassifyRegionEndToEndSuccess,
   ImageRecognitionClear,
@@ -61,7 +60,7 @@ import {
   ImageRecognitionLinkNewPart,
   ImageRecognitionLinkNewPartSuccess,
   ImageRecognitionLinkPart,
-  ImageRecognitionLinkPartSuccess,
+  ImageRecognitionLinkPartSuccess, ImageRecognitionMoveSymbolsPosition,
   ImageRecognitionPutComments,
   ImageRecognitionPutCommentsSuccess,
   ImageRecognitionRevertRotation,
@@ -370,12 +369,39 @@ export class ImageOverviewEffects {
         //catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
       )));
 
-  @Effect()
+  /*@Effect()
   changeSymbol$ = this.actions$.pipe(
     ofType<ImageRecognitionChangeSymbol>(ImageRecognitionActionTypes.ImageRecognitionChangeSymbol),
     switchMap((action: ImageRecognitionChangeSymbol) =>
       this.agnosticRepresentationService.changeSymbol$(action.agnosticSymbol, action.agnosticSymbolType, action.positionInStaff).pipe(
-        switchMap((agnosticSymbol: AgnosticSymbol) => of(new ImageRecognitionChangeSymbolSuccess(agnosticSymbol))),
+        switchMap((agnosticSymbol: AgnosticSymbol) => of(new ImageRecognitionChangeSymbolsSuccess(agnosticSymbol))),
+        //catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
+      )));*/
+
+  @Effect()
+  changeSymbolsType$ = this.actions$.pipe(
+    ofType<ImageRecognitionChangeSymbolsType>(ImageRecognitionActionTypes.ImageRecognitionChangeSymbolsType),
+    switchMap((action: ImageRecognitionChangeSymbolsType) =>
+      this.agnosticRepresentationService.changeSymbolsType$(action.agnosticSymbols, action.agnosticSymbolType).pipe(
+        switchMap((agnosticSymbols: AgnosticSymbol[]) => of(new ImageRecognitionChangeSymbolsSuccess(agnosticSymbols))),
+        //catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
+      )));
+
+  @Effect()
+  changeSymbolsPosition$ = this.actions$.pipe(
+    ofType<ImageRecognitionChangeSymbolsPosition>(ImageRecognitionActionTypes.ImageRecognitionChangeSymbolsPosition),
+    switchMap((action: ImageRecognitionChangeSymbolsPosition) =>
+      this.agnosticRepresentationService.changeSymbolsPosition$(action.agnosticSymbols, action.positionInStaff).pipe(
+        switchMap((agnosticSymbols: AgnosticSymbol[]) => of(new ImageRecognitionChangeSymbolsSuccess(agnosticSymbols))),
+        //catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
+      )));
+
+  @Effect()
+  moveSymbolsPosition$ = this.actions$.pipe(
+    ofType<ImageRecognitionMoveSymbolsPosition>(ImageRecognitionActionTypes.ImageRecognitionMoveSymbolsPosition),
+    switchMap((action: ImageRecognitionMoveSymbolsPosition) =>
+      this.agnosticRepresentationService.moveSymbolsPosition$(action.agnosticSymbols, action.difference).pipe(
+        switchMap((agnosticSymbols: AgnosticSymbol[]) => of(new ImageRecognitionChangeSymbolsSuccess(agnosticSymbols))),
         //catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
       )));
 
@@ -386,7 +412,7 @@ export class ImageOverviewEffects {
       this.agnosticRepresentationService.changeSymbolBoundingBox$(action.agnosticSymbol,
         action.boundingBox.fromX, action.boundingBox.fromY,
         action.boundingBox.toX, action.boundingBox.toY).pipe(
-        switchMap((agnosticSymbol: AgnosticSymbol) => of(new ImageRecognitionChangeSymbolSuccess(agnosticSymbol))),
+        switchMap((agnosticSymbol: AgnosticSymbol) => of(new ImageRecognitionChangeSymbolsSuccess([agnosticSymbol]))),
         //catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
       )));
 
@@ -396,7 +422,7 @@ export class ImageOverviewEffects {
     switchMap((action: ImageRecognitionChangeSymbolComments) =>
       this.agnosticRepresentationService.changeSymbolComments$(action.agnosticSymbol,
         action.comments).pipe(
-        switchMap((agnosticSymbol: AgnosticSymbol) => of(new ImageRecognitionChangeSymbolSuccess(agnosticSymbol))),
+        switchMap((agnosticSymbol: AgnosticSymbol) => of(new ImageRecognitionChangeSymbolsSuccess([agnosticSymbol]))),
         //catchError((error: any) => of(new AgnosticRepresentationServerError(error)))
       )));
   @Effect()

@@ -88,10 +88,12 @@ export enum ImageRecognitionActionTypes {
   ImageRecognitionClassifyRegionEndToEndSuccess = '[Image Recognition. AgnosticRepresentation] Classify region end-to-end success',
   ImageRecognitionClearRegionSymbols = '[Image Recognition. AgnosticRepresentation] Clear region symbols',
   ImageRecognitionClearRegionSymbolsSuccess = '[Image Recognition. AgnosticRepresentation] Clear region symbols success',
-  ImageRecognitionChangeSymbol = '[Image Recognition. AgnosticRepresentation] Change symbol',
+  ImageRecognitionChangeSymbolsType = '[Image Recognition. AgnosticRepresentation] Change symbol type',
+  ImageRecognitionChangeSymbolsPosition = '[Image Recognition. AgnosticRepresentation] Change symbol position',
+  ImageRecognitionMoveSymbolsPosition = '[Image Recognition. AgnosticRepresentation] Move symbol position',
   ImageRecognitionChangeSymbolBoundingBox = '[Image Recognition. AgnosticRepresentation] Change symbol bounding box',
   ImageRecognitionChangeSymbolComments = '[Image Recognition. AgnosticRepresentation] Change symbol comments',
-  ImageRecognitionChangeSymbolSuccess = '[Image Recognition. AgnosticRepresentation] Change symbol success',
+  ImageRecognitionChangeSymbolsSuccess = '[Image Recognition. AgnosticRepresentation] Change symbols success',
   ImageRecognitionChangeRegionExternalReference = '[Image Recognition. AgnosticRepresentation] Change region external reference comments',
   ImageRecognitionChangeRegionExternalReferenceSuccess = '[Image Recognition. AgnosticRepresentation] Change region external reference success',
   ImageRecognitionChangeSymbolX = '[Image Recognition. AgnosticRepresentation] Change symbol X',
@@ -430,15 +432,29 @@ export class ImageRecognitionClearRegionSymbolsSuccess implements Action {
   constructor(public deleted: boolean) {}
 }
 
-
-export class ImageRecognitionChangeSymbol implements Action {
+/*export class ImageRecognitionChangeSymbol implements Action {
   public readonly type = ImageRecognitionActionTypes.ImageRecognitionChangeSymbol;
   constructor(public agnosticSymbol: AgnosticSymbol, public agnosticSymbolType: string, public positionInStaff: string) {}
+}*/
+
+export class ImageRecognitionChangeSymbolsType implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionChangeSymbolsType;
+  constructor(public agnosticSymbols: AgnosticSymbol[], public agnosticSymbolType: string) {}
 }
 
-export class ImageRecognitionChangeSymbolSuccess implements Action {
-  public readonly type = ImageRecognitionActionTypes.ImageRecognitionChangeSymbolSuccess;
-  constructor(public agnosticSymbol: AgnosticSymbol) {}
+export class ImageRecognitionChangeSymbolsPosition implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionChangeSymbolsPosition;
+  constructor(public agnosticSymbols: AgnosticSymbol[], public positionInStaff: string) {}
+}
+
+export class ImageRecognitionMoveSymbolsPosition implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionMoveSymbolsPosition;
+  constructor(public agnosticSymbols: AgnosticSymbol[], public difference: number) {}
+}
+
+export class ImageRecognitionChangeSymbolsSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionChangeSymbolsSuccess;
+  constructor(public agnosticSymbols: AgnosticSymbol[]) {}
 }
 
 export class ImageRecognitionChangeSymbolBoundingBox implements Action {
@@ -573,7 +589,7 @@ export type ImageRecognitionActions =
   ImageRecognitionDeleteSymbols | ImageRecognitionDeleteSymbolsSuccess |
   ImageRecognitionClassifyRegionEndToEnd | ImageRecognitionClassifyRegionEndToEndSuccess |
   ImageRecognitionClearRegionSymbols | ImageRecognitionClearRegionSymbolsSuccess |
-  ImageRecognitionChangeSymbol | ImageRecognitionChangeSymbolComments | ImageRecognitionChangeSymbolBoundingBox | ImageRecognitionChangeSymbolSuccess |
+  ImageRecognitionChangeSymbolsType | ImageRecognitionChangeSymbolsPosition | ImageRecognitionMoveSymbolsPosition | ImageRecognitionChangeSymbolComments | ImageRecognitionChangeSymbolBoundingBox | ImageRecognitionChangeSymbolsSuccess |
   ImageRecognitionChangeRegionExternalReference | ImageRecognitionChangeRegionExternalReferenceSuccess |
   ImageRecognitionChangeSymbolX | ImageRecognitionChangeSymbolXSuccess |
 

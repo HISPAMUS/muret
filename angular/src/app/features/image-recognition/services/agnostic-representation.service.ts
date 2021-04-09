@@ -44,13 +44,20 @@ export class AgnosticRepresentationService {
     return this.apiRestClientService.post$<SymbolCreationResult>('agnostic/createSymbolFromStrokes', symbolCreation);
   }
 
-  deleteSymbols$(symbols: AgnosticSymbol[]): Observable<NumberArray> {
+  symbols2IDs(symbols: AgnosticSymbol[]): NumberArray {
     const symbolIDs: NumberArray = {
       values: []
     };
     symbols.forEach(s => {
       symbolIDs.values.push(s.id);
     });
+    return symbolIDs;
+  }
+
+
+  deleteSymbols$(symbols: AgnosticSymbol[]): Observable<NumberArray> {
+
+    const symbolIDs = this.symbols2IDs(symbols);
     return this.apiRestClientService.post$<NumberArray>('agnostic/deleteSymbols', symbolIDs);
   }
 
@@ -65,11 +72,29 @@ export class AgnosticRepresentationService {
     }
   }
 
-  changeSymbol$(agnosticSymbol: AgnosticSymbol, agnosticSymbolType: string, positionInStaff: string): Observable<AgnosticSymbol> {
+  /*changeSymbol$(agnosticSymbol: AgnosticSymbol, agnosticSymbolType: string, positionInStaff: string): Observable<AgnosticSymbol> {
     const url = `agnostic/changeAgnosticSymbol/${agnosticSymbol.id}/${agnosticSymbolType}/${positionInStaff}`;
     return this.apiRestClientService.get$<AgnosticSymbol>(url);
+  }*/
 
+  changeSymbolsType$(agnosticSymbols: AgnosticSymbol[], agnosticSymbolType: string): Observable<AgnosticSymbol[]> {
+    const symbolIDs = this.symbols2IDs(agnosticSymbols);
+    const url = `agnostic/changeAgnosticSymbolsType/${agnosticSymbolType}`;
+    return this.apiRestClientService.put$<AgnosticSymbol[]>(url, symbolIDs);
   }
+
+  changeSymbolsPosition$(agnosticSymbols: AgnosticSymbol[], positionInStaff: string): Observable<AgnosticSymbol[]> {
+    const symbolIDs = this.symbols2IDs(agnosticSymbols);
+    const url = `agnostic/changeAgnosticSymbolsPosition/${positionInStaff}`;
+    return this.apiRestClientService.put$<AgnosticSymbol[]>(url, symbolIDs);
+  }
+
+  moveSymbolsPosition$(agnosticSymbols: AgnosticSymbol[], difference: number): Observable<AgnosticSymbol[]> {
+    const symbolIDs = this.symbols2IDs(agnosticSymbols);
+    const url = `agnostic/moveAgnosticSymbolsPosition/${difference}`;
+    return this.apiRestClientService.put$<AgnosticSymbol[]>(url, symbolIDs);
+  }
+
 
   changeSymbolBoundingBox$(symbol: AgnosticSymbol, fromX: number, fromY: number, toX: number, toY: number): Observable<AgnosticSymbol> {
     // console.log('Ey')

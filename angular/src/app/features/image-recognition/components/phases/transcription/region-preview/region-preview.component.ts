@@ -50,7 +50,6 @@ export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
   selectedSymbols: AgnosticSymbol[];
   private selectedSymbolSubscription: Subscription;
 
-
   constructor(private store: Store<ImageRecognitionState>, protected dialogsService: DialogsService) {
     this.zoomManager = new ZoomManager();
     this.modeValue = 'eSelecting';
