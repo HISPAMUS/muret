@@ -14,12 +14,10 @@ import es.ua.dlsi.grfia.im3ws.muret.watchdog.WatchDog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,13 +86,14 @@ public class UserManagementController
     }
 
     @GetMapping("/userPermissions")
-    @Transactional
+    @Transactional(readOnly = true)
     public Map<String, List<String>> getAllUsersPermissions()
     {
         return m_userManager.getUsersPermissions();
     }
 
     @GetMapping("/allUsers")
+    @Transactional(readOnly = true)
     public List<String> getAllUsers()
     {
         List<User> users = m_userManager.getUsers();

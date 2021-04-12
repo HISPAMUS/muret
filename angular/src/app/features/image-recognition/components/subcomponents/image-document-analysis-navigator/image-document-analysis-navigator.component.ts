@@ -75,6 +75,7 @@ export class ImageDocumentAnalysisNavigatorComponent implements OnChanges {
   }
 
   onSVGShapesSelected(shapes: Shape[]) {
+    console.log('onSVGShapesSelected');
     this.onShapesSelected.emit(shapes);
   }
 

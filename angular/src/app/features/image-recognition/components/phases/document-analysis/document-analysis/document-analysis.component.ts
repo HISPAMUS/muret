@@ -98,7 +98,9 @@ export class DocumentAnalysisComponent extends ImageRecognitionBaseAbstractCompo
    */
   onDocumentAnalysisShapesSelected(shapes: Shape[]) {
     this.selectedShapes = shapes;
+    console.log('Selected shapes');
     if (shapes && shapes.length > 0) {
+      console.log('Selected shapes #' + shapes.length);
       this.selectedRegionType = null;
       let selectedRegionTypeString = null;
       shapes.forEach(shape => {

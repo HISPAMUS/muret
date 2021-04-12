@@ -103,7 +103,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   private originX = 0;
   private originY = 0;
 
-  private lastSelectedElement: SVGGraphicsElement;
+  // private lastSelectedElement: SVGGraphicsElement;
   private selectionManager: SVGSelectionManager;
   private shapesMap: Map<string, Shape>;
   private addingShape: boolean;
@@ -138,20 +138,24 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
         });
       }
 
-      this.selectionManager.selectByX = this.selectByX;
+      //this.selectionManager.selectByX = this.selectByX;
+      this.selectionManager.clear();
       this.selectionManager.selectableElements = this.shapes;
+      this.selectedShapesValue = [];
       this.shapes.forEach(shape => {
         this.shapesMap.set(shape.id, shape);
         if (previouslySelectedIDs.has(shape.id)) {
           this.selectionManager.add(shape);
+          this.selectedShapesValue.push(shape);
         }
       });
-
     }
 
     if (changes.selectByX) {
       this.selectionManager.selectByX = true;
     }
+
+    //this.emitSelectedShapes(); it generates repeated selection events
   }
 
   ngAfterContentChecked(): void {

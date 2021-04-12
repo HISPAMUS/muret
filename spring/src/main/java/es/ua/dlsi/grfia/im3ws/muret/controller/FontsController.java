@@ -7,6 +7,7 @@ import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticOrSemanticSymbolFont;
 import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticOrSemanticSymbolFontSingleton;
 import es.ua.dlsi.im3.core.score.NotationType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
@@ -34,6 +35,7 @@ public class FontsController {
      * @throws IM3WSException On SVG constructrion
      */
     @GetMapping(path = {"svgset"})
+    // Does not need to be transactional @Transactional(readOnly = true)
     public SVGSet getAgnosticSymbolSVGSet(@RequestParam(name="notationType") NotationType notationType, @RequestParam(name="manuscriptType") ManuscriptType manuscriptType) {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Getting AgnosticSymbolSVGSet");
         try {

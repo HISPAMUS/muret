@@ -658,7 +658,7 @@ public class DocumentController {
 
 
     @GetMapping(path = {"/statistics/{id}"})
-    @Transactional
+    @Transactional(readOnly = true)
     public DocumentStatistics getDocumentStatistics(@PathVariable("id") Integer id)  {
         try {
             Optional<Document> document = documentRepository.findById(id);

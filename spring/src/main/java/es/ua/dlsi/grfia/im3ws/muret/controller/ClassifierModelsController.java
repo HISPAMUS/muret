@@ -14,11 +14,9 @@ import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
 import es.ua.dlsi.grfia.im3ws.service.FileStorageService;
 import es.ua.dlsi.im3.core.score.NotationType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import javax.transaction.Transactional;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -93,7 +91,7 @@ public class ClassifierModelsController {
     }
 
     @GetMapping(path={"models/{imageID}"})
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ClassifierModel> getModels(@PathVariable("imageID") Long imageID) {
         ArrayList<ClassifierModel> result = new ArrayList<>();
         result.addAll(requestModels(ClassifierModelTypes.eDocumentAnalysis, imageID));
@@ -125,7 +123,7 @@ public class ClassifierModelsController {
         return result;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ClassifierModel> requestModels(ClassifierModelTypes classifierType, Long imageID)
     {
         try {
@@ -144,7 +142,7 @@ public class ClassifierModelsController {
     }
 
 
-    // revisado hasta aquí
+    // revisado hasta aquí - ver? @Transactional(readOnly = true)
 
 
     @GetMapping(path = {"symbols/{imageID}"})

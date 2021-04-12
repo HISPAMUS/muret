@@ -2,11 +2,7 @@ package es.ua.dlsi.grfia.im3ws.muret.controller;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
-import es.ua.dlsi.grfia.im3ws.muret.controller.payload.ImageToCrop;
-import es.ua.dlsi.grfia.im3ws.muret.controller.payload.RegionCreation;
-import es.ua.dlsi.grfia.im3ws.muret.entity.BoundingBox;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Image;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Page;
 import es.ua.dlsi.grfia.im3ws.muret.model.ClassifierClient;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.PageRepository;
@@ -17,16 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
-import javax.transaction.Transactional;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 // !!! Important: no controller should throw any exception
 
 @RequestMapping("imagefiles")
@@ -80,6 +74,7 @@ public class ImageFilesController extends MuRETBaseController {
     }
 
     @GetMapping(value = "{documentPath}/master/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
+    // Does not need to be transactional @Transactional(readOnly = true)
     public ResponseEntity<InputStreamResource> getMasterImage(@PathVariable("documentPath") String documentPath, @PathVariable("imageID") Long imageID)  {
         try {
             return getImage(documentPath, imageID,  MURETConfiguration.MASTER_IMAGES);
@@ -89,7 +84,7 @@ public class ImageFilesController extends MuRETBaseController {
     }
 
     @GetMapping(value = "preview/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
-    @Transactional
+    @Transactional(readOnly = true)
     public ResponseEntity<InputStreamResource> getPreviewImage(@PathVariable("imageID") Long imageID)  {
         try {
             return getImage(null, imageID, MURETConfiguration.PREVIEW_IMAGES);
@@ -99,7 +94,7 @@ public class ImageFilesController extends MuRETBaseController {
     }
 
     @GetMapping(value = "master/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
-    @Transactional // because we'll get the document path
+    @Transactional(readOnly = true) // because we'll get the document path
     public ResponseEntity<InputStreamResource> getMasterImage(@PathVariable("imageID") Long imageID)  {
         try {
             return getImage(null, imageID,  MURETConfiguration.MASTER_IMAGES);
@@ -110,6 +105,7 @@ public class ImageFilesController extends MuRETBaseController {
     }
 
     @GetMapping(value = "{documentPath}/thumbnail/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
+    // Does not need to be transactional @Transactional(readOnly = true)
     public ResponseEntity<InputStreamResource> getThumbnailImage(@PathVariable("documentPath") String documentPath, @PathVariable("imageID") Long imageID) {
         try {
             return getImage(documentPath, imageID,  MURETConfiguration.THUMBNAIL_IMAGES);
@@ -119,6 +115,7 @@ public class ImageFilesController extends MuRETBaseController {
 
     }
     @GetMapping(value = "{documentPath}/preview/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
+    // Does not need to be transactional @Transactional(readOnly = true)
     public ResponseEntity<InputStreamResource> getPreviewImage(@PathVariable("documentPath") String documentPath, @PathVariable("imageID") Long imageID) {
         try {
             return getImage(documentPath, imageID,  MURETConfiguration.PREVIEW_IMAGES);
@@ -128,7 +125,7 @@ public class ImageFilesController extends MuRETBaseController {
     }
 
     @GetMapping(value = "croppedImage/{imageID}/{fromX}/{fromY}/{toX}/{toY}", produces = MediaType.IMAGE_JPEG_VALUE)
-    @Transactional
+    @Transactional(readOnly = true)
     public ResponseEntity<InputStreamResource> getCroppedMasterImageBlob(@PathVariable("imageID") Long imageID,
             @PathVariable("fromX") int fromX, @PathVariable("fromY") int fromY,
             @PathVariable("toX") int toX, @PathVariable("toY") int toY) {

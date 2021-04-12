@@ -89,7 +89,7 @@ public class BreadcrumbsController {
     }
 
     @GetMapping(path = {"image/{imageID}"})
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Breadcrumb> getImageBreadcrumbs(@PathVariable("imageID") Long imageID) {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Getting image breadcrumbs of document id={0}", imageID);
 
