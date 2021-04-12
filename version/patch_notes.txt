@@ -1,3 +1,9 @@
+0.17
+    MINOR UPDATES
+    - Custos in printed mensural agnostic font is correct placed
+    - Allow two resize events to the same bounding box (issue #206)
+    - Add links to previous and next images im collection (issue #207)
+-----
 0.16
     MINOR UPDATES
     - Update to Verovio 3.3.0 to correct (issue #194)
