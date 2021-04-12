@@ -46,6 +46,17 @@ public class ImageRecognitionController {
         this.actionLogsDocument = actionLogsDocument;
     }
 
+    private void setPrevAndNextImages(ImageOverview imageOverview, List<Image> sortedImages, Image thisImage) {
+        int index = sortedImages.indexOf(thisImage);
+        if (index != -1) {
+            if (index > 0) {
+                imageOverview.setPrevImageID(sortedImages.get(index-1).getId());
+            }
+            if (index < sortedImages.size()-1) {
+                imageOverview.setNextImageID(sortedImages.get(index+1).getId());
+            }
+        }
+    }
 
     @GetMapping(path = {"/overview/{imageID}"})
     @Transactional(readOnly = true)
@@ -59,7 +70,18 @@ public class ImageRecognitionController {
             ImageOverview result = new ImageOverview();
             result.setImageID(id);
             result.setFilename(image.get().getFilename());
-            Document document = image.get().computeDocument();
+            Document document;
+
+            if (image.get().getDocument() != null) {
+                document = image.get().getDocument();
+                setPrevAndNextImages(result, document.computeAllImagesNotInSectionSorted(), image.get());
+            } else if (image.get().getSection() != null) {
+                document = image.get().getSection().getDocument();
+                setPrevAndNextImages(result, image.get().getSection().computeAllImagesSorted(), image.get());
+            } else {
+                throw new IM3WSException("Image " + id + " has not either document or section");
+            }
+
             result.setDocumentID(document.getId());
             //result.setImageWidth(image.get().getWidth());
             result.setDocumentPath(document.getPath());

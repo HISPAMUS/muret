@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -109,5 +110,11 @@ public class Section extends Auditable implements IID<Long>, IOrdered {
     @Override
     public int hashCode() {
         return Objects.hash(name, document);
+    }
+
+    public List<Image> computeAllImagesSorted() {
+        LinkedList<Image> result = new LinkedList<>(this.images);
+        result.sort(Image.COMPARATOR);
+        return result;
     }
 }

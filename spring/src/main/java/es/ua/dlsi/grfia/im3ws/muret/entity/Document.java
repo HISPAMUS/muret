@@ -249,11 +249,19 @@ public class Document extends Auditable implements IID<Integer>  {
         result.sort(Image.COMPARATOR);
         if (this.sections != null) {
             for (Section section : this.computeAllSectionsSorted()) {
-                LinkedList<Image> sectionImages = new LinkedList<>(section.getImages());
-                sectionImages.sort(Image.COMPARATOR);
-                result.addAll(sectionImages);
+                result.addAll(section.computeAllImagesSorted());
             }
         }
+        return result;
+    }
+
+    /**
+     * It returns images directly linked to the document and in sections, sorted inside each section
+     * @return
+     */
+    public List<Image> computeAllImagesNotInSectionSorted() {
+        LinkedList<Image> result = new LinkedList<>(this.images);
+        result.sort(Image.COMPARATOR);
         return result;
     }
 

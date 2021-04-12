@@ -21,6 +21,11 @@
         <br>
         <button class="btn-primary" *ngIf="commentsChanged" (click)="saveComments()">Save comments</button>
       </form>
+      <hr>
+      <ul>
+        <li *ngIf="imageOverview.prevImageID"><a [routerLink]="['/imageRecognition/overview', imageOverview.prevImageID]">Previous image in collection</a></li>
+        <li *ngIf="imageOverview.nextImageID"><a [routerLink]="['/imageRecognition/overview', imageOverview.nextImageID]">Next image in collection</a></li>
+      </ul>
     </div>
   </div>
 </div>

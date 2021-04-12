@@ -14,6 +14,8 @@ import java.util.Set;
  */
 public class ImageOverview {
     Long imageID;
+    Long prevImageID;
+    Long nextImageID;
     //int imageWidth;
     String filename;
     Integer documentID;
@@ -37,7 +39,23 @@ public class ImageOverview {
         this.imageID = imageID;
     }
 
-    /*public int getImageWidth() {
+    public Long getPrevImageID() {
+        return prevImageID;
+    }
+
+    public void setPrevImageID(Long prevImageID) {
+        this.prevImageID = prevImageID;
+    }
+
+    public Long getNextImageID() {
+        return nextImageID;
+    }
+
+    public void setNextImageID(Long nextImageID) {
+        this.nextImageID = nextImageID;
+    }
+
+/*public int getImageWidth() {
         return imageWidth;
     }
 
