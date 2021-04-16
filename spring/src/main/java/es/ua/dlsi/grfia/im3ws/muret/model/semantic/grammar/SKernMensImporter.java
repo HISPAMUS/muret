@@ -1,5 +1,6 @@
 package es.ua.dlsi.grfia.im3ws.muret.model.semantic.grammar;
 
+import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.io.ImportException;
 import es.ua.dlsi.im3.core.io.antlr.ANTLRUtils;
@@ -53,6 +54,8 @@ public class SKernMensImporter {
         private int lastAgumentationDots;
         private boolean lastHasSeparationDot;
         private boolean inLigature;
+        private BeamGroup lastBeamGroup; //TODO Esto no va para varios spines
+        private boolean inBeam = false;
         private LigatureType ligatureType;
         private boolean debug;
         private StemDirection lastStemDirection;
@@ -60,6 +63,8 @@ public class SKernMensImporter {
         private ArrayList<Long> associatedIDS;
         private NotationType notationType;
         private SimpleNote pendingTieFrom;
+
+        private TimeSignature lastTimeSignature; // used for multirests
 
         public Loader(Parser parser, boolean debug) {
             this.humdrumMatrix = new HumdrumMatrix();
@@ -288,6 +293,8 @@ public class SKernMensImporter {
 
             ts = new FractionalTimeSignature(num, den);
             humdrumMatrix.addItemToCurrentRow(ctx.getText(), ts);
+
+            lastTimeSignature = ts;
         }
 
 
@@ -336,6 +343,8 @@ public class SKernMensImporter {
                 Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Invalid meter sign {0}", ctx.getText());
                 throw new GrammarParseRuntimeException("Invalid time signature: " + ctx.getText());
             }
+
+            lastTimeSignature = ts;
         }
 
         @Override
@@ -547,7 +556,15 @@ public class SKernMensImporter {
             humdrumMatrix.addItemToCurrentRow(ctx.getText(), rest);
         }
 
-
+        @Override
+        public void exitMultirest(sKernMensParser.MultirestContext ctx) {
+            super.exitMultirest(ctx);
+            if (lastTimeSignature == null) {
+                throw new GrammarParseRuntimeException("Cannot build a multirest without a previous time signature");
+            }
+            SimpleMultiMeasureRest simpleMultiMeasureRest = new SimpleMultiMeasureRest(lastTimeSignature.getDuration(), Integer.parseInt(ctx.number().getText()));
+            humdrumMatrix.addItemToCurrentRow(ctx.getText(), simpleMultiMeasureRest);
+        }
 
         private void handlePerfectionColoration(SingleFigureAtom simpleFigureAtom) throws IM3Exception {
             simpleFigureAtom.getAtomFigure().setColored(lastColoured);
@@ -623,6 +640,19 @@ public class SKernMensImporter {
         }
 
         @Override
+        public void exitBeam(sKernMensParser.BeamContext ctx) {
+            super.exitBeam(ctx);
+            //TODO esto no va para varios spines
+
+            if (ctx.CHAR_L() != null) {
+                this.lastBeamGroup = new BeamGroup(false);
+                this.inBeam = true;
+            } else if (ctx.CHAR_J() != null) {
+                this.inBeam = false;
+            }
+        }
+
+        @Override
         public void exitStem(sKernMensParser.StemContext ctx) {
             switch (ctx.getText()) {
                 case "/":
@@ -635,6 +665,8 @@ public class SKernMensImporter {
                     throw new GrammarParseRuntimeException("Unimplemented stem direction: " + ctx.getText());
             }
         }
+
+
 
         @Override
         public void exitNote(sKernMensParser.NoteContext ctx) {
@@ -769,6 +801,14 @@ public class SKernMensImporter {
             if (lastPause) {
                 atomFigure.setFermata(new Fermata());
                 lastPause = false;
+            }
+
+            if (this.lastBeamGroup != null) {
+                this.lastBeamGroup.add(note);
+            }
+
+            if (!this.inBeam) {
+                this.lastBeamGroup = null;
             }
         }
 

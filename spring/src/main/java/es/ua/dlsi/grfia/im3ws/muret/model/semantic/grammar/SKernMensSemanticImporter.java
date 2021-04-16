@@ -76,6 +76,8 @@ public class SKernMensSemanticImporter implements ISemanticImporter {
                         } else {
                             lastPlainChant.getCoreSymbol().addSubatom(simpleNote); //TODO semanticSymbolType is null, IDS not linked
                         }
+                    } else if (item.getParsedObject() instanceof SimpleMultiMeasureRest) {
+                        semanticEncoding.add(semanticSymbolType = new SemanticMultirest((SimpleMultiMeasureRest) item.getParsedObject()));
                     } else if (item.getParsedObject() instanceof SimpleRest) {
                         SimpleRest simpleRest = (SimpleRest) item.getParsedObject();
                         if (lastPlainChant == null) {
@@ -83,8 +85,6 @@ public class SKernMensSemanticImporter implements ISemanticImporter {
                         } else {
                             lastPlainChant.getCoreSymbol().addSubatom(simpleRest); //TODO semanticSymbolType is null, IDS not linked
                         }
-                    } else if (item.getParsedObject() instanceof SimpleMultiMeasureRest) {
-                        semanticEncoding.add(semanticSymbolType = new SemanticMultirest((SimpleMultiMeasureRest) item.getParsedObject()));
                     } else if (item.getParsedObject() instanceof KernLigatureComponent) {
                         KernLigatureComponent kernLigatureComponent = (KernLigatureComponent) item.getParsedObject();
                         if (kernLigatureComponent.getStartEnd() == LigatureStartEnd.start) {

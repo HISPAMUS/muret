@@ -48,6 +48,8 @@ graphicalToken:
     |
     layout
     |
+    multirest
+    |
     rest
     |
     note
@@ -147,6 +149,8 @@ spineOperation:
 spineTerminator: ASTERISK MINUS;
 spineSplit: ASTERISK CIRCUMFLEX;
 spineJoin: ASTERISK CHAR_v;
+
+multirest: (CHAR_r) (CHAR_r) number;
 
 rest: duration (CHAR_r) pause? restLinePosition?;
 

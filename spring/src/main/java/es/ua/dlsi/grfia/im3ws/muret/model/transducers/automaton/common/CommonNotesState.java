@@ -2,8 +2,6 @@ package es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.common;
 
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.SemanticTransduction;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.TransducerState;
-import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.states.AccNoteState;
-import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.states.FermataState;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.IM3RuntimeException;
 import es.ua.dlsi.im3.core.adt.dfa.State;
@@ -33,6 +31,13 @@ public abstract class CommonNotesState extends TransducerState {
     public class FiguresColoration {
         Figures figure;
         Boolean colored;
+        BeamType beam;
+
+        public FiguresColoration(Figures figure, Boolean colored, BeamType beam) {
+            this.figure = figure;
+            this.colored = colored;
+            this.beam = beam;
+        }
 
         public FiguresColoration(Figures figure, Boolean colored) {
             this.figure = figure;
@@ -45,6 +50,11 @@ public abstract class CommonNotesState extends TransducerState {
 
         public Boolean getColored() {
             return colored;
+        }
+
+
+        public BeamType getBeam() {
+            return beam;
         }
     }
     
@@ -77,39 +87,61 @@ public abstract class CommonNotesState extends TransducerState {
 
                 ScientificPitch scientificPitch = parsePitch(clef, token.getPositionInStaff(), accidental);
 
-                Accidentals keySignatureAccidental = null;
-                if (currentKeySignature != null) {
-                    keySignatureAccidental = currentKeySignature.getCoreSymbol().getAccidentalOf(scientificPitch.getPitchClass().getNoteName());
-                }
-
                 Accidentals visualAccidental = null;
-                Accidentals actualAccidental = null;
-
-                if (keySignatureAccidental != null) {
-                    if (keySignatureAccidental == Accidentals.FLAT && scientificPitch.getPitchClass().getAccidental() == Accidentals.SHARP) {
-                        actualAccidental = Accidentals.NATURAL;
-                        visualAccidental = Accidentals.SHARP;
-                    } else {
-
-                        if (!scientificPitch.getPitchClass().isAltered()) {
-                            actualAccidental = keySignatureAccidental;
-                            visualAccidental = scientificPitch.getPitchClass().getAccidental();
-                        } else {
-                            actualAccidental = scientificPitch.getPitchClass().getAccidental();
-                            visualAccidental =  scientificPitch.getPitchClass().getAccidental();;
-                        }
-                    }
+                if (accidental != null) { // if it is explicitly written
+                    visualAccidental = accidental;
                 } else {
-                    actualAccidental = scientificPitch.getPitchClass().getAccidental();
-                    visualAccidental =  scientificPitch.getPitchClass().getAccidental();;
+                    Accidentals keySignatureAccidental = null;
+                    if (currentKeySignature != null) {
+                        keySignatureAccidental = currentKeySignature.getCoreSymbol().getAccidentalOf(scientificPitch.getPitchClass().getNoteName());
+                    }
+
+                    Accidentals actualAccidental = null;
+
+                    if (keySignatureAccidental != null) {
+                        if (keySignatureAccidental == Accidentals.FLAT && scientificPitch.getPitchClass().getAccidental() == Accidentals.SHARP) {
+                            actualAccidental = Accidentals.NATURAL; // used in mensural
+                            visualAccidental = Accidentals.SHARP;
+                        } else {
+
+                            if (!scientificPitch.getPitchClass().isAltered()) {
+                                actualAccidental = keySignatureAccidental;
+                                visualAccidental = scientificPitch.getPitchClass().getAccidental();
+                            } else {
+                                actualAccidental = scientificPitch.getPitchClass().getAccidental();
+                                visualAccidental = scientificPitch.getPitchClass().getAccidental();
+                                ;
+                            }
+                        }
+                    } else {
+                        actualAccidental = scientificPitch.getPitchClass().getAccidental();
+                        visualAccidental = scientificPitch.getPitchClass().getAccidental();
+                        ;
+                    }
+
+                    scientificPitch.getPitchClass().setAccidental(actualAccidental);
                 }
-
-                scientificPitch.getPitchClass().setAccidental(actualAccidental);
-
                 boolean fermata = false;
                 fermata = FermataState.isPendingFermata(transduction, true);
 
-                SemanticNote note = new SemanticNote(false, scientificPitch, visualAccidental, figuresColoration.getFigure(), 0, fermata, false, null, figuresColoration.getColored());
+                SemanticBeamType semanticBeamType = null;
+                if (figuresColoration.getBeam() != null) {
+                    switch (figuresColoration.getBeam()) {
+                        case right:
+                            semanticBeamType = SemanticBeamType.start;
+                            break;
+                        case both:
+                            semanticBeamType = SemanticBeamType.inner;
+                            break;
+                        case left:
+                            semanticBeamType = SemanticBeamType.end;
+                            break;
+                        default:
+                            throw new IM3Exception("Unsupported beam: " + figuresColoration.getBeam());
+                    }
+                }
+
+                SemanticNote note = new SemanticNote(false, scientificPitch, visualAccidental, figuresColoration.getFigure(), 0, fermata, false, null, figuresColoration.getColored(), semanticBeamType);
 
                 if (value != null && value.getStemDirection() != null && token.getPositionInStaff().equals(PositionsInStaff.LINE_3)) {
                     switch (value.getStemDirection()) {
@@ -279,7 +311,7 @@ public abstract class CommonNotesState extends TransducerState {
     private FiguresColoration parseFigure(INoteDurationSpecification durationSpecification) throws IM3Exception {
         if (durationSpecification instanceof Beam) {
             Beam beam = (Beam) durationSpecification;
-            return new FiguresColoration(Figures.findFigureWithFlags(beam.getBeams(), notationType), null);
+            return new FiguresColoration(Figures.findFigureWithFlags(beam.getBeams(), notationType), null, beam.getBeamType());
         } else if (durationSpecification instanceof NoteFigures) {
             NoteFigures noteFigures = (NoteFigures) durationSpecification;
             return convert(noteFigures);

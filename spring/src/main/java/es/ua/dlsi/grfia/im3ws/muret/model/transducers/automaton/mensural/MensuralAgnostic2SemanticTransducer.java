@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural;
 
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.Agnostic2SemanticTransducer;
+import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.common.AccNoteState;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.states.ClefState;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.states.TimeSignatureState;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.states.*;
@@ -13,7 +14,7 @@ import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Clef;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Custos;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Fermata;
 import es.ua.dlsi.im3.omr.language.GraphicalSymbolAlphabet;
-import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.states.FermataState;
+import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.common.FermataState;
 import org.apache.commons.math3.fraction.Fraction;
 
 import java.io.File;

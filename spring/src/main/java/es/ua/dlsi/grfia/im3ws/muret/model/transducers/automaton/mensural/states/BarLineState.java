@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.states
 
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.SemanticTransduction;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.TransducerState;
+import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.common.FermataState;
 import es.ua.dlsi.im3.core.adt.dfa.State;
 import es.ua.dlsi.im3.core.score.BarlineType;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;

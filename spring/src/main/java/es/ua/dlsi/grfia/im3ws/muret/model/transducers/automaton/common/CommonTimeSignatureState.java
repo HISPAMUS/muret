@@ -6,41 +6,79 @@ import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.IM3RuntimeException;
 import es.ua.dlsi.im3.core.adt.dfa.State;
 import es.ua.dlsi.im3.core.score.NotationType;
+import es.ua.dlsi.im3.core.score.mensural.meters.ProportioDupla;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
+import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Digit;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.MeterSign;
 import es.ua.dlsi.im3.omr.encoding.enums.MeterSigns;
+import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticFractionalTimeSignature;
 import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticMeterSignTimeSignature;
+import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticProportioTimeSignature;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CommonTimeSignatureState extends TransducerState {
     NotationType notationType;
+    MeterSigns meterSigns;
+    List<Digit> digits;
+    List<Long> agnosticIDs;
+
     public CommonTimeSignatureState(int number, NotationType notationType) {
         super(number, "keySig");
         this.notationType = notationType;
+        this.agnosticIDs = new ArrayList<>();
     }
-    MeterSigns meterSigns;
-    Long agnosticID;
 
     @Override
     public void onEnter(AgnosticSymbol token, State previousState, SemanticTransduction transduction) {
-        if (!(token.getSymbol() instanceof MeterSign)) {
-            // the automaton has an error
-            throw new IM3RuntimeException("Expected a metersign and found a " + token.getSymbol());
+        agnosticIDs.add(token.getId());
+        if (token.getSymbol() instanceof MeterSign) {
+            MeterSign symbol = (MeterSign) token.getSymbol();
+            meterSigns = symbol.getMeterSigns();
+        } else if (token.getSymbol() instanceof Digit) {
+            if (digits == null) {
+                digits = new ArrayList<>();
+            }
+            digits.add((Digit) token.getSymbol());
         }
 
-        MeterSign symbol = (MeterSign) token.getSymbol();
-        meterSigns = symbol.getMeterSigns();
-        agnosticID = token.getId();
-        // TODO: 5/10/17 C3 escrito como C 3 ... Quizás habrá que hacer varios estados del autómata
-        // TODO 2/4, ...
     }
 
     @Override
     public void onExit(State nextState, boolean isStateChange, SemanticTransduction transduction) throws IM3Exception {
-        if (meterSigns == null) {
-            throw new IM3RuntimeException("Meter signs cannot be null");
+        if (isStateChange) {
+            // TODO: 5/10/17 C3 escrito como C 3 ... Quizás habrá que hacer varios estados del autómata
+            if (meterSigns != null) {
+                SemanticMeterSignTimeSignature meterSignTimeSignature = new SemanticMeterSignTimeSignature(notationType, meterSigns);
+                meterSignTimeSignature.setAgnosticIDs(agnosticIDs);
+                transduction.add(meterSignTimeSignature);
+            } else if (digits != null && !digits.isEmpty()) {
+                if (digits.size() == 1) {
+                    Digit digit = digits.get(0);
+                    SemanticProportioTimeSignature semanticProportioTimeSignature;
+                    if (notationType != NotationType.eMensural) {
+                        throw new IM3Exception("Unsupported one digit time in modern notation");
+                    }
+                    if (digit.getDigit() == 2) {
+                        semanticProportioTimeSignature = new SemanticProportioTimeSignature(NotationType.eMensural, 2);
+                    } else if (digit.getDigit() == 3) {
+                        semanticProportioTimeSignature = new SemanticProportioTimeSignature(NotationType.eMensural, 3);
+                    } else {
+                        throw new IM3Exception("Unsupported one digit time signature different of 2 or 3 in mensural, and found: " + digit.getDigit());
+                    }
+                    semanticProportioTimeSignature.setAgnosticIDs(agnosticIDs);
+                    transduction.add(semanticProportioTimeSignature);
+                } else if (digits.size() == 2) {
+                    SemanticFractionalTimeSignature semanticFractionalTimeSignature = new SemanticFractionalTimeSignature(notationType, digits.get(1).getDigit(), digits.get(0).getDigit());
+                    semanticFractionalTimeSignature.setAgnosticIDs(agnosticIDs);
+                    transduction.add(semanticFractionalTimeSignature);
+                } else {
+                    throw new IM3Exception("Too many digits in time signature state: " + digits.size());
+                }
+            } else {
+                throw new IM3Exception("No digits or meter signs in time signature state");
+            }
         }
-        SemanticMeterSignTimeSignature meterSignTimeSignature = new SemanticMeterSignTimeSignature(notationType, meterSigns);
-        meterSignTimeSignature.setAgnosticIDs(agnosticID);
-        transduction.add(meterSignTimeSignature);
     }
 }

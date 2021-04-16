@@ -1,4 +1,4 @@
-package es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.mensural.states;
+package es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.common;
 
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.SemanticTransduction;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.TransducerState;

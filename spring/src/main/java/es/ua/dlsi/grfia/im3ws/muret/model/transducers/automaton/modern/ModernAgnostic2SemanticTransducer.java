@@ -1,10 +1,13 @@
 package es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.modern;
 
+import es.ua.dlsi.grfia.im3ws.muret.model.transducers.SemanticTransduction;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.Agnostic2SemanticTransducer;
+import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.common.AccNoteState;
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.modern.states.*;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.adt.dfa.*;
 import es.ua.dlsi.im3.core.score.*;
+import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticEncoding;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbolType;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.*;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Clef;
@@ -31,6 +34,7 @@ public class ModernAgnostic2SemanticTransducer extends Agnostic2SemanticTransduc
         State noteacc = new AccNoteState(6);
         State notes = new NotesState(7);
         State barline = new BarLineState(9);
+        State multirest = new MultirestState(10);
         states.add(start);
         states.add(clef);
         states.add(keysig);
@@ -38,6 +42,7 @@ public class ModernAgnostic2SemanticTransducer extends Agnostic2SemanticTransduc
         states.add(noteacc);
         states.add(notes);
         states.add(barline);
+        states.add(multirest);
 
         HashMap<State, Fraction> endStates = new HashMap<>();
         endStates.put(notes, Fraction.TWO_THIRDS);
@@ -60,10 +65,26 @@ public class ModernAgnostic2SemanticTransducer extends Agnostic2SemanticTransduc
         transitions.add(new Transition<>(keysig, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
 
         // transitions.add(new Transition<>(timesig, new VerticalSeparator(), timesig));
+        transitions.add(new Transition<>(keysig, new Digit(), timesig));
+        transitions.add(new Transition<>(barline, new Digit(), timesig));
+        transitions.add(new Transition<>(clef, new Digit(), timesig));
+        transitions.add(new Transition<>(timesig, new Digit(), timesig));
         transitions.add(new Transition<>(timesig, new Accidental(), noteacc));
         transitions.add(new Transition<>(timesig, new Note(), notes));
         transitions.add(new Transition<>(timesig, new Rest(), notes));
         transitions.add(new Transition<>(timesig, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
+
+        transitions.add(new Transition<>(timesig, new Multirest(), multirest));
+        //transitions.add(new Transition<>(timesig, new Digit(), multirest));
+        transitions.add(new Transition<>(clef, new Multirest(), multirest));
+        transitions.add(new Transition<>(multirest, new Digit(), multirest));
+        transitions.add(new Transition<>(barline, new Multirest(), multirest));
+        transitions.add(new Transition<>(keysig, new Multirest(), multirest));
+
+        transitions.add(new Transition<>(multirest, new Accidental(), noteacc));
+        transitions.add(new Transition<>(multirest, new Note(), notes));
+        transitions.add(new Transition<>(multirest, new Rest(), notes));
+        transitions.add(new Transition<>(multirest, new VerticalLine(), barline));
 
         transitions.add(new Transition<>(notes, new Accidental(), noteacc));
         transitions.add(new Transition<>(barline, new Accidental(), noteacc));
@@ -80,6 +101,8 @@ public class ModernAgnostic2SemanticTransducer extends Agnostic2SemanticTransduc
         transitions.add(new Transition<>(notes, new VerticalLine(), barline));
         transitions.add(new Transition<>(barline, new VerticalLine(), barline));
 
+
+
         //TODO Añadir defect en todo
 
         GraphicalSymbolAlphabet alphabet = new GraphicalSymbolAlphabet();
@@ -91,4 +114,5 @@ public class ModernAgnostic2SemanticTransducer extends Agnostic2SemanticTransduc
         dpa.writeDot(new File("/tmp/dpamodern.dot"));
         dpa.writeDot(new File("/tmp/dpamodern.dot"));
     }
+
 }
