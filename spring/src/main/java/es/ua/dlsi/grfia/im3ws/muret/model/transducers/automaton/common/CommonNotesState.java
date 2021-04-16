@@ -12,6 +12,7 @@ import es.ua.dlsi.im3.core.score.mensural.ligature.LigatureFactory;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.*;
+import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Slur;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbol;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbolType;
 import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.*;
@@ -22,6 +23,7 @@ import java.util.Arrays;
 // TODO: 5/10/17 Mirar si podemos compartir algo con modern
 public abstract class CommonNotesState extends TransducerState {
     private final NotationType notationType;
+    SemanticNote lastNote = null;
 
     public CommonNotesState(int number, NotationType notationType) {
         super(number, "notes");
@@ -78,7 +80,12 @@ public abstract class CommonNotesState extends TransducerState {
 
         agnosticIDs.add(token.getId());
 
-        if (token.getSymbol() instanceof Note) {
+        if (token.getSymbol() instanceof Slur) {
+            if (lastNote == null) {
+                throw new IM3Exception("Last note is null, cannot tie");
+            }
+            lastNote.setTiedToNext(true);
+        } else if (token.getSymbol() instanceof Note) {
             Note value = ((Note) token.getSymbol());
             try {
                 FiguresColoration figuresColoration = parseFigure(value.getDurationSpecification());
@@ -156,6 +163,7 @@ public abstract class CommonNotesState extends TransducerState {
 
                 note.setAgnosticIDs(agnosticIDs);
                 transduction.add(note);
+                lastNote = note;
             } catch (IM3Exception e) {
                 throw new IM3RuntimeException(e);
             }

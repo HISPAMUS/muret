@@ -7,10 +7,10 @@ import es.ua.dlsi.grfia.im3ws.muret.model.transducers.automaton.modern.states.*;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.adt.dfa.*;
 import es.ua.dlsi.im3.core.score.*;
-import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticEncoding;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbolType;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.*;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Clef;
+import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Slur;
 import es.ua.dlsi.im3.omr.language.GraphicalSymbolAlphabet;
 import org.apache.commons.math3.fraction.Fraction;
 
@@ -93,6 +93,7 @@ public class ModernAgnostic2SemanticTransducer extends Agnostic2SemanticTransduc
         transitions.add(new Transition<>(notes, new Note(), notes));
         transitions.add(new Transition<>(notes, new Dot(), notes));
         transitions.add(new Transition<>(notes, new Rest(), notes));
+        transitions.add(new Transition<>(notes, new Slur(), notes));
         transitions.add(new Transition<>(notes, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
         transitions.add(new Transition<>(barline, new Note(), notes));
         transitions.add(new Transition<>(barline, new Rest(), notes));

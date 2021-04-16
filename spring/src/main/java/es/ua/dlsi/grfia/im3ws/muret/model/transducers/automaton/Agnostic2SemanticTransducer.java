@@ -29,8 +29,9 @@ public abstract class Agnostic2SemanticTransducer implements IAgnostic2SemanticT
         dpa.setSkipUnknownSymbols(true);
         SemanticTransduction transduction = dpa.probabilityOf(agnosticEncoding.getSymbols(), initialProbability -> new SemanticTransduction(initialProbability));
 
-        // not group beams
+        // now group beams and set ties
         BeamGroup beamGroup = null;
+        SemanticNote lastNote = null;
         for (SemanticSymbol symbol: transduction.getSemanticEncoding().getSymbols()) {
             if (symbol.getSymbol() instanceof SemanticNote) {
                 SemanticNote semanticNote = (SemanticNote) symbol.getSymbol();
@@ -57,6 +58,11 @@ public abstract class Agnostic2SemanticTransducer implements IAgnostic2SemanticT
                             throw new IM3Exception("Unknown beam type: " +  semanticNote.getSemanticBeamType());
                     }
                 }
+
+                if (lastNote != null && lastNote.isTiedToNext()) {
+                    lastNote.getCoreSymbol().tieToNext(semanticNote.getCoreSymbol());
+                }
+                lastNote = semanticNote;
             }
         }
         return transduction;

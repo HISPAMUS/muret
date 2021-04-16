@@ -21,7 +21,7 @@ import java.util.List;
 public class CommonTimeSignatureState extends TransducerState {
     NotationType notationType;
     MeterSigns meterSigns;
-    List<Digit> digits;
+    List<AgnosticSymbol> digits;
     List<Long> agnosticIDs;
 
     public CommonTimeSignatureState(int number, NotationType notationType) {
@@ -40,7 +40,7 @@ public class CommonTimeSignatureState extends TransducerState {
             if (digits == null) {
                 digits = new ArrayList<>();
             }
-            digits.add((Digit) token.getSymbol());
+            digits.add(token);
         }
 
     }
@@ -55,7 +55,7 @@ public class CommonTimeSignatureState extends TransducerState {
                 transduction.add(meterSignTimeSignature);
             } else if (digits != null && !digits.isEmpty()) {
                 if (digits.size() == 1) {
-                    Digit digit = digits.get(0);
+                    Digit digit = (Digit) digits.get(0).getSymbol();
                     SemanticProportioTimeSignature semanticProportioTimeSignature;
                     if (notationType != NotationType.eMensural) {
                         throw new IM3Exception("Unsupported one digit time in modern notation");
@@ -70,7 +70,15 @@ public class CommonTimeSignatureState extends TransducerState {
                     semanticProportioTimeSignature.setAgnosticIDs(agnosticIDs);
                     transduction.add(semanticProportioTimeSignature);
                 } else if (digits.size() == 2) {
-                    SemanticFractionalTimeSignature semanticFractionalTimeSignature = new SemanticFractionalTimeSignature(notationType, digits.get(1).getDigit(), digits.get(0).getDigit());
+                    Digit numerator, denominator;
+                    if (digits.get(0).getPositionInStaff().getLineSpace() > digits.get(1).getPositionInStaff().getLineSpace()) {
+                        numerator = (Digit) digits.get(0).getSymbol();
+                        denominator = (Digit) digits.get(1).getSymbol();
+                    } else {
+                        numerator = (Digit) digits.get(1).getSymbol();
+                        denominator = (Digit) digits.get(0).getSymbol();
+                    }
+                    SemanticFractionalTimeSignature semanticFractionalTimeSignature = new SemanticFractionalTimeSignature(notationType, numerator.getDigit(), denominator.getDigit());
                     semanticFractionalTimeSignature.setAgnosticIDs(agnosticIDs);
                     transduction.add(semanticFractionalTimeSignature);
                 } else {
