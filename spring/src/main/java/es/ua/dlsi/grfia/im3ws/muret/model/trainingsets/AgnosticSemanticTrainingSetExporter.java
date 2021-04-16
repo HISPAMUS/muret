@@ -128,6 +128,8 @@ public class AgnosticSemanticTrainingSetExporter extends AbstractTrainingSetExpo
         file.close();
     }
 
+    //TODO A otro sitio (se usa también en semantic representation model)
+
     public void exportPage(JSONArray jsonSystems, Page page) throws IM3Exception {
 
 
@@ -144,14 +146,7 @@ public class AgnosticSemanticTrainingSetExporter extends AbstractTrainingSetExpo
                 ArrayList<Symbol> symbolArrayList = new ArrayList<>(region.getSymbols());
                 symbolArrayList.sort(Symbol.getHorizontalPositionComparator());
 
-                AgnosticEncoding agnostic = SemanticRepresentationModel.region2Agnostic(region, true);
-                if (includeAgnosticContext) {
-                    lastAgnosticClef = agnostic.insertContextInSequence(lastAgnosticClef);
-                }
-
-                AgnosticExporter agnosticExporter = new AgnosticExporter(AgnosticVersion.v2);
-                String agnosticSequence = agnosticExporter.export(agnostic);
-
+                String agnosticSequence = SemanticRepresentationModel.region2AgnosticString(region, includeAgnosticContext, lastAgnosticClef);
                 systemJSON.put("image_id", region.getPage().getImage().getId());
                 systemJSON.put("image_name", region.getPage().getImage().getFilename());
                 systemJSON.put("region_id", region.getId());

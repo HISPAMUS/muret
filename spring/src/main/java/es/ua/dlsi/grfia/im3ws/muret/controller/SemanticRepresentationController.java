@@ -41,7 +41,7 @@ public class SemanticRepresentationController extends MuRETBaseController {
     public SemanticRepresentationController(MURETConfiguration muretConfiguration, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository, DocumentModel documentModel, ActionLogsSemantic actionLogsSemantic) {
         super(muretConfiguration, imageRepository, pageRepository, regionRepository, symbolRepository);
         this.documentModel = documentModel;
-        this.semanticRepresentationModel = new SemanticRepresentationModel(documentModel, regionRepository);
+        this.semanticRepresentationModel = new SemanticRepresentationModel(muretConfiguration, documentModel, regionRepository);
         this.partsModel = new PartsModel();
         this.notationModel = new NotationModel();
         this.actionLogsSemantic = actionLogsSemantic;
@@ -59,20 +59,17 @@ public class SemanticRepresentationController extends MuRETBaseController {
             Region region = getRegion(staffID);
             Document document = region.getPage().getImage().computeDocument();
 
-            if (classifierModelID.equals(AGNOSTIC2SEMANTIC_TRANSDUCER)) {
-                //TODO Ahora sólo lo guardo en la región
-                /*Part part = partsModel.findPart(region);
-                if (part == null) {
-                    throw new IM3WSException("The staff has not an associated part yet");
-                }*/
-                Part part = null;
-                String partName = "";
-                Notation result = semanticRepresentationModel.computeAndSaveSemanticFromAgnostic(document, partName, region, mensurstrich, renderer);
-                actionLogsSemantic.logTransduce(region, classifierModelID);
-                return result;
-            } else {
-                throw new IM3WSException("Unsupported classifier: " + classifierModelID);
-            }
+            Part part = null;
+            String partName = "";
+            Notation result = semanticRepresentationModel.computeAndSaveSemanticFromAgnostic(classifierModelID, document, partName, region, mensurstrich, renderer);
+            actionLogsSemantic.logTransduce(region, classifierModelID);
+            return result;
+
+            //TODO Ahora sólo lo guardo en la región
+            /*Part part = partsModel.findPart(region);
+            if (part == null) {
+                throw new IM3WSException("The staff has not an associated part yet");
+            }*/
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot convert agnostic to semantic", e);
         }

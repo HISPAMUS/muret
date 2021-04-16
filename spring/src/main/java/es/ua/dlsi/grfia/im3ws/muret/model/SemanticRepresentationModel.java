@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.im3ws.muret.model;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
+import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Notation;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Renderer;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Document;
@@ -11,24 +12,42 @@ import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.score.*;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticEncoding;
+import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticExporter;
+import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticToken;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.HorizontalSeparator;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.VerticalSeparator;
 import es.ua.dlsi.im3.omr.encoding.semantic.*;
+import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
 import java.util.Collection;
+
+import static es.ua.dlsi.grfia.im3ws.muret.controller.ClassifierModelsController.AGNOSTIC2SEMANTIC_TRANSDUCER;
 
 public class SemanticRepresentationModel {
 
     private final DocumentModel documentModel;
     private final RegionRepository regionRepository;
     private NotationModel notationModel;
+    private final ClassifierClient classifierClient;
 
-    public SemanticRepresentationModel(DocumentModel documentModel, RegionRepository regionRepository) {
+    public SemanticRepresentationModel(MURETConfiguration muretConfiguration, DocumentModel documentModel, RegionRepository regionRepository) {
         this.documentModel = documentModel;
         this.regionRepository = regionRepository;
         this.notationModel = new NotationModel();
+        this.classifierClient = new ClassifierClient(muretConfiguration.getPythonclassifiers());
+    }
+
+    public static String region2AgnosticString(Region region, boolean includeAgnosticContext, AgnosticToken lastAgnosticClef) throws IM3Exception {
+        AgnosticEncoding agnostic = SemanticRepresentationModel.region2Agnostic(region, true);
+        if (includeAgnosticContext) {
+            lastAgnosticClef = agnostic.insertContextInSequence(lastAgnosticClef);
+        }
+
+        AgnosticExporter agnosticExporter = new AgnosticExporter(AgnosticVersion.v2);
+        String agnosticSequence = agnosticExporter.export(agnostic);
+        return agnosticSequence;
     }
 
 
@@ -67,15 +86,22 @@ public class SemanticRepresentationModel {
      * @param staff
      * @return MEI
      */
-    public Notation computeAndSaveSemanticFromAgnostic(Document document, String partName, Region staff, boolean mensurstrich, Renderer renderer) throws FileNotFoundException, IM3Exception, IM3WSException {
+    public Notation computeAndSaveSemanticFromAgnostic(String classifierModelID, Document document, String partName, Region staff, boolean mensurstrich, Renderer renderer) throws FileNotFoundException, IM3Exception, IM3WSException {
         AgnosticEncoding agnosticEncoding = region2Agnostic(staff, false);
         NotationType notationType = document.getNotationType();
-        SemanticTransduction semanticTransduction = new TranslationModel().computeSemanticFromAgnostic(agnosticEncoding, notationType);
 
+        String kernExport = null;
+        if (classifierModelID.equals(AGNOSTIC2SEMANTIC_TRANSDUCER)) {
+            SemanticTransduction semanticTransduction = new TranslationModel().computeSemanticFromAgnostic(agnosticEncoding, notationType);
+            KernSemanticExporter kernSemanticExporter = new KernSemanticExporter();
+            kernExport = kernSemanticExporter.export(semanticTransduction.getSemanticEncoding());
+        } else {
+            String agnosticString = region2AgnosticString(staff, false, null);
+            kernExport = classifierClient.translateAgnostic2Semantic(classifierModelID, agnosticString);
+
+        }
         Notation result = null;
         //documentModel.addSemanticEncoding(document, partName, staff.getId(), staff.getBoundingBox(), semantic.getSemanticEncoding());
-        KernSemanticExporter kernSemanticExporter = new KernSemanticExporter();
-        String kernExport = kernSemanticExporter.export(semanticTransduction.getSemanticEncoding());
         sendSemanticEncoding(document, partName, staff, mensurstrich, renderer, kernExport);
         result = notationModel.getNotation(document, partName, staff, mensurstrich, renderer);
         return result;

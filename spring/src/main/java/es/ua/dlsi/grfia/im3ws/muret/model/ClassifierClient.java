@@ -138,6 +138,18 @@ public class ClassifierClient {
         }
     }
 
+    static class SemanticTranslation { // it must be static for letting Jackson instantiate it from JSon responses
+        String semantic;
+
+        public String getSemantic() {
+            return semantic;
+        }
+
+        public void setSemantic(String semantic) {
+            this.semantic = semantic;
+        }
+    }
+
     /**
      *
      * @param imageID
@@ -298,6 +310,16 @@ public class ClassifierClient {
 
         return this.restClient.post("image/" + imageID.toString() + "/docAnalysis", AutoDocumentAnalysisModel.class, postContent);
     }
+
+    public String translateAgnostic2Semantic(String classifierModelID, String agnosticString) throws IM3WSException {
+        Map<String, Object> postContent = new HashMap<>();
+        postContent.put("model", classifierModelID);
+        postContent.put("agnostic", agnosticString);
+
+        SemanticTranslation result = this.restClient.post("translate", SemanticTranslation.class, postContent);
+        return result.getSemantic();
+    }
+
 
 
     public static void main(String [] args) throws IM3WSException, IM3Exception {

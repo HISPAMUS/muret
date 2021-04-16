@@ -1,8 +1,12 @@
 0.17
+    MAJOR UPDATES
+    - Include learnt agnostic to semantic translators
+
     MINOR UPDATES
     - Custos in printed mensural agnostic font is correct placed
     - Allow two resize events to the same bounding box (issue #206)
     - Add links to previous and next images im collection (issue #207)
+
 -----
 0.16
     MINOR UPDATES
