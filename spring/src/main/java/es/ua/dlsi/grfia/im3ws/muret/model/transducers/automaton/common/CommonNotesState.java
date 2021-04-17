@@ -85,8 +85,9 @@ public abstract class CommonNotesState extends TransducerState {
                 throw new IM3Exception("Last note is null, cannot tie");
             }
             lastNote.setTiedToNext(true);
-        } else if (token.getSymbol() instanceof Note) {
-            Note value = ((Note) token.getSymbol());
+        } else if (token.getSymbol() instanceof Note || token.getSymbol() instanceof GraceNote) {
+            IAgnosticNote value = (IAgnosticNote) token.getSymbol();
+
             try {
                 FiguresColoration figuresColoration = parseFigure(value.getDurationSpecification());
 
@@ -148,7 +149,14 @@ public abstract class CommonNotesState extends TransducerState {
                     }
                 }
 
-                SemanticNote note = new SemanticNote(false, scientificPitch, visualAccidental, figuresColoration.getFigure(), 0, fermata, false, null, figuresColoration.getColored(), semanticBeamType);
+                GraceNoteType graceNoteType = null;
+                if (token.getSymbol() instanceof Acciaccatura) {
+                    graceNoteType = GraceNoteType.acciaccatura;
+                } else if (token.getSymbol() instanceof Appoggiatura) {
+                    graceNoteType = GraceNoteType.appoggiatura;
+                }
+
+                SemanticNote note = new SemanticNote(graceNoteType, scientificPitch, visualAccidental, figuresColoration.getFigure(), 0, fermata, false, null, figuresColoration.getColored(), semanticBeamType);
 
                 if (value != null && value.getStemDirection() != null && token.getPositionInStaff().equals(PositionsInStaff.LINE_3)) {
                     switch (value.getStemDirection()) {

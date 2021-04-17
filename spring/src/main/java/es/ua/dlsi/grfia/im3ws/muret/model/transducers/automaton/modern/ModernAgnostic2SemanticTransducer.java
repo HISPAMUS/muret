@@ -53,6 +53,8 @@ public class ModernAgnostic2SemanticTransducer extends Agnostic2SemanticTransduc
 
         transitions.add(new Transition<>(clef, new Accidental(), keysig));
         transitions.add(new Transition<>(clef, new Note(), notes)); // for second systems ...
+        transitions.add(new Transition<>(clef, new Appoggiatura(), notes));
+        transitions.add(new Transition<>(clef, new Acciaccatura(), notes));
         transitions.add(new Transition<>(clef, new Rest(), notes)); // for second systems ...
         transitions.add(new Transition<>(clef, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
         transitions.add(new Transition<>(clef, new MeterSign(), timesig));
@@ -62,6 +64,8 @@ public class ModernAgnostic2SemanticTransducer extends Agnostic2SemanticTransduc
 
         transitions.add(new Transition<>(keysig, new Note(), notes)); //TODO no está esto bien del todo.. ver 2º 7 3º pentagrama RISM
         transitions.add(new Transition<>(keysig, new Rest(), notes)); //TODO no está esto bien del todo.. ver 2º 7 3º pentagrama RISM
+        transitions.add(new Transition<>(keysig, new Appoggiatura(), notes));
+        transitions.add(new Transition<>(keysig, new Acciaccatura(), notes));
         transitions.add(new Transition<>(keysig, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
 
         // transitions.add(new Transition<>(timesig, new VerticalSeparator(), timesig));
@@ -71,6 +75,8 @@ public class ModernAgnostic2SemanticTransducer extends Agnostic2SemanticTransduc
         transitions.add(new Transition<>(timesig, new Digit(), timesig));
         transitions.add(new Transition<>(timesig, new Accidental(), noteacc));
         transitions.add(new Transition<>(timesig, new Note(), notes));
+        transitions.add(new Transition<>(timesig, new Appoggiatura(), notes));
+        transitions.add(new Transition<>(timesig, new Acciaccatura(), notes));
         transitions.add(new Transition<>(timesig, new Rest(), notes));
         transitions.add(new Transition<>(timesig, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
 
@@ -83,6 +89,8 @@ public class ModernAgnostic2SemanticTransducer extends Agnostic2SemanticTransduc
 
         transitions.add(new Transition<>(multirest, new Accidental(), noteacc));
         transitions.add(new Transition<>(multirest, new Note(), notes));
+        transitions.add(new Transition<>(multirest, new Appoggiatura(), notes));
+        transitions.add(new Transition<>(multirest, new Acciaccatura(), notes));
         transitions.add(new Transition<>(multirest, new Rest(), notes));
         transitions.add(new Transition<>(multirest, new VerticalLine(), barline));
 
@@ -91,14 +99,20 @@ public class ModernAgnostic2SemanticTransducer extends Agnostic2SemanticTransduc
         transitions.add(new Transition<>(barline, new Clef(), clef));
 
         transitions.add(new Transition<>(notes, new Note(), notes));
+        transitions.add(new Transition<>(notes, new Appoggiatura(), notes));
+        transitions.add(new Transition<>(notes, new Acciaccatura(), notes));
         transitions.add(new Transition<>(notes, new Dot(), notes));
         transitions.add(new Transition<>(notes, new Rest(), notes));
         transitions.add(new Transition<>(notes, new Slur(), notes));
         transitions.add(new Transition<>(notes, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
         transitions.add(new Transition<>(barline, new Note(), notes));
+        transitions.add(new Transition<>(barline, new Appoggiatura(), notes));
+        transitions.add(new Transition<>(barline, new Acciaccatura(), notes));
         transitions.add(new Transition<>(barline, new Rest(), notes));
         transitions.add(new Transition<>(barline, new es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Ligature(), notes));
         transitions.add(new Transition<>(noteacc, new Note(), notes));
+        transitions.add(new Transition<>(noteacc, new Appoggiatura(), notes));
+        transitions.add(new Transition<>(noteacc, new Acciaccatura(), notes));
         transitions.add(new Transition<>(notes, new VerticalLine(), barline));
         transitions.add(new Transition<>(barline, new VerticalLine(), barline));
 

@@ -63,6 +63,7 @@ public class SKernMensImporter {
         private ArrayList<Long> associatedIDS;
         private NotationType notationType;
         private SimpleNote pendingTieFrom;
+        private GraceNoteType graceNoteType;
 
         private TimeSignature lastTimeSignature; // used for multirests
 
@@ -637,6 +638,7 @@ public class SKernMensImporter {
         public void enterNote(sKernMensParser.NoteContext ctx) {
             this.lastStemDirection = null;
             this.lastPause = false;
+            this.graceNoteType = null;
         }
 
         @Override
@@ -666,7 +668,20 @@ public class SKernMensImporter {
             }
         }
 
-
+        @Override
+        public void exitGraceNote(sKernMensParser.GraceNoteContext ctx) {
+            super.exitGraceNote(ctx);
+            switch (ctx.getText()) {
+                case "q":
+                    graceNoteType = GraceNoteType.acciaccatura;
+                    break;
+                case "qq":
+                    graceNoteType = GraceNoteType.appoggiatura;
+                    break;
+                default:
+                    throw new GrammarParseRuntimeException("Unimplemented grace note: " + ctx.getText());
+            }
+        }
 
         @Override
         public void exitNote(sKernMensParser.NoteContext ctx) {
@@ -675,6 +690,7 @@ public class SKernMensImporter {
 
             ScientificPitch scientificPitch = constructScientificPitch(ctx.alteration());
             SimpleNote note = new SimpleNote(lastFigure, lastAgumentationDots, scientificPitch);
+            note.setGraceNoteType(graceNoteType);
             if (pendingTieFrom != null) {
                 try {
                     note.tieFromPrevious(pendingTieFrom);

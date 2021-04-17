@@ -206,8 +206,9 @@ alteration: OCTOTHORPE | (OCTOTHORPE OCTOTHORPE) | MINUS | (MINUS MINUS) | CHAR_
 editorialAccidental: (CHAR_y CHAR_y?) | (CHAR_Y CHAR_Y?);
 
 afterNote:
-	     (slurEnd | stem| ligatureEnd | beam | pause | barLineCrossedNoteEnd)*;
+	     (slurEnd | stem| ligatureEnd | beam | pause | barLineCrossedNoteEnd | graceNote)*;
 
+graceNote: CHAR_q CHAR_q?;
 slurStart: LEFT_PARENTHESIS;
 ligatureStart: ANGLE_BRACKET_OPEN | LEFT_BRACKET; // both ligature and ties - ambiguity solved in Java code (SKernMensImporter)
 ligatureEnd: ANGLE_BRACKET_CLOSE | RIGHT_BRACKET;

@@ -466,7 +466,7 @@ public class ImportAgnosticStaticLauro implements CommandLineRunner {
             throw new IM3Exception("Invalid perfection: " + subsubtokens[2]);
         }
 
-        SemanticNote semanticNote = new SemanticNote(false, scientificPitch, null, figures, dots, false, false, null, colored, perfection, null);
+        SemanticNote semanticNote = new SemanticNote(null,scientificPitch, null, figures, dots, false, false, null, colored, perfection, null);
         scientificPitch.setOctave(scientificPitch.getOctave()+1); // everything is set an octave below
         return semanticNote;
     }

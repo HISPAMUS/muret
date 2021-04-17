@@ -93,6 +93,7 @@ CHAR_i: 'i';
 CHAR_m: 'm';
 CHAR_n: 'n';
 CHAR_p: 'p';
+CHAR_q: 'q';
 CHAR_r: 'r';
 CHAR_s: 's';
 CHAR_t: 't';
