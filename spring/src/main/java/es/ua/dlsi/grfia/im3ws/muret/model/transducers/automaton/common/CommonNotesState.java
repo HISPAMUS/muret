@@ -24,6 +24,7 @@ import java.util.Arrays;
 public abstract class CommonNotesState extends TransducerState {
     private final NotationType notationType;
     SemanticNote lastNote = null;
+    Integer tupletNumber = null;
 
     public CommonNotesState(int number, NotationType notationType) {
         super(number, "notes");
@@ -80,7 +81,12 @@ public abstract class CommonNotesState extends TransducerState {
 
         agnosticIDs.add(token.getId());
 
-        if (token.getSymbol() instanceof Slur) {
+        if (token.getSymbol() instanceof Digit) {
+            if (lastNote == null) {
+                throw new IM3Exception("Cannot set a tuplet without a previous note");
+            }
+            tupletNumber = ((Digit) token.getSymbol()).getDigit();
+        } else if (token.getSymbol() instanceof Slur) {
             if (lastNote == null) {
                 throw new IM3Exception("Last note is null, cannot tie");
             }
@@ -118,7 +124,6 @@ public abstract class CommonNotesState extends TransducerState {
                             } else {
                                 actualAccidental = scientificPitch.getPitchClass().getAccidental();
                                 visualAccidental = scientificPitch.getPitchClass().getAccidental();
-                                ;
                             }
                         }
                     } else {
@@ -156,7 +161,7 @@ public abstract class CommonNotesState extends TransducerState {
                     graceNoteType = GraceNoteType.appoggiatura;
                 }
 
-                SemanticNote note = new SemanticNote(graceNoteType, scientificPitch, visualAccidental, figuresColoration.getFigure(), 0, fermata, false, null, figuresColoration.getColored(), semanticBeamType);
+                SemanticNote note = new SemanticNote(graceNoteType, scientificPitch, visualAccidental, figuresColoration.getFigure(), 0, fermata, false, tupletNumber, figuresColoration.getColored(), semanticBeamType);
 
                 if (value != null && value.getStemDirection() != null && token.getPositionInStaff().equals(PositionsInStaff.LINE_3)) {
                     switch (value.getStemDirection()) {
@@ -175,6 +180,8 @@ public abstract class CommonNotesState extends TransducerState {
             } catch (IM3Exception e) {
                 throw new IM3RuntimeException(e);
             }
+            tupletNumber = null;
+
         } else if (token.getSymbol() instanceof Rest) {
             //TODO si accidental no es nulo la alteración debe ir con alguien
             Rest value = ((Rest) token.getSymbol());
@@ -183,12 +190,13 @@ public abstract class CommonNotesState extends TransducerState {
 
             boolean fermata = false;
             fermata = FermataState.isPendingFermata(transduction, true);
-            SemanticRest rest = new SemanticRest(figures, 0, fermata, null);
+            SemanticRest rest = new SemanticRest(figures, 0, fermata, tupletNumber);
             if (token.getPositionInStaff().getLine() != 3) {
                 rest.setLinePosition(token.getPositionInStaff().getLine());
             }
             rest.setAgnosticIDs(agnosticIDs);
             transduction.add(rest);
+            tupletNumber = null;
         } else if (token.getSymbol() instanceof Dot) {
             SemanticSymbol lastSymbol = transduction.getLastSymbol();
             lastSymbol.getSymbol().addAgnosticID(token.getId());

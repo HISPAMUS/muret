@@ -14,6 +14,7 @@ import es.ua.dlsi.im3.omr.encoding.semantic.SemanticEncoding;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbol;
 import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticNote;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,12 +30,16 @@ public abstract class Agnostic2SemanticTransducer implements IAgnostic2SemanticT
         dpa.setSkipUnknownSymbols(true);
         SemanticTransduction transduction = dpa.probabilityOf(agnosticEncoding.getSymbols(), initialProbability -> new SemanticTransduction(initialProbability));
 
-        // now group beams and set ties
+        // now group beams, set ties and tuplets
         BeamGroup beamGroup = null;
         SemanticNote lastNote = null;
+        Integer inTuplet = null;
         for (SemanticSymbol symbol: transduction.getSemanticEncoding().getSymbols()) {
             if (symbol.getSymbol() instanceof SemanticNote) {
                 SemanticNote semanticNote = (SemanticNote) symbol.getSymbol();
+                if (semanticNote.getTupletNumber() != null) {
+                    inTuplet = semanticNote.getTupletNumber();
+                }
                 if (semanticNote.getSemanticBeamType() != null) {
                     switch (semanticNote.getSemanticBeamType()) {
                         case start:
@@ -52,6 +57,18 @@ public abstract class Agnostic2SemanticTransducer implements IAgnostic2SemanticT
                                 throw new IM3Exception("Missing beam start");
                             }
                             beamGroup.add(semanticNote.getCoreSymbol());
+
+                            if (inTuplet != null) {
+                                if (beamGroup.getIncludedFigures().size() == inTuplet) {
+                                    for (SingleFigureAtom atom: beamGroup.getIncludedFigures()) {
+                                        atom.setInTuplet(inTuplet);
+                                    }
+                                } else {
+                                    throw new IM3Exception("Expected a beam group of " + inTuplet + " notes for tuplet and found " + beamGroup.getIncludedFigures().size());
+                                }
+
+                                inTuplet = null;
+                            }
                             beamGroup = null;
                             break;
                         default:
@@ -65,6 +82,7 @@ public abstract class Agnostic2SemanticTransducer implements IAgnostic2SemanticT
                 lastNote = semanticNote;
             }
         }
+
         return transduction;
     }
 

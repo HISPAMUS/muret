@@ -67,6 +67,10 @@ public class SKernMensImporter {
 
         private TimeSignature lastTimeSignature; // used for multirests
 
+        private Integer tupletNumber;
+        ArrayList<Atom> tupletElements;
+
+
         public Loader(Parser parser, boolean debug) {
             this.humdrumMatrix = new HumdrumMatrix();
             this.inLigature = false;
@@ -486,6 +490,7 @@ public class SKernMensImporter {
         @Override
         public void exitModernDuration(sKernMensParser.ModernDurationContext ctx) {
             super.exitModernDuration(ctx);
+            Integer newTupletNumber = null;
             switch (ctx.number().getText()) {
                 case "0":
                     lastFigure = Figures.DOUBLE_WHOLE;
@@ -517,12 +522,49 @@ public class SKernMensImporter {
                 case "256":
                     lastFigure = Figures.TWO_HUNDRED_FIFTY_SIX;
                     break;
+                case "12": // tuplets TODO Generalize this (use KernImporter from IM3Core)
+                    lastFigure = Figures.EIGHTH;
+                    newTupletNumber = 3;
+                    break;
+                case "24":
+                    lastFigure = Figures.SIXTEENTH;
+                    newTupletNumber = 3;
+                    break;
+                case "40":
+                    lastFigure = Figures.EIGHTH;
+                    newTupletNumber = 5;
+                    break;
+                case "56":
+                    lastFigure = Figures.EIGHTH;
+                    newTupletNumber = 7;
+                    break;
+                case "3":
+                    lastFigure = Figures.HALF;
+                    newTupletNumber = 3;
+                    break;
+                case "6":
+                    lastFigure = Figures.QUARTER;
+                    newTupletNumber = 3;
+                    break;
+                case "9":
+                    lastFigure = Figures.EIGHTH;
+                    newTupletNumber = 9;
+                    break;
+                case "18":
+                    lastFigure = Figures.SIXTEENTH;
+                    newTupletNumber = 9;
+                    break;
                 default: // tuplet
-                    lastFigure = Figures.NO_DURATION;
-                    // one temporal that will be modified later
+                    throw new GrammarParseRuntimeException("Unsupported duration (tuplet?): " + ctx.number().getText());
             }
+            if (tupletNumber != null && tupletNumber != newTupletNumber) {
+                throw new GrammarParseRuntimeException("Unsupported mixed duration tuplets: " + tupletNumber + " and " + newTupletNumber);
+            }
+            this.tupletNumber = newTupletNumber;
+
             lastAgumentationDots = ctx.augmentationDot().size();
         }
+
 
         @Override
         public void enterRest(sKernMensParser.RestContext ctx) {
@@ -825,6 +867,52 @@ public class SKernMensImporter {
 
             if (!this.inBeam) {
                 this.lastBeamGroup = null;
+            }
+
+            if (tupletNumber != null) {
+                if (this.tupletElements == null) {
+                    this.tupletElements = new ArrayList<>();
+                }
+
+                if (this.tupletElements.size() < tupletNumber) {
+                    if (!this.tupletElements.isEmpty() && !this.tupletElements.get(0).getAtomFigures().get(0).getFigure().equals(lastFigure)) {
+                        throw new GrammarParseRuntimeException("Unsupported tuplets of mixed figures");
+                    }
+                    this.tupletElements.add(note);
+                }
+
+                if (this.tupletElements.size() == tupletNumber) {
+                    //TODO
+                    int inSpaceOfAtoms;
+                    switch (tupletNumber) {
+                        //TODO Generalize -- see Semantic2IMCore
+                        case 2:
+                            inSpaceOfAtoms = 3;
+                            break;
+                        case 3:
+                            inSpaceOfAtoms = 2;
+                            break;
+                        case 5:
+                        case 6:
+                        case 7:
+                            inSpaceOfAtoms = 4;
+                            break;
+                        case 9:
+                            inSpaceOfAtoms = 8;
+                            break;
+                        default:
+                            throw new GrammarParseRuntimeException("Unsupported tuplet: " + tupletNumber);
+                    }
+
+                    try {
+                        SimpleTuplet tuplet = new SimpleTuplet(tupletNumber, inSpaceOfAtoms, lastFigure, this.tupletElements);
+                        tupletNumber = null;
+                        // internally the elements are inside the tuplet
+                    } catch (IM3Exception e) {
+                        throw new GrammarParseRuntimeException(e);
+                    }
+
+                }
             }
         }
 

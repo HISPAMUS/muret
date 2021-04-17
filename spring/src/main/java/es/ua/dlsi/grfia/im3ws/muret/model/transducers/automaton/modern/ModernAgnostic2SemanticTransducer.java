@@ -99,6 +99,7 @@ public class ModernAgnostic2SemanticTransducer extends Agnostic2SemanticTransduc
         transitions.add(new Transition<>(barline, new Clef(), clef));
 
         transitions.add(new Transition<>(notes, new Note(), notes));
+        transitions.add(new Transition<>(notes, new Digit(), notes)); // for tuplets
         transitions.add(new Transition<>(notes, new Appoggiatura(), notes));
         transitions.add(new Transition<>(notes, new Acciaccatura(), notes));
         transitions.add(new Transition<>(notes, new Dot(), notes));
