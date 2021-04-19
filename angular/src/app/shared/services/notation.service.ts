@@ -31,6 +31,7 @@ export class NotationService {
   }
 
   public renderStaff(mei: string): string {
+    //return this.vrvToolkit.RenderToPAE(mei, optionsStaff);
     return this.vrvToolkit.renderData(mei, optionsStaff);
   }
 

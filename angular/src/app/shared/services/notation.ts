@@ -1,5 +1,5 @@
 export interface Notation {
   content: string;
-  notationResponseType: 'mei' | 'svg';
+  notationResponseType: 'mei' | 'svg' | 'pae';
   semanticEncoding: string;
 }
