@@ -11,6 +11,10 @@
           [attr.aria-expanded]="isMEISelected()" aria-controls="meiPanel">
     MEI
   </button>
+  <button class="btn btn-secondary" (click)="showPAEC()"
+          [attr.aria-expanded]="isPAECSelected()" aria-controls="paecPanel">
+    PAEC
+  </button>
   <!--<button class="btn btn-primary" (click)="showSemanticToolbar()"
           [attr.aria-expanded]="isToolbarSelected()" aria-controls="toolbarPanel">
     Semantic Toolbar
@@ -26,6 +30,10 @@
 
   <div id="meiPanel" [ngbCollapse]="isMEICollapsed()">
     <app-meipreview></app-meipreview>
+  </div>
+
+  <div id="paecPanel" [ngbCollapse]="isPAECCollapsed()">
+    <app-paecpreview></app-paecpreview>
   </div>
 
   <!--<div id="semanticToolbar" class="card" [ngbCollapse]="isSemanticToolbarCollapsed()">

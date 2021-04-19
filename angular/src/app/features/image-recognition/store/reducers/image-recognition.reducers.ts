@@ -538,6 +538,16 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
       return newState;
     }
     // ---- semantic
+    case ImageRecognitionActionTypes.ImageRecognitionConvertAgnostic2Semantic:
+    case ImageRecognitionActionTypes.ImageRecognitionGetNotation:
+    case ImageRecognitionActionTypes.ImageRecognitionSendSemanticEncoding: {
+      const newState = {
+        //apiRestServerError: null,
+        ...state
+      };
+      newState.notation = null; // reset it
+      return newState;
+    }
     case ImageRecognitionActionTypes.ImageRecognitionConvertAgnostic2SemanticSuccess:
     case ImageRecognitionActionTypes.ImageRecognitionGetNotationSuccess:
     case ImageRecognitionActionTypes.ImageRecognitionSendSemanticEncodingSuccess: {

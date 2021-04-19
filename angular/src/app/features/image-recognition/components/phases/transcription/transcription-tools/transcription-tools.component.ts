@@ -9,7 +9,7 @@ import {SVGSet} from "../../../../../../core/model/restapi/svgset";
 export class TranscriptionToolsComponent implements OnInit {
   @Input() svgSet: SVGSet;
 
-  encodingPaneType: 'none' | 'manual' | 'mei' | 'toolbar' | 'agnostic';
+  encodingPaneType: 'none' | 'manual' | 'mei' | 'toolbar' | 'agnostic' | 'paec';
 
   constructor() { }
 
@@ -28,6 +28,10 @@ export class TranscriptionToolsComponent implements OnInit {
     return this.encodingPaneType !== 'mei';
   }
 
+  isPAECCollapsed() {
+    return this.encodingPaneType !== 'paec';
+  }
+
   isSemanticToolbarCollapsed() {
     return this.encodingPaneType !== 'toolbar';
   }
@@ -44,6 +48,11 @@ export class TranscriptionToolsComponent implements OnInit {
     return this.encodingPaneType === 'mei';
   }
 
+  isPAECSelected() {
+    return this.encodingPaneType === 'paec';
+  }
+
+
   isToolbarSelected() {
     return this.encodingPaneType === 'toolbar';
   }
@@ -58,6 +67,10 @@ export class TranscriptionToolsComponent implements OnInit {
 
   showMEI() {
     this.encodingPaneType = 'mei';
+  }
+
+  showPAEC() {
+    this.encodingPaneType = 'paec';
   }
 
   showSemanticToolbar() {

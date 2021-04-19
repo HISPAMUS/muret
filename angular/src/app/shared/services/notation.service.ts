@@ -19,6 +19,10 @@ const optionsScore = {
   pageWidth: 60000
 };
 
+const optionsPAEC = {
+  breaks: 'encoded'
+};
+
 
 //TODO Values por Verovio
 
@@ -33,6 +37,12 @@ export class NotationService {
   public renderStaff(mei: string): string {
     //return this.vrvToolkit.RenderToPAE(mei, optionsStaff);
     return this.vrvToolkit.renderData(mei, optionsStaff);
+  }
+
+  public renderStaffToPAE(mei: string): string {
+    this.vrvToolkit.loadData(mei);
+    const result = this.vrvToolkit.renderToPAE();
+    return result;
   }
 
   public renderScore(mei: string): string {

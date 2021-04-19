@@ -40,6 +40,7 @@ import { SemanticKernMensGridComponent } from './components/phases/transcription
 import { MEIPreviewComponent } from './components/phases/transcription/meipreview/meipreview.component';
 import { SemanticToolbarComponent } from './components/phases/transcription/semantic-toolbar/semantic-toolbar.component';
 import {NgxSliderModule} from "@angular-slider/ngx-slider";
+import { PAECPreviewComponent } from './components/phases/transcription/paecpreview/paecpreview.component';
 
 
 @NgModule({
@@ -49,7 +50,7 @@ import {NgxSliderModule} from "@angular-slider/ngx-slider";
     ClassifiersComponent,
     MusicRegionSemanticRepresentationComponent,
     TextRegionSemanticRepresentationComponent,
-    AgnosticStaffComponent, SemanticNotationComponent, TextRegionAgnosticRepresentationComponent, MusicAgnosticRepresentationComponent, ChangePitchComponent, AgnosticToolbarComponent, TranscriptionToolsComponent, SemanticKernMensGridComponent, MEIPreviewComponent, SemanticToolbarComponent
+    AgnosticStaffComponent, SemanticNotationComponent, TextRegionAgnosticRepresentationComponent, MusicAgnosticRepresentationComponent, ChangePitchComponent, AgnosticToolbarComponent, TranscriptionToolsComponent, SemanticKernMensGridComponent, MEIPreviewComponent, SemanticToolbarComponent, PAECPreviewComponent
   ],
     imports: [
         CommonModule,
