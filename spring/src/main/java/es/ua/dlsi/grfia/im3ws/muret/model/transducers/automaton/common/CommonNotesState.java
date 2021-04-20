@@ -191,7 +191,7 @@ public abstract class CommonNotesState extends TransducerState {
             boolean fermata = false;
             fermata = FermataState.isPendingFermata(transduction, true);
             SemanticRest rest = new SemanticRest(figures, 0, fermata, tupletNumber);
-            if (token.getPositionInStaff().getLine() != 3) {
+            if (token.getPositionInStaff().getLine() != 3 && !figures.equals(Figures.WHOLE)) {
                 rest.setLinePosition(token.getPositionInStaff().getLine());
             }
             rest.setAgnosticIDs(agnosticIDs);

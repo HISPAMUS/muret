@@ -143,7 +143,14 @@ public class AgnosticRepresentationModel {
 
             Symbol s = symbol.get();
             actionLogAgnosticModel.logChangeSymbolType(s);
-            s.setAgnosticSymbol(new AgnosticSymbol(AgnosticVersion.v2, agnosticSymbolType, s.getAgnosticSymbol().getPositionInStaff()));
+            // TODO patch for rest whole
+            PositionInStaff positionInStaff = s.getAgnosticSymbol().getPositionInStaff();
+            if (agnosticSymbolTypeString.equals("rest.whole")) {
+                positionInStaff = PositionsInStaff.LINE_4;
+            } else if (agnosticSymbolTypeString.startsWith("rest")) {
+                positionInStaff = PositionsInStaff.LINE_3;
+            }
+            s.setAgnosticSymbol(new AgnosticSymbol(AgnosticVersion.v2, agnosticSymbolType, positionInStaff));
             result.add(s);
         }
         //return symbolRepository.update(symbol.get());
