@@ -7,6 +7,7 @@ import es.ua.dlsi.im3.core.score.BarlineType;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
 import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticBarline;
 
+//TODO Repetitions - colon
 public class BarLineState extends TransducerState {
     public BarLineState(int number) {
         super(number, "barline");

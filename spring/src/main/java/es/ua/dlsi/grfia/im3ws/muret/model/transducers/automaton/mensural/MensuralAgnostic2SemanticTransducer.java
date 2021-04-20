@@ -108,12 +108,12 @@ public class MensuralAgnostic2SemanticTransducer extends Agnostic2SemanticTransd
         //TODO Añadir defect en todo
 
         GraphicalSymbolAlphabet alphabet = new GraphicalSymbolAlphabet();
-        dpa = new DeterministicProbabilisticAutomaton(states, start,endStates, alphabet, transitions);
-        dpa.setDebug(true);
-        dpa.normalizeProbabilities();
+        ndpa = new DeterministicProbabilisticAutomaton(states, start,endStates, alphabet, transitions);
+        ndpa.setDebug(true);
+        ndpa.normalizeProbabilities();
 
         System.err.println("TO-DO Quitar escritura DOT");
-        dpa.writeDot(new File("/tmp/dpamensural.dot"));
+        ndpa.writeDot(new File("/tmp/dpamensural.dot"));
 
     }
 }

@@ -41,8 +41,13 @@ export class NotationService {
 
   public renderStaffToPAE(mei: string): string {
     this.vrvToolkit.loadData(mei);
-    const result = this.vrvToolkit.renderToPAE();
-    return result;
+    try {
+      const result = this.vrvToolkit.renderToPAE();
+      return result;
+    } catch (e) {
+      console.log(e);
+      return 'Cannot convert to to PAEC';
+    }
   }
 
   public renderScore(mei: string): string {

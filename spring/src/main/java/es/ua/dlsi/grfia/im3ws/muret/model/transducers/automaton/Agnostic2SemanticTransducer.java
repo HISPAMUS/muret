@@ -4,7 +4,8 @@ import es.ua.dlsi.grfia.im3ws.muret.model.transducers.IAgnostic2SemanticTransduc
 import es.ua.dlsi.grfia.im3ws.muret.model.transducers.SemanticTransduction;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.adt.Pair;
-import es.ua.dlsi.im3.core.adt.dfa.DeterministicProbabilisticAutomaton;
+import es.ua.dlsi.im3.core.adt.dfa.NonDeterministicProbabilisticAutomaton;
+import es.ua.dlsi.im3.core.adt.dfa.ProbabilisticAutomaton;
 import es.ua.dlsi.im3.core.adt.dfa.State;
 import es.ua.dlsi.im3.core.score.*;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticEncoding;
@@ -14,12 +15,11 @@ import es.ua.dlsi.im3.omr.encoding.semantic.SemanticEncoding;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbol;
 import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticNote;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public abstract class Agnostic2SemanticTransducer implements IAgnostic2SemanticTransducer {
-    protected DeterministicProbabilisticAutomaton<State, AgnosticSymbolType, SemanticTransduction> dpa;
+    protected ProbabilisticAutomaton<State, AgnosticSymbolType, SemanticTransduction> ndpa;
     NotationType notationType;
 
     public Agnostic2SemanticTransducer(NotationType notationType) {
@@ -27,8 +27,8 @@ public abstract class Agnostic2SemanticTransducer implements IAgnostic2SemanticT
     }
 
     public SemanticTransduction transduce(AgnosticEncoding agnosticEncoding) throws IM3Exception {
-        dpa.setSkipUnknownSymbols(true);
-        SemanticTransduction transduction = dpa.probabilityOf(agnosticEncoding.getSymbols(), initialProbability -> new SemanticTransduction(initialProbability));
+        ndpa.setSkipUnknownSymbols(true);
+        SemanticTransduction transduction = ndpa.probabilityOf(agnosticEncoding.getSymbols(), initialProbability -> new SemanticTransduction(initialProbability));
 
         // now group beams, set ties and tuplets
         BeamGroup beamGroup = null;

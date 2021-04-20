@@ -8,7 +8,7 @@ import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticCompoundAtom
 import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticLigature;
 import org.apache.commons.math3.fraction.BigFraction;
 
-public class SemanticTransduction extends Transduction {
+public class SemanticTransduction extends Transduction implements Cloneable {
     SemanticEncoding semanticEncoding;
 
     public SemanticTransduction(BigFraction initialProbability) {
@@ -31,5 +31,12 @@ public class SemanticTransduction extends Transduction {
 
     public SemanticSymbol getLastSymbol() {
         return semanticEncoding.getSymbols().get(semanticEncoding.getSymbols().size()-1);
+    }
+
+    @Override
+    public SemanticTransduction clone() {
+        SemanticTransduction semanticTransduction = new SemanticTransduction(this.getProbability());
+        semanticTransduction.semanticEncoding = (SemanticEncoding) this.semanticEncoding.clone();
+        return semanticTransduction;
     }
 }

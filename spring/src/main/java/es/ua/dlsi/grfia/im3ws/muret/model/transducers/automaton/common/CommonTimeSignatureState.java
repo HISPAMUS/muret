@@ -25,7 +25,7 @@ public class CommonTimeSignatureState extends TransducerState {
     List<Long> agnosticIDs;
 
     public CommonTimeSignatureState(int number, NotationType notationType) {
-        super(number, "keySig");
+        super(number, "timeSig");
         this.notationType = notationType;
         this.agnosticIDs = new ArrayList<>();
     }
@@ -87,6 +87,8 @@ public class CommonTimeSignatureState extends TransducerState {
             } else {
                 throw new IM3Exception("No digits or meter signs in time signature state");
             }
+
+            digits = null;
         }
     }
 }
