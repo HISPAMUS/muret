@@ -3,8 +3,9 @@
     <aside class="col-3"  id="leftColumn">  <!-- left column -->
       <div id="imageNavigator" [ngClass]="imageNavigatorHeight">
         <!--<h3 class="text-center">{{imageOverview.filename}}</h3>-->
-        <p id="doubleClickBBoxes">Double click for changing the bounding boxes <br> <a [routerLink]="['/imageRecognition/transcription', imageOverview.prevImageID]">Previous</a> |
-          <a [routerLink]="['/imageRecognition/transcription', imageOverview.nextImageID]">Next</a>
+        <p id="doubleClickBBoxes"><a [routerLink]="['/imageRecognition/transcription', imageOverview.prevImageID]">Previous</a> |
+          <a [routerLink]="['/imageRecognition/transcription', imageOverview.nextImageID]">Next </a><br>
+            Double click for changing the bounding boxes 
         </p>
         <app-image-recognition-toolbar [zoomManager]="zoomManager" [hideModeButtons]="true"></app-image-recognition-toolbar>
         <app-image-document-analysis-navigator

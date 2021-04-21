@@ -157,13 +157,13 @@
                 </executions>
             </plugin>
             <!-- for standalone deployment -->
-            <!--It does not compile with this plugin <plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <executable>true</executable>
                 </configuration>
-            </plugin>-->
+            </plugin>
         </plugins>
     </build>
 

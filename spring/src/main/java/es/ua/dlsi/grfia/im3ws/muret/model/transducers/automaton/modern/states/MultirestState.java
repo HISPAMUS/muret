@@ -74,6 +74,10 @@ public class MultirestState extends TransducerState {
             SemanticMultirest semanticMultirest = new SemanticMultirest(lastTimeSignature.getDuration(), n);
             semanticMultirest.setAgnosticIDs(agnosticIDs);
             transduction.add(semanticMultirest);
+
+            this.multirest = null;
+            this.digits = null;
+            this.agnosticIDs.clear();
         }
     }
 }

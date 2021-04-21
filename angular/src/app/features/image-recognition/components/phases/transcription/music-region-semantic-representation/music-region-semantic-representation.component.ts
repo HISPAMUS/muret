@@ -36,7 +36,7 @@ export class MusicRegionSemanticRepresentationComponent implements OnInit, OnCha
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.region && this.region && this.region.semanticEncoding) {
+    if (changes.region && this.region) {
       this.store.dispatch(new ImageRecognitionGetNotation(this.region, false, 'verovio'));
       if (this.region && this.region.notationType) {
         this.specialNotationType = this.region.notationType;

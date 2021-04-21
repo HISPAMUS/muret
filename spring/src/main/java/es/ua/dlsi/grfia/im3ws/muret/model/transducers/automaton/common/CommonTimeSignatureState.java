@@ -89,6 +89,8 @@ public class CommonTimeSignatureState extends TransducerState {
             }
 
             digits = null;
+            this.agnosticIDs.clear();
+            this.meterSigns = null;
         }
     }
 }

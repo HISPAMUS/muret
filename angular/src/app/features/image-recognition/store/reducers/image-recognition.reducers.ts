@@ -549,8 +549,14 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
       return newState;
     }
     case ImageRecognitionActionTypes.ImageRecognitionConvertAgnostic2SemanticSuccess:
-    case ImageRecognitionActionTypes.ImageRecognitionGetNotationSuccess:
     case ImageRecognitionActionTypes.ImageRecognitionSendSemanticEncodingSuccess: {
+      const newState = {
+        ...state
+      };
+      newState.notation = action.notation; // the notation contains the selected region semantic encoding - we don't use the one in the region
+      return newState;
+    }
+    case ImageRecognitionActionTypes.ImageRecognitionGetNotationSuccess: {
       const newState = {
         //apiRestServerError: null,
         ...state
