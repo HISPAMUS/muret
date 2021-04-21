@@ -907,6 +907,7 @@ public class SKernMensImporter {
                     try {
                         SimpleTuplet tuplet = new SimpleTuplet(tupletNumber, inSpaceOfAtoms, lastFigure, this.tupletElements);
                         tupletNumber = null;
+                        this.tupletElements = null;
                         // internally the elements are inside the tuplet
                     } catch (IM3Exception e) {
                         throw new GrammarParseRuntimeException(e);
