@@ -1,0 +1,23 @@
+version:4
+90	27260	clef.G2:L2:0
+964	27620	digit.4:L4:0
+964	27260	digit.4:L2:0
+1373	26900	note.quarter_up:L0:0
+1486	26698	slur.start:L-1:0
+2063	26990	note.quarter_up:S0:0
+2356	27614	slur.start:S3:0
+2753	27080	note.quarter_up:L1:0
+2866	26878	slur.start:L0:0
+3443	27170	note.quarter_up:S1:0
+3736	27553	slur.start:S3:0
+4133	27080	verticalLine.thin:L1:0
+4326	27260	note.quarter_up:L2:0
+4438	27643	slur.end:L4:0
+5016	27170	note.quarter_up:S1:0
+5125	26969	slur.end:S0:0
+5706	27080	note.quarter_up:L1:0
+5815	27749	slur.end:S4:0
+6396	26900	note.quarter_up:L0:0
+6509	26698	slur.end:L-1:0
+6956	27080	verticalLine.thin:L1:0
+7086	27080	verticalLine.thick:L1:0

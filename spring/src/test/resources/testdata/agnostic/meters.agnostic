@@ -1,0 +1,12 @@
+version:4
+90	27440	clef.G2:L2:0
+825	27620	metersign.Ct:L3:0
+1393	27080	note.whole:L0:0
+2983	27260	verticalLine.thin:L1:0
+3086	27620	metersign.Ccut:L3:0
+3656	27170	note.whole:S0:0
+5246	27260	verticalLine.thin:L1:0
+5601	27800	digit.1:L4:0
+5601	27440	digit.8:L2:0
+5817	27800	digit.2:L4:0
+6121	27800	rest.whole:L4:0

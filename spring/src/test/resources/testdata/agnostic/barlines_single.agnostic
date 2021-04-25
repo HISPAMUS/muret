@@ -1,0 +1,25 @@
+version:4
+90	27440	clef.G2:L2:0
+915	27080	note.whole:L0:0
+2685	27170	note.whole:S0:0
+4275	27260	verticalLine.thin:L1:0
+4374	27260	verticalLine.thin:L1:0
+4567	27260	note.whole:L1:0
+6157	27260	verticalLine.thin:L1:0
+6350	27350	note.whole:S1:0
+8075	27260	verticalLine.thick:L1:0
+8205	27260	verticalLine.thin:L1:0
+8282	27620	colon:L3:0
+8498	27440	note.whole:L2:0
+9881	27620	colon:L3:0
+9958	27260	verticalLine.thin:L1:0
+10088	27260	verticalLine.thick:L1:0
+10218	27260	verticalLine.thin:L1:0
+10295	27620	colon:L3:0
+10511	27530	note.whole:S2:0
+11894	27620	colon:L3:0
+11971	27260	verticalLine.thin:L1:0
+12101	27260	verticalLine.thick:L1:0
+12326	27620	note.whole:L3:0
+13786	27260	verticalLine.thin:L1:0
+13916	27260	verticalLine.thick:L1:0

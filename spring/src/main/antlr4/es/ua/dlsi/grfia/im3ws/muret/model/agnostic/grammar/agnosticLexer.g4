@@ -8,10 +8,12 @@ VERSION: 'version';
 
 // Agnostic symbol types
 TACCIDENTAL: 'accidental';
-TBRACKET: 'bracket';
 TCLEF: 'clef';
-TCOLONT: 'colon';
+TCOLON: 'colon';
 TDIGIT: 'digit';
+TENCLOSURE: 'enclosure';
+TDOT: 'dot';
+THORIZONTAL_BRACKET: 'horizBracket';
 TMARK: 'mark';
 TMETERSIGN: 'metersign';
 TMULTIREST: 'multirest';
@@ -23,19 +25,20 @@ SEPSYMBOL: DOT;
 SEPPROPERTIES: UNDERSCORE;
 
 // Subtypes
-STACCIDENTALS: 'flat' | 'natural' | 'sharp' | 'double_sharp';
+STCLEFOCTAVE: '8va' | '8vb' | '15ma' | '15mb';
+STACCIDENTALS: 'flat' | 'natural' | 'sharp' | 'double_sharp' | 'double_sharp_x' | 'double_flat';
 STMETERSIGNS: 'Ct' | 'Ccut' | 'CZ' | 'CcutZ' | 'O' | 'Odot' | 'Cdot'; // Ct for common time, to avoid ambiguities
+STFIGURES_WITH_STEM: 'longa' | 'longaBlack' | 'quadrupleWholeStem' | 'tripleWholeStem' | 'doubleWholeStem' | 'doubleWholeBlackStem' | 'half' | 'quarter' | 'eighth' | 'sixteenth' | 'thirtySecond' | 'sixtyFourth' | 'hundredTwentyEighth' | 'twoHundredFiftySix' | 'eighthCut' | 'eighthVoid' | 'sixteenthVoid';
 STFIGURES_WITHOUT_STEM:
     'doubleWhole' | 'breve' | 'breveBlack' |  'whole'  | 'wholeBlack';
-STFIGURES_WITH_STEM: 'longa' | 'longaBlack' | 'quadrupleWholeStem' | 'tripleWholeStem' | 'doubleWholeStem' | 'doubleWholeBlackStem' | // mensural
-| 'half' | 'quarter' | 'eighth' | 'sixteenth' | 'thirtySecond' | 'sixtyFourth' | 'hundredTwentEighth' | 'twoHundredFiftySix' | 'eighthCut' | 'eighthVoid' | 'sixteenthVoid';
 STMENSURAL_REST_FIGURES: 'seminima' | 'fusa' | 'semifusa';
 
-STMARKS_UNPOSITIONAL: 'accent' | 'tenuto' | 'harmonic';
+STMARKS_UNPOSITIONAL: 'accent' | 'tenuto' | 'harmonic' | 'breath' | 'arpeggio' | 'trill';
 STMARKS_POSITIONAL: 'staccatissimo' | 'marcato' | 'fermata';
-STMARKS_UPPERLOWER: 'turn';
+STMARKS_UPPERLOWER: 'turn' | 'mordent';
 STBEAM: 'beamedRight' | 'beamedLeft' | 'beamedBoth';
 STLINEWIDTH: 'thin' | 'thick';
+STENCLOSURES: 'bracket' | 'parenthesis';
 
 // Properties
 PSTART: 'start';
@@ -50,6 +53,9 @@ PCHORD: 'chord';
 PCUE: 'cue';
 PSLASH: 'slash';
 PTIE: 'tie';
+PRIGHT: 'right';
+PLEFT: 'left';
+
 
 // General rules
 COLON: ':';
@@ -57,6 +63,8 @@ COLON: ':';
 CHAR_C: 'C';
 CHAR_F: 'F';
 CHAR_G: 'G';
+CHAR_L: 'L';
+CHAR_S: 'S';
 
 DIGIT_0: '0';
 DIGIT_1: '1';
@@ -70,8 +78,9 @@ DIGIT_8: '8';
 DIGIT_9: '9';
 
 EOL : '\r'?'\n';
-
 HYPHEN: '-';
+TAB: '\t';
+
 
 
 fragment DOT : '.';

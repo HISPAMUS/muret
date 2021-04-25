@@ -1,0 +1,12 @@
+version:4
+90	27125	clef.G2:L2:0
+964	27485	digit.4:L4:0
+964	27125	digit.4:L2:0
+1352	27305	note.eighth_down_cue_slash:L3:0
+1588	27395	note.half_down:S3:0
+2271	27035	note.eighth_up_cue:S1:0
+2638	26945	note.half_up:L1:0
+3688	26945	verticalLine.thin:L1:0
+3881	27215	note.beamedRight1_up_cue:S2:0
+4331	27305	note.beamedLeft1_up_cue:L3:0
+4781	27395	note.whole:S3:0

@@ -1,0 +1,13 @@
+**kern	**kern	**kern
+*part2	*part2	*part1
+*staff3	*staff2	*staff1
+*clefF4	*clefG2	*clefC3
+*k[b-]	*k[b-]	*k[b-]
+*M4/4	*M4/4	*M4/4
+*met(c)	*met(c)	*met(c)
+1C	1g	1E
+=	=	=
+4D	4a	4F
+==	==	==
+*-	*-	*-
+!!!system-decoration: s1{(s2,s3)}

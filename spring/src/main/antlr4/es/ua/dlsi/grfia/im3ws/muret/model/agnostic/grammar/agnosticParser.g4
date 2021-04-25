@@ -15,28 +15,38 @@ options { tokenVocab=agnosticLexer; } // use tokens from agnosticLexer.g4
     }
 }
 
-start: version (EOL agnosticSymbol)*;
-version: VERSION COLON NUMBER;
-agnosticSymbol: symbol COLON positionInStaff COLON staff;
+start: version (EOL agnosticSymbol)* EOL*;
+version: VERSION COLON naturalNumber; // currently 'version:4'
+agnosticSymbol: (coordinates TAB)? symbol COLON positionInStaff COLON staff;
+
+coordinates: naturalNumber TAB naturalNumber;
 
 positionInStaff: (CHAR_L | CHAR_S) integer;
 staff: naturalNumber;
 
-symbol: accidental | bracket | clef | colon | digit | mark | metersign | multirest | note | rest | slur | verticalLine;
+symbol: accidental | horizontalBracket | clef | colon | digit | dot | enclosure | mark | metersign | multirest | note | rest | slur | verticalLine;
 
-accidental: TACCIDENTAL SEPSYMBOL STACCIDENTALS;
+accidental: TACCIDENTAL SEPSYMBOL STACCIDENTALS (SEPPROPERTIES PCUE)?;
 
-bracket: TBRACKET SEPSYMBOL (STSTART | STEND);
+clef: TCLEF SEPSYMBOL (CHAR_C | CHAR_F | CHAR_G) clefLine (SEPPROPERTIES STCLEFOCTAVE)?;
 
-clef: TCLEF SEPSYMBOL (CHAR_C | CHAR_F | CHAR_G);
+clefLine: DIGIT_1 | DIGIT_2 | DIGIT_3 | DIGIT_4 | DIGIT_5;
 
 colon: TCOLON;
 
+dot: TDOT;
+
 digit: TDIGIT SEPSYMBOL naturalNumber;
+
+enclosure: TENCLOSURE SEPSYMBOL STENCLOSURES SEPPROPERTIES leftRight;
+
+horizontalBracket: THORIZONTAL_BRACKET SEPSYMBOL (PSTART | PEND);
+
+leftRight: PRIGHT | PLEFT;
 
 mark: TMARK SEPSYMBOL (markPositional | markUnpositional | markUpperLower);
 
-markPositional: STMARKS_POSITIONAL SEPPROPERTIES pUpDown;
+markPositional: STMARKS_POSITIONAL SEPPROPERTIES pAboveBelow;
 
 markUnpositional: STMARKS_UNPOSITIONAL;
 
@@ -46,11 +56,11 @@ metersign: TMETERSIGN SEPSYMBOL STMETERSIGNS;
 
 multirest: TMULTIREST;
 
-note: TNOTE SEPSYMBOL noteFigure (SEPPROPERTIES PCHORD?) (SEPPROPERTIES cue)?;
+note: TNOTE SEPSYMBOL noteFigure (SEPPROPERTIES PCHORD)? (SEPPROPERTIES cue)?;
 
-cue: PCUE (SEPPROPERTIES PSLASH?);
+cue: PCUE (SEPPROPERTIES PSLASH)?;
 
-noteFigure: (STFIGURES_WITHOUT_STEM | STFIGURES_WITH_STEM SEPSYMBOL pUpDown) | beam;
+noteFigure: (STFIGURES_WITHOUT_STEM | STFIGURES_WITH_STEM SEPPROPERTIES pUpDown) | (beam SEPPROPERTIES pUpDown);
 
 beam: STBEAM naturalNumber;
 

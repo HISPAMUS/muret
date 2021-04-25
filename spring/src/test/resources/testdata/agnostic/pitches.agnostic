@@ -1,0 +1,24 @@
+version:4
+90	27440	clef.G2:L2:0
+90	25494	clef.G2:L2:0
+953	25764	note.whole:S3:0
+964	27800	digit.4:L4:0
+964	27440	digit.4:L2:0
+1385	26810	note.whole:S-2:0
+3094	25854	note.whole:L4:0
+3266	26900	note.whole:L-1:0
+5147	26990	note.whole:S-1:0
+5235	25944	note.whole:S4:0
+7028	27080	note.whole:L0:0
+7376	26034	note.whole:L5:0
+8909	27170	note.whole:S0:0
+9517	26124	note.whole:S5:0
+10790	27260	note.whole:L1:0
+11658	26214	note.whole:L6:0
+12671	27350	note.whole:S1:0
+13799	26394	note.whole:L7:0
+14552	27440	note.whole:L2:0
+15940	26484	note.whole:S7:0
+16433	27530	note.whole:S2:0
+18081	26574	note.whole:L8:0
+18314	27620	note.whole:L3:0
