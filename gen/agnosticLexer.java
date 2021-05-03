@@ -1,4 +1,4 @@
-// Generated from /Users/drizo/cmg/investigacion/software/github/repositorioHispamus/muret/spring/src/main/antlr4/es/ua/dlsi/grfia/im3ws/muret/model/agnostic/grammar/agnosticLexer.g4 by ANTLR 4.9.1
+// Generated from /Users/drizo/cmg/investigacion/software/github/repositorioHispamus/muret/muret/spring/src/main/antlr4/es/ua/dlsi/grfia/im3ws/muret/model/agnostic/grammar/agnosticLexer.g4 by ANTLR 4.9.1
 
 import java.util.ArrayList;
 

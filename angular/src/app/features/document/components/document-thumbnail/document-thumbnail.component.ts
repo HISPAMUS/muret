@@ -42,10 +42,11 @@ export class DocumentThumbnailComponent implements OnInit {
   @Input() imagePartIds: number[];
   @Input() imageRecognitionProgressStatuses: ImageRecognitionProgressStatus[];
 
-  loadedImage$: Observable<SafeResourceUrl>;
+  //loadedImage$: Observable<SafeResourceUrl>;
   loadingImage = "assets/images/loading.svg";
   imageClass: string;
   @ViewChild(ContextMenuComponent, { static: true }) public contextualMenu: ContextMenuComponent; // , { static: true } for avoiding ExpressionChangedAfterItHasCheckedError
+  thumbnailImageURL: string;
 
   constructor(private imageFilesService: ImageFilesService, private sanitizer: DomSanitizer, private lightbox: Lightbox,
               private lighboxConfig: LightboxConfig, private store: Store<DocumentState>,
@@ -57,10 +58,10 @@ export class DocumentThumbnailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadedImage$ = this.imageFilesService.getThumbnailImageBlob$(this.documentPath, this.imageID).pipe(
+    /*this.loadedImage$ = this.imageFilesService.getThumbnailImageBlob$(this.documentPath, this.imageID).pipe(
       //map(imageBlob => this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(imageBlob)))
       map(imageBlob => window.URL.createObjectURL(imageBlob))
-    );
+    );*/
   }
 
   onSelect() {
@@ -72,7 +73,18 @@ export class DocumentThumbnailComponent implements OnInit {
   }
 
   preview() {
-    this.imageFilesService.getPreviewImageBlob$(this.documentPath, this.imageID).subscribe(imageBlob => {
+    const albums = []; // used by Lightbox
+
+    const album = {
+      src: this.imageFilesService.getPreviewImageURL(this.documentPath, this.filename),
+      caption: this.filename,
+    };
+
+    albums.push(album);
+    this.lightbox.open(albums);
+    // window.open(window.URL.createObjectURL(imageBlob), 'Preview ' + this.image.filename, 'widthPercentage=1280,heightPercentage=720');
+
+    /*this.imageFilesService.getPreviewImageBlob$(this.documentPath, this.imageID).subscribe(imageBlob => {
       const albums = []; // used by Lightbox
 
       const album = {
@@ -83,7 +95,7 @@ export class DocumentThumbnailComponent implements OnInit {
       albums.push(album);
       this.lightbox.open(albums);
       // window.open(window.URL.createObjectURL(imageBlob), 'Preview ' + this.image.filename, 'widthPercentage=1280,heightPercentage=720');
-    });
+    });*/
   }
 
   moveToSection(section: Section) {
@@ -169,5 +181,9 @@ export class DocumentThumbnailComponent implements OnInit {
         }
       ); // css in styles.css
     modalRef.componentInstance.init(this.getSelectedImageIds(), this.documentPath);
+  }
+
+  getThumbnailImageURL() {
+    return this.imageFilesService.getThumbnailImageURL(this.documentPath, this.filename);
   }
 }

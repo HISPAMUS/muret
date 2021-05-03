@@ -392,7 +392,6 @@ public class DocumentController {
             }
 
             Part part = optionalPart.get();
-            actionLogsParts.logLinkPart(part.getDocument());
             return linkImagesToPart(imageIds, part);
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot linl images to part", e);
@@ -415,9 +414,9 @@ public class DocumentController {
 
                 image.setPart(null);
                 changedImages.add(image);
+                actionLogsParts.logUnlinkPart(image);
             }
             imageRepository.saveAll(changedImages);
-            actionLogsParts.logLinkPart(document);
             return getPartsInImages(document);
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot linl images to part", e);
@@ -447,7 +446,7 @@ public class DocumentController {
             imagesInNewPart.setPart(savedPart);
             HashSet<PartsInImage> partsInImages = linkImagesToPart(imageIds, savedPart);
             imagesInNewPart.setPartsInImage(partsInImages);
-            actionLogsParts.logLinkPart(part.getDocument());
+            actionLogsParts.logLinkPart(image);
             return imagesInNewPart;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot create part and link to image", e);
@@ -467,6 +466,7 @@ public class DocumentController {
 
             image.setPart(part);
             changedImages.add(image);
+            actionLogsParts.logLinkPart(image);
         }
 
         imageRepository.saveAll(changedImages);
@@ -621,14 +621,14 @@ public class DocumentController {
 
     private void storeImageInDocument(Optional<Document> document, String fileName, Path filePath) throws IM3Exception {
         Path mastersPath = Paths.get(muretConfiguration.getFolder(), document.get().getPath(),  MURETConfiguration.MASTER_IMAGES, fileName);
-        Path thumbnailsPath = Paths.get(muretConfiguration.getFolder(), document.get().getPath(), MURETConfiguration.THUMBNAIL_IMAGES, fileName);
-        Path previewPath = Paths.get(muretConfiguration.getFolder(), document.get().getPath(), MURETConfiguration.PREVIEW_IMAGES, fileName);
+        //replaced for IIIF Path thumbnailsPath = Paths.get(muretConfiguration.getFolder(), document.get().getPath(), MURETConfiguration.THUMBNAIL_IMAGES, fileName);
+        //replaced for IIIF Path previewPath = Paths.get(muretConfiguration.getFolder(), document.get().getPath(), MURETConfiguration.PREVIEW_IMAGES, fileName);
 
         BufferedImage fullImage = null;
         try {
             fullImage = ImageIO.read(filePath.toFile());
-            createSecondaryImage(filePath, thumbnailsPath, muretConfiguration.getThumbnailHeight());
-            createSecondaryImage(filePath, previewPath, muretConfiguration.getPreviewHeight());
+            //replaced for IIIF createSecondaryImage(filePath, thumbnailsPath, muretConfiguration.getThumbnailHeight());
+            //replaced for IIIF createSecondaryImage(filePath, previewPath, muretConfiguration.getPreviewHeight());
             // move to master
             Files.move(filePath, mastersPath);
         } catch (IOException e) {
@@ -645,9 +645,9 @@ public class DocumentController {
     }
 
 
-    private void createSecondaryImage(Path inputImagePath, Path outputImagePath, int height) throws IM3Exception {
+    /*private void createSecondaryImage(Path inputImagePath, Path outputImagePath, int height) throws IM3Exception {
         ImageUtils.getInstance().scaleToFitHeight(inputImagePath.toFile(), outputImagePath.toFile(), height);
-    }
+    }*/
 
     // revisado hasta aquí
 

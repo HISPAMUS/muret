@@ -50,7 +50,7 @@ public class PartsController extends MuRETBaseController {
         Part part = getPart(partLinking.getPartID());
 
         linkToPart(partLinking, part);
-        actionLogsParts.logLinkPart(image.computeDocument());
+        actionLogsParts.logLinkPart(image);
         return new ImageRecognitionModel().getPagesRegionsSymbols(image);
     }
 
@@ -107,7 +107,7 @@ public class PartsController extends MuRETBaseController {
         PagesRegionsSymbolsAndNewPart pagesRegionsSymbolsAndNewPart = new PagesRegionsSymbolsAndNewPart();
         pagesRegionsSymbolsAndNewPart.setPart(savedPart);
         pagesRegionsSymbolsAndNewPart.setPagesRegionsSymbols(new ImageRecognitionModel().getPagesRegionsSymbols(image));
-        actionLogsParts.logLinkPart(document.get());
+        actionLogsParts.logLinkPart(image);
         return pagesRegionsSymbolsAndNewPart;
     }
 
@@ -145,7 +145,7 @@ public class PartsController extends MuRETBaseController {
                     throw new IM3WSException("Invalid assignable to part type: " + partLinking.getPartAssignedTo());
             }
         }
-        actionLogsParts.logLinkPart(image.computeDocument());
+        actionLogsParts.logLinkPart(image);
         return new ImageRecognitionModel().getPagesRegionsSymbols(image);
     }
 
@@ -158,7 +158,7 @@ public class PartsController extends MuRETBaseController {
         Part part = getPart(partID);
         image.setPart(part);
         imageRepository.save(image);
-        actionLogsParts.logLinkPart(image.computeDocument());
+        actionLogsParts.logLinkPart(image);
         return part;
     }
 
@@ -176,7 +176,7 @@ public class PartsController extends MuRETBaseController {
         Part savedPart = partRepository.save(part);
         image.setPart(savedPart);
         imageRepository.save(image);
-        actionLogsParts.logLinkPart(document);
+        actionLogsParts.logLinkPart(image);
         return savedPart;
     }
     @PutMapping(path = {"unlinkImageFromPart/{imageID}"})
@@ -187,7 +187,7 @@ public class PartsController extends MuRETBaseController {
         Image image = getImage(imageID);
         image.setPart(null);
         imageRepository.save(image);
-        actionLogsParts.logLinkPart(image.computeDocument());
+        actionLogsParts.logLinkPart(image);
     }
 
     // revisado hasta aquí

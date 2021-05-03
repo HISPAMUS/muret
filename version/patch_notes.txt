@@ -1,3 +1,22 @@
+0.19
+    MAJOR UPDATES
+    - All images are now served by the IIIF Cantaloupe server (issue #183)
+
+    MINOR UPDATES
+    - The warning message "Cannot get notation because the region has not a semantic encoding" has been removed
+
+----
+
+0.18
+
+    MINOR UPDATES
+    - Whole rest vertical position in staff corrected (issue #208)
+    - We've used a non deterministic probabilistic automaton to deal with multirests digits horizontal position
+    - PAEC code visualization added (issue #198)
+    - Custos accidentals are not rendered in Verovio (issue #195)
+    - Link to previous and next work added in music transcription screen
+
+----
 0.17
     MAJOR UPDATES
     - Include learnt agnostic to semantic translators
@@ -6,7 +25,7 @@
     - Custos in printed mensural agnostic font is correct placed
     - Allow two resize events to the same bounding box (issue #206)
     - Add links to previous and next images im collection (issue #207)
-
+    - Add multirests, fractional time signatures, beams, tuplets (not complete) to automaton based transducer
 -----
 0.16
     MINOR UPDATES

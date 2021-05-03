@@ -1,4 +1,4 @@
-<div id="documentThumbnail">
+<div *ngIf="filename" id="documentThumbnail">
   <div class="d-flex flex-nowrap">
     <p class="pl-1">{{filename}}</p>
     <p id="links" class="ml-auto pr-1">
@@ -12,10 +12,10 @@
        [contextMenu]="contextualMenu"
        [class]="hidden?'hidden':''"
        loading="lazy"
+       [lazyLoad]="getThumbnailImageURL()"
        [defaultImage]="loadingImage"
-       [lazyLoad]="loadedImage$ | async"
   >
-
+<!-- [lazyLoad]="loadedImage$ | async" -->
   <app-image-parts [documentParts]="documentParts" [imagePartIds]="imagePartIds"></app-image-parts>
 </div>
 

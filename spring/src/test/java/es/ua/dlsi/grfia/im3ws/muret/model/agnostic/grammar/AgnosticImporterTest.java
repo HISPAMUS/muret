@@ -1,6 +1,5 @@
 package es.ua.dlsi.grfia.im3ws.muret.model.agnostic.grammar;
 
-import es.ua.dlsi.grfia.im3ws.service.FileUtilsTest;
 import es.ua.dlsi.im3.core.TestFileUtils;
 import es.ua.dlsi.im3.core.io.ImportException;
 import org.junit.Test;
@@ -8,10 +7,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 // Agnostic files are generated using the script generate.sh in the folder testdata/agnostic
 /**
