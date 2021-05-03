@@ -128,6 +128,8 @@ public class JSONTagging extends AbstractTrainingSetExporter {
         jsonImage.put("id", image.getId());
         jsonImage.put("filename", image.getFilename());
         jsonImage.put("url", IIIFModel.getMasterImageURL(this.muretConfiguration.getBaseIIIFImagesURI(), documentPath, image.getFilename(), image.getRotation()));
+        jsonImage.put("rotation", image.getRotation());
+        jsonImage.put("original", IIIFModel.getMasterImageURL(this.muretConfiguration.getBaseIIIFImagesURI(), documentPath, image.getFilename(), 0));
         jsonImage.put("collection", constructCollectionPath(image));
 
         List<Page> pages = image.getSortedPages();
