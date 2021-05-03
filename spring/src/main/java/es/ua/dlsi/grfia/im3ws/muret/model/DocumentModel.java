@@ -75,8 +75,8 @@ public class DocumentModel {
             File documentFolder = createDocumentFileStructure(muretFolder, documentBaseName);
             createdFolders.push(documentFolder);
             createdFolders.push(createDocumentFileStructure(documentFolder, MURETConfiguration.MASTER_IMAGES));
-            createdFolders.push(createDocumentFileStructure(documentFolder, MURETConfiguration.THUMBNAIL_IMAGES));
-            createdFolders.push(createDocumentFileStructure(documentFolder, MURETConfiguration.PREVIEW_IMAGES));
+            // replaced for IIIF createdFolders.push(createDocumentFileStructure(documentFolder, MURETConfiguration.THUMBNAIL_IMAGES));
+            // replaced for IIIF createdFolders.push(createDocumentFileStructure(documentFolder, MURETConfiguration.PREVIEW_IMAGES));
 
             Document newDocument = new Document(document.getName(),
                     documentBaseName,

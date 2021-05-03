@@ -78,17 +78,17 @@ export class DocumentAnalysisComponent extends ImageRecognitionBaseAbstractCompo
 
   }
 
-  protected drawPage(page: Page) {
-    super.drawPage(page);
+  protected drawPage(newShapes: Shape[], page: Page) {
+    super.drawPage(newShapes, page);
 
-    this.addLabelBox('page', page.id, page.boundingBox, 'FF0000', page, 'page');
+    this.addLabelBox(newShapes, 'page', page.id, page.boundingBox, 'FF0000', page, 'page');
   }
 
-  protected drawRegion(region: Region) {
-    super.drawRegion(region);
+  protected drawRegion(newShapes: Shape[], region: Region) {
+    super.drawRegion(newShapes, region);
 
     if (region.regionType) {
-      this.addLabelBox(region.regionType.name, region.id, region.boundingBox, region.regionType.hexargb, region, region.regionType.name);
+      this.addLabelBox(newShapes, region.regionType.name, region.id, region.boundingBox, region.regionType.hexargb, region, region.regionType.name);
     }
   }
 

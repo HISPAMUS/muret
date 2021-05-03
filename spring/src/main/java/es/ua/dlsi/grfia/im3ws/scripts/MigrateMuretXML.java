@@ -220,13 +220,13 @@ public class MigrateMuretXML implements CommandLineRunner {
         image.setWidth(fullImage.getWidth());
 
         // copy thumbnail file
-        File thumbnail = new File(new File(documentPath, MURETConfiguration.THUMBNAIL_IMAGES), xmlImage.getImageRelativeFileName());
+        /* replaced for IIIF File thumbnail = new File(new File(documentPath, MURETConfiguration.THUMBNAIL_IMAGES), xmlImage.getImageRelativeFileName());
         ImageUtils.getInstance().scaleToFitHeight(inputImage, thumbnail, muretConfiguration.getThumbnailHeight());
 
         // copy preview file
         File preview = new File(new File(documentPath, MURETConfiguration.PREVIEW_IMAGES), xmlImage.getImageRelativeFileName());
         ImageUtils.getInstance().scaleToFitHeight(inputImage, preview, muretConfiguration.getPreviewHeight());
-
+        */
         return imageRepository.save(image);
     }
 

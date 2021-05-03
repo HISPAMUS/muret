@@ -5,7 +5,7 @@ import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticOrSemanticSymbolFont;
 import es.ua.dlsi.grfia.im3ws.muret.model.AgnosticOrSemanticSymbolFontSingleton;
-import es.ua.dlsi.grfia.im3ws.muret.model.DocumentModel;
+import es.ua.dlsi.grfia.im3ws.muret.model.IIIFModel;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.io.ExportException;
 import es.ua.dlsi.im3.core.score.PositionInStaff;
@@ -30,18 +30,9 @@ import java.util.logging.Logger;
 public class JSONTagging extends AbstractTrainingSetExporter {
     private static final String FIELD_SEPARATOR = ";";
     private final boolean includeStrokes;
+    private final MURETConfiguration muretConfiguration;
 
-    //TODO Como constructor
-    @Autowired
-    MURETConfiguration muretConfiguration;
-
-    //TODO Como constructor
-    @Autowired
-    DocumentModel documentModel;
-
-
-
-    public JSONTagging(int id, boolean includeStrokes) {
+    public JSONTagging(int id, boolean includeStrokes, MURETConfiguration muretConfiguration) {
         super(id,
                 includeStrokes?
                         "JSON files with images, pages, regions, symbols, symbol dictionary and strokes"
@@ -52,6 +43,7 @@ public class JSONTagging extends AbstractTrainingSetExporter {
                 false
                 );
         this.includeStrokes = includeStrokes;
+        this.muretConfiguration = muretConfiguration;
     }
 
 
@@ -71,7 +63,7 @@ public class JSONTagging extends AbstractTrainingSetExporter {
                 for (Image image: document.computeAllImagesSorted()) {
                     Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Exporting JSON for image " + image.getFilename());
                     File outputJSonFile = new File(documentFolder, image.getFilename() + ".json");
-                    generate(image, outputJSonFile);
+                    generate(document.getPath(), image, outputJSonFile);
                 }
             }
 
@@ -130,11 +122,12 @@ public class JSONTagging extends AbstractTrainingSetExporter {
         return stringBuilder.toString();
     }
 
-    private void generate(Image image, File outputJSonFile) throws IOException, ExportException {
+    private void generate(String documentPath, Image image, File outputJSonFile) throws IOException, ExportException {
         JSONObject jsonImage = new JSONObject();
 
         jsonImage.put("id", image.getId());
         jsonImage.put("filename", image.getFilename());
+        jsonImage.put("url", IIIFModel.getMasterImageURL(this.muretConfiguration.getBaseIIIFImagesURI(), documentPath, image.getFilename()));
         jsonImage.put("collection", constructCollectionPath(image));
 
         List<Page> pages = image.getSortedPages();

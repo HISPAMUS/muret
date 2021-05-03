@@ -17,6 +17,7 @@ export const environment = {
   // apiEndpoint: 'https://muret.dlsi.ua.es/rest' // production
   // apiEndpoint: 'https://muret.dlsi.ua.es/rest/muretapi' // production
   apiEndpoint: 'http://localhost:8080/muretapi',
+  iiifEndpoint: 'http://localhost:8182/iiif/2'
   // RECALL CHANGE the baseHRef in index.html
 };
 

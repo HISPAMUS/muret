@@ -73,7 +73,7 @@ public class ImageFilesController extends MuRETBaseController {
         return getImageFile(documentPath, image, imagesRelativePath);
     }
 
-    @GetMapping(value = "{documentPath}/master/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
+    /*removed for IIIF @GetMapping(value = "{documentPath}/master/{imageID}", produces = MediaType.IMAGE_JPEG_VALUE)
     // Does not need to be transactional @Transactional(readOnly = true)
     public ResponseEntity<InputStreamResource> getMasterImage(@PathVariable("documentPath") String documentPath, @PathVariable("imageID") Long imageID)  {
         try {
@@ -149,7 +149,7 @@ public class ImageFilesController extends MuRETBaseController {
         } catch (Throwable t) {
             throw ControllerUtils.createServerError(this, "Cannot get cropped master image", t);
         }
-    }
+    }*/
 
     @PutMapping(value = "rotateImage/{imageID}/{degrees}")
     @Transactional

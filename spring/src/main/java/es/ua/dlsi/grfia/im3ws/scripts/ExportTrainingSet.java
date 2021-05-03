@@ -61,7 +61,7 @@ public class ExportTrainingSet implements CommandLineRunner {
                 new AgnosticSymbolImagesTextFile(4, false, true),
                 new AgnosticSymbolImagesTextFile(5, true, false),
                 new AgnosticSymbolImagesTextFile(6, true, true),
-                new JSONTagging(7, false));
+                new JSONTagging(7, false, muretConfiguration));
     }
 
     @Override

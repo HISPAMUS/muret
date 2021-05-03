@@ -11,15 +11,17 @@
   </div>
   <div class="row">
     <div class="col">
-      <app-image-document-analysis-navigator *ngIf="(loadedImage$ | async) as loadedImage"
-        [loadedImage]="loadedImage"
-        [regionTypes]="regionTypes$ | async"
-        [shapes]="documentAnalysisShapes"
-        (onNavigatorContextMenu)="onContextMenu($event)"
-        [contextMenu]="contextMenu"
-        [zoomManager]="zoomManager"
-        [mode]="'eSelecting'"
-      ></app-image-document-analysis-navigator>
+      <ng-container *ngIf="regionTypes$ | async as regionTypes">
+        <app-image-document-analysis-navigator *ngIf="documentAnalysisShapes"
+          [loadedImage]="masterImageURL"
+          [regionTypes]="regionTypes"
+          [shapes]="documentAnalysisShapes"
+          (onNavigatorContextMenu)="onContextMenu($event)"
+          [contextMenu]="contextMenu"
+          [zoomManager]="zoomManager"
+          [mode]="'eSelecting'"
+        ></app-image-document-analysis-navigator>
+      </ng-container>
       <p>Use right button to change the parts of the selected items</p>
     </div>
   </div>

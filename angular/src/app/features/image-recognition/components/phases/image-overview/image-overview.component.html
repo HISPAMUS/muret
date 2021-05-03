@@ -1,12 +1,14 @@
 <div class="container" *ngIf="imageOverview">
   <div class="row">
     <div class="col-8">
-      <app-image-document-analysis-navigator *ngIf="(loadedImage$ | async) as loadedImage"
-        [loadedImage]="loadedImage"
-        [regionTypes]="regionTypes$ | async"
-        [shapes]="documentAnalysisShapes"
-        [zoomManager]="zoomManager"
-      ></app-image-document-analysis-navigator>
+      <ng-container *ngIf="regionTypes$ | async as regionTypes">
+        <app-image-document-analysis-navigator *ngIf="documentAnalysisShapes"
+          [loadedImage]="masterImageURL"
+          [regionTypes]="regionTypes"
+          [shapes]="documentAnalysisShapes"
+          [zoomManager]="zoomManager"
+        ></app-image-document-analysis-navigator>
+      </ng-container>
     </div>
     <div class="col-4">
       <ul>

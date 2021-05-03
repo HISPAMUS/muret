@@ -23,6 +23,7 @@ import {ModalOptions} from "../../../../../dialogs/options-dialog/options-dialog
 import {ImageFilesService} from "../../../../../core/services/image-files.service";
 import {DomSanitizer} from "@angular/platform-browser";
 import {ShowErrorService} from "../../../../../core/services/show-error.service";
+import {Shape} from "../../../../../svg/model/shape";
 
 @Component({
   selector: 'app-parts-in-image-component',
@@ -30,7 +31,7 @@ import {ShowErrorService} from "../../../../../core/services/show-error.service"
   styleUrls: ['./parts-in-image-component.component.css']
 })
 export class PartsInImageComponentComponent extends ImageRecognitionBaseAbstractComponent {
-  @ViewChild(ContextMenuComponent) public contextMenu: ContextMenuComponent;
+  @ViewChild(ContextMenuComponent, { static: true }) public contextMenu: ContextMenuComponent; // to avoid error: "Expression has changed after it was checked""
   private selectedIDs: Set<number>;
   private selectedType: PartLinkedTo;
 
@@ -40,24 +41,20 @@ export class PartsInImageComponentComponent extends ImageRecognitionBaseAbstract
     this.phase = 'parts';
   }
 
-  ngOnInit() {
-    super.ngOnInit();
-  }
-
-  protected drawPage(page: Page) {
-    super.drawPage(page);
+  protected drawPage(newShapes: Shape[], page: Page) {
+    super.drawPage(newShapes, page);
 
     if (page.part) {
-      this.addLabelBox('page', page.id, page.boundingBox, 'FF0000', page, page.part.name);
+      this.addLabelBox(newShapes, 'page', page.id, page.boundingBox, 'FF0000', page, page.part.name);
     }
 
   }
 
-  protected drawRegion(region: Region) {
-    super.drawRegion(region);
+  protected drawRegion(newShapes: Shape[], region: Region) {
+    super.drawRegion(newShapes, region);
 
     if (region.part) {
-      this.addLabelBox(region.regionType.name, region.id, region.boundingBox, region.regionType.hexargb, region, region.part.name);
+      this.addLabelBox(newShapes, region.regionType.name, region.id, region.boundingBox, region.regionType.hexargb, region, region.part.name);
     }
   }
 

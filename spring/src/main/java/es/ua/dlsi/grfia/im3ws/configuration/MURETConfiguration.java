@@ -14,8 +14,8 @@ import java.util.logging.Logger;
 @ConfigurationProperties(prefix = "muret")
 public class MURETConfiguration {
     public static final String MASTER_IMAGES = "masters";
-    public static final String THUMBNAIL_IMAGES = "thumbnails";
-    public static final String PREVIEW_IMAGES = "previews";
+    //replaced for IIIF public static final String THUMBNAIL_IMAGES = "thumbnails";
+    //replaced for IIIF public static final String PREVIEW_IMAGES = "previews";
 
     public static final String MODELS_FOLDER = "tmp_models";
 
@@ -25,8 +25,8 @@ public class MURETConfiguration {
     private String warningmail;
     private String warningsender;
 
-    private int thumbnailHeight;
-    private int previewHeight;
+    //replaced for IIIF private int thumbnailHeight;
+    //replaced for IIIF private int previewHeight;
     private boolean disableSecurity;
 
     private boolean enableWatchDogNotification;
@@ -49,8 +49,8 @@ public class MURETConfiguration {
         this.angularurldev = angularurldev;
         this.angularurlprod = angularurlprod;
         //this.url = url;
-        this.thumbnailHeight = thumbnailHeight;
-        this.previewHeight = previewHeight;
+        //replaced for IIIF this.thumbnailHeight = thumbnailHeight;
+        //replaced for IIIF this.previewHeight = previewHeight;
         this.pythonclassifiers = pythonclassifiers;
         this.disableSecurity = disableSecurity;
 
@@ -83,7 +83,7 @@ public class MURETConfiguration {
         this.folder = folder;
     }
 
-    public int getThumbnailHeight() {
+    /*replaced for IIIF public int getThumbnailHeight() {
         return thumbnailHeight;
     }
 
@@ -97,7 +97,7 @@ public class MURETConfiguration {
 
     public void setPreviewHeight(int previewHeight) {
         this.previewHeight = previewHeight;
-    }
+    }*/
 
     public String getPythonclassifiers() {
         return pythonclassifiers;

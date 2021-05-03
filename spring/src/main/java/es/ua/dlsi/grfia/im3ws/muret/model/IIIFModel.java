@@ -9,11 +9,24 @@ import java.util.HashMap;
  * @created 27/08/2020
  */
 public class IIIFModel {
+    public static final String MASTERS = ":masters:";
+    public static final String FULL_FILL_0_DEFAULT_JPG = "/full/full/0/default.jpg";
     String manifestFile;
     HashMap<Image, String> imageCanvases;
 
     public IIIFModel() {
         this.imageCanvases = new HashMap<>();
+    }
+
+    public static String getMasterImageURL(String baseIIIFImagesURI, String documentPath, String filename) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(baseIIIFImagesURI);
+        stringBuilder.append('/');
+        stringBuilder.append(documentPath);
+        stringBuilder.append(MASTERS);
+        stringBuilder.append(filename);
+        stringBuilder.append(FULL_FILL_0_DEFAULT_JPG);
+        return stringBuilder.toString();
     }
 
     public String getManifestFile() {

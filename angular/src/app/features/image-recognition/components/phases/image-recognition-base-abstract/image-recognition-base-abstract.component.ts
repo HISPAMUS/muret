@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterContentInit, AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from "rxjs";
 import {ImageOverview} from "../../../../../core/model/restapi/image-overview";
 import {ActivatedRoute, ParamMap} from "@angular/router";
@@ -38,7 +38,7 @@ import {SVGSet} from "../../../../../core/model/restapi/svgset";
   templateUrl: './image-recognition-base-abstract-component.component.html',
   styleUrls: ['./image-recognition-base-abstract-component.component.css']
 })
-export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, OnDestroy, AfterViewInit {
+export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, OnDestroy, AfterContentInit {
   private _imageID: number;
   private _imageOverview: ImageOverview;
   private imageOverviewSubscription: Subscription;
@@ -52,12 +52,15 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
   protected undefinedRegionType: RegionType;
   loadedImage$: Observable<SafeResourceUrl>;
   svgSet$: Observable<SVGSet>;
+  masterImageURL: string;
 
 
   constructor(protected route: ActivatedRoute, protected store: Store<ImageRecognitionState>, protected dialogsService: DialogsService,
               protected imageFilesService: ImageFilesService, protected sanitizer: DomSanitizer,
               protected manageErrorsService: ShowErrorService
   ) {
+    this._documentAnalysisShapes = null;
+    this._imageOverview = null;
     this.store.dispatch(new ImageRecognitionGetRegionTypes());
   }
 
@@ -83,12 +86,13 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
     this.imageOverviewSubscription = this.store.select(selectImageRecognitionImageOverview).subscribe(next => {
       if (next) {
         this._imageOverview = next;
+        this.masterImageURL = this.imageFilesService.getMasterImageURL(this.imageOverview.documentPath, this.imageOverview.filename);
 
         this.store.dispatch(new CoreGetSVGSet(next.notationType, next.manuscriptType));
 
-        this.loadedImage$ = this.imageFilesService.getMasterImageBlob$(next.documentPath, next.imageID).pipe(
+        /*this.loadedImage$ = this.imageFilesService.getMasterImageBlob$(next.documentPath, next.imageID).pipe(
             //map(imageBlob => this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(imageBlob)))
-            map(imageBlob => window.URL.createObjectURL(imageBlob)));
+            map(imageBlob => window.URL.createObjectURL(imageBlob)));*/
 
         this._status = this.getProgressStatus();
         this.onImageOverviewChanged();
@@ -97,7 +101,9 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
 
     this.svgSet$ = this.store.select(selectCoreSVGAgnosticOrSemanticSymbolSet);
   }
-  ngAfterViewInit(): void {
+  // use this to avoid problems: https://angular.io/errors/NG0100
+  // Expression has changed after it was checked
+  ngAfterContentInit(): void {
     this.pagesSubscription = this.store.select(selectImageRecognitionPagesRegionsSymbols).subscribe(next => {
       if (next) {
         this.drawPagesAndRegions(next);
@@ -125,20 +131,21 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
   }
 
   protected drawPagesAndRegions(pagesRegionsSymbols: Page[]) {
-    this._documentAnalysisShapes = new Array();
+    const newShapes = new Array();
     if (pagesRegionsSymbols) {
       pagesRegionsSymbols.forEach(page => {
-        this.drawPage(page);
+        this.drawPage(newShapes, page);
         if (page.regions) {
           page.regions.forEach(region => {
-            this.drawRegion(region);
+            this.drawRegion(newShapes, region);
           });
         }
       });
     }
+    this._documentAnalysisShapes = newShapes;
   }
 
-  private drawBox(layer: string, id: number, boundingBox: BoundingBox, color: string, data: Region | Page): Rectangle {
+  private drawBox(newShapes: Shape[], layer: string, id: number, boundingBox: BoundingBox, color: string, data: Region | Page): Rectangle {
     const rect = new Rectangle();
     rect.id = layer + id;
     rect.fromX = boundingBox.fromX;
@@ -151,20 +158,20 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
       //this.imageOverview.imageWidth / 200;
     rect.layer = layer;
     rect.data = data;
-    this._documentAnalysisShapes.push(rect);
+    newShapes.push(rect);
     return rect;
   }
-  protected drawPage(page: Page) {
-    this.drawBox('page', page.id, page.boundingBox, 'red', page).selectable = this.isPageSelectable();
+  protected drawPage(newShapes: Shape[], page: Page) {
+    this.drawBox(newShapes, 'page', page.id, page.boundingBox, 'red', page).selectable = this.isPageSelectable();
   }
 
   protected abstract isPageSelectable(): boolean;
 
-  protected drawRegion(region: Region) {
-    this.drawBox(region.regionType.name, region.id, region.boundingBox, '#' + region.regionType.hexargb, region);
+  protected drawRegion(newShapes: Shape[], region: Region) {
+    this.drawBox(newShapes, region.regionType.name, region.id, region.boundingBox, '#' + region.regionType.hexargb, region);
   }
 
-  protected addLabelBox(layer: string, id: number, boundingBox: BoundingBox, color: string, data: Region | Page, label: string) {
+  protected addLabelBox(newShapes: Shape[], layer: string, id: number, boundingBox: BoundingBox, color: string, data: Region | Page, label: string) {
     const rect = new Rectangle(); // background
     //rect.id = layer + id;
     rect.fromX = boundingBox.fromX;
@@ -175,7 +182,7 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
     rect.layer = layer;
     rect.data = data;
     rect.selectable = false;
-    // this.documentAnalysisShapes.push(rect); //TODO si lo pongo no va bien la selección
+    // newShapes.push(rect); //TODO si lo pongo no va bien la selección
 
     const t: Text = new Text();
     t.layer = layer;
@@ -188,7 +195,7 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
     t.fontSize = 30;
     t.selectable = false;
 
-    this.documentAnalysisShapes.push(t);
+    newShapes.push(t);
   }
 
   protected onImageOverviewChanged() {

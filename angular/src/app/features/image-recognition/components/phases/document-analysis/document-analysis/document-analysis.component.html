@@ -23,21 +23,23 @@
       <app-document-analysis-toolbar [regionTypes]="regionTypes$ | async" [selectedRegion]="selectedRegionType" (onChangeRegion)="changeRegionType($event)"></app-document-analysis-toolbar>
     </div>
     <div class="col-11">
-      <app-image-document-analysis-navigator *ngIf="(loadedImage$ | async) as loadedImage"
-        [(mode)]="mode"
-        [loadedImage]="loadedImage"
-        [regionTypes]="regionTypes$ | async"
-        [shapes]="documentAnalysisShapes"
-        (onNavigatorContextMenu)="onContextMenu($event)"
-        [contextMenu]="contextMenu"
-        [zoomManager]="zoomManager"
-        (onShapesSelected)="onDocumentAnalysisShapesSelected($event)"
-        [nextShapeToAdd]="'Rectangle'"
-        (onSvgShapeCreated)="onSVGShapeCreated($event)"
-        (onSvgShapeChanged)="onSVGShapeChanged($event)"
-        [addRegionTypeToFilter]="selectedRegionType"
-        [imageRotation]="getImageRotation()"
-      ></app-image-document-analysis-navigator>
+      <ng-container *ngIf="regionTypes$ | async as regionTypes">
+        <app-image-document-analysis-navigator *ngIf="documentAnalysisShapes"
+          [(mode)]="mode"
+          [loadedImage]="masterImageURL"
+          [regionTypes]="regionTypes"
+          [shapes]="documentAnalysisShapes"
+          (onNavigatorContextMenu)="onContextMenu($event)"
+          [contextMenu]="contextMenu"
+          [zoomManager]="zoomManager"
+          (onShapesSelected)="onDocumentAnalysisShapesSelected($event)"
+          [nextShapeToAdd]="'Rectangle'"
+          (onSvgShapeCreated)="onSVGShapeCreated($event)"
+          (onSvgShapeChanged)="onSVGShapeChanged($event)"
+          [addRegionTypeToFilter]="selectedRegionType"
+          [imageRotation]="getImageRotation()"
+        ></app-image-document-analysis-navigator>
+      </ng-container>
     </div>
   </div>
 </div>

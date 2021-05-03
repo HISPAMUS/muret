@@ -1,5 +1,6 @@
 package es.ua.dlsi.grfia.im3ws.muret.model.trainingsets;
 
+import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.model.ITrainingSetExporter;
 import es.ua.dlsi.grfia.im3ws.muret.model.DocumentModel;
 import es.ua.dlsi.im3.core.IM3Exception;
@@ -20,12 +21,12 @@ public class TrainingSetsFactory {
     private List<ITrainingSetExporter> trainingSetExporters;
 
     @Autowired
-    public TrainingSetsFactory(DocumentModel documentModel) {
+    public TrainingSetsFactory(DocumentModel documentModel, MURETConfiguration muretConfiguration) {
         this.trainingSetExporters = Arrays.asList(
                 new ImagesExporter(documentModel, 0, false),
                 new ImagesExporter(documentModel, 1, true),
-                new JSONTagging(2,true),
-                new JSONTagging(3, false),
+                new JSONTagging(2,true, muretConfiguration),
+                new JSONTagging(3, false, muretConfiguration),
                 new AgnosticSemanticTrainingSetExporter(4, documentModel)
                 /*new AgnosticSymbolImagesTextFile(4, false, false), // just used in command line (see ExportTrainingSet)
                 new AgnosticSymbolImagesTextFile(5, false, true),
