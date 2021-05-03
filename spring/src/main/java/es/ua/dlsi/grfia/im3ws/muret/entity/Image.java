@@ -41,6 +41,8 @@ public class Image extends Auditable implements IAssignableToPart, IID<Long>, IO
     @Column // in the document or section
     private Integer ordering;
     @Column
+    private Float rotation;
+    @Column
     private boolean hidden;
 
     @JsonBackReference (value="document")
@@ -108,6 +110,14 @@ public class Image extends Auditable implements IAssignableToPart, IID<Long>, IO
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Float getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(Float rotation) {
+        this.rotation = rotation;
     }
 
     public State getState() {

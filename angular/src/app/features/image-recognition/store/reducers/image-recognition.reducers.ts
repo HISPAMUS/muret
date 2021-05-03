@@ -331,14 +331,22 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
       };
       return newState;
     }
-
-    case ImageRecognitionActionTypes.ImageRecognitionApplyRotationSuccess:
+    case ImageRecognitionActionTypes.ImageRecognitionApplyRotationSuccess: {
+      const newState: ImageRecognitionState = {
+        ...state,
+        imageOverview: klona(state.imageOverview), // force reload
+        //apiRestServerError: null
+      };
+      newState.imageOverview.rotation = action.rotatedImage.rotation;
+      return newState;
+    }
     case ImageRecognitionActionTypes.ImageRecognitionRevertRotationSuccess: {
       const newState: ImageRecognitionState = {
         ...state,
         imageOverview: klona(state.imageOverview), // force reload
         //apiRestServerError: null
       };
+      newState.imageOverview.rotation = 0;
       return newState;
     }
     /// ---------- agnostic recognition

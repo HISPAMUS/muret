@@ -12,6 +12,7 @@ import { StringResponse } from 'src/app/core/model/restapi/string-response';
 import {ChangedRegionTypes} from "../../../core/model/restapi/changed-region-types";
 import {NumberArray} from "../../../core/model/restapi/number-array";
 import {DocumentAnalysisForm} from "../../../core/model/restapi/document-analysis-form";
+import {RotatedImage} from "../../../core/model/restapi/rotated-image";
 
 @Injectable() // non-singleton
 export class DocumentAnalysisService {
@@ -135,14 +136,14 @@ export class DocumentAnalysisService {
      return this.apiRestClientService.post$<Page[]>(url, form);
    }
 
-  rotateImage$(imageID: number, degrees: number) {
-    const url = `imagefiles/rotateImage/${imageID}/${degrees}`;
-    return this.apiRestClientService.put$(url, null);
+  rotateImage$(imageID: number, degrees: number): Observable<RotatedImage> {
+    const url = `documentanalysis/rotateImage/${imageID}/${degrees}`;
+    return this.apiRestClientService.put$<RotatedImage>(url, null);
   }
 
 
   revertRotation$(imageID: number) {
-    const url = `imagefiles/revertRotation/${imageID}`;
+    const url = `documentanalysis/revertRotation/${imageID}`;
     return this.apiRestClientService.put$(url, null);
   }
   // revisado hasta aquí

@@ -18,6 +18,7 @@ public class ImageOverview {
     Long nextImageID;
     //int imageWidth;
     String filename;
+    Float rotation;
     Integer documentID;
     String documentPath;
     String comments;
@@ -141,5 +142,13 @@ public class ImageOverview {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public Float getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(Float rotation) {
+        this.rotation = rotation;
     }
 }

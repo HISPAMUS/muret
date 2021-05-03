@@ -8,6 +8,7 @@ export interface ImageOverview {
   //imageWidth: number;
   filename: string;
   documentID: number;
+  rotation: number;
   documentPath: string;
   notationType: string;
   manuscriptType: string;

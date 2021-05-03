@@ -11,9 +11,9 @@ import es.ua.dlsi.grfia.im3ws.muret.model.DocumentAnalysisModel;
 import es.ua.dlsi.grfia.im3ws.muret.model.actionlogs.ActionLogsDocumentAnalysis;
 import es.ua.dlsi.grfia.im3ws.muret.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -263,6 +263,74 @@ public class DocumentAnalysisController extends MuRETBaseController {
             return documentAnalysisModel.createAutomaticDocumentAnalysis(persistentImage, request.getNumPages(), autoDocumentAnalysisModel);
         } catch (IM3WSException e) {
             throw ControllerUtils.createServerError(this, "Cannot analyze document", e);
+        }
+    }
+
+    @PutMapping(value = "rotateImage/{imageID}/{degrees}")
+    @Transactional
+    public RotatedImage rotateImage(@PathVariable("imageID") Long imageID, @PathVariable("degrees") float degrees) {
+        try {
+            Image image = getImage(imageID);
+            image.setRotation(degrees);
+            imageRepository.save(image);
+            return new RotatedImage(imageID, degrees);
+
+            /*File imageFile = getImageFile(null, image, MURETConfiguration.MASTER_IMAGES);
+
+            // extension
+            String extension;
+            if (imageFile.getName().endsWith("tif") || imageFile.getName().endsWith("tiff")) {
+                extension = "TIFF";
+            } else if (imageFile.getName().endsWith("jpg")) {
+                extension = "JPG";
+            } else if (imageFile.getName().endsWith("png")) {
+                extension = "PNG";
+            } else {
+                throw new IM3WSException("Unsupported image extension: " + image.getFilename());
+            }
+            BufferedImage bufferedImage = ImageIO.read(imageFile);
+            File backup = new File(imageFile.getAbsolutePath() + "_backup");
+            if (!backup.exists()) {
+                // just save the first rotation
+                ImageIO.write(bufferedImage, extension, backup);
+            }
+            BufferedImage rotatedImage = ImageUtils.getInstance().rotate(bufferedImage, degrees);
+            ImageIO.write(rotatedImage, extension, imageFile);
+
+            // now notify the image has changed to the server
+            notifyServerImageChanged(image);*/
+        } catch (Throwable t) {
+            throw ControllerUtils.createServerError(this, "Cannot rotate image", t);
+        }
+    }
+
+    /*private void notifyServerImageChanged(Image image) {
+        Path imagePath = Paths.get(muretConfiguration.getFolder(), image.computeDocument().getPath(),
+                MURETConfiguration.MASTER_IMAGES, image.getFilename());
+
+        classifierClient.uploadImage(image.getId(), imagePath);
+    }*/
+
+    @PutMapping(value = "revertRotation/{imageID}")
+    @org.springframework.transaction.annotation.Transactional
+    public void revertRotation(@PathVariable("imageID") Long imageID) {
+        try {
+            Image image = getImage(imageID);
+            image.setRotation(0.0F);
+            imageRepository.save(image);
+            /*File imageFile = getImageFile(null, image, MURETConfiguration.MASTER_IMAGES);
+
+            File backup = new File(imageFile.getAbsolutePath() + "_backup");
+            if (backup.exists()) {
+                // just save the first rotation
+                BufferedImage bufferedImage = ImageIO.read(backup);
+                ImageIO.write(bufferedImage, "JPG", imageFile);
+            }
+            // now notify the image has changed to the server
+            notifyServerImageChanged(image);*/
+
+        } catch (Throwable t) {
+            throw ControllerUtils.createServerError(this, "Cannot rotate image", t);
         }
     }
 

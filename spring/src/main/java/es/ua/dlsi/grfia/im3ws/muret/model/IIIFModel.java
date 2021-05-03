@@ -10,7 +10,8 @@ import java.util.HashMap;
  */
 public class IIIFModel {
     public static final String MASTERS = ":masters:";
-    public static final String FULL_FILL_0_DEFAULT_JPG = "/full/full/0/default.jpg";
+    public static final String FULL_FULL = "/full/full/";
+    public static final String DEFAULT_JPG = "/default.jpg";
     String manifestFile;
     HashMap<Image, String> imageCanvases;
 
@@ -18,14 +19,23 @@ public class IIIFModel {
         this.imageCanvases = new HashMap<>();
     }
 
-    public static String getMasterImageURL(String baseIIIFImagesURI, String documentPath, String filename) {
+    public static String getMasterImageURL(String baseIIIFImagesURI, String documentPath, String filename, double rotation) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(baseIIIFImagesURI);
         stringBuilder.append('/');
         stringBuilder.append(documentPath);
         stringBuilder.append(MASTERS);
         stringBuilder.append(filename);
-        stringBuilder.append(FULL_FILL_0_DEFAULT_JPG);
+        stringBuilder.append(FULL_FULL);
+        if (rotation < 0.0) {
+            double r = 360.0 - rotation;
+            stringBuilder.append(Double.toString(r).replace(',', '.'));
+        } else if (rotation > 0.0) {
+            double r = rotation;
+            stringBuilder.append(Double.toString(r).replace(',', '.'));
+        } else {
+            stringBuilder.append('0');
+        }
         return stringBuilder.toString();
     }
 

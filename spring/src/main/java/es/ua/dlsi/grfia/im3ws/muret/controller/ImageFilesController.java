@@ -151,28 +151,6 @@ public class ImageFilesController extends MuRETBaseController {
         }
     }*/
 
-    @PutMapping(value = "rotateImage/{imageID}/{degrees}")
-    @Transactional
-    public void rotateImage(@PathVariable("imageID") Long imageID, @PathVariable("degrees") double degrees) {
-        try {
-            Image image = getImage(imageID);
-            File imageFile = getImageFile(null, image, MURETConfiguration.MASTER_IMAGES);
-
-            BufferedImage bufferedImage = ImageIO.read(imageFile);
-            File backup = new File(imageFile.getAbsolutePath() + "_backup");
-            if (!backup.exists()) {
-                // just save the first rotation
-                ImageIO.write(bufferedImage, "JPG", backup);
-            }
-            BufferedImage rotatedImage = ImageUtils.getInstance().rotate(bufferedImage, degrees);
-            ImageIO.write(rotatedImage, "JPG", imageFile);
-
-            // now notify the image has changed to the server
-            notifyServerImageChanged(image);
-        } catch (Throwable t) {
-            throw ControllerUtils.createServerError(this, "Cannot rotate image", t);
-        }
-    }
 
     private void notifyServerImageChanged(Image image) {
         Path imagePath = Paths.get(muretConfiguration.getFolder(), image.computeDocument().getPath(),
@@ -186,7 +164,9 @@ public class ImageFilesController extends MuRETBaseController {
     public void revertRotation(@PathVariable("imageID") Long imageID) {
         try {
             Image image = getImage(imageID);
-            File imageFile = getImageFile(null, image, MURETConfiguration.MASTER_IMAGES);
+            image.setRotation(0.0F);
+            imageRepository.save(image);
+            /*File imageFile = getImageFile(null, image, MURETConfiguration.MASTER_IMAGES);
 
             File backup = new File(imageFile.getAbsolutePath() + "_backup");
             if (backup.exists()) {
@@ -195,7 +175,7 @@ public class ImageFilesController extends MuRETBaseController {
                 ImageIO.write(bufferedImage, "JPG", imageFile);
             }
             // now notify the image has changed to the server
-            notifyServerImageChanged(image);
+            notifyServerImageChanged(image);*/
 
         } catch (Throwable t) {
             throw ControllerUtils.createServerError(this, "Cannot rotate image", t);

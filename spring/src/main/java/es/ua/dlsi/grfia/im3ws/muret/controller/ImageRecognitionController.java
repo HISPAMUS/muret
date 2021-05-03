@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 // !!! Important: no controller should launch any exception
@@ -62,45 +64,50 @@ public class ImageRecognitionController {
     @Transactional(readOnly = true)
     public ImageOverview getImageOverview(@PathVariable("imageID") Long id)  {
         try {
-            Optional<Image> image = imageRepository.findById(id);
-            if (!image.isPresent()) {
-                throw new IM3WSException("Cannot find an image with id " + id);
-            }
+            Image image = getImage(id);
 
             ImageOverview result = new ImageOverview();
             result.setImageID(id);
-            result.setFilename(image.get().getFilename());
+            result.setFilename(image.getFilename());
+            result.setRotation(image.getRotation());
             Document document;
 
-            if (image.get().getDocument() != null) {
-                document = image.get().getDocument();
-                setPrevAndNextImages(result, document.computeAllImagesNotInSectionSorted(), image.get());
-            } else if (image.get().getSection() != null) {
-                document = image.get().getSection().getDocument();
-                setPrevAndNextImages(result, image.get().getSection().computeAllImagesSorted(), image.get());
+            if (image.getDocument() != null) {
+                document = image.getDocument();
+                setPrevAndNextImages(result, document.computeAllImagesNotInSectionSorted(), image);
+            } else if (image.getSection() != null) {
+                document = image.getSection().getDocument();
+                setPrevAndNextImages(result, image.getSection().computeAllImagesSorted(), image);
             } else {
                 throw new IM3WSException("Image " + id + " has not either document or section");
             }
 
             result.setDocumentID(document.getId());
-            //result.setImageWidth(image.get().getWidth());
+            //result.setImageWidth(image.getWidth());
             result.setDocumentPath(document.getPath());
             result.setManuscriptType(document.getManuscriptType());
             result.setNotationType(document.getNotationType());
-            result.setComments(image.get().getComments());
+            result.setComments(image.getComments());
             ArrayList<Part> sortedParts = new ArrayList<>(document.getParts());
             Collections.sort(sortedParts);
             result.setDocumentParts(sortedParts);
-            result.setImagePart(image.get().getPart());
-            result.setHidden(image.get().isHidden());
-            result.setImageRecognitionProgressStatuses(image.get().getImageRecognitionProgressStatuses());
-            actionLogsDocument.logOpenImage(image.get());
+            result.setImagePart(image.getPart());
+            result.setHidden(image.isHidden());
+            result.setImageRecognitionProgressStatuses(image.getImageRecognitionProgressStatuses());
+            actionLogsDocument.logOpenImage(image);
             return result;
         } catch (Throwable e) {
             throw ControllerUtils.createServerError(this, "Cannot create statistics", e);
         }
     }
 
+    private Image getImage(@PathVariable("imageID") Long id) throws IM3WSException {
+        Optional<Image> image = imageRepository.findById(id);
+        if (!image.isPresent()) {
+            throw new IM3WSException("Cannot find an image with id " + id);
+        }
+        return image.get();
+    }
 
     /**
      *

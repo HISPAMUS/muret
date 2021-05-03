@@ -67,7 +67,7 @@ export class DocumentAnalysisComponent extends ImageRecognitionBaseAbstractCompo
 
   onImageOverviewChanged() {
     super.onImageOverviewChanged(); // e.g. after applying rotation
-    this.sliderImageRotation = 0;
+    this.sliderImageRotation = this.imageOverview.rotation * 10;
   }
 
   protected isPageSelectable(): boolean {

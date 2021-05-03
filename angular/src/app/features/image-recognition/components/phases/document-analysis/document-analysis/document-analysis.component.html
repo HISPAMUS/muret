@@ -8,6 +8,8 @@
         [selectionDone]="isSelectionDone()"
         (onDelete)="onDelete()"
         (onClear)="onClear()"></app-image-recognition-toolbar>
+        <p><a [routerLink]="['/imageRecognition/documentAnalysis', imageOverview.prevImageID]"> &#60; </a>
+        <a [routerLink]="['/imageRecognition/documentAnalysis', imageOverview.nextImageID]">&#62; </a>
       <div id="slider" class="d-flex align-items-center">
         <button class="btn-secondary" (click)="onRevertRotation()">Revert</button>
         <ngx-slider [(value)]="sliderImageRotation" [options]="sliderOptions"></ngx-slider>

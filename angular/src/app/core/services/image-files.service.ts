@@ -85,18 +85,27 @@ export class ImageFilesService {
     return this.apiRestClientService.getBlob$(url);
   }
 
+  private getRotation(rotation: number): string {
+    if (rotation == 0.0) {
+      return '0';
+    } else if (rotation < 0) {
+       return ''+ (360.0 + rotation);
+    } else {
+      return ''+ rotation;
+    }
+  }
   getThumbnailImageURL(documentPath: string, filename: string) {
-    const url = this.iiif + '/' + documentPath + ':masters:' + filename + '/full/!132,200/0/default.jpg';
-    console.log(url);
-    return url;
+    return this.iiif + '/' + documentPath + ':masters:' + filename + '/full/!132,200/0/default.jpg';
   }
 
   getPreviewImageURL(documentPath: string, filename: string) {
     return this.iiif + '/' + documentPath + ':masters:' + filename + '/full/!1280,720/0/default.jpg';
   }
 
-  getMasterImageURL(documentPath: string, filename: string) {
-    return this.iiif + '/' + documentPath + ':masters:' + filename + '/full/full/0/default.jpg';
+  getMasterImageURL(documentPath: string, filename: string, rotation: number) {
+    const url = this.iiif + '/' + documentPath + ':masters:' + filename + '/full/full/' + this.getRotation(rotation) + '/default.jpg';
+    console.log(url);
+    return url;
   }
 
 }

@@ -50,7 +50,7 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
   protected phase: string;
   private _status: string;
   protected undefinedRegionType: RegionType;
-  loadedImage$: Observable<SafeResourceUrl>;
+  // loadedImage$: Observable<SafeResourceUrl>;
   svgSet$: Observable<SVGSet>;
   masterImageURL: string;
 
@@ -86,7 +86,7 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
     this.imageOverviewSubscription = this.store.select(selectImageRecognitionImageOverview).subscribe(next => {
       if (next) {
         this._imageOverview = next;
-        this.masterImageURL = this.imageFilesService.getMasterImageURL(this.imageOverview.documentPath, this.imageOverview.filename);
+        this.masterImageURL = this.imageFilesService.getMasterImageURL(this.imageOverview.documentPath, this.imageOverview.filename, this.imageOverview.rotation);
 
         this.store.dispatch(new CoreGetSVGSet(next.notationType, next.manuscriptType));
 
@@ -100,16 +100,18 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
     });
 
     this.svgSet$ = this.store.select(selectCoreSVGAgnosticOrSemanticSymbolSet);
-  }
-  // use this to avoid problems: https://angular.io/errors/NG0100
-  // Expression has changed after it was checked
-  ngAfterContentInit(): void {
+
     this.pagesSubscription = this.store.select(selectImageRecognitionPagesRegionsSymbols).subscribe(next => {
       if (next) {
         this.drawPagesAndRegions(next);
       }
       //this.pagesWithRegions = next;
     });
+
+  }
+  // use this to avoid problems: https://angular.io/errors/NG0100
+  // Expression has changed after it was checked
+  ngAfterContentInit(): void {
   }
 
   ngOnDestroy() {

@@ -92,6 +92,7 @@ import {Notation} from "../../../../shared/services/notation";
 import {SemanticRepresentationService} from "../../services/semantic-representation.service";
 import {ChangeNotationTypeSuccess} from "../../../semantic-representation-old/store/actions/semantic-representation.actions";
 import {StringResponse} from "../../../../core/model/restapi/string-response";
+import {RotatedImage} from "../../../../core/model/restapi/rotated-image";
 
 
 /**
@@ -308,7 +309,7 @@ export class ImageOverviewEffects {
   rotateImage$ = this.actions$.pipe(
     ofType<ImageRecognitionApplyRotation>(ImageRecognitionActionTypes.ImageRecognitionApplyRotation),
     switchMap((action: ImageRecognitionApplyRotation) => this.documentAnalysisService.rotateImage$(action.imageID, action.rotationDegrees).pipe(
-      switchMap(() => of(new ImageRecognitionApplyRotationSuccess())),
+      switchMap((rotatedImage: RotatedImage) => of(new ImageRecognitionApplyRotationSuccess(rotatedImage))),
       //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
   @Effect()

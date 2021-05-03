@@ -17,6 +17,7 @@ public interface IImageProjection {
 
     State getState();
     String getFilename();
+    Float getRotation();
     Integer getOrdering();
     boolean isHidden();
     String getComments();

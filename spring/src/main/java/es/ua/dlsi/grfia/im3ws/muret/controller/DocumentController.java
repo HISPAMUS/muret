@@ -30,7 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.print.Doc;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;

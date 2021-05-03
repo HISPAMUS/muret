@@ -133,6 +133,7 @@ public class DocumentModel {
         return documentScoreSong;
     }
 
+    //TODO Add rotation
     /**
      * It generates the IIIF manifest file and saves it. If it existed, it would replace it keeping always the last copy
      * @return

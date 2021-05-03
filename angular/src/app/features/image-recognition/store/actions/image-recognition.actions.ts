@@ -18,6 +18,7 @@ import {AgnosticSymbol} from "../../../../core/model/entities/agnostic-symbol";
 import {Notation} from "../../../../shared/services/notation";
 import {SymbolCreationResult} from "../../../agnostic-representation-old/model/symbol-creation-result";
 import {StringResponse} from "../../../../core/model/restapi/string-response";
+import {RotatedImage} from "../../../../core/model/restapi/rotated-image";
 
 /**
  * We use the same actions for overview, parts, document analysis ... because they share the state
@@ -356,7 +357,8 @@ export class ImageRecognitionApplyRotation implements Action {
 
 export class ImageRecognitionApplyRotationSuccess implements Action {
   public readonly type = ImageRecognitionActionTypes.ImageRecognitionApplyRotationSuccess;
-  constructor() {}
+  constructor(public rotatedImage: RotatedImage) {
+  }
 }
 
 
