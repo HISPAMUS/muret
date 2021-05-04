@@ -2,3 +2,7 @@
   align-items: flex-start;
   justify-content: flex-start;
 }
+
+img {
+  max-width: 100px;
+}
