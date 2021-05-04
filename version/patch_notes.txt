@@ -1,6 +1,7 @@
 0.19
     MAJOR UPDATES
     - All images are now served by the IIIF Cantaloupe server (issue #183)
+    - Rotation in document analysis is perfomed using the IIIF transform (origin in bottom left)
 
     MINOR UPDATES
     - The warning message "Cannot get notation because the region has not a semantic encoding" has been removed
