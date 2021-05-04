@@ -12,7 +12,7 @@
         <a [routerLink]="['/imageRecognition/documentAnalysis', imageOverview.nextImageID]">&#62; </a>
       <div id="slider" class="d-flex align-items-center">
         <button class="btn-secondary" (click)="onRevertRotation()">Revert</button>
-        <ngx-slider [(value)]="sliderImageRotation" [options]="sliderOptions"></ngx-slider>
+        <ngx-slider [(value)]="sliderImageRotation" [options]="sliderOptions" (valueChange)="onRotationChanged()"></ngx-slider>
         <button class="btn-secondary" (click)="onSaveRotation()">Save</button>
       </div>
       <app-classifiers [title]="'Select a document analysis classifier'" [models]="documentAnalysisModels$ | async" (onExecuteClassifier)="attemptDocumentAnalysis($event)">
@@ -39,7 +39,6 @@
           (onSvgShapeCreated)="onSVGShapeCreated($event)"
           (onSvgShapeChanged)="onSVGShapeChanged($event)"
           [addRegionTypeToFilter]="selectedRegionType"
-          [imageRotation]="getImageRotation()"
         ></app-image-document-analysis-navigator>
       </ng-container>
     </div>

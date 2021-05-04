@@ -26,12 +26,12 @@
 
     <image *ngIf="backgroundImage" [attr.xlink:href]="backgroundImage" preserveAspectRatio="xMinYMin slice"
            [attr.width]="viewPortWidth" [attr.height]="viewPortHeight"
-           [ngStyle]="{
-              'transform': 'rotate(' + imageRotation + 'deg)',
-              'transform-origin': '100% 0%'
-            }"
     />
     <!-- the rotation is the same IIIF applies, see https://iiif.io/api/image/2.0/ -->
+    <!-- Rotation applyed in IIIF [ngStyle]="{
+    'transform': 'rotate(' + imageRotation + 'deg)',
+    'transform-origin': '0% 100%'
+    }" -->
 
     <!-- width and height compulsory for Firefox and Safari -->
 

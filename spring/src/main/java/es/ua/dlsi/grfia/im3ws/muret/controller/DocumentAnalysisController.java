@@ -271,7 +271,10 @@ public class DocumentAnalysisController extends MuRETBaseController {
     public RotatedImage rotateImage(@PathVariable("imageID") Long imageID, @PathVariable("degrees") float degrees) {
         try {
             Image image = getImage(imageID);
-            image.setRotation(degrees);
+            if (degrees < 0) {
+                degrees = 360 + degrees;
+            }
+            image.setRotation(degrees); // don't allow negative values
             imageRepository.save(image);
             return new RotatedImage(imageID, degrees);
 

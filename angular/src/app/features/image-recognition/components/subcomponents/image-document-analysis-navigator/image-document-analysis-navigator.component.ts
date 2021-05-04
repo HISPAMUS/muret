@@ -13,7 +13,7 @@ import {ZoomManager} from "../../../../../shared/model/zoom-manager";
 })
 export class ImageDocumentAnalysisNavigatorComponent implements OnChanges {
   @Input() loadedImage: SafeResourceUrl;
-  @Input() imageRotation: number = 0;
+  //using IIIF @Input() imageRotation: number = 0;
   @Input() regionTypes: RegionType[];
   @Input() shapes: Shape[];
   @Input() nextShapeToAdd: 'Rectangle' | 'Line' | 'Text' | 'Polylines';

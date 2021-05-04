@@ -66,6 +66,7 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params: ParamMap) => {
+      this._documentAnalysisShapes = null;
       this._imageID = +this.route.snapshot.paramMap.get('id'); // + converts the string to number
       this.store.dispatch(new ImageRecognitionGetImageOverview(this.imageID))
       this.store.dispatch(new BreadcrumbsUpdateImage(this.imageID));
@@ -86,7 +87,8 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
     this.imageOverviewSubscription = this.store.select(selectImageRecognitionImageOverview).subscribe(next => {
       if (next) {
         this._imageOverview = next;
-        this.masterImageURL = this.imageFilesService.getMasterImageURL(this.imageOverview.documentPath, this.imageOverview.filename, this.imageOverview.rotation);
+        this.updateMasterImageURL(this.imageOverview.rotation);
+        // in document analysis, as we have the rotation slider, we must see the original image in order to avoid rotating it twice
 
         this.store.dispatch(new CoreGetSVGSet(next.notationType, next.manuscriptType));
 
@@ -238,4 +240,7 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
     this.store.dispatch(new ImageRecognitionChangeRegionBoundingBox(rectangle.data, rectangle.toBoundingBox()));
   }
 
+  protected updateMasterImageURL(rotation: number) {
+    this.masterImageURL = this.imageFilesService.getMasterImageURL(this.imageOverview.documentPath, this.imageOverview.filename, rotation);
+  }
 }

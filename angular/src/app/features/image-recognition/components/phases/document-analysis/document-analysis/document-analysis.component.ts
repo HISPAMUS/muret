@@ -45,7 +45,7 @@ export class DocumentAnalysisComponent extends ImageRecognitionBaseAbstractCompo
   documentAnalysisModels$: Observable<ClassifierModel[]>;
   sliderImageRotation: number = 0;
   sliderOptions: Options = {
-    floor: -50, // divide by 10
+    floor: -50, // divide by 10 to allow 1 decimal
     ceil: 50,
      translate: (value: number): string => {
       return value / 10 + 'º';
@@ -67,7 +67,12 @@ export class DocumentAnalysisComponent extends ImageRecognitionBaseAbstractCompo
 
   onImageOverviewChanged() {
     super.onImageOverviewChanged(); // e.g. after applying rotation
-    this.sliderImageRotation = this.imageOverview.rotation * 10;
+    // this.sliderImageRotation = this.imageOverview.rotation * 10;
+    let rot = this.imageOverview.rotation;
+    if (rot >= 180) {
+      rot = rot - 360;
+    }
+    this.sliderImageRotation = rot * 10;
   }
 
   protected isPageSelectable(): boolean {
@@ -276,7 +281,7 @@ export class DocumentAnalysisComponent extends ImageRecognitionBaseAbstractCompo
   }
 
   getImageRotation() {
-    return this.sliderImageRotation / 10;
+    return ((this.sliderImageRotation / 10) + 360) % 360; // don't allow negative values
   }
 
   onSaveRotation() {
@@ -285,6 +290,10 @@ export class DocumentAnalysisComponent extends ImageRecognitionBaseAbstractCompo
 
   onRevertRotation() {
     this.store.dispatch(new ImageRecognitionRevertRotation(this.imageID));
+  }
+
+  onRotationChanged() {
+    this.updateMasterImageURL(this.getImageRotation());
   }
 }
 

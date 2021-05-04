@@ -44,7 +44,7 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   @Input() backgroundImage: string;
   @Input() shapes: Shape[];
   @Input() zoomFactor: number;
-  @Input() imageRotation: number = 0;
+  // @Input() imageRotation: number = 0; Rotated in IIIF
 
   @Input() singleSelectionInEditMode: boolean; // if this value is set just one symbol can be selected in editing mode
 
