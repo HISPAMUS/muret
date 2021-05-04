@@ -116,8 +116,13 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   }
 
   ngOnInit() {
+    this.init();
+  }
+
+  init() {
     if (this.backgroundImage) {
-      this.unsafeBackgroundImage = this.sanitizer.bypassSecurityTrustResourceUrl(this.backgroundImage);
+      //this.unsafeBackgroundImage = this.sanitizer.bypassSecurityTrustResourceUrl(this.backgroundImage);
+      this.unsafeBackgroundImage = this.backgroundImage;
     } else if (this.viewPortHeight !== 0 && this.viewPortWidth !== 0) { // when not using image use the specified height and width
       this.computeViewBox();
       this.scaledImageHeight = this.viewPortHeight;
@@ -126,6 +131,10 @@ export class SvgCanvasComponent implements OnInit, OnChanges, AfterContentChecke
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes.backgroundImage) {
+      this.init();
+    }
+
     this.computeViewBox(); // it costs less to compute the change than checking if it has changed
     this.computeScaledImageSize();
     if (changes.shapes && this.shapes) { //TODO This event has been received twice, check why
