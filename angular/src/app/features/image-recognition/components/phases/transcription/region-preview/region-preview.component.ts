@@ -24,6 +24,7 @@ import {
 } from "../../../../store/actions/image-recognition.actions";
 import {DialogsService} from "../../../../../../shared/services/dialogs.service";
 import {selectImageRecognitionSelectedAgnosticSymbols} from "../../../../store/selectors/image-recognition.selector";
+import {ImageOverview} from "../../../../../../core/model/restapi/image-overview";
 
 @Component({
   selector: 'app-region-preview',
@@ -31,7 +32,7 @@ import {selectImageRecognitionSelectedAgnosticSymbols} from "../../../../store/s
   styleUrls: ['./region-preview.component.css']
 })
 export class RegionPreviewComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() imageID: number;
+  @Input() imageOverview: ImageOverview;
   @Input() agnosticSymbolClassifiers: ClassifierModel;
   @Input() loadedImage: SafeResourceUrl;
   @Input() selectedRegion: Region;

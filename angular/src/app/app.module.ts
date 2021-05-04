@@ -73,6 +73,8 @@ import {NewDocumentModule} from "./features/new-document-old/new-document.module
 import {faPlusSquare} from "@fortawesome/free-solid-svg-icons/faPlusSquare";
 import {faLink} from "@fortawesome/free-solid-svg-icons/faLink";
 import {faUnlink} from "@fortawesome/free-solid-svg-icons/faUnlink";
+import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
+import {faChevronRight} from "@fortawesome/free-solid-svg-icons/faChevronRight";
 
 @NgModule({
   declarations: [
@@ -150,6 +152,8 @@ export class AppModule {
     library.addIcons(faObjectGroup); // used in document thumbnail
     library.addIcons(faMusic); // used in document thumbnail
     library.addIcons(faGuitar); // used in document thumbnail
+    library.addIcons(faChevronLeft); // used in document thumbnail
+    library.addIcons(faChevronRight); // used in document thumbnail
     library.addIcons(faTasks); // used in document to show drag and drop
     library.addIcons(faEllipsisV); // used in section
     library.addIcons(faArrowsAlt); // used in document to show drag and drop
@@ -160,6 +164,5 @@ export class AppModule {
     library.addIcons(faPlusSquare); // used in kern / mens grid
     library.addIcons(faLink); // used in kern / mens grid
     library.addIcons(faUnlink); // used in kern / mens grid
-
   }
 }

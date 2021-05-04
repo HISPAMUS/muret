@@ -24,7 +24,7 @@
 
   </app-classifiers>
 
-  <app-document-phases [selectedPhase]="'transcription'" [imageID]="imageID"  [size]="'lg'"></app-document-phases>
+  <app-document-phases [selectedPhase]="'transcription'" [imageID]="imageOverview.imageID"  [size]="'lg'"></app-document-phases>
 </div>
 <div id="imageCanvas">
   <app-svg-canvas *ngIf="loadedImage"

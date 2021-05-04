@@ -8,16 +8,15 @@
         [selectionDone]="isSelectionDone()"
         (onDelete)="onDelete()"
         (onClear)="onClear()"></app-image-recognition-toolbar>
-        <p><a [routerLink]="['/imageRecognition/documentAnalysis', imageOverview.prevImageID]"> &#60; </a>
-        <a [routerLink]="['/imageRecognition/documentAnalysis', imageOverview.nextImageID]">&#62; </a>
       <div id="slider" class="d-flex align-items-center">
         <button class="btn-secondary" (click)="onRevertRotation()">Revert</button>
         <ngx-slider [(value)]="sliderImageRotation" [options]="sliderOptions" (valueChange)="onRotationChanged()"></ngx-slider>
         <button class="btn-secondary" (click)="onSaveRotation()">Save</button>
+      <button class="btn-secondary" (click)="autorotate()">Auto</button>
       </div>
       <app-classifiers [title]="'Select a document analysis classifier'" [models]="documentAnalysisModels$ | async" (onExecuteClassifier)="attemptDocumentAnalysis($event)">
       </app-classifiers>
-      <app-document-phases [selectedPhase]="'documentAnalysis'"  [imageID]="imageID" [size]="'lg'"></app-document-phases>
+      <app-document-phases [selectedPhase]="'documentAnalysis'"  [imageID]="imageID" [size]="'lg'" [prevImageID]="imageOverview.prevImageID" [nextImageID]="imageOverview.nextImageID"></app-document-phases>
     </div>
   </div>
   <div class="row">

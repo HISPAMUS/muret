@@ -17,6 +17,7 @@ import {
 } from "../../../../store/actions/image-recognition.actions";
 import {AgnosticSymbol} from "../../../../../../core/model/entities/agnostic-symbol";
 import {PositionInStaffService} from "../../../../../../shared/services/position-in-staff.service";
+import {ImageOverview} from "../../../../../../core/model/restapi/image-overview";
 
 @Component({
   selector: 'app-music-agnostic-representation',
@@ -24,7 +25,7 @@ import {PositionInStaffService} from "../../../../../../shared/services/position
   styleUrls: ['./music-agnostic-representation.component.css']
 })
 export class MusicAgnosticRepresentationComponent implements OnInit, OnDestroy {
-  @Input() imageID: number;
+  @Input() imageOverview: ImageOverview;
   @Input() region: Region;
   @Input() loadedImage: SafeResourceUrl;
   @Input() svgSet: SVGSet;

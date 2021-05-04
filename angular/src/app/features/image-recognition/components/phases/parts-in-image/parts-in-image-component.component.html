@@ -6,7 +6,7 @@
         <p class="text-center" *ngIf="imageOverview.imagePart">Whole image linked to {{imageOverview.imagePart.name}}. <a [routerLink]="" (click)="unlinkImageFromPart()">Unlink part</a></p>
         <p class="text-center" *ngIf="!imageOverview.imagePart"><a [routerLink]="" (click)="linkImageToPart()">Link whole image to part</a></p>
       </div>
-      <app-document-phases [selectedPhase]="'parts'" [imageID]="imageID" [size]="'lg'"></app-document-phases>
+      <app-document-phases [selectedPhase]="'parts'" [imageID]="imageID" [size]="'lg'" [prevImageID]="imageOverview.prevImageID" [nextImageID]="imageOverview.nextImageID"></app-document-phases>
     </div>
   </div>
   <div class="row">

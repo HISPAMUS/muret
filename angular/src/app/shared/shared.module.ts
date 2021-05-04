@@ -24,6 +24,8 @@ import {NotationService} from "./services/notation.service";
 import {CrudToolbarComponent} from "./components/crud-toolbar-old/crud-toolbar.component";
 import { ImageShowHideComponent } from './components/image-show-hide/image-show-hide.component';
 import { ToggleButtonComponent } from './components/toggle-button/toggle-button.component';
+import { NextImageComponent } from './components/next-image/next-image.component';
+import {PreviousImageComponent} from "./components/previous-image/previous-image.component";
 
 @NgModule({
   imports: [
@@ -56,7 +58,8 @@ import { ToggleButtonComponent } from './components/toggle-button/toggle-button.
     ImagePhaseTranscriptionComponent,
     ProgressStatusComponent,
     ImageShowHideComponent,
-    ToggleButtonComponent
+    ToggleButtonComponent,
+    NextImageComponent, PreviousImageComponent
   ],
     exports: [
         StateComponent,
@@ -73,7 +76,7 @@ import { ToggleButtonComponent } from './components/toggle-button/toggle-button.
         ImagePhaseTranscriptionComponent,
         ProgressStatusComponent,
         ImageShowHideComponent,
-        ToggleButtonComponent
+        ToggleButtonComponent, NextImageComponent, PreviousImageComponent
     ],
   providers: [NotationService]
 })

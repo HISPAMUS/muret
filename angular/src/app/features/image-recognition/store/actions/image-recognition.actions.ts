@@ -71,6 +71,8 @@ export enum ImageRecognitionActionTypes {
   ImageRecognitionDeleteRegionsSuccess = '[Image Recognition. Document Analysis] Delete region success',
   ImageRecognitionAutomaticDocumentAnalysis = '[Image Recognition. Document Analysis] Start automatic analysis',
   ImageRecognitionAutomaticDocumentAnalysisSuccess = '[Image Recognition. Document Analysis] Automatic analysis success',
+  ImageRecognitionAutoRotate = '[Image Recognition. Document Analysis] Auto rotate',
+  ImageRecognitionAutoRotateSuccess = '[Image Recognition. Document Analysis] Auto rotate success',
   ImageRecognitionApplyRotation = '[Image Recognition. Document Analysis] Apply rotation',
   ImageRecognitionApplyRotationSuccess = '[Image Recognition. Document Analysis] Apply rotation success',
   ImageRecognitionRevertRotation = '[Image Recognition. Document Analysis] Revert rotation',
@@ -361,6 +363,16 @@ export class ImageRecognitionApplyRotationSuccess implements Action {
   }
 }
 
+export class ImageRecognitionAutoRotate implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionAutoRotate;
+  constructor(public imageID: number) {}
+}
+
+export class ImageRecognitionAutoRotateSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionAutoRotateSuccess;
+  constructor(public rotatedImage: RotatedImage) {}
+}
+
 
 export class ImageRecognitionRevertRotation implements Action {
   public readonly type = ImageRecognitionActionTypes.ImageRecognitionRevertRotation;
@@ -584,6 +596,7 @@ export type ImageRecognitionActions =
 
   ImageRecognitionApplyRotation | ImageRecognitionApplyRotationSuccess |
   ImageRecognitionRevertRotation | ImageRecognitionRevertRotationSuccess |
+  ImageRecognitionAutoRotate | ImageRecognitionAutoRotateSuccess |
 
   // agnostic representation
   ImageRecognitionSelectRegion | ImageRecognitionSelectAgnosticSymbols |

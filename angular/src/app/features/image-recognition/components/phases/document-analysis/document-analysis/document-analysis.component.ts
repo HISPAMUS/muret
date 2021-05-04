@@ -12,7 +12,7 @@ import {Shape} from "../../../../../../svg/model/shape";
 import {RegionType} from "../../../../../../core/model/entities/region-type";
 import {
   ImageRecognitionApplyRotation,
-  ImageRecognitionAutomaticDocumentAnalysis,
+  ImageRecognitionAutomaticDocumentAnalysis, ImageRecognitionAutoRotate,
   ImageRecognitionChangePageBoundingBox,
   ImageRecognitionChangeRegionBoundingBox,
   ImageRecognitionChangeRegionsType,
@@ -292,8 +292,13 @@ export class DocumentAnalysisComponent extends ImageRecognitionBaseAbstractCompo
     this.store.dispatch(new ImageRecognitionRevertRotation(this.imageID));
   }
 
+  autorotate() {
+    this.store.dispatch(new ImageRecognitionAutoRotate(this.imageID));
+  }
+
   onRotationChanged() {
     this.updateMasterImageURL(this.getImageRotation());
   }
+
 }
 

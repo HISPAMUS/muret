@@ -141,11 +141,18 @@ export class DocumentAnalysisService {
     return this.apiRestClientService.put$<RotatedImage>(url, null);
   }
 
-
   revertRotation$(imageID: number) {
     const url = `documentanalysis/revertRotation/${imageID}`;
     return this.apiRestClientService.put$(url, null);
   }
+
+  autorotateImage$(imageID: number): Observable<RotatedImage> {
+    // take care: imagefiles, not documentanalysis
+    const url = `imagefiles/autorotateImage/${imageID}`;
+    return this.apiRestClientService.put$<RotatedImage>(url, null);
+  }
+
+
   // revisado hasta aquí
 
 

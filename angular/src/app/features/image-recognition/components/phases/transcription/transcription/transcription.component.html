@@ -3,11 +3,16 @@
     <aside class="col-3"  id="leftColumn">  <!-- left column -->
       <div id="imageNavigator" [ngClass]="imageNavigatorHeight">
         <!--<h3 class="text-center">{{imageOverview.filename}}</h3>-->
-        <p id="doubleClickBBoxes"><a [routerLink]="['/imageRecognition/transcription', imageOverview.prevImageID]">Previous</a> |
-          <a [routerLink]="['/imageRecognition/transcription', imageOverview.nextImageID]">Next </a><br>
+        <p id="doubleClickBBoxes">
             Double click for changing the bounding boxes
         </p>
-        <app-image-recognition-toolbar [zoomManager]="zoomManager" [hideModeButtons]="true"></app-image-recognition-toolbar>
+        <div class="d-flex align-content-between">
+          <app-image-recognition-toolbar [zoomManager]="zoomManager" [hideModeButtons]="true"></app-image-recognition-toolbar>
+          <div>
+            <app-previous-image [prevImageID]="imageOverview.prevImageID" [selectedPhase]="'transcription'" [size]="'lg'"></app-previous-image>
+            <app-next-image [nextImageID]="imageOverview.nextImageID" [selectedPhase]="'transcription'" [size]="'lg'"></app-next-image>
+          </div>
+        </div>
         <ng-container *ngIf="regionTypes$ | async as regionTypes">
           <app-image-document-analysis-navigator *ngIf="documentAnalysisShapes"
             [loadedImage]="masterImageURL"
@@ -35,7 +40,7 @@
         <container-element [ngSwitch]="regionInteractionType">
           <ng-container *ngSwitchCase="'Music'">
             <app-music-agnostic-representation
-              [imageID]="imageID"
+              [imageOverview]="imageOverview"
               [region]="selectedRegion"
               [loadedImage]="masterImageURL"
               [svgSet]="svgSet$ | async"

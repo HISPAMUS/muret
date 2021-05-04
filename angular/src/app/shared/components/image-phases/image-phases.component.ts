@@ -8,6 +8,8 @@ import {ImageRecognitionProgressStatus} from "../../../core/model/entities/image
 })
 export class ImagePhasesComponent implements OnInit, OnChanges {
   @Input() imageID: number;
+  @Input() nextImageID: number;
+  @Input() prevImageID: number;
   @Input() size: string;
   @Input() imageRecognitionProgressStatuses: ImageRecognitionProgressStatus[];
   @Input() selectedPhase: string;
@@ -34,6 +36,4 @@ export class ImagePhasesComponent implements OnInit, OnChanges {
       return result;
     }
   }
-
-
 }

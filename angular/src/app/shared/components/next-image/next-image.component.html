@@ -1,0 +1,5 @@
+<label *ngIf="nextImageID" ngbButtonLabel [ngbTooltip]="'Next image in collection'">
+    <a [routerLink]="['/imageRecognition/' + selectedPhase, nextImageID]">
+        <fa-icon [icon]="'chevron-right'" [size]="size"></fa-icon>
+    </a>
+</label>

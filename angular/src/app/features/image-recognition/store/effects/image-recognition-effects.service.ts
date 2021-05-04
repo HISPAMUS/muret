@@ -70,7 +70,7 @@ import {
   ImageRecognitionUnlinkImageFromPart,
   ImageRecognitionUnlinkImageFromPartSuccess,
   ImageRecognitionUnlinkPart,
-  ImageRecognitionUnlinkPartSuccess
+  ImageRecognitionUnlinkPartSuccess, ImageRecognitionAutoRotate, ImageRecognitionAutoRotateSuccess
 } from "../actions/image-recognition.actions";
 import {Page} from "../../../../core/model/entities/page";
 import {ImagePartsService} from "../../services/image-parts.service";
@@ -319,7 +319,13 @@ export class ImageOverviewEffects {
       switchMap(() => of(new ImageRecognitionRevertRotationSuccess())),
       //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
-
+  @Effect()
+  autorotateImage$ = this.actions$.pipe(
+    ofType<ImageRecognitionAutoRotate>(ImageRecognitionActionTypes.ImageRecognitionAutoRotate),
+    switchMap((action: ImageRecognitionAutoRotate) => this.documentAnalysisService.autorotateImage$(action.imageID).pipe(
+      switchMap((rotatedImage: RotatedImage) => of(new ImageRecognitionAutoRotateSuccess(rotatedImage))),
+      //catchError(err => of(new ImageRecognitionServerError(err)))
+    )));
   // ------------- Agnostic representation
   @Effect()
   createSymbolFromBoundingBox$ = this.actions$.pipe(

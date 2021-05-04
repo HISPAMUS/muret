@@ -2,3 +2,6 @@
 <app-image-phase-document-analysis [selected]="selectedPhase=='documentAnalysis'" [imageID]="imageID" [size]="size" [status]="getPhaseStatus('documentAnalysis')"></app-image-phase-document-analysis>
 <app-image-phase-parts [selected]="selectedPhase=='parts'" [imageID]="imageID" [size]="size" [status]="getPhaseStatus('parts')"></app-image-phase-parts>
 <app-image-phase-transcription [selected]="selectedPhase=='transcription'" [imageID]="imageID" [size]="size" [status]="getPhaseStatus('transcription')"></app-image-phase-transcription>
+
+<app-previous-image [prevImageID]="prevImageID" [selectedPhase]="selectedPhase" [size]="size"></app-previous-image>
+<app-next-image [nextImageID]="nextImageID" [selectedPhase]="selectedPhase" [size]="size"></app-next-image>
