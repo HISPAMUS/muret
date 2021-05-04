@@ -1,4 +1,4 @@
-<div class="container" *ngIf="imageOverview">
+<div class="container" *ngIf="imageOverview; else loading">
   <div class="row">
     <div class="col-8">
       <ng-container *ngIf="regionTypes$ | async as regionTypes">
@@ -31,5 +31,11 @@
     </div>
   </div>
 </div>
+
+<ng-template #loading>
+  <div class="jumbotron">
+    Loading ...
+  </div>
+</ng-template>
 
 

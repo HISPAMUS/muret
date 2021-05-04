@@ -2,8 +2,10 @@ package es.ua.dlsi.grfia.im3ws.muret.controller;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
+import es.ua.dlsi.grfia.im3ws.muret.controller.payload.RotatedImage;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Image;
 import es.ua.dlsi.grfia.im3ws.muret.model.ClassifierClient;
+import es.ua.dlsi.grfia.im3ws.muret.model.ImageModel;
 import es.ua.dlsi.grfia.im3ws.muret.repository.ImageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.PageRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
@@ -34,6 +36,26 @@ public class ImageFilesController extends MuRETBaseController {
         super(muretConfiguration, imageRepository, pageRepository, regionRepository, symbolRepository);
         classifierClient = new ClassifierClient(muretConfiguration.getPythonclassifiers());
     }
+
+
+    @PutMapping(value = "autorotateImage/{imageID}")
+    @Transactional
+    public RotatedImage autorotateImage(@PathVariable("imageID") Long imageID) {
+        try {
+            Image image = getImage(imageID);
+            File imageFile = getImageFile(null, image, MURETConfiguration.MASTER_IMAGES);
+            ImageModel imageModel = new ImageModel();
+            BufferedImage bufferedImage = ImageIO.read(imageFile);
+            double rotation = -imageModel.computeScoreRotation(bufferedImage); // it computes the rotation inverse to IIIF
+            image.setRotation((float) rotation);
+            imageRepository.save(image);
+            System.err.println("Rotation: " + image.getRotation());
+            return new RotatedImage(imageID, (float) rotation);
+        } catch (IM3WSException | IOException e) {
+            throw ControllerUtils.createServerError(this, "Cannot autorotate image", e);
+        }
+    }
+
 
     /**
      *

@@ -67,6 +67,7 @@ export abstract class ImageRecognitionBaseAbstractComponent implements OnInit, O
   ngOnInit(): void {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this._documentAnalysisShapes = null;
+      this._imageOverview = null;
       this._imageID = +this.route.snapshot.paramMap.get('id'); // + converts the string to number
       this.store.dispatch(new ImageRecognitionGetImageOverview(this.imageID))
       this.store.dispatch(new BreadcrumbsUpdateImage(this.imageID));

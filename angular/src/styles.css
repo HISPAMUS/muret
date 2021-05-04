@@ -124,3 +124,10 @@ hr {
 }
 
 
+.jumbotron {
+  width: 50vw;
+  min-height: 30vh;
+  margin-top: 30vh;
+  margin-left: auto;
+  margin-right: auto;
+}

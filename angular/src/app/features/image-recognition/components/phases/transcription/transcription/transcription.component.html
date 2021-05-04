@@ -1,4 +1,4 @@
-<div class="container-fluid" *ngIf="imageOverview && masterImageURL">
+<div class="container-fluid" *ngIf="imageOverview && masterImageURL; else loading">
   <div class="row">
     <aside class="col-3"  id="leftColumn">  <!-- left column -->
       <div id="imageNavigator" [ngClass]="imageNavigatorHeight">
@@ -82,3 +82,9 @@
 
 <!-- Positioned absolute -->
 <app-progress-status (statusChange)="onStatusChange($event)" [(status)]="status"></app-progress-status>
+
+<ng-template #loading>
+  <div class="jumbotron">
+    Loading ...
+  </div>
+</ng-template>

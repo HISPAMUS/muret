@@ -49,8 +49,14 @@ public class ImageRecognitionController {
     }
 
     private void setPrevAndNextImages(ImageOverview imageOverview, List<Image> sortedImages, Image thisImage) {
-        int index = sortedImages.indexOf(thisImage);
-        if (index != -1) {
+        Integer index = null;
+        for (int i=0; index == null && i<sortedImages.size(); i++) {
+            if (sortedImages.get(i).getId() == thisImage.getId()) {
+                index = i;
+            }
+        }
+
+        if (index != null) {
             if (index > 0) {
                 imageOverview.setPrevImageID(sortedImages.get(index-1).getId());
             }

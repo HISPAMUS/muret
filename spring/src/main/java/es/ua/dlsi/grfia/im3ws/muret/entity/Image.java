@@ -18,13 +18,14 @@ import java.util.stream.Collectors;
 @Entity
 public class Image extends Auditable implements IAssignableToPart, IID<Long>, IOrdered {
     public static final Comparator<? super Image> COMPARATOR = (Comparator<Image>) (o1, o2) -> {
+        System.out.println(o1.ordering + " " + o2.ordering);
         if (o1.ordering != null && o2.ordering != null) {
             int diff = o1.ordering - o2.ordering;
             if (diff != 0) {
                 return diff;
             }
         }
-        return o1.filename.compareTo(o2.filename);
+        return o1.id.compareTo(o2.id);
     };
     @Id
     @Column
