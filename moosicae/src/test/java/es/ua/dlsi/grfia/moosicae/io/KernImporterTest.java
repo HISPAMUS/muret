@@ -84,7 +84,7 @@ public class KernImporterTest {
             assertEquals("Note #1, d", EDiatonicPitches.D, ((INote)staffSymbols[4]).getNoteHead().getPitch().getDiatonicPitch().getValue());
             assertEquals("Note #1, d, octave 4", 4, ((INote)staffSymbols[4]).getNoteHead().getPitch().getOctave().getValue().intValue());
             assertFalse("Note #1, no accidental", ((INote)staffSymbols[4]).getNoteHead().getPitch().getAlteration().isPresent());
-            assertEquals("Note #1, explicit stem up", EStemDirection.up, ((IStemmed)staffSymbols[4]).getStem().getStemDirection().getValue());
+            assertEquals("Note #1, explicit stem up", EStemDirection.up, ((INote)staffSymbols[4]).getStem().get().getStemDirection().getValue());
             assertEquals("Note #5, c", EDiatonicPitches.C, ((INote)staffSymbols[10]).getNoteHead().getPitch().getDiatonicPitch().getValue());
             assertEquals("Note #5, accidental sharp", EAccidentalSymbols.SHARP, ((INote)staffSymbols[10]).getNoteHead().getPitch().getAlteration().get().getAccidentalSymbol().getValue());
             assertEquals("Rest, half note", EFigures.HALF, ((IRest)staffSymbols[15]).getFigure().getValue());
@@ -144,7 +144,7 @@ public class KernImporterTest {
            assertEquals("Top voice, line #23, 8b-\\, figure", EFigures.EIGHTH, ((INote)tvL22BeamGroup[1]).getFigure().getValue());
            assertEquals("Top voice, line #23, 8b-\\, pitch", EDiatonicPitches.B, ((INote)tvL22BeamGroup[1]).getNoteHead().getPitch().getDiatonicPitch().getValue());
            assertEquals("Top voice, line #23, 8b-\\, accidental", EAccidentalSymbols.FLAT, ((INote)tvL22BeamGroup[1]).getNoteHead().getPitch().getAlteration().get().getAccidentalSymbol().getValue());
-           assertEquals("Top voice, line #23, 8b-\\, explicit stem down", EStemDirection.down, ((IStemmed)tvL22BeamGroup[1]).getStem().getStemDirection().getValue());
+           assertEquals("Top voice, line #23, 8b-\\, explicit stem down", EStemDirection.down, ((INote)tvL22BeamGroup[1]).getStem().get().getStemDirection().getValue());
         } catch (Throwable t) {
             t.printStackTrace();
             fail(t.toString());

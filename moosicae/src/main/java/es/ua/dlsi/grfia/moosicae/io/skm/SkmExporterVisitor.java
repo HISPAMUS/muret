@@ -8,9 +8,6 @@ import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
 import es.ua.dlsi.grfia.moosicae.core.impl.BeamGroup;
-import es.ua.dlsi.grfia.moosicae.core.impl.Grace;
-import es.ua.dlsi.grfia.moosicae.core.impl.Stemmed;
-import es.ua.dlsi.grfia.moosicae.core.impl.WholeMeasureRest;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmCoreSymbol;
@@ -252,15 +249,6 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
         throw new UnsupportedOperationException("Whole measure rest");
     }
 
-    @Override
-    public void exportStemmed(IStemmed stemmed, SkmExporterVisitorTokenParam inputOutput) {
-
-    }
-
-    @Override
-    public void exportGrace(IGrace grace, SkmExporterVisitorTokenParam inputOutput) {
-
-    }
 
     @Override
     public void exportChord(IChord chord, SkmExporterVisitorTokenParam inputOutput) throws IMException {

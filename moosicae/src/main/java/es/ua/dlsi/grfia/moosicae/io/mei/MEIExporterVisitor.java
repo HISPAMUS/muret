@@ -5,9 +5,6 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.impl.BeamGroup;
-import es.ua.dlsi.grfia.moosicae.core.impl.Grace;
-import es.ua.dlsi.grfia.moosicae.core.impl.Stemmed;
-import es.ua.dlsi.grfia.moosicae.core.impl.WholeMeasureRest;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLExporterVisitorParam;
@@ -193,16 +190,6 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
     @Override
     public void exportWholeMeasureRest(IWholeMeasureRest wholeMeasureRest, XMLExporterVisitorParam inputOutput) {
         throw new UnsupportedOperationException("Whole measure rest");
-    }
-
-    @Override
-    public void exportStemmed(IStemmed stemmed, XMLExporterVisitorParam inputOutput) {
-        throw new UnsupportedOperationException("Stemmed");
-    }
-
-    @Override
-    public void exportGrace(IGrace grace, XMLExporterVisitorParam inputOutput) {
-        throw new UnsupportedOperationException("Grace");
     }
 
     @Override

@@ -7,12 +7,11 @@ import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
 import es.ua.dlsi.grfia.moosicae.core.impl.BeamGroup;
-import es.ua.dlsi.grfia.moosicae.core.impl.Grace;
-import es.ua.dlsi.grfia.moosicae.core.impl.Stemmed;
-import es.ua.dlsi.grfia.moosicae.core.impl.WholeMeasureRest;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.KernCoreSymbol;
+
+import java.util.Optional;
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
@@ -101,17 +100,32 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
 
     @Override
     public void exportNote(INote note, KernExporterVisitorTokenParam inputOutput) throws IMException {
-        doExport(note, inputOutput);
-        inputOutput.buildAndAddToken(note);
-    }
-
-    private void doExport(INote note, KernExporterVisitorTokenParam inputOutput) throws IMException {
         exportFigure(note.getFigure(), inputOutput);
         inputOutput.append(SEP);
         if (note.getDots().isPresent()) {
             exportDots(note.getDots().get(), inputOutput);
         }
-        exportNoteHead(note.getNoteHead(), inputOutput);
+        doExport(note.getNoteHead(), inputOutput, note.getGraceNoteType());
+
+        if (note.getStem().isPresent()) {
+            exportStem(note.getStem().get(), inputOutput);
+        }
+        inputOutput.buildAndAddToken(note);
+    }
+
+    private void exportStem(IStem stem, KernExporterVisitorTokenParam inputOutput) throws IMException {
+        switch (stem.getStemDirection().getValue()) {
+            case down:
+                inputOutput.append(SEP);
+                inputOutput.append("\\");
+                break;
+            case up:
+                inputOutput.append(SEP);
+                inputOutput.append("/");
+                break;
+            default:
+                throw new IMException("Unsupported stem direction: " + stem.getStemDirection().getValue());
+        }
     }
 
     @Override
@@ -267,81 +281,15 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
     }
 
     @Override
-    public void exportStemmed(IStemmed stemmed, KernExporterVisitorTokenParam inputOutput) throws IMException {
-        doExport(stemmed, inputOutput);
-        inputOutput.buildAndAddToken(stemmed);
-    }
-
-    private void doExport(IStemmed stemmed, KernExporterVisitorTokenParam inputOutput) throws IMException {
-        if (stemmed.getDecoratesTo() instanceof IGrace) {
-            doExport((IGrace) stemmed.getDecoratesTo(), inputOutput);
-        } else if (stemmed.getDecoratesTo() instanceof INote) {
-            doExport((INote) stemmed.getDecoratesTo(), inputOutput);
-        } else if (stemmed.getDecoratesTo() instanceof IChord) {
-            doExport((IChord) stemmed.getDecoratesTo(), inputOutput);
-        } else {
-            throw new IMException("Unsupported stemmed target " + stemmed.getDecoratesTo());
-        }
-        switch (stemmed.getStem().getStemDirection().getValue()) {
-            case down:
-                inputOutput.append(SEP);
-                inputOutput.append("\\");
-                break;
-            case up:
-                inputOutput.append(SEP);
-                inputOutput.append("/");
-                break;
-            default:
-                throw new IMException("Unsupported stem direction: " + stemmed.getStem().getStemDirection().getValue());
-        }
-    }
-
-
-    @Override
-    public void exportGrace(IGrace grace, KernExporterVisitorTokenParam inputOutput) throws IMException {
-        doExport(grace, inputOutput);
-        inputOutput.buildAndAddToken(grace);
-    }
-
-    private void doExport(IGrace grace, KernExporterVisitorTokenParam inputOutput) throws IMException {
-        if (grace.getDecoratesTo() instanceof IStemmed) {
-            doExport((IStemmed) grace.getDecoratesTo(), inputOutput);
-        } else if (grace.getDecoratesTo() instanceof INote) {
-            doExport((INote) grace.getDecoratesTo(), inputOutput);
-        } else if (grace.getDecoratesTo() instanceof IChord) {
-            doExport((IChord) grace.getDecoratesTo(), inputOutput);
-        } else {
-            throw new IMException("Unsupported grace decoration target " + grace.getDecoratesTo());
-        }
-
-        switch (grace.getGraceNoteType().getValue()) {
-            case acciaccatura:
-                inputOutput.append(SEP);
-                inputOutput.append("q");
-                break;
-            case appoggiatura:
-                inputOutput.append(SEP);
-                inputOutput.append("qq");
-                break;
-            default:
-                throw new IMException("Unsupported grace note type: " + grace.getGraceNoteType().getValue());
-        }
-    }
-
-    @Override
     public void exportChord(IChord chord, KernExporterVisitorTokenParam inputOutput) throws IMException {
-        doExport(chord, inputOutput);
-        inputOutput.buildAndAddToken(chord);
-    }
-
-    private void doExport(IChord chord, KernExporterVisitorTokenParam inputOutput) throws IMException {
         exportFigure(chord.getFigure(), inputOutput);
         if (chord.getDots().isPresent()) {
             exportDots(chord.getDots().get(), inputOutput);
         }
-        for (INoteHead noteHead : chord.getNoteHeads()) {
+        for (INoteHead noteHead: chord.getNoteHeads()) {
             exportNoteHead(noteHead, inputOutput);
         }
+        inputOutput.buildAndAddToken(chord);
     }
 
     @Override
@@ -513,10 +461,28 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
         }
     }
 
+    private void doExport(INoteHead noteHead, KernExporterVisitorTokenParam inputOutput, Optional<IGraceNoteType> graceNoteType) throws IMException {
+        exportPitch(noteHead.getPitch(), inputOutput);
+        //TODO Ties!!!! - start, middle, end
+        if (graceNoteType != null && graceNoteType.isPresent()) {
+            switch (graceNoteType.get().getValue()) {
+                case acciaccatura:
+                    inputOutput.append(SEP);
+                    inputOutput.append("q");
+                    break;
+                case appoggiatura:
+                    inputOutput.append(SEP);
+                    inputOutput.append("qq");
+                    break;
+                default:
+                    throw new IMException("Unsupported grace note type: " + graceNoteType.get().getValue());
+            }
+        }
+    }
+
     @Override
     public void exportNoteHead(INoteHead noteHead, KernExporterVisitorTokenParam inputOutput) throws IMException {
-        //TODO ties
-        exportPitch(noteHead.getPitch(), inputOutput);
+        doExport(noteHead, inputOutput, null);
     }
 
     @Override

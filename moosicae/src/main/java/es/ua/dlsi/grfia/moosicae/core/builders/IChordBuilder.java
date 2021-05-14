@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class IChordBuilder extends IDurationalSingleBuilder<IChord> {
+public class IChordBuilder extends IPitchedDurationalSingleBuilder<IChord> {
     private List<INoteHead> noteHeads;
 
     public IChordBuilder() {
@@ -25,7 +25,7 @@ public class IChordBuilder extends IDurationalSingleBuilder<IChord> {
 
     @Override
     public IChord build() throws IMException {
-        return ICoreAbstractFactory.getInstance().createChord(getId(), figure, dots, noteHeads.toArray(new INoteHead[0]));
+        return ICoreAbstractFactory.getInstance().createChord(getId(), figure, dots, noteHeads.toArray(new INoteHead[0]), stem, graceNoteType);
     }
 
 

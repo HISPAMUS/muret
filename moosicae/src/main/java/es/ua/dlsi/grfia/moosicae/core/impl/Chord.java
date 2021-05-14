@@ -16,8 +16,8 @@ public class Chord extends PitchedDurationalSingle implements IChord {
     @NotNull
     private final INoteHead[] noteHeads;
 
-    Chord(IId id, IFigure figure,  IDots dots, @NotNull INoteHead [] noteHeads) {
-        super(id, figure, dots);
+    Chord(IId id, IFigure figure,  IDots dots, @NotNull INoteHead [] noteHeads, IStem stem, IGraceNoteType graceNoteType) {
+        super(id, figure, dots, stem, graceNoteType);
         this.noteHeads = noteHeads.clone();
     }
 
@@ -28,7 +28,7 @@ public class Chord extends PitchedDurationalSingle implements IChord {
 
     @Override
     public Chord clone() {
-        return new Chord(null, figure, dots, noteHeads);
+        return new Chord(null, figure, dots, noteHeads, stem, graceNoteType);
     }
 
     public INoteHead[] getNoteHeads() {

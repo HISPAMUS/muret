@@ -18,19 +18,14 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 25/03/2020
  */
-public class MEINoteBuilder extends CoreObjectBuilder<IPitchedDurationalSingle> implements IImporterAdapter<IPitchedDurationalSingle, XMLImporterParam> {
+public class MEINoteBuilder extends INoteBuilder implements IImporterAdapter<INote, XMLImporterParam> {
     /**
      * In MEI the alteration is child of the note because there is no pitch element inside note
      */
     private IAlteration alteration;
     private IPitchBuilder pitchBuilder;
-    private INoteBuilder noteBuilder;
-
-    private Optional<EStemDirection> eStemDirection;
-    private Optional<EGraceNoteType> eGraceNoteType;
 
     public MEINoteBuilder() {
-        this.noteBuilder = new INoteBuilder();
     }
 
     public MEINoteBuilder from(IAlteration alteration) {
@@ -42,11 +37,11 @@ public class MEINoteBuilder extends CoreObjectBuilder<IPitchedDurationalSingle> 
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
         Optional<EFigures> figure = MEIAttributesParsers.getInstance().parseFigure(xmlImporterParam);
         if (figure.isPresent()) {
-            this.noteBuilder.from(figure.get());
+            this.from(figure.get());
         }
         Optional<Integer> dots = MEIAttributesParsers.getInstance().parseDots(xmlImporterParam);
         if (dots.isPresent()) {
-            this.noteBuilder.from(dots.get());
+            this.from(dots.get());
         }
 
         if (xmlImporterParam.hasAttributes()) { // pname... are included as parameters
@@ -70,40 +65,32 @@ public class MEINoteBuilder extends CoreObjectBuilder<IPitchedDurationalSingle> 
             }
 
             INoteHead noteHead = ICoreAbstractFactory.getInstance().createNoteHead(null, pitchBuilder.build(), null); //TODO ties
-            this.noteBuilder.from(noteHead);
+            this.from(noteHead);
 
-            eStemDirection = MEIAttributesParsers.getInstance().parseStem(xmlImporterParam, "stem.dir");
-            eGraceNoteType = MEIAttributesParsers.getInstance().parseGraceNoteType(xmlImporterParam);
+            Optional<EStemDirection> eStemDirection = MEIAttributesParsers.getInstance().parseStem(xmlImporterParam, "stem.dir");
+            if (eStemDirection.isPresent()) {
+                this.from(ICoreAbstractFactory.getInstance().createStem(null, eStemDirection.get()));
+            }
+
+            Optional<EGraceNoteType> eGraceNoteType = MEIAttributesParsers.getInstance().parseGraceNoteType(xmlImporterParam);
+            if (eGraceNoteType.isPresent()) {
+                this.from(ICoreAbstractFactory.getInstance().createGraceNoteType(null, eGraceNoteType.get()));
+            }
         }
     }
 
     @Override
-    public IPitchedDurationalSingle build() throws IMException {
+    public INote build() throws IMException {
         if (this.pitchBuilder != null) {
-            if (alteration != null) { //TODO Should accidental be implemented as a decorator as we do with stem or grace?
+            if (alteration != null) {
                 this.pitchBuilder.from(alteration);
                 INoteHead noteHead = ICoreAbstractFactory.getInstance().createNoteHead(null, pitchBuilder.build(), null); //TODO ties;
-                this.noteBuilder.from(noteHead);
+                this.from(noteHead);
             }
         } else {
             throw new IMException("Missing pitch builder");
         }
 
-        IPitchedDurationalSingle note = this.noteBuilder.build();
-        // now add all decorators
-        if (this.eStemDirection != null && this.eStemDirection.isPresent()) {
-            IStem stem = ICoreAbstractFactory.getInstance().createStem(null, this.eStemDirection.get());
-            IStemmedBuilder stemmedBuilder = new IStemmedBuilder();
-            stemmedBuilder.from(note).from(stem);
-            note = stemmedBuilder.build();
-        }
-
-        if (this.eGraceNoteType != null && this.eGraceNoteType.isPresent()) {
-            IGraceNoteType graceNoteType = ICoreAbstractFactory.getInstance().createGraceNoteType(null, this.eGraceNoteType.get());
-            IGraceBuilder graceBuilder = new IGraceBuilder();
-            graceBuilder.from(note).from(graceNoteType);
-            note = graceBuilder.build();
-        }
-        return note;
+        return super.build();
     }
 }

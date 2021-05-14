@@ -199,16 +199,6 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
     }
 
     @Override
-    public void exportStemmed(IStemmed stemmed, XMLExporterVisitorParam inputOutput) {
-        throw new UnsupportedOperationException("Stemmed");
-    }
-
-    @Override
-    public void exportGrace(IGrace grace, XMLExporterVisitorParam inputOutput) {
-        throw new UnsupportedOperationException("Grace");
-    }
-
-    @Override
     public void exportChord(IChord chord, XMLExporterVisitorParam inputOutputOutput) throws IMException {
 
     }

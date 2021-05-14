@@ -16,8 +16,8 @@ public class Note extends PitchedDurationalSingle implements INote {
     @NotNull
     private final INoteHead noteHead;
 
-    Note(IId id, @NotNull IFigure figure,  IDots dots, @NotNull INoteHead noteHead) {
-        super(id, figure, dots);
+    Note(IId id, @NotNull IFigure figure,  IDots dots, @NotNull INoteHead noteHead, IStem stem, IGraceNoteType graceNoteType) {
+        super(id, figure, dots, stem, graceNoteType);
         Objects.requireNonNull(noteHead); // @NotNull is not working?
         this.noteHead = noteHead;
     }
@@ -29,7 +29,7 @@ public class Note extends PitchedDurationalSingle implements INote {
 
     @Override
     public DurationalSingle clone() {
-        return new Note(null, figure, dots, noteHead);
+        return new Note(null, figure, dots, noteHead, stem, graceNoteType);
     }
 
     @Override

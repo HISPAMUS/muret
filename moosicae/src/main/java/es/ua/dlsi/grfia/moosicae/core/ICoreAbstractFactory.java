@@ -35,7 +35,7 @@ public interface ICoreAbstractFactory {
     IBarlineType createBarlineType(IId id, @NotNull EBarlineTypes barlineType);
     IBeamGroup createBeamGroup(IId id, @NotNull IDurational[] toArray);
     ICautionaryKeySignatureAccidentals createCautionaryKeySignatureAccidentals(IId id, @NotNull Boolean value);
-    IChord createChord(IId id, @NotNull IFigure figures, IDots dots, @NotNull INoteHead[] noteHead);
+    IChord createChord(IId id, @NotNull IFigure figures, IDots dots, @NotNull INoteHead[] noteHead, IStem stem, IGraceNoteType graceNoteType);
     IClef createClef(IId id, @NotNull IClefSign clefSign, IClefLine line, IOctaveTransposition octaveTransposition);
     IClefLine createClefLine(IId id, @NotNull Integer line);
     IClefSign createClefSign(IId id, @NotNull EClefSigns clefSign);
@@ -83,7 +83,7 @@ public interface ICoreAbstractFactory {
     IName createName(IId id, @NotNull String value);
     INotationType createNotationType(IId id, @NotNull ENotationTypes notationType);
     INumber createNumber(IId id, @NotNull Integer value);
-    INote createNote(IId id, IFigure figures, IDots dots, @NotNull INoteHead noteHead);
+    INote createNote(IId id, IFigure figures, IDots dots, @NotNull INoteHead noteHead, IStem stem, IGraceNoteType graceNoteType);
 
     /**
      *
@@ -154,10 +154,5 @@ public interface ICoreAbstractFactory {
     ITitle createTitle(IId id, @NotNull String title);
     IVoice createVoice(@NotNull IPart part, IId id,  IName name);
     IWholeMeasureRest createWholeMeasureRest(IId id, @NotNull IRest rest);
-
-    IStemmed createStemmed(IPitchedDurationalSingle decoratesTo, IStem stem);
-
-    IGrace createGrace(IPitchedDurationalSingle decoratesTo, IGraceNoteType graceNoteType);
-
     IGraceNoteType createGraceNoteType(IId id, EGraceNoteType value);
 }
