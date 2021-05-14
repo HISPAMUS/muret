@@ -1,10 +1,14 @@
 0.19
+
     MAJOR UPDATES
     - All images are now served by the IIIF Cantaloupe server (issue #183)
     - Rotation in document analysis is perfomed using the IIIF transform (origin in bottom left)
+    - Document analysis: autorotate using Hugh Transform
 
     MINOR UPDATES
     - The warning message "Cannot get notation because the region has not a semantic encoding" has been removed
+    - Add buttons to move to previous and next image in collection
+    - Show a "loading" screen when changing to other image to avoid displaying invalid information
 
 ----
 
