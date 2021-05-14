@@ -41,6 +41,8 @@ public class MEIImporter extends XMLImporter implements IImporter {
 
         coreObjectBuilderSuppliers.add("note", MEINoteBuilder::new);
         coreObjectBuilderSuppliers.add("accid", MEIAlterationBuilder::new);
+
+        coreObjectBuilderSuppliers.add("beam", MEIBeamBuilder::new);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
+import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IBeamGroup;
 import es.ua.dlsi.grfia.moosicae.core.IDurational;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
@@ -16,7 +17,7 @@ public class BeamGroup extends DurationalComposite implements IBeamGroup {
     }
 
     @Override
-    public <InputOutputType> void export(IExporterVisitor<InputOutputType> exportVisitor, InputOutputType inputOutput) {
+    public <InputOutputType> void export(IExporterVisitor<InputOutputType> exportVisitor, InputOutputType inputOutput) throws IMException {
         exportVisitor.exportBeamGroup(this, inputOutput);
     }
 

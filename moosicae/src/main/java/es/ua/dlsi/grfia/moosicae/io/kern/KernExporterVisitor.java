@@ -36,8 +36,18 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
     }
 
     @Override
-    public void exportBeamGroup(BeamGroup beamGroup, KernExporterVisitorTokenParam inputOutput) {
-        throw new UnsupportedOperationException("TODO");
+    public void exportBeamGroup(BeamGroup beamGroup, KernExporterVisitorTokenParam inputOutput) throws IMException {
+        //throw new UnsupportedOperationException("TODO");
+        for (int i=0; i<beamGroup.getChildren().length; i++) {
+            if (i==0) {
+                inputOutput.setBeamGroupState(BeamGroupExportState.first);
+            } else if (i==beamGroup.getChildren().length-1) {
+                inputOutput.setBeamGroupState(BeamGroupExportState.last);
+            } else {
+                inputOutput.setBeamGroupState(BeamGroupExportState.middle);
+            }
+            beamGroup.getChildren()[i].export(this, inputOutput);
+        }
     }
 
     @Override
@@ -110,7 +120,22 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
         if (note.getStem().isPresent()) {
             exportStem(note.getStem().get(), inputOutput);
         }
+        if (inputOutput.getBeamGroupState() != null) {
+            exportBeamProperty(inputOutput.getBeamGroupState(), inputOutput);
+        }
         inputOutput.buildAndAddToken(note);
+    }
+
+    private void exportBeamProperty(BeamGroupExportState beamGroupState, KernExporterVisitorTokenParam inputOutput) {
+        inputOutput.append(SEP);
+        switch (beamGroupState) {
+            case first:
+                inputOutput.append('L');
+                break;
+            case last:
+                inputOutput.append('J');
+                break;
+        }
     }
 
     private void exportStem(IStem stem, KernExporterVisitorTokenParam inputOutput) throws IMException {
@@ -135,6 +160,12 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
             exportDots(rest.getDots().get(), inputOutput);
         }
         inputOutput.append("r");
+
+        //TODO optional position on line
+        if (inputOutput.getBeamGroupState() != null) {
+            exportBeamProperty(inputOutput.getBeamGroupState(), inputOutput);
+        }
+
         inputOutput.buildAndAddToken(rest);
     }
 
@@ -289,6 +320,11 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
         for (INoteHead noteHead: chord.getNoteHeads()) {
             exportNoteHead(noteHead, inputOutput);
         }
+
+        if (inputOutput.getBeamGroupState() != null) {
+            exportBeamProperty(inputOutput.getBeamGroupState(), inputOutput);
+        }
+
         inputOutput.buildAndAddToken(chord);
     }
 

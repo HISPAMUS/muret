@@ -11,7 +11,7 @@ import es.ua.dlsi.grfia.moosicae.core.properties.*;
  */
 public interface IExporterVisitor<InputOutputType>  {
 
-    void exportBeamGroup(BeamGroup beamGroup, InputOutputType inputOutput);
+    void exportBeamGroup(BeamGroup beamGroup, InputOutputType inputOutput) throws IMException;
     void exportClef(IClef clef, InputOutputType inputOutput) throws IMException;
     void exportClefSign(IClefSign clefSign, InputOutputType inputOutput) throws IMException;
     void exportClefOctaveTransposition(IOctaveTransposition octaveTransposition, InputOutputType inputOutput) throws IMException;

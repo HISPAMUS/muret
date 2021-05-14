@@ -14,6 +14,7 @@ public class KernExporterVisitorTokenParam {
     private final KernDocument document;
     private KernToken previousToken;
     private StringBuilder stringBuilder;
+    private BeamGroupExportState beamGroupState; //TODO Modify for spines
 
     public KernExporterVisitorTokenParam(KernDocument document, KernToken previousToken) {
         this.document = document;
@@ -44,5 +45,11 @@ public class KernExporterVisitorTokenParam {
         this.stringBuilder = new StringBuilder(); // reset for new one
     }
 
+    public BeamGroupExportState getBeamGroupState() {
+        return beamGroupState;
+    }
 
+    public void setBeamGroupState(BeamGroupExportState beamGroupState) {
+        this.beamGroupState = beamGroupState;
+    }
 }
