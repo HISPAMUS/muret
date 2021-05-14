@@ -1,0 +1,15 @@
+clefs.agnostic
+barlines_single.agnostic
+unit_test_1.agnostic
+accidentals.agnostic
+meters.agnostic
+articulations_ornaments.agnostic
+cue_notes.agnostic
+beams.agnostic
+ties.agnostic
+slurs_nested.agnostic
+tuplets.agnostic
+chords.agnostic
+durations.agnostic
+pitches.agnostic
+rests.agnostic
