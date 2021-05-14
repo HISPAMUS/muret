@@ -2,7 +2,7 @@ package es.ua.dlsi.grfia.moosicae.core.builders.properties;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
-import es.ua.dlsi.grfia.moosicae.core.ITimeSignatureDenominator;
+import es.ua.dlsi.grfia.moosicae.core.properties.ITimeSignatureDenominator;
 
 
 /**

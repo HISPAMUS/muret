@@ -1,7 +1,9 @@
 package es.ua.dlsi.grfia.moosicae.io.mei.importer.elements;
 
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
-import es.ua.dlsi.grfia.moosicae.io.mei.importer.builders.MEIMeasureRightProperty;
+import es.ua.dlsi.grfia.moosicae.core.properties.ILeftBarline;
+import es.ua.dlsi.grfia.moosicae.core.properties.INumber;
+import es.ua.dlsi.grfia.moosicae.core.properties.IRightBarline;
 
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
@@ -13,14 +15,18 @@ import java.util.Optional;
  * @created 24/03/2020
  */
 public class MEIMeasure extends MEIObject {
-    private final MEIMeasureRightProperty right;
+    private final INumber number;
+    private final ILeftBarline leftBarline;
+    private final IRightBarline rightBarline;
 
     @NotNull
     private MEIStaff[] staves;
 
-    public MEIMeasure(IId id, MEIMeasureRightProperty right, MEIStaff[] staves) {
+    public MEIMeasure(IId id, INumber number, ILeftBarline left, IRightBarline right, MEIStaff[] staves) {
         super(id);
-        this.right = right;
+        this.number = number;
+        this.leftBarline = left;
+        this.rightBarline = right;
         this.staves = staves.clone();
     }
     public MEIStaff[] getStaves() {
@@ -29,17 +35,23 @@ public class MEIMeasure extends MEIObject {
 
     @Override
     public MEIMeasure clone() {
-        return new MEIMeasure(id, right, staves);
+        return new MEIMeasure(null, number, leftBarline, rightBarline, staves);
     }
-
-    public Optional<MEIMeasureRightProperty> getRight() {
-        return Optional.ofNullable(right);
+    public Optional<INumber> getNumber() {
+        return Optional.ofNullable(number);
+    }
+    public Optional<ILeftBarline> getLeftBarline() {
+        return Optional.ofNullable(leftBarline);
+    }
+    public Optional<IRightBarline> getRightBarline() {
+        return Optional.ofNullable(rightBarline);
     }
 
     @Override
     public String toString() {
         return "MEIMeasure{" +
-                "right=" + right +
+                "left=" + leftBarline +
+                "right=" + rightBarline +
                 ", staves=" + Arrays.toString(staves) +
                 "} " + super.toString();
     }

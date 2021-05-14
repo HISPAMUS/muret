@@ -15,9 +15,12 @@ import java.util.Optional;
  * @created 18/03/2020
  */
 public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporterVisitorParam> {
+
+
     @Override
-    public void exportBeamGroup(BeamGroup beamGroup, LilypondExporterVisitorParam inputOutput) {
+    public void exportBeamGroup(IBeamGroup beamGroup, LilypondExporterVisitorParam inputOutput) throws IMException {
         throw new UnsupportedOperationException("TODO");
+
     }
 
     @Override
@@ -215,6 +218,11 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
     @Override
     public void exportWholeMeasureRest(IWholeMeasureRest wholeMeasureRest, LilypondExporterVisitorParam inputOutput) {
         throw new UnsupportedOperationException("Whole measure rest");
+    }
+
+    @Override
+    public void exportMeasure(IMeasure measure, LilypondExporterVisitorParam inputOutput) {
+
     }
 
     @Override

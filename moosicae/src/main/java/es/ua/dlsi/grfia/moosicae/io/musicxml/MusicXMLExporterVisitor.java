@@ -22,7 +22,7 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
     public static final int MAX_DUR = 256;
 
     @Override
-    public void exportBeamGroup(BeamGroup beamGroup, XMLExporterVisitorParam inputOutput) {
+    public void exportBeamGroup(IBeamGroup beamGroup, XMLExporterVisitorParam inputOutput) {
         throw new UnsupportedOperationException("TODO");
     }
 
@@ -196,6 +196,11 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
     @Override
     public void exportWholeMeasureRest(IWholeMeasureRest wholeMeasureRest, XMLExporterVisitorParam inputOutput) {
         throw new UnsupportedOperationException("Whole measure rest");
+    }
+
+    @Override
+    public void exportMeasure(IMeasure measure, XMLExporterVisitorParam inputOutput) {
+
     }
 
     @Override

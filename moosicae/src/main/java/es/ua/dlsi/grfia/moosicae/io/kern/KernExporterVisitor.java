@@ -4,9 +4,9 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
+import es.ua.dlsi.grfia.moosicae.core.enums.EBarlineTypes;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
-import es.ua.dlsi.grfia.moosicae.core.impl.BeamGroup;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.KernCoreSymbol;
@@ -36,8 +36,7 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
     }
 
     @Override
-    public void exportBeamGroup(BeamGroup beamGroup, KernExporterVisitorTokenParam inputOutput) throws IMException {
-        //throw new UnsupportedOperationException("TODO");
+    public void exportBeamGroup(IBeamGroup beamGroup, KernExporterVisitorTokenParam inputOutput) throws IMException {
         for (int i=0; i<beamGroup.getChildren().length; i++) {
             if (i==0) {
                 inputOutput.setBeamGroupState(BeamGroupExportState.first);
@@ -127,12 +126,13 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
     }
 
     private void exportBeamProperty(BeamGroupExportState beamGroupState, KernExporterVisitorTokenParam inputOutput) {
-        inputOutput.append(SEP);
         switch (beamGroupState) {
             case first:
+                inputOutput.append(SEP);
                 inputOutput.append('L');
                 break;
             case last:
+                inputOutput.append(SEP);
                 inputOutput.append('J');
                 break;
         }
@@ -309,6 +309,23 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
     @Override
     public void exportWholeMeasureRest(IWholeMeasureRest wholeMeasureRest, KernExporterVisitorTokenParam inputOutput) {
         throw new UnsupportedOperationException("Whole measure rest");
+    }
+
+    @Override
+    public void exportMeasure(IMeasure measure, KernExporterVisitorTokenParam inputOutput) throws IMException {
+        if (measure.getBarNumber().isPresent()) {
+            inputOutput.append(measure.getBarNumber().get().getValue());
+        }
+        if (measure.getLeftBarline().isPresent()) {
+            throw new IMException("Unsupported left barline export");
+        }
+        if (measure.getRightBarline().isPresent()) {
+            exportBarline(measure.getRightBarline().get(), inputOutput);
+        } else {
+            doExport(EBarlineTypes.single, inputOutput);
+            inputOutput.buildAndAddToken(measure);
+        }
+
     }
 
     @Override
@@ -591,22 +608,20 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
 
     @Override
     public void exportBarline(IBarline barline, KernExporterVisitorTokenParam inputOutput) throws IMException {
-        inputOutput.append('=');
-        if (barline.getBarNumber().isPresent()) {
-            inputOutput.append(barline.getBarNumber().get().getValue());
-        }
         if (barline.getBarlineType().isPresent()) {
             exportBarlineType(barline.getBarlineType().get(), inputOutput);
         }
         inputOutput.buildAndAddToken(barline);
     }
 
-    @Override
-    public void exportBarlineType(IBarlineType barlineType, KernExporterVisitorTokenParam inputOutput) throws IMException {
+    private void doExport(EBarlineTypes barlineTypes, KernExporterVisitorTokenParam inputOutput) throws IMException {
         String encoding;
-        switch (barlineType.getValue()) {
-            case end:
+        switch (barlineTypes) {
+            case single:
                 encoding = "=";
+                break;
+            case end:
+                encoding = "==";
                 break;
             case doubleThin:
                 encoding = "||";
@@ -614,19 +629,23 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
             case hidden:
                 encoding = "-";
                 break;
-            case leftRepeat:
+            case repeatStart:
                 encoding = "|!:";
                 break;
-            case leftRightRepeat:
+            case repeatBoth:
                 encoding = ":|!|:";
                 break;
-            case rightRepeat:
+            case repeatEnd:
                 encoding = ":|!";
                 break;
             default:
-                throw new IMException("Unknown barline type: " + barlineType.getValue());
+                throw new IMException("Unknown barline type: " + barlineTypes);
         }
         inputOutput.append(encoding);
+    }
+    @Override
+    public void exportBarlineType(IBarlineType barlineType, KernExporterVisitorTokenParam inputOutput) throws IMException {
+        doExport(barlineType.getValue(), inputOutput);
     }
 
     @Override

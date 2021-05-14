@@ -2,6 +2,8 @@ package es.ua.dlsi.grfia.moosicae.core.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.properties.ITimeSignatureDenominator;
+import es.ua.dlsi.grfia.moosicae.core.properties.ITimeSignatureNumerator;
 
 import java.util.LinkedList;
 import java.util.List;

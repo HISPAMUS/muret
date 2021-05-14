@@ -6,9 +6,11 @@ package es.ua.dlsi.grfia.moosicae.core.enums;
  */
 public enum  EBarlineTypes {
     hidden,
+    single,
     doubleThin,
     end,
-    leftRepeat,
-    rightRepeat,
-    leftRightRepeat
+    repeatEnd,
+    dashed,
+    repeatStart,
+    repeatBoth
 }

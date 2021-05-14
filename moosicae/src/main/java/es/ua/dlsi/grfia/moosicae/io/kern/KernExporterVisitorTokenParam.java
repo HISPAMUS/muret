@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.io.kern;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
+import es.ua.dlsi.grfia.moosicae.core.IMooObject;
 import es.ua.dlsi.grfia.moosicae.core.IVoicedItem;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernDocument;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernToken;
@@ -38,7 +39,7 @@ public class KernExporterVisitorTokenParam {
         return previousToken;
     }
 
-    public void buildAndAddToken(IVoicedItem symbol) throws IMException {
+    public void buildAndAddToken(IMooObject symbol) throws IMException {
         KernCoreSymbol newToken = new KernCoreSymbol(stringBuilder.toString(), symbol);
         this.document.add(previousToken, newToken);
         previousToken = newToken; // it allows us to add new tokens after this one

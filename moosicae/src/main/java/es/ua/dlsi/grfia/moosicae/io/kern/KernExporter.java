@@ -2,11 +2,11 @@ package es.ua.dlsi.grfia.moosicae.io.kern;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
-import es.ua.dlsi.grfia.moosicae.core.IPart;
-import es.ua.dlsi.grfia.moosicae.core.IScore;
-import es.ua.dlsi.grfia.moosicae.core.IVoice;
-import es.ua.dlsi.grfia.moosicae.core.IVoiced;
+import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.enums.EBarlineTypes;
+import es.ua.dlsi.grfia.moosicae.core.impl.Measure;
 import es.ua.dlsi.grfia.moosicae.io.AbstractExporter;
+import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.EKernHeaders;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernDocument;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernToken;
@@ -40,13 +40,15 @@ public class KernExporter extends AbstractExporter<KernExporterVisitor> {
 
     @Override
     public String exportScore(IScore score) throws IMException {
+        // in order to export, the IScore is transformed into a humdrum matrix
         KernDocument kernDocument = new KernDocument();
         List<IVoice> voices = generateVoices(score);
 
         exportParts(kernDocument, score);
         //TODO staves, text, dynamics....
-        exportSymbols(kernDocument, voices);
+        exportSymbols(kernDocument, voices, score.getMeasures());
 
+        // now, the humdrum matrix is exported as a string
         return exportKernDocument(kernDocument);
     }
 
@@ -83,8 +85,30 @@ public class KernExporter extends AbstractExporter<KernExporterVisitor> {
         return result;
     }
 
-    private void exportSymbols(KernDocument kernDocument, List<IVoice> voices) throws IMException {
-        for (IVoice voice: voices) {
+    private KernToken export(KernDocument kernDocument, IExporterVisitable item, KernToken lastToken) throws IMException {
+        KernExporterVisitorTokenParam kernExporterVisitorTokenParam = new KernExporterVisitorTokenParam(kernDocument, lastToken);
+        item.export(this.exporterVisitor, kernExporterVisitorTokenParam);
+        return kernExporterVisitorTokenParam.getLastToken();
+    }
+    private void exportSymbols(KernDocument kernDocument, List<IVoice> voices, IMeasure[] measures) throws IMException {
+        //TODO Esto no va para mensural ni para varias voces
+        if (voices.size() != 1) {
+            throw new IMException("Unsupported several voices and found " + voices.size());
+        }
+        KernToken lastToken = lastVoiceTokens.get(voices.get(0));
+        for (IMeasure measure: measures) {
+            //TODO Optimizarlo - esto está muy mal hecho
+            for (IVoicedItem voicedItem: measure.getItems()) {
+                lastToken = export(kernDocument, voicedItem, lastToken);
+            }
+            if (measure.getRightBarline().isPresent()) {
+                lastToken = export(kernDocument, measure.getRightBarline().get(), lastToken);
+            } else {
+                IBarline barline = ICoreAbstractFactory.getInstance().createRightBarline(measure.getId(), EBarlineTypes.single);
+                lastToken = export(kernDocument, barline, lastToken);
+            }
+        }
+        /*for (IVoice voice: voices) {
             KernToken lastToken = lastVoiceTokens.get(voice);
             if (voice == null) {
                 throw new IMRuntimeException("Cannot find last token for voice " + voice);
@@ -95,7 +119,7 @@ public class KernExporter extends AbstractExporter<KernExporterVisitor> {
                 //TODO varios spines...
                 lastToken = kernExporterVisitorTokenParam.getLastToken();
             }
-        }
+        }*/
     }
 
     private void exportParts(KernDocument kernDocument, IScore score) throws IMException {

@@ -1,8 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.io.musicxml.importer.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
-import es.ua.dlsi.grfia.moosicae.core.ITimeSignatureDenominator;
+import es.ua.dlsi.grfia.moosicae.core.properties.ITimeSignatureDenominator;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.ITimeSignatureDenominatorBuilder;
 import es.ua.dlsi.grfia.moosicae.io.IImporterAdapter;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;

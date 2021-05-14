@@ -1,8 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.ITimeSignatureDenominator;
-import es.ua.dlsi.grfia.moosicae.core.ITimeSignatureNumerator;
+import es.ua.dlsi.grfia.moosicae.core.properties.ITimeSignatureDenominator;
+import es.ua.dlsi.grfia.moosicae.core.properties.ITimeSignatureNumerator;
 import es.ua.dlsi.grfia.moosicae.core.adt.IFractionBuilder;
 import es.ua.dlsi.grfia.moosicae.core.adt.ITime;
 import es.ua.dlsi.grfia.moosicae.core.adt.ITimeBuilder;

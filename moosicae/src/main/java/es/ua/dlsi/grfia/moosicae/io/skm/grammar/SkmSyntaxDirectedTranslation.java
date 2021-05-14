@@ -627,16 +627,16 @@ public class SkmSyntaxDirectedTranslation {
                     barlineType = EBarlineTypes.hidden;
                     break;
                 case "|!:":
-                    barlineType = EBarlineTypes.leftRepeat;
+                    barlineType = EBarlineTypes.repeatStart;
                     break;
                 case ":|!|:":
-                    barlineType = EBarlineTypes.leftRightRepeat;
+                    barlineType = EBarlineTypes.repeatBoth;
                     break;
                 case ":|!":
-                    barlineType = EBarlineTypes.rightRepeat;
+                    barlineType = EBarlineTypes.repeatEnd;
                     break;
                 default:
-                    throw createException("Unkopwn barline type: " + ctx.getText());
+                    throw createException("Unknown barline type: " + ctx.getText());
             }
             importingContexts.addObjectToPool(barlineType);
         }

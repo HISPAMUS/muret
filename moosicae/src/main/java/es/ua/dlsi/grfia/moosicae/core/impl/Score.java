@@ -13,11 +13,14 @@ public class Score extends CoreObject implements IScore {
     private final LinkedList<IPart> parts;
     @NotNull
     private final LinkedList<ISystem> systemElements;
+    @NotNull
+    private final LinkedList<IMeasure> measures;
 
     public Score(IId id) {
         super(id);
         parts = new LinkedList<>();
         systemElements = new LinkedList<>();
+        measures = new LinkedList<>();
     }
 
     @Override
@@ -33,6 +36,11 @@ public class Score extends CoreObject implements IScore {
     @Override
     public ISystem[] getSystemElements() {
         return systemElements.toArray(new ISystem[systemElements.size()]);
+    }
+
+    @Override
+    public IMeasure[] getMeasures() {
+        return measures.toArray(new IMeasure[measures.size()]);
     }
 
     @Override
@@ -78,6 +86,12 @@ public class Score extends CoreObject implements IScore {
         toVoice.addItem(symbol);
         inStaff.put(symbol);
     }
+
+    @Override
+    public void add(IMeasure measure) {
+        this.measures.add(measure);
+    }
+
 
     @Override
     public Score clone() {

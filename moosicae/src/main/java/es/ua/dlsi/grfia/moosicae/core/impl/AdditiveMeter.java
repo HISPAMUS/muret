@@ -3,6 +3,8 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
+import es.ua.dlsi.grfia.moosicae.core.properties.ITimeSignatureDenominator;
+import es.ua.dlsi.grfia.moosicae.core.properties.ITimeSignatureNumerator;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 
 import javax.validation.constraints.NotNull;

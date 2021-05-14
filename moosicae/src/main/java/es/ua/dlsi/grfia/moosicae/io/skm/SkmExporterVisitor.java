@@ -7,7 +7,6 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
-import es.ua.dlsi.grfia.moosicae.core.impl.BeamGroup;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmCoreSymbol;
@@ -28,7 +27,7 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     }
 
     @Override
-    public void exportBeamGroup(BeamGroup beamGroup, SkmExporterVisitorTokenParam inputOutput) {
+    public void exportBeamGroup(IBeamGroup beamGroup, SkmExporterVisitorTokenParam inputOutput) {
         throw new UnsupportedOperationException("TODO");
     }
 
@@ -247,6 +246,11 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     @Override
     public void exportWholeMeasureRest(IWholeMeasureRest wholeMeasureRest, SkmExporterVisitorTokenParam inputOutput) {
         throw new UnsupportedOperationException("Whole measure rest");
+    }
+
+    @Override
+    public void exportMeasure(IMeasure measure, SkmExporterVisitorTokenParam inputOutput) {
+
     }
 
 
@@ -508,9 +512,6 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     @Override
     public void exportBarline(IBarline barline, SkmExporterVisitorTokenParam inputOutput) throws IMException {
         inputOutput.append('=');
-        if (barline.getBarNumber().isPresent()) {
-            inputOutput.append(barline.getBarNumber().get().getValue());
-        }
         if (barline.getBarlineType().isPresent()) {
             exportBarlineType(barline.getBarlineType().get(), inputOutput);
         }
@@ -530,13 +531,13 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
             case hidden:
                 encoding = "-";
                 break;
-            case leftRepeat:
+            case repeatStart:
                 encoding = "|!:";
                 break;
-            case leftRightRepeat:
+            case repeatBoth:
                 encoding = ":|!|:";
                 break;
-            case rightRepeat:
+            case repeatEnd:
                 encoding = ":|!";
                 break;
             default:

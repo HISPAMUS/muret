@@ -124,7 +124,7 @@ public class MusicXMLImporter extends XMLImporter implements IImporter {
                     }
                 }
                 //TODO parámetros barline
-                IBarline barline = ICoreAbstractFactory.getInstance().createBarline(null, null, null);
+                IBarline barline = ICoreAbstractFactory.getInstance().createBarline(null, null);
                 score.add(defaultVoice, defaultStaff, barline);
             }
 

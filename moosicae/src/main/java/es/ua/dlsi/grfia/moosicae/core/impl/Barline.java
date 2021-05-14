@@ -15,20 +15,11 @@ import java.util.Optional;
  * @created 15/03/2020
  */
 public class Barline extends VoicedItem implements IBarline {
-
-    private INumber barNumber;
-
     private IBarlineType barlineType;
 
-    Barline(IId id,  INumber barNumber,  IBarlineType barlineType) {
+    Barline(IId id,  IBarlineType barlineType) {
         super(id);
-        this.barNumber = barNumber;
         this.barlineType = barlineType;
-    }
-
-    @Override
-    public Optional<INumber> getBarNumber() {
-        return Optional.ofNullable(barNumber);
     }
 
     @Override
@@ -43,7 +34,7 @@ public class Barline extends VoicedItem implements IBarline {
 
     @Override
     public Barline clone() {
-        return new Barline(null, barNumber, barlineType);
+        return new Barline(null, barlineType);
     }
 
     @Override
@@ -53,22 +44,11 @@ public class Barline extends VoicedItem implements IBarline {
 
         Barline barline = (Barline) o;
 
-        if (barNumber != null ? !barNumber.equals(barline.barNumber) : barline.barNumber != null) return false;
         return barlineType != null ? barlineType.equals(barline.barlineType) : barline.barlineType == null;
     }
 
     @Override
     public int hashCode() {
-        int result = barNumber != null ? barNumber.hashCode() : 0;
-        result = 31 * result + (barlineType != null ? barlineType.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Barline{" +
-                "barNumber=" + barNumber +
-                ", barlineType=" + barlineType +
-                "} " + super.toString();
+        return barlineType != null ? barlineType.hashCode() : 0;
     }
 }

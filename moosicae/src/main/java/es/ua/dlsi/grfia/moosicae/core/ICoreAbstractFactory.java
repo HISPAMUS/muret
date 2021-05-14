@@ -31,8 +31,10 @@ public interface ICoreAbstractFactory {
     IAlternatingMeter createAlternatingMeter(IId id, @NotNull IMeter[] meters);
     IAlterationDisplayType createAlterationDisplayType(IId id, @NotNull EAlterationDisplayTypes alterationDisplayType);
     IAccidentalSymbol createAccidentalSymbol(IId id, @NotNull EAccidentalSymbols accidentalSymbol);
-    IBarline createBarline(IId id,  INumber barNumber,  IBarlineType barlineType);
+    IBarline createBarline(IId id,  IBarlineType barlineType);
     IBarlineType createBarlineType(IId id, @NotNull EBarlineTypes barlineType);
+    ILeftBarline createLeftBarline(IId id, @NotNull EBarlineTypes barlineType);
+    IRightBarline createRightBarline(IId id, @NotNull EBarlineTypes barlineType);
     IBeamGroup createBeamGroup(IId id, @NotNull IDurational[] toArray);
     ICautionaryKeySignatureAccidentals createCautionaryKeySignatureAccidentals(IId id, @NotNull Boolean value);
     IChord createChord(IId id, @NotNull IFigure figures, IDots dots, @NotNull INoteHead[] noteHead, IStem stem, IGraceNoteType graceNoteType);
@@ -71,6 +73,7 @@ public interface ICoreAbstractFactory {
     IKeyAccidentalCount createKeyAccidentalCount(IId id, @NotNull Integer nAccidentals);
     IUnconventionalKeySignature createUnconventionalKeySignature(IId id, @NotNull IPitchClass [] pitchClasses, ICautionaryKeySignatureAccidentals cautionaryKeySignatureAccidentals);
     IStandardTimeSignature createStandardTimeSignature(IId id, @NotNull ITimeSignatureNumerator numerator, @NotNull ITimeSignatureDenominator denominator);
+    IMeasure createMeasure(IId id, INumber number, ILeftBarline leftBarline, IRightBarline rightBarline);
     IMensuration createMensuration(IId id, @NotNull EMensurations mensuration);
     IMensuration createMensuration(IId id,  EMensuralPerfections modusMaior,  EMensuralPerfections modusMinor, @NotNull EMensuralPerfections tempus, @NotNull EMensuralPerfections prolatio);
     IMetronomeMark createMetronomeMark(IId id, @NotNull IHorizontalAnchor start, @NotNull IFigure figure,  IDots dots, @NotNull IMetronomeMarkValue value);

@@ -2,6 +2,8 @@ package es.ua.dlsi.grfia.moosicae.core;
 
 import es.ua.dlsi.grfia.moosicae.core.impl.properties.IntegerCoreCoreProperty;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
+import es.ua.dlsi.grfia.moosicae.core.properties.ITimeSignatureDenominator;
+
 import javax.validation.constraints.NotNull;
 
 /**

@@ -3,7 +3,6 @@ package es.ua.dlsi.grfia.moosicae.io.kern.grammar;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.IMeter;
-import es.ua.dlsi.grfia.moosicae.core.IMetronomeMark;
 import es.ua.dlsi.grfia.moosicae.core.IMooObject;
 import es.ua.dlsi.grfia.moosicae.core.builders.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.*;
@@ -12,7 +11,6 @@ import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
 import es.ua.dlsi.grfia.moosicae.core.mensural.IMensuration;
 import es.ua.dlsi.grfia.moosicae.core.properties.IDots;
 import es.ua.dlsi.grfia.moosicae.core.properties.IFigure;
-import es.ua.dlsi.grfia.moosicae.core.properties.IMetronomeMarkValue;
 import es.ua.dlsi.grfia.moosicae.core.properties.IStem;
 import es.ua.dlsi.grfia.moosicae.io.ImportingContexts;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.builders.KernMeterBuilder;
@@ -690,13 +688,13 @@ public class KernSyntaxDirectedTranslation {
                     barlineType = EBarlineTypes.hidden;
                     break;
                 case "|!:":
-                    barlineType = EBarlineTypes.leftRepeat;
+                    barlineType = EBarlineTypes.repeatStart;
                     break;
                 case ":|!|:":
-                    barlineType = EBarlineTypes.leftRightRepeat;
+                    barlineType = EBarlineTypes.repeatBoth;
                     break;
                 case ":|!":
-                    barlineType = EBarlineTypes.rightRepeat;
+                    barlineType = EBarlineTypes.repeatEnd;
                     break;
                 default:
                     throw createException("Unkopwn barline type: " + ctx.getText());

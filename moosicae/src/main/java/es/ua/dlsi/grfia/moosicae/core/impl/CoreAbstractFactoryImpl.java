@@ -4,11 +4,9 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.IMetronomeMark;
 import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.core.adt.IFractionBuilder;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
-import es.ua.dlsi.grfia.moosicae.core.impl.adt.FractionBuilder;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.Mensuration;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.mensurations.*;
 import es.ua.dlsi.grfia.moosicae.core.impl.properties.*;
@@ -39,8 +37,8 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IBarline createBarline(IId id,  INumber barNumber,  IBarlineType barlineType) {
-        return new Barline(id, barNumber, barlineType);
+    public IBarline createBarline(IId id, IBarlineType barlineType) {
+        return new Barline(id, barlineType);
     }
 
     @Override
@@ -172,6 +170,11 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     @Override
     public IStandardTimeSignature createStandardTimeSignature(IId id, ITimeSignatureNumerator numerator, ITimeSignatureDenominator denominator) {
         return new StandardTimeSignature(id, numerator, denominator);
+    }
+
+    @Override
+    public IMeasure createMeasure(IId id, INumber number, ILeftBarline leftBarline, IRightBarline rightBarline) {
+        return new Measure(id, number, leftBarline, rightBarline);
     }
 
     @Override
@@ -415,6 +418,16 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     @Override
     public IBarlineType createBarlineType(IId id, EBarlineTypes barlineType) {
         return new BarlineType(id, barlineType);
+    }
+
+    @Override
+    public ILeftBarline createLeftBarline(IId id, @NotNull EBarlineTypes barlineType) {
+        return new LeftBarline(id, new BarlineType(null, barlineType));
+    }
+
+    @Override
+    public IRightBarline createRightBarline(IId id, @NotNull EBarlineTypes barlineType) {
+        return new RightBarline(id, new BarlineType(null, barlineType));
     }
 
     @Override

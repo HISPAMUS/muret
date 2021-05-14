@@ -80,8 +80,13 @@ public class MEIImporter extends XMLImporter implements IImporter {
 
     private void insertContents(MEIScoreDef scoreDef, MEISection section, IScore score, IPart part, IVoice voice) throws IMException {
         boolean firstMeasure = true;
-        for (MEIMeasure measure: section.getMeasures()) {
-            for (MEIStaff measureStaff: measure.getStaves()) {
+        for (MEIMeasure meiMeasure: section.getMeasures()) {
+            IMeasure measure = ICoreAbstractFactory.getInstance().createMeasure(meiMeasure.getId(),
+                    meiMeasure.getNumber().isPresent() ? meiMeasure.getNumber().get() : null,
+                    meiMeasure.getLeftBarline().isPresent() ? meiMeasure.getLeftBarline().get() : null,
+                    meiMeasure.getRightBarline().isPresent() ? meiMeasure.getRightBarline().get() : null);
+            score.add(measure);
+            for (MEIStaff measureStaff: meiMeasure.getStaves()) {
                 IStaff staff = staffNumbers.get(measureStaff.getN());
                 if (staff == null) {
                     throw new IMException("Cannot find a staff with n=" + measureStaff.getN());
@@ -94,12 +99,14 @@ public class MEIImporter extends XMLImporter implements IImporter {
                     }
 
                     if (meiStaffDef.getClef().isPresent()) {
-                        score.add(voice, staff, meiStaffDef.getClef().get());
+                        IClef clef = meiStaffDef.getClef().get();
+                        score.add(voice, staff, clef);
+                        measure.add(clef);
                     }
 
-                    addCommonDefElements(meiStaffDef, score, voice, staff);
+                    addCommonDefElements(meiStaffDef, score, voice, staff, measure);
 
-                    addCommonDefElements(scoreDef, score, voice, staff);
+                    addCommonDefElements(scoreDef, score, voice, staff, measure);
 
                 }
 
@@ -108,6 +115,7 @@ public class MEIImporter extends XMLImporter implements IImporter {
                     for (IVoicedItem coreItem: layer.getItems()) {
                         //TODO insertar los elementos comunes
                         score.add(voice, staff, coreItem);//TODO la voice debería salir de layer
+                        measure.add(coreItem);
                     }
                 }
             }
@@ -115,18 +123,21 @@ public class MEIImporter extends XMLImporter implements IImporter {
         }
     }
 
-    private void addCommonDefElements(IMEIDef imeiDef, IScore score, IVoice voice, IStaff staff) {
+    private void addCommonDefElements(IMEIDef imeiDef, IScore score, IVoice voice, IStaff staff, IMeasure measure) {
         Optional<IMeter> meter = imeiDef.getMeter();
         if (meter.isPresent()) {
             score.add(voice, staff, meter.get());
+            measure.add(meter.get());
         }
         Optional<IKey> key = imeiDef.getKey();
         if (key.isPresent()) {
             score.add(voice, staff, key.get());
+            measure.add(key.get());
         } else { // else because in the case of importing both key and key signature (it should'n happen) we prefer the key (that is a key signature with a mode)
             Optional<IConventionalKeySignature> conventionalKeySignature = imeiDef.getConventionalKeySignature();
             if (conventionalKeySignature.isPresent()) {
                 score.add(voice, staff, conventionalKeySignature.get());
+                measure.add(conventionalKeySignature.get());
             }
         }
     }
@@ -160,6 +171,7 @@ public class MEIImporter extends XMLImporter implements IImporter {
                 break;
             case "section":
                 this.section = (MEISection) end;
+                break;
         }
 
     }

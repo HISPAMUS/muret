@@ -17,7 +17,7 @@ import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
  */
 public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorParam> {
     @Override
-    public void exportBeamGroup(BeamGroup beamGroup, XMLExporterVisitorParam inputOutput) {
+    public void exportBeamGroup(IBeamGroup beamGroup, XMLExporterVisitorParam inputOutput) {
         throw new UnsupportedOperationException("TODO");
     }
 
@@ -190,6 +190,11 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
     @Override
     public void exportWholeMeasureRest(IWholeMeasureRest wholeMeasureRest, XMLExporterVisitorParam inputOutput) {
         throw new UnsupportedOperationException("Whole measure rest");
+    }
+
+    @Override
+    public void exportMeasure(IMeasure measure, XMLExporterVisitorParam inputOutput) {
+
     }
 
     @Override

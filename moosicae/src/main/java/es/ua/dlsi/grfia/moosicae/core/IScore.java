@@ -31,4 +31,7 @@ public interface IScore extends IMooObject {
      * @param symbol
      */
     void add(IVoice toVoice, IStaff inStaff, IVoicedItem symbol);
+
+    IMeasure[] getMeasures();
+    void add(IMeasure measure);
 }
