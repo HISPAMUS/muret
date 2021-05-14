@@ -64,10 +64,6 @@ public class MxmlNote extends MxmlObject implements IMxmlPartItem, INote {
     }
 
     @Override
-    public Optional<IStem> getStem() {
-        return note.getStem();
-    }
-    @Override
     public ITime getDuration() {
         return note.getDuration();
     }

@@ -3,6 +3,7 @@ package es.ua.dlsi.grfia.moosicae.io;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.IScore;
+import es.ua.dlsi.grfia.moosicae.io.kern.KernImporter;
 import es.ua.dlsi.grfia.moosicae.io.mei.MEIImporter;
 import es.ua.dlsi.grfia.moosicae.io.mon.MONImporter;
 import es.ua.dlsi.grfia.moosicae.io.musicxml.MusicXMLImporter;
@@ -14,12 +15,6 @@ import java.io.InputStream;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class Importer {
-    private final ICoreAbstractFactory coreAbstractFactory;
-
-    public Importer(ICoreAbstractFactory coreAbstractFactory) {
-        this.coreAbstractFactory = coreAbstractFactory;
-    }
-
     public IImporter create(Encodings encoding) throws IMException {
         switch (encoding) {
             case MEI:
@@ -27,7 +22,9 @@ public class Importer {
             case MUSICXML:
                 return new MusicXMLImporter();
             case MON:
-                return new MONImporter(coreAbstractFactory);
+                return new MONImporter();
+            case KERN:
+                return new KernImporter();
             default:
                 throw new IMException("Cannot import from encoding " + encoding);
         }

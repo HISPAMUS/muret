@@ -8,6 +8,7 @@ public enum Encodings {
     MEI("mei"),
     MUSICXML("musicxml"),
     KERN("krn"),
+    EKERN("ekrn"),
     MON("mon"),
     LILYPOND("ly");
 

@@ -21,6 +21,8 @@ import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.util.List;
 
 /**
  * It reads files for test correctly in Maven
@@ -84,4 +86,6 @@ public class TestFileUtils {
         file.mkdir();
         return file;
     }
+
+
 }

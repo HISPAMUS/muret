@@ -5,6 +5,8 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.impl.BeamGroup;
+import es.ua.dlsi.grfia.moosicae.core.impl.Grace;
+import es.ua.dlsi.grfia.moosicae.core.impl.Stemmed;
 import es.ua.dlsi.grfia.moosicae.core.impl.WholeMeasureRest;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
@@ -214,8 +216,18 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
     }
 
     @Override
-    public void exportWholeMeasureRest(WholeMeasureRest wholeMeasureRest, LilypondExporterVisitorParam inputOutput) {
+    public void exportWholeMeasureRest(IWholeMeasureRest wholeMeasureRest, LilypondExporterVisitorParam inputOutput) {
         throw new UnsupportedOperationException("Whole measure rest");
+    }
+
+    @Override
+    public void exportStemmed(IStemmed stemmed, LilypondExporterVisitorParam inputOutput) {
+        throw new UnsupportedOperationException("Stemmed");
+    }
+
+    @Override
+    public void exportGrace(IGrace grace, LilypondExporterVisitorParam inputOutput) {
+        throw new UnsupportedOperationException("Grace");
     }
 
     @Override

@@ -6,23 +6,18 @@ import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
+import java.util.Optional;
 
 
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class Note extends Stemmed implements INote {
+public class Note extends PitchedDurationalSingle implements INote {
     @NotNull
     private final INoteHead noteHead;
 
     Note(IId id, @NotNull IFigure figure,  IDots dots, @NotNull INoteHead noteHead) {
         super(id, figure, dots);
-        Objects.requireNonNull(noteHead); // @NotNull is not working?
-        this.noteHead = noteHead;
-    }
-
-    Note(IId id, @NotNull IFigure figure,  IDots dots, IStem stem, @NotNull INoteHead noteHead) {
-        super(id, figure, dots, stem);
         Objects.requireNonNull(noteHead); // @NotNull is not working?
         this.noteHead = noteHead;
     }

@@ -5,9 +5,7 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
-import es.ua.dlsi.grfia.moosicae.core.impl.BeamGroup;
-import es.ua.dlsi.grfia.moosicae.core.impl.KeySignature;
-import es.ua.dlsi.grfia.moosicae.core.impl.WholeMeasureRest;
+import es.ua.dlsi.grfia.moosicae.core.impl.*;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLExporterVisitorParam;
@@ -196,8 +194,18 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
     }
 
     @Override
-    public void exportWholeMeasureRest(WholeMeasureRest wholeMeasureRest, XMLExporterVisitorParam inputOutput) {
+    public void exportWholeMeasureRest(IWholeMeasureRest wholeMeasureRest, XMLExporterVisitorParam inputOutput) {
         throw new UnsupportedOperationException("Whole measure rest");
+    }
+
+    @Override
+    public void exportStemmed(IStemmed stemmed, XMLExporterVisitorParam inputOutput) {
+        throw new UnsupportedOperationException("Stemmed");
+    }
+
+    @Override
+    public void exportGrace(IGrace grace, XMLExporterVisitorParam inputOutput) {
+        throw new UnsupportedOperationException("Grace");
     }
 
     @Override
@@ -439,6 +447,7 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
     public void exportSystemBeginning(ISystemBeginning systemBeginning, XMLExporterVisitorParam inputOutput) {
 
     }
+
 
 
 

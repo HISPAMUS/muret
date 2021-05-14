@@ -3,14 +3,12 @@ package es.ua.dlsi.grfia.moosicae.io.mei.importer.builders;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.INote;
-import es.ua.dlsi.grfia.moosicae.core.builders.INoteBuilder;
-import es.ua.dlsi.grfia.moosicae.core.builders.IPitchBuilder;
+import es.ua.dlsi.grfia.moosicae.core.IPitchedDurationalSingle;
+import es.ua.dlsi.grfia.moosicae.core.builders.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IAlterationBuilder;
-import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
-import es.ua.dlsi.grfia.moosicae.core.enums.EDiatonicPitches;
-import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
-import es.ua.dlsi.grfia.moosicae.core.properties.IAlteration;
-import es.ua.dlsi.grfia.moosicae.core.properties.INoteHead;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.IStemBuilder;
+import es.ua.dlsi.grfia.moosicae.core.enums.*;
+import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IImporterAdapter;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
 
@@ -20,13 +18,20 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 25/03/2020
  */
-public class MEINoteBuilder extends INoteBuilder implements IImporterAdapter<INote, XMLImporterParam> {
+public class MEINoteBuilder extends CoreObjectBuilder<IPitchedDurationalSingle> implements IImporterAdapter<IPitchedDurationalSingle, XMLImporterParam> {
     /**
      * In MEI the alteration is child of the note because there is no pitch element inside note
      */
     private IAlteration alteration;
     private IPitchBuilder pitchBuilder;
+    private INoteBuilder noteBuilder;
 
+    private Optional<EStemDirection> eStemDirection;
+    private Optional<EGraceNoteType> eGraceNoteType;
+
+    public MEINoteBuilder() {
+        this.noteBuilder = new INoteBuilder();
+    }
 
     public MEINoteBuilder from(IAlteration alteration) {
         this.alteration = alteration;
@@ -37,11 +42,11 @@ public class MEINoteBuilder extends INoteBuilder implements IImporterAdapter<INo
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
         Optional<EFigures> figure = MEIAttributesParsers.getInstance().parseFigure(xmlImporterParam);
         if (figure.isPresent()) {
-            from(figure.get());
+            this.noteBuilder.from(figure.get());
         }
         Optional<Integer> dots = MEIAttributesParsers.getInstance().parseDots(xmlImporterParam);
         if (dots.isPresent()) {
-            from(dots.get());
+            this.noteBuilder.from(dots.get());
         }
 
         if (xmlImporterParam.hasAttributes()) { // pname... are included as parameters
@@ -65,22 +70,40 @@ public class MEINoteBuilder extends INoteBuilder implements IImporterAdapter<INo
             }
 
             INoteHead noteHead = ICoreAbstractFactory.getInstance().createNoteHead(null, pitchBuilder.build(), null); //TODO ties
-            from(noteHead);
+            this.noteBuilder.from(noteHead);
+
+            eStemDirection = MEIAttributesParsers.getInstance().parseStem(xmlImporterParam, "stem.dir");
+            eGraceNoteType = MEIAttributesParsers.getInstance().parseGraceNoteType(xmlImporterParam);
         }
     }
 
     @Override
-    public INote build() throws IMException {
+    public IPitchedDurationalSingle build() throws IMException {
         if (this.pitchBuilder != null) {
-            if (alteration != null) {
+            if (alteration != null) { //TODO Should accidental be implemented as a decorator as we do with stem or grace?
                 this.pitchBuilder.from(alteration);
                 INoteHead noteHead = ICoreAbstractFactory.getInstance().createNoteHead(null, pitchBuilder.build(), null); //TODO ties;
-                this.from(noteHead);
+                this.noteBuilder.from(noteHead);
             }
         } else {
             throw new IMException("Missing pitch builder");
         }
 
-        return super.build();
+        IPitchedDurationalSingle note = this.noteBuilder.build();
+        // now add all decorators
+        if (this.eStemDirection != null && this.eStemDirection.isPresent()) {
+            IStem stem = ICoreAbstractFactory.getInstance().createStem(null, this.eStemDirection.get());
+            IStemmedBuilder stemmedBuilder = new IStemmedBuilder();
+            stemmedBuilder.from(note).from(stem);
+            note = stemmedBuilder.build();
+        }
+
+        if (this.eGraceNoteType != null && this.eGraceNoteType.isPresent()) {
+            IGraceNoteType graceNoteType = ICoreAbstractFactory.getInstance().createGraceNoteType(null, this.eGraceNoteType.get());
+            IGraceBuilder graceBuilder = new IGraceBuilder();
+            graceBuilder.from(note).from(graceNoteType);
+            note = graceBuilder.build();
+        }
+        return note;
     }
 }

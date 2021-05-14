@@ -4,6 +4,8 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.impl.BeamGroup;
+import es.ua.dlsi.grfia.moosicae.core.impl.Grace;
+import es.ua.dlsi.grfia.moosicae.core.impl.Stemmed;
 import es.ua.dlsi.grfia.moosicae.core.impl.WholeMeasureRest;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 
@@ -11,6 +13,7 @@ import es.ua.dlsi.grfia.moosicae.core.properties.*;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public interface IExporterVisitor<InputOutputType>  {
+
     void exportBeamGroup(BeamGroup beamGroup, InputOutputType inputOutput);
     void exportClef(IClef clef, InputOutputType inputOutput) throws IMException;
     void exportClefSign(IClefSign clefSign, InputOutputType inputOutput) throws IMException;
@@ -52,9 +55,11 @@ public interface IExporterVisitor<InputOutputType>  {
     void exportMixedMeter(IMixedMeter mixedMeter, InputOutputType inputOutput) throws IMException;
     void exportAlternatingMeter(IAlternatingMeter alternatingMeter, InputOutputType inputOutput) throws IMException;
     void exportAdditiveMeter(IAdditiveMeter compoundMeter, InputOutputType inputOutput) throws IMException;
-
     void exportInterchangingMeter(IInterchangingMeter interchangingMeter, InputOutputType inputOutput) throws IMException;
 
-    void exportWholeMeasureRest(WholeMeasureRest wholeMeasureRest, InputOutputType inputOutput);
+    void exportWholeMeasureRest(IWholeMeasureRest wholeMeasureRest, InputOutputType inputOutput);
 
+    void exportStemmed(IStemmed stemmed, InputOutputType inputOutput) throws IMException;
+
+    void exportGrace(IGrace grace, InputOutputType inputOutput) throws IMException;
 }

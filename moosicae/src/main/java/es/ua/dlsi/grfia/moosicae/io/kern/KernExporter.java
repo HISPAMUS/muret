@@ -22,14 +22,20 @@ import java.util.List;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class KernExporter extends AbstractExporter<KernExporterVisitor> {
+    private final boolean ekern;
     /**
      * Actually, a spine for each voice
      */
     HashMap<IVoice, KernToken> lastVoiceTokens;
 
-    public KernExporter() {
-        super(new KernExporterVisitor());
+    public KernExporter(boolean ekern) {
+        super(new KernExporterVisitor(ekern));
+        this.ekern = ekern;
         lastVoiceTokens = new HashMap<>();
+    }
+
+    public KernExporter() {
+        this(false);
     }
 
     @Override
@@ -98,10 +104,16 @@ public class KernExporter extends AbstractExporter<KernExporterVisitor> {
             IPart part = score.getParts()[ipart];
             for (int ivoice = part.getVoices().length -1; ivoice >= 0; ivoice--) {
                 IVoice voice = part.getVoices()[ivoice];
-                KernHeader kernHeader = new KernHeader(EKernHeaders.skern);  //TODO tipo
+                EKernHeaders header;
+                if (this.ekern) { //TODO tipo
+                    header = EKernHeaders.ekern;
+                } else {
+                    header = EKernHeaders.kern;
+                }
+                KernHeader kernHeader = new KernHeader(header);
                 kernDocument.addHeader(kernHeader);
 
-                KernExporterVisitorTokenParam kernExporterVisitorTokenParam = new KernExporterVisitorTokenParam(kernDocument, kernHeader);
+                //KernExporterVisitorTokenParam kernExporterVisitorTokenParam = new KernExporterVisitorTokenParam(kernDocument, kernHeader);
                 int npart = ipart+1;
                 KernPart kernPart = new KernPart(exporterVisitor.exportPart(npart), npart);
                 kernDocument.add(kernHeader, kernPart);

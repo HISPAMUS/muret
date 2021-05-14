@@ -14,7 +14,7 @@ import java.io.InputStream;
  * @created 23/08/2020
  */
 public class MONImporter implements IImporter {
-    public MONImporter(ICoreAbstractFactory coreAbstractFactory) {
+    public MONImporter() {
     }
 
     @Override

@@ -12,17 +12,12 @@ import java.util.Arrays;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class Chord extends Stemmed implements IChord {
+public class Chord extends PitchedDurationalSingle implements IChord {
     @NotNull
     private final INoteHead[] noteHeads;
 
     Chord(IId id, IFigure figure,  IDots dots, @NotNull INoteHead [] noteHeads) {
         super(id, figure, dots);
-        this.noteHeads = noteHeads.clone();
-    }
-
-    Chord(IId id, IFigure figure,  IDots dots, IStem stem, @NotNull INoteHead [] noteHeads) {
-        super(id, figure, dots, stem);
         this.noteHeads = noteHeads.clone();
     }
 

@@ -312,4 +312,34 @@ public class MEIAttributesParsers {
         }
     }
 
+    public Optional<EStemDirection> parseStem(XMLImporterParam xmlImporterParam, String attrName) throws IMException {
+        Optional<String> directionString = xmlImporterParam.getAttribute(attrName);
+        if (directionString.isPresent()) {
+            switch (directionString.get()) {
+                case "up": return Optional.of(EStemDirection.up);
+                case "down": return Optional.of(EStemDirection.down);
+                default: throw new IMException("Unknown stem direction: '" + directionString.get() + "'");
+            }
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<EGraceNoteType> parseGraceNoteType(XMLImporterParam xmlImporterParam) throws IMException {
+        Optional<String> grace = xmlImporterParam.getAttribute("grace");
+        if (grace.isPresent()) {
+            Optional<String> stemMod = xmlImporterParam.getAttribute("stem.mod");
+            if (stemMod.isPresent()) {
+                if (stemMod.equals("1slash")) {
+                    return Optional.of(EGraceNoteType.acciaccatura);
+                } else {
+                    throw new IMException("Unsupported slash type in grace note: '" + stemMod.get() + "'");
+                }
+            } else {
+                return Optional.of(EGraceNoteType.appoggiatura);
+            }
+        } else {
+            return Optional.empty();
+        }
+    }
 }

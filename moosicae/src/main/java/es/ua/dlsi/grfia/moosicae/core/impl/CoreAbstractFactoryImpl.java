@@ -44,8 +44,8 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IChord createChord(IId id, IFigure figure, IDots dots, IStem stem, INoteHead[] noteHeads) {
-        return new Chord(id, figure, dots, stem, noteHeads);
+    public IChord createChord(IId id, IFigure figure, IDots dots, INoteHead[] noteHeads) {
+        return new Chord(id, figure, dots, noteHeads);
     }
 
     @Override
@@ -257,8 +257,8 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public INote createNote(IId id, IFigure figure, IDots dots, IStem stem, INoteHead noteHead) {
-        return new Note(id, figure, dots, stem, noteHead);
+    public INote createNote(IId id, IFigure figure, IDots dots, INoteHead noteHead) {
+        return new Note(id, figure, dots, noteHead);
     }
 
     @Override
@@ -400,6 +400,21 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     @Override
     public IWholeMeasureRest createWholeMeasureRest(IId id, IRest rest) {
         return new WholeMeasureRest(id, rest);
+    }
+
+    @Override
+    public IStemmed createStemmed(IPitchedDurationalSingle decoratesTo, IStem stem) {
+        return new Stemmed(decoratesTo, stem);
+    }
+
+    @Override
+    public IGrace createGrace(IPitchedDurationalSingle decoratesTo, IGraceNoteType graceNoteType) {
+        return new Grace(decoratesTo, graceNoteType);
+    }
+
+    @Override
+    public IGraceNoteType createGraceNoteType(IId id, EGraceNoteType value) {
+        return new GraceNoteType(id, value);
     }
 
     @Override

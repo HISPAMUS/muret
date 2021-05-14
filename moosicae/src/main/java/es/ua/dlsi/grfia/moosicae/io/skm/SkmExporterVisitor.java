@@ -8,12 +8,15 @@ import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
 import es.ua.dlsi.grfia.moosicae.core.impl.BeamGroup;
+import es.ua.dlsi.grfia.moosicae.core.impl.Grace;
+import es.ua.dlsi.grfia.moosicae.core.impl.Stemmed;
 import es.ua.dlsi.grfia.moosicae.core.impl.WholeMeasureRest;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmCoreSymbol;
 
 /**
+ * @Deprecated - use Kern
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTokenParam> {
@@ -245,8 +248,18 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
     }
 
     @Override
-    public void exportWholeMeasureRest(WholeMeasureRest wholeMeasureRest, SkmExporterVisitorTokenParam inputOutput) {
+    public void exportWholeMeasureRest(IWholeMeasureRest wholeMeasureRest, SkmExporterVisitorTokenParam inputOutput) {
         throw new UnsupportedOperationException("Whole measure rest");
+    }
+
+    @Override
+    public void exportStemmed(IStemmed stemmed, SkmExporterVisitorTokenParam inputOutput) {
+
+    }
+
+    @Override
+    public void exportGrace(IGrace grace, SkmExporterVisitorTokenParam inputOutput) {
+
     }
 
     @Override
