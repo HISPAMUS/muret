@@ -9,7 +9,7 @@
         <p>#{{statistics.images}} images, #{{statistics.pages}} pagesWithRegions, #{{statistics.regions}} regions (#{{statistics.staves}} staves), #{{statistics.agnosticSymbols}} agnostic symbols</p>
       </div>-->
       <div class="d-flex justify-content-between">
-        <p *ngIf="hasOtherView(documentOverview)"><a (click)="openDocument()">Open thumnbail view</a></p>
+        <p *ngIf="hasOtherView(documentOverview)"><a (click)="openDocument()">Open thumbnail view</a></p>
         <p> <a (click)="downloadActionLogs()">Download action logs</a></p>
       </div>
     </div>

@@ -48,7 +48,7 @@ public class AgnosticRepresentationModel {
         this.regionRepository = regionRepository;
         this.symbolRepository = symbolRepository;
         this.actionLogAgnosticModel = actionLogAgnosticModel;
-        this.classifierClient = new ClassifierClient(muretConfiguration.getPythonclassifiers());
+        this.classifierClient = new ClassifierClient(muretConfiguration.getBaseIIIFImagesURI(), muretConfiguration.getPythonclassifiers());
 
     }
 
@@ -247,12 +247,13 @@ public class AgnosticRepresentationModel {
         if (modelID != null && !modelID.equals(ClassifierModelsController.MANUALSYMBOL_CLASSIFIER)  // if not manual classifier
         && agnosticSymbol == null) { // if not provided, try to classify
             Image persistentImage = persistentRegion.getPage().getImage();
-            long imageID = persistentImage.getId();
+            /*long imageID = persistentImage.getId();
             Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.computeDocument().getPath(),
-                    MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());
+                    MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());*/
 
             try {
-                otherPossibilities = classifierClient.classifySymbolInImage(modelID, imageID, imagePath, boundingBox);
+                //otherPossibilities = classifierClient.classifySymbolInImage(modelID, imageID, imagePath, boundingBox);
+                otherPossibilities = classifierClient.classifySymbolInImage(modelID, persistentImage, boundingBox);
             } catch (Throwable t) {
                 Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Error from classifying server", t);
             }
@@ -391,11 +392,12 @@ public class AgnosticRepresentationModel {
 
         Image persistentImage = persistentRegion.getPage().getImage();
 
-        long imageID = persistentImage.getId();
+        /*long imageID = persistentImage.getId();
         Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.computeDocument().getPath(),
-                MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());
+                MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());*/
 
-        List<AgnosticSymbolTypeAndPosition> items = classifierClient.classifyEndToEnd(modelID, imageID, imagePath, persistentRegion.getBoundingBox());
+        //List<AgnosticSymbolTypeAndPosition> items = classifierClient.classifyEndToEnd(modelID, imageID, imagePath, persistentRegion.getBoundingBox());
+        List<AgnosticSymbolTypeAndPosition> items = classifierClient.classifyEndToEnd(modelID, persistentImage, persistentRegion.getBoundingBox());
         items.sort(new Comparator<AgnosticSymbolTypeAndPosition>() {
             @Override
             public int compare(AgnosticSymbolTypeAndPosition o1, AgnosticSymbolTypeAndPosition o2) {

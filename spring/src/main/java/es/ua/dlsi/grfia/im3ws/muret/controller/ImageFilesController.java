@@ -34,7 +34,7 @@ public class ImageFilesController extends MuRETBaseController {
     @Autowired
     public ImageFilesController(MURETConfiguration muretConfiguration, ImageRepository imageRepository, PageRepository pageRepository, RegionRepository regionRepository, SymbolRepository symbolRepository) {
         super(muretConfiguration, imageRepository, pageRepository, regionRepository, symbolRepository);
-        classifierClient = new ClassifierClient(muretConfiguration.getPythonclassifiers());
+        classifierClient = new ClassifierClient(muretConfiguration.getBaseIIIFImagesURI(), muretConfiguration.getPythonclassifiers());
     }
 
 

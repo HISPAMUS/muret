@@ -47,7 +47,7 @@ public class DocumentAnalysisController extends MuRETBaseController {
         this.imageRepository = imageRepository;
         this.agnosticModel = agnosticModel;
         this.regionRepository = regionrepository;
-        this.m_client = new ClassifierClient(muretConfiguration.getPythonclassifiers());
+        this.m_client = new ClassifierClient(muretConfiguration.getBaseIIIFImagesURI(), muretConfiguration.getPythonclassifiers());
         this.actionLogsDocumentAnalysis = actionLogsDocumentAnalysis;
     }
 
@@ -256,9 +256,10 @@ public class DocumentAnalysisController extends MuRETBaseController {
     {
         try {
             Image persistentImage = getImage(request.getImageID());
-            Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.computeDocument().getPath(),
-                    MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());
-            AutoDocumentAnalysisModel autoDocumentAnalysisModel = m_client.getDocumentAnalysis(request.getImageID(), imagePath, request.getModelToUse());
+            /*Path imagePath = Paths.get(muretConfiguration.getFolder(), persistentImage.computeDocument().getPath(),
+                    MURETConfiguration.MASTER_IMAGES, persistentImage.getFilename());*/
+            //AutoDocumentAnalysisModel autoDocumentAnalysisModel = m_client.getDocumentAnalysis(request.getImageID(), imagePath, request.getModelToUse());
+            AutoDocumentAnalysisModel autoDocumentAnalysisModel = m_client.getDocumentAnalysis(persistentImage, request.getModelToUse());
             actionLogsDocumentAnalysis.logAutomatic(persistentImage, request.getModelToUse());
             return documentAnalysisModel.createAutomaticDocumentAnalysis(persistentImage, request.getNumPages(), autoDocumentAnalysisModel);
         } catch (IM3WSException e) {

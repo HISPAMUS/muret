@@ -48,7 +48,7 @@ public class WatchDog {
             logger.error("Email starting failed");
         }
         m_userManager = manager;
-        m_restClient = new ClassifierClient(muretConfiguration.getPythonclassifiers());
+        m_restClient = new ClassifierClient(muretConfiguration.getBaseIIIFImagesURI(), muretConfiguration.getPythonclassifiers());
         this.muretConfiguration = muretConfiguration;
         if (muretConfiguration.isEnableWatchDogNotification()) {
             logger.info("Server watchdog started!!");

@@ -36,7 +36,7 @@ public class SemanticRepresentationModel {
         this.documentModel = documentModel;
         this.regionRepository = regionRepository;
         this.notationModel = new NotationModel();
-        this.classifierClient = new ClassifierClient(muretConfiguration.getPythonclassifiers());
+        this.classifierClient = new ClassifierClient(muretConfiguration.getBaseIIIFImagesURI(), muretConfiguration.getPythonclassifiers());
     }
 
     public static String region2AgnosticString(Region region, boolean includeAgnosticContext, AgnosticToken lastAgnosticClef) throws IM3Exception {

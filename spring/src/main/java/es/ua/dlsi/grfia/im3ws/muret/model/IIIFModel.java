@@ -28,7 +28,7 @@ public class IIIFModel {
         stringBuilder.append(filename);
         stringBuilder.append(FULL_FULL);
         if (rotation < 0.0) {
-            double r = 360.0 - rotation;
+            double r = 360.0 + rotation;
             stringBuilder.append(Double.toString(r).replace(',', '.'));
         } else if (rotation > 0.0) {
             double r = rotation;
@@ -36,6 +36,7 @@ public class IIIFModel {
         } else {
             stringBuilder.append('0');
         }
+        stringBuilder.append(DEFAULT_JPG);
         return stringBuilder.toString();
     }
 

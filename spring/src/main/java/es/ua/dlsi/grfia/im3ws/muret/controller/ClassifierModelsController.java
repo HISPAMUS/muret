@@ -46,7 +46,7 @@ public class ClassifierModelsController {
 
     @Autowired
     public ClassifierModelsController(MURETConfiguration muretConfiguration, ImageRepository imageRepository, FileStorageService fileStorageService, MURETConfiguration config) {
-        classifierClient = new ClassifierClient(muretConfiguration.getPythonclassifiers());
+        classifierClient = new ClassifierClient(muretConfiguration.getBaseIIIFImagesURI(), muretConfiguration.getPythonclassifiers());
         this.imageRepository = imageRepository;
         this.fileStorageService = fileStorageService;
         this.muretconfig = config;

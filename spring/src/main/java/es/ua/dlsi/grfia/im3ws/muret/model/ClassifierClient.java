@@ -1,24 +1,10 @@
 package es.ua.dlsi.grfia.im3ws.muret.model;
 
 import es.ua.dlsi.grfia.im3ws.IM3WSException;
-import es.ua.dlsi.grfia.im3ws.controller.StringResponse;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.*;
-import es.ua.dlsi.grfia.im3ws.muret.entity.BoundingBox;
-import es.ua.dlsi.grfia.im3ws.muret.entity.ManuscriptType;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Region;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Symbol;
+import es.ua.dlsi.grfia.im3ws.muret.entity.*;
 import es.ua.dlsi.im3.core.IM3Exception;
-import es.ua.dlsi.im3.core.score.NotationType;
-import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticSymbol;
-import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.ResourceAccessException;
 
-import java.lang.reflect.Array;
-import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -31,12 +17,15 @@ import java.util.logging.Logger;
 public class ClassifierClient {
     private static final int N_PREDICTIONS_SHAPE = 5;
     private static final int N_PREDICTIONS_POSITION = 1;
+    private final String iiifImagesBaseURI;
     ClassifiersRESTClient restClient;
 
-    public ClassifierClient(String restServerURL) {
+    public ClassifierClient(String iiifImagesBaseURI, String restServerURL) {
         this.restClient = new ClassifiersRESTClient(restServerURL);
+        this.iiifImagesBaseURI = iiifImagesBaseURI;
     }
 
+    /*Removed because we are using the IIIF urls now
     public boolean checkImageExists(long imageID) throws IM3WSException {
         try {
             restClient.get("image/" + imageID, String.class);
@@ -48,7 +37,7 @@ public class ClassifierClient {
                 throw new IM3WSException("Wrong response from server", h);
             }
         }
-    }
+    }*/
 
     public boolean PingClassifierServer()
     {
@@ -150,19 +139,21 @@ public class ClassifierClient {
         }
     }
 
+    private String getImageURLWithRotation(Image image) {
+        String documentPath = image.computeDocument().getPath();
+        return IIIFModel.getMasterImageURL(iiifImagesBaseURI, documentPath, image.getFilename(), image.getRotation());
+    }
     /**
      *
-     * @param imageID
-     * @param path
      * @param boundingBox
      * @return A sorted list of possibilities
      * @throws IM3WSException
      * @throws IM3Exception
      */
-    public List<AgnosticSymbolTypeAndPosition> classifySymbolInImage(String modelID, long imageID, Path path, BoundingBox boundingBox) throws IM3WSException {
-        if (!checkImageExists(imageID)) {
+    public List<AgnosticSymbolTypeAndPosition> classifySymbolInImage(String modelID, Image image, BoundingBox boundingBox) throws IM3WSException {
+        /*if (!checkImageExists(imageID)) {
             this.uploadImage(imageID, path);
-        }
+        }*/
 
         Map<String, Object> postContent = new HashMap<>();
         postContent.put("left", boundingBox.getFromX());
@@ -172,10 +163,12 @@ public class ClassifierClient {
         postContent.put("predictions", N_PREDICTIONS_SHAPE);
 
         postContent.put("model", modelID);
+        postContent.put("url", getImageURLWithRotation(image));
 
         try {
-            //ShapePosition response = this.restClient.post("image/" + imageID + "/bbox", ShapePosition.class, postContent);
-            ShapePosition response = this.restClient.post("/image/" + imageID + "/symbol", ShapePosition.class, postContent);
+            //ShapePosition response = this.restClient.post("/image/" + imageID + "/symbol", ShapePosition.class, postContent);
+            ShapePosition response = this.restClient.post("/image/symbol", ShapePosition.class, postContent);
+
 
 
             List<AgnosticSymbolTypeAndPosition> result = new ArrayList<>();
@@ -191,7 +184,7 @@ public class ClassifierClient {
             }
             return result;
         } catch (Throwable t) {
-            Logger.getLogger(this.getClass().getName()).log(Level.WARNING,  "Cannot classify " + path.toString() + " with bounding box " + boundingBox, t);
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING,  "Cannot classify image " + image.getId() + " with bounding box " + boundingBox, t);
             return null;
         }
     }
@@ -252,10 +245,10 @@ public class ClassifierClient {
         }
     }
 
-    public List<AgnosticSymbolTypeAndPosition> classifyEndToEnd(String modelID, long imageID, Path path, BoundingBox boundingBox) throws IM3WSException {
-        if (!checkImageExists(imageID)) {
+    public List<AgnosticSymbolTypeAndPosition> classifyEndToEnd(String modelID, Image image, BoundingBox boundingBox) throws IM3WSException {
+        /*if (!checkImageExists(imageID)) {
             this.uploadImage(imageID, path);
-        }
+        }*/
 
         Map<String, Object> postContent = new HashMap<>();
         postContent.put("left", boundingBox.getFromX());
@@ -265,10 +258,12 @@ public class ClassifierClient {
         postContent.put("predictions", N_PREDICTIONS_SHAPE);
 
         postContent.put("model", modelID);
+        postContent.put("url", getImageURLWithRotation(image));
         // postContent.put("vocabulary", "vocabulary"); //TODO Quitar
 
         try {
-            EndToEndItem [] response = this.restClient.post("image/" + imageID + "/e2e", EndToEndItem[].class, postContent);
+            //EndToEndItem [] response = this.restClient.post("image/" + imageID + "/e2e", EndToEndItem[].class, postContent);
+            EndToEndItem [] response = this.restClient.post("/image/e2e", EndToEndItem[].class, postContent);
 
             List<AgnosticSymbolTypeAndPosition> result = new ArrayList<>();
             for (EndToEndItem endToEndItem: response) {
@@ -280,7 +275,7 @@ public class ClassifierClient {
             }
             return result;
         } catch (Throwable t) {
-            Logger.getLogger(this.getClass().getName()).log(Level.WARNING,  "Cannot classify e2e" + path.toString() + " with bounding box " + boundingBox, t);
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING,  "Cannot classify e2e" + image.getId() + " with bounding box " + boundingBox, t);
             return null;
         }
     }
@@ -299,16 +294,19 @@ public class ClassifierClient {
         return response.getMessage();
     }
 
-    public AutoDocumentAnalysisModel getDocumentAnalysis(Integer imageID, Path path, String modelToUse) throws IM3WSException
+
+    public AutoDocumentAnalysisModel getDocumentAnalysis(Image image, String modelToUse) throws IM3WSException
     {
-        if (!checkImageExists(imageID)) {
+        /*if (!checkImageExists(imageID)) {
             this.uploadImage(imageID, path);
-        }
+        }*/
 
         Map<String, Object> postContent = new HashMap<>();
         postContent.put("model", modelToUse);
+        postContent.put("url", getImageURLWithRotation(image));
 
-        return this.restClient.post("image/" + imageID.toString() + "/docAnalysis", AutoDocumentAnalysisModel.class, postContent);
+        //return this.restClient.post("image/" + imageID.toString() + "/docAnalysis", AutoDocumentAnalysisModel.class, postContent);*/
+        return this.restClient.post("/image/docAnalysis", AutoDocumentAnalysisModel.class, postContent);
     }
 
     public String translateAgnostic2Semantic(String classifierModelID, String agnosticString) throws IM3WSException {
@@ -323,7 +321,7 @@ public class ClassifierClient {
 
 
     public static void main(String [] args) throws IM3WSException, IM3Exception {
-        // used to check it
+        /*// used to check it
         ClassifierClient classifiersRESTClient = new ClassifierClient("http://localhost:9999");
         System.out.println("Image 1 exists: " + classifiersRESTClient.checkImageExists(1));
         System.out.println("Image 2 exists: " + classifiersRESTClient.checkImageExists(2));
@@ -337,7 +335,7 @@ public class ClassifierClient {
         // 47,71,146,226 -> Clef.G2
         Path path2 = Paths.get("/Applications/MAMP/htdocs/muret/b-59-850/previews/12609.JPG");
         List<AgnosticSymbolTypeAndPosition> agnosticSymbol = classifiersRESTClient.classifySymbolInImage("1", 2271, path2, new BoundingBox(47, 71, 146, 226));
-        System.out.println("Classified as " + agnosticSymbol);
+        System.out.println("Classified as " + agnosticSymbol);*/
     }
 
 }
