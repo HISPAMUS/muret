@@ -142,7 +142,7 @@ public class WatchDog {
             if(!patchVersion.equals(m_currentVersion))
             {
                 m_currentVersion = patchVersion;
-                String patchNotesText = "MuRET has been updated! Here we give you a list of the recent updates:\n";
+                String patchNotesText = "MuRET has been updated! Remember to use incognito mode to avoid caches problems. Here we give you a list of the recent updates:\n";
                 while(lineReader.hasNextLine())
                 {
                     patchNotesText += lineReader.nextLine() + "\n";
@@ -171,7 +171,7 @@ public class WatchDog {
         String[] emails = new String[usersToEmail.size()];
         usersToEmail.toArray(emails);
         emailMessage.setFrom(m_mailWarner);
-        emailMessage.setTo(emails);
+        emailMessage.setBcc(emails);
         emailMessage.setSubject("MuRET V." + m_currentVersion + " is available");
 
         emailMessage.setText(c_patchNotes);

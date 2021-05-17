@@ -1,3 +1,12 @@
+0.20
+
+    MAJOR UPDATES
+
+    MINOR UPDATES
+    - Notification to MuRET users are sent using BCC
+
+----
+
 0.19
 
     MAJOR UPDATES
