@@ -321,7 +321,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IStaff createStaff(IId id, @NotNull IStaffLineCount staffLineCount, IVoicedItem[] items) {
+    public IStaff createStaff(IId id, @NotNull IStaffLineCount staffLineCount, IVoicedSingle[] items) {
         return new Staff(id, staffLineCount, items);
     }
 
@@ -431,7 +431,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IBeamGroup createBeamGroup(IId id,@NotNull IDurational[] children) {
+    public IBeamGroup createBeamGroup(IId id,@NotNull IVoiced[] children) {
         return new BeamGroup(id, children);
     }
 

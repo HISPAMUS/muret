@@ -28,7 +28,7 @@ public class MultimeasureRest extends DurationalComposite implements IMultimeasu
 
     @Override
     public MultimeasureRest clone() {
-        return new MultimeasureRest(null, children, measureCount);
+        return new MultimeasureRest(null, getChildren(), measureCount);
     }
 
     @Override

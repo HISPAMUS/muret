@@ -9,12 +9,10 @@ import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.impl.ConventionalKeySignature;
 import es.ua.dlsi.grfia.moosicae.io.kern.KernImporter;
-import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernSyntaxDirectedTranslation;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernSyntaxDirectedTranslation2EKern;
 import es.ua.dlsi.grfia.moosicae.io.mei.MEIImporter;
 import es.ua.dlsi.grfia.moosicae.io.musicxml.MusicXMLImporter;
 import es.ua.dlsi.grfia.moosicae.utils.TestFileUtils;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
@@ -67,7 +65,7 @@ public class KernImporterTest {
             assertEquals("Parts", 1, song.getParts().length);
             assertEquals("System elements", 1, song.getSystemElements().length);
             IStaff staff = (IStaff) song.getSystemElements()[0];
-            IVoicedItem[] staffSymbols = staff.getStaffSymbols();
+            IVoicedSingle[] staffSymbols = staff.getStaffSymbols();
             assertEquals("Staff symbols", 16, staffSymbols.length);
             // the cast itself checks the expected class. The same is applied to optionals
             assertEquals("Clef line", 2, ((IClef)staffSymbols[0]).getLine().get().getValue().intValue());
@@ -109,8 +107,8 @@ public class KernImporterTest {
        try {
            assertEquals("Parts", 1, song.getParts().length);
            assertEquals("System elements", 2, song.getSystemElements().length);
-           IVoicedItem[] topStaffSymbols = ((IStaff)song.getSystemElements()[0]).getStaffSymbols();
-           IVoicedItem[] bottomStaffSymbols = ((IStaff)song.getSystemElements()[1]).getStaffSymbols();
+           IVoicedSingle[] topStaffSymbols = ((IStaff)song.getSystemElements()[0]).getStaffSymbols();
+           IVoicedSingle[] bottomStaffSymbols = ((IStaff)song.getSystemElements()[1]).getStaffSymbols();
            assertEquals("Bottom staff #elements", 16, bottomStaffSymbols.length); // take into account beam groups contain several notes
            assertEquals("Top staff #elements", 16, topStaffSymbols.length); // beam groups inside
            assertEquals("Clef line", 2, ((IClef)topStaffSymbols[0]).getLine().get().getValue().intValue());
@@ -119,7 +117,7 @@ public class KernImporterTest {
            assertEquals("Clef note", EClefSigns.F, ((IClef)bottomStaffSymbols[0]).getSignType().getValue());
 
            for (int i=0; i<2; i++) {
-               IVoicedItem[] staffSymbols = ((IStaff)song.getSystemElements()[i]).getStaffSymbols();
+               IVoicedSingle[] staffSymbols = ((IStaff)song.getSystemElements()[i]).getStaffSymbols();
                assertTrue("Conventional key signature", staffSymbols[1] instanceof ConventionalKeySignature); // internal/impl test
                assertEquals("Key signature accidentals", 1, ((IKeySignature)staffSymbols[1]).getPitchClasses().length);
                assertEquals("Key signature pitch", EDiatonicPitches.B, ((IKeySignature)staffSymbols[1]).getPitchClasses()[0].getDiatonicPitch().getValue());
@@ -133,13 +131,13 @@ public class KernImporterTest {
            assertEquals("Whole measure rest figure", EFigures.HALF, ((IWholeMeasureRest)bottomStaffSymbols[4]).getRest().getFigure().getValue());
            assertEquals("Whole measure rest #dots", 1, ((IWholeMeasureRest)bottomStaffSymbols[4]).getRest().getDots().get().getDots().length);
 
-           IDurational[] bvL15BeamGroup = ((IBeamGroup)bottomStaffSymbols[7]).getChildren();
+           IVoiced[] bvL15BeamGroup = ((IBeamGroup)bottomStaffSymbols[7]).getConnected();
            assertEquals("Bottom voice, line #15, 8GG/L starts beam with 5 notes", 5, bvL15BeamGroup.length);
 
            assertEquals("Bottom voice, line #15, 8GG/L, pitch", EDiatonicPitches.G, ((INote)bvL15BeamGroup[0]).getNoteHead().getPitch().getDiatonicPitch().getValue());
            assertEquals("Bottom voice, line #15, 8GG/L, octave", 2, ((INote)bvL15BeamGroup[0]).getNoteHead().getPitch().getOctave().getValue().intValue());
 
-           IDurational[] tvL22BeamGroup = ((IBeamGroup)topStaffSymbols[12]).getChildren();
+           IVoiced[] tvL22BeamGroup = ((IBeamGroup)topStaffSymbols[12]).getConnected();
            assertEquals("Bottom voice, line #22, 8dd\\L starts beam with 5 notes", 5, tvL22BeamGroup.length);
            assertEquals("Top voice, line #23, 8b-\\, figure", EFigures.EIGHTH, ((INote)tvL22BeamGroup[1]).getFigure().getValue());
            assertEquals("Top voice, line #23, 8b-\\, pitch", EDiatonicPitches.B, ((INote)tvL22BeamGroup[1]).getNoteHead().getPitch().getDiatonicPitch().getValue());
@@ -192,31 +190,31 @@ public class KernImporterTest {
            IVoice tenor = tenorPart.getVoices()[0];
            IVoice bass = bassPart.getVoices()[0];
 
-           assertEquals("Soprano voice #elements", 24, soprano.getItems().length);
-           assertEquals("Alto voice #elements", 25, alto.getItems().length);
-           assertEquals("Tenor voice #elements", 26, tenor.getItems().length);
-           assertEquals("Bass voice #elements", 29, bass.getItems().length);
+           assertEquals("Soprano voice #elements", 24, soprano.getChildren().length);
+           assertEquals("Alto voice #elements", 25, alto.getChildren().length);
+           assertEquals("Tenor voice #elements", 26, tenor.getChildren().length);
+           assertEquals("Bass voice #elements", 29, bass.getChildren().length);
 
            assertEquals("System elements", 2, song.getSystemElements().length);
 
-           assertEquals("Soprano clef line", 2, ((IClef)soprano.getItems()[0]).getLine().get().getValue().intValue());
-           assertEquals("Soprano clef note", EClefSigns.G, ((IClef)soprano.getItems()[0]).getSignType().getValue());
+           assertEquals("Soprano clef line", 2, ((IClef)soprano.getChildren()[0]).getLine().get().getValue().intValue());
+           assertEquals("Soprano clef note", EClefSigns.G, ((IClef)soprano.getChildren()[0]).getSignType().getValue());
 
-           assertEquals("Tenor clef line", 4, ((IClef)tenor.getItems()[0]).getLine().get().getValue().intValue());
-           assertEquals("Tenor clef note", EClefSigns.F, ((IClef)tenor.getItems()[0]).getSignType().getValue());
+           assertEquals("Tenor clef line", 4, ((IClef)tenor.getChildren()[0]).getLine().get().getValue().intValue());
+           assertEquals("Tenor clef note", EClefSigns.F, ((IClef)tenor.getChildren()[0]).getSignType().getValue());
 
-           assertEquals("Key signature accidentals", 3, ((IKeySignature)soprano.getItems()[1]).getPitchClasses().length);
-           assertEquals("Key signature first pitch", EDiatonicPitches.F, ((IKeySignature)soprano.getItems()[1]).getPitchClasses()[0].getDiatonicPitch().getValue());
-           assertEquals("Key signature first accidental", EAccidentalSymbols.SHARP, ((IKeySignature)soprano.getItems()[1]).getPitchClasses()[0].getAccidental().get().getValue());
-           assertEquals("Meter numerator", 4, ((IStandardTimeSignature)soprano.getItems()[2]).getNumerator().getValue().intValue());
-           assertEquals("Meter denominator", 4, ((IStandardTimeSignature)soprano.getItems()[2]).getDenominator().getValue().intValue());
+           assertEquals("Key signature accidentals", 3, ((IKeySignature)soprano.getChildren()[1]).getPitchClasses().length);
+           assertEquals("Key signature first pitch", EDiatonicPitches.F, ((IKeySignature)soprano.getChildren()[1]).getPitchClasses()[0].getDiatonicPitch().getValue());
+           assertEquals("Key signature first accidental", EAccidentalSymbols.SHARP, ((IKeySignature)soprano.getChildren()[1]).getPitchClasses()[0].getAccidental().get().getValue());
+           assertEquals("Meter numerator", 4, ((IStandardTimeSignature)soprano.getChildren()[2]).getNumerator().getValue().intValue());
+           assertEquals("Meter denominator", 4, ((IStandardTimeSignature)soprano.getChildren()[2]).getDenominator().getValue().intValue());
 
-           assertEquals("Soprano voice, first note, 4ee\\, figure", EFigures.QUARTER, ((INote)soprano.getItems()[3]).getFigure().getValue());
-           assertEquals("Soprano voice, first note, 4ee\\, pitch", EDiatonicPitches.E, ((INote)soprano.getItems()[3]).getNoteHead().getPitch().getDiatonicPitch().getValue());
+           assertEquals("Soprano voice, first note, 4ee\\, figure", EFigures.QUARTER, ((INote)soprano.getChildren()[3]).getFigure().getValue());
+           assertEquals("Soprano voice, first note, 4ee\\, pitch", EDiatonicPitches.E, ((INote)soprano.getChildren()[3]).getNoteHead().getPitch().getDiatonicPitch().getValue());
 
-           assertTrue("Bar line", soprano.getItems()[4] instanceof IBarline);
+           assertTrue("Bar line", soprano.getChildren()[4] instanceof IBarline);
 
-          // assertEquals("Soprano voice, first note with fermata, 2ee;", ((INote)soprano.getItems()[10]).getNoteHead());
+          // assertEquals("Soprano voice, first note with fermata, 2ee;", ((INote)soprano.getChildren()[10]).getNoteHead());
 
         } catch (Throwable t) {
             t.printStackTrace();

@@ -31,7 +31,7 @@ public class FormatConverterTest {
 
     @Test
     public void convert() throws IMException, IOException {
-        String [] filenames = new String[] {"230006508-1_9_1"};
+        String [] filenames = new String[] {"230006508-1_9_1", "000103737-1_1_1"};
         for (String filename: filenames) {
             test(filename);
         }

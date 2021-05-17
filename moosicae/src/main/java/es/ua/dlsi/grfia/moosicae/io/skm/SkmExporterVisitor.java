@@ -26,10 +26,7 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
         return stringBuilder.toString();
     }
 
-    @Override
-    public void exportBeamGroup(IBeamGroup beamGroup, SkmExporterVisitorTokenParam inputOutput) {
-        throw new UnsupportedOperationException("TODO");
-    }
+
 
     @Override
     public void exportClef(IClef clef, SkmExporterVisitorTokenParam inputOutput) throws IMException {

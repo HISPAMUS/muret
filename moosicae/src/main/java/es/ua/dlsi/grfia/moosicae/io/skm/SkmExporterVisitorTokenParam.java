@@ -1,7 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.io.skm;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.IVoicedItem;
+import es.ua.dlsi.grfia.moosicae.core.IVoicedSingle;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.SkmDocument;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.SkmToken;
 import es.ua.dlsi.grfia.moosicae.io.skm.grammar.tokens.SkmCoreSymbol;
@@ -37,7 +37,7 @@ public class SkmExporterVisitorTokenParam {
         return previousToken;
     }
 
-    public void buildAndAddToken(IVoicedItem symbol) throws IMException {
+    public void buildAndAddToken(IVoicedSingle symbol) throws IMException {
         SkmCoreSymbol newToken = new SkmCoreSymbol(stringBuilder.toString(), symbol);
         this.document.add(previousToken, newToken);
         previousToken = newToken; // it allows us to add new tokens after this one

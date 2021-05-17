@@ -82,8 +82,8 @@ public class Score extends CoreObject implements IScore {
     }
 
     @Override
-    public void add(IVoice toVoice, IStaff inStaff, IVoicedItem symbol) {
-        toVoice.addItem(symbol);
+    public void add(IVoice toVoice, IStaff inStaff, IVoicedSingle symbol) {
+        toVoice.addChild(symbol);
         inStaff.put(symbol);
     }
 

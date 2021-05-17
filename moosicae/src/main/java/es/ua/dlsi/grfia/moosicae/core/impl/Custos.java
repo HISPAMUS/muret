@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class Custos extends VoicedItem implements ICustos {
+public class Custos extends VoicedSingle implements ICustos {
     @NotNull
     private final IPitch pitch;
 

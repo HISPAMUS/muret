@@ -15,7 +15,7 @@ import java.util.Optional;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class Clef extends VoicedItem implements IClef {
+public class Clef extends VoicedSingle implements IClef {
 
     private final IClefLine line;
     @NotNull

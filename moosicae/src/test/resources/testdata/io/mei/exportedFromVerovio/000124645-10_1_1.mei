@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<score>
+   <section>
+      <scoreDef xml:id="scoredef-0000000755231672" meter.count="3" meter.unit="4">
+         <staffGrp xml:id="staffgrp-0000001068616883">
+            <staffDef xml:id="staffdef-0000000838212720" n="1" lines="5" clef.shape="F" clef.line="4" />
+         </staffGrp>
+      </scoreDef>
+      <section xml:id="section-0000002137964241">
+         <measure xml:id="measure-0000001720916286" right="single">
+            <staff xml:id="staff-0000002127270106" n="1">
+               <layer xml:id="layer-0000001772729169" n="1" key.sig="0">
+                  <note xml:id="note-0000000071024905" dur="4" oct="4" pname="c" />
+                  <clef xml:id="clef-0000001800071280" shape="G" line="2" />
+                  <note xml:id="note-0000001862154250" dur="4" oct="6" pname="c" />
+                  <note xml:id="note-0000001947292019" dur="4" oct="5" pname="g" />
+               </layer>
+            </staff>
+         </measure>
+         <measure xml:id="measure-0000000103294936" right="single">
+            <staff xml:id="staff-0000000486183053" n="1">
+               <layer xml:id="layer-0000001644806862" n="1">
+                  <note xml:id="note-0000001859425450" dur="16" oct="5" pname="a" grace="acc" stem.dir="up" />
+                  <beam xml:id="beam-0000001954449680">
+                     <note xml:id="note-0000001181507006" dur="8" oct="5" pname="g" />
+                     <note xml:id="note-0000000525907248" dur="16" oct="5" pname="f" />
+                     <note xml:id="note-0000002027909731" dur="16" oct="5" pname="e" />
+                  </beam>
+                  <beam xml:id="beam-0000001223514299">
+                     <note xml:id="note-0000000365887380" dur="16" oct="4" pname="c" />
+                     <note xml:id="note-0000001448903268" dur="16" oct="4" pname="d" />
+                     <note xml:id="note-0000001400151943" dur="16" oct="4" pname="e" />
+                     <note xml:id="note-0000000227902175" dur="16" oct="4" pname="f" />
+                  </beam>
+                  <beam xml:id="beam-0000000026879619">
+                     <note xml:id="note-0000001388512624" dur="16" oct="4" pname="g" />
+                     <note xml:id="note-0000000794190663" dur="16" oct="4" pname="a" />
+                     <note xml:id="note-0000001351606936" dur="16" oct="4" pname="b" />
+                     <note xml:id="note-0000000375755386" dur="16" oct="5" pname="c" />
+                  </beam>
+               </layer>
+            </staff>
+         </measure>
+         <scoreDef xml:id="scoredef-0000000818435837" key.sig="0" />
+         <measure xml:id="measure-0000000767342410" right="single">
+            <staff xml:id="staff-0000001718850322" n="1">
+               <layer xml:id="layer-0000000341458603" n="1" key.sig="0">
+                  <clef xml:id="clef-0000001441472802" shape="F" line="4" />
+                  <note xml:id="note-0000000818353424" dur="4" oct="2" pname="g" />
+                  <clef xml:id="clef-0000000093656530" shape="G" line="2" />
+                  <note xml:id="note-0000001580721780" dur="4" oct="6" pname="d" />
+                  <note xml:id="note-0000000670759423" dur="4" oct="5" pname="f" />
+               </layer>
+            </staff>
+         </measure>
+         <measure xml:id="measure-0000001884645457" right="invis">
+            <staff xml:id="staff-0000001311959258" n="1">
+               <layer xml:id="layer-0000000464714216" n="1">
+                  <note xml:id="note-0000000053804173" dur="8" oct="5" pname="f" grace="acc" stem.dir="up" />
+                  <beam xml:id="beam-0000001952690270">
+                     <note xml:id="note-0000000196120224" dur="8" oct="5" pname="e" />
+                     <note xml:id="note-0000001020274436" dur="16" oct="5" pname="d" />
+                     <note xml:id="note-0000000095524557" dur="16" oct="5" pname="c" />
+                  </beam>
+               </layer>
+            </staff>
+         </measure>
+      </section>
+   </section>
+</score>

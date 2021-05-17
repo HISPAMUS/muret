@@ -1,6 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.io.mei.importer.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
+import es.ua.dlsi.grfia.moosicae.core.IBeamGroup;
+import es.ua.dlsi.grfia.moosicae.core.IConnector;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.io.mei.importer.elements.MEIMeasure;
 import es.ua.dlsi.grfia.moosicae.io.mei.importer.elements.MEISection;
@@ -15,9 +17,11 @@ import java.util.List;
  */
 public class MEISectionBuilder extends MEIObjectBuilder<MEISection> {
     private final List<MEIMeasure> measureList;
+    private final List<IConnector> connectorList;
 
     public MEISectionBuilder() {
         this.measureList = new LinkedList<>();
+        this.connectorList = new LinkedList<>();
     }
 
     public MEISectionBuilder add(MEIMeasure measure) {
@@ -25,6 +29,10 @@ public class MEISectionBuilder extends MEIObjectBuilder<MEISection> {
         return this;
     }
 
+    public MEISectionBuilder add(IConnector connector) {
+        this.connectorList.add(connector);
+        return this;
+    }
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
@@ -33,6 +41,6 @@ public class MEISectionBuilder extends MEIObjectBuilder<MEISection> {
 
     @Override
     public MEISection build() throws IMException {
-        return new MEISection(getId(), measureList.toArray(new MEIMeasure[0]));
+        return new MEISection(getId(), measureList.toArray(new MEIMeasure[0]), connectorList.toArray(new IConnector[0]));
     }
 }

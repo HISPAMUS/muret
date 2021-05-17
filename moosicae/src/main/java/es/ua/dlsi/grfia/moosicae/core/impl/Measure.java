@@ -2,7 +2,7 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IMeasure;
-import es.ua.dlsi.grfia.moosicae.core.IVoicedItem;
+import es.ua.dlsi.grfia.moosicae.core.IVoicedSingle;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.properties.ILeftBarline;
 import es.ua.dlsi.grfia.moosicae.core.properties.INumber;
@@ -19,7 +19,7 @@ import java.util.Optional;
  */
 public class Measure extends CoreObject implements IMeasure {
     @NotNull
-    private final LinkedList<IVoicedItem> items;
+    private final LinkedList<IVoicedSingle> items;
     private INumber barNumber;
     private ILeftBarline leftBarline;
     private IRightBarline rightBarline;
@@ -48,12 +48,12 @@ public class Measure extends CoreObject implements IMeasure {
     }
 
     @Override
-    public IVoicedItem[] getItems() {
-        return items.toArray(new IVoicedItem[items.size()]);
+    public IVoicedSingle[] getItems() {
+        return items.toArray(new IVoicedSingle[items.size()]);
     }
 
     @Override
-    public void add(IVoicedItem voicedItem) {
+    public void add(IVoicedSingle voicedItem) {
         this.items.add(voicedItem);
     }
 

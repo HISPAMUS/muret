@@ -31,7 +31,7 @@ public class MEIStaffDefBuilder extends MEIObjectBuilder<MEIStaffDef> {
             n = Integer.parseInt(nattr.get());
         }
 
-        Optional<IClef> clef = MEIAttributesParsers.getInstance().parseClef(xmlImporterParam);
+        Optional<IClef> clef = MEIAttributesParsers.getInstance().parseClef(xmlImporterParam, true);
         if (clef.isPresent()) {
             this.clef = clef.get();
         }

@@ -1,7 +1,8 @@
 package es.ua.dlsi.grfia.moosicae.io.musicxml.importer.elements;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.IVoicedItem;
+import es.ua.dlsi.grfia.moosicae.core.IConnector;
+import es.ua.dlsi.grfia.moosicae.core.IVoicedSingle;
 import es.ua.dlsi.grfia.moosicae.core.INote;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
@@ -84,8 +85,8 @@ public class MxmlNote extends MxmlObject implements IMxmlPartItem, INote {
     }
 
     @Override
-    public IVoicedItem[] getItems() {
-        return new IVoicedItem[] {this.getNote()};
+    public IVoicedSingle[] getItems() {
+        return new IVoicedSingle[] {this.getNote()};
     }
 
 
@@ -97,5 +98,10 @@ public class MxmlNote extends MxmlObject implements IMxmlPartItem, INote {
     @Override
     public Optional<IGraceNoteType> getGraceNoteType() {
         return note.getGraceNoteType();
+    }
+
+    @Override
+    public IConnector[] getConnectors() {
+        throw new UnsupportedOperationException("TO-DO");
     }
 }

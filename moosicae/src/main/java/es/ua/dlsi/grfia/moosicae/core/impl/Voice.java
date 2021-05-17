@@ -2,7 +2,6 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.core.impl.properties.IdGenerator;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.properties.IName;
 import es.ua.dlsi.grfia.moosicae.core.properties.INoteHead;
@@ -16,7 +15,7 @@ import java.util.Optional;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class Voice extends CoreObject implements IVoice {
+public class Voice extends VoicedComposite implements IVoice {
 
     private final IName name;
     @NotNull
@@ -34,16 +33,6 @@ public class Voice extends CoreObject implements IVoice {
     }
 
     @Override
-    public IVoiced[] getItems() {
-        return items.toArray(new IVoiced[items.size()]);
-    }
-
-    @Override
-    public void addItem(IVoiced item) {
-        this.items.add(item);
-    }
-
-    @Override
     public void tie(INoteHead prev, INoteHead next) throws IMException {
         //TODO
     }
@@ -57,7 +46,7 @@ public class Voice extends CoreObject implements IVoice {
     public Voice clone() {
         Voice voice = new Voice(null, name);
         for (IVoiced voiced: items) {
-            voice.addItem((IVoiced) voiced.clone());
+            voice.addChild((IVoiced) voiced.clone());
         }
         return voice;
     }

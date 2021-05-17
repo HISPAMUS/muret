@@ -171,8 +171,9 @@ public class MEIAttributesParsers {
         }
     }
 
-    Optional<IClef> parseClef(XMLImporterParam xmlImporterParam) throws IMException {
-        Optional<String> shape = xmlImporterParam.getAttribute("clef.shape");
+    Optional<IClef> parseClef(XMLImporterParam xmlImporterParam, boolean asAttribute) throws IMException {
+        String prefix = asAttribute?"clef.":"";
+        Optional<String> shape = xmlImporterParam.getAttribute(prefix + "shape");
         if (shape.isPresent()) {
             IClefBuilder clefBuilder = new IClefBuilder();
             EClefSigns clefSign;
@@ -188,14 +189,14 @@ public class MEIAttributesParsers {
             }
             clefBuilder.from(clefSign);
 
-            Optional<String> line = xmlImporterParam.getAttribute("clef.line");
+            Optional<String> line = xmlImporterParam.getAttribute(prefix + "line");
             if (line.isPresent()) {
                 IClefLine clefLine = ICoreAbstractFactory.getInstance().createClefLine(null, Integer.parseInt(line.get()));
                 clefBuilder.from(clefLine);
             }
 
-            Optional<String> clefDis = xmlImporterParam.getAttribute("clef.dis");
-            Optional<String> clefDisPlace = xmlImporterParam.getAttribute("clef.dis.place");
+            Optional<String> clefDis = xmlImporterParam.getAttribute(prefix + "dis");
+            Optional<String> clefDisPlace = xmlImporterParam.getAttribute(prefix + "dis.place");
             if (clefDis.isPresent() || clefDisPlace.isPresent()) {
                 if (!clefDis.isPresent() || !clefDisPlace.isPresent()) {
                     throw new IMException("For clef octave transposition, both clef.dis and clef.dis must be present");

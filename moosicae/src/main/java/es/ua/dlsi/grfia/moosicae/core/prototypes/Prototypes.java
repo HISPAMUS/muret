@@ -1,8 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.core.prototypes;
 
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
-import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
-import es.ua.dlsi.grfia.moosicae.core.IVoicedItem;
+import es.ua.dlsi.grfia.moosicae.core.IVoicedSingle;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,7 +14,7 @@ import java.util.Set;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 27/03/2020
  */
-public abstract class Prototypes<Type extends IVoicedItem> {
+public abstract class Prototypes<Type extends IVoicedSingle> {
     protected HashMap<String, Type> prototypes;
 
     public Prototypes() {

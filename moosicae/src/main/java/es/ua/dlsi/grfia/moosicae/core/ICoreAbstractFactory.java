@@ -35,7 +35,7 @@ public interface ICoreAbstractFactory {
     IBarlineType createBarlineType(IId id, @NotNull EBarlineTypes barlineType);
     ILeftBarline createLeftBarline(IId id, @NotNull EBarlineTypes barlineType);
     IRightBarline createRightBarline(IId id, @NotNull EBarlineTypes barlineType);
-    IBeamGroup createBeamGroup(IId id, @NotNull IDurational[] toArray);
+    IBeamGroup createBeamGroup(IId id, @NotNull IVoiced[] toArray);
     ICautionaryKeySignatureAccidentals createCautionaryKeySignatureAccidentals(IId id, @NotNull Boolean value);
     IChord createChord(IId id, @NotNull IFigure figures, IDots dots, @NotNull INoteHead[] noteHead, IStem stem, IGraceNoteType graceNoteType);
     IClef createClef(IId id, @NotNull IClefSign clefSign, IClefLine line, IOctaveTransposition octaveTransposition);
@@ -118,7 +118,7 @@ public interface ICoreAbstractFactory {
     IScore createScore(IId id);
     IRest createRest(IId id, @NotNull IFigure figure,  IDots dots);
 
-    IStaff createStaff(IId id, @NotNull IStaffLineCount staffLineCount, IVoicedItem[] items);
+    IStaff createStaff(IId id, @NotNull IStaffLineCount staffLineCount, IVoicedSingle[] items);
 
     /**
      * For nested staff. It adds the staff to the staff group

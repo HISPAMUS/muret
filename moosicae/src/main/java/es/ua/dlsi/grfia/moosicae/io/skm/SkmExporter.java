@@ -78,7 +78,7 @@ public class SkmExporter extends AbstractExporter<SkmExporterVisitor> {
             if (voice == null) {
                 throw new IMRuntimeException("Cannot find last token for voice " + voice);
             }
-            for (IVoiced voiced: voice.getItems()) {
+            for (IVoiced voiced: voice.getChildren()) {
                 SkmExporterVisitorTokenParam skmExporterVisitorTokenParam = new SkmExporterVisitorTokenParam(skmDocument, lastToken);
                 voiced.export(this.exporterVisitor, skmExporterVisitorTokenParam);
                 //TODO varios spines...

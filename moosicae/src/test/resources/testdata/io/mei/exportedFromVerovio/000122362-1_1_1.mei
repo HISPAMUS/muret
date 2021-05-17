@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<score>
+   <section>
+      <scoreDef xml:id="scoredef-0000000755265286" meter.count="2" meter.unit="2">
+         <staffGrp xml:id="staffgrp-0000002009039427">
+            <staffDef xml:id="staffdef-0000001040267808" n="1" lines="5" clef.shape="C" clef.line="1" />
+         </staffGrp>
+      </scoreDef>
+      <section xml:id="section-0000000131214807">
+         <measure xml:id="measure-0000001103424865" right="single">
+            <staff xml:id="staff-0000000029070162" n="1">
+               <layer xml:id="layer-0000001944007427" n="1">
+                  <rest xml:id="rest-0000001116620131" dur="2" />
+                  <rest xml:id="rest-0000000174950584" dur="4" />
+                  <rest xml:id="rest-0000000489352545" dur="8" />
+                  <note xml:id="note-0000001833339452" dur="8" oct="4" pname="a" />
+               </layer>
+            </staff>
+         </measure>
+         <measure xml:id="measure-0000000927035396" right="single">
+            <staff xml:id="staff-0000000840802608" n="1">
+               <layer xml:id="layer-0000001258684144" n="1">
+                  <note xml:id="note-0000001990485258" dur="2" oct="4" pname="a" />
+                  <rest xml:id="rest-0000000585478240" dur="8" />
+                  <note xml:id="note-0000000362709126" dur="8" oct="4" pname="a" />
+                  <note xml:id="note-0000001493690496" dur="8" oct="4" pname="b" />
+                  <note xml:id="note-0000000372332842" dur="8" oct="5" pname="c" />
+               </layer>
+            </staff>
+         </measure>
+         <scoreDef xml:id="scoredef-0000002133290799" meter.count="3" meter.unit="2" />
+         <measure xml:id="measure-0000001051706472" right="single">
+            <staff xml:id="staff-0000000030728136" n="1">
+               <layer xml:id="layer-0000000912044034" n="1">
+                  <note xml:id="note-0000001978972128" dur="1" oct="4" pname="g">
+                     <accid xml:id="accid-0000000357830560" accid="s" />
+                  </note>
+                  <note xml:id="note-0000001104010320" dur="4" oct="4" pname="g">
+                     <accid xml:id="accid-0000000842738160" accid="n" />
+                  </note>
+                  <note xml:id="note-0000001245603155" dur="4" oct="4" pname="a" />
+               </layer>
+            </staff>
+         </measure>
+         <scoreDef xml:id="scoredef-0000001731941438" meter.sym="common" />
+         <measure xml:id="measure-0000001960329294" right="single">
+            <staff xml:id="staff-0000001181635129" n="1">
+               <layer xml:id="layer-0000001439723341" n="1">
+                  <note xml:id="note-0000001746397028" dur="8" oct="4" pname="g" grace="acc" stem.dir="up" />
+                  <note xml:id="note-0000002035846047" dur="2" oct="4" pname="f" />
+                  <note xml:id="note-0000000607564278" dur="8" oct="4" pname="f" grace="acc" stem.dir="up" />
+                  <note xml:id="note-0000000048078861" dur="4" oct="4" pname="e" />
+                  <note xml:id="note-0000000607565555" dur="8" oct="4" pname="f" grace="acc" stem.dir="up" />
+                  <note xml:id="note-0000000069541400" dur="4" oct="4" pname="d" />
+               </layer>
+            </staff>
+         </measure>
+         <scoreDef xml:id="scoredef-0000001495779173" meter.count="3" meter.unit="2" />
+         <measure xml:id="measure-0000002019448913" right="invis">
+            <staff xml:id="staff-0000000551205832" n="1">
+               <layer xml:id="layer-0000000797904663" n="1">
+                  <note xml:id="note-0000001116988829" dur="8" oct="4" pname="d" grace="acc" stem.dir="up" />
+                  <note xml:id="note-0000002076690576" dur="1" oct="4" pname="e" />
+                  <note xml:id="note-0000002034279788" dur="4" oct="4" pname="e" />
+                  <rest xml:id="rest-0000000053253029" dur="8" />
+               </layer>
+            </staff>
+         </measure>
+      </section>
+   </section>
+</score>

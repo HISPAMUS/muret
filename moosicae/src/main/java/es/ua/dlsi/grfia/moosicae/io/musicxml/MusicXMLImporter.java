@@ -118,8 +118,8 @@ public class MusicXMLImporter extends XMLImporter implements IImporter {
             IStaff defaultStaff = ICoreAbstractFactory.getInstance().createStaff(score, null, staffLineCount);
             for (MxmlMeasure measure : mxmlImportedPart.getMeasures()) {
                 for (IMxmlPartItem item: measure.getItems()) {
-                    IVoicedItem[] subitems = item.getItems(); //TODO sacar los datos adicionales del MusicXMLNote como es la staff...
-                    for (IVoicedItem coreItem: subitems) {
+                    IVoicedSingle[] subitems = item.getItems(); //TODO sacar los datos adicionales del MusicXMLNote como es la staff...
+                    for (IVoicedSingle coreItem: subitems) {
                         score.add(defaultVoice, defaultStaff, coreItem);
                     }
                 }

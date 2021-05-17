@@ -91,9 +91,9 @@ public class SkmDocument2IScore {
     private void processCoreSymbol(IVoice voice, SkmCoreSymbol skmCoreSymbol) throws IMException {
         IStaff voiceStaff = voiceStaves.get(voice);
         if (skmCoreSymbol.getSymbol() instanceof IVoiced) {
-            voice.addItem((IVoiced) skmCoreSymbol.getSymbol());
+            voice.addChild((IVoiced) skmCoreSymbol.getSymbol());
             if (voiceStaff != null) {
-                voiceStaff.put((IVoicedItem) skmCoreSymbol.getSymbol());
+                voiceStaff.put((IVoicedSingle) skmCoreSymbol.getSymbol());
             }
         }
     }

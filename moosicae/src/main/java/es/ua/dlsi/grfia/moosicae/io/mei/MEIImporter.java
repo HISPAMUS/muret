@@ -29,6 +29,7 @@ public class MEIImporter extends XMLImporter implements IImporter {
         coreObjectBuilderSuppliers.add("staffGrp", MEIStaffGroupBuilder::new);
         coreObjectBuilderSuppliers.add("staffDef", MEIStaffDefBuilder::new);
         coreObjectBuilderSuppliers.add("keySig", MEIKeyOrKeySignatureBuilder::new);
+        coreObjectBuilderSuppliers.add("clef", MEIClefBuilder::new);
         coreObjectBuilderSuppliers.add("keyAccid", MEIKeyAccidBuilder::new);
 
         coreObjectBuilderSuppliers.add("meterSig", MEIMeterSigBuilder::new);
@@ -100,8 +101,7 @@ public class MEIImporter extends XMLImporter implements IImporter {
 
                     if (meiStaffDef.getClef().isPresent()) {
                         IClef clef = meiStaffDef.getClef().get();
-                        score.add(voice, staff, clef);
-                        measure.add(clef);
+                        insert(score, voice, measure, staff, clef);
                     }
 
                     addCommonDefElements(meiStaffDef, score, voice, staff, measure);
@@ -112,32 +112,52 @@ public class MEIImporter extends XMLImporter implements IImporter {
 
 
                 for (MEILayer layer: measureStaff.getLayers()) {
-                    for (IVoicedItem coreItem: layer.getItems()) {
+                    for (IVoiced voiced: layer.getItems()) {
                         //TODO insertar los elementos comunes
-                        score.add(voice, staff, coreItem);//TODO la voice debería salir de layer
-                        measure.add(coreItem);
+                        insert(score, voice, measure, staff, voiced);
                     }
                 }
             }
             firstMeasure = false;
         }
+
+        /*Nothing to do as voiced items are already connected
+        for (IConnector connector: section.getConnectors()) {
+        }*/
     }
 
-    private void addCommonDefElements(IMEIDef imeiDef, IScore score, IVoice voice, IStaff staff, IMeasure measure) {
+
+    private void insert(IScore score, IVoice voice, IMeasure measure, IStaff staff, IVoiced voiced) throws IMException {
+        if (voiced instanceof IVoicedSingle) {
+            IVoicedSingle single = (IVoicedSingle) voiced;
+            score.add(voice, staff, single);//TODO la voice debería salir de layer
+            measure.add(single);
+        } else if (voiced instanceof IVoicedComposite) {
+            //TODO Añadir a single voice el parámetro staff para poder moverlo con cross-staff a otro
+            IVoicedComposite composite = (IVoicedComposite) voiced;
+            voice.addChild(composite);
+            //TODO Ver qué pasa con barrados que cruzan las barras de compás y por tanto están en distintos compases
+            for (IVoiced child: ((IVoicedComposite) voiced).getChildren()) {
+                insert(score, voice, measure, staff, child);
+            }
+        } else {
+            throw new IMException("Unsupported voiced type: " + voiced.getClass().getName());
+        }
+
+    }
+
+    private void addCommonDefElements(IMEIDef imeiDef, IScore score, IVoice voice, IStaff staff, IMeasure measure) throws IMException {
         Optional<IMeter> meter = imeiDef.getMeter();
         if (meter.isPresent()) {
-            score.add(voice, staff, meter.get());
-            measure.add(meter.get());
+            insert(score, voice, measure, staff, meter.get());
         }
         Optional<IKey> key = imeiDef.getKey();
         if (key.isPresent()) {
-            score.add(voice, staff, key.get());
-            measure.add(key.get());
+            insert(score, voice, measure, staff, key.get());
         } else { // else because in the case of importing both key and key signature (it should'n happen) we prefer the key (that is a key signature with a mode)
             Optional<IConventionalKeySignature> conventionalKeySignature = imeiDef.getConventionalKeySignature();
             if (conventionalKeySignature.isPresent()) {
-                score.add(voice, staff, conventionalKeySignature.get());
-                measure.add(conventionalKeySignature.get());
+                insert(score, voice, measure, staff, conventionalKeySignature.get());
             }
         }
     }

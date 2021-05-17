@@ -12,7 +12,7 @@ import java.util.Optional;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class Key extends VoicedItem implements IKey {
+public class Key extends VoicedSingle implements IKey {
     @NotNull
     private final IPitchClass pitchClass;
     @NotNull

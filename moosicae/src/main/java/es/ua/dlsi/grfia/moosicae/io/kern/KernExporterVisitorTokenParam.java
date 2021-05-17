@@ -2,7 +2,6 @@ package es.ua.dlsi.grfia.moosicae.io.kern;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IMooObject;
-import es.ua.dlsi.grfia.moosicae.core.IVoicedItem;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernDocument;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernToken;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.KernCoreSymbol;
@@ -15,7 +14,6 @@ public class KernExporterVisitorTokenParam {
     private final KernDocument document;
     private KernToken previousToken;
     private StringBuilder stringBuilder;
-    private BeamGroupExportState beamGroupState; //TODO Modify for spines
 
     public KernExporterVisitorTokenParam(KernDocument document, KernToken previousToken) {
         this.document = document;
@@ -46,11 +44,4 @@ public class KernExporterVisitorTokenParam {
         this.stringBuilder = new StringBuilder(); // reset for new one
     }
 
-    public BeamGroupExportState getBeamGroupState() {
-        return beamGroupState;
-    }
-
-    public void setBeamGroupState(BeamGroupExportState beamGroupState) {
-        this.beamGroupState = beamGroupState;
-    }
 }

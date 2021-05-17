@@ -1,12 +1,9 @@
 package es.ua.dlsi.grfia.moosicae.io.kern;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.EBarlineTypes;
-import es.ua.dlsi.grfia.moosicae.core.impl.Measure;
 import es.ua.dlsi.grfia.moosicae.io.AbstractExporter;
-import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.EKernHeaders;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernDocument;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernToken;
@@ -98,7 +95,7 @@ public class KernExporter extends AbstractExporter<KernExporterVisitor> {
         KernToken lastToken = lastVoiceTokens.get(voices.get(0));
         for (IMeasure measure: measures) {
             //TODO Optimizarlo - esto está muy mal hecho
-            for (IVoicedItem voicedItem: measure.getItems()) {
+            for (IVoicedSingle voicedItem: measure.getItems()) {
                 lastToken = export(kernDocument, voicedItem, lastToken);
             }
             if (measure.getRightBarline().isPresent()) {

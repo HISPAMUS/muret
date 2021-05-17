@@ -21,10 +21,7 @@ import java.util.Optional;
 public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisitorParam> {
     public static final int MAX_DUR = 256;
 
-    @Override
-    public void exportBeamGroup(IBeamGroup beamGroup, XMLExporterVisitorParam inputOutput) {
-        throw new UnsupportedOperationException("TODO");
-    }
+
 
     @Override
     public void exportClef(IClef clef, XMLExporterVisitorParam inputOutput) {

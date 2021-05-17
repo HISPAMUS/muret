@@ -17,11 +17,6 @@ import java.util.Optional;
 public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporterVisitorParam> {
 
 
-    @Override
-    public void exportBeamGroup(IBeamGroup beamGroup, LilypondExporterVisitorParam inputOutput) throws IMException {
-        throw new UnsupportedOperationException("TODO");
-
-    }
 
     @Override
     public void exportClef(IClef clef, LilypondExporterVisitorParam inputOutput) throws IMException {

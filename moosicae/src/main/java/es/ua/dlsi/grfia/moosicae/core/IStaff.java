@@ -7,7 +7,7 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IStaffLineCount;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public interface IStaff extends ISystem {
-    IVoicedItem[] getStaffSymbols();
+    IVoicedSingle[] getStaffSymbols();
     IStaffLineCount getStaffLineCount();
 
     /**
@@ -16,9 +16,9 @@ public interface IStaff extends ISystem {
      */
     void addLayoutElement(IStaffLayoutElement staffLayoutElement);
 
-    void put(IVoicedItem symbol);
+    void put(IVoicedSingle symbol);
 
-    void remove(IVoicedItem symbol);
+    void remove(IVoicedSingle symbol);
 
     /**
      * @return True if getStaffSymbols has length 0

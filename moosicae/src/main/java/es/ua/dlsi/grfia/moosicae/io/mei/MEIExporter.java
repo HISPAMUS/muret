@@ -3,16 +3,12 @@ package es.ua.dlsi.grfia.moosicae.io.mei;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.io.BaseExporter;
-import es.ua.dlsi.grfia.moosicae.io.IExporter;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLExporterVisitorParam;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLParamExportMode;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLPreambleElement;
 import es.ua.dlsi.grfia.moosicae.utils.xml.XMLTree;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Optional;
@@ -24,7 +20,7 @@ public class MEIExporter extends BaseExporter {
     /**
      * Used to avoid exporting twice symbols such as the key signature, meter, clef that are exporte in the scoreDef or staffDef elements as attributes
      */
-    HashSet<IVoicedItem> exportedSymbols;
+    HashSet<IVoicedSingle> exportedSymbols;
     HashMap<IStaff, Integer> staffNumbers;
 
     public MEIExporter() {
@@ -69,7 +65,7 @@ public class MEIExporter extends BaseExporter {
     }
 
     private <T> Optional<T> findFirst(IStaff staff, Class<T> type) {
-        for (IVoicedItem symbol: staff.getStaffSymbols()) {
+        for (IVoicedSingle symbol: staff.getStaffSymbols()) {
             if (type.isAssignableFrom(symbol.getClass())) {
                 return (Optional<T>) Optional.of(symbol);
             }
@@ -136,7 +132,7 @@ public class MEIExporter extends BaseExporter {
             xmlStaff.addAttribute("n", Integer.toString(nstaff));
             XMLElement xmlLayer = xmlStaff.addChild("layer");
             xmlLayer.addAttribute("n", Integer.toString(nstaff));
-            for (IVoicedItem staffElement: staff.getStaffSymbols()) {
+            for (IVoicedSingle staffElement: staff.getStaffSymbols()) {
                 if (!exportedSymbols.contains(staffElement)) {
                     XMLExporterVisitorParam XMLExporterVisitorParam = new XMLExporterVisitorParam(XMLParamExportMode.element, xmlLayer);
                     staffElement.export(meiExporterVisitor, XMLExporterVisitorParam);

@@ -2,7 +2,7 @@ package es.ua.dlsi.grfia.moosicae.io.commonbuilders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
-import es.ua.dlsi.grfia.moosicae.core.IVoicedItem;
+import es.ua.dlsi.grfia.moosicae.core.IVoicedSingle;
 import es.ua.dlsi.grfia.moosicae.core.IKey;
 import es.ua.dlsi.grfia.moosicae.core.builders.CoreObjectBuilder;
 import es.ua.dlsi.grfia.moosicae.core.enums.EAccidentalSymbols;
@@ -22,7 +22,7 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 24/03/2020
  */
-public class KeyOrKeySignatureBuilder extends CoreObjectBuilder<IVoicedItem> implements IImporterAdapter<IVoicedItem, XMLImporterParam> {
+public class KeyOrKeySignatureBuilder extends CoreObjectBuilder<IVoicedSingle> implements IImporterAdapter<IVoicedSingle, XMLImporterParam> {
     protected IKeyAccidentalCount keyAccidentalCount;
     protected IMode mode;
     protected EAccidentalSymbols accidentalSymbol;
@@ -63,7 +63,7 @@ public class KeyOrKeySignatureBuilder extends CoreObjectBuilder<IVoicedItem> imp
     }
 
     @Override
-    public IVoicedItem build() throws IMException {
+    public IVoicedSingle build() throws IMException {
         if (keyAccidentalCount != null) {
             int fifths = this.keyAccidentalCount.getValue();
 

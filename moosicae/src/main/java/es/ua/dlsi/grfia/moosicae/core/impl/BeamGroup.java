@@ -3,6 +3,7 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IBeamGroup;
 import es.ua.dlsi.grfia.moosicae.core.IDurational;
+import es.ua.dlsi.grfia.moosicae.core.IVoiced;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import javax.validation.constraints.NotNull;
@@ -10,19 +11,19 @@ import javax.validation.constraints.NotNull;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class BeamGroup extends DurationalComposite implements IBeamGroup {
+public class BeamGroup extends Connector implements IBeamGroup {
 
-    BeamGroup(IId id, @NotNull IDurational[] children) {
-        super(id, children);
+    BeamGroup(IId id, @NotNull IVoiced[] connected) {
+        super(id, connected);
     }
 
     @Override
-    public <InputOutputType> void export(IExporterVisitor<InputOutputType> exportVisitor, InputOutputType inputOutput) throws IMException {
-        exportVisitor.exportBeamGroup(this, inputOutput);
+    public BeamGroup clone() {
+        return new BeamGroup(null, getConnected());
     }
 
     @Override
-    public DurationalComposite clone() {
-        return new BeamGroup(null, children);
+    public String toString() {
+        return "BeamGroup{} " + super.toString();
     }
 }

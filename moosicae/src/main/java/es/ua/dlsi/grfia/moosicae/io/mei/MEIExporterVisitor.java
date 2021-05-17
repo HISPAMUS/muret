@@ -16,10 +16,6 @@ import es.ua.dlsi.grfia.moosicae.utils.xml.XMLElement;
  * @created 16/03/2020
  */
 public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorParam> {
-    @Override
-    public void exportBeamGroup(IBeamGroup beamGroup, XMLExporterVisitorParam inputOutput) {
-        throw new UnsupportedOperationException("TODO");
-    }
 
     @Override
     public void exportClef(IClef clef, XMLExporterVisitorParam inputOutput) throws IMException {

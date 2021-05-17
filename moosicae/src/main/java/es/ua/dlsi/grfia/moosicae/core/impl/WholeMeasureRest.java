@@ -22,7 +22,7 @@ public class WholeMeasureRest extends MultimeasureRest implements IWholeMeasureR
 
     @Override
     public WholeMeasureRest clone() {
-        return new WholeMeasureRest(null, (IRest)children[0]);
+        return new WholeMeasureRest(null, (IRest)children.get(0));
     }
 
     @Override

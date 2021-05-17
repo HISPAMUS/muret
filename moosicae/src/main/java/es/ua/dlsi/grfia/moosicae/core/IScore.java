@@ -25,12 +25,12 @@ public interface IScore extends IMooObject {
     void remove(IPart part);
 
     /**
-     * It adds the symbol to the voice and puts in in the staff
+     * Utility convenience method, it adds the symbol to the voice and puts in in the staff
      * @param toVoice
      * @param inStaff
      * @param symbol
      */
-    void add(IVoice toVoice, IStaff inStaff, IVoicedItem symbol);
+    void add(IVoice toVoice, IStaff inStaff, IVoicedSingle symbol);
 
     IMeasure[] getMeasures();
     void add(IMeasure measure);

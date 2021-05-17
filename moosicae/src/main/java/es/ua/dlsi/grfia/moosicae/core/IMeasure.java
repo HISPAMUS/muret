@@ -14,6 +14,6 @@ public interface IMeasure extends IMooObject, IExporterVisitable {
     Optional<INumber> getBarNumber();
     Optional<ILeftBarline> getLeftBarline();
     Optional<IRightBarline> getRightBarline();
-    IVoicedItem[] getItems();
-    void add(IVoicedItem voicedItem);
+    IVoicedSingle[] getItems();
+    void add(IVoicedSingle voicedItem);
 }

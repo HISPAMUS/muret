@@ -4,8 +4,10 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IBeamGroup;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.IMeter;
+import es.ua.dlsi.grfia.moosicae.core.IVoiced;
 import es.ua.dlsi.grfia.moosicae.core.builders.IBeamGroupBuilder;
 import es.ua.dlsi.grfia.moosicae.io.IImporterAdapter;
+import es.ua.dlsi.grfia.moosicae.io.mei.importer.elements.MEIBeam;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
 
 import java.util.LinkedList;
@@ -21,5 +23,17 @@ public class MEIBeamBuilder extends IBeamGroupBuilder implements IImporterAdapte
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
 
+    }
+
+    /**
+     * This object,
+     * @return
+     * @throws IMException
+     */
+    @Override
+    public MEIBeam build() throws IMException {
+        IBeamGroup beamGroup = super.build();
+        MEIBeam beam = new MEIBeam(beamGroup);
+        return beam;
     }
 }

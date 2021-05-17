@@ -2,27 +2,31 @@ package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.core.IDurational;
 import es.ua.dlsi.grfia.moosicae.core.IDurationalComposite;
+import es.ua.dlsi.grfia.moosicae.core.IVoicedSingle;
 import es.ua.dlsi.grfia.moosicae.core.adt.ITimeBuilder;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.adt.ITime;
 
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
+import java.util.List;
 
 /**
+ * We don't inherit here from IDurational for avoiding having time as parameter in the constructor
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public abstract class DurationalComposite extends VoicedItem implements IDurationalComposite {
+public abstract class DurationalComposite extends Voiced implements IDurationalComposite {
     @NotNull
-    protected IDurational[] children;
+    protected List<IDurational> children;
 
     public DurationalComposite(IId id, @NotNull IDurational[] children) {
         super(id);
-        this.children = children.clone();
+        this.children = Arrays.asList(children);
     }
 
     @Override
     public IDurational[] getChildren() {
-        return children;
+        return children.toArray(new IDurational[children.size()]);
     }
 
     @Override

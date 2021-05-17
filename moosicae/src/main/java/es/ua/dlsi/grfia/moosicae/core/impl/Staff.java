@@ -18,7 +18,7 @@ public class Staff extends CoreObject implements IStaff {
     IStaffLineCount staffLineCount;
 
     @NotNull
-    private final List<IVoicedItem> items;
+    private final List<IVoicedSingle> items;
 
     public Staff(IId id, @NotNull IStaffLineCount staffLineCount) {
         super(id);
@@ -26,7 +26,7 @@ public class Staff extends CoreObject implements IStaff {
         items = new LinkedList<>();
     }
 
-    public Staff(IId id, IStaffLineCount staffLineCount, IVoicedItem[] items) {
+    public Staff(IId id, IStaffLineCount staffLineCount, IVoicedSingle[] items) {
         super(id);
         this.staffLineCount = staffLineCount;
         if (items != null) {
@@ -37,8 +37,8 @@ public class Staff extends CoreObject implements IStaff {
     }
 
     @Override
-    public IVoicedItem[] getStaffSymbols() {
-        return items.toArray(new IVoicedItem[items.size()]);
+    public IVoicedSingle[] getStaffSymbols() {
+        return items.toArray(new IVoicedSingle[items.size()]);
     }
 
     @Override
@@ -52,12 +52,12 @@ public class Staff extends CoreObject implements IStaff {
     }
 
     @Override
-    public void put(IVoicedItem symbol) {
+    public void put(IVoicedSingle symbol) {
         this.items.add(symbol);
     }
 
     @Override
-    public void remove(IVoicedItem symbol) {
+    public void remove(IVoicedSingle symbol) {
         this.items.remove(symbol);
     }
 
@@ -75,7 +75,7 @@ public class Staff extends CoreObject implements IStaff {
     @Override
     public Staff clone() {
         Staff staff = new Staff(null, staffLineCount);
-        for (IVoicedItem symbol: items) {
+        for (IVoicedSingle symbol: items) {
             items.add(symbol); // do not clone, it's an aggregation
         }
         return staff;

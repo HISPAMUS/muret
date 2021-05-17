@@ -3,7 +3,6 @@ package es.ua.dlsi.grfia.moosicae.io.musicxml;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.io.BaseExporter;
-import es.ua.dlsi.grfia.moosicae.io.IExporter;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLExporterVisitorParam;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLParamExportMode;
 import es.ua.dlsi.grfia.moosicae.utils.xml.DTDDeclaration;
@@ -94,7 +93,7 @@ public class MusicXMLExporter extends BaseExporter {
             //TODO ordenar por tiempos - ver qué staves pertenecen a partes
             for (IStaff staff: score.listAllStaves()) {
                 IKeySignature lastKeySignature = null;
-                for (IVoicedItem staffElement: staff.getStaffSymbols()) {
+                for (IVoicedSingle staffElement: staff.getStaffSymbols()) {
                     XMLElement parentElement = xmlMeasure; // by default
                     if (staffElement instanceof INonDurational) {
                         if (!nonAttributesFound) {

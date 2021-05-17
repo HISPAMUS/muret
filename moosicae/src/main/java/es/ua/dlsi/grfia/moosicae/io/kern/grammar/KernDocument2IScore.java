@@ -152,9 +152,9 @@ public class KernDocument2IScore {
             if (symbol instanceof IDurational && currentBeamGroupBuilder != null) {
                 currentBeamGroupBuilder.add((IDurational) symbol);
             } else {
-                voice.addItem((IVoiced) symbol);
+                voice.addChild((IVoiced) symbol);
                 if (voiceStaff != null) {
-                    voiceStaff.put((IVoicedItem) symbol);
+                    voiceStaff.put((IVoicedSingle) symbol);
                 }
             }
         }

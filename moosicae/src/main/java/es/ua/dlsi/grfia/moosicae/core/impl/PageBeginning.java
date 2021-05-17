@@ -8,7 +8,7 @@ import es.ua.dlsi.grfia.moosicae.core.IPageBeginning;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class PageBeginning extends VoicedItem implements IPageBeginning {
+public class PageBeginning extends VoicedSingle implements IPageBeginning {
     public PageBeginning(IId id) {
         super(id);
     }

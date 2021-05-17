@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public abstract class Durational extends VoicedItem implements IDurational {
+public abstract class Durational extends VoicedSingle implements IDurational {
     @NotNull
     private final ITime duration;
 

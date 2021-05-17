@@ -48,7 +48,12 @@ public class MxmlAttributes extends MxmlObject implements IMxmlPartItem {
     }
 
     @Override
-    public IVoicedItem[] getItems() {
+    public IVoicedSingle[] getItems() {
         return nonDurationalList;
+    }
+
+    @Override
+    public IConnector[] getConnectors() {
+        throw new UnsupportedOperationException("TO-DO");
     }
 }
