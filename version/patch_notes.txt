@@ -4,6 +4,7 @@
     - All images are now served by the IIIF Cantaloupe server (issue #183)
     - Rotation in document analysis is perfomed using the IIIF transform (origin in bottom left)
     - Document analysis: autorotate using Hugh Transform
+    - Backend DL classifiers in Python now just use IIIF urls including rotation
 
     MINOR UPDATES
     - The warning message "Cannot get notation because the region has not a semantic encoding" has been removed
