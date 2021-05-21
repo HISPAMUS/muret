@@ -222,9 +222,19 @@ public class MEIImporter extends XMLImporter implements IImporter {
             }
             for (MEILayer layer : measureStaff.getLayers()) { //TODO ¿Layers - voices?
                 for (IVoiced voiced : layer.getItems()) { //TODO Revisar el concepto de Voiced
-                    scoreGraph.addContentNode(staffSubgraph, voiced);
+                    importItem(staffSubgraph, voiced);
                 }
             }
+        }
+    }
+
+    private void importItem(IScoreStaffSubgraph staffSubgraph, IVoiced voiced) {
+        if (voiced instanceof IVoicedComposite) {
+            for (IVoiced child: ((IVoicedComposite) voiced).getChildren()) {
+                importItem(staffSubgraph, child);
+            }
+        } else {
+            scoreGraph.addContentNode(staffSubgraph, voiced);
         }
     }
 
