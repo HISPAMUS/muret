@@ -26,6 +26,7 @@ public class MEIRestBuilder extends IRestBuilder implements IImporterAdapter<IRe
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
+        MEIObjectBuilder.readMEI(this, xmlImporterParam);
         Optional<EFigures> figure = MEIAttributesParsers.getInstance().parseFigure(xmlImporterParam);
         if (figure.isPresent()) {
             this.from(figure.get());

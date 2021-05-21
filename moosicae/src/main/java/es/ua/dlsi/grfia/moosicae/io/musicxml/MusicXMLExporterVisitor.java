@@ -201,6 +201,11 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
     }
 
     @Override
+    public void exportFermata(IFermata fermata, XMLExporterVisitorParam inputOutput) {
+
+    }
+
+    @Override
     public void exportChord(IChord chord, XMLExporterVisitorParam inputOutputOutput) throws IMException {
 
     }

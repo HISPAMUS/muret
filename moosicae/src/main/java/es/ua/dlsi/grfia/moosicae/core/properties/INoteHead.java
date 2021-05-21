@@ -1,5 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.core.properties;
 
+import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreProperty;
 
 import java.util.Optional;
@@ -16,4 +17,6 @@ public interface INoteHead extends ICoreProperty {
      * @return
      */
     Optional<ITie> getStartsTie();
+
+    void tieTo(INoteHead toNoteHead) throws IMException;
 }

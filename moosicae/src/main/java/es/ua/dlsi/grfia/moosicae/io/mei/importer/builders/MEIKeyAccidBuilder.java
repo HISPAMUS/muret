@@ -18,6 +18,7 @@ import java.util.Optional;
 public class MEIKeyAccidBuilder extends IPitchClassBuilder implements IImporterAdapter<IPitchClass, XMLImporterParam> {
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
+        MEIObjectBuilder.readMEI(this, xmlImporterParam);
         Optional<EDiatonicPitches> diatonicPitch = MEIAttributesParsers.getInstance().parseDiatonicPitch(xmlImporterParam);
         Optional<EAccidentalSymbols> accidentalSymbol = MEIAttributesParsers.getInstance().parseAccidentalSymbol(xmlImporterParam, "accid");
         if (diatonicPitch.isPresent() || accidentalSymbol.isPresent()) {

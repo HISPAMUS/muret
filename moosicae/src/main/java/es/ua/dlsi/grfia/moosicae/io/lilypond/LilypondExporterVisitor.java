@@ -221,6 +221,11 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
     }
 
     @Override
+    public void exportFermata(IFermata fermata, LilypondExporterVisitorParam inputOutput) {
+
+    }
+
+    @Override
     public void exportCutTime(ICutTime meter, LilypondExporterVisitorParam inputOutput) throws IMException {
         inputOutput.addChildLine("\\defaultTimeSignature");
         inputOutput.addChildLine("\\time 2/2");

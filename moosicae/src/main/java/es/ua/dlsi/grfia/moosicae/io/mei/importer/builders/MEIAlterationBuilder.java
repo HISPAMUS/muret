@@ -17,6 +17,8 @@ import java.util.Optional;
 public class MEIAlterationBuilder extends IAlterationBuilder implements IImporterAdapter<IAlteration, XMLImporterParam> {
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
+        MEIObjectBuilder.readMEI(this, xmlImporterParam);
+
         Optional<String> accidGes = xmlImporterParam.getAttribute("accid.ges"); //TODO resto de parámetros
         Optional<String> accid = xmlImporterParam.getAttribute("accid"); //TODO resto de parámetros
 

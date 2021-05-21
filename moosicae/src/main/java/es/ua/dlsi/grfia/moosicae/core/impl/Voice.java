@@ -33,16 +33,6 @@ public class Voice extends VoicedComposite implements IVoice {
     }
 
     @Override
-    public void tie(INoteHead prev, INoteHead next) throws IMException {
-        //TODO
-    }
-
-    @Override
-    public void untie(INoteHead prev, INoteHead next) throws IMException {
-//TODO
-    }
-
-    @Override
     public Voice clone() {
         Voice voice = new Voice(null, name);
         for (IVoiced voiced: items) {

@@ -13,7 +13,7 @@ import java.util.Optional;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class Part extends CoreObject implements IPart {
+public class Part extends MooObject implements IPart {
 
     private IName name;
     @NotNull

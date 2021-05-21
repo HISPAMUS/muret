@@ -22,7 +22,7 @@ public class MEIBeamBuilder extends IBeamGroupBuilder implements IImporterAdapte
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
-
+        MEIObjectBuilder.readMEI(this, xmlImporterParam);
     }
 
     /**

@@ -13,8 +13,4 @@ import java.util.Optional;
  */
 public interface IVoice extends IVoicedComposite {
     Optional<IName> getName();
-    //TODO Add another interface in charge of tied notes
-    void tie(INoteHead prev, INoteHead next) throws IMException;
-    void untie(INoteHead prev, INoteHead next) throws IMException;
-
 }

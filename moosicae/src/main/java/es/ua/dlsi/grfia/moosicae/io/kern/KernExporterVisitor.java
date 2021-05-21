@@ -109,8 +109,15 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
         }
 
         exportConnectors(note, inputOutput);
+        exportMarks(note, inputOutput);
 
         inputOutput.buildAndAddToken(note);
+    }
+
+    private void exportMarks(IVoiced voiced, KernExporterVisitorTokenParam inputOutput) throws IMException {
+        for (IMark mark: voiced.getMarks()) {
+            mark.export(this, inputOutput);
+        }
     }
 
     private void exportStem(IStem stem, KernExporterVisitorTokenParam inputOutput) throws IMException {
@@ -161,6 +168,7 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
     public void exportMultimeasureRest(IMultimeasureRest mrest, KernExporterVisitorTokenParam inputOutput) throws IMException {
         if (this.ekern) {
             inputOutput.append("rr");
+            inputOutput.append(SEP);
             inputOutput.append(mrest.getMeasureCount().getValue());
             inputOutput.buildAndAddToken(mrest);
         } else {
@@ -317,6 +325,12 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
     }
 
     @Override
+    public void exportFermata(IFermata fermata, KernExporterVisitorTokenParam inputOutput) {
+        inputOutput.append(SEP);
+        inputOutput.append(';');
+    }
+
+    @Override
     public void exportChord(IChord chord, KernExporterVisitorTokenParam inputOutput) throws IMException {
         exportFigure(chord.getFigure(), inputOutput);
         if (chord.getDots().isPresent()) {
@@ -469,7 +483,6 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
     public void exportPitchClass(IPitchClass pitchClass, KernExporterVisitorTokenParam inputOutput) {
         exportDiatonicPitch(pitchClass.getDiatonicPitch(), inputOutput);
         if (pitchClass.getAccidental().isPresent()) {
-            inputOutput.append(SEP);
             exportAccidentalSymbol(pitchClass.getAccidental().get(), inputOutput);
         }
     }
@@ -505,7 +518,27 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
 
     private void doExport(INoteHead noteHead, KernExporterVisitorTokenParam inputOutput, Optional<IGraceNoteType> graceNoteType) throws IMException {
         exportPitch(noteHead.getPitch(), inputOutput);
-        //TODO Ties!!!! - start, middle, end
+
+        if (inputOutput.getKernExporterContext().isTieOpened()) {
+            if (noteHead.getStartsTie().isPresent()) {
+                inputOutput.append(SEP);
+                // continue tie
+                inputOutput.append('_');
+            } else {
+                inputOutput.append(SEP);
+                // end tie
+                inputOutput.append(']');
+                inputOutput.getKernExporterContext().setTieOpened(false);
+            }
+        } else {
+            if (noteHead.getStartsTie().isPresent()) {
+                inputOutput.append(SEP);
+                // start tie
+                inputOutput.append('[');
+                inputOutput.getKernExporterContext().setTieOpened(true);
+            }
+        }
+
         if (graceNoteType != null && graceNoteType.isPresent()) {
             switch (graceNoteType.get().getValue()) {
                 case acciaccatura:
@@ -531,6 +564,7 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
     public void exportDots(IDots dots, KernExporterVisitorTokenParam inputOutput) {
         for (int i=0; i<dots.getDots().length; i++) {
             inputOutput.append('.');
+            inputOutput.append(SEP);
         }
     }
 

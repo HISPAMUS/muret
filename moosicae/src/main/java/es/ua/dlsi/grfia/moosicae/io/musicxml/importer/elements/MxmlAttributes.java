@@ -56,4 +56,14 @@ public class MxmlAttributes extends MxmlObject implements IMxmlPartItem {
     public IConnector[] getConnectors() {
         throw new UnsupportedOperationException("TO-DO");
     }
+
+    @Override
+    public IMark[] getMarks() {
+        return new IMark[0];
+    }
+
+    @Override
+    public void addMark(IMark mark) {
+
+    }
 }

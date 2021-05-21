@@ -26,6 +26,7 @@ public class MEIStaffDefBuilder extends MEIObjectBuilder<MEIStaffDef> {
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
+        MEIObjectBuilder.readMEI(this, xmlImporterParam);
         Optional<String> nattr = xmlImporterParam.getAttribute("n");
         if (nattr.isPresent()) {
             n = Integer.parseInt(nattr.get());

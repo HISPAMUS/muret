@@ -22,6 +22,7 @@ public class MEIMeterSigBuilder extends MEIObjectBuilder<IMeter> implements IImp
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
+        MEIObjectBuilder.readMEI(this, xmlImporterParam);
         Optional<String> osym = xmlImporterParam.getAttribute("sym");
         if (osym.isPresent()) {
             sym = osym.get();

@@ -3,6 +3,8 @@ package es.ua.dlsi.grfia.moosicae.io.mei;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.properties.IId;
+import es.ua.dlsi.grfia.moosicae.core.properties.INoteHead;
 import es.ua.dlsi.grfia.moosicae.core.properties.IStaffLineCount;
 import es.ua.dlsi.grfia.moosicae.core.scoregraph.IScoreGraph;
 import es.ua.dlsi.grfia.moosicae.core.scoregraph.IScoreStaffSubgraph;
@@ -14,7 +16,6 @@ import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporter;
 import es.ua.dlsi.grfia.moosicae.utils.Pair;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.*;
 
 
@@ -35,6 +36,9 @@ public class MEIImporter extends XMLImporter implements IImporter {
      * The IScoreStaffSubgraph may be null for common objects
      */
     private List<Pair<IScoreStaffSubgraph, IMooObject>> pendingObjects;
+    private List<MEITie> pendingTies;
+    private List<MEIMark> pendingMarks;
+    private HashMap<IId, IMooObject> mooObjects; // used for linking elements
     //private HashMap<Integer, MEIStaffDef> staffDefs;
 
     public MEIImporter() {
@@ -56,12 +60,18 @@ public class MEIImporter extends XMLImporter implements IImporter {
 
         coreObjectBuilderSuppliers.add("note", MEINoteBuilder::new);
         coreObjectBuilderSuppliers.add("rest", MEIRestBuilder::new);
+        coreObjectBuilderSuppliers.add("multiRest", MEIMultiRestBuilder::new);
         coreObjectBuilderSuppliers.add("accid", MEIAlterationBuilder::new);
 
         coreObjectBuilderSuppliers.add("beam", MEIBeamBuilder::new);
+        coreObjectBuilderSuppliers.add("tie", MEITieBuilder::new);
+        coreObjectBuilderSuppliers.add("fermata", MEIFermataBuilder::new);
 
         staffNumbers = new HashMap<>();
         pendingObjects = new LinkedList<>();
+        pendingMarks = new LinkedList<>();
+        mooObjects = new HashMap<>();
+        pendingTies = new LinkedList<>();
         score = ICoreAbstractFactory.getInstance().createScore(null);
         scoreGraph = score.getScoreGraph();
     }
@@ -107,10 +117,6 @@ public class MEIImporter extends XMLImporter implements IImporter {
             importStaffDefs(null, scoreDef.getMeiStaffGroupDef());
         }
 
-        Optional<IMeter> meter = scoreDef.getMeter();
-        if (meter.isPresent()) {
-            pendingObjects.add(new Pair<>(null, meter.get()));
-        }
         Optional<IKey> key = scoreDef.getKey();
         if (key.isPresent()) {
             pendingObjects.add(new Pair<>(null, key.get()));
@@ -120,6 +126,11 @@ public class MEIImporter extends XMLImporter implements IImporter {
                 pendingObjects.add(new Pair<>(null, conventionalKeySignature.get()));
             }
         }
+
+        Optional<IMeter> meter = scoreDef.getMeter();
+        if (meter.isPresent()) {
+            pendingObjects.add(new Pair<>(null, meter.get()));
+        }
     }
 
 
@@ -127,10 +138,6 @@ public class MEIImporter extends XMLImporter implements IImporter {
         if (meiStaffDef.getClef().isPresent()) {
             pendingObjects.add(new Pair<>(scoreStaffSubgraph, meiStaffDef.getClef().get()));
         }
-        if (meiStaffDef.getMeter().isPresent()) {
-            pendingObjects.add(new Pair<>(scoreStaffSubgraph, meiStaffDef.getMeter().get()));
-        }
-
         if (meiStaffDef.getKey().isPresent()) {
             pendingObjects.add(new Pair<>(scoreStaffSubgraph, meiStaffDef.getKey().get()));
         } else { // else because in the case of importing both key and key signature (it should'n happen) we prefer the key (that is a key signature with a mode)
@@ -139,7 +146,9 @@ public class MEIImporter extends XMLImporter implements IImporter {
                 pendingObjects.add(new Pair<>(scoreStaffSubgraph, conventionalKeySignature.get()));
             }
         }
-
+        if (meiStaffDef.getMeter().isPresent()) {
+            pendingObjects.add(new Pair<>(scoreStaffSubgraph, meiStaffDef.getMeter().get()));
+        }
     }
 
 
@@ -154,12 +163,63 @@ public class MEIImporter extends XMLImporter implements IImporter {
         for (MEISection meiSection: meiScore.getSections()) {
             importSection(meiSection);
         }
-        try {
-            score.getScoreGraph().printDot(new File("/tmp/grafo.dot")); //TODO Quitar
+
+        importTies();
+
+        importMarks();
+
+        /*try {
+            score.getScoreGraph().printDot(new File("/tmp/grafo.dot"));
         } catch (FileNotFoundException e) {
             throw new IMException(e);
-        }
+        }*/
         return score;
+    }
+
+    private void importMarks() throws IMException {
+        for (MEIMark mark: pendingMarks) {
+            IMooObject meiObject = findMooObject(mark.getStartId());
+            if (!(meiObject instanceof IVoiced)) {
+                throw new IMException("The id " + mark.getStartId() + " does not belong to a voiced object");
+            }
+            IVoiced voiced = (IVoiced) meiObject;
+            mark.toMooObject(mark, voiced);
+        }
+        pendingMarks.clear();
+    }
+
+    private void importTies() throws IMException {
+        for (MEITie meiTie: pendingTies) {
+            linkTie(meiTie);
+        }
+        pendingTies.clear();
+    }
+
+    private IMooObject findMooObject(IId id) throws IMException {
+        IMooObject mooObject = mooObjects.get(id);
+        if (mooObject == null) {
+            throw new IMException("Cannot find and object with id = " + id.getValue());
+        }
+        return mooObject;
+    }
+    private void linkTie(MEITie meiTie) throws IMException {
+        IMooObject from = findMooObject(meiTie.getStartId());
+        INoteHead fromNoteHead;
+        if (from instanceof INote) {
+            fromNoteHead = ((INote) from).getNoteHead();
+        } else {
+            throw new IMException("Expected a note for the tie and found " + from.getClass()); //TODO Chords
+        }
+
+        IMooObject to = findMooObject(meiTie.getEndId());
+        INoteHead toNoteHead;
+        if (to instanceof INote) {
+            toNoteHead = ((INote) to).getNoteHead();
+        } else {
+            throw new IMException("Expected a note for the tie and found " + to.getClass()); //TODO Chords
+        }
+
+        fromNoteHead.tieTo(toNoteHead);
     }
 
     private void importSection(MEISection section) throws IMException {
@@ -170,6 +230,10 @@ public class MEIImporter extends XMLImporter implements IImporter {
                 importMeasure((MEIMeasure)meiSectionItem);
             } else if (meiSectionItem instanceof MEISection) {
                 importSection((MEISection) meiSectionItem); //TODO How are they hierarchically linked?
+            } else if (meiSectionItem instanceof MEITie) {
+                pendingTies.add((MEITie) meiSectionItem);
+            } else if (meiSectionItem instanceof MEIMark) {
+                pendingMarks.add((MEIMark) meiSectionItem);
             } else {
                 throw new IMException("Unsupported IMeiSectionItem meiSectionItem subclass: " + meiSectionItem.getClass());
             }
@@ -235,6 +299,7 @@ public class MEIImporter extends XMLImporter implements IImporter {
             }
         } else {
             scoreGraph.addContentNode(staffSubgraph, voiced);
+            mooObjects.put(voiced.getId(), voiced);
         }
     }
 

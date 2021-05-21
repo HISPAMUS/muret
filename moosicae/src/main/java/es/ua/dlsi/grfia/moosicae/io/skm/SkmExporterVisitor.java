@@ -250,6 +250,11 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
 
     }
 
+    @Override
+    public void exportFermata(IFermata fermata, SkmExporterVisitorTokenParam inputOutput) {
+
+    }
+
 
     @Override
     public void exportChord(IChord chord, SkmExporterVisitorTokenParam inputOutput) throws IMException {
@@ -503,7 +508,7 @@ public class SkmExporterVisitor implements IExporterVisitor<SkmExporterVisitorTo
         }
         inputOutput.append("MM");
         inputOutput.append(metronomeMark.getValue().getValue());
-        inputOutput.buildAndAddToken(metronomeMark);
+        //TODOOOOO inputOutput.buildAndAddToken(metronomeMark);
     }
 
     @Override

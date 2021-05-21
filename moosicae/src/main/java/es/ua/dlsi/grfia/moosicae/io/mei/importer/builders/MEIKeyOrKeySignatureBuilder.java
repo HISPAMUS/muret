@@ -21,6 +21,7 @@ public class MEIKeyOrKeySignatureBuilder extends KeyOrKeySignatureBuilder {
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
         super.read(xmlImporterParam);
+        MEIObjectBuilder.readMEI(this, xmlImporterParam);
 
         Optional<IMode> mode = MEIAttributesParsers.getInstance().parseMode(xmlImporterParam, "mode");
         if (mode.isPresent()) {

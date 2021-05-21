@@ -36,22 +36,22 @@
          <measure xml:id="measure-0000001099594089" right="single">
             <staff xml:id="staff-0000001555575981" n="1">
                <layer xml:id="layer-0000001152949283" n="1">
-                  <note xml:id="note-0000000873652500" dots="1" dur="4" oct="4" pname="b">
+                  <note xml:id="note-0000000873652500" dots="1" dur="4" oct="4" pname="b" tie="i">
                      <accid xml:id="accid-0000001131872961" accid.ges="f" />
                   </note>
                </layer>
             </staff>
-            <tie xml:id="tie-0000000978710401" startid="#note-0000000873652500" endid="#note-0000001702080530" />
+            <!-- replaced for the attribute for the test <tie xml:id="tie-0000000978710401" startid="#note-0000000873652500" endid="#note-0000001702080530" />-->
          </measure>
          <measure xml:id="measure-0000000816583402" right="single">
             <staff xml:id="staff-0000001608457234" n="1">
                <layer xml:id="layer-0000000095420056" n="1">
-                  <note xml:id="note-0000001702080530" dots="1" dur="4" oct="4" pname="b">
+                  <note xml:id="note-0000001702080530" dots="1" dur="4" oct="4" pname="b" tie="m">
                      <accid xml:id="accid-0000000237806023" accid.ges="f" />
                   </note>
                </layer>
             </staff>
-            <tie xml:id="tie-0000000338761494" startid="#note-0000001702080530" endid="#note-0000000450542408" />
+            <!-- replaced for the attribute for the test <tie xml:id="tie-0000000338761494" startid="#note-0000001702080530" endid="#note-0000000450542408" /> -->
          </measure>
          <measure xml:id="measure-0000001350411767" right="single">
             <staff xml:id="staff-0000000585281461" n="1">
@@ -86,7 +86,7 @@
          <measure xml:id="measure-0000000371021628" right="single">
             <staff xml:id="staff-0000000045892643" n="1">
                <layer xml:id="layer-0000000833327918" n="1">
-                  <note xml:id="note-0000002001455739" dur="4" oct="4" pname="b">
+                  <note xml:id="note-0000002001455739" dur="4" oct="4" pname="b" tie="t">
                      <accid xml:id="accid-0000000282758765" accid.ges="f" />
                   </note>
                   <note xml:id="note-0000002092736191" dur="8" oct="5" pname="e">
@@ -118,7 +118,7 @@
                      <accid xml:id="accid-0000000771018732" accid.ges="f" />
                   </note>
                   <beam xml:id="beam-0000000883186957">
-                     <note xml:id="note-0000000595502726" dots="1" dur="16" oct="4" pname="g" />
+                     <note xml:id="note-0000000595502726" dots="1" dur="16" oct="4" pname="g" stem.dir="up"/> <!-- stem added for the test -->
                      <note xml:id="note-0000000316218235" dur="16" oct="4" pname="f" />
                   </beam>
                   <note xml:id="note-0000001805332967" dur="8" oct="4" pname="e">

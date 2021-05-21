@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class Staff extends CoreObject implements IStaff {
+public class Staff extends MooObject implements IStaff {
     @NotNull
     IStaffLineCount staffLineCount;
 

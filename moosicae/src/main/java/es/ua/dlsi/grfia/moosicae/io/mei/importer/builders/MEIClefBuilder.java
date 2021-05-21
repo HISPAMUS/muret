@@ -17,6 +17,7 @@ public class MEIClefBuilder extends CoreObjectBuilder<IClef> implements IImporte
     private IClef clef;
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
+        MEIObjectBuilder.readMEI(this, xmlImporterParam);
         Optional<IClef> clef = MEIAttributesParsers.getInstance().parseClef(xmlImporterParam, false);
         if (clef.isPresent()) {
             this.clef = clef.get();

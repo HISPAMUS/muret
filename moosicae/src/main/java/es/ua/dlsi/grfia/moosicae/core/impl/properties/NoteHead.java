@@ -1,5 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.core.impl.properties;
 
+import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.core.properties.INoteHead;
 import es.ua.dlsi.grfia.moosicae.core.properties.IPitch;
@@ -37,6 +38,15 @@ public class NoteHead extends CoreProperty implements INoteHead {
     @Override
     public Optional<ITie> getStartsTie() {
         return Optional.ofNullable(tiedToNext);
+    }
+
+    @Override
+    public void tieTo(INoteHead toNoteHead) throws IMException {
+        if (toNoteHead.getPitch().equals(this.pitch)) {
+            tiedToNext = new Tie(null, null);
+        } else {
+            throw new IMException("Cannot tie from pitch " + this.pitch + " to " + toNoteHead.getPitch());
+        }
     }
 
     @Override

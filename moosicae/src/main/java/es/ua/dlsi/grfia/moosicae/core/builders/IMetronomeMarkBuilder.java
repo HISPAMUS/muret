@@ -13,7 +13,7 @@ public class IMetronomeMarkBuilder extends CoreObjectBuilder<IMetronomeMark> {
     private IFigure figure;
     private IDots dots;
     private IMetronomeMarkValue value;
-    private IHorizontalAnchor start;
+    private IMarkAnchor start;
 
     public IMetronomeMarkBuilder() {}
 
@@ -27,7 +27,7 @@ public class IMetronomeMarkBuilder extends CoreObjectBuilder<IMetronomeMark> {
         return this;
     }
 
-    public IMetronomeMarkBuilder from(IHorizontalAnchor start) {
+    public IMetronomeMarkBuilder from(IMarkAnchor start) {
         this.start = start;
         return this;
     }

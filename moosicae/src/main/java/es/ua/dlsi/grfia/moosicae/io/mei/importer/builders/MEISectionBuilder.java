@@ -35,7 +35,7 @@ public class MEISectionBuilder extends MEIObjectBuilder<MEISection> {
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
-
+        MEIObjectBuilder.readMEI(this, xmlImporterParam);
     }
 
     @Override

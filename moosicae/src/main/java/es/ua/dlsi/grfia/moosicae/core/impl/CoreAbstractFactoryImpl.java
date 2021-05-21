@@ -216,7 +216,7 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IMetronomeMark createMetronomeMark(IId id, @NotNull IHorizontalAnchor start, IFigure figure,  IDots dots, IMetronomeMarkValue value) {
+    public IMetronomeMark createMetronomeMark(IId id, @NotNull IMarkAnchor start, IFigure figure, IDots dots, IMetronomeMarkValue value) {
         return new MetronomeMark(id, start, figure, dots, value);
     }
 
@@ -410,6 +410,11 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     @Override
     public IGraceNoteType createGraceNoteType(IId id, EGraceNoteType value) {
         return new GraceNoteType(id, value);
+    }
+
+    @Override
+    public IFermata createFermata(IId id, IMarkAnchor start, IVerticalPlace verticalPlace, IFermataShape fermataShape) {
+        return new Fermata(id, start, verticalPlace, fermataShape);
     }
 
     @Override

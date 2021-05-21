@@ -22,9 +22,9 @@ public class MetronomeMark extends VoicedSingle implements IMetronomeMark {
     private IMetronomeMarkValue value;
 
     @NotNull
-    private final IHorizontalAnchor start;
+    private final IMarkAnchor start;
 
-    MetronomeMark(IId id, @NotNull IHorizontalAnchor start, @NotNull IFigure figure,  IDots dots, IMetronomeMarkValue value) {
+    MetronomeMark(IId id, @NotNull IMarkAnchor start, @NotNull IFigure figure, IDots dots, IMetronomeMarkValue value) {
         super(id);
         this.figure = figure;
         this.dots = dots;
@@ -78,7 +78,7 @@ public class MetronomeMark extends VoicedSingle implements IMetronomeMark {
     }
 
     @Override
-    public IHorizontalAnchor getStart() {
+    public IMarkAnchor getStart() {
         return null;
     }
 }

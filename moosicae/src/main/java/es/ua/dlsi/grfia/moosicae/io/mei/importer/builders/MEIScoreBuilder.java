@@ -28,7 +28,7 @@ public class MEIScoreBuilder extends MEIObjectBuilder<MEIScore> {
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
-
+        MEIObjectBuilder.readMEI(this, xmlImporterParam);
     }
 
     @Override

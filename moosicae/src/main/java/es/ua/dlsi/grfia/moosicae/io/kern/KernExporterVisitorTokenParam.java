@@ -12,13 +12,15 @@ import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.KernCoreSymbol;
  */
 public class KernExporterVisitorTokenParam {
     private final KernDocument document;
+    private final KernExporterContext kernExporterContext;
     private KernToken previousToken;
     private StringBuilder stringBuilder;
 
-    public KernExporterVisitorTokenParam(KernDocument document, KernToken previousToken) {
+    public KernExporterVisitorTokenParam(KernDocument document, KernExporterContext kernExporterContext, KernToken previousToken) {
         this.document = document;
         this.previousToken = previousToken;
         this.stringBuilder = new StringBuilder();
+        this.kernExporterContext = kernExporterContext;
     }
 
     public void append(String subtoken) {
@@ -35,6 +37,10 @@ public class KernExporterVisitorTokenParam {
 
     public KernToken getLastToken() {
         return previousToken;
+    }
+
+    public KernExporterContext getKernExporterContext() {
+        return kernExporterContext;
     }
 
     public void buildAndAddToken(IMooObject symbol) throws IMException {

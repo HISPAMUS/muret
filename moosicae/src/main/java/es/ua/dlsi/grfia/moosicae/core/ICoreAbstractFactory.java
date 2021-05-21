@@ -77,7 +77,7 @@ public interface ICoreAbstractFactory {
     IMeasure createMeasure(IId id, INumber number, ILeftBarline leftBarline, IRightBarline rightBarline);
     IMensuration createMensuration(IId id, @NotNull EMensurations mensuration);
     IMensuration createMensuration(IId id,  EMensuralPerfections modusMaior,  EMensuralPerfections modusMinor, @NotNull EMensuralPerfections tempus, @NotNull EMensuralPerfections prolatio);
-    IMetronomeMark createMetronomeMark(IId id, @NotNull IHorizontalAnchor start, @NotNull IFigure figure,  IDots dots, @NotNull IMetronomeMarkValue value);
+    IMetronomeMark createMetronomeMark(IId id, @NotNull IMarkAnchor start, @NotNull IFigure figure, IDots dots, @NotNull IMetronomeMarkValue value);
     IMetronomeMarkValue createMetronomeMarkValue(IId id, @NotNull Integer value);
     IMixedMeter createMixedMeter(IId id, @NotNull IMeter[] meters);
     IMode createMode(IId id, EModes mode);
@@ -160,10 +160,13 @@ public interface ICoreAbstractFactory {
     IWholeMeasureRest createWholeMeasureRest(IId id, @NotNull IRest rest);
     IGraceNoteType createGraceNoteType(IId id, EGraceNoteType value);
 
+    IFermata createFermata(IId id, @NotNull IMarkAnchor start, IVerticalPlace verticalPlace, IFermataShape fermataShape);
+
     ///// Graphs
     // We don't have a createScoreGraph because it's a property created by the IScore itself
     IScorePartSubgraph createScorePartSubgraph(IPart part);
     IScoreVoiceSubgraph createScoreVoiceSubgraph(IVoice voice);
     IScoreStaffSubgraph createScoreStaffSubgraph(IStaff staff);
     IScoreGraphContentNode createScoreGraphContentNode(IMooObject mooObject);
+
 }

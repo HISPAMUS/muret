@@ -35,6 +35,7 @@ public class MEIScoreDefBuilder extends MEIObjectBuilder<MEIScoreDef> {
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
+        MEIObjectBuilder.readMEI(this, xmlImporterParam);
         Optional<IMeter> meter = MEIAttributesParsers.getInstance().parseMeter(xmlImporterParam);
         if (meter.isPresent()) {
             this.meter = meter.get();

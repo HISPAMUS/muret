@@ -1,10 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.io.mei.importer.elements;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
-import es.ua.dlsi.grfia.moosicae.core.IBeamGroup;
-import es.ua.dlsi.grfia.moosicae.core.IConnector;
-import es.ua.dlsi.grfia.moosicae.core.IVoiced;
-import es.ua.dlsi.grfia.moosicae.core.IVoicedComposite;
+import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 
@@ -37,6 +34,16 @@ public class MEIBeam implements IVoicedComposite, IBeamGroup {
     @Override
     public IConnector[] getConnectors() {
         return new IConnector[0];
+    }
+
+    @Override
+    public IMark[] getMarks() {
+        return new IMark[0];
+    }
+
+    @Override
+    public void addMark(IMark mark) {
+
     }
 
     @Override

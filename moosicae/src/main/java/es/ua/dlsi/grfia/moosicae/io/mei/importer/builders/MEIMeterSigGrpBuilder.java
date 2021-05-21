@@ -29,6 +29,7 @@ public class MEIMeterSigGrpBuilder extends MEIObjectBuilder<IMeter> implements I
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
+        MEIObjectBuilder.readMEI(this, xmlImporterParam);
         Optional<String> ofunc = xmlImporterParam.getAttribute("func");
         if (ofunc.isPresent()) {
             func = ofunc.get();

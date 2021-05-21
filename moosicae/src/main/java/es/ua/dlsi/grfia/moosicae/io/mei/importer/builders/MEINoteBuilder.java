@@ -7,6 +7,7 @@ import es.ua.dlsi.grfia.moosicae.core.IPitchedDurationalSingle;
 import es.ua.dlsi.grfia.moosicae.core.builders.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IAlterationBuilder;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IStemBuilder;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.ITieBuilder;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IImporterAdapter;
@@ -24,6 +25,7 @@ public class MEINoteBuilder extends INoteBuilder implements IImporterAdapter<INo
      */
     private IAlteration alteration;
     private IPitchBuilder pitchBuilder;
+    private ITie tie;
 
     public MEINoteBuilder() {
     }
@@ -35,6 +37,7 @@ public class MEINoteBuilder extends INoteBuilder implements IImporterAdapter<INo
 
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
+        MEIObjectBuilder.readMEI(this, xmlImporterParam);
         Optional<EFigures> figure = MEIAttributesParsers.getInstance().parseFigure(xmlImporterParam);
         if (figure.isPresent()) {
             this.from(figure.get());
@@ -64,18 +67,25 @@ public class MEINoteBuilder extends INoteBuilder implements IImporterAdapter<INo
                 pitchBuilder.from(alterationBuilder.build());
             }
 
-            INoteHead noteHead = ICoreAbstractFactory.getInstance().createNoteHead(null, pitchBuilder.build(), null); //TODO ties
-            this.from(noteHead);
-
             Optional<EStemDirection> eStemDirection = MEIAttributesParsers.getInstance().parseStem(xmlImporterParam, "stem.dir");
             if (eStemDirection.isPresent()) {
                 this.from(ICoreAbstractFactory.getInstance().createStem(null, eStemDirection.get()));
+            }
+
+            Optional<String> tieStr = xmlImporterParam.getAttribute("tie");
+            if (tieStr.isPresent() && (tieStr.get().equals("i") || tieStr.get().equals("m"))) {
+                tie = ICoreAbstractFactory.getInstance().createTie(null, null);
             }
 
             Optional<EGraceNoteType> eGraceNoteType = MEIAttributesParsers.getInstance().parseGraceNoteType(xmlImporterParam);
             if (eGraceNoteType.isPresent()) {
                 this.from(ICoreAbstractFactory.getInstance().createGraceNoteType(null, eGraceNoteType.get()));
             }
+
+            //INoteHead noteHead = ICoreAbstractFactory.getInstance().createNoteHead(null, pitchBuilder.build(), tie);
+            //this.from(noteHead);
+
+
         }
     }
 
@@ -84,9 +94,9 @@ public class MEINoteBuilder extends INoteBuilder implements IImporterAdapter<INo
         if (this.pitchBuilder != null) {
             if (alteration != null) {
                 this.pitchBuilder.from(alteration);
-                INoteHead noteHead = ICoreAbstractFactory.getInstance().createNoteHead(null, pitchBuilder.build(), null); //TODO ties;
-                this.from(noteHead);
             }
+            INoteHead noteHead = ICoreAbstractFactory.getInstance().createNoteHead(null, pitchBuilder.build(), tie);
+            this.from(noteHead);
         } else {
             throw new IMException("Missing pitch builder");
         }

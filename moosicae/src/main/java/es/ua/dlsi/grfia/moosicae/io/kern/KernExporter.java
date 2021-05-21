@@ -30,10 +30,12 @@ public class KernExporter extends AbstractExporter<KernExporterVisitor> {
     HashMap<IVoice, KernToken> lastVoiceTokens;
     private IScore score;
     private KernDocument kernDocument;
+    private KernExporterContext kernExporterContext;
 
     public KernExporter(boolean ekern) {
         super(new KernExporterVisitor(ekern));
         this.ekern = ekern;
+        kernExporterContext = new KernExporterContext();
         lastVoiceTokens = new HashMap<>();
     }
 
@@ -143,7 +145,7 @@ public class KernExporter extends AbstractExporter<KernExporterVisitor> {
     }
 
     private KernToken export(IExporterVisitable item, KernToken lastToken) throws IMException {
-        KernExporterVisitorTokenParam kernExporterVisitorTokenParam = new KernExporterVisitorTokenParam(kernDocument, lastToken);
+        KernExporterVisitorTokenParam kernExporterVisitorTokenParam = new KernExporterVisitorTokenParam(kernDocument, kernExporterContext, lastToken);
         item.export(this.exporterVisitor, kernExporterVisitorTokenParam);
         return kernExporterVisitorTokenParam.getLastToken();
     }

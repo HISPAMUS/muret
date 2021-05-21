@@ -1,6 +1,5 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
-import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IConnector;
 import es.ua.dlsi.grfia.moosicae.core.IVoiced;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
@@ -14,7 +13,7 @@ import java.util.List;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 17/5/21
  */
-public abstract class Connector extends CoreObject implements IConnector {
+public abstract class Connector extends MooObject implements IConnector {
     @NotNull
     protected List<IVoiced> connected;
     /**

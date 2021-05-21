@@ -194,6 +194,11 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
     }
 
     @Override
+    public void exportFermata(IFermata fermata, XMLExporterVisitorParam inputOutput) {
+
+    }
+
+    @Override
     public void exportChord(IChord chord, XMLExporterVisitorParam inputOutputOutput) throws IMException {
 
     }

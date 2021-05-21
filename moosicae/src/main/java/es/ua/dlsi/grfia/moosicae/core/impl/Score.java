@@ -11,7 +11,7 @@ import java.util.LinkedList;
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
-public class Score extends CoreObject implements IScore {
+public class Score extends MooObject implements IScore {
     @NotNull
     private final IScoreGraph scoreGraph;
     @NotNull
