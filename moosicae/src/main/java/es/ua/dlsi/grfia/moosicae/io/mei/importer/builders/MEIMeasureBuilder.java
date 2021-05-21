@@ -62,6 +62,8 @@ public class MEIMeasureBuilder extends MEIObjectBuilder<MEIMeasure> {
                 return EBarlineTypes.repeatEnd;
             case "rptboth":
                 return EBarlineTypes.repeatBoth;
+            case "invis":
+                return EBarlineTypes.hidden;
             default:
                 throw new IMException("Unsupported barline type: " + barlineType);
         }

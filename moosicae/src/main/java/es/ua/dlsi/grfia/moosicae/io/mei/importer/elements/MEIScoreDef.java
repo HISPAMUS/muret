@@ -11,7 +11,7 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 25/03/2020
  */
-public class MEIScoreDef extends MEIObject implements IMEIDef {
+public class MEIScoreDef extends MEIObject implements IMEIDef, IMeiSectionItem {
     private final IKey key;
     private final IConventionalKeySignature conventionalKeySignature;
     private final IMeter meter;

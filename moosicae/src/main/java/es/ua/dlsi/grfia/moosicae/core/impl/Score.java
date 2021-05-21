@@ -1,7 +1,10 @@
 package es.ua.dlsi.grfia.moosicae.core.impl;
 
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.impl.scoregraph.ScoreGraph;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
+import es.ua.dlsi.grfia.moosicae.core.scoregraph.IScoreGraph;
+
 import javax.validation.constraints.NotNull;
 
 import java.util.LinkedList;
@@ -9,6 +12,8 @@ import java.util.LinkedList;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class Score extends CoreObject implements IScore {
+    @NotNull
+    private final IScoreGraph scoreGraph;
     @NotNull
     private final LinkedList<IPart> parts;
     @NotNull
@@ -21,6 +26,12 @@ public class Score extends CoreObject implements IScore {
         parts = new LinkedList<>();
         systemElements = new LinkedList<>();
         measures = new LinkedList<>();
+        scoreGraph = new ScoreGraph();
+    }
+
+    @Override
+    public IScoreGraph getScoreGraph() {
+        return scoreGraph;
     }
 
     @Override

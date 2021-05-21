@@ -1,8 +1,14 @@
 package es.ua.dlsi.grfia.moosicae.core;
+
+import es.ua.dlsi.grfia.moosicae.core.scoregraph.IScoreGraph;
+
 /**
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public interface IScore extends IMooObject {
+    IScoreGraph getScoreGraph();
+
+    /////////TODO Revisar de aquí a bajo de forma coherente con el grafo
     IMetadata getMetadata();
     IPart[] getParts();
 

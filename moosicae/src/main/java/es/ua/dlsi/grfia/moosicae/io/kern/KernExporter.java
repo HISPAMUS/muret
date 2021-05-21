@@ -3,6 +3,9 @@ package es.ua.dlsi.grfia.moosicae.io.kern;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.EBarlineTypes;
+import es.ua.dlsi.grfia.moosicae.core.scoregraph.IScoreGraphContentNode;
+import es.ua.dlsi.grfia.moosicae.core.scoregraph.IScoreGraphNode;
+import es.ua.dlsi.grfia.moosicae.core.scoregraph.IScoreStaffSubgraph;
 import es.ua.dlsi.grfia.moosicae.io.AbstractExporter;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.EKernHeaders;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernDocument;
@@ -16,6 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Each KernExported object should be used for every exportation, as it uses internal variables for the process
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public class KernExporter extends AbstractExporter<KernExporterVisitor> {
@@ -24,6 +28,8 @@ public class KernExporter extends AbstractExporter<KernExporterVisitor> {
      * Actually, a spine for each voice
      */
     HashMap<IVoice, KernToken> lastVoiceTokens;
+    private IScore score;
+    private KernDocument kernDocument;
 
     public KernExporter(boolean ekern) {
         super(new KernExporterVisitor(ekern));
@@ -37,16 +43,70 @@ public class KernExporter extends AbstractExporter<KernExporterVisitor> {
 
     @Override
     public String exportScore(IScore score) throws IMException {
+        this.score = score;
         // in order to export, the IScore is transformed into a humdrum matrix
-        KernDocument kernDocument = new KernDocument();
-        List<IVoice> voices = generateVoices(score);
+        kernDocument = new KernDocument();
 
-        exportParts(kernDocument, score);
+        exportScoreGraph();
+
+        /*TODO Spines .... exportParts(kernDocument, score);
         //TODO staves, text, dynamics....
-        exportSymbols(kernDocument, voices, score.getMeasures());
+        List<IVoice> voices = generateVoices(score);
+        exportSymbols(kernDocument, voices, score.getMeasures());*/
 
         // now, the humdrum matrix is exported as a string
         return exportKernDocument(kernDocument);
+    }
+
+    private void exportScoreGraph() throws IMException {
+        //TODO Varios spines
+        IScoreStaffSubgraph[] stavesSubgraphs = score.getScoreGraph().getStavesSubgraphs();
+        if (stavesSubgraphs.length != 1) {
+            throw new IMException("Unsupported several staves");
+        }
+
+        IScoreGraphContentNode[] next = score.getScoreGraph().getStartNode().getNextNodes(stavesSubgraphs[0]);
+        KernToken lastToken = null;
+        EKernHeaders header;
+        if (this.ekern) { //TODO tipo
+            header = EKernHeaders.ekern;
+        } else {
+            header = EKernHeaders.kern;
+        }
+        KernHeader kernHeader = new KernHeader(header);
+        kernDocument.addHeader(kernHeader);
+        lastToken = kernHeader;
+
+        //TODO Part
+        KernPart kernPart = new KernPart("*part·1", 1);
+        kernDocument.add(lastToken, kernPart);
+        lastToken = kernPart;
+
+        IMeasure lastMeasure = null;
+        while (next != null && next.length > 0) {
+            if (next.length > 1) {
+                throw new IMException("Unsupported several spines, found " + next.length);
+            }
+
+            IMooObject mooObject = next[0].getContent();
+
+            if (!(mooObject instanceof IExporterVisitable)) {
+                throw new IMException("TO-DO Must be an exportable visitable: " + next[0].getContent().getClass());
+            }
+
+            if (mooObject instanceof IMeasure) {
+                if (lastMeasure != null) {
+                    lastToken = export(lastMeasure, lastToken);
+                }
+                lastMeasure = (IMeasure) mooObject;
+            } else {
+                lastToken = export((IExporterVisitable) mooObject, lastToken);
+            }
+            next = next[0].getNextNodes(stavesSubgraphs[0]);
+        }
+        if (lastMeasure != null) {
+            lastToken = export(lastMeasure, lastToken);
+        }
     }
 
     private String exportKernDocument(KernDocument kernDocument) {
@@ -82,14 +142,14 @@ public class KernExporter extends AbstractExporter<KernExporterVisitor> {
         return result;
     }
 
-    private KernToken export(KernDocument kernDocument, IExporterVisitable item, KernToken lastToken) throws IMException {
+    private KernToken export(IExporterVisitable item, KernToken lastToken) throws IMException {
         KernExporterVisitorTokenParam kernExporterVisitorTokenParam = new KernExporterVisitorTokenParam(kernDocument, lastToken);
         item.export(this.exporterVisitor, kernExporterVisitorTokenParam);
         return kernExporterVisitorTokenParam.getLastToken();
     }
     private void exportSymbols(KernDocument kernDocument, List<IVoice> voices, IMeasure[] measures) throws IMException {
         //TODO Esto no va para mensural ni para varias voces
-        if (voices.size() != 1) {
+        /*if (voices.size() != 1) {
             throw new IMException("Unsupported several voices and found " + voices.size());
         }
         KernToken lastToken = lastVoiceTokens.get(voices.get(0));
@@ -104,7 +164,7 @@ public class KernExporter extends AbstractExporter<KernExporterVisitor> {
                 IBarline barline = ICoreAbstractFactory.getInstance().createRightBarline(measure.getId(), EBarlineTypes.single);
                 lastToken = export(kernDocument, barline, lastToken);
             }
-        }
+        }*/
         /*for (IVoice voice: voices) {
             KernToken lastToken = lastVoiceTokens.get(voice);
             if (voice == null) {
@@ -119,7 +179,7 @@ public class KernExporter extends AbstractExporter<KernExporterVisitor> {
         }*/
     }
 
-    private void exportParts(KernDocument kernDocument, IScore score) throws IMException {
+    /*private void exportParts(KernDocument kernDocument, IScore score) throws IMException {
         //TODO text, ....
         for (int ipart = score.getParts().length-1; ipart>=0; ipart--) {
             IPart part = score.getParts()[ipart];
@@ -142,5 +202,5 @@ public class KernExporter extends AbstractExporter<KernExporterVisitor> {
                 lastVoiceTokens.put(voice, kernPart);
             }
         }
-    }
+    }*/
 }

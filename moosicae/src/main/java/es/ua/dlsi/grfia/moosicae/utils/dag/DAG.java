@@ -1,5 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.utils.dag;
 
+import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 
 /**
@@ -13,7 +14,7 @@ public class DAG<SpineItemContentType> {
     public DAG() {
     }
 
-    public DAGNode add(DAGNode<SpineItemContentType> previous, DAGLabel<SpineItemContentType> item) {
+    public DAGNode add(DAGNode<SpineItemContentType> previous, DAGLabel<SpineItemContentType> item) throws IMException {
         if (firstNode == null) {
             if (previous != null) {
                 throw new IMRuntimeException("Cannot add a node to a previous node when the first node is null");
@@ -21,6 +22,9 @@ public class DAG<SpineItemContentType> {
             firstNode = new DAGNode<>(item);
             return firstNode;
         } else {
+            if (previous == null) {
+                throw new IMException("Cannot add a node with null previous parameter");
+            }
             DAGNode<SpineItemContentType> node = new DAGNode<>(item);
             node.setPrevious(previous);
             previous.addNext(node);

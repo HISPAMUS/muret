@@ -14,7 +14,7 @@ import java.util.Optional;
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 24/03/2020
  */
-public class MEIMeasure extends MEIObject {
+public class MEIMeasure extends MEIObject implements IMeiSectionItem {
     private final INumber number;
     private final ILeftBarline leftBarline;
     private final IRightBarline rightBarline;

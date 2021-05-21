@@ -26,12 +26,12 @@ public class FormatConverterTest {
 
         List<String> expected = Files.readAllLines(TestFileUtils.getFile("/testdata/io/mei/exportedFromVerovio/" + filename + ".ekrn").toPath());
         List<String> found = Files.readAllLines(output.toPath());
-        assertEquals("Generated ekern: " + filename, expected, found);
+        assertEquals(filename, expected, found);
     }
 
     @Test
     public void convert() throws IMException, IOException {
-        String [] filenames = new String[] {"230006508-1_9_1", "000103737-1_1_1"};
+        String [] filenames = new String[] {"000122362-1_1_1"}; //, "230006508-1_9_1", "000103737-1_1_1"};
         for (String filename: filenames) {
             test(filename);
         }

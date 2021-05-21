@@ -11,9 +11,11 @@ import es.ua.dlsi.grfia.moosicae.core.impl.mensural.Mensuration;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.mensurations.*;
 import es.ua.dlsi.grfia.moosicae.core.impl.properties.*;
 import es.ua.dlsi.grfia.moosicae.core.impl.properties.Number;
+import es.ua.dlsi.grfia.moosicae.core.impl.scoregraph.*;
 import es.ua.dlsi.grfia.moosicae.core.mensural.*;
 import es.ua.dlsi.grfia.moosicae.core.metadata.ITitle;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
+import es.ua.dlsi.grfia.moosicae.core.scoregraph.*;
 
 
 import javax.validation.constraints.NotNull;
@@ -408,6 +410,26 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     @Override
     public IGraceNoteType createGraceNoteType(IId id, EGraceNoteType value) {
         return new GraceNoteType(id, value);
+    }
+
+    @Override
+    public IScorePartSubgraph createScorePartSubgraph(IPart part) {
+        return new ScorePartSubgraph(part);
+    }
+
+    @Override
+    public IScoreVoiceSubgraph createScoreVoiceSubgraph(IVoice voice) {
+        return new ScoreVoiceSubgraph(voice);
+    }
+
+    @Override
+    public IScoreStaffSubgraph createScoreStaffSubgraph(IStaff staff) {
+        return new ScoreStaffSubgraph(staff);
+    }
+
+    @Override
+    public IScoreGraphContentNode createScoreGraphContentNode(IMooObject mooObject) {
+        return new ScoreGraphContentNode(mooObject);
     }
 
     @Override

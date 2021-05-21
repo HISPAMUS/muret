@@ -1,30 +1,44 @@
 package es.ua.dlsi.grfia.moosicae.io.mei;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
+import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.properties.IStaffLineCount;
+import es.ua.dlsi.grfia.moosicae.core.scoregraph.IScoreGraph;
+import es.ua.dlsi.grfia.moosicae.core.scoregraph.IScoreStaffSubgraph;
 import es.ua.dlsi.grfia.moosicae.io.IImporter;
 import es.ua.dlsi.grfia.moosicae.io.mei.importer.builders.*;
 import es.ua.dlsi.grfia.moosicae.io.mei.importer.elements.*;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLValidators;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporter;
+import es.ua.dlsi.grfia.moosicae.utils.Pair;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Optional;
+import java.io.FileNotFoundException;
+import java.util.*;
 
 
 /**
+ * Do not reuse it for several MEI files
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 19/03/2020
  */
 public class MEIImporter extends XMLImporter implements IImporter {
-    private MEIScoreDef meiScoreDef;
+    private IScore score;
+    private IScoreGraph scoreGraph;
     private MEISection section;
-    private HashMap<Integer, IStaff> staffNumbers;
-    private HashMap<Integer, MEIStaffDef> staffDefs;
+    private HashMap<Integer, IScoreStaffSubgraph> staffNumbers;
+    private MEIScore meiScore;
+    /**
+     * In MEI the scoreDef outside the measure can be used to specify meter or key changes.
+     * We move them into the next coming measure.
+     * The IScoreStaffSubgraph may be null for common objects
+     */
+    private List<Pair<IScoreStaffSubgraph, IMooObject>> pendingObjects;
+    //private HashMap<Integer, MEIStaffDef> staffDefs;
 
     public MEIImporter() {
+        coreObjectBuilderSuppliers.add("score", MEIScoreBuilder::new);
         coreObjectBuilderSuppliers.add("scoreDef", MEIScoreDefBuilder::new);
         coreObjectBuilderSuppliers.add("staffGrp", MEIStaffGroupBuilder::new);
         coreObjectBuilderSuppliers.add("staffDef", MEIStaffDefBuilder::new);
@@ -41,9 +55,15 @@ public class MEIImporter extends XMLImporter implements IImporter {
         coreObjectBuilderSuppliers.add("layer", MEILayerBuilder::new);
 
         coreObjectBuilderSuppliers.add("note", MEINoteBuilder::new);
+        coreObjectBuilderSuppliers.add("rest", MEIRestBuilder::new);
         coreObjectBuilderSuppliers.add("accid", MEIAlterationBuilder::new);
 
         coreObjectBuilderSuppliers.add("beam", MEIBeamBuilder::new);
+
+        staffNumbers = new HashMap<>();
+        pendingObjects = new LinkedList<>();
+        score = ICoreAbstractFactory.getInstance().createScore(null);
+        scoreGraph = score.getScoreGraph();
     }
 
     @Override
@@ -52,7 +72,7 @@ public class MEIImporter extends XMLImporter implements IImporter {
         XMLValidators.validateRelaxNG(this.getClass().getResourceAsStream("/schemata/mei/mei-all.rng"), fileToBeValidated);
     }
 
-    private void convert(IScore score, IVoice voice, IStaffGroup parent, MEISystemDef systemDef) {
+    private void importStaffDefs(IStaffGroup parent, MEISystemDef systemDef) {
         if (systemDef instanceof MEIStaffDef) {
             MEIStaffDef meiStaffDef = (MEIStaffDef) systemDef;
             //TODO line count parameter in MEI
@@ -63,8 +83,10 @@ public class MEIImporter extends XMLImporter implements IImporter {
             } else {
                 staff = ICoreAbstractFactory.getInstance().createStaff(parent, null, staffLineCount);
             }
-            staffNumbers.put(meiStaffDef.getN(), staff);
-            staffDefs.put(meiStaffDef.getN(), meiStaffDef);
+            IScoreStaffSubgraph scoreStaffSubgraph = ICoreAbstractFactory.getInstance().createScoreStaffSubgraph(staff);
+            scoreGraph.addStaffSubgraph(scoreStaffSubgraph);
+            staffNumbers.put(meiStaffDef.getN(), scoreStaffSubgraph);
+            importStaffDefStaff(meiStaffDef, scoreStaffSubgraph);
         } else if (systemDef instanceof MEIStaffGroupDef) {
             MEIStaffGroupDef meiStaffGroupDef = (MEIStaffGroupDef) systemDef;
             IStaffGroup staffGroup;
@@ -74,125 +96,146 @@ public class MEIImporter extends XMLImporter implements IImporter {
                 staffGroup = ICoreAbstractFactory.getInstance().createStaffGroup(parent, null);
             }
             for (MEISystemDef child: meiStaffGroupDef.getChildren()) {
-                convert(score, voice, staffGroup, child);
+                importStaffDefs(staffGroup, child);
             }
         }
     }
 
-    private void insertContents(MEIScoreDef scoreDef, MEISection section, IScore score, IPart part, IVoice voice) throws IMException {
-        boolean firstMeasure = true;
-        for (MEIMeasure meiMeasure: section.getMeasures()) {
-            IMeasure measure = ICoreAbstractFactory.getInstance().createMeasure(meiMeasure.getId(),
-                    meiMeasure.getNumber().isPresent() ? meiMeasure.getNumber().get() : null,
-                    meiMeasure.getLeftBarline().isPresent() ? meiMeasure.getLeftBarline().get() : null,
-                    meiMeasure.getRightBarline().isPresent() ? meiMeasure.getRightBarline().get() : null);
-            score.add(measure);
-            for (MEIStaff measureStaff: meiMeasure.getStaves()) {
-                IStaff staff = staffNumbers.get(measureStaff.getN());
-                if (staff == null) {
-                    throw new IMException("Cannot find a staff with n=" + measureStaff.getN());
-                }
 
-                if (firstMeasure) {
-                    MEIStaffDef meiStaffDef = staffDefs.get(measureStaff.getN());
-                    if (meiStaffDef == null) {
-                        throw new IMException("Cannot find a staffDef with n=" + measureStaff.getN());
-                    }
-
-                    if (meiStaffDef.getClef().isPresent()) {
-                        IClef clef = meiStaffDef.getClef().get();
-                        insert(score, voice, measure, staff, clef);
-                    }
-
-                    addCommonDefElements(meiStaffDef, score, voice, staff, measure);
-
-                    addCommonDefElements(scoreDef, score, voice, staff, measure);
-
-                }
-
-
-                for (MEILayer layer: measureStaff.getLayers()) {
-                    for (IVoiced voiced: layer.getItems()) {
-                        //TODO insertar los elementos comunes
-                        insert(score, voice, measure, staff, voiced);
-                    }
-                }
-            }
-            firstMeasure = false;
+    private void importScoreDef(MEIScoreDef scoreDef) {
+        if (scoreDef.getMeiStaffGroupDef() != null) {
+            importStaffDefs(null, scoreDef.getMeiStaffGroupDef());
         }
 
-        /*Nothing to do as voiced items are already connected
-        for (IConnector connector: section.getConnectors()) {
-        }*/
-    }
-
-
-    private void insert(IScore score, IVoice voice, IMeasure measure, IStaff staff, IVoiced voiced) throws IMException {
-        if (voiced instanceof IVoicedSingle) {
-            IVoicedSingle single = (IVoicedSingle) voiced;
-            score.add(voice, staff, single);//TODO la voice debería salir de layer
-            measure.add(single);
-        } else if (voiced instanceof IVoicedComposite) {
-            //TODO Añadir a single voice el parámetro staff para poder moverlo con cross-staff a otro
-            IVoicedComposite composite = (IVoicedComposite) voiced;
-            voice.addChild(composite);
-            //TODO Ver qué pasa con barrados que cruzan las barras de compás y por tanto están en distintos compases
-            for (IVoiced child: ((IVoicedComposite) voiced).getChildren()) {
-                insert(score, voice, measure, staff, child);
-            }
-        } else {
-            throw new IMException("Unsupported voiced type: " + voiced.getClass().getName());
-        }
-
-    }
-
-    private void addCommonDefElements(IMEIDef imeiDef, IScore score, IVoice voice, IStaff staff, IMeasure measure) throws IMException {
-        Optional<IMeter> meter = imeiDef.getMeter();
+        Optional<IMeter> meter = scoreDef.getMeter();
         if (meter.isPresent()) {
-            insert(score, voice, measure, staff, meter.get());
+            pendingObjects.add(new Pair<>(null, meter.get()));
         }
-        Optional<IKey> key = imeiDef.getKey();
+        Optional<IKey> key = scoreDef.getKey();
         if (key.isPresent()) {
-            insert(score, voice, measure, staff, key.get());
+            pendingObjects.add(new Pair<>(null, key.get()));
         } else { // else because in the case of importing both key and key signature (it should'n happen) we prefer the key (that is a key signature with a mode)
-            Optional<IConventionalKeySignature> conventionalKeySignature = imeiDef.getConventionalKeySignature();
+            Optional<IConventionalKeySignature> conventionalKeySignature = scoreDef.getConventionalKeySignature();
             if (conventionalKeySignature.isPresent()) {
-                insert(score, voice, measure, staff, conventionalKeySignature.get());
+                pendingObjects.add(new Pair<>(null, conventionalKeySignature.get()));
             }
         }
     }
+
+
+    private void importStaffDefStaff(MEIStaffDef meiStaffDef, IScoreStaffSubgraph scoreStaffSubgraph) {
+        if (meiStaffDef.getClef().isPresent()) {
+            pendingObjects.add(new Pair<>(scoreStaffSubgraph, meiStaffDef.getClef().get()));
+        }
+        if (meiStaffDef.getMeter().isPresent()) {
+            pendingObjects.add(new Pair<>(scoreStaffSubgraph, meiStaffDef.getMeter().get()));
+        }
+
+        if (meiStaffDef.getKey().isPresent()) {
+            pendingObjects.add(new Pair<>(scoreStaffSubgraph, meiStaffDef.getKey().get()));
+        } else { // else because in the case of importing both key and key signature (it should'n happen) we prefer the key (that is a key signature with a mode)
+            Optional<IConventionalKeySignature> conventionalKeySignature = meiStaffDef.getConventionalKeySignature();
+            if (conventionalKeySignature.isPresent()) {
+                pendingObjects.add(new Pair<>(scoreStaffSubgraph, conventionalKeySignature.get()));
+            }
+        }
+
+    }
+
+
 
     @Override
     protected IScore buildScore() throws IMException {
-        if (meiScoreDef == null) {
-            throw new IMException("Missing element scoreDef");
-        }
-        if (section == null) {
-            throw new IMException("Missing element section");
+        // TODO now everything goes to a part
+        if (meiScore == null) {
+            throw new IMException("Top meiScore (generated from <score> element) not found");
         }
 
-        // TODO everything goes to a part
-        staffNumbers = new HashMap<>();
-        staffDefs = new HashMap<>();
-        IScore score = ICoreAbstractFactory.getInstance().createScore(null);
-        IPart part = ICoreAbstractFactory.getInstance().createPart(score, null,null);
-        IVoice voice = ICoreAbstractFactory.getInstance().createVoice(part, null, null);
-        convert(score, voice, null, meiScoreDef.getMeiStaffGroupDef());
-        insertContents(meiScoreDef, section, score, part, voice);
+        for (MEISection meiSection: meiScore.getSections()) {
+            importSection(meiSection);
+        }
+        try {
+            score.getScoreGraph().printDot(new File("/tmp/grafo.dot")); //TODO Quitar
+        } catch (FileNotFoundException e) {
+            throw new IMException(e);
+        }
         return score;
+    }
+
+    private void importSection(MEISection section) throws IMException {
+        for (IMeiSectionItem meiSectionItem: section.getSectionItems()) {
+            if (meiSectionItem instanceof MEIScoreDef) {
+                importScoreDef((MEIScoreDef)meiSectionItem);
+            } else if (meiSectionItem instanceof MEIMeasure) {
+                importMeasure((MEIMeasure)meiSectionItem);
+            } else if (meiSectionItem instanceof MEISection) {
+                importSection((MEISection) meiSectionItem); //TODO How are they hierarchically linked?
+            } else {
+                throw new IMException("Unsupported IMeiSectionItem meiSectionItem subclass: " + meiSectionItem.getClass());
+            }
+        }
+    }
+
+    private void importMeasure(MEIMeasure meiMeasure) throws IMException {
+        IMeasure measure = ICoreAbstractFactory.getInstance().createMeasure(meiMeasure.getId(),
+                meiMeasure.getNumber().isPresent() ? meiMeasure.getNumber().get() : null,
+                meiMeasure.getLeftBarline().isPresent() ? meiMeasure.getLeftBarline().get() : null,
+                meiMeasure.getRightBarline().isPresent() ? meiMeasure.getRightBarline().get() : null);
+
+        scoreGraph.addCommonContentNode(measure);
+
+        // pending objects defined before the measure and belonging specifically to a staff
+        for (MEIStaff measureStaff : meiMeasure.getStaves()) {
+            IScoreStaffSubgraph staffSubgraph = this.staffNumbers.get(measureStaff.getN());
+            if (staffSubgraph == null) {
+                throw new IMException("Staff with N=" + measureStaff.getN() + " not previously defined");
+            }
+            // pending objects defined before the measure and belonging specifically to a staff
+            for (Iterator<Pair<IScoreStaffSubgraph, IMooObject>> iterator = pendingObjects.listIterator(); iterator.hasNext(); ) {
+                Pair<IScoreStaffSubgraph, IMooObject> pair = iterator.next();
+                if (pair.getLeft() == staffSubgraph) {
+                    scoreGraph.addContentNode(staffSubgraph, pair.getRight());
+                    iterator.remove();
+                }
+            }
+        }
+
+
+        // pending objects defined before the measure and not belonging specifically to any staff
+        for (Iterator<Pair<IScoreStaffSubgraph, IMooObject>> iterator = pendingObjects.listIterator(); iterator.hasNext(); ) {
+            Pair<IScoreStaffSubgraph, IMooObject> pair = iterator.next();
+            if (pair.getLeft() == null) {
+                scoreGraph.addCommonContentNode(pair.getRight());
+                iterator.remove();
+            }
+        }
+
+        if (!pendingObjects.isEmpty()) {
+            throw new IMRuntimeException("The pending objects list should be empty");
+        }
+
+        // not measure contents are inserted
+        for (MEIStaff measureStaff : meiMeasure.getStaves()) {
+            IScoreStaffSubgraph staffSubgraph = this.staffNumbers.get(measureStaff.getN());
+            if (staffSubgraph == null) {
+                throw new IMException("Staff with N=" + measureStaff.getN() + " not previously defined");
+            }
+            for (MEILayer layer : measureStaff.getLayers()) { //TODO ¿Layers - voices?
+                for (IVoiced voiced : layer.getItems()) { //TODO Revisar el concepto de Voiced
+                    scoreGraph.addContentNode(staffSubgraph, voiced);
+                }
+            }
+        }
     }
 
 
     @Override
     protected void onEndElement(String elementName, Object end) {
         switch (elementName) {
-            case "scoreDef":
-                this.meiScoreDef = (MEIScoreDef) end;
-                break;
-            case "section":
-                this.section = (MEISection) end;
+            case "score":
+                this.meiScore = (MEIScore) end;
                 break;
         }
-
     }
+
 }

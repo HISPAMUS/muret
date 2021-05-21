@@ -85,6 +85,7 @@ public abstract class XMLImporter {
 
     private void handleStartElement(StartElement startElement) throws IMException {
         String elementName = startElement.getName().getLocalPart();
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Started element {0}", elementName);
         // if there is an specific builder associated to this element name, create it and import it with the specific importer visitor
         // e.g. <note> may be imported with a INoteBuilder
         // If the importer is MEIImporterVisitor, there will be a method in MEIImporterVisitor able to import the specifics of MEI
@@ -113,7 +114,6 @@ public abstract class XMLImporter {
                 //currentBuilder.doImport(xmlImporterVisitor, new XMLImporterVisitorParam(data));
                 XMLImporterParam importerParam = new XMLImporterParam(data);
                 currentBuilder.read(importerParam);
-
             }
         }
     }
@@ -126,9 +126,11 @@ public abstract class XMLImporter {
         // (it will build an object and prepare it for the parent context to be inserted)
         if (importingContexts.contains(elementName)) {
             Object coreObject = importingContexts.end(elementName);
-            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Parsed element {0} into object {1} = {2}", new Object[] { elementName, coreObject.getClass().getName(), coreObject });
+            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "End element {0}, parsed into object {1} = {2}", new Object[] { elementName, coreObject.getClass().getName(), coreObject });
             onEndElement(elementName, coreObject);
             builderStack.pop();
+        } else {
+            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "End element {0} not in importing contexts", elementName);
         }
     }
 

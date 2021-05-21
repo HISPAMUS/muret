@@ -104,6 +104,7 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
         doExport(note.getNoteHead(), inputOutput, note.getGraceNoteType());
 
         if (note.getStem().isPresent()) {
+            inputOutput.append(SEP);
             exportStem(note.getStem().get(), inputOutput);
         }
 
@@ -115,11 +116,9 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
     private void exportStem(IStem stem, KernExporterVisitorTokenParam inputOutput) throws IMException {
         switch (stem.getStemDirection().getValue()) {
             case down:
-                inputOutput.append(SEP);
                 inputOutput.append("\\");
                 break;
             case up:
-                inputOutput.append(SEP);
                 inputOutput.append("/");
                 break;
             default:
@@ -130,6 +129,7 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
     @Override
     public void exportRest(IRest rest, KernExporterVisitorTokenParam inputOutput) throws IMException {
         exportFigure(rest.getFigure(), inputOutput);
+        inputOutput.append(SEP);
         if (rest.getDots().isPresent()) {
             exportDots(rest.getDots().get(), inputOutput);
         }
@@ -184,7 +184,7 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
     @Override
     public void exportCutTime(ICutTime meter, KernExporterVisitorTokenParam inputOutput) throws IMException {
         //inputOutput.append("*met(c|)");
-        inputOutput.append("*M");
+        inputOutput.append("*met");
         inputOutput.append(SEP);
         inputOutput.append("(c|)");
         inputOutput.buildAndAddToken(meter);
@@ -193,7 +193,7 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
     @Override
     public void exportCommonTime(ICommonTime meter, KernExporterVisitorTokenParam inputOutput) throws IMException {
         //inputOutput.append("*met(c)");
-        inputOutput.append("*M");
+        inputOutput.append("*met");
         inputOutput.append(SEP);
         inputOutput.append("(c)");
         inputOutput.buildAndAddToken(meter);
@@ -361,6 +361,7 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
         inputOutput.append(SEP);
         inputOutput.append(diatonicPitch);
         if (key.getPitchClass().getAccidental().isPresent()) {
+            inputOutput.append(SEP);
             exportAccidentalSymbol(key.getPitchClass().getAccidental().get(), inputOutput);
         }
 
@@ -459,6 +460,7 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
     public void exportAlteration(IAlteration alteration, KernExporterVisitorTokenParam inputOutput) {
         exportAccidentalSymbol(alteration.getAccidentalSymbol(), inputOutput);
         if (alteration.getAlterationDisplayType().isPresent()) {
+            inputOutput.append(SEP);
             exportAlterationDisplayType(alteration.getAlterationDisplayType().get(), inputOutput);
         }
     }
@@ -467,6 +469,7 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
     public void exportPitchClass(IPitchClass pitchClass, KernExporterVisitorTokenParam inputOutput) {
         exportDiatonicPitch(pitchClass.getDiatonicPitch(), inputOutput);
         if (pitchClass.getAccidental().isPresent()) {
+            inputOutput.append(SEP);
             exportAccidentalSymbol(pitchClass.getAccidental().get(), inputOutput);
         }
     }
@@ -495,6 +498,7 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
     public void exportPitch(IPitch pitch, KernExporterVisitorTokenParam inputOutput) {
         exportDiatonicPitchAndOctave(pitch.getDiatonicPitch(), pitch.getOctave(), inputOutput);
         if (pitch.getAlteration().isPresent()) {
+            inputOutput.append(SEP);
             exportAlteration(pitch.getAlteration().get(), inputOutput);
         }
     }
@@ -612,7 +616,7 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
                 encoding = "||";
                 break;
             case hidden:
-                encoding = "-";
+                encoding = "=-";
                 break;
             case repeatStart:
                 encoding = "|!:";

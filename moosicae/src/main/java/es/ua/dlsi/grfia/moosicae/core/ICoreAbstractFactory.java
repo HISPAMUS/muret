@@ -9,6 +9,7 @@ import es.ua.dlsi.grfia.moosicae.core.impl.CoreAbstractFactoryImpl;
 import es.ua.dlsi.grfia.moosicae.core.mensural.*;
 import es.ua.dlsi.grfia.moosicae.core.metadata.ITitle;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
+import es.ua.dlsi.grfia.moosicae.core.scoregraph.*;
 
 import javax.validation.constraints.NotNull;
 
@@ -158,4 +159,11 @@ public interface ICoreAbstractFactory {
     IVoice createVoice(@NotNull IPart part, IId id,  IName name);
     IWholeMeasureRest createWholeMeasureRest(IId id, @NotNull IRest rest);
     IGraceNoteType createGraceNoteType(IId id, EGraceNoteType value);
+
+    ///// Graphs
+    // We don't have a createScoreGraph because it's a property created by the IScore itself
+    IScorePartSubgraph createScorePartSubgraph(IPart part);
+    IScoreVoiceSubgraph createScoreVoiceSubgraph(IVoice voice);
+    IScoreStaffSubgraph createScoreStaffSubgraph(IStaff staff);
+    IScoreGraphContentNode createScoreGraphContentNode(IMooObject mooObject);
 }

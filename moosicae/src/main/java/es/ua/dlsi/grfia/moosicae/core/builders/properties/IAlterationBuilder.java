@@ -43,6 +43,9 @@ public class IAlterationBuilder extends CoreObjectBuilder<IAlteration> {
 
     @Override
     public IAlteration build() throws IMException {
+        if (accidentalSymbol == null) {
+            throw new IMException("Expected an accidental symbol");
+        }
         return ICoreAbstractFactory.getInstance().createAlteration(getId(), accidentalSymbol, alterationDisplayType);
     }
 

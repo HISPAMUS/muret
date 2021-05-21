@@ -2,7 +2,6 @@ package es.ua.dlsi.grfia.moosicae.io.kern.grammar;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
-import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.IScore;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.KernHeader;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.KernSpineBegin;

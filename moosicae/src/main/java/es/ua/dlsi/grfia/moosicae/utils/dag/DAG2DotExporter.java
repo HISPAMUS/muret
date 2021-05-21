@@ -38,7 +38,7 @@ public class DAG2DotExporter<SpineItemContentType> {
         if (firstNode != null) {
             // first add all nodes
             printNodes(os, firstNode);
-            // not the edges
+            // now the edges
             printEdges(os, firstNode);
         }
         os.println("}");

@@ -18,31 +18,44 @@ public class MEIAlterationBuilder extends IAlterationBuilder implements IImporte
     @Override
     public void read(XMLImporterParam xmlImporterParam) throws IMException {
         Optional<String> accidGes = xmlImporterParam.getAttribute("accid.ges"); //TODO resto de parámetros
-        if (accidGes.isPresent()) {
-            EAccidentalSymbols eAccidentalSymbol;
-            switch (accidGes.get()) {
-                case "fff":
-                    eAccidentalSymbol = EAccidentalSymbols.TRIPLE_FLAT;
-                    break;
-                case "ff":
-                    eAccidentalSymbol = EAccidentalSymbols.DOUBLE_FLAT;
-                    break;
-                case "f":
-                    eAccidentalSymbol = EAccidentalSymbols.FLAT;
-                    break;
-                case "n":
-                    eAccidentalSymbol = EAccidentalSymbols.NATURAL;
-                    break;
-                case "s":
-                    eAccidentalSymbol = EAccidentalSymbols.SHARP;
-                    break;
-                case "ss":
-                    eAccidentalSymbol = EAccidentalSymbols.DOUBLE_SHARP;
-                    break;
-                default:
-                    throw new IMException("Unknown accidental symbol '" + accidGes.get() + "'");
-            }
-            from(eAccidentalSymbol);
+        Optional<String> accid = xmlImporterParam.getAttribute("accid"); //TODO resto de parámetros
+
+        if (!accidGes.isPresent() && !accid.isPresent()) {
+            throw new IMException("TO-DO accid and accid.ges");
         }
+
+        String accidStr;
+        if (accidGes.isPresent()) {
+            accidStr = accidGes.get();
+        } else if (accid.isPresent()) {
+            accidStr = accid.get();
+        } else {
+            throw new IMException("Expected at least accid or accid.ges");
+        }
+
+        EAccidentalSymbols eAccidentalSymbol;
+        switch (accidStr) {
+            case "fff":
+                eAccidentalSymbol = EAccidentalSymbols.TRIPLE_FLAT;
+                break;
+            case "ff":
+                eAccidentalSymbol = EAccidentalSymbols.DOUBLE_FLAT;
+                break;
+            case "f":
+                eAccidentalSymbol = EAccidentalSymbols.FLAT;
+                break;
+            case "n":
+                eAccidentalSymbol = EAccidentalSymbols.NATURAL;
+                break;
+            case "s":
+                eAccidentalSymbol = EAccidentalSymbols.SHARP;
+                break;
+            case "ss":
+                eAccidentalSymbol = EAccidentalSymbols.DOUBLE_SHARP;
+                break;
+            default:
+                throw new IMException("Unknown accidental symbol '" + accidGes.get() + "'");
+        }
+        from(eAccidentalSymbol);
     }
 }

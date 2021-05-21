@@ -7,6 +7,7 @@ import es.ua.dlsi.grfia.moosicae.core.builders.IObjectBuilder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Stack;
 
 /**
  * Used to handle context organized importers, such as XML tree structures. It allows to add core object builders (method begin),
@@ -17,7 +18,7 @@ import java.util.LinkedList;
  */
 public class ImportingContexts<BuiltType> {
     private final ImportedObjectPool objectPool;
-    private final HashMap<String, IObjectBuilder<? extends BuiltType>> objectBuilders;
+    private final HashMap<String, Stack<IObjectBuilder<? extends BuiltType>>> objectBuilders; // a stack because there may be recursive elements (e.g. <section><section></section></section>, e.g. in MEI)
     /**
      * Use a list instead of a Stack in order to iterate
      */
@@ -37,7 +38,14 @@ public class ImportingContexts<BuiltType> {
      * @return
      */
     public <BuilderType extends IObjectBuilder<? extends BuiltType>> IObjectBuilder<? extends BuiltType> begin(String contextName, BuilderType coreObjectBuilder) {
-        objectBuilders.put(contextName, coreObjectBuilder);
+        Stack<IObjectBuilder<? extends BuiltType>> stack = objectBuilders.get(contextName);
+        if (stack == null) {
+            stack = new Stack<>();
+            objectBuilders.put(contextName, stack);
+        }
+
+        stack.push(coreObjectBuilder);
+        //objectBuilders.put(contextName, coreObjectBuilder);
         objectBuilderStack.add(0, coreObjectBuilder);
 
         return coreObjectBuilder;
@@ -56,16 +64,25 @@ public class ImportingContexts<BuiltType> {
      * @throws IMException
      */
     public BuiltType end(String contextName) throws IMException {
-        IObjectBuilder<? extends BuiltType> coreObjectBuilder = objectBuilders.get(contextName);
-        if (coreObjectBuilder == null) {
+        Stack<IObjectBuilder<? extends BuiltType>> stack = objectBuilders.get(contextName);
+        //IObjectBuilder<? extends BuiltType> coreObjectBuilder = objectBuilders.get(contextName);
+        if (stack == null) {
             throw new IMException("Cannot find a core object builder for the context with name '" + contextName + "'");
         }
 
+        if (stack.isEmpty()) {
+            throw new IMException("The core object builder stack for the context with name '" + contextName + "' is empty");
+        }
+
+        IObjectBuilder<? extends BuiltType> coreObjectBuilder = stack.pop();
+        if (stack.isEmpty()) { // if no builders left remove the context name
+            objectBuilders.remove(contextName);
+        }
         // try to assign available objects to build object
         objectPool.populate(coreObjectBuilder);
         BuiltType coreObject = coreObjectBuilder.build();
         objectBuilderStack.remove(0);
-        objectBuilders.remove(contextName);
+        //objectBuilders.remove(contextName);
         //objectPool.add(coreObject);
 
         // try to assign this just created object to other parent context builders
