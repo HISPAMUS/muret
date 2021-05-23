@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<score>
+   <section>
+      <scoreDef xml:id="scoredef-0000000755332514" key.sig="1f" meter.sym="common">
+         <staffGrp xml:id="staffgrp-0000001742400868">
+            <staffDef xml:id="staffdef-0000001444377984" n="1" lines="5" clef.shape="C" clef.line="1" />
+         </staffGrp>
+      </scoreDef>
+      <section xml:id="section-0000000412683233">
+         <measure xml:id="measure-0000001169551781" right="single">
+            <staff xml:id="staff-0000001499232176" n="1">
+               <layer xml:id="layer-0000000586496176" n="1">
+                  <note xml:id="note-0000000291290302" dots="1" dur="1" oct="5" pname="c" />
+                  <note xml:id="note-0000001600874201" dur="2" oct="4" pname="b">
+                     <accid xml:id="accid-0000000070082944" accid.ges="f" />
+                  </note>
+                  <note xml:id="note-0000000945582971" dur="2" oct="4" pname="b">
+                     <accid xml:id="accid-0000001034005797" accid.ges="f" />
+                  </note>
+                  <note xml:id="note-0000001097758655" dur="1" oct="4" pname="a" />
+                  <note xml:id="note-0000000997703208" dur="2" oct="4" pname="g" />
+               </layer>
+            </staff>
+            <tie xml:id="tie-0000001063001252" startid="#note-0000001600874201" endid="#note-0000000945582971" />
+            <tie xml:id="tie-0000000845501080" startid="#note-0000000997703208" endid="#note-0000001187853559" />
+         </measure>
+         <measure xml:id="measure-0000002009740293" right="single">
+            <staff xml:id="staff-0000000437359361" n="1">
+               <layer xml:id="layer-0000001503066460" n="1">
+                  <note xml:id="note-0000001187853559" dur="2" oct="4" pname="g" />
+                  <note xml:id="note-0000001246783601" dur="2" oct="4" pname="f" />
+                  <note xml:id="note-0000000362306070" dur="2" oct="4" pname="f" />
+                  <note xml:id="note-0000001161979245" dur="2" oct="4" pname="e" />
+               </layer>
+            </staff>
+            <tie xml:id="tie-0000001694038228" startid="#note-0000001246783601" endid="#note-0000000362306070" />
+         </measure>
+         <measure xml:id="measure-0000001622566192" right="single">
+            <staff xml:id="staff-0000000168884897" n="1">
+               <layer xml:id="layer-0000000982685062" n="1">
+                  <note xml:id="note-0000001838591604" dur="2" oct="4" pname="f" />
+                  <clef xml:id="clef-0000000341435555" shape="F" line="4" />
+                  <rest xml:id="rest-0000001066891745" dur="16" />
+                  <beam xml:id="beam-0000000699012245">
+                     <note xml:id="note-0000001908589412" dur="16" oct="3" pname="f" />
+                     <note xml:id="note-0000001563252625" dur="16" oct="3" pname="g" />
+                     <note xml:id="note-0000001271930977" dur="16" oct="3" pname="a" />
+                  </beam>
+                  <clef xml:id="clef-0000000431068101" shape="C" line="1" />
+                  <beam xml:id="beam-0000001473020016">
+                     <note xml:id="note-0000001291708201" dur="16" oct="3" pname="b">
+                        <accid xml:id="accid-0000000827546684" accid.ges="f" />
+                     </note>
+                     <note xml:id="note-0000000855926296" dur="16" oct="4" pname="c" />
+                     <note xml:id="note-0000001707789266" dur="16" oct="4" pname="d" />
+                     <note xml:id="note-0000001695251507" dur="16" oct="4" pname="e" />
+                  </beam>
+               </layer>
+            </staff>
+         </measure>
+      </section>
+   </section>
+</score>

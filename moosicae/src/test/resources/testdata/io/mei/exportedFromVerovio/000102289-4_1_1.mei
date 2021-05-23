@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<score>
+   <section>
+      <scoreDef xml:id="scoredef-0000000755332514" key.sig="3s" meter.sym="cut">
+         <staffGrp xml:id="staffgrp-0000001742400868">
+            <staffDef xml:id="staffdef-0000001444377984" n="1" lines="5" clef.shape="C" clef.line="1" />
+         </staffGrp>
+      </scoreDef>
+      <section xml:id="section-0000000412683233">
+         <measure xml:id="measure-0000001169551781" right="single">
+            <staff xml:id="staff-0000001499232176" n="1">
+               <layer xml:id="layer-0000000586496176" n="1">
+                  <clef xml:id="clef-0000000341435555" shape="F" line="4" />
+                  <note xml:id="note-0000000291290302" dur="2" oct="3" pname="a" />
+                  <note xml:id="note-0000001600874201" dur="4" oct="4" pname="c">
+                     <accid xml:id="accid-0000000070082944" accid.ges="s" />
+                  </note>
+                  <note xml:id="note-0000001063001252" dur="4" oct="3" pname="g">
+                     <accid xml:id="accid-0000000945582971" accid.ges="s" />
+                  </note>
+               </layer>
+            </staff>
+         </measure>
+         <measure xml:id="measure-0000001097758655" right="single">
+            <staff xml:id="staff-0000001034005797" n="1">
+               <layer xml:id="layer-0000001755639889" n="1">
+                  <note xml:id="note-0000000614304643" dur="2" oct="3" pname="a" />
+                  <rest xml:id="rest-0000001664243772" dur="2" />
+               </layer>
+            </staff>
+            <fermata xml:id="fermata-0000002118057476" startid="#rest-0000001664243772" />
+         </measure>
+         <measure xml:id="measure-0000001187853559" right="single">
+            <staff xml:id="staff-0000001503066460" n="1">
+               <layer xml:id="layer-0000000620468466" n="1">
+                  <clef xml:id="clef-0000000431068101" shape="C" line="1" />
+                  <note xml:id="note-0000000032918230" dur="2" oct="5" pname="c">
+                     <accid xml:id="accid-0000001353394331" accid.ges="s" />
+                  </note>
+                  <note xml:id="note-0000000351732093" dur="4" oct="5" pname="d" />
+                  <note xml:id="note-0000001686290507" dur="4" oct="4" pname="b" />
+               </layer>
+            </staff>
+         </measure>
+         <measure xml:id="measure-0000000982685062" right="single">
+            <staff xml:id="staff-0000001142861690" n="1">
+               <layer xml:id="layer-0000001473020016" n="1">
+                  <note xml:id="note-0000000855926296" dur="2" oct="5" pname="c">
+                     <accid xml:id="accid-0000001707789266" accid.ges="s" />
+                  </note>
+                  <rest xml:id="rest-0000001695251507" dur="2" />
+               </layer>
+            </staff>
+            <fermata xml:id="fermata-0000001426533400" startid="#rest-0000001695251507" />
+         </measure>
+      </section>
+   </section>
+</score>
