@@ -4,7 +4,6 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
-import es.ua.dlsi.grfia.moosicae.core.impl.BeamGroup;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLExporterVisitorParam;
@@ -195,6 +194,11 @@ public class MEIExporterVisitor implements IExporterVisitor<XMLExporterVisitorPa
 
     @Override
     public void exportFermata(IFermata fermata, XMLExporterVisitorParam inputOutput) {
+
+    }
+
+    @Override
+    public void exportTuplet(ITuplet tuplet, XMLExporterVisitorParam inputOutput) {
 
     }
 

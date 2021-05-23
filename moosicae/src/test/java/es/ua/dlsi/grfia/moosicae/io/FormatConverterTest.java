@@ -19,8 +19,8 @@ import static org.junit.Assert.*;
 public class FormatConverterTest {
     private void test(String filename) throws IMException, IOException {
         File input = TestFileUtils.getFile("/testdata/io/mei/exportedFromVerovio/" + filename + ".mei");
-        //File output  = TestFileUtils.createTempFile(filename + ".krn"); // TODO ekern
-        File output  = new File("/tmp/" + filename + ".ekrn"); // TODO ekern
+        File output  = TestFileUtils.createTempFile(filename + ".ekrn"); // TODO ekern
+        //File output  = new File("/tmp/" + filename + ".ekrn");
         FormatConverter formatConverter = new FormatConverter();
         formatConverter.convert(input, output);
 
@@ -31,7 +31,7 @@ public class FormatConverterTest {
 
     @Test
     public void convert() throws IMException, IOException {
-        String [] filenames = new String[] {"200043752-1_43_2", "000124645-10_1_1", "000122362-1_1_1", "230006508-1_9_1", "000103737-1_1_1"};
+        String [] filenames = new String[] {"210097473-1_11_1", "200043752-1_43_2", "000124645-10_1_1", "000122362-1_1_1", "230006508-1_9_1", "000103737-1_1_1"};
         for (String filename: filenames) {
             test(filename);
         }

@@ -5,6 +5,8 @@ import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.IMetronomeMark;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.ITupletActual;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.ITupletNormal;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.Mensuration;
@@ -435,6 +437,21 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     @Override
     public IScoreGraphContentNode createScoreGraphContentNode(IMooObject mooObject) {
         return new ScoreGraphContentNode(mooObject);
+    }
+
+    @Override
+    public ITuplet createTuplet(IId id, IVoiced[] children, ITupletActual tupletActual, ITupletNormal tupletNormal) {
+        return new Tuplet(id, children, tupletActual, tupletNormal);
+    }
+
+    @Override
+    public ITupletActual createTupletActual(IId id, @NotNull Integer value) {
+        return new TupletActual(id, value);
+    }
+
+    @Override
+    public ITupletNormal createTupletNormal(IId id, @NotNull Integer value) {
+        return new TupletNormal(id, value);
     }
 
     @Override

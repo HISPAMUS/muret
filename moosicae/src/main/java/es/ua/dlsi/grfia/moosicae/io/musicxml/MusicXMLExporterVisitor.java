@@ -206,6 +206,11 @@ public class MusicXMLExporterVisitor implements IExporterVisitor<XMLExporterVisi
     }
 
     @Override
+    public void exportTuplet(ITuplet tuplet, XMLExporterVisitorParam inputOutput) {
+
+    }
+
+    @Override
     public void exportChord(IChord chord, XMLExporterVisitorParam inputOutputOutput) throws IMException {
 
     }

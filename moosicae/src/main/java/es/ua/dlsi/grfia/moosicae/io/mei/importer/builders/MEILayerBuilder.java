@@ -1,6 +1,7 @@
 package es.ua.dlsi.grfia.moosicae.io.mei.importer.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
+import es.ua.dlsi.grfia.moosicae.core.IImportable;
 import es.ua.dlsi.grfia.moosicae.core.IVoiced;
 import es.ua.dlsi.grfia.moosicae.io.mei.importer.elements.MEILayer;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
@@ -15,20 +16,20 @@ import java.util.Optional;
  */
 public class MEILayerBuilder extends MEIObjectBuilder<MEILayer> {
     private Integer n;
-    private final List<IVoiced> items;
+    private final List<IImportable> items;
 
 
     public MEILayerBuilder() {
         items = new LinkedList<>();
     }
 
-    public void add(IVoiced coreItem) {
-        this.items.add(coreItem);
+    public void add(IImportable importable) {
+        this.items.add(importable);
     }
 
     @Override
     public MEILayer build() throws IMException {
-        return new MEILayer(getId(), items.toArray(new IVoiced[items.size()]), n);
+        return new MEILayer(getId(), items.toArray(new IImportable[items.size()]), n);
     }
 
     @Override

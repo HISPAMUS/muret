@@ -11,16 +11,16 @@
             <staff xml:id="staff-0000002029687254" n="1">
                <layer xml:id="layer-0000000634465807" n="1">
                   <rest xml:id="rest-0000001210510894" dur="2" />
-                  <beam xml:id="beam-0000001116620131">
-                     <tuplet xml:id="tuplet-0000000174950584" num="3" numbase="2">
+                  <tuplet xml:id="tuplet-0000000174950584" num="3" numbase="2">  <!-- order of tuplet - beam changed for test -->
+                     <beam xml:id="beam-0000001116620131">
                         <note xml:id="note-0000001944007427" dur="8" oct="5" pname="f" />
                         <note xml:id="note-0000000489352545" dur="8" oct="5" pname="d" />
                         <note xml:id="note-0000001833339452" dur="8" oct="5" pname="b">
                            <accid xml:id="accid-0000000840802608" accid.ges="f" />
                         </note>
-                     </tuplet>
-                  </beam>
-                  <beam xml:id="beam-0000000690041587">
+                     </beam>
+                  </tuplet>                  
+                  <beam xml:id="beam-0000000690041587">                     
                      <tuplet xml:id="tuplet-0000001117258909" num="3" numbase="2">
                         <note xml:id="note-0000000927035396" dur="8" oct="5" pname="f" />
                         <note xml:id="note-0000000173474195" dur="8" oct="6" pname="d" />

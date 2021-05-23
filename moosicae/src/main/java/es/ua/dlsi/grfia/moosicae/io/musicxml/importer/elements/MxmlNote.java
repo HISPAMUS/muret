@@ -115,4 +115,9 @@ public class MxmlNote extends MxmlObject implements IMxmlPartItem, INote {
     public void addMark(IMark mark) {
 
     }
+
+    @Override
+    public void addConnector(IConnector connector) {
+
+    }
 }

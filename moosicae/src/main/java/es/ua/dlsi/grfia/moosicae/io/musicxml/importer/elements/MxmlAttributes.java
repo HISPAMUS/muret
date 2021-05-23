@@ -66,4 +66,9 @@ public class MxmlAttributes extends MxmlObject implements IMxmlPartItem {
     public void addMark(IMark mark) {
 
     }
+
+    @Override
+    public void addConnector(IConnector connector) {
+
+    }
 }

@@ -144,6 +144,7 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
 
         //TODO optional position on line
         exportConnectors(rest, inputOutput);
+        exportMarks(rest, inputOutput);
 
         inputOutput.buildAndAddToken(rest);
     }
@@ -328,6 +329,15 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
     public void exportFermata(IFermata fermata, KernExporterVisitorTokenParam inputOutput) {
         inputOutput.append(SEP);
         inputOutput.append(';');
+    }
+
+    @Override
+    public void exportTuplet(ITuplet tuplet, KernExporterVisitorTokenParam inputOutput) throws IMException {
+        inputOutput.setInTuplet(tuplet);
+        for (IVoiced child: tuplet.getChildren()) {
+            child.export(this, inputOutput);
+        }
+        inputOutput.setInTuplet(null);
     }
 
     @Override
@@ -576,44 +586,54 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
     @Override
     public void exportFigure(IFigure figure, KernExporterVisitorTokenParam inputOutput) {
         String encoding;
-        switch (figure.getValue()) {
-            case MAXIMA:
-                encoding = "X";
-                break;
-            case LONGA:
-                encoding = "L";
-                break;
-            case BREVE:
-                encoding = "S";
-                break;
-            case SEMIBREVE:
-                encoding = "s";
-                break;
-            case MINIM:
-                encoding = "M";
-                break;
-            case SEMIMINIM:
-                encoding = "m";
-                break;
-            case FUSA:
-                encoding = "U";
-                break;
-            case SEMIFUSA:
-                encoding = "u";
-                break;
-            case OCTUPLE_WHOLE: // modern
-                encoding = "000";
-                break;
-            case QUADRUPLE_WHOLE: // modern
-                encoding = "00";
-                break;
-            case DOUBLE_WHOLE: // modern
-                encoding = "0";
-                break;
-            default: // all the other modern notation
-                encoding = Integer.toString(figure.computeMeterUnit());
+        if (inputOutput.getInTuplet() != null) {
+            encoding = exportTupletFigure(inputOutput.getInTuplet(), figure);
+        } else {
+            switch (figure.getValue()) {
+                case MAXIMA:
+                    encoding = "X";
+                    break;
+                case LONGA:
+                    encoding = "L";
+                    break;
+                case BREVE:
+                    encoding = "S";
+                    break;
+                case SEMIBREVE:
+                    encoding = "s";
+                    break;
+                case MINIM:
+                    encoding = "M";
+                    break;
+                case SEMIMINIM:
+                    encoding = "m";
+                    break;
+                case FUSA:
+                    encoding = "U";
+                    break;
+                case SEMIFUSA:
+                    encoding = "u";
+                    break;
+                case OCTUPLE_WHOLE: // modern
+                    encoding = "000";
+                    break;
+                case QUADRUPLE_WHOLE: // modern
+                    encoding = "00";
+                    break;
+                case DOUBLE_WHOLE: // modern
+                    encoding = "0";
+                    break;
+                default: // all the other modern notation
+                    encoding = Integer.toString(figure.computeMeterUnit());
+            }
         }
         inputOutput.append(encoding);
+    }
+
+    private String exportTupletFigure(ITuplet inTuplet, IFigure figure) {
+        int meterUnit = figure.computeMeterUnit();
+        int value = meterUnit * inTuplet.getActual().getValue() / inTuplet.getNormal().getValue();
+        return Integer.toString(value);
     }
 
     @Override

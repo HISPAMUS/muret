@@ -58,4 +58,6 @@ public interface IExporterVisitor<InputOutputType>  {
     void exportMeasure(IMeasure measure, InputOutputType inputOutput) throws IMException;
 
     void exportFermata(IFermata fermata, InputOutputType inputOutput);
+
+    void exportTuplet(ITuplet tuplet, InputOutputType inputOutput) throws IMException;
 }

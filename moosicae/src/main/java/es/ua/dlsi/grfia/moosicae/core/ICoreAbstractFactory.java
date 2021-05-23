@@ -3,6 +3,8 @@ package es.ua.dlsi.grfia.moosicae.core;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.ITupletActual;
+import es.ua.dlsi.grfia.moosicae.core.builders.properties.ITupletNormal;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
 import es.ua.dlsi.grfia.moosicae.core.impl.CoreAbstractFactoryImpl;
@@ -169,4 +171,7 @@ public interface ICoreAbstractFactory {
     IScoreStaffSubgraph createScoreStaffSubgraph(IStaff staff);
     IScoreGraphContentNode createScoreGraphContentNode(IMooObject mooObject);
 
+    ITuplet createTuplet(IId id, @NotNull IVoiced[] children, @NotNull ITupletActual tupletActual, @NotNull ITupletNormal tupletNormal);
+    ITupletActual createTupletActual(IId id, @NotNull Integer value);
+    ITupletNormal createTupletNormal(IId id, @NotNull Integer value);
 }

@@ -17,7 +17,7 @@ public abstract class Voiced extends MooObject implements IVoiced {
      * As each element will have very few connectors, most of them none, by default we leave it null, and we use brute force for searching the list
      * as it will be faster than using any other kind of data type
      */
-    private List<Connector> connectors;
+    private List<IConnector> connectors;
 
     private List<IMark> marks;
 
@@ -31,13 +31,13 @@ public abstract class Voiced extends MooObject implements IVoiced {
     }
 
     /**
-     * Package visibility
+     * This is usually used by the connector itself
      * @param connector
      */
-    void addConnector(Connector connector) {
+    public void addConnector(IConnector connector) {
         boolean found = false;
         if (connectors != null) {
-            for (Connector c : connectors) {
+            for (IConnector c : connectors) {
                 if (c == connector) {
                     found = true;
                     break;

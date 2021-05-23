@@ -64,6 +64,7 @@ public class MEIImporter extends XMLImporter implements IImporter {
         coreObjectBuilderSuppliers.add("accid", MEIAlterationBuilder::new);
 
         coreObjectBuilderSuppliers.add("beam", MEIBeamBuilder::new);
+        coreObjectBuilderSuppliers.add("tuplet", MEITupletBuilder::new);
         coreObjectBuilderSuppliers.add("tie", MEITieBuilder::new);
         coreObjectBuilderSuppliers.add("fermata", MEIFermataBuilder::new);
 
@@ -285,24 +286,28 @@ public class MEIImporter extends XMLImporter implements IImporter {
                 throw new IMException("Staff with N=" + measureStaff.getN() + " not previously defined");
             }
             for (MEILayer layer : measureStaff.getLayers()) { //TODO ¿Layers - voices?
-                for (IVoiced voiced : layer.getItems()) { //TODO Revisar el concepto de Voiced
-                    importItem(staffSubgraph, voiced);
+                for (IImportable importable : layer.getItems()) { //TODO Revisar el concepto de Voiced
+                    importItem(staffSubgraph, importable);
                 }
             }
         }
     }
 
-    private void importItem(IScoreStaffSubgraph staffSubgraph, IVoiced voiced) {
-        if (voiced instanceof IVoicedComposite) {
-            for (IVoiced child: ((IVoicedComposite) voiced).getChildren()) {
+    private void importItem(IScoreStaffSubgraph staffSubgraph, IImportable importable) throws IMException {
+        if (importable instanceof MEIBeam) {
+            MEIBeam meiBeam = (MEIBeam) importable;
+            for (IVoiced child : meiBeam.getChildren()) {
                 importItem(staffSubgraph, child);
             }
+            //TODO ¿No se añade el beam como conector?
+        } else if (importable instanceof IMooObject) {
+            IMooObject mooObject = (IMooObject) importable;
+            scoreGraph.addContentNode(staffSubgraph, mooObject);
+            mooObjects.put(mooObject.getId(), mooObject);
         } else {
-            scoreGraph.addContentNode(staffSubgraph, voiced);
-            mooObjects.put(voiced.getId(), voiced);
+            throw new IMException("Unsupported type " + importable.getClass());
         }
     }
-
 
     @Override
     protected void onEndElement(String elementName, Object end) {

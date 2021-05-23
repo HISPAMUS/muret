@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.io.kern;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.IMooObject;
+import es.ua.dlsi.grfia.moosicae.core.ITuplet;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernDocument;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernToken;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.KernCoreSymbol;
@@ -15,6 +16,7 @@ public class KernExporterVisitorTokenParam {
     private final KernExporterContext kernExporterContext;
     private KernToken previousToken;
     private StringBuilder stringBuilder;
+    private ITuplet inTuplet;
 
     public KernExporterVisitorTokenParam(KernDocument document, KernExporterContext kernExporterContext, KernToken previousToken) {
         this.document = document;
@@ -41,6 +43,14 @@ public class KernExporterVisitorTokenParam {
 
     public KernExporterContext getKernExporterContext() {
         return kernExporterContext;
+    }
+
+    public ITuplet getInTuplet() {
+        return inTuplet;
+    }
+
+    public void setInTuplet(ITuplet inTuplet) {
+        this.inTuplet = inTuplet;
     }
 
     public void buildAndAddToken(IMooObject symbol) throws IMException {

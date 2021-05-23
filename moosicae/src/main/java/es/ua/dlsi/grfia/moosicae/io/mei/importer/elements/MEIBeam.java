@@ -9,75 +9,81 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * We must treat is as a voiced composite because MEI uses it hierarchically, not as a connector. Implementing these two interfaces, it will be appended as a group of voiced items and as a connector.
- * This fact will be handled in MEIImporter
  * @author David Rizo - drizo@dlsi.ua.es
  * @created 17/5/21
  */
-public class MEIBeam implements IVoicedComposite, IBeamGroup {
-    IBeamGroup beamGroup;
+public class MEIBeam implements IBeamGroup, IImportable {
+    private final IId id;
+    List<IVoiced> children;
+    List<IVoiced> connected;
 
-    public MEIBeam(IBeamGroup beamGroup) {
-        this.beamGroup = beamGroup;
+    public MEIBeam(IId id) {
+        this.id = id;
+        this.children = new LinkedList<>();
+        this.connected = new LinkedList<>();
     }
 
     @Override
     public IId getId() {
-        return beamGroup.getId();
+        return id;
     }
 
+    /**
+     * Actually it is not used
+     * @return
+     */
     @Override
     public MEIBeam clone() {
-        return new MEIBeam((IBeamGroup) beamGroup.clone());
+        throw new UnsupportedOperationException("Unsupported");
     }
 
-    @Override
-    public IConnector[] getConnectors() {
-        return new IConnector[0];
-    }
-
-    @Override
-    public IMark[] getMarks() {
-        return new IMark[0];
-    }
-
-    @Override
-    public void addMark(IMark mark) {
-
-    }
-
-    @Override
     public IVoiced[] getChildren() {
-        return beamGroup.getConnected();
+        return children.toArray(new IVoiced[0]);
     }
 
+    /**
+     * Add item to the beam group and to the connected items list
+     * @param voiced
+     */
     @Override
-    public void addChild(IVoiced item) {
-        this.beamGroup.add(item);
-
+    public void add(IVoiced voiced) {
+        addRecursive(voiced, false); // all items and subitems are linked to the beam
+        this.children.add(voiced); // MEIImporter will insert the items as they are, either single or composite
     }
 
-    @Override
-    public <InputOutputType> void export(IExporterVisitor<InputOutputType> exportVisitor, InputOutputType inputOutput) throws IMException {
+    private void addRecursive(IVoiced voiced, boolean addToConnector) { // this is used for the structure <beam><tuplet>...</tuplet></beam>
+        if (voiced instanceof IVoicedComposite) { // e.g. a tuplet
+            IVoicedComposite composite = (IVoicedComposite) voiced;
+            for (IVoiced child: composite.getChildren()) {
+                addRecursive(child, true);
+            }
+        } else {
+            this.connected.add(voiced);
+            if (addToConnector) { // when we have a <tuplet><beam>, we don't want the note to be added to other connector, it already has one
+                voiced.addConnector(this);
+            }
+        }
     }
 
     @Override
     public IVoiced[] getConnected() {
-        return getChildren();
+        return connected.toArray(new IVoiced[0]);
+    }
+
+    private void checkSize() throws IMException {
+        if (connected.size() <= 1) {
+            throw new IMException("Expected at least 2 elements, and found " + connected.size());
+        }
+    }
+    @Override
+    public IVoiced getFirst() throws IMException {
+        checkSize();
+        return connected.get(0);
     }
 
     @Override
-    public IVoiced getFirst() {
-        return beamGroup.getFirst();
-    }
-
-    @Override
-    public IVoiced getLast() {
-        return beamGroup.getLast();
-    }
-
-    @Override
-    public void add(IVoiced voiced) {
-        this.addChild(voiced);
+    public IVoiced getLast() throws IMException {
+        checkSize();
+        return connected.get(connected.size()-1);
     }
 }

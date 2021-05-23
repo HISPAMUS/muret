@@ -4,7 +4,6 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
-import es.ua.dlsi.grfia.moosicae.core.impl.BeamGroup;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 
@@ -222,6 +221,11 @@ public class LilypondExporterVisitor implements IExporterVisitor<LilypondExporte
 
     @Override
     public void exportFermata(IFermata fermata, LilypondExporterVisitorParam inputOutput) {
+
+    }
+
+    @Override
+    public void exportTuplet(ITuplet tuplet, LilypondExporterVisitorParam inputOutput) {
 
     }
 
