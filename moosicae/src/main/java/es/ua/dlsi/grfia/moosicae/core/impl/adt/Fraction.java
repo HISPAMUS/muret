@@ -94,4 +94,19 @@ public class Fraction implements IFraction {
     public int compareTo(IFraction o) {
         return fraction.compareTo(((Fraction)o).fraction);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Fraction)) return false;
+
+        Fraction fraction1 = (Fraction) o;
+
+        return fraction.equals(fraction1.fraction);
+    }
+
+    @Override
+    public int hashCode() {
+        return fraction.hashCode();
+    }
 }

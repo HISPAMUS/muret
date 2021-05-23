@@ -3,13 +3,16 @@ package es.ua.dlsi.grfia.moosicae.io.kern;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.adt.ITime;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.EBarlineTypes;
 import es.ua.dlsi.grfia.moosicae.core.enums.EClefSigns;
 import es.ua.dlsi.grfia.moosicae.core.enums.EFigures;
+import es.ua.dlsi.grfia.moosicae.core.enums.ENotationTypes;
 import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.IExporterVisitor;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.KernCoreSymbol;
+import es.ua.dlsi.grfia.moosicae.utils.Pair;
 
 import java.util.Optional;
 
@@ -173,7 +176,26 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
             inputOutput.append(mrest.getMeasureCount().getValue());
             inputOutput.buildAndAddToken(mrest);
         } else {
-            throw new IMException("TO-DO mrest in raw kern: sequence of rests - see multiple spines");
+            if (inputOutput.getLastMeter() == null) {
+                throw new IMException("Last meter contexual field is empty in KernExporterVisitorTokenParam");
+            }
+            ITime meterDuration = inputOutput.getLastMeter().getBarDuration();
+            Pair<EFigures, Integer> figureAndDots = EFigures.findDurationWithDots(meterDuration, ENotationTypes.eModern); // **ekern is modern
+            IDots dots = null;
+            if (figureAndDots.getRight() > 0) {
+                dots = ICoreAbstractFactory.getInstance().createDots(null, figureAndDots.getRight());
+            }
+            IFigure figure = ICoreAbstractFactory.getInstance().createFigure(null, figureAndDots.getLeft());
+            IRest rest = ICoreAbstractFactory.getInstance().createRest(null, figure, dots);
+            for (int i=0; i<mrest.getMeasureCount().getValue(); i++) {
+                exportRest(rest, inputOutput);
+                if (i<mrest.getMeasureCount().getValue()-1) {
+                    doExport(EBarlineTypes.single, inputOutput);
+                    IMeasure measure = ICoreAbstractFactory.getInstance().createMeasure(null, null, null, null);
+                    inputOutput.buildAndAddToken(measure);
+                }
+            }
+            // "TO-DO mrest in raw kern: sequence of rests - see multiple spines");
         }
     }
 
@@ -192,7 +214,10 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
 
     @Override
     public void exportCutTime(ICutTime meter, KernExporterVisitorTokenParam inputOutput) throws IMException {
-        //inputOutput.append("*met(c|)");
+        if (!ekern) {
+            inputOutput.append("*M2/2");
+            inputOutput.buildAndAddToken(meter);
+        }
         inputOutput.append("*met");
         inputOutput.append(SEP);
         inputOutput.append("(c|)");
@@ -201,7 +226,11 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
 
     @Override
     public void exportCommonTime(ICommonTime meter, KernExporterVisitorTokenParam inputOutput) throws IMException {
-        //inputOutput.append("*met(c)");
+        if (!ekern) {
+            inputOutput.append("*M4/4");
+            inputOutput.buildAndAddToken(meter);
+        }
+
         inputOutput.append("*met");
         inputOutput.append(SEP);
         inputOutput.append("(c)");

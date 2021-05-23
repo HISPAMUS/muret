@@ -8,6 +8,7 @@ import es.ua.dlsi.grfia.moosicae.core.adt.ITime;
 import es.ua.dlsi.grfia.moosicae.core.adt.ITimeBuilder;
 import es.ua.dlsi.grfia.moosicae.core.impl.adt.FractionBuilder;
 import es.ua.dlsi.grfia.moosicae.core.impl.adt.TimeBuilder;
+import es.ua.dlsi.grfia.moosicae.utils.Pair;
 
 // TODO: 22/9/17 Que tenga plica o no depende de la tipografía?
 // TODO: revisar lo de la plica - no lo quito porque ya lo tengo metido...
@@ -121,6 +122,22 @@ public enum EFigures implements Comparable<EFigures> {
             }
         }
         throw new IMException("Cannot find a figure with duration " + duration + " and notation type " + notationType);
+    }
+
+    public static Pair<EFigures, Integer> findDurationWithDots(ITime duration, ENotationTypes notationType) throws IMException {
+        if (notationType == null) {
+            throw new IMException("Cannot search a duration if notationType is null");
+        }
+        for (EFigures fig : EFigures.values()) {
+            ITime figureDuration = fig.getDuration();
+            for (int i=0; i<5; i++) { // maximum 5 dots
+                if (fig.notationType == notationType && figureDuration.equals(duration)) {
+                    return new Pair<>(fig, i);
+                }
+                figureDuration = figureDuration.add(figureDuration.divide(2));
+            }
+        }
+        throw new IMException("Cannot find a figure (and dots) with duration " + duration + " and notation type " + notationType);
     }
 
     public static EFigures findMeterUnit(int meterUnit, ENotationTypes notationType) throws IMException {

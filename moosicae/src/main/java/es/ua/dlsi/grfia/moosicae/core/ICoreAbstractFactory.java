@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.core;
 
 
 import es.ua.dlsi.grfia.moosicae.IMException;
+import es.ua.dlsi.grfia.moosicae.core.adt.ITime;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.ITupletActual;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.ITupletNormal;
@@ -174,4 +175,6 @@ public interface ICoreAbstractFactory {
     ITuplet createTuplet(IId id, @NotNull IVoiced[] children, @NotNull ITupletActual tupletActual, @NotNull ITupletNormal tupletNormal);
     ITupletActual createTupletActual(IId id, @NotNull Integer value);
     ITupletNormal createTupletNormal(IId id, @NotNull Integer value);
+
+    ITime createTime(int numerator, int denominator);
 }

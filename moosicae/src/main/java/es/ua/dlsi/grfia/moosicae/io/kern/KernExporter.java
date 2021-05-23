@@ -31,6 +31,7 @@ public class KernExporter extends AbstractExporter<KernExporterVisitor> {
     private IScore score;
     private KernDocument kernDocument;
     private KernExporterContext kernExporterContext;
+    private IMeter lastMeter;
 
     public KernExporter(boolean ekern) {
         super(new KernExporterVisitor(ekern));
@@ -70,17 +71,19 @@ public class KernExporter extends AbstractExporter<KernExporterVisitor> {
         IScoreGraphContentNode[] next = score.getScoreGraph().getStartNode().getNextNodes(stavesSubgraphs[0]);
         KernToken lastToken = null;
         EKernHeaders header;
+        KernPart kernPart = new KernPart("*part·1", 1);
         if (this.ekern) { //TODO tipo
             header = EKernHeaders.ekern;
+            kernPart = new KernPart("*part·1", 1);
         } else {
             header = EKernHeaders.kern;
+            kernPart = new KernPart("*part1", 1);
         }
         KernHeader kernHeader = new KernHeader(header);
         kernDocument.addHeader(kernHeader);
         lastToken = kernHeader;
 
         //TODO Part
-        KernPart kernPart = new KernPart("*part·1", 1);
         kernDocument.add(lastToken, kernPart);
         lastToken = kernPart;
 
@@ -101,6 +104,9 @@ public class KernExporter extends AbstractExporter<KernExporterVisitor> {
                     lastToken = export(lastMeasure, lastToken);
                 }
                 lastMeasure = (IMeasure) mooObject;
+            } else if (mooObject instanceof IMeter) {
+                lastMeter = (IMeter)mooObject;
+                lastToken = export((IExporterVisitable) mooObject, lastToken);
             } else {
                 lastToken = export((IExporterVisitable) mooObject, lastToken);
             }
@@ -146,6 +152,7 @@ public class KernExporter extends AbstractExporter<KernExporterVisitor> {
 
     private KernToken export(IExporterVisitable item, KernToken lastToken) throws IMException {
         KernExporterVisitorTokenParam kernExporterVisitorTokenParam = new KernExporterVisitorTokenParam(kernDocument, kernExporterContext, lastToken);
+        kernExporterVisitorTokenParam.setLastMeter(lastMeter);
         item.export(this.exporterVisitor, kernExporterVisitorTokenParam);
         return kernExporterVisitorTokenParam.getLastToken();
     }

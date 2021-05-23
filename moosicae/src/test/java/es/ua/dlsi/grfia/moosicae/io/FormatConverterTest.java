@@ -18,15 +18,19 @@ import static org.junit.Assert.*;
  */
 public class FormatConverterTest {
     private void test(String filename) throws IMException, IOException {
-        File input = TestFileUtils.getFile("/testdata/io/mei/exportedFromVerovio/" + filename + ".mei");
-        File output  = TestFileUtils.createTempFile(filename + ".ekrn"); // TODO ekern
-        //File output  = new File("/tmp/" + filename + ".ekrn");
-        FormatConverter formatConverter = new FormatConverter();
-        formatConverter.convert(input, output);
+        String path = "/testdata/io/mei/exportedFromVerovio/";
+        String [] extensions = new String[] {".ekrn", ".krn"};
+        File input = TestFileUtils.getFile(path + filename + ".mei");
+        for (String extension: extensions) {
+            File output = TestFileUtils.createTempFile(filename + extension);
+            //File output  = new File("/tmp/" + filename + ".ekrn");
+            FormatConverter formatConverter = new FormatConverter();
+            formatConverter.convert(input, output);
 
-        List<String> expected = Files.readAllLines(TestFileUtils.getFile("/testdata/io/mei/exportedFromVerovio/" + filename + ".ekrn").toPath());
-        List<String> found = Files.readAllLines(output.toPath());
-        assertEquals(filename, expected, found);
+            List<String> expected = Files.readAllLines(TestFileUtils.getFile(path + filename + extension).toPath());
+            List<String> found = Files.readAllLines(output.toPath());
+            assertEquals(filename + extension, expected, found);
+        }
     }
 
     @Test

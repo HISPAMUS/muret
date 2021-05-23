@@ -4,11 +4,13 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.IMetronomeMark;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.adt.ITime;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.ITupletActual;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.ITupletNormal;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
 import es.ua.dlsi.grfia.moosicae.core.enums.mensural.EMensurations;
+import es.ua.dlsi.grfia.moosicae.core.impl.adt.Time;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.Mensuration;
 import es.ua.dlsi.grfia.moosicae.core.impl.mensural.mensurations.*;
 import es.ua.dlsi.grfia.moosicae.core.impl.properties.*;
@@ -452,6 +454,11 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     @Override
     public ITupletNormal createTupletNormal(IId id, @NotNull Integer value) {
         return new TupletNormal(id, value);
+    }
+
+    @Override
+    public ITime createTime(int numerator, int denominator) {
+        return new Time(numerator, denominator);
     }
 
     @Override
