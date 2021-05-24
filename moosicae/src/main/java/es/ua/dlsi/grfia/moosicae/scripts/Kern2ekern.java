@@ -11,6 +11,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 /**
+ * @deprecated Use ConvertFormat
  * It migrates from kern to ekern a given folder recursively. The ekern has the order of the tokens normalized (always in the same position).
  * It leaves the files in the same folder of the *krn files.
  * When traversing the folder, if the *ekern file exists, it skips the translation.
