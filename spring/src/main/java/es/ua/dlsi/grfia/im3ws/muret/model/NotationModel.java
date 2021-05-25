@@ -178,6 +178,7 @@ public class NotationModel {
         try {
             iiifModel = documentModel.generateIIIFManifestFile(document);
             song.getMetadata().setSource(iiifModel.getManifestFile());
+            song.getMetadata().setTargetType("IIIF");
         } catch (IM3WSException e) {
             throw new IM3Exception(e);
         }
