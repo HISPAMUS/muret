@@ -98,7 +98,7 @@ public class ImportAgnosticStaticLauro implements CommandLineRunner {
                         File fileAgnostic = new File(path, name + ".agnostic");
                         try {
                             if (fileAgnostic.exists()) {
-                                List<Region> sortedRegions = page.getSortedStaves(); /*page.getRegions().stream().filter(
+                                List<Region> sortedRegions = page.computeSortedStaves(); /*page.getRegions().stream().filter(
                                         region -> region.getRegionType().getName().equals("staff")).
                                         sorted(Region.getVerticalPositionComparator()).collect(Collectors.toList());*/
 

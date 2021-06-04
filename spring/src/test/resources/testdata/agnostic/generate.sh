@@ -5,7 +5,7 @@ rm *.svg
 for krn in $(find . -name "*.krn" -print); do
 	echo $krn
 	fbname=$(basename "$krn" .krn)
-	outputFileName=${fbname}.agnostic
+	outputFileName=${fbname}.agnosticv4
 	${VEROVIOMR} ${krn} | sort -k1 -k2r -n > ${outputFileName}
 	echo ${outputFileName} >> files.lst
 	echo "-----"

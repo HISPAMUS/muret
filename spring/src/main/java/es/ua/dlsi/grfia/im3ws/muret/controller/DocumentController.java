@@ -640,6 +640,7 @@ public class DocumentController {
         Image image = new Image(fileName, null, fullImage.getWidth(), fullImage.getHeight(), document.get(), null, null, null, null);
         image.setCreatedBy(AuditorAwareImpl.getCurrentUser());
         image.setOrdering(document.get().computeNextImageOrdering());
+        image.setRotation(0f);
         imageRepository.save(image);
     }
 

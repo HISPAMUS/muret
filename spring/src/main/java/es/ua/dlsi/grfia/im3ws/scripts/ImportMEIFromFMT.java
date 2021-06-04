@@ -2,7 +2,6 @@ package es.ua.dlsi.grfia.im3ws.scripts;
 
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.entity.*;
-import es.ua.dlsi.grfia.im3ws.muret.entity.Collection;
 import es.ua.dlsi.grfia.im3ws.muret.repository.*;
 import es.ua.dlsi.im3.core.score.*;
 import es.ua.dlsi.im3.core.score.io.mei.MEISongImporter;
@@ -12,7 +11,6 @@ import es.ua.dlsi.im3.omr.encoding.Sequence;
 import es.ua.dlsi.im3.omr.encoding.agnostic.*;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.AgnosticSystemBreak;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Digit;
-import es.ua.dlsi.im3.omr.encoding.semantic.MensSemanticImporter;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticEncoding;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbol;
 import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.SemanticSystemBreak;
@@ -169,7 +167,7 @@ public class ImportMEIFromFMT implements CommandLineRunner {
 
                     // check the number of staves in MuRET matches the number of staves in MEI file
                     TreeMap<Time, SystemBeginning> pageSystemBeginningsMap = pageSystemBeginnings.getSystemBeginnings();
-                    List<Region> staves = page.getSortedStaves();
+                    List<Region> staves = page.computeSortedStaves();
                     if (staves.size() != pageSystemBeginningsMap.size()) {
                         throw new Exception("MuRET has " + staves.size() + "staves  and MEI file has " + pageSystemBeginnings.getSystemBeginnings().size());
                     }

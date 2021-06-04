@@ -112,8 +112,8 @@ public class Worms2021MuRETDatasets implements CommandLineRunner {
             //if (!document.getName().equals("mision02")) { // skip it because it's not complete
             if (!document.getName().startsWith("M")) { // skip it because it's not complete
                 for (Image image : document.getImages()) {
-                    for (Page page : image.getSortedPages()) {
-                        List<Region> staves = page.getSortedStaves();
+                    for (Page page : image.computeSortedPages()) {
+                        List<Region> staves = page.computeSortedStaves();
                         if (!staves.isEmpty()) {
                             boolean empty = true;
                             for (Region region: staves) {
@@ -143,7 +143,7 @@ public class Worms2021MuRETDatasets implements CommandLineRunner {
             System.out.println("\nFold #" + i + " of size " + folds[i].size());
             int nstavesTotal = 0;
             for (Page page: folds[i]) {
-                int nstaves = page.getSortedStaves().size();
+                int nstaves = page.computeSortedStaves().size();
                 System.out.println("\t\tPage in " + page.getImage().getFilename() + " " + page.getImage().computeDocument().getName() + ": #" + nstaves + " staves");
                 nstavesTotal += nstaves;
             }

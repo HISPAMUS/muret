@@ -140,7 +140,7 @@ public class Page extends Auditable implements IAssignableToPart, IDelimitedWith
      */
     @Transient
     @JsonIgnore
-    public List<Region> getSortedStaves() {
+    public List<Region> computeSortedStaves() {
         List<Region> sortedRegions = getRegions().stream().filter(
                 region -> region.getRegionType().getName().equals("staff")).
                 sorted(Region.getVerticalPositionComparator()).collect(Collectors.toList());
@@ -153,7 +153,7 @@ public class Page extends Auditable implements IAssignableToPart, IDelimitedWith
      */
     @JsonIgnore
     @Transient
-    public List<Region> getSortedRegions() {
+    public List<Region> computeSortedRegions() {
         List<Region> sortedRegions = getRegions().stream().sorted(Region.getVerticalPositionComparator()).collect(Collectors.toList());
         return sortedRegions;
     }

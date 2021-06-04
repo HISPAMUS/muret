@@ -12,12 +12,10 @@ import es.ua.dlsi.im3.omr.encoding.semantic.SemanticEncoding;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbol;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbolType;
 import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.util.HashMap;
@@ -96,11 +94,11 @@ public class AlignmentController extends MuRETBaseController {
                 }
 
                 int nPage = 0;
-                for (Page page : image.getSortedPages()) {
+                for (Page page : image.computeSortedPages()) {
                     nPage++; // first is #1
 
                     int nStaff = 0;
-                    for (Region region : page.getSortedStaves()) {
+                    for (Region region : page.computeSortedStaves()) {
                         nStaff++; // first is #1
                         AlignmentPreviewPart regionPart = imagePart;
                         if (region.getPart() != null) {

@@ -241,7 +241,7 @@ public class Image extends Auditable implements IAssignableToPart, IID<Long>, IO
      */
     @Transient
     @JsonIgnore
-    public List<Page> getSortedPages() {
+    public List<Page> computeSortedPages() {
         List<Page> sortedPages = getPages().stream().sorted(Page.getVerticalPositionComparator()).collect(Collectors.toList());
         return sortedPages;
     }

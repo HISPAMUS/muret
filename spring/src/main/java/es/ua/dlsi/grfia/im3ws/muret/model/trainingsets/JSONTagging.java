@@ -13,7 +13,6 @@ import es.ua.dlsi.im3.core.score.PositionsInStaff;
 import es.ua.dlsi.im3.core.utils.FileCompressors;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -132,7 +131,7 @@ public class JSONTagging extends AbstractTrainingSetExporter {
         jsonImage.put("original", IIIFModel.getMasterImageURL(this.muretConfiguration.getBaseIIIFImagesURI(), documentPath, image.getFilename(), 0));
         jsonImage.put("collection", constructCollectionPath(image));
 
-        List<Page> pages = image.getSortedPages();
+        List<Page> pages = image.computeSortedPages();
         if (pages != null && !pages.isEmpty()) {
             JSONArray jsonPages = new JSONArray();
             jsonImage.put("pages", jsonPages);
@@ -143,7 +142,7 @@ public class JSONTagging extends AbstractTrainingSetExporter {
                 jsonPage.put("id", page.getId());
                 putBoundingBox(jsonPage, page.getBoundingBox());
 
-                List<Region> regions = page.getSortedRegions();
+                List<Region> regions = page.computeSortedRegions();
                 if (regions!=null && !regions.isEmpty()) {
                     JSONArray jsonRegions = new JSONArray();
                     jsonPage.put("regions", jsonRegions);

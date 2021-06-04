@@ -174,12 +174,12 @@ public class ImageFilesController extends MuRETBaseController {
     }*/
 
 
-    private void notifyServerImageChanged(Image image) {
+    /*private void notifyServerImageChanged(Image image) {
         Path imagePath = Paths.get(muretConfiguration.getFolder(), image.computeDocument().getPath(),
                 MURETConfiguration.MASTER_IMAGES, image.getFilename());
 
         classifierClient.uploadImage(image.getId(), imagePath);
-    }
+    }*/
 
     @PutMapping(value = "revertRotation/{imageID}")
     @Transactional

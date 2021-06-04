@@ -5,10 +5,7 @@ import es.ua.dlsi.grfia.im3ws.muret.model.*;
 import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.io.ExportException;
 import es.ua.dlsi.im3.core.utils.FileCompressors;
-import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticEncoding;
-import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticExporter;
 import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticToken;
-import es.ua.dlsi.im3.omr.encoding.agnostic.AgnosticVersion;
 import es.ua.dlsi.im3.omr.encoding.semantic.KernSemanticExporter;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -116,7 +113,7 @@ public class AgnosticSemanticTrainingSetExporter extends AbstractTrainingSetExpo
         JSONArray jsonSystems = new JSONArray();
 
         for (Image image: document.computeAllImagesSorted()) {
-            for (Page page: image.getSortedPages()) {
+            for (Page page: image.computeSortedPages()) {
                 exportPage(jsonSystems, page);
             }
         }
@@ -134,7 +131,7 @@ public class AgnosticSemanticTrainingSetExporter extends AbstractTrainingSetExpo
 
 
         AgnosticToken lastAgnosticClef = null; // used for the agnostic format including the context
-        for (Region region: page.getSortedStaves()) {
+        for (Region region: page.computeSortedStaves()) {
             if (region.getSymbols() != null && !region.getSymbols().isEmpty() && region.getSemanticEncoding() != null) {
 
                 /*if (page.getImage().getFilename().equals("[C14-15] 10.jpg")) {

@@ -134,7 +134,6 @@ public class NotationModel {
 
     public Notation getNotation(Document document, String partName, Region region, boolean mensustriche, Renderer renderer) throws IM3Exception, IM3WSException {
 
-        //TODO Código algo duplicado en DocumentModel - exportMEI
         //TODO Ahora sólo lo guardo en la región
         SemanticEncoding semanticEncoding = importSemanticEncoding(document, region);
         String mei = getMEINotation(semanticEncoding, document.getNotationType());
@@ -240,7 +239,7 @@ public class NotationModel {
 
                 //Part imagePart = image.getPart();
                 int npage = 0;
-                for (Page page: image.getSortedPages()) {
+                for (Page page: image.computeSortedPages()) {
                     npage++;
                     String lastPageID = "page_" + page.getId();
                     if (imageSurface != null) {
@@ -253,7 +252,7 @@ public class NotationModel {
                     }
                     boolean newPage = true;
                     int nregion = 0;
-                    for (Region region : page.getSortedStaves()) {
+                    for (Region region : page.computeSortedStaves()) {
                         nregion++;
                         Part regionPart = region.findPart();
                         if (partsAndFacsimile && regionPart != null) {
@@ -512,8 +511,8 @@ public class NotationModel {
             preflightCkeckImageResult.setImageName(image.getFilename());
             if (idsOfSelectedImages.contains(image.getId())) {
                 Part imagePart = image.getPart();
-                for (Page page: image.getSortedPages()) {
-                    Collection<Region> sortedStaves = page.getSortedStaves();
+                for (Page page: image.computeSortedPages()) {
+                    Collection<Region> sortedStaves = page.computeSortedStaves();
                     for (Region region: sortedStaves) {
                         ArrayList<String> problems = new ArrayList<>();
                         Part regionPart = region.getPart();

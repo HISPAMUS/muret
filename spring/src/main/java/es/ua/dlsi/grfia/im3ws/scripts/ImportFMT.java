@@ -10,21 +10,11 @@ import es.ua.dlsi.im3.core.IM3Exception;
 import es.ua.dlsi.im3.core.io.ImportException;
 import es.ua.dlsi.im3.core.score.*;
 import es.ua.dlsi.im3.core.score.io.mei.MEISongImporter;
-import es.ua.dlsi.im3.core.score.mensural.ligature.LigaturaCumOppositaPropietate;
-import es.ua.dlsi.im3.core.score.mensural.meters.Perfection;
 import es.ua.dlsi.im3.core.utils.FileUtils;
 import es.ua.dlsi.im3.omr.encoding.Encoder;
 import es.ua.dlsi.im3.omr.encoding.agnostic.*;
-import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.AgnosticSystemBreak;
 import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.Digit;
-import es.ua.dlsi.im3.omr.encoding.agnostic.agnosticsymbols.NoteFigures;
-import es.ua.dlsi.im3.omr.encoding.enums.ClefNote;
-import es.ua.dlsi.im3.omr.encoding.enums.MeterSigns;
-import es.ua.dlsi.im3.omr.encoding.semantic.MensSemanticImporter;
 import es.ua.dlsi.im3.omr.encoding.semantic.SemanticEncoding;
-import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbol;
-import es.ua.dlsi.im3.omr.encoding.semantic.SemanticSymbolType;
-import es.ua.dlsi.im3.omr.encoding.semantic.semanticsymbols.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -36,10 +26,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 
 import javax.transaction.Transactional;
 import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.*;
-import java.util.stream.Collectors;
 
 // use a different port when launching it simultaneously to the web server
 // --server.port=8181
@@ -142,7 +129,7 @@ public class ImportFMT implements CommandLineRunner {
         TreeMap<Time, SystemBeginning> systemBeginnings = staff.getParts().get(0).getPageSystemBeginnings().getSystemBeginnings();
         int nsystems = systemBeginnings.size();
 
-        List<Region> regions = image.getPages().iterator().next().getSortedStaves();
+        List<Region> regions = image.getPages().iterator().next().computeSortedStaves();
         if (regions.size() != nsystems) {
             throw new ImportException("MEI file has " + nsystems + " systems  and there are " + regions.size() + " regions");
         }
