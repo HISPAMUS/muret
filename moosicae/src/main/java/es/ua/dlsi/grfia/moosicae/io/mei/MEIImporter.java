@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.IMRuntimeException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
+import es.ua.dlsi.grfia.moosicae.core.properties.INotationType;
 import es.ua.dlsi.grfia.moosicae.core.properties.INoteHead;
 import es.ua.dlsi.grfia.moosicae.core.properties.IStaffLineCount;
 import es.ua.dlsi.grfia.moosicae.core.scoregraph.IScoreGraph;
@@ -86,13 +87,17 @@ public class MEIImporter extends XMLImporter implements IImporter {
     private void importStaffDefs(IStaffGroup parent, MEISystemDef systemDef) {
         if (systemDef instanceof MEIStaffDef) {
             MEIStaffDef meiStaffDef = (MEIStaffDef) systemDef;
+            INotationType notationType = null;
+            if (meiStaffDef.getNotationType().isPresent()) {
+                notationType = meiStaffDef.getNotationType().get();
+            }
             //TODO line count parameter in MEI
             IStaffLineCount staffLineCount = ICoreAbstractFactory.getInstance().createStaffLineCount(5);
             IStaff staff;
             if (parent == null) {
-                staff = ICoreAbstractFactory.getInstance().createStaff(score, null, staffLineCount);
+                staff = ICoreAbstractFactory.getInstance().createStaff(score, null, staffLineCount, notationType);
             } else {
-                staff = ICoreAbstractFactory.getInstance().createStaff(parent, null, staffLineCount);
+                staff = ICoreAbstractFactory.getInstance().createStaff(parent, null, staffLineCount, notationType);
             }
             IScoreStaffSubgraph scoreStaffSubgraph = ICoreAbstractFactory.getInstance().createScoreStaffSubgraph(staff);
             scoreGraph.addStaffSubgraph(scoreStaffSubgraph);

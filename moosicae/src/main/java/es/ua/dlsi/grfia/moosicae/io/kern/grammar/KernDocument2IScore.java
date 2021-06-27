@@ -3,12 +3,16 @@ package es.ua.dlsi.grfia.moosicae.io.kern.grammar;
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
 import es.ua.dlsi.grfia.moosicae.core.builders.IBeamGroupBuilder;
+import es.ua.dlsi.grfia.moosicae.core.enums.ENotationTypes;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
+import es.ua.dlsi.grfia.moosicae.core.properties.INotationType;
 import es.ua.dlsi.grfia.moosicae.core.prototypes.PrototypesAbstractBuilder;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.*;
 import es.ua.dlsi.grfia.moosicae.utils.dag.DAGNode;
 
 import java.util.*;
+
+import static es.ua.dlsi.grfia.moosicae.io.kern.grammar.EKernHeaders.*;
 
 /**
  * It converts the KernDocument obtained when parsing to an IScore object
@@ -54,14 +58,26 @@ public class KernDocument2IScore {
             KernToken kernToken = node.getLabel().getContent();
             if (kernToken instanceof KernHeader) {
                 EKernHeaders headerType = ((KernHeader) kernToken).getSkmHeaderType();
-                if (headerType == EKernHeaders.kern || headerType == EKernHeaders.mens) { //TODO tambuén smens y skern ??? - o emens / ekern
+                if (headerType == kern || headerType == mens) { //TODO tambuén smens y skern ??? - o emens / ekern
                     // Create the voice for this spine - it may be moved to another part when the *part signifier is found
                     IVoice voice = ICoreAbstractFactory.getInstance().createVoice(defaultPart, null, null);
                     voiceParts.put(voice.getId(), defaultPart);
 
+                    ENotationTypes eNotationTypes;
+                    switch (headerType) {
+                        case kern:
+                            eNotationTypes = ENotationTypes.eModern;
+                            break;
+                        case mens:
+                            eNotationTypes = ENotationTypes.eMensural;
+                            break;
+                        default:
+                            throw new IMException("Unsupported: " + headerType);
+                    }
+                    INotationType notationType = ICoreAbstractFactory.getInstance().createNotationType(null, eNotationTypes);
                     //TODO staves - cuando se encuentre con *staff1 o *staff1/2
                     // don't insert the staff yet into the score yet because their order must be reversed
-                    IStaff defaultVoiceStaff = ICoreAbstractFactory.getInstance().createStaff(null, ICoreAbstractFactory.getInstance().createStaffLineCount(5), null);
+                    IStaff defaultVoiceStaff = ICoreAbstractFactory.getInstance().createStaff(null, ICoreAbstractFactory.getInstance().createStaffLineCount(5), null, notationType);
                     staves.add(0, defaultVoiceStaff); // insert from the beginning
                     voiceStaves.put(voice.getId(), defaultVoiceStaff);
                     // now traverse the spine

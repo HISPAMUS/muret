@@ -1,4 +1,4 @@
-package es.ua.dlsi.grfia.im3ws.scripts;
+package es.ua.dlsi.grfia.im3ws.scripts.cdma;
 
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.controller.payload.Notation;
@@ -10,6 +10,7 @@ import es.ua.dlsi.grfia.im3ws.muret.entity.Region;
 import es.ua.dlsi.grfia.im3ws.muret.model.NotationModel;
 import es.ua.dlsi.grfia.im3ws.muret.repository.DocumentRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
+import es.ua.dlsi.grfia.im3ws.scripts.AuthenticateForScripts;
 import es.ua.dlsi.grfia.im3ws.utils.StreamGobbler;
 import es.ua.dlsi.im3.core.IM3Exception;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ import java.util.concurrent.Executors;
 @EnableJpaRepositories("es.ua.dlsi.grfia.im3ws.muret.repository")
 @EntityScan("es.ua.dlsi.grfia.im3ws.muret.entity")
 @Transactional
-public class GenerateMalagaTSV implements CommandLineRunner {
+public class GenerateCdmaPsv implements CommandLineRunner {
     @Autowired
     AuthenticationManager authenticationManager;
 
@@ -61,13 +62,13 @@ public class GenerateMalagaTSV implements CommandLineRunner {
 
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext ctx = SpringApplication.run(GenerateMalagaTSV.class, args);
+        ConfigurableApplicationContext ctx = SpringApplication.run(GenerateCdmaPsv.class, args);
         SpringApplication.exit(ctx);
     }
 
 
     @Autowired
-    public GenerateMalagaTSV(MURETConfiguration muretConfiguration) {
+    public GenerateCdmaPsv(MURETConfiguration muretConfiguration) {
         this.muretConfiguration = muretConfiguration;
     }
 
@@ -84,7 +85,7 @@ public class GenerateMalagaTSV implements CommandLineRunner {
         int suborden = 1;
         NotationModel notationModel = new NotationModel();
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("orden\tsuborden\tincipitmusical\tclave\tarmadura\tcompas\n");
+        stringBuilder.append("orden|suborden|incipitmusical|clave|armadura|compas\n");
         LinkedList<Region> regionsToSave = new LinkedList<>();
         boolean started = false;
         for (Image image: document.get().computeAllImagesSorted()) {
@@ -109,11 +110,11 @@ public class GenerateMalagaTSV implements CommandLineRunner {
                             } else {
                                 suborden++;
                             }
-                            stringBuilder.append('\t');
+                            stringBuilder.append('|');
                             stringBuilder.append(suborden);
-                            stringBuilder.append('\t');
+                            stringBuilder.append('|');
                             addPAE(notation, stringBuilder);
-                            stringBuilder.append('\n');
+                            stringBuilder.append('|');
 
                             lastReference = region.getExternalReference();
                         }
@@ -179,11 +180,11 @@ public class GenerateMalagaTSV implements CommandLineRunner {
             }
         }
         stringBuilder.append(incipit);
-        stringBuilder.append('\t');
+        stringBuilder.append('|');
         stringBuilder.append(clef);
-        stringBuilder.append('\t');
+        stringBuilder.append('|');
         stringBuilder.append(keySig);
-        stringBuilder.append('\t');
+        stringBuilder.append('|');
         stringBuilder.append(timeSig);
     }
 }

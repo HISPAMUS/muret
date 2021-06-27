@@ -5,6 +5,7 @@ import es.ua.dlsi.grfia.moosicae.core.IConventionalKeySignature;
 import es.ua.dlsi.grfia.moosicae.core.IKey;
 import es.ua.dlsi.grfia.moosicae.core.IMeter;
 import es.ua.dlsi.grfia.moosicae.core.properties.IId;
+import es.ua.dlsi.grfia.moosicae.core.properties.INotationType;
 
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
@@ -18,18 +19,20 @@ public class MEIStaffDef extends MEISystemDef implements IMEIDef {
     private final IConventionalKeySignature conventionalKeySignature;
     private IMeter meter;
     private IClef clef;
+    private INotationType notationType;
 
     @NotNull
     private Integer n;
 
 
-    public MEIStaffDef(IId id, @NotNull Integer n, IClef clef, IConventionalKeySignature conventionalKeySignature, IKey key, IMeter meter) {
+    public MEIStaffDef(IId id, @NotNull Integer n, IClef clef, IConventionalKeySignature conventionalKeySignature, IKey key, IMeter meter, INotationType notationType) {
         super(id);
         this.key = key;
         this.conventionalKeySignature = conventionalKeySignature;
         this.meter = meter;
         this.clef = clef;
         this.n = n;
+        this.notationType = notationType;
     }
 
     public Integer getN() {
@@ -55,9 +58,12 @@ public class MEIStaffDef extends MEISystemDef implements IMEIDef {
         return Optional.ofNullable(meter);
     }
 
+    public Optional<INotationType> getNotationType() {
+        return Optional.ofNullable(notationType);
+    }
 
     @Override
     public MEIStaffDef clone() {
-        return new MEIStaffDef(null, n, clef, conventionalKeySignature, key, meter);
+        return new MEIStaffDef(null, n, clef, conventionalKeySignature, key, meter, notationType);
     }
 }

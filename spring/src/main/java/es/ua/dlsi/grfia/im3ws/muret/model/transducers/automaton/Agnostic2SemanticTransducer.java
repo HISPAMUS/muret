@@ -86,10 +86,10 @@ public abstract class Agnostic2SemanticTransducer implements IAgnostic2SemanticT
         return transduction;
     }
 
-    public List<ITimedElementInStaff> semantic2IMCore(SemanticEncoding semanticEncoding) throws IM3Exception {
+    public List<ITimedElementInStaff> semantic2IMCore(SemanticEncoding semanticEncoding, boolean addStaffSyncLine) throws IM3Exception {
         Semantic2IMCore semantic2ScoreSong = new Semantic2IMCore();
         LinkedList<ITimedElementInStaff> result = new LinkedList<>();
-        List<Pair<SemanticSymbol, ITimedElementInStaff>> pairs = semantic2ScoreSong.convert(notationType, semanticEncoding);
+        List<Pair<SemanticSymbol, ITimedElementInStaff>> pairs = semantic2ScoreSong.convert(notationType, semanticEncoding, addStaffSyncLine);
         pairs.forEach(pair -> {
             result.add(pair.getY());
         });

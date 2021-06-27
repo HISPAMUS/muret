@@ -7,10 +7,7 @@ import es.ua.dlsi.grfia.moosicae.core.builders.IConventionalKeySignatureBuilder;
 import es.ua.dlsi.grfia.moosicae.core.builders.IModeBuilder;
 import es.ua.dlsi.grfia.moosicae.core.builders.properties.IOctaveTransposition;
 import es.ua.dlsi.grfia.moosicae.core.enums.*;
-import es.ua.dlsi.grfia.moosicae.core.properties.IAccidentalSymbol;
-import es.ua.dlsi.grfia.moosicae.core.properties.ICautionaryKeySignatureAccidentals;
-import es.ua.dlsi.grfia.moosicae.core.properties.IClefLine;
-import es.ua.dlsi.grfia.moosicae.core.properties.IMode;
+import es.ua.dlsi.grfia.moosicae.core.properties.*;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -342,5 +339,19 @@ public class MEIAttributesParsers {
         } else {
             return Optional.empty();
         }
+    }
+
+    public Optional<INotationType> parseNotationType(XMLImporterParam xmlImporterParam) throws IMException {
+        Optional<String> notationType = xmlImporterParam.getAttribute("notationtype");
+        if (notationType.isPresent()) {
+            switch (notationType.get()) {
+                case "mensural":
+                    return Optional.of(ICoreAbstractFactory.getInstance().createNotationType(null, ENotationTypes.eMensural));
+                default:
+                    throw new IMException("Unsupported notation type: '" + notationType.get() + "'");
+            }
+        }
+
+        return Optional.empty();
     }
 }

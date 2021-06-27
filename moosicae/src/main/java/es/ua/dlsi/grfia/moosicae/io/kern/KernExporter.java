@@ -2,9 +2,9 @@ package es.ua.dlsi.grfia.moosicae.io.kern;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
-import es.ua.dlsi.grfia.moosicae.core.enums.EBarlineTypes;
+import es.ua.dlsi.grfia.moosicae.core.enums.ENotationTypes;
+import es.ua.dlsi.grfia.moosicae.core.properties.INotationType;
 import es.ua.dlsi.grfia.moosicae.core.scoregraph.IScoreGraphContentNode;
-import es.ua.dlsi.grfia.moosicae.core.scoregraph.IScoreGraphNode;
 import es.ua.dlsi.grfia.moosicae.core.scoregraph.IScoreStaffSubgraph;
 import es.ua.dlsi.grfia.moosicae.io.AbstractExporter;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.EKernHeaders;
@@ -12,6 +12,7 @@ import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernDocument;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernToken;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.KernHeader;
 import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.KernPart;
+import es.ua.dlsi.grfia.moosicae.io.kern.grammar.tokens.KernStaff;
 
 
 import java.util.HashMap;
@@ -32,16 +33,18 @@ public class KernExporter extends AbstractExporter<KernExporterVisitor> {
     private KernDocument kernDocument;
     private KernExporterContext kernExporterContext;
     private IMeter lastMeter;
+    private boolean addPart;
 
-    public KernExporter(boolean ekern) {
+    public KernExporter(boolean addPart, boolean ekern) {
         super(new KernExporterVisitor(ekern));
         this.ekern = ekern;
+        this.addPart = addPart; //TODO
         kernExporterContext = new KernExporterContext();
         lastVoiceTokens = new HashMap<>();
     }
 
     public KernExporter() {
-        this(false);
+        this(true, false);
     }
 
     @Override
@@ -68,24 +71,46 @@ public class KernExporter extends AbstractExporter<KernExporterVisitor> {
             throw new IMException("Unsupported several staves");
         }
 
+        INotationType notationType = stavesSubgraphs[0].getStaff().getNotationType();
         IScoreGraphContentNode[] next = score.getScoreGraph().getStartNode().getNextNodes(stavesSubgraphs[0]);
         KernToken lastToken = null;
         EKernHeaders header;
-        KernPart kernPart = new KernPart("*part·1", 1);
-        if (this.ekern) { //TODO tipo
-            header = EKernHeaders.ekern;
-            kernPart = new KernPart("*part·1", 1);
+        KernPart kernPart = null;
+        KernStaff kernStaff = null;
+        if (this.ekern) { //TODO Otros tipos
+            if (notationType.getValue() == ENotationTypes.eMensural) {
+                header = EKernHeaders.emens_1_0;
+            } else {
+                header = EKernHeaders.ekern_1_0;
+            }
+
+            if (this.addPart) {
+                kernPart = new KernPart("*part·1", 1);
+            }
+            kernStaff = new KernStaff("*staff·1", 1);
         } else {
-            header = EKernHeaders.kern;
-            kernPart = new KernPart("*part1", 1);
+            if (notationType.getValue() == ENotationTypes.eMensural) {
+                header = EKernHeaders.mens;
+            } else {
+                header = EKernHeaders.kern;
+            }
+            if (this.addPart) {
+                kernPart = new KernPart("*part1", 1);
+            }
+            kernStaff = new KernStaff("*staff1", 1);
         }
         KernHeader kernHeader = new KernHeader(header);
         kernDocument.addHeader(kernHeader);
         lastToken = kernHeader;
 
         //TODO Part
-        kernDocument.add(lastToken, kernPart);
-        lastToken = kernPart;
+        if (addPart) {
+            kernDocument.add(lastToken, kernPart);
+            lastToken = kernPart;
+        }
+
+        kernDocument.add(lastToken, kernStaff);
+        lastToken = kernStaff;
 
         IMeasure lastMeasure = null;
         while (next != null && next.length > 0) {

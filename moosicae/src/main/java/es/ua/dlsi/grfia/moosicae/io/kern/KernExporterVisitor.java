@@ -180,7 +180,7 @@ public class KernExporterVisitor implements IExporterVisitor<KernExporterVisitor
                 throw new IMException("Last meter contexual field is empty in KernExporterVisitorTokenParam");
             }
             ITime meterDuration = inputOutput.getLastMeter().getBarDuration();
-            Pair<EFigures, Integer> figureAndDots = EFigures.findDurationWithDots(meterDuration, ENotationTypes.eModern); // **ekern is modern
+            Pair<EFigures, Integer> figureAndDots = EFigures.findDurationWithDots(meterDuration, ENotationTypes.eModern, 2); // **ekern is modern
             IDots dots = null;
             if (figureAndDots.getRight() > 0) {
                 dots = ICoreAbstractFactory.getInstance().createDots(null, figureAndDots.getRight());

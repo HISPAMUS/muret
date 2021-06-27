@@ -1,17 +1,28 @@
-0.20
 
+0.21
     MAJOR UPDATES
+    - Rename part added
 
     MINOR UPDATES
-    - Notification to MuRET users are sent using BCC
+    - Repeated xml:id in export are no longer duplicated (issue #225)
+    - Agnostic recognition button renamed (issue #219)
+----
 
+0.20
+
+    MINOR UPDATES
+    - Some typos in texts have been corrected
+    - Notification to MuRET users are sent using BCC
+    - When region didn't have semantic encoding the toolbar to create it was hidden. This is now corrected (issue #220)
+    - @targettype = IIIF added to the <source> element to make it compliant with the MP-Editor (issue #222)
+    - Mensuration changes are correctly exported to MEI (issue #223)
 ----
 
 0.19
 
     MAJOR UPDATES
     - All images are now served by the IIIF Cantaloupe server (issue #183)
-    - Rotation in document analysis is perfomed using the IIIF transform (origin in bottom left)
+    - Rotation in document analysis is performed using the IIIF transform (origin in bottom left)
     - Document analysis: autorotate using Hugh Transform
     - Backend DL classifiers in Python now just use IIIF urls including rotation
 

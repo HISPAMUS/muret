@@ -15,7 +15,7 @@ import {
   ImageRecognitionLinkImageToNewPart,
   ImageRecognitionLinkImageToPart,
   ImageRecognitionLinkNewPart,
-  ImageRecognitionLinkPart,
+  ImageRecognitionLinkPart, ImageRecognitionRenamePart,
   ImageRecognitionUnlinkImageFromPart,
   ImageRecognitionUnlinkPart
 } from "../../../store/actions/image-recognition.actions";
@@ -57,6 +57,7 @@ export class PartsInImageComponentComponent extends ImageRecognitionBaseAbstract
       this.addLabelBox(newShapes, region.regionType.name, region.id, region.boundingBox, region.regionType.hexargb, region, region.part.name);
     }
   }
+
 
 
   partTracking(index, item): number {
@@ -129,6 +130,11 @@ export class PartsInImageComponentComponent extends ImageRecognitionBaseAbstract
       });
   }
 
+
+  protected isPageSelectable(): boolean {
+    return true;
+  }
+
   unlinkPart() {
     const partLinking: PartLinking = this.createPartLinking();
     this.store.dispatch(new ImageRecognitionUnlinkPart(partLinking));
@@ -159,8 +165,26 @@ export class PartsInImageComponentComponent extends ImageRecognitionBaseAbstract
     });
   }
 
-  protected isPageSelectable(): boolean {
-    return true;
-  }
 
+  renamePart() {
+    //TODO Other visual method of renaming
+    const parts: ModalOptions[] = [];
+    this.imageOverview.documentParts.forEach(part => {
+      const option: ModalOptions = {
+        id: ''+part.id,
+        name: part.name
+      };
+      parts.push(option);
+    });
+    this.dialogsService.showOptions('Select a part to rename', parts, null).subscribe(selectedPart => {
+      if (selectedPart && selectedPart.id) {
+        this.dialogsService.showInput('Rename part', 'Input the new name of the part', selectedPart.name, true)
+          .subscribe((text) => {
+            if (text) {
+              this.store.dispatch(new ImageRecognitionRenamePart(+selectedPart.id, text));
+            }
+          });
+      }
+    });
+  }
 }

@@ -18,7 +18,7 @@ public class EFiguresTest {
     public void findDurationWithDots() throws IMException {
         ITime duration = ICoreAbstractFactory.getInstance().createTime(3, 1);
         Pair<EFigures, Integer> expected = new Pair<>(EFigures.HALF, 1);
-        Pair<EFigures, Integer> actual = EFigures.findDurationWithDots(duration, ENotationTypes.eModern);
+        Pair<EFigures, Integer> actual = EFigures.findDurationWithDots(duration, ENotationTypes.eModern, 2);
         assertEquals(expected, actual);
     }
 }

@@ -20,8 +20,12 @@ import {
   ImageRecognitionChangeStatus,
   ImageRecognitionChangeStatusSuccess,
   ImageRecognitionChangeSymbolBoundingBox,
-  ImageRecognitionChangeSymbolComments, ImageRecognitionChangeSymbolsPosition, ImageRecognitionChangeSymbolsType,
-  ImageRecognitionChangeSymbolsSuccess, ImageRecognitionChangeSymbolX, ImageRecognitionChangeSymbolXSuccess,
+  ImageRecognitionChangeSymbolComments,
+  ImageRecognitionChangeSymbolsPosition,
+  ImageRecognitionChangeSymbolsType,
+  ImageRecognitionChangeSymbolsSuccess,
+  ImageRecognitionChangeSymbolX,
+  ImageRecognitionChangeSymbolXSuccess,
   ImageRecognitionClassifyRegionEndToEnd,
   ImageRecognitionClassifyRegionEndToEndSuccess,
   ImageRecognitionClear,
@@ -60,7 +64,8 @@ import {
   ImageRecognitionLinkNewPart,
   ImageRecognitionLinkNewPartSuccess,
   ImageRecognitionLinkPart,
-  ImageRecognitionLinkPartSuccess, ImageRecognitionMoveSymbolsPosition,
+  ImageRecognitionLinkPartSuccess,
+  ImageRecognitionMoveSymbolsPosition,
   ImageRecognitionPutComments,
   ImageRecognitionPutCommentsSuccess,
   ImageRecognitionRevertRotation,
@@ -70,7 +75,10 @@ import {
   ImageRecognitionUnlinkImageFromPart,
   ImageRecognitionUnlinkImageFromPartSuccess,
   ImageRecognitionUnlinkPart,
-  ImageRecognitionUnlinkPartSuccess, ImageRecognitionAutoRotate, ImageRecognitionAutoRotateSuccess
+  ImageRecognitionUnlinkPartSuccess,
+  ImageRecognitionAutoRotate,
+  ImageRecognitionAutoRotateSuccess,
+  ImageRecognitionRenamePart, ImageRecognitionRenamePartSuccess
 } from "../actions/image-recognition.actions";
 import {Page} from "../../../../core/model/entities/page";
 import {ImagePartsService} from "../../services/image-parts.service";
@@ -191,6 +199,14 @@ export class ImageOverviewEffects {
     ofType<ImageRecognitionUnlinkImageFromPart>(ImageRecognitionActionTypes.ImageRecognitionUnlinkImageFromPart),
     switchMap((action: ImageRecognitionUnlinkImageFromPart) => this.imagePartsService.unlinkImageFromPart$(action.imageID).pipe(
       switchMap(() => of(new ImageRecognitionUnlinkImageFromPartSuccess())),
+      //catchError(err => of(new ImageRecognitionServerError(err)))
+    )));
+
+  @Effect()
+  renamePart$ = this.actions$.pipe(
+    ofType<ImageRecognitionRenamePart>(ImageRecognitionActionTypes.ImageRecognitionRenamePart),
+    switchMap((action: ImageRecognitionRenamePart) => this.imagePartsService.renamePart$(action.partID, action.name).pipe(
+      switchMap((part) => of(new ImageRecognitionRenamePartSuccess(part))),
       //catchError(err => of(new ImageRecognitionServerError(err)))
     )));
 

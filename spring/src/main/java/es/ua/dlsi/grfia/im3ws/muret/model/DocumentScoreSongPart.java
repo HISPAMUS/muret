@@ -134,7 +134,7 @@ public class DocumentScoreSongPart {
             // now insert the new content
             //TimeSignature lastTimeSignature = layer.getStaff().getRunningTimeSignatureOrNullAt(systemBeginning.getTime());
             //KeySignature lastKeySignature = layer.getStaff().getRunningKeySignatureOrNullAt(layer.getDuration());
-            List<Pair<SemanticSymbol, ITimedElementInStaff>> newElementsPairs = semantic2IMCore.convert(layer.getStaff().getNotationType(),semanticEncoding);
+            List<Pair<SemanticSymbol, ITimedElementInStaff>> newElementsPairs = semantic2IMCore.convert(layer.getStaff().getNotationType(),semanticEncoding, true);
 
             LinkedList<ITimedElementInStaff> newElements = new LinkedList<>();
             newElementsPairs.forEach(pair -> {

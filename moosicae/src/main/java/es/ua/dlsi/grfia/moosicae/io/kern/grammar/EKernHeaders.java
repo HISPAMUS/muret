@@ -3,11 +3,12 @@ package es.ua.dlsi.grfia.moosicae.io.kern.grammar;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public enum EKernHeaders {
-    kern ("**kern"),
-    mens ("**mens"),
+    kern("**kern"),
+    mens("**mens"),
+    ekern_1_0("**ekern_1.0"),
+    emens_1_0("**emens_1.0"),
     skern ("**skern"),
     smens ("**smens"),
-    ekern ("**ekern"),
     edynam ("**edynam"),
     dyn ("**dyn"), // old dynamics type, not supperted by VHV
     dynam ("**dynam"), // new dynamics type, supported by VHV

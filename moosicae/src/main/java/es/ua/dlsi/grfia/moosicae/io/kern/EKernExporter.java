@@ -6,6 +6,6 @@ package es.ua.dlsi.grfia.moosicae.io.kern;
  */
 public class EKernExporter extends KernExporter {
     public EKernExporter() {
-        super(true);
+        super(true, true);
     }
 }

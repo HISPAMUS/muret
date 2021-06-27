@@ -1,5 +1,6 @@
 clefs.agnosticv4
 barlines_single.agnosticv4
+ligature.agnosticv4
 unit_test_1.agnosticv4
 accidentals.agnosticv4
 meters.agnosticv4
@@ -13,3 +14,5 @@ chords.agnosticv4
 durations.agnosticv4
 pitches.agnosticv4
 rests.agnosticv4
+mensural.agnosticv4
+ligature.agnosticv4

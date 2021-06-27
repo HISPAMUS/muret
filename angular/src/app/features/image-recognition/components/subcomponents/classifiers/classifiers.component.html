@@ -4,7 +4,7 @@
     <option *ngFor="let model of sortedModels" [value]="model.id">{{model.name}}</option>
   </select>
   <button *ngIf="!hideClassifyButton" [disabled]="!selectedModel" class="btn btn-primary" (click)="executeClassifier()">
-    <fa-icon *ngIf="!(analyzing$ | async)" icon="server" class="icons" size="lg" ngbTooltip="Execute document analysis"></fa-icon>
+    <fa-icon *ngIf="!(analyzing$ | async)" icon="server" class="icons" size="lg" ngbTooltip="Execute classifier"></fa-icon>
     <span *ngIf="analyzing$ |async" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
   </button>
   <span *ngIf="hideClassifyButton && analyzing$ |async" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>

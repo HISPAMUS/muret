@@ -25,7 +25,7 @@ public abstract class MonodicTest extends AbstractCoreTest {
         score = ICoreAbstractFactory.getInstance().createScore(ICoreAbstractFactory.getInstance().createId());
         part = ICoreAbstractFactory.getInstance().createPart(score, ICoreAbstractFactory.getInstance().createId(), ICoreAbstractFactory.getInstance().createName(ICoreAbstractFactory.getInstance().createId(), "Violin"));
         voice = ICoreAbstractFactory.getInstance().createVoice(part, ICoreAbstractFactory.getInstance().createId(), null);
-        staff = ICoreAbstractFactory.getInstance().createStaff(score, ICoreAbstractFactory.getInstance().createId(), ICoreAbstractFactory.getInstance().createStaffLineCount(5));
+        staff = ICoreAbstractFactory.getInstance().createStaff(score, ICoreAbstractFactory.getInstance().createId(), ICoreAbstractFactory.getInstance().createStaffLineCount(5), null);
     }
 
     protected void addSmallRest()  {

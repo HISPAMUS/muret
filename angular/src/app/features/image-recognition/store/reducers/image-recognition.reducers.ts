@@ -137,7 +137,35 @@ export function imageRecognitionReducers(state = initialImageRecognitionState, a
       newState.imageOverview.imagePart = null;
       return newState;
     }
-
+    case ImageRecognitionActionTypes.ImageRecognitionRenamePartSuccess: {
+      const newState: ImageRecognitionState = {
+        pagesRegionsSymbols: klona(state.pagesRegionsSymbols),
+        imageOverview: klona(state.imageOverview),
+        regionTypes: state.regionTypes,
+        classifierModels: state.classifierModels,
+        analyzing: state.analyzing,
+        //apiRestServerError: null
+      };
+      if (newState.imageOverview.imagePart && newState.imageOverview.imagePart.id === action.part.id) {
+        newState.imageOverview.imagePart.name = action.part.name;
+      }
+      newState.imageOverview.documentParts.forEach(part => {
+        if (part.id === action.part.id) {
+          part.name = action.part.name;
+        }
+      });
+      newState.pagesRegionsSymbols.forEach(page => {
+        if (page.part && page.part.id == action.part.id) {
+          page.part.name = action.part.name;
+        }
+        page.regions.forEach(region => {
+          if (region.part && region.part.id == action.part.id) {
+            region.part.name = action.part.name;
+          }
+        });
+      });
+      return newState;
+    }
     /// ------ Document analysis
     case ImageRecognitionActionTypes.ImageRecognitionGetRegionTypesSuccess: {
       return {

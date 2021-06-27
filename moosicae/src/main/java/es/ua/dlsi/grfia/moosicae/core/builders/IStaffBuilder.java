@@ -4,6 +4,7 @@ import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.ICoreAbstractFactory;
 import es.ua.dlsi.grfia.moosicae.core.IVoicedSingle;
 import es.ua.dlsi.grfia.moosicae.core.IStaff;
+import es.ua.dlsi.grfia.moosicae.core.properties.INotationType;
 import es.ua.dlsi.grfia.moosicae.core.properties.IStaffLineCount;
 
 import java.util.LinkedList;
@@ -16,6 +17,7 @@ import java.util.List;
 public class IStaffBuilder extends ISystemBuilder<IStaff> {
     private final List<IVoicedSingle> staffSymbols;
     protected IStaffLineCount lineCount;
+    INotationType notationType;
 
     public IStaffBuilder() {
         this.staffSymbols = new LinkedList<>();
@@ -26,6 +28,11 @@ public class IStaffBuilder extends ISystemBuilder<IStaff> {
         return this;
     }
 
+    public IStaffBuilder from(INotationType notationType) {
+        this.notationType = notationType;
+        return this;
+    }
+
     public IStaffBuilder add(IVoicedSingle coreItem) {
         this.staffSymbols.add(coreItem);
         return this;
@@ -33,6 +40,6 @@ public class IStaffBuilder extends ISystemBuilder<IStaff> {
 
     @Override
     public IStaff build() throws IMException {
-        return ICoreAbstractFactory.getInstance().createStaff(getId(), lineCount, staffSymbols.toArray(new IVoicedSingle[0])); // recall the IVoicedSingle[0] is used to indicate the array type without cast
+        return ICoreAbstractFactory.getInstance().createStaff(getId(), lineCount, staffSymbols.toArray(new IVoicedSingle[0]), notationType); // recall the IVoicedSingle[0] is used to indicate the array type without cast
     }
 }

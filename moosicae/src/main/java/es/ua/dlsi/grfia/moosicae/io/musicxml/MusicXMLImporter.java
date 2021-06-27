@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.io.musicxml;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.enums.ENotationTypes;
 import es.ua.dlsi.grfia.moosicae.core.properties.IStaffLineCount;
 import es.ua.dlsi.grfia.moosicae.io.IImporter;
 import es.ua.dlsi.grfia.moosicae.io.musicxml.importer.builders.*;
@@ -115,7 +116,7 @@ public class MusicXMLImporter extends XMLImporter implements IImporter {
             //TODO voices, staves
             IStaffLineCount staffLineCount = ICoreAbstractFactory.getInstance().createStaffLineCount(5);
             IVoice defaultVoice = ICoreAbstractFactory.getInstance().createVoice(part, null, null);
-            IStaff defaultStaff = ICoreAbstractFactory.getInstance().createStaff(score, null, staffLineCount);
+            IStaff defaultStaff = ICoreAbstractFactory.getInstance().createStaff(score, null, staffLineCount, ICoreAbstractFactory.getInstance().createNotationType(null, ENotationTypes.eMensural));
             for (MxmlMeasure measure : mxmlImportedPart.getMeasures()) {
                 for (IMxmlPartItem item: measure.getItems()) {
                     IVoicedSingle[] subitems = item.getItems(); //TODO sacar los datos adicionales del MusicXMLNote como es la staff...

@@ -39,4 +39,9 @@ export class ImagePartsService {
     const url = `parts/unlinkImageFromPart/${imageID}`;
     return this.apiRestClientService.put$(url, null);
   }
+
+  renamePart$(partID: number, name: string): Observable<Part> {
+    const url = `parts/rename/${partID}/${name}`;
+    return this.apiRestClientService.put$<Part>(url, null);
+  }
 }

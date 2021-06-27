@@ -124,13 +124,13 @@ public enum EFigures implements Comparable<EFigures> {
         throw new IMException("Cannot find a figure with duration " + duration + " and notation type " + notationType);
     }
 
-    public static Pair<EFigures, Integer> findDurationWithDots(ITime duration, ENotationTypes notationType) throws IMException {
+    public static Pair<EFigures, Integer> findDurationWithDots(ITime duration, ENotationTypes notationType, int maxDots) throws IMException {
         if (notationType == null) {
             throw new IMException("Cannot search a duration if notationType is null");
         }
         for (EFigures fig : EFigures.values()) {
             ITime figureDuration = fig.getDuration();
-            for (int i=0; i<5; i++) { // maximum 5 dots
+            for (int i=0; i<maxDots; i++) { // maximum 5 dots
                 if (fig.notationType == notationType && figureDuration.equals(duration)) {
                     return new Pair<>(fig, i);
                 }

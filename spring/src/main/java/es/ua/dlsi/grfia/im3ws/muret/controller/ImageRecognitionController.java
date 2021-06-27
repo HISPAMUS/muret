@@ -67,7 +67,7 @@ public class ImageRecognitionController {
     }
 
     @GetMapping(path = {"/overview/{imageID}"})
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = false) // action logs
     public ImageOverview getImageOverview(@PathVariable("imageID") Long id)  {
         try {
             Image image = getImage(id);

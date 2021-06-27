@@ -17,7 +17,7 @@ import java.util.List;
 public class AgnosticImporterTest {
 
     /**
-     * This test just evaluates the files are correct.
+     * This test just evaluates the files are syntactically correct
      * Files to test are generated with script generate.sh in the folder testdata/agnostic
      */
     @Test

@@ -327,20 +327,20 @@ public class CoreAbstractFactoryImpl implements ICoreAbstractFactory {
     }
 
     @Override
-    public IStaff createStaff(IId id, @NotNull IStaffLineCount staffLineCount, IVoicedSingle[] items) {
-        return new Staff(id, staffLineCount, items);
+    public IStaff createStaff(IId id, @NotNull IStaffLineCount staffLineCount, IVoicedSingle[] items, INotationType notationType) {
+        return new Staff(id, staffLineCount, items, notationType);
     }
 
     @Override
-    public IStaff createStaff(IStaffGroup staves, IId id, IStaffLineCount staffLineCount) {
-        Staff staff = new Staff(id, staffLineCount);
+    public IStaff createStaff(IStaffGroup staves, IId id, IStaffLineCount staffLineCount, INotationType notationType) {
+        Staff staff = new Staff(id, staffLineCount, notationType);
         staves.add(staff);
         return staff;
     }
 
     @Override
-    public IStaff createStaff(IScore score, IId id, IStaffLineCount staffLineCount) {
-        Staff staff = new Staff(id, staffLineCount);
+    public IStaff createStaff(IScore score, IId id, IStaffLineCount staffLineCount, INotationType notationType) {
+        Staff staff = new Staff(id, staffLineCount, notationType);
         score.add(staff);
         return staff;
     }

@@ -2,6 +2,7 @@ package es.ua.dlsi.grfia.moosicae.io.mei.importer.builders;
 
 import es.ua.dlsi.grfia.moosicae.IMException;
 import es.ua.dlsi.grfia.moosicae.core.*;
+import es.ua.dlsi.grfia.moosicae.core.properties.INotationType;
 import es.ua.dlsi.grfia.moosicae.io.mei.importer.elements.MEIStaffDef;
 import es.ua.dlsi.grfia.moosicae.io.xml.XMLImporterParam;
 
@@ -17,11 +18,12 @@ public class MEIStaffDefBuilder extends MEIObjectBuilder<MEIStaffDef> {
     private IConventionalKeySignature conventionalKeySignature;
     protected IMeter meter;
     private Integer n;
+    private INotationType notationType;
 
 
     @Override
     public MEIStaffDef build() throws IMException {
-        return new MEIStaffDef(getId(), n, clef, conventionalKeySignature, key, meter);
+        return new MEIStaffDef(getId(), n, clef, conventionalKeySignature, key, meter, notationType);
     }
 
     @Override
@@ -35,6 +37,11 @@ public class MEIStaffDefBuilder extends MEIObjectBuilder<MEIStaffDef> {
         Optional<IClef> clef = MEIAttributesParsers.getInstance().parseClef(xmlImporterParam, true);
         if (clef.isPresent()) {
             this.clef = clef.get();
+        }
+
+        Optional<INotationType> notationType = MEIAttributesParsers.getInstance().parseNotationType(xmlImporterParam);
+        if (notationType.isPresent()) {
+            this.notationType = notationType.get();
         }
 
         Optional<IKey> key = MEIAttributesParsers.getInstance().parseKey(xmlImporterParam);

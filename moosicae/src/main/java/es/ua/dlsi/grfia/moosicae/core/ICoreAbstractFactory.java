@@ -122,20 +122,20 @@ public interface ICoreAbstractFactory {
     IScore createScore(IId id);
     IRest createRest(IId id, @NotNull IFigure figure,  IDots dots);
 
-    IStaff createStaff(IId id, @NotNull IStaffLineCount staffLineCount, IVoicedSingle[] items);
+    IStaff createStaff(IId id, @NotNull IStaffLineCount staffLineCount, IVoicedSingle[] items, INotationType notationType);
 
     /**
      * For nested staff. It adds the staff to the staff group
      * @param staffGroup
      * @return
      */
-    IStaff createStaff(@NotNull IStaffGroup staffGroup, IId id, @NotNull IStaffLineCount staffLineCount);
+    IStaff createStaff(@NotNull IStaffGroup staffGroup, IId id, @NotNull IStaffLineCount staffLineCount, INotationType notationType);
     /**
      * For ungrouped staves. It adds the staff to the score
      * @param score
      * @return
      */
-    IStaff createStaff(@NotNull IScore score, IId id, @NotNull IStaffLineCount staffLineCount);
+    IStaff createStaff(@NotNull IScore score, IId id, @NotNull IStaffLineCount staffLineCount, INotationType notationType);
     IStaffGroup createStaffGroup(IId id, ISystem[] children);
 
     /**

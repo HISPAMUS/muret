@@ -55,7 +55,7 @@ public class NotationModel {
         //TODO URGENT - esta separación no está bien - puesto para prueba de concepto de ReadSCO
         ScoreSong song = null;
         if (notationType == NotationType.eMensural) {
-            List<Pair<SemanticSymbol, ITimedElementInStaff>> items = semantic2IMCore.convert(notationType, semanticEncoding);
+            List<Pair<SemanticSymbol, ITimedElementInStaff>> items = semantic2IMCore.convert(notationType, semanticEncoding, true);
             song = new ScoreSong();
             ScorePart part = song.addPart();
             ScoreLayer layer = part.addScoreLayer();
@@ -73,7 +73,7 @@ public class NotationModel {
                 }
             }
         } else {
-            song = semantic2IMCore.convertToSingleVoicedSong(notationType, semanticEncoding);
+            song = semantic2IMCore.convertToSingleVoicedSong(notationType, semanticEncoding, true);
         }
 
         if (notationType == NotationType.eModern && song.getMeasures().isEmpty()) {
@@ -314,7 +314,7 @@ public class NotationModel {
                                     SemanticEncoding semantic = importSemanticEncoding(document, region);
                                     Semantic2IMCore semantic2IMCore = new Semantic2IMCore();
                                     //TODO compases y tonalidad anteriores
-                                    List<Pair<SemanticSymbol, ITimedElementInStaff>> items = semantic2IMCore.convert(document.getNotationType(), semantic);
+                                    List<Pair<SemanticSymbol, ITimedElementInStaff>> items = semantic2IMCore.convert(document.getNotationType(), semantic, false);
 
                                     Staff staff = staves.get(regionPart);
                                     if (staff == null) {

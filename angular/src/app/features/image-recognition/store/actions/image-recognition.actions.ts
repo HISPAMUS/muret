@@ -41,6 +41,8 @@ export enum ImageRecognitionActionTypes {
   ImageRecognitionLinkNewPartSuccess = '[ImageRecognition - Parts] Link new part success',
   ImageRecognitionUnlinkPart = '[ImageRecognition - Parts] Unlink part',
   ImageRecognitionUnlinkPartSuccess = '[ImageRecognition - Parts] Unlink part success',
+  ImageRecognitionRenamePart = '[ImageRecognition - Parts] Rename part',
+  ImageRecognitionRenamePartSuccess = '[ImageRecognition - Parts] Rename part success',
 
   ImageRecognitionLinkImageToPart = '[ImageRecognition - Parts] Link part to image',
   ImageRecognitionLinkImageToPartSuccess = '[ImageRecognition - Parts] Link part to image success',
@@ -227,6 +229,17 @@ export class ImageRecognitionUnlinkImageFromPart implements Action {
 export class ImageRecognitionUnlinkImageFromPartSuccess implements Action {
   public readonly type = ImageRecognitionActionTypes.ImageRecognitionUnlinkImageFromPartSuccess;
   constructor() {}
+}
+
+
+export class ImageRecognitionRenamePart implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionRenamePart;
+  constructor(public partID: number, public name: string) {}
+}
+
+export class ImageRecognitionRenamePartSuccess implements Action {
+  public readonly type = ImageRecognitionActionTypes.ImageRecognitionRenamePartSuccess;
+  constructor(public part: Part) {}
 }
 
 // ----- Document analysis
@@ -578,6 +591,7 @@ export type ImageRecognitionActions =
   ImageRecognitionLinkImageToPart | ImageRecognitionLinkImageToPartSuccess |
   ImageRecognitionLinkImageToNewPart | ImageRecognitionLinkImageToNewPartSuccess |
   ImageRecognitionUnlinkImageFromPart | ImageRecognitionUnlinkImageFromPartSuccess |
+  ImageRecognitionRenamePart | ImageRecognitionRenamePartSuccess |
 
   // document analysis
   ImageRecognitionGetRegionTypes | ImageRecognitionGetRegionTypesSuccess |

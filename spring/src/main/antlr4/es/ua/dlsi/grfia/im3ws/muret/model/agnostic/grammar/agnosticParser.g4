@@ -16,7 +16,7 @@ options { tokenVocab=agnosticLexer; } // use tokens from agnosticLexer.g4
 }
 
 start: version (EOL agnosticSymbol)* EOL*;
-version: VERSION COLON naturalNumber; // currently 'version:4'
+version: VERSION COLON naturalNumber; // currently 'agnostic_version:4'
 agnosticSymbol: (coordinates TAB)? symbol COLON positionInStaff COLON staff;
 
 coordinates: naturalNumber TAB naturalNumber;
@@ -60,7 +60,7 @@ note: TNOTE SEPSYMBOL noteFigure (SEPPROPERTIES PCHORD)? (SEPPROPERTIES cue)?;
 
 cue: PCUE (SEPPROPERTIES PSLASH)?;
 
-noteFigure: (STFIGURES_WITHOUT_STEM | STFIGURES_WITH_STEM SEPPROPERTIES pUpDown) | (beam SEPPROPERTIES pUpDown);
+noteFigure: (STFIGURES_WITHOUT_STEM | STFIGURES_WITH_STEM (SEPPROPERTIES pUpDown)?) | (beam SEPPROPERTIES pUpDown);
 
 beam: STBEAM naturalNumber;
 

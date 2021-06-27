@@ -1,5 +1,6 @@
 package es.ua.dlsi.grfia.moosicae.core;
 
+import es.ua.dlsi.grfia.moosicae.core.properties.INotationType;
 import es.ua.dlsi.grfia.moosicae.core.properties.IStaffLineCount;
 
 /**
@@ -7,6 +8,7 @@ import es.ua.dlsi.grfia.moosicae.core.properties.IStaffLineCount;
  * @author David Rizo - drizo@dlsi.ua.es
  */
 public interface IStaff extends ISystem {
+    INotationType getNotationType();
     IVoicedSingle[] getStaffSymbols();
     IStaffLineCount getStaffLineCount();
 

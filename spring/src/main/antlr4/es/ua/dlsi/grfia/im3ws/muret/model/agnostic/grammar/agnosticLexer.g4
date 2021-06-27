@@ -4,7 +4,7 @@ lexer grammar agnosticLexer;
 import java.util.ArrayList;
 }
 
-VERSION: 'version';
+VERSION: 'agnostic_version';
 
 // Agnostic symbol types
 TACCIDENTAL: 'accidental';
@@ -28,10 +28,11 @@ SEPPROPERTIES: UNDERSCORE;
 STCLEFOCTAVE: '8va' | '8vb' | '15ma' | '15mb';
 STACCIDENTALS: 'flat' | 'natural' | 'sharp' | 'double_sharp' | 'double_sharp_x' | 'double_flat';
 STMETERSIGNS: 'Ct' | 'Ccut' | 'CZ' | 'CcutZ' | 'O' | 'Odot' | 'Cdot'; // Ct for common time, to avoid ambiguities
-STFIGURES_WITH_STEM: 'longa' | 'longaBlack' | 'quadrupleWholeStem' | 'tripleWholeStem' | 'doubleWholeStem' | 'doubleWholeBlackStem' | 'half' | 'quarter' | 'eighth' | 'sixteenth' | 'thirtySecond' | 'sixtyFourth' | 'hundredTwentyEighth' | 'twoHundredFiftySix' | 'eighthCut' | 'eighthVoid' | 'sixteenthVoid';
+// fusa and semifusa are used for mensural notation
+STFIGURES_WITH_STEM: 'longa2Black' | 'longaBlack' | 'longa2' | 'longa' | 'quadrupleWholeStem' | 'tripleWholeStem' | 'doubleWholeStem' | 'doubleWholeBlackStem' | 'half' | 'quarter' | 'eighth' | 'sixteenth' | 'thirtySecond' | 'sixtyFourth' | 'hundredTwentyEighth' | 'twoHundredFiftySix' | 'eighthCut' | 'eighthVoid' | 'sixteenthVoid' | 'fusa' | 'semifusa';
 STFIGURES_WITHOUT_STEM:
     'doubleWhole' | 'breve' | 'breveBlack' |  'whole'  | 'wholeBlack';
-STMENSURAL_REST_FIGURES: 'seminima' | 'fusa' | 'semifusa';
+STMENSURAL_REST_FIGURES: 'seminima';
 
 STMARKS_UNPOSITIONAL: 'accent' | 'tenuto' | 'harmonic' | 'breath' | 'arpeggio' | 'trill';
 STMARKS_POSITIONAL: 'staccatissimo' | 'marcato' | 'fermata';

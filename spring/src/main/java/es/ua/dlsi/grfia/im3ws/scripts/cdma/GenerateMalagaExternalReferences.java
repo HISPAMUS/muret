@@ -1,4 +1,4 @@
-package es.ua.dlsi.grfia.im3ws.scripts;
+package es.ua.dlsi.grfia.im3ws.scripts.cdma;
 
 import es.ua.dlsi.grfia.im3ws.configuration.MURETConfiguration;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Document;
@@ -7,6 +7,7 @@ import es.ua.dlsi.grfia.im3ws.muret.entity.Page;
 import es.ua.dlsi.grfia.im3ws.muret.entity.Region;
 import es.ua.dlsi.grfia.im3ws.muret.repository.DocumentRepository;
 import es.ua.dlsi.grfia.im3ws.muret.repository.RegionRepository;
+import es.ua.dlsi.grfia.im3ws.scripts.AuthenticateForScripts;
 import es.ua.dlsi.im3.core.IM3Exception;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

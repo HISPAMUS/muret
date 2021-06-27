@@ -187,7 +187,7 @@ public class KernSyntaxDirectedTranslation2EKern {
                     output(EKernHeaders.edynam.getEncoding());
                     break;
                 case kern:
-                    output(EKernHeaders.ekern.getEncoding());
+                    output(EKernHeaders.ekern_1_0.getEncoding());
                     break;
             } // the other spine types are not transcoded
         }

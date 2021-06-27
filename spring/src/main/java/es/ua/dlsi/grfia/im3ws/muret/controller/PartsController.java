@@ -190,6 +190,21 @@ public class PartsController extends MuRETBaseController {
         actionLogsParts.logLinkPart(image);
     }
 
+    @PutMapping("rename/{partID}/{newName}")
+    public Part rename(@PathVariable Long partID, @PathVariable String newName) {
+        try {
+            Optional<Part> part = partRepository.findById(partID);
+            if (!part.isPresent()) {
+                throw new IM3WSException("Cannot find a part with id " + partID);
+            }
+
+            part.get().setName(newName);
+            return partRepository.save(part.get());
+        } catch (IM3WSException e) {
+            throw ControllerUtils.createServerError(this, "Cannot rename part", e);
+        }
+    }
+
     // revisado hasta aquí
     @GetMapping(path = {"uses/{documentID}"})
     @Transactional(readOnly = true)
@@ -414,20 +429,7 @@ public class PartsController extends MuRETBaseController {
         }
     }*/
 
-    @PutMapping("rename/{partID}/{newName}")
-    public Part rename(@PathVariable Long partID, @PathVariable String newName) {
-        try {
-            Optional<Part> part = partRepository.findById(partID);
-            if (!part.isPresent()) {
-                throw new IM3WSException("Cannot find a part with id " + partID);
-            }
 
-            part.get().setName(newName);
-            return partRepository.save(part.get());
-        } catch (IM3WSException e) {
-            throw ControllerUtils.createServerError(this, "Cannot rename part", e);
-        }
-    }
 
     @DeleteMapping(path = {"delete/{partID}"})
     public long deletePart(@PathVariable("partID") long partID)  {
